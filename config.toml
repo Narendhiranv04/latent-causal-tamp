@@ -1,0 +1,52 @@
+# 2D planar-3R suite configuration (Guide v1.6 §2, §2.1).
+# Every key is validated by scene.load_config; unknown or missing keys fail.
+# Sections for later stages ([geometry], [planner2d], [inference]) are added
+# when their stage arrives, so this file never carries unused parameters.
+
+[suite]
+name = "planar_3r"
+rows = 8
+cols = 8
+pitch_m = 0.08
+obstacle_radius_m = 0.024
+margin_m = 0.005
+num_obstacles = 35
+num_targets = 1
+coordinate_frame = "world_xy_y_back"
+domain_policy = "ALL_SUPPORTED"
+margin_policy = "UNINFLATED_ORACLE_DELTA_ONCE"
+
+# Robot profile: PROVISIONAL guide values. Not collision/reach tested until G1,
+# which must freeze a tested robot_profile_hash before any labels exist.
+[arm2d]
+base_xy_m = [-0.14, 0.32]
+link_lengths_m = [0.42, 0.34, 0.20]
+link_full_widths_m = [0.018, 0.016, 0.014]
+joint_limits_rad = [
+  [-3.14159265, 3.14159265],
+  [-3.14159265, 3.14159265],
+  [-3.14159265, 3.14159265],
+]
+q_home_rad = [0.0, 0.0, 0.0]        # provisional: MUST PASS collision / reach checks (G1)
+base_radius_m = 0.018                # provisional colliding fixed base
+joint_housing_radius_m = 0.012       # provisional joint geometry
+self_collision_exclusions = [[0, 1], [1, 2]]
+
+[gripper2d]
+model = "two_finger_side"
+palm_length_m = 0.028                # provisional
+palm_full_width_m = 0.034            # provisional
+finger_length_m = 0.050              # provisional
+finger_thickness_m = 0.007           # provisional
+open_gap_m = 0.070                   # tip-to-tip clear gap; must exceed 2r
+closed_gap_m = 0.046                 # contact model; not a grasp-force claim
+tcp_at_palm_tip = true
+attachment_pose_policy = "validated_contact_at_closure"
+contact_pos_tolerance_m = 0.001
+release_xy_tolerance_m = 0.002
+
+# Rendering of the clean learner observation and the fixed overview axes.
+[render]
+image_px = 320                       # square top-down image over the support; 0.002 m/px
+overview_xlim_m = [-0.22, 0.92]      # fixed for every comparative 2D panel
+overview_ylim_m = [-0.06, 0.70]
