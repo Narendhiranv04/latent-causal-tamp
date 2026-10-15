@@ -134,7 +134,8 @@ def test_link0_sweep_certificate_and_unresolved_budget(cfg, robot):
     tiny = {**cfg["planner2d"], "max_nodes": 2}                       # budget spent at once
     pl = pn.plan(far, qa, qb, robot.open_gap, tiny, 4000, "t")
     assert pl.direct.status == ge.COLLISION
-    assert pl.status == ge.UNRESOLVED and pl.reason == "BUDGET_EXHAUSTED"  # never "infeasible"
+    assert pl.status == ge.UNRESOLVED and pl.reason == "BUDGET_EXHAUSTED:NODES"  # never "infeasible"
+    assert not pl.wall_clock_cut                                      # node budget: deterministic
 
 
 def test_home_clear_of_every_cell_and_q0_rejected(cfg, robot):
@@ -218,3 +219,81 @@ def test_interrupted_connect_never_joins_uncertified_edges(cfg, robot):
         assert pl.status == ge.UNRESOLVED or certified(pl)
     full = pn.plan(ck, qa, qb, robot.open_gap, cfg["planner2d"], 4000, "join")
     assert full.status == ge.CLEAR and certified(full)
+
+
+# ---------------------------------------------------------------- G1 hardening (report 0004)
+def approach(robot, cell, phi, branch, depth=mo.IK_REFINE_DEPTH, max_jump=0.1):
+    """The declared straight approach line of a lattice cell, IK-tracked."""
+    xy = sc.Lattice(8, 8, 0.08).center(cell)
+    u = np.array([math.cos(phi), math.sin(phi)])
+    pts = [np.asarray(xy) - d * u for d in np.linspace(0.06, 0.0, 13)]
+    return mo.ik_track(robot, pts, [phi] * 13, (robot.grasp_x, 0.0), branch, max_jump, depth)
+
+
+def test_refinement_resolves_a_jump_the_old_tracker_called_infeasible(robot):
+    coarse, why = approach(robot, 4, math.pi / 2, -1, depth=0)        # old fixed-step behaviour
+    assert coarse is None and why == mo.CONTINUATION                  # numerical, never definite
+    qs, why = approach(robot, 4, math.pi / 2, -1)
+    assert why is None and len(qs) > 13
+    assert max(np.max(np.abs(np.diff(qs, axis=0)), axis=1)) <= 0.1
+
+
+def test_ik_track_definite_reasons(robot):
+    assert approach(robot, 56, math.pi / 3, 1) == (None, mo.NO_IK)    # a sampled pose has no IK
+    assert approach(robot, 16, 6.021385919380436, -1)[1] == mo.NO_IK  # found between samples
+    assert approach(robot, 51, 2.8797932657906435, -1)[1] == mo.JOINT_LIMIT  # +-pi crossing
+    assert mo.CONTINUATION not in mo.DEFINITE_IK_FAILURES
+
+
+def test_restrictive_jump_threshold_never_certifies_infeasibility(cfg, robot):
+    """A tiny max_ik_jump_rad makes every approach fail numerically; the skill must
+    then be UNRESOLVED (old code: CERTIFIED_INFEASIBLE)."""
+    strict = {**cfg, "skill2d": {**cfg["skill2d"], "max_ik_jump_rad": 1e-7}}
+    s = sc.place_scene(cfg, "r", "v", [27], [])
+    res = sk.plan_skill(robot, s, "t0", 36, strict, "strict")
+    approach_fails = [c for c in res.picks if c.stage == "APPROACH"]
+    assert approach_fails and all(not c.certified and c.reason == mo.CONTINUATION for c in approach_fails)
+    assert res.status == sk.UNRESOLVED
+
+
+def test_ik_on_reach_boundary_is_not_declared_missing(robot):
+    joints, theta = ge.fk(robot, (0.4, 0.0, 0.3))                      # straight elbow: |cos q2| = 1
+    assert ge.ik(robot, joints[3], theta[2])
+    outward = joints[3] + 1e-6 * (joints[2] - joints[0]) / np.linalg.norm(joints[2] - joints[0])
+    assert ge.ik(robot, outward, theta[2]) == []
+
+
+def test_wall_cap_is_recorded_as_load_dependent(cfg, robot):
+    far = checker(cfg, robot, [(0.50, 0.32)])
+    qa, qb = np.array([0.6, 0.0, 0.0]), np.array([-0.6, 0.0, 0.0])
+    pl = pn.plan(far, qa, qb, robot.open_gap, {**cfg["planner2d"], "max_wall_seconds": 0.0}, 4000, "w")
+    assert pl.status == ge.UNRESOLVED and pl.reason == "BUDGET_EXHAUSTED:WALL" and pl.wall_clock_cut
+
+
+def test_replay_rejects_inconsistent_records(cfg, robot, corner_skill):
+    s, res = corner_skill
+    p = sk.params(cfg)
+    good = res.traj.arrays()
+    tampered = [("q", lambda a: a.__setitem__(5, a[5] + np.array([0, 0, 7.0]))),     # beyond limits
+                ("gap", lambda a: a.__setitem__(3, robot.open_gap + 0.01)),          # beyond open gap
+                ("place_xy", lambda a: a.__setitem__(0, a[0] + 0.01)),               # placed elsewhere
+                ("held_local", lambda a: a.__setitem__(0, a[0] + 0.005))]            # wrong grasp offset
+    for key, edit in tampered:
+        bad = {k: v.copy() for k, v in good.items()}
+        edit(bad[key])
+        with pytest.raises(ValueError):
+            mo.certify_trajectory(robot, s, "t0", bad, p["delta"], p["eps"], p["evals"])
+    with pytest.raises(ValueError):
+        ge.certify(checker(cfg, robot, []), robot.q_home, robot.q_home, 0.0, robot.open_gap + 0.01, 100)
+
+
+def test_rrt_connect_matches_accepted_g1_planner(cfg, robot):
+    """Golden lock: this certified RRT-Connect path was produced by the accepted G1
+    planner (commit f165115). Any change to search behaviour must be deliberate and
+    reported (report 0004: a dropped tree swap was caught this way)."""
+    ck = checker(cfg, robot, [(0.50, 0.32)])
+    pl = pn.plan(ck, np.array([0.6, 0.0, 0.0]), np.array([-0.6, 0.0, 0.0]), robot.open_gap,
+                 cfg["planner2d"], 4000, "golden")
+    assert pl.reason == "RRT_JOINT"
+    assert sc.stable_hash([np.asarray(q).tolist() for q in pl.path]) == \
+        "sha256:4c86c08046d5cc72801ddc52c1994f616352363c3f2d1534471974677291c594"

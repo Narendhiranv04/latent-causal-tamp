@@ -167,6 +167,23 @@ def robot_profile_hash(cfg: dict) -> str:
     return stable_hash({"arm2d": cfg["arm2d"], "gripper2d": cfg["gripper2d"]})
 
 
+# Reference-construction policy for fixtures from G2 on (report 0004): the primary
+# protocol plans and certifies the nominal action with the final dense clutter in
+# place; sparse-first-then-fill references are development bootstraps only.
+REFERENCE_POLICIES = {"FINAL_DENSE_PLANNED": "PRIMARY", "SPARSE_SEEDED_REFERENCE": "BOOTSTRAP_ONLY"}
+
+
+def validate_fixtures(fixtures: dict) -> dict:
+    """Reject G2+ fixtures that do not declare an allowed reference policy and role."""
+    for name, fx in fixtures.items():
+        if int(fx["stage"].lstrip("G")) >= 2:
+            policy = fx.get("reference_policy")
+            if policy not in REFERENCE_POLICIES or REFERENCE_POLICIES[policy] != fx.get("benchmark_role"):
+                raise ConfigError(f"{name}: needs reference_policy in {sorted(REFERENCE_POLICIES)} "
+                                  f"with the matching benchmark_role, got {policy!r}/{fx.get('benchmark_role')!r}")
+    return fixtures
+
+
 # ------------------------------------------------------------------ lattice
 @dataclass(frozen=True)
 class Lattice:

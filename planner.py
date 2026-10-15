@@ -28,6 +28,8 @@ class Plan:
     tree_xy: np.ndarray | None = None  # tree vertices as TCP (joint space) or object (pose space) xy
     direct: ge.Verdict | None = None
     ends: tuple | None = None        # (qa, qb) of the requested connection
+    wall_clock_cut: bool = False     # the wall-time safety cap ended search or shortcutting:
+                                     # the outcome may differ under another machine load
 
 
 def call_seed(base: int, key: str) -> int:
@@ -130,8 +132,8 @@ class PoseSpace:
         d = self._delta(a, b)
         n = max(1, math.ceil(float(np.linalg.norm(d)) / self.line_step))
         s = np.linspace(0.0, 1.0, n + 1)
-        qs = mo.ik_track(self.ck.robot, a[:2] + s[:, None] * d[:2], a[2] + s * d[2] / self.w,
-                         self.local, self.branch, self.jump)
+        qs, _ = mo.ik_track(self.ck.robot, a[:2] + s[:, None] * d[:2], a[2] + s * d[2] / self.w,
+                            self.local, self.branch, self.jump)
         if qs is None or mo.certify_chain(self.ck, qs, self.gap, self.evals).status != ge.CLEAR:
             return None
         return qs
@@ -164,9 +166,11 @@ def _rrt_connect(space, za, zb, max_nodes: int, deadline: float, rounds: int):
             reached = extend(trees[1], new)          # CONNECT: keep extending toward new
         if reached is not None and np.array_equal(reached, new):  # trees met: every edge certified
             nodes, edges = _join(trees, za)
-            return _shortcut(space, nodes, edges, rounds, deadline), count(), trees
+            path, cut = _shortcut(space, nodes, edges, rounds, deadline)
+            return path, count(), trees, "SOLVED", cut
         trees.reverse()
-    return None, count(), trees
+    stop = "NODES" if count() >= max_nodes else "WALL"   # node budget = deterministic; wall = safety cap
+    return None, count(), trees, stop, stop == "WALL"
 
 
 def _chain(tree) -> list[int]:
@@ -186,16 +190,21 @@ def _join(trees, za):
     return nodes, edges
 
 
-def _shortcut(space, nodes, edges, rounds: int, deadline: float) -> list:
-    """Certified shortcutting on the node path; returns the joint waypoint path."""
+def _shortcut(space, nodes, edges, rounds: int, deadline: float):
+    """Certified shortcutting on the node path; returns (joint waypoint path, whether
+    the wall-time cap cut the rounds short, i.e. the result is load-dependent)."""
+    cut = False
     for _ in range(rounds):
-        if len(nodes) < 3 or time.time() > deadline:
+        if len(nodes) < 3:
+            break
+        if time.time() > deadline:
+            cut = True
             break
         i, j = sorted(space.rng.choice(len(nodes), 2, replace=False))
         wp = space.edge(nodes[i], nodes[j]) if j - i > 1 else None
         if wp is not None:
             nodes, edges = nodes[:i + 1] + nodes[j:], edges[:i] + [wp] + edges[j:]
-    return [edges[0][0]] + [q for e in edges for q in e[1:]]
+    return [edges[0][0]] + [q for e in edges for q in e[1:]], cut
 
 
 def plan(checker, qa, qb, gap: float, pcfg: dict, max_evals: int, key: str, rrt: bool = True,
@@ -230,11 +239,14 @@ def plan(checker, qa, qb, gap: float, pcfg: dict, max_evals: int, key: str, rrt:
         space, name = PoseSpace(checker, gap, ev, rng, pcfg["pose_step_m"], pcfg["pose_phi_weight_m"],
                                 local, branch, line_step, jump), "RRT_OBJECT_POSE"
         za, zb = np.asarray(za, float), np.asarray(zb, float)
-    path, n, trees = _rrt_connect(space, za, zb, pcfg["max_nodes"], t0 + pcfg["max_wall_seconds"],
-                                  pcfg["shortcut_rounds"])
+    path, n, trees, stop, cut = _rrt_connect(space, za, zb, pcfg["max_nodes"], t0 + pcfg["max_wall_seconds"],
+                                             pcfg["shortcut_rounds"])
     tree = np.array([space.xy(z) for t in trees for z in t["z"]])
     if path is None:
-        return out(ge.UNRESOLVED, [], "BUDGET_EXHAUSTED", n, tree)
-    if not (np.allclose(path[0], qa, atol=1e-9) and np.allclose(path[-1], qb, atol=1e-9)):
-        return out(ge.UNRESOLVED, [], "ENDPOINT_IK_MISMATCH", n, tree)
-    return out(ge.CLEAR, [qa] + path[1:-1] + [qb], name, n, tree)
+        res = out(ge.UNRESOLVED, [], f"BUDGET_EXHAUSTED:{stop}", n, tree)
+    elif not (np.allclose(path[0], qa, atol=1e-9) and np.allclose(path[-1], qb, atol=1e-9)):
+        res = out(ge.UNRESOLVED, [], "ENDPOINT_IK_MISMATCH", n, tree)
+    else:
+        res = out(ge.CLEAR, [qa] + path[1:-1] + [qb], name, n, tree)
+    res.wall_clock_cut = cut
+    return res

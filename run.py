@@ -26,6 +26,7 @@ import numpy as np
 import PIL
 from PIL import Image
 
+import diagnostics as dg
 import figures as fig
 import geometry as ge
 import motion as mo
@@ -35,7 +36,7 @@ import viz
 
 
 def load_fixture(path: str, case: str) -> dict:
-    fixtures = json.loads(Path(path).read_text())["fixtures"]
+    fixtures = sc.validate_fixtures(json.loads(Path(path).read_text())["fixtures"])
     if case not in fixtures:
         raise SystemExit(f"unknown case {case!r}; known: {sorted(fixtures)}")
     return fixtures[case]
@@ -184,7 +185,7 @@ def home_check(cfg: dict) -> dict:
 
 def cmd_check(args) -> int:
     cfg = sc.load_config(args.config)
-    fixtures = json.loads(Path(args.fixtures).read_text())["fixtures"]
+    fixtures = sc.validate_fixtures(json.loads(Path(args.fixtures).read_text())["fixtures"])
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
     robot, chash, rhash = ge.make_robot(cfg), sc.config_hash(cfg), sc.robot_profile_hash(cfg)
@@ -198,7 +199,10 @@ def cmd_check(args) -> int:
         scenes[tid] = sc.scene_to_dict(s)
         if res.traj is not None:
             arrays.update({f"{tid}__{k}": v for k, v in res.traj.arrays().items()})
-    fig.g1_figures(out, robot, cfg, fixtures, done)
+    if not args.no_figures:
+        fig.g1_figures(out, robot, cfg, fixtures, done)
+    f = dg.ik_tracking_figure(robot, cfg, dg.ik_examples(robot, cfg, done))
+    f.savefig(out / "ik_tracking.png", dpi=90)
     extent = traj_extent(robot, done)
     xl, yl = cfg["render"]["overview_xlim_m"], cfg["render"]["overview_ylim_m"]
     nominal = "G1_S1_t%d" % fixtures["G1_S1"]["tasks"].index(fixtures["G1_S1"]["nominal_task"])
@@ -220,6 +224,7 @@ def cmd_check(args) -> int:
         "config_hash": chash, "robot_profile_hash": rhash, "robot_profile_status": "TESTED_G1",
         "nominal_task": nominal, "nominal_action_hash": tasks[nominal]["action_hash"],
         "audit_counts": counts, "robot_extent_m": extent, "tasks": tasks,
+        "wall_clock_dependent_tasks": sorted(k for k, t in tasks.items() if t["wall_clock_dependent"]),
         "target_replay_status": "KINEMATIC_REPLAY_CERTIFIED (see replay)", "simulation_replay_status": "NOT_RUN",
         "physical_execution_status": "NOT_RUN"})
     with open(out / "metrics.csv", "w", newline="") as f:
@@ -257,7 +262,9 @@ def cmd_replay(args) -> int:
         report[tid] = {"segments": len(verdicts), "all_certified": all(v.status == ge.CLEAR for v in verdicts),
                        "hash_matches_record": h == result["tasks"][tid]["action_hash"]}
     ok = all(r["all_certified"] and r["hash_matches_record"] for r in report.values())
-    _write_json(run / "replay.json", {"replay_passed": ok, "trajectories": report})
+    out = Path(args.report) if args.report else run / "replay.json"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    _write_json(out, {"replay_passed": ok, "run": str(run), "trajectories": report})
     print(json.dumps({"replay_passed": ok, "trajectories": len(report)}))
     return 0 if ok else 1
 
@@ -276,9 +283,11 @@ def main(argv=None) -> int:
     q.add_argument("--fixtures", default="fixtures.json")
     q.add_argument("--out", required=True)
     q.add_argument("--workers", type=int, default=16)
+    q.add_argument("--no-figures", action="store_true", help="re-certification run: skip the G1 figure set")
     q.set_defaults(func=cmd_check)
     q = sub.add_parser("replay", help="G1: independently re-certify a run's stored trajectories")
     q.add_argument("--run", required=True)
+    q.add_argument("--report", help="where to write the replay record (default: <run>/replay.json)")
     q.set_defaults(func=cmd_replay)
     args = p.parse_args(argv)
     return args.func(args)

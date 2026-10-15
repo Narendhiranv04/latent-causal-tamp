@@ -57,14 +57,16 @@ def params(cfg: dict) -> dict:
             "release_tol": cfg["gripper2d"]["release_xy_tolerance_m"]}
 
 
-def _fail(c: Candidate, stage: str, v: ge.Verdict | None = None) -> Candidate:
-    """Record the first failed check; v=None on a line stage means IK tracking broke
-    (missing branch or a joint jump), which is exact, hence certified."""
+def _fail(c: Candidate, stage: str, v: ge.Verdict | None = None, why: str | None = None) -> Candidate:
+    """Record the first failed check. A geometry verdict is definite only if it is a
+    COLLISION (not gray band / budget). An IK-tracking reason is definite only for
+    motion.DEFINITE_IK_FAILURES, and then only for the specified straight path and
+    branch; numerical continuation failures stay uncertified (UNRESOLVED)."""
     c.stage = stage
     if v is not None:
         c.reason, c.certified = v.pair or "", v.status == ge.COLLISION
-    elif stage in ("APPROACH", "RETREAT"):
-        c.reason = "IK_TRACK_DISCONTINUOUS"
+    elif why is not None:
+        c.reason, c.certified = why, why in mo.DEFINITE_IK_FAILURES
     return c
 
 
@@ -85,23 +87,24 @@ def screen_pick(robot, ck: dict, xy, radius: float, p: dict) -> list[Candidate]:
         out.append(c)
         q = c.q_end = _ik(robot, xy, (robot.grasp_x, 0.0), phi).get(b)
         if q is None:
-            _fail(c, "NO_IK")
+            _fail(c, "NO_IK", why=mo.NO_IK)              # exact for this declared (phi, branch)
             continue
         v = rest.status_at(q, gopen)
         if v.status != ge.CLEAR:
             _fail(c, "GRASP_POSE", v)
             continue
-        line = mo.ik_line(robot, xy, (robot.grasp_x, 0.0), phi, b, p["approach_dist_m"], 0.0,
-                          p["line_step_m"], p["max_ik_jump_rad"])
+        line, why = mo.ik_line(robot, xy, (robot.grasp_x, 0.0), phi, b, p["approach_dist_m"], 0.0,
+                               p["line_step_m"], p["max_ik_jump_rad"])
         v = None if line is None else mo.certify_chain(rest, line, gopen, p["evals"])
         if v is None or v.status != ge.CLEAR:
-            _fail(c, "APPROACH", v)
+            _fail(c, "APPROACH", v, why)
             continue
         local = ge.tool_local(robot, q, xy)
         gap = 2 * (radius + abs(local[1]))
         if abs(local[1]) > p["contact_tol"] or not 0 <= local[0] <= robot.finger_len \
                 or gap < robot.closed_gap:
-            _fail(c, "CLOSURE")
+            _fail(c, "CLOSURE", why="CLOSURE_GEOMETRY")   # exact under the declared contact model
+            c.certified = True
             continue
         v = ge.certify(touch, q, q, gopen, gap, p["evals"])
         if v.status != ge.CLEAR:
@@ -118,7 +121,7 @@ def screen_place(robot, ck: dict, dest, local, gap: float, p: dict) -> list[Cand
         out.append(c)
         q = c.q_end = _ik(robot, dest, local, phi).get(b)
         if q is None:
-            _fail(c, "NO_IK")
+            _fail(c, "NO_IK", why=mo.NO_IK)              # exact for this declared (phi, branch)
             continue
         v = ck[("held", False)].status_at(q, gap)
         if v.status != ge.CLEAR:
@@ -128,12 +131,12 @@ def screen_place(robot, ck: dict, dest, local, gap: float, p: dict) -> list[Cand
         if v.status != ge.CLEAR:
             _fail(c, "RELEASE", v)
             continue
-        line = mo.ik_line(robot, dest, local, phi, b, 0.0, p["retreat_dist_m"], p["line_step_m"],
-                          p["max_ik_jump_rad"])
+        line, why = mo.ik_line(robot, dest, local, phi, b, 0.0, p["retreat_dist_m"], p["line_step_m"],
+                               p["max_ik_jump_rad"])
         v = None if line is None else mo.certify_chain(ck[("placed", False)], line, robot.open_gap,
                                                        p["evals"])
         if v is None or v.status != ge.CLEAR:
-            _fail(c, "RETREAT", v)
+            _fail(c, "RETREAT", v, why)
             continue
         c.line = line
     return out
@@ -192,7 +195,7 @@ def plan_skill(robot, scene, target_id: str, dest_cell: int, cfg: dict, key: str
                 same = pick.branch == place.branch          # pose-space search keeps one elbow branch
                 guide = None if not same else mo.carry_line(
                     robot, target.xy_m, dest, pick.local, pick.phi, place.phi, pick.branch,
-                    p["line_step_m"], p["max_ik_jump_rad"])
+                    p["line_step_m"], p["max_ik_jump_rad"])[0]
                 pose = None if not same else ((*target.xy_m, pick.phi), (*dest, place.phi), pick.local,
                                               pick.branch, p["line_step_m"], p["max_ik_jump_rad"])
                 p2 = connect(f"carry{i}.{j}", ck[("held", False)], pick.q_end, place.q_end, pick.gap,
@@ -235,6 +238,16 @@ def _finish(res, robot, scene, target_id, dest, parts, cfg) -> SkillResult:
     return res
 
 
+def count_reasons(cands: list) -> dict:
+    """'STAGE:reason:definite|unresolved' -> count, over rejected candidates."""
+    out = {}
+    for c in cands:
+        if c.stage != "OK":
+            k = f"{c.stage}:{c.reason}:{'definite' if c.certified else 'unresolved'}"
+            out[k] = out.get(k, 0) + 1
+    return dict(sorted(out.items()))
+
+
 def summary(res: SkillResult, scene_hash: str, robot_hash: str) -> dict:
     """JSON-able record of one skill query (statuses, budgets, reasons, hash)."""
     count = lambda cs: {s: sum(c.stage == s for c in cs) for s in sorted({c.stage for c in cs})}  # noqa: E731
@@ -243,7 +256,8 @@ def summary(res: SkillResult, scene_hash: str, robot_hash: str) -> dict:
            "rrt_pass_connector_log": [{"label": label, "status": pl.status, "method": pl.reason, "nodes": pl.nodes,
                            "seconds": round(pl.seconds, 2)} for label, pl in res.plans],
            "place_error_m": res.place_error_m, "connectors_used": res.used, "action_hash": None,
-           "waypoints": 0}
+           "waypoints": 0, "wall_clock_dependent": any(pl.wall_clock_cut for _, pl in res.plans),
+           "rejection_reasons": count_reasons(res.picks + res.places)}
     if res.traj is not None:
         arrays = res.traj.arrays()
         out["action_hash"] = mo.trajectory_hash(arrays, res.traj.target, scene_hash, robot_hash)

@@ -18,6 +18,7 @@ pushed to `main` of `github.com/Narendhiranv04/latent-causal-tamp`.
 |---|---|---|
 | G0 | scene, records, visual foundations | implemented; report `responses-phases/0001_G0_completion.md` |
 | G1 | 3R kinematics, collision bodies, certified six-phase skill, 64-cell audit | implemented; report `responses-phases/0003_G1_completion.md` |
+| G1 hardening | sound IK-tracking labels, replay record checks, planner stop provenance, G2 reference policy | report `responses-phases/0004_G1_hardening.md` |
 | G2–G10 | see Guide v1.6 §5 | not started |
 
 The 2D robot profile was tested at G1 (`robot_profile_hash` in `runs/g1_robot/result.json`);
@@ -35,12 +36,27 @@ robot motion claims are kinematic only (`PLANAR_ARM_KINEMATIC_SKILL`), never dyn
 | `planner.py` | certified connectors: direct, guide line, link-0 sweep certificate, seeded RRT-Connect (joint or held-object pose space) |
 | `skill.py` | six-phase side-grasp skill (pick/place screening, connectors) and its JSON summary |
 | `viz.py` | clean learner observation, drawing primitives (robot drawn from `geometry.bodies`), G0 overview |
-| `figures.py` | G1 figures and GIFs composed from recorded results |
+| `figures.py` | G1 task, audit and corner figures and GIFs composed from recorded results |
+| `diagnostics.py` | figures that explain verification verdicts (rejections, certificates, budgets, IK tracking) |
 | `run.py` | the sole command dispatcher |
 | `tests/` | one test file per stage component |
 | `runs/` | flat per-run output directories |
 | `responses-phases/` | one numbered, immutable Markdown report per substantive response (`NNNN_<topic>.md`) |
 | `instruction-phase-md/` | user-supplied workflow instructions and stage reviews |
+
+## G2 reference-construction policy (report 0004)
+
+From G2 on every fixture must declare `reference_policy` and `benchmark_role`
+(enforced by `scene.validate_fixtures`):
+
+- `FINAL_DENSE_PLANNED` / `PRIMARY`: the final 30-40-object clutter is in place while
+  the nominal 3R grasp/carry/release/retreat/connector is planned, certified and frozen;
+  blocked variants then relocate existing IDs into the frozen sweep.
+- `SPARSE_SEEDED_REFERENCE` / `BOOTSTRAP_ONLY`: plan sparse, fill cells clear of the
+  sweep, re-verify. Development bootstrap only; never a primary benchmark claim.
+
+Canonical planning budgets are node/evaluation budgets; the wall-time limit is a
+safety cap and any result it affects is flagged `wall_clock_dependent`.
 
 ## Conventions
 

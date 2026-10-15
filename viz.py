@@ -255,3 +255,30 @@ def figure_rgba(fig) -> np.ndarray:
     """Rendered pixels of a figure (for pixel-exact comparisons in tests)."""
     fig.canvas.draw()
     return np.asarray(fig.canvas.buffer_rgba()).copy()
+
+
+# ------------------------------------------------------------------ stage panels
+STATUS = {"VERIFIED_FEASIBLE": ("VERIFIED", COLORS["valid"]),
+          "CERTIFIED_INFEASIBLE": ("INFEASIBLE", COLORS["invalid"]),
+          "UNRESOLVED": ("UNRESOLVED", COLORS["unresolved"])}
+LIMITS = {"grid": ((-0.56, 0.68), (-0.06, 0.80))}  # audit view: support, base and home pose
+
+
+def scene_panel(ax, scene, cfg, title: str, hide=(), limits="robot"):
+    lim = (cfg["render"]["overview_xlim_m"], cfg["render"]["overview_ylim_m"]) if limits == "robot" \
+        else LIMITS[limits]
+    ax.set(xlim=lim[0], ylim=lim[1], aspect="equal", xlabel="x [m]", ylabel="y [m]")
+    ax.set_title(title, fontsize=9, loc="left")
+    ax.tick_params(labelsize=7)
+    draw_support(ax, scene, cell_ids=False)
+    for o in scene.objects:
+        if o.id not in hide:
+            fc, ec = ((COLORS["target"], COLORS["target_edge"]) if o.kind == "target"
+                      else (COLORS["obstacle"], COLORS["obstacle_edge"]))
+            ax.add_patch(Circle(o.xy_m, o.radius_m, fc=fc, ec=ec, lw=0.8, zorder=3))
+
+
+def status_tag(ax, status: str, text: str = "", loc=(0.02, 0.02)):
+    tag, color = STATUS[status]
+    ax.text(*loc, f"{tag}  {text}".strip(), transform=ax.transAxes, fontsize=8, color="white",
+            weight="bold", va="bottom", bbox=dict(fc=color, ec="none", pad=3), zorder=20)

@@ -193,3 +193,15 @@ def test_cli_scene_run_writes_artifacts(scene, tmp_path):
     result = json.loads((out / "result.json").read_text())
     assert result["gate_checks_passed"] and result["scene_hash"] == sc.scene_hash(scene)
     assert result["robot_pose_status"] == "SCHEMATIC_NOT_RUN" and result["target_hash"] is None
+
+
+def test_g2_reference_policy_is_enforced():
+    ok = {"a": {"stage": "G2", "reference_policy": "FINAL_DENSE_PLANNED", "benchmark_role": "PRIMARY"},
+          "b": {"stage": "G2", "reference_policy": "SPARSE_SEEDED_REFERENCE", "benchmark_role": "BOOTSTRAP_ONLY"},
+          "c": {"stage": "G1"}}
+    assert sc.validate_fixtures(ok) is ok
+    for bad in ({"stage": "G2"},
+                {"stage": "G3", "reference_policy": "SPARSE_SEEDED_REFERENCE", "benchmark_role": "PRIMARY"},
+                {"stage": "G2", "reference_policy": "SPARSE_FILL", "benchmark_role": "PRIMARY"}):
+        with pytest.raises(sc.ConfigError):
+            sc.validate_fixtures({"x": bad})

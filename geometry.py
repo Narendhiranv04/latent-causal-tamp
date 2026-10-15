@@ -25,6 +25,9 @@ ROBOT_BODIES = ("base", "link0", "housing1", "link1", "housing2", "link2",
 FRAME = {"base": 0, "link0": 1, "housing1": 2, "link1": 2, "housing2": 3, "link2": 3,
          "palm": 3, "rail": 3, "finger_l": 3, "finger_r": 3, "held": 3}
 FINGERS = ("finger_l", "finger_r")
+# |cos q2| may exceed 1 by rounding for poses exactly on the reach boundary; such poses
+# are solved (clipped), so "no IK" is only claimed beyond this tolerance.
+IK_BOUNDARY_TOL = 1e-12
 # Bodies joined by a joint or a rigid mount; never tested against each other. The
 # config adds its link pairs (link0-link1, link1-link2) on top of these.
 MOUNTED = {("base", "link0"), ("link0", "housing1"), ("housing1", "link1"),
@@ -88,7 +91,7 @@ def ik(robot: Robot, tcp, phi: float) -> list[tuple[int, np.ndarray]]:
     l1, l2, l3 = robot.lengths
     w = np.asarray(tcp) - l3 * np.array([math.cos(phi), math.sin(phi)]) - robot.base
     c2 = (w @ w - l1 ** 2 - l2 ** 2) / (2 * l1 * l2)
-    if abs(c2) > 1.0:
+    if abs(c2) > 1.0 + IK_BOUNDARY_TOL:   # outside the annulus beyond rounding: no IK
         return []
     out = []
     for branch in (1, -1):
@@ -330,6 +333,8 @@ def certify(checker: Checker, qa, qb, ga: float, gb: float, max_evals: int, ends
     (COLLISION, first detected pair), or the evaluation budget ends (UNRESOLVED).
     `ends` may pass already computed endpoint distances (d(qa), d(qb)).
     """
+    if min(ga, gb) < 0 or max(ga, gb) > checker.robot.open_gap + 1e-12:
+        raise ValueError("finger gap outside [0, open_gap]: the finger speed bound would not hold")
     qa, qb = np.asarray(qa, float), np.asarray(qb, float)
     dq, dg = qb - qa, gb - ga
     lip = checker.lipschitz(dq, dg)
