@@ -14,6 +14,7 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
+import config as cf  # noqa: E402
 import geometry  # noqa: E402
 import scene as sc  # noqa: E402
 import viz  # noqa: E402
@@ -29,7 +30,7 @@ def raw():
 
 @pytest.fixture(scope="module")
 def cfg(raw):
-    return sc.validate_config(raw)
+    return cf.validate_config(raw)
 
 
 @pytest.fixture(scope="module")
@@ -40,8 +41,8 @@ def scene(cfg):
 def _bad(raw, edit):
     bad = copy.deepcopy(raw)
     edit(bad)
-    with pytest.raises(sc.ConfigError):
-        sc.validate_config(bad)
+    with pytest.raises(cf.ConfigError):
+        cf.validate_config(bad)
 
 
 # ---------------------------------------------------------------- config
@@ -61,10 +62,10 @@ def test_physically_inconsistent_config_fails(raw):
 
 
 def test_config_hash_is_stable_and_sensitive(raw, cfg):
-    assert sc.config_hash(sc.validate_config(copy.deepcopy(raw))) == sc.config_hash(cfg)
+    assert cf.config_hash(cf.validate_config(copy.deepcopy(raw))) == cf.config_hash(cfg)
     changed = copy.deepcopy(raw)
     changed["suite"]["margin_m"] = 0.006
-    assert sc.config_hash(sc.validate_config(changed)) != sc.config_hash(cfg)
+    assert cf.config_hash(cf.validate_config(changed)) != cf.config_hash(cfg)
 
 
 # ---------------------------------------------------------------- lattice
@@ -196,12 +197,23 @@ def test_cli_scene_run_writes_artifacts(scene, tmp_path):
 
 
 def test_g2_reference_policy_is_enforced():
-    ok = {"a": {"stage": "G2", "reference_policy": "FINAL_DENSE_PLANNED", "benchmark_role": "PRIMARY"},
+    dense, sparse = list(range(35)), [3, 11, 40]
+    ok = {"a": {"stage": "G2", "reference_policy": "FINAL_DENSE_PLANNED", "benchmark_role": "PRIMARY",
+                "obstacle_cells": dense},
           "b": {"stage": "G2", "reference_policy": "SPARSE_SEEDED_REFERENCE", "benchmark_role": "BOOTSTRAP_ONLY"},
+          "d": {"stage": "G2", "reference_policy": "FINAL_DEV_SCENE_PLANNED", "benchmark_role": "DEVELOPMENT_ONLY",
+                "obstacle_cells": sparse},
           "c": {"stage": "G1"}}
-    assert sc.validate_fixtures(ok) is ok
+    assert cf.validate_fixtures(ok) is ok
     for bad in ({"stage": "G2"},
                 {"stage": "G3", "reference_policy": "SPARSE_SEEDED_REFERENCE", "benchmark_role": "PRIMARY"},
-                {"stage": "G2", "reference_policy": "SPARSE_FILL", "benchmark_role": "PRIMARY"}):
-        with pytest.raises(sc.ConfigError):
-            sc.validate_fixtures({"x": bad})
+                {"stage": "G2", "reference_policy": "SPARSE_FILL", "benchmark_role": "PRIMARY"},
+                {"stage": "G2", "reference_policy": "FINAL_DEV_SCENE_PLANNED", "benchmark_role": "PRIMARY",
+                 "obstacle_cells": sparse},                                   # dev scene posing as primary
+                {"stage": "G2", "reference_policy": "FINAL_DEV_SCENE_PLANNED", "benchmark_role": "DEVELOPMENT_ONLY",
+                 "obstacle_cells": dense},                                    # "dev" scene that is dense
+                {"stage": "G2", "reference_policy": "FINAL_DEV_SCENE_PLANNED", "benchmark_role": "DEVELOPMENT_ONLY"},
+                {"stage": "G2", "reference_policy": "FINAL_DENSE_PLANNED", "benchmark_role": "PRIMARY",
+                 "obstacle_cells": sparse}):                                  # sparse scene posing as dense
+        with pytest.raises(cf.ConfigError):
+            cf.validate_fixtures({"x": bad})

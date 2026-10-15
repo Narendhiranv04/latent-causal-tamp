@@ -12,6 +12,7 @@ the composition of one skill out of certified pieces.
 from __future__ import annotations
 
 import math
+import time
 from dataclasses import dataclass, field
 
 import numpy as np
@@ -19,6 +20,7 @@ import numpy as np
 import geometry as ge
 import motion as mo
 import planner as pn
+from scene import Scene, make_scene, place_scene
 
 VERIFIED, INFEASIBLE, UNRESOLVED = "VERIFIED_FEASIBLE", "CERTIFIED_INFEASIBLE", "UNRESOLVED"
 SCOPE = "PLANAR_ARM_KINEMATIC_SKILL"
@@ -227,6 +229,9 @@ def _finish(res, robot, scene, target_id, dest, parts, cfg) -> SkillResult:
             t.add(q, gap, phase)
     res.traj, res.place_error_m = t, float(np.linalg.norm(np.subtract(t.place_xy, dest)))
     res.used = {"pregrasp": p1.reason, "carry": p2.reason, "return_home": p3.reason,
+                "costs": {k: {"nodes": c.nodes, "evals": c.evals, "seconds": round(c.seconds, 2),
+                              "wall_clock_cut": c.wall_clock_cut} for k, c in (("pregrasp", p1), ("carry", p2),
+                                                                                ("return_home", p3))},
                 "pick": {"phi_rad": pick.phi, "branch": pick.branch},
                 "place": {"phi_rad": place.phi, "branch": place.branch}}
     verdicts = mo.certify_trajectory(robot, scene, target_id, t.arrays(), p["delta"], p["eps"], p["evals"])
@@ -254,7 +259,7 @@ def summary(res: SkillResult, scene_hash: str, robot_hash: str) -> dict:
     out = {"status": res.status, "reason": res.reason, "verification_scope": res.scope,
            "pick_candidates": count(res.picks), "place_candidates": count(res.places),
            "rrt_pass_connector_log": [{"label": label, "status": pl.status, "method": pl.reason, "nodes": pl.nodes,
-                           "seconds": round(pl.seconds, 2)} for label, pl in res.plans],
+                           "evals": pl.evals, "seconds": round(pl.seconds, 2)} for label, pl in res.plans],
            "place_error_m": res.place_error_m, "connectors_used": res.used, "action_hash": None,
            "waypoints": 0, "wall_clock_dependent": any(pl.wall_clock_cut for _, pl in res.plans),
            "rejection_reasons": count_reasons(res.picks + res.places)}
@@ -278,3 +283,49 @@ def audit_rows(done: dict) -> list[dict]:
                      "n_grasp": sum(s == "OK" for s in st),
                      "ok_phis": [c.phi for c in res.picks if c.stage == "OK"]})
     return rows
+
+
+# ------------------------------------------------------------------ G1 job helpers (moved from run.py)
+def task_scene(cfg: dict, fx: dict, task_id: str, src: int) -> Scene:
+    """Seeded fixtures reuse their generated scene; designated ones put t0 at src."""
+    if "seed" in fx:
+        s = make_scene(cfg, fx["root_id"], "ref", fx["seed"])
+        if s.get("t0").cell != src:
+            raise SystemExit(f"{task_id}: fixture target rests at {s.get('t0').cell}, not {src}")
+        return s
+    return place_scene(cfg, fx["root_id"], task_id, [src], fx["obstacle_cells"])
+
+
+def run_task(job):
+    """Pool worker: plan one six-phase skill (independent per-query seeds)."""
+    cfg, fx, task_id, src, dst = job
+    s = task_scene(cfg, fx, task_id, src)
+    t0 = time.time()
+    res = plan_skill(ge.make_robot(cfg), s, "t0", dst, cfg, task_id)
+    return task_id, s, res, time.time() - t0
+
+
+def g1_jobs(cfg: dict, fixtures: dict) -> list:
+    jobs = []
+    for case, fx in fixtures.items():
+        if fx["stage"] != "G1":
+            continue
+        if fx.get("audit"):
+            n = cfg["suite"]["rows"] * cfg["suite"]["cols"]
+            jobs += [(cfg, fx, f"audit_c{c:02d}", c, n - 1 - c) for c in range(n)]
+        jobs += [(cfg, fx, f"{case}_t{i}", a, b) for i, (a, b) in enumerate(fx["tasks"])]
+    return jobs
+
+
+def home_check(cfg: dict) -> dict:
+    """Old provisional vs current home against every one of the 64 cells occupied."""
+    robot = ge.make_robot(cfg)
+    full = place_scene(cfg, "root_full", "all_cells", [], list(range(64)))
+    ck = ge.Checker(robot, ge.make_world(full), cfg["suite"]["margin_m"], cfg["geometry"]["numeric_margin_band_m"])
+    out = {}
+    for name, q in (("provisional_q0", (0.0, 0.0, 0.0)), ("home", robot.q_home)):
+        d = ck.distances(q, robot.open_gap)
+        k = int(np.argmin(d - ck.clear_thr))
+        out[name] = {"q": list(q), "status": ck.status_at(q, robot.open_gap).status,
+                     "closest_pair": ck.labels[k], "distance_m": float(d[k])}
+    return out

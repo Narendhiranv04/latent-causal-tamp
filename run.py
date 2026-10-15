@@ -1,10 +1,11 @@
 """Sole command dispatcher (Guide v1.6 §1). Never imported by other modules.
 
-Active commands: scene (G0), check and replay (G1). Later commands arrive with their stage.
+Active commands: scene (G0), check and replay (G1), intervene (G2). Later commands arrive with their stage.
 
     python run.py scene --config config.toml --case G0_ILLUSTRATIVE --out runs/g0_scene
     python run.py check --config config.toml --out runs/g1_robot
     python run.py replay --run runs/g1_robot
+    python run.py intervene --config config.toml --out runs/g2_interventions
 """
 from __future__ import annotations
 
@@ -15,7 +16,6 @@ import json
 import math
 import platform
 import sys
-import time
 from datetime import datetime, timezone
 from itertools import combinations
 from multiprocessing import Pool
@@ -26,9 +26,12 @@ import numpy as np
 import PIL
 from PIL import Image
 
+import config as cf
 import diagnostics as dg
 import figures as fig
 import geometry as ge
+import intervention_figures as ifig
+import interventions as iv
 import motion as mo
 import scene as sc
 import skill as sk
@@ -36,7 +39,7 @@ import viz
 
 
 def load_fixture(path: str, case: str) -> dict:
-    fixtures = sc.validate_fixtures(json.loads(Path(path).read_text())["fixtures"])
+    fixtures = cf.validate_fixtures(json.loads(Path(path).read_text())["fixtures"])
     if case not in fixtures:
         raise SystemExit(f"unknown case {case!r}; known: {sorted(fixtures)}")
     return fixtures[case]
@@ -70,12 +73,12 @@ def scene_checks(cfg: dict, fx: dict, s: sc.Scene, inst: np.ndarray, out: Path) 
 
 
 def cmd_scene(args) -> int:
-    cfg = sc.load_config(args.config)
+    cfg = cf.load_config(args.config)
     fx = load_fixture(args.fixtures, args.case)
     s = sc.make_scene(cfg, fx["root_id"], fx["variant_id"], fx["seed"])
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
-    chash, shash, rhash = sc.config_hash(cfg), sc.scene_hash(s), s.robot_profile_hash
+    chash, shash, rhash = cf.config_hash(cfg), sc.scene_hash(s), s.robot_profile_hash
 
     _write_json(out / "config.json", {"config_hash": chash, "config": cfg})
     sc.save_scene_json(s, out / "scene.json")
@@ -138,59 +141,14 @@ def _write_manifest(out: Path, seeds: dict, chash: str, extra: dict) -> None:
 
 
 # ------------------------------------------------------------------ G1
-def task_scene(cfg: dict, fx: dict, task_id: str, src: int) -> sc.Scene:
-    """Seeded fixtures reuse their generated scene; designated ones put t0 at src."""
-    if "seed" in fx:
-        s = sc.make_scene(cfg, fx["root_id"], "ref", fx["seed"])
-        if s.get("t0").cell != src:
-            raise SystemExit(f"{task_id}: fixture target rests at {s.get('t0').cell}, not {src}")
-        return s
-    return sc.place_scene(cfg, fx["root_id"], task_id, [src], fx["obstacle_cells"])
-
-
-def run_task(job):
-    """Pool worker: plan one six-phase skill (independent per-query seeds)."""
-    cfg, fx, task_id, src, dst = job
-    s = task_scene(cfg, fx, task_id, src)
-    t0 = time.time()
-    res = sk.plan_skill(ge.make_robot(cfg), s, "t0", dst, cfg, task_id)
-    return task_id, s, res, time.time() - t0
-
-
-def g1_jobs(cfg: dict, fixtures: dict) -> list:
-    jobs = []
-    for case, fx in fixtures.items():
-        if fx["stage"] != "G1":
-            continue
-        if fx.get("audit"):
-            n = cfg["suite"]["rows"] * cfg["suite"]["cols"]
-            jobs += [(cfg, fx, f"audit_c{c:02d}", c, n - 1 - c) for c in range(n)]
-        jobs += [(cfg, fx, f"{case}_t{i}", a, b) for i, (a, b) in enumerate(fx["tasks"])]
-    return jobs
-
-
-def home_check(cfg: dict) -> dict:
-    """Old provisional vs current home against every one of the 64 cells occupied."""
-    robot = ge.make_robot(cfg)
-    full = sc.place_scene(cfg, "root_full", "all_cells", [], list(range(64)))
-    ck = ge.Checker(robot, ge.make_world(full), cfg["suite"]["margin_m"], cfg["geometry"]["numeric_margin_band_m"])
-    out = {}
-    for name, q in (("provisional_q0", (0.0, 0.0, 0.0)), ("home", robot.q_home)):
-        d = ck.distances(q, robot.open_gap)
-        k = int(np.argmin(d - ck.clear_thr))
-        out[name] = {"q": list(q), "status": ck.status_at(q, robot.open_gap).status,
-                     "closest_pair": ck.labels[k], "distance_m": float(d[k])}
-    return out
-
-
 def cmd_check(args) -> int:
-    cfg = sc.load_config(args.config)
-    fixtures = sc.validate_fixtures(json.loads(Path(args.fixtures).read_text())["fixtures"])
+    cfg = cf.load_config(args.config)
+    fixtures = cf.validate_fixtures(json.loads(Path(args.fixtures).read_text())["fixtures"])
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
-    robot, chash, rhash = ge.make_robot(cfg), sc.config_hash(cfg), sc.robot_profile_hash(cfg)
+    robot, chash, rhash = ge.make_robot(cfg), cf.config_hash(cfg), cf.robot_profile_hash(cfg)
     with Pool(args.workers) as pool:
-        done = {tid: (s, res, secs) for tid, s, res, secs in pool.imap_unordered(run_task, g1_jobs(cfg, fixtures))}
+        done = {tid: (s, res, secs) for tid, s, res, secs in pool.imap_unordered(sk.run_task, sk.g1_jobs(cfg, fixtures))}
     tasks, arrays, scenes = {}, {}, {}
     for tid in sorted(done):
         s, res, secs = done[tid]
@@ -208,7 +166,7 @@ def cmd_check(args) -> int:
     nominal = "G1_S1_t%d" % fixtures["G1_S1"]["tasks"].index(fixtures["G1_S1"]["nominal_task"])
     audit = [t for k, t in tasks.items() if k.startswith("audit_")]
     corners = {k: t["status"] for k, t in tasks.items() if k.startswith(("G1_D0", "G1_S1")) and k != nominal}
-    gate = {"home_clear_of_all_64_cells": home_check(cfg)["home"]["status"] == ge.CLEAR,
+    gate = {"home_clear_of_all_64_cells": sk.home_check(cfg)["home"]["status"] == ge.CLEAR,
             "all_64_cells_verified_obstacle_free": all(t["status"] == sk.VERIFIED for t in audit),
             "corner_tasks_verified_D0_and_S1": all(v == sk.VERIFIED for v in corners.values()),
             "nominal_skill_verified": tasks[nominal]["status"] == sk.VERIFIED,
@@ -220,7 +178,7 @@ def cmd_check(args) -> int:
     _write_json(out / "config.json", {"config_hash": chash, "config": cfg})
     counts = {st: sum(t["status"] == st for t in audit) for st in (sk.VERIFIED, sk.INFEASIBLE, sk.UNRESOLVED)}
     _write_json(out / "result.json", {
-        "stage": "G1", "gate_checks_passed": all(gate.values()), "gate": gate, "home_check": home_check(cfg),
+        "stage": "G1", "gate_checks_passed": all(gate.values()), "gate": gate, "home_check": sk.home_check(cfg),
         "config_hash": chash, "robot_profile_hash": rhash, "robot_profile_status": "TESTED_G1",
         "nominal_task": nominal, "nominal_action_hash": tasks[nominal]["action_hash"],
         "audit_counts": counts, "robot_extent_m": extent, "tasks": tasks,
@@ -237,6 +195,58 @@ def cmd_check(args) -> int:
     return 0 if all(gate.values()) else 1
 
 
+# ------------------------------------------------------------------ G2
+def run_family(job):
+    """Pool worker: plan, freeze and intervene on one G2 fixture."""
+    cfg, name, fx = job
+    return iv.reference_family(ge.make_robot(cfg), cfg, name, fx)
+
+
+def cmd_intervene(args) -> int:
+    cfg = cf.load_config(args.config)
+    fixtures = cf.validate_fixtures(json.loads(Path(args.fixtures).read_text())["fixtures"])
+    g2 = {k: fx for k, fx in fixtures.items() if fx["stage"] == "G2"}
+    out = Path(args.out)
+    out.mkdir(parents=True, exist_ok=True)
+    robot, chash = ge.make_robot(cfg), cf.config_hash(cfg)
+    with Pool(len(g2)) as pool:
+        fams = {f["name"]: f for f in pool.imap_unordered(run_family, [(cfg, k, fx) for k, fx in g2.items()])}
+    families, gates, tasks, scenes, arrays = {}, {}, {}, {}, {}
+    for name in sorted(fams):
+        f = fams[name]
+        families[name] = iv.family_summary(f, cfg)
+        gates[name] = iv.family_gates(families[name], g2[name]["blockers"])
+        if f["frozen"] is not None:              # replay-compatible: <name>__q etc. + scenes[name]
+            tasks[name] = {"action_hash": f["frozen"].action_hash}
+            scenes[name] = sc.scene_to_dict(f["scene"])
+            arrays.update({f"{name}__{k}": v for k, v in f["frozen"].arrays.items()})
+        for s in f["snaps"]:
+            scenes[f"{name}/{s.variant}"] = sc.scene_to_dict(s.scene)
+            Image.fromarray(viz.render_observation(s.scene, cfg["render"]["image_px"])[0]).save(
+                out / f"obs_{name}_{s.variant}.png")             # clean learner observation, no overlays
+    ifig.g2_figures(out, robot, cfg, fams)
+    ok = all(g and all(g.values()) for g in gates.values())
+    _write_json(out / "config.json", {"config_hash": chash, "config": cfg})
+    _write_json(out / "scenes.json", scenes)
+    np.savez_compressed(out / "arrays.npz", **arrays)
+    _write_json(out / "result.json", {
+        "stage": "G2", "gate_checks_passed": ok, "gates": gates, "families": families, "tasks": tasks,
+        "config_hash": chash, "robot_profile_hash": cf.robot_profile_hash(cfg),
+        "verification_scope": "FIXED_ACTION_KINEMATIC_REPLAY (privileged diagnostic edits; no corrective motion)",
+        "simulation_replay_status": "NOT_RUN", "physical_execution_status": "NOT_RUN"})
+    with open(out / "metrics.csv", "w", newline="") as fh:
+        w = csv.writer(fh)
+        w.writerow(["family", "variant", "parent", "edit", "F_fixed", "whole_scene_replay", "Delta_I", "c", "oracle_evals"])
+        w.writerows([[n, x["variant"], x["parent"], x["edit"] and f"{x['edit']['kind']} {x['edit']['obj_id']}",
+                      x["F_fixed"], x["whole_scene_replay"], x.get("Delta_I"),
+                      " ".join(f"{i}={c['c']}" for i, c in x["contributions"].items()), x["oracle_evals"]]
+                     for n, fam in families.items() for x in fam["nodes"]])
+    _write_manifest(out, {"planner_base": cfg["planner2d"]["seed"], "per_query": "crc32(task/connector)"}, chash,
+                    {"families": {n: f["frozen"] for n, f in families.items()}})
+    print(json.dumps({"out": str(out), "gates": gates}))
+    return 0 if ok else 1
+
+
 def traj_extent(robot, done) -> list[float]:
     """Bounding box of every body over every recorded waypoint and figure sample."""
     boxes = [viz.robot_extent(robot, q, g) for _, res, _ in done.values() if res.traj is not None
@@ -249,9 +259,9 @@ def traj_extent(robot, done) -> list[float]:
 def cmd_replay(args) -> int:
     """Re-certify every stored trajectory from the run's own files and hashes."""
     run = Path(args.run)
-    cfg = sc.validate_config(json.loads((run / "config.json").read_text())["config"])
+    cfg = cf.validate_config(json.loads((run / "config.json").read_text())["config"])
     scenes, result = json.loads((run / "scenes.json").read_text()), json.loads((run / "result.json").read_text())
-    robot, rhash = ge.make_robot(cfg), sc.robot_profile_hash(cfg)
+    robot, rhash = ge.make_robot(cfg), cf.robot_profile_hash(cfg)
     delta, eps, evals = cfg["suite"]["margin_m"], cfg["geometry"]["numeric_margin_band_m"], cfg["geometry"]["certify_max_evals"]
     data, report = np.load(run / "arrays.npz", allow_pickle=False), {}
     for tid in sorted({k.split("__")[0] for k in data.files}):
@@ -285,7 +295,12 @@ def main(argv=None) -> int:
     q.add_argument("--workers", type=int, default=16)
     q.add_argument("--no-figures", action="store_true", help="re-certification run: skip the G1 figure set")
     q.set_defaults(func=cmd_check)
-    q = sub.add_parser("replay", help="G1: independently re-certify a run's stored trajectories")
+    q = sub.add_parser("intervene", help="G2: frozen reference actions, diagnostic interventions, attribution")
+    q.add_argument("--config", default="config.toml")
+    q.add_argument("--fixtures", default="fixtures.json")
+    q.add_argument("--out", required=True)
+    q.set_defaults(func=cmd_intervene)
+    q = sub.add_parser("replay", help="G1/G2: independently re-certify a run's stored trajectories")
     q.add_argument("--run", required=True)
     q.add_argument("--report", help="where to write the replay record (default: <run>/replay.json)")
     q.set_defaults(func=cmd_replay)

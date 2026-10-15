@@ -9,6 +9,7 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
+import config as cf  # noqa: E402
 import geometry as ge  # noqa: E402
 import motion as mo  # noqa: E402
 import planner as pn  # noqa: E402
@@ -18,7 +19,7 @@ import skill as sk  # noqa: E402
 
 @pytest.fixture(scope="module")
 def cfg():
-    return sc.load_config(ROOT / "config.toml")
+    return cf.load_config(ROOT / "config.toml")
 
 
 @pytest.fixture(scope="module")
@@ -187,7 +188,7 @@ def test_attachment_continuity(robot, corner_skill):
 def test_skill_is_deterministic(cfg, robot, corner_skill):
     s, res = corner_skill
     again = sk.plan_skill(robot, s, "t0", 7, cfg, "test/corner")
-    h = lambda r: mo.trajectory_hash(r.traj.arrays(), "t0", sc.scene_hash(s), sc.robot_profile_hash(cfg))  # noqa: E731
+    h = lambda r: mo.trajectory_hash(r.traj.arrays(), "t0", sc.scene_hash(s), cf.robot_profile_hash(cfg))  # noqa: E731
     assert h(again) == h(res)
 
 
@@ -295,5 +296,5 @@ def test_rrt_connect_matches_accepted_g1_planner(cfg, robot):
     pl = pn.plan(ck, np.array([0.6, 0.0, 0.0]), np.array([-0.6, 0.0, 0.0]), robot.open_gap,
                  cfg["planner2d"], 4000, "golden")
     assert pl.reason == "RRT_JOINT"
-    assert sc.stable_hash([np.asarray(q).tolist() for q in pl.path]) == \
+    assert cf.stable_hash([np.asarray(q).tolist() for q in pl.path]) == \
         "sha256:4c86c08046d5cc72801ddc52c1994f616352363c3f2d1534471974677291c594"

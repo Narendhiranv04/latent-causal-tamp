@@ -19,7 +19,8 @@ pushed to `main` of `github.com/Narendhiranv04/latent-causal-tamp`.
 | G0 | scene, records, visual foundations | implemented; report `responses-phases/0001_G0_completion.md` |
 | G1 | 3R kinematics, collision bodies, certified six-phase skill, 64-cell audit | implemented; report `responses-phases/0003_G1_completion.md` |
 | G1 hardening | sound IK-tracking labels, replay record checks, planner stop provenance, G2 reference policy | report `responses-phases/0004_G1_hardening.md` |
-| G2–G10 | see Guide v1.6 §5 | not started |
+| G2 | frozen reference actions (D1, D2), privileged one-edit interventions, per-object fixed-action oracle | implemented; report `responses-phases/0005_G2_completion.md` |
+| G3–G10 | see Guide v1.6 §5 | not started |
 
 The 2D robot profile was tested at G1 (`robot_profile_hash` in `runs/g1_robot/result.json`);
 robot motion claims are kinematic only (`PLANAR_ARM_KINEMATIC_SKILL`), never dynamic or hardware.
@@ -29,14 +30,17 @@ robot motion claims are kinematic only (`PLANAR_ARM_KINEMATIC_SKILL`), never dyn
 | File | Responsibility |
 |---|---|
 | `config.toml` | 2D suite values; unknown/missing keys fail |
+| `config.py` | config schema/validation, canonical hashes, fixture reference policy (split from `scene.py`) |
 | `fixtures.json` | reproducible cases: root/variant IDs, seeds, lineage |
-| `scene.py` | config validation, lattice, scene state, candidate maps, snapshots, hashes |
+| `scene.py` | lattice, scene state, candidate maps, snapshots, scene hash |
 | `geometry.py` | 3R FK/IK, collision bodies (links, housings, palm, rail, fingers), exact 2D distances, conservative interval certifier |
 | `motion.py` | recorded trajectories and hashes, IK-tracked lines, certified chains, replay, path sampling |
 | `planner.py` | certified connectors: direct, guide line, link-0 sweep certificate, seeded RRT-Connect (joint or held-object pose space) |
 | `skill.py` | six-phase side-grasp skill (pick/place screening, connectors) and its JSON summary |
 | `viz.py` | clean learner observation, drawing primitives (robot drawn from `geometry.bodies`), G0 overview |
 | `figures.py` | G1 task, audit and corner figures and GIFs composed from recorded results |
+| `interventions.py` | frozen action identity, privileged diagnostic edits and their audit, F_fixed / c_i / d_I / Delta_I, families |
+| `intervention_figures.py` | G2 lineage, attribution and fixed-action replay figures and GIFs |
 | `diagnostics.py` | figures that explain verification verdicts (rejections, certificates, budgets, IK tracking) |
 | `run.py` | the sole command dispatcher |
 | `tests/` | one test file per stage component |
@@ -54,6 +58,9 @@ From G2 on every fixture must declare `reference_policy` and `benchmark_role`
   blocked variants then relocate existing IDs into the frozen sweep.
 - `SPARSE_SEEDED_REFERENCE` / `BOOTSTRAP_ONLY`: plan sparse, fill cells clear of the
   sweep, re-verify. Development bootstrap only; never a primary benchmark claim.
+- `FINAL_DEV_SCENE_PLANNED` / `DEVELOPMENT_ONLY`: an explicitly sparse development scene
+  (< 30 obstacles, e.g. D1, D2) whose reference is planned with its final background
+  present. Never a primary claim; dense primary roots must hold 30-40 obstacles.
 
 Canonical planning budgets are node/evaluation budgets; the wall-time limit is a
 safety cap and any result it affects is flagged `wall_clock_dependent`.
@@ -72,6 +79,7 @@ python -m pytest tests -q
 python run.py scene --config config.toml --case G0_ILLUSTRATIVE --out runs/g0_scene
 python run.py check --config config.toml --out runs/g1_robot   # ~1.5 min with 24 workers
 python run.py replay --run runs/g1_robot                      # re-certify stored trajectories
+python run.py intervene --out runs/g2_interventions           # ~2.5 min: D1/D2 frozen actions + interventions
 ```
 
 Each run writes `config.json`, `scene.json`, `result.json`, `overview.png`,

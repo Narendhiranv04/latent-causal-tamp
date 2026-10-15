@@ -238,15 +238,21 @@ class Checker:
 
     EXACT_BELOW_M = 0.05  # self pairs farther than this (bounding circles) report a lower bound
 
-    def __init__(self, robot: Robot, world: World, delta: float, eps: float, held=None, contact=None):
+    def __init__(self, robot: Robot, world: World, delta: float, eps: float, held=None, contact=None,
+                 self_pairs: bool = True):
+        """self_pairs=False keeps only pairs with a world disc (the per-object oracle
+        of interventions); robot-robot pairs and support containment are then the
+        frozen action's own, already certified, business."""
         self.robot, self.world, self.held, self.delta, self.eps = robot, world, held, delta, eps
+        self.n_evals = 0                       # distance evaluations (verifier calls) so far
         self.names = list(ROBOT_BODIES) + (["held"] if held else [])
         idx = {b: i for i, b in enumerate(self.names)}
         rows = [(b, oid, b in FINGERS and oid == contact) for b in self.names for oid in world.ids]
         self.pairs = [(a, b) for i, a in enumerate(self.names) for b in self.names[i + 1:]
-                      if frozenset((a, b)) not in robot.excluded]
+                      if self_pairs and frozenset((a, b)) not in robot.excluded]
         rows += [(a, b, "held" in (a, b) and bool({a, b} & set(FINGERS))) for a, b in self.pairs]
-        if held:
+        self.has_support = bool(held) and self_pairs
+        if self.has_support:
             rows.append(("held", "support", None))
         self.labels = [f"{a}|{b}" for a, b, _ in rows]
         margin = [0.0 if c is None else (None if c else delta) for _, _, c in rows]
@@ -276,6 +282,7 @@ class Checker:
 
     def distances(self, q, gap: float) -> np.ndarray:
         """Signed distance (or a conservative lower bound far from contact) per entry."""
+        self.n_evals += 1
         b = bodies(self.robot, q, gap, self.held)
         w = self.world
         out = [points_to_core(w.xy, b[n][0]) - w.radius - b[n][1] for n in self.names]
@@ -290,7 +297,7 @@ class Checker:
             self_d.append(bound if bound > self.EXACT_BELOW_M
                           else core_distance(b[a][0], b[c][0]) - b[a][1] - b[c][1])
         out.append(self_d)
-        if self.held:
+        if self.has_support:
             (x, y), r = b["held"][0][0], b["held"][1]
             out.append([min(x - r, w.support[0] - x - r, y - r, w.support[1] - y - r)])
         return np.concatenate(out)

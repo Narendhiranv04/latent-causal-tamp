@@ -16,7 +16,7 @@ from dataclasses import dataclass, field
 import numpy as np
 
 import geometry as ge
-from scene import stable_hash
+from config import stable_hash
 
 # phase -> (where the target is, may the fingers touch it)
 CONTEXT = {"pregrasp": ("start", False), "approach": ("start", False),
@@ -221,3 +221,78 @@ def target_xy(robot, arrays: dict, phase: str, q, start_xy) -> np.ndarray:
     if ctx == "held":
         return ge.tool_point(robot, q, arrays["held_local"])
     return np.asarray(arrays["place_xy"] if ctx == "placed" else start_xy, float)
+
+
+# ------------------------------------------------------------------ per-object fixed-action oracle
+VALID, INVALID, UNRESOLVED = "VALID", "INVALID", "UNRESOLVED"   # three-valued factor labels
+
+
+@dataclass
+class ObjectCheck:
+    """Fixed-action compatibility y^a of one non-target object at one pose."""
+    obj_id: str
+    status: str                       # VALID / INVALID / UNRESOLVED over the whole action
+    phase_status: dict                # phase -> VALID / INVALID / UNRESOLVED
+    min_by_phase: dict                # phase -> sampled min signed clearance [m] (magnitude, not proof)
+    first: dict | None = None         # first definite violation: kind, body, phase, segment, s, distance
+    evals: int = 0
+
+
+def _band(d: float, delta: float, eps: float) -> str:
+    return INVALID if d < delta - eps else (UNRESOLVED if d < delta + eps else VALID)
+
+
+def object_check(robot, arrays: dict, target, obj, support, delta: float, eps: float, max_evals: int) -> ObjectCheck:
+    """Replay the recorded action against one object (Methodology §3 y^a_i).
+
+    target = (id, resting xy, r); obj = (id, xy, r). Each stored joint-linear segment
+    is certified with a checker whose world is this object alone (all robot bodies;
+    the carried target during carry, under the recorded attachment). The resting
+    target (start phases) and placed target (placed phases) are exact static disc
+    pairs. A definite violation anywhere gives INVALID; otherwise any gray band or
+    budget stop gives UNRESOLVED; VALID needs every interval certified clear.
+    min_by_phase is the minimum over stored waypoints (a diagnostic magnitude).
+    """
+    world = ge.World((obj[0],), np.array([obj[1]], float), np.array([obj[2]], float), support)
+    plain = ge.Checker(robot, world, delta, eps, self_pairs=False)
+    held = ge.Checker(robot, world, delta, eps, (target[0], target[2], tuple(arrays["held_local"])),
+                      self_pairs=False)
+    rest = {"start": np.asarray(target[1]), "placed": np.asarray(arrays["place_xy"])}
+    q, gap = arrays["q"], arrays["gap"]
+    phase_status, mins, first, cache = {}, {}, None, {}
+
+    def at(k, ck):                                        # waypoint distances, evaluated once per context
+        if (k, id(ck)) not in cache:
+            cache[(k, id(ck))] = ck.distances(q[k], gap[k])
+        return cache[(k, id(ck))]
+
+    for i, p in enumerate(str(x) for x in arrays["phase"]):
+        ctx = CONTEXT[p][0]
+        ck = held if ctx == "held" else plain
+        found = []
+        if ctx in rest:                                   # target resting / placed: static disc pair
+            d = float(np.linalg.norm(np.asarray(obj[1]) - rest[ctx]) - obj[2] - target[2])
+            found.append((_band(d, delta, eps), d, 0.0, "target", "RESTING_TARGET" if ctx == "start"
+                          else "PLACED_TARGET"))
+        ends = (at(i, ck), at(i + 1, ck))
+        ds = [float(np.min(e)) for e in ends]
+        v = ge.certify(ck, q[i], q[i + 1], gap[i], gap[i + 1], max_evals, ends)
+        body = (v.pair or "|").split("|")[0]
+        found.append(({ge.CLEAR: VALID, ge.COLLISION: INVALID}.get(v.status, UNRESOLVED), v.distance, v.s,
+                       body, "CARRIED_TARGET" if body == "held" else "ROBOT_BODY"))
+        status = _conjoin(f[0] for f in found)
+        phase_status[p] = _conjoin([phase_status.get(p, VALID), status])
+        mins[p] = min([mins.get(p, np.inf), min(ds)] + [f[1] for f in found if f[3] == "target"])
+        hit = next((f for f in found if f[0] == INVALID), None)
+        if first is None and hit:
+            first = {"kind": hit[4], "body": hit[3], "phase": p, "segment": i, "s": hit[2], "distance": hit[1]}
+    return ObjectCheck(obj[0], _conjoin(phase_status.values()), phase_status, mins, first,
+                       plain.n_evals + held.n_evals)
+
+
+def _conjoin(statuses) -> str:
+    """Three-valued conjunction: any INVALID dominates, all VALID is VALID, else UNRESOLVED."""
+    statuses = list(statuses)
+    if INVALID in statuses:
+        return INVALID
+    return VALID if all(s == VALID for s in statuses) else UNRESOLVED

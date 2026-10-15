@@ -28,6 +28,7 @@ class Plan:
     tree_xy: np.ndarray | None = None  # tree vertices as TCP (joint space) or object (pose space) xy
     direct: ge.Verdict | None = None
     ends: tuple | None = None        # (qa, qb) of the requested connection
+    evals: int = 0                   # distance evaluations spent (verifier calls)
     wall_clock_cut: bool = False     # the wall-time safety cap ended search or shortcutting:
                                      # the outcome may differ under another machine load
 
@@ -215,10 +216,10 @@ def plan(checker, qa, qb, gap: float, pcfg: dict, max_evals: int, key: str, rrt:
     max_jump) is given for a same-branch carry. Search edges get their own small
     evaluation budget (an edge that does not certify cheaply is discarded; CLEAR is
     sound at any budget)."""
-    t0 = time.time()
+    t0, e0 = time.time(), checker.n_evals
     qa, qb = np.asarray(qa, float), np.asarray(qb, float)
     out = lambda st, path, reason, n=0, tree=None: Plan(st, path, n, time.time() - t0, reason,  # noqa: E731
-                                                        tree, direct, (qa, qb))
+                                                        tree, direct, (qa, qb), checker.n_evals - e0)
     direct = ge.certify(checker, qa, qb, gap, gap, max_evals)
     if direct.status == ge.CLEAR:
         return out(ge.CLEAR, [qa, qb], "DIRECT", 2)

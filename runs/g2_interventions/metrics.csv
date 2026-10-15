@@ -1,0 +1,16 @@
+family,variant,parent,edit,F_fixed,whole_scene_replay,Delta_I,c,oracle_evals
+G2_D1,ref,,,VALID,VALID,,o00=0 o01=0 o02=0 o03=0,1038
+G2_D1,block_a,ref,RELOCATE o02,INVALID,INVALID,-1,o00=0 o01=0 o02=1 o03=0,951
+G2_D1,clear_a,block_a,RELOCATE o02,VALID,VALID,1,o00=0 o01=0 o02=0 o03=0,983
+G2_D1,remove_a,block_a,REMOVE o02,VALID,VALID,1,o00=0 o01=0 o03=0,710
+G2_D1,unrelated_ref,ref,RELOCATE o00,VALID,VALID,0,o00=0 o01=0 o02=0 o03=0,1038
+G2_D1,unrelated_block_a,block_a,RELOCATE o00,INVALID,INVALID,0,o00=0 o01=0 o02=1 o03=0,951
+G2_D2,ref,,,VALID,VALID,,o00=0 o01=0 o02=0 o03=0 o04=0 o05=0,268
+G2_D2,block_a,ref,RELOCATE o05,INVALID,INVALID,-1,o00=0 o01=0 o02=0 o03=0 o04=0 o05=1,263
+G2_D2,block_ab,block_a,RELOCATE o02,INVALID,INVALID,0,o00=0 o01=0 o02=1 o03=0 o04=0 o05=1,255
+G2_D2,clear_a,block_ab,RELOCATE o05,INVALID,INVALID,0,o00=0 o01=0 o02=1 o03=0 o04=0 o05=0,254
+G2_D2,clear_ab,clear_a,RELOCATE o02,VALID,VALID,1,o00=0 o01=0 o02=0 o03=0 o04=0 o05=0,270
+G2_D2,remove_a,block_ab,REMOVE o05,INVALID,INVALID,0,o00=0 o01=0 o02=1 o03=0 o04=0,207
+G2_D2,remove_b,block_ab,REMOVE o02,INVALID,INVALID,0,o00=0 o01=0 o03=0 o04=0 o05=1,218
+G2_D2,unrelated_ref,ref,RELOCATE o00,VALID,VALID,0,o00=0 o01=0 o02=0 o03=0 o04=0 o05=0,268
+G2_D2,unrelated_block_ab,block_ab,RELOCATE o00,INVALID,INVALID,0,o00=0 o01=0 o02=1 o03=0 o04=0 o05=1,255

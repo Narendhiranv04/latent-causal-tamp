@@ -58,8 +58,10 @@ certify_max_evals = 4000             # distance evaluations per segment before U
 [planner2d]
 algorithm = "RRT_CONNECT_WITH_FULL_BODY_CALLBACK"   # every tree edge certified (geometry.certify)
 seed = 41
-max_nodes = 20000
-max_wall_seconds = 30.0
+max_nodes = 4000                     # G2 calibration (report 0005): canonical, deterministic budget;
+                                     # ~2.9x the largest successful G1/G2 search (1387 nodes, ~90/s)
+max_wall_seconds = 300.0             # safety cap only (~6x the node budget's time); results it touches
+                                     # are flagged wall_clock_dependent and never canonical
 extend_step_rad = 0.25
 shortcut_rounds = 150
 pose_step_m = 0.06                   # carry search in held-object pose space: step [m]
