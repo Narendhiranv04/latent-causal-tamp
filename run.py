@@ -1,11 +1,12 @@
 """Sole command dispatcher (Guide v1.6 §1). Never imported by other modules.
 
-Active commands: scene (G0), check and replay (G1), intervene (G2). Later commands arrive with their stage.
+Active commands: scene (G0), check and replay (G1), intervene (G2), solve (G3). Later commands arrive with their stage.
 
     python run.py scene --config config.toml --case G0_ILLUSTRATIVE --out runs/g0_scene
     python run.py check --config config.toml --out runs/g1_robot
     python run.py replay --run runs/g1_robot
     python run.py intervene --config config.toml --out runs/g2_interventions
+    python run.py solve --config config.toml --out runs/g3_repairs
 """
 from __future__ import annotations
 
@@ -24,8 +25,10 @@ from pathlib import Path
 import matplotlib
 import numpy as np
 import PIL
+import scipy
 from PIL import Image
 
+import assignment_figures as afig
 import config as cf
 import diagnostics as dg
 import figures as fig
@@ -35,6 +38,7 @@ import interventions as iv
 import motion as mo
 import scene as sc
 import skill as sk
+import verify as vf
 import viz
 
 
@@ -247,6 +251,50 @@ def cmd_intervene(args) -> int:
     return 0 if ok else 1
 
 
+# ------------------------------------------------------------------ G3
+def run_repair(job):
+    """Pool worker: A0 terminal problem, executable repair search and replay for one G3 fixture."""
+    cfg, name, fx = job
+    try:
+        return name, vf.run_fixture(ge.make_robot(cfg), cfg, name, fx)
+    except iv.FixtureUnavailable as e:
+        return name, {"name": name, "unavailable": f"CONSTRUCTION_UNAVAILABLE: {e}"}
+
+
+def cmd_solve(args) -> int:
+    cfg = cf.load_config(args.config)
+    fixtures = cf.validate_fixtures(json.loads(Path(args.fixtures).read_text())["fixtures"])
+    g3 = {k: fx for k, fx in fixtures.items() if fx["stage"] == "G3"}
+    out = Path(args.out)
+    out.mkdir(parents=True, exist_ok=True)
+    robot, chash, rhash = ge.make_robot(cfg), cf.config_hash(cfg), cf.robot_profile_hash(cfg)
+    with Pool(len(g3)) as pool:
+        res = dict(pool.imap_unordered(run_repair, [(cfg, k, fx) for k, fx in g3.items()]))
+    records, tasks, scenes, arrays = vf.archive(res, rhash)
+    afig.g3_figures(out, robot, cfg, res)
+    rows = afig.summary_rows(res)
+    ok = all(r["replay"]["replay_passed"] for r in res.values() if r.get("replay"))
+    _write_json(out / "config.json", {"config_hash": chash, "config": cfg})
+    _write_json(out / "scenes.json", scenes)
+    np.savez_compressed(out / "arrays.npz", **arrays)
+    _write_json(out / "result.json", {
+        "stage": "G3", "gate_checks_passed": ok, "fixtures": records, "tasks": tasks, "summary": rows,
+        "config_hash": chash, "robot_profile_hash": rhash,
+        "solver": {"matching": "scipy.optimize.linear_sum_assignment", "k_best": "Murty partitioning (solve.kbest)",
+                   "scipy": scipy.__version__},
+        "verification_scope": "KINEMATIC_3R_RELOCATIONS_AND_FIXED_GAMMA0_REPLAY (no dynamics, no simulation)",
+        "simulation_replay_status": "NOT_RUN", "physical_execution_status": "NOT_RUN"})
+    with open(out / "metrics.csv", "w", newline="") as fh:
+        w = csv.DictWriter(fh, ["fixture", "domain", "|D|", "LB", "best verified", "minimality", "status", "stop",
+                                "plans", "attempts", "replay"])
+        w.writeheader()
+        w.writerows(rows)
+    _write_manifest(out, {"planner_base": cfg["planner2d"]["seed"], "per_query": "crc32(episode key)"}, chash,
+                    {"frozen_actions": {n: r["frozen"].action_hash for n, r in res.items() if "frozen" in r}})
+    print(json.dumps({"out": str(out), "replay_passed": ok, "summary": rows}))
+    return 0 if ok else 1
+
+
 def traj_extent(robot, done) -> list[float]:
     """Bounding box of every body over every recorded waypoint and figure sample."""
     boxes = [viz.robot_extent(robot, q, g) for _, res, _ in done.values() if res.traj is not None
@@ -259,22 +307,28 @@ def traj_extent(robot, done) -> list[float]:
 def cmd_replay(args) -> int:
     """Re-certify every stored trajectory from the run's own files and hashes."""
     run = Path(args.run)
-    cfg = cf.validate_config(json.loads((run / "config.json").read_text())["config"])
+    archived = json.loads((run / "config.json").read_text())["config"]
+    filled = sorted(set(cf.SCHEMA) - set(archived))      # sections introduced after this run; unused by replay
+    current = cf.load_config(args.config)
+    cfg = cf.validate_config({**{s: current[s] for s in filled}, **archived})
     scenes, result = json.loads((run / "scenes.json").read_text()), json.loads((run / "result.json").read_text())
     robot, rhash = ge.make_robot(cfg), cf.robot_profile_hash(cfg)
     delta, eps, evals = cfg["suite"]["margin_m"], cfg["geometry"]["numeric_margin_band_m"], cfg["geometry"]["certify_max_evals"]
     data, report = np.load(run / "arrays.npz", allow_pickle=False), {}
     for tid in sorted({k.split("__")[0] for k in data.files}):
         arr = {k.split("__")[1]: data[k] for k in data.files if k.startswith(tid + "__")}
-        s = sc.scene_from_dict(scenes[tid])
-        verdicts = mo.certify_trajectory(robot, s, "t0", arr, delta, eps, evals)
-        h = mo.trajectory_hash(arr, "t0", sc.scene_hash(s), rhash)
+        task = result["tasks"][tid]
+        s, target = sc.scene_from_dict(scenes[tid]), task.get("target", "t0")
+        verdicts = mo.certify_trajectory(robot, s, target, arr, delta, eps, evals)
+        bound = sc.scene_from_dict(scenes[task.get("hash_scene", tid)])     # G3: gamma_0 keeps its reference identity
+        h = mo.trajectory_hash(arr, target, sc.scene_hash(bound), rhash)
         report[tid] = {"segments": len(verdicts), "all_certified": all(v.status == ge.CLEAR for v in verdicts),
                        "hash_matches_record": h == result["tasks"][tid]["action_hash"]}
     ok = all(r["all_certified"] and r["hash_matches_record"] for r in report.values())
     out = Path(args.report) if args.report else run / "replay.json"
     out.parent.mkdir(parents=True, exist_ok=True)
-    _write_json(out, {"replay_passed": ok, "run": str(run), "trajectories": report})
+    _write_json(out, {"replay_passed": ok, "run": str(run), "config_sections_filled_from_current": filled,
+                      "trajectories": report})
     print(json.dumps({"replay_passed": ok, "trajectories": len(report)}))
     return 0 if ok else 1
 
@@ -300,9 +354,15 @@ def main(argv=None) -> int:
     q.add_argument("--fixtures", default="fixtures.json")
     q.add_argument("--out", required=True)
     q.set_defaults(func=cmd_intervene)
-    q = sub.add_parser("replay", help="G1/G2: independently re-certify a run's stored trajectories")
+    q = sub.add_parser("solve", help="G3: A0 assignment, executable move-once repair search, figures")
+    q.add_argument("--config", default="config.toml")
+    q.add_argument("--fixtures", default="fixtures.json")
+    q.add_argument("--out", required=True)
+    q.set_defaults(func=cmd_solve)
+    q = sub.add_parser("replay", help="G1-G3: independently re-certify a run's stored trajectories")
     q.add_argument("--run", required=True)
     q.add_argument("--report", help="where to write the replay record (default: <run>/replay.json)")
+    q.add_argument("--config", default="config.toml", help="only for config sections the run predates")
     q.set_defaults(func=cmd_replay)
     args = p.parse_args(argv)
     return args.func(args)

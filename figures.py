@@ -109,7 +109,11 @@ def write_gif(fig, draw, n: int, path, ms: int = 70) -> None:
     for k in range(n):
         draw(k)
         imgs.append(Image.fromarray(viz.figure_rgba(fig)[..., :3]))
-    pal = imgs[0].quantize(colors=128)
+    picks = [imgs[k] for k in sorted({0, n // 4, n // 2, 3 * n // 4, n - 1})]   # palette sees colours of every phase
+    sheet = Image.new("RGB", (picks[0].width, picks[0].height * len(picks)))
+    for k, im in enumerate(picks):
+        sheet.paste(im, (0, k * im.height))
+    pal = sheet.quantize(colors=128)
     frames = [im.quantize(palette=pal) for im in imgs]
     frames[0].save(path, save_all=True, append_images=frames[1:], duration=ms, loop=0, optimize=True)
     plt.close(fig)

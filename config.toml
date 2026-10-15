@@ -77,6 +77,12 @@ max_ik_jump_rad = 0.1                # larger joint jump between line waypoints 
 max_plan_failures = 4                # UNRESOLVED connector calls per skill before giving up
 max_direct_pairs = 64                # (pick, place) pairs tried with direct/guide connectors before RRT
 
+[repair2d]
+k_best = 12                          # A0 assignments tried, in nondecreasing moved-object count
+max_orders = 6                       # legal move orders tried per assignment
+max_relocations = 40                 # distinct relocation skills planned per repair search (budget)
+skill_plan_failures = 2              # UNRESOLVED connectors allowed per relocation skill in repair search
+
 # Rendering of the clean learner observation and the fixed overview axes.
 [render]
 image_px = 320                       # square top-down image over the support; 0.002 m/px

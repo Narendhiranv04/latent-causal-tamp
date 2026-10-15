@@ -35,6 +35,7 @@ SCHEMA = {
     "skill2d": {"approach_dirs": int, "approach_dist_m": float, "retreat_dist_m": float,
                 "line_step_m": float, "max_ik_jump_rad": float, "max_plan_failures": int,
                 "max_direct_pairs": int},
+    "repair2d": {"k_best": int, "max_orders": int, "max_relocations": int, "skill_plan_failures": int},
     "render": {"image_px": int, "overview_xlim_m": VEC2, "overview_ylim_m": VEC2},
 }
 
@@ -124,6 +125,7 @@ def _check_physics(cfg: dict) -> None:
         (min(cfg["geometry"]["certify_max_evals"], cfg["planner2d"]["max_nodes"],
              cfg["skill2d"]["approach_dirs"], cfg["skill2d"]["max_plan_failures"]) > 0
          and cfg["skill2d"]["line_step_m"] > 0, "budgets and steps must be > 0"),
+        (min(cfg["repair2d"].values()) > 0, "repair budgets must be > 0"),
         (r["image_px"] > 0, "image_px must be > 0"),
         (r["overview_xlim_m"][0] < r["overview_xlim_m"][1]
          and r["overview_ylim_m"][0] < r["overview_ylim_m"][1], "overview limits need lo < hi"),

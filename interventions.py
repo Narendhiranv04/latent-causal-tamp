@@ -214,12 +214,15 @@ def build_family(robot, cfg: dict, frozen: FrozenAction, ref_scene: Scene, n_blo
       moved ID: a currently non-blocking obstacle nearest to that cell (then lowest ID);
       correction: the nearest vacant cell that is VALID for it, other than its
         original reference cell (an alternative admissible endpoint, not an undo)."""
-    delta = cfg["suite"]["margin_m"]
-    snap = lambda name, parent, edit, scene: evaluate(robot, cfg, frozen, Snapshot(name, parent.variant, edit,  # noqa: E731
-                                                       apply_edit(scene, edit, name, delta)))
     ref = evaluate(robot, cfg, frozen, Snapshot("ref", None, None, ref_scene))
     if ref.F != mo.VALID:
         raise FixtureUnavailable("the frozen action is not clear in its own reference scene")
+    out = add_blockers(robot, cfg, frozen, ref, n_blockers)
+    return _corrections(robot, cfg, frozen, ref, out, [s.edit.obj_id for s in out[1:]])
+
+
+def add_blockers(robot, cfg: dict, frozen: FrozenAction, ref: Snapshot, n_blockers: int) -> list:
+    """ref plus one blocking relocation per edit (the intrusion rule of build_family)."""
     out, cur, blockers, phases = [ref], ref, [], set()
     for k in range(n_blockers):
         cells = {c: v for c, v in scan_cells(robot, cfg, frozen, cur.scene).items()
@@ -231,26 +234,39 @@ def build_family(robot, cfg: dict, frozen: FrozenAction, ref_scene: Scene, n_blo
                    and o.id not in blockers]
         o = min(movable, key=lambda o: (math.dist(o.xy_m, cur.scene.lattice.center(dst)), o.id))
         name = "block_" + "".join("abcdefgh"[: k + 1])
-        cur = snap(name, cur, Edit("RELOCATE", o.id, o.cell, dst), cur.scene)
+        cur = _child(robot, cfg, frozen, cur, name, Edit("RELOCATE", o.id, o.cell, dst))
         out.append(cur)
         blockers.append(o.id)
         phases.add(cells[dst].first["phase"])
-    full = cur
+    return out
+
+
+def _child(robot, cfg, frozen, parent: Snapshot, name: str, edit: Edit) -> Snapshot:
+    """Evaluate the one-edit child of a snapshot."""
+    child = apply_edit(parent.scene, edit, name, cfg["suite"]["margin_m"])
+    return evaluate(robot, cfg, frozen, Snapshot(name, parent.variant, edit, child))
+
+
+def _corrections(robot, cfg, frozen, ref, out, blockers) -> list:
+    """Diagnostic corrections one per edit, removal twins and unrelated edits."""
+    full = cur = out[-1]
     for k, oid in enumerate(blockers):                       # diagnostic corrections, one per edit
         scan = scan_cells(robot, cfg, frozen, cur.scene)
         here, home = cur.scene.get(oid), ref.scene.get(oid).cell
         dst = min((c for c, v in scan.items() if v.status == mo.VALID and c != home),
                   key=lambda c: (math.dist(cur.scene.lattice.center(c), here.xy_m), c))
-        cur = snap("clear_" + "".join("abcdefgh"[: k + 1]), cur, Edit("RELOCATE", oid, here.cell, dst), cur.scene)
+        cur = _child(robot, cfg, frozen, cur, "clear_" + "".join("abcdefgh"[: k + 1]),
+                     Edit("RELOCATE", oid, here.cell, dst))
         out.append(cur)
     for k, oid in enumerate(blockers):                       # removal twins of the fully blocked snapshot
-        out.append(snap(f"remove_{'abcdefgh'[k]}", full, Edit("REMOVE", oid, full.scene.get(oid).cell), full.scene))
+        out.append(_child(robot, cfg, frozen, full, f"remove_{'abcdefgh'[k]}",
+                          Edit("REMOVE", oid, full.scene.get(oid).cell)))
     for parent in (ref, full):                               # unrelated edits leave the outcome unchanged
         scan = scan_cells(robot, cfg, frozen, parent.scene)
         o = min((o for o in parent.scene.objects if o.kind == "obstacle" and o.id not in blockers), key=lambda o: o.id)
         dst = min((c for c, v in scan.items() if v.status == mo.VALID),
                   key=lambda c: (math.dist(parent.scene.lattice.center(c), o.xy_m), c))
-        out.append(snap(f"unrelated_{parent.variant}", parent, Edit("RELOCATE", o.id, o.cell, dst), parent.scene))
+        out.append(_child(robot, cfg, frozen, parent, f"unrelated_{parent.variant}", Edit("RELOCATE", o.id, o.cell, dst)))
     return out
 
 
@@ -312,3 +328,18 @@ def family_gates(summary: dict, blockers: int) -> dict:
         gates["partial_correction_keeps_failure"] = (part["F_fixed"] == mo.INVALID and part["d_I"][ids[0]] == -1
                                                      and part["contributions"][ids[1]]["c"] == 1)
     return gates
+
+
+def load_archived(run_dir, family: str):
+    """(FrozenAction, {variant: Scene}) from a G2 run, read-only; identity re-verified."""
+    import json
+    from pathlib import Path
+    from scene import scene_from_dict
+    run = Path(run_dir)
+    res, scenes = json.loads((run / "result.json").read_text()), json.loads((run / "scenes.json").read_text())
+    data = np.load(run / "arrays.npz", allow_pickle=False)
+    f = res["families"][family]["frozen"]
+    frozen = FrozenAction("t0", {k.split("__")[1]: data[k] for k in data.files if k.startswith(family + "__")},
+                          f["reference_scene_hash"], f["robot_profile_hash"], f["action_hash"])
+    frozen.verify()
+    return frozen, {k.split("/")[1]: scene_from_dict(v) for k, v in scenes.items() if k.startswith(family + "/")}

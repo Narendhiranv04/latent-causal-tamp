@@ -1,0 +1,3975 @@
+{
+ "config_hash": "sha256:9af02e1f4cc76577b63275fdd7593fa83b7dc34eaa7344cfb790bba22618e28f",
+ "fixtures": {
+  "G3_D1": {
+   "cell_status": {
+    "INVALID": [
+     25,
+     26,
+     33,
+     34,
+     40,
+     41,
+     42,
+     44,
+     45,
+     48,
+     49,
+     51,
+     52,
+     53,
+     56,
+     57,
+     58,
+     59
+    ],
+    "UNRESOLVED": [],
+    "VALID_count": 45
+   },
+   "compare": [
+    {
+     "cost": 1,
+     "failed_relocation": null,
+     "final_F_fixed": "VALID",
+     "final_whole_replay": "VALID",
+     "label": "G2 diagnostic endpoint",
+     "moved_history": [
+      "o02"
+     ],
+     "order": [
+      [
+       "o02",
+       43
+      ]
+     ],
+     "rank": -1,
+     "reason": "ALL_RELOCATIONS_CONNECTOR_AND_GAMMA0_REPLAY_CERTIFIED",
+     "skill_status": [
+      "VERIFIED_FEASIBLE"
+     ],
+     "status": "EXECUTABLE_VERIFIED",
+     "wall_clock_dependent": false
+    },
+    {
+     "cost": 1,
+     "failed_relocation": null,
+     "final_F_fixed": "VALID",
+     "final_whole_replay": "VALID",
+     "label": "reference restoration (lemma witness)",
+     "moved_history": [
+      "o02"
+     ],
+     "order": [
+      [
+       "o02",
+       50
+      ]
+     ],
+     "rank": -1,
+     "reason": "ALL_RELOCATIONS_CONNECTOR_AND_GAMMA0_REPLAY_CERTIFIED",
+     "skill_status": [
+      "VERIFIED_FEASIBLE"
+     ],
+     "status": "EXECUTABLE_VERIFIED",
+     "wall_clock_dependent": false
+    }
+   ],
+   "forced": {
+    "attempts": [
+     {
+      "cost": 2,
+      "failed_relocation": 0,
+      "final_F_fixed": null,
+      "final_whole_replay": null,
+      "moved_history": [],
+      "order": [
+       [
+        "o02",
+        60
+       ],
+       [
+        "o03",
+        61
+       ]
+      ],
+      "rank": -2,
+      "reason": "o02->60: CERTIFIED_INFEASIBLE NO_PLACE_CANDIDATE",
+      "skill_status": [
+       "CERTIFIED_INFEASIBLE"
+      ],
+      "status": "UNRESOLVED",
+      "wall_clock_dependent": false
+     },
+     {
+      "cost": 2,
+      "failed_relocation": null,
+      "final_F_fixed": "VALID",
+      "final_whole_replay": "VALID",
+      "moved_history": [
+       "o03",
+       "o02"
+      ],
+      "order": [
+       [
+        "o03",
+        61
+       ],
+       [
+        "o02",
+        60
+       ]
+      ],
+      "rank": -2,
+      "reason": "ALL_RELOCATIONS_CONNECTOR_AND_GAMMA0_REPLAY_CERTIFIED",
+      "skill_status": [
+       "VERIFIED_FEASIBLE",
+       "VERIFIED_FEASIBLE"
+      ],
+      "status": "EXECUTABLE_VERIFIED",
+      "wall_clock_dependent": false
+     }
+    ],
+    "blocker": "o02",
+    "cell": 60,
+    "cost": 2,
+    "owner": "o03"
+   },
+   "frozen_action_hash": "sha256:487ec18878068e01501c6737f1c58ec4cd1b9e410560bd4d8f7f8c32c5784355",
+   "lineage": [
+    "archived G2_D1/block_a"
+   ],
+   "replay": {
+    "final_F_fixed": "VALID",
+    "moved_history": [
+     "o02"
+    ],
+    "moves": 1,
+    "replay_passed": true
+   },
+   "restoration": {
+    "assignment": {
+     "o02": 50
+    },
+    "direct_blockers": [
+     "o02"
+    ],
+    "moves": 1,
+    "terminal_valid": true
+   },
+   "restricted_domain": null,
+   "search": {
+    "attempts": [
+     {
+      "cost": 1,
+      "failed_relocation": null,
+      "final_F_fixed": "VALID",
+      "final_whole_replay": "VALID",
+      "moved_history": [
+       "o02"
+      ],
+      "order": [
+       [
+        "o02",
+        43
+       ]
+      ],
+      "rank": 0,
+      "reason": "ALL_RELOCATIONS_CONNECTOR_AND_GAMMA0_REPLAY_CERTIFIED",
+      "skill_status": [
+       "VERIFIED_FEASIBLE"
+      ],
+      "status": "EXECUTABLE_VERIFIED",
+      "wall_clock_dependent": false
+     }
+    ],
+    "lower_bound": 1,
+    "minimality": "MINIMUM_CERTIFIED",
+    "pruned_orders": 0,
+    "relocation_plans": 1,
+    "status": "EXECUTABLE_VERIFIED",
+    "stop_reason": "WITNESS_FOUND",
+    "upper_bound": 1,
+    "witness": {
+     "cost": 1,
+     "failed_relocation": null,
+     "final_F_fixed": "VALID",
+     "final_whole_replay": "VALID",
+     "moved_history": [
+      "o02"
+     ],
+     "order": [
+      [
+       "o02",
+       43
+      ]
+     ],
+     "rank": 0,
+     "reason": "ALL_RELOCATIONS_CONNECTOR_AND_GAMMA0_REPLAY_CERTIFIED",
+     "skill_status": [
+      "VERIFIED_FEASIBLE"
+     ],
+     "status": "EXECUTABLE_VERIFIED",
+     "wall_clock_dependent": false
+    }
+   },
+   "terminal": {
+    "ALL_SUPPORTED": {
+     "assignments": [
+      {
+       "cells": {
+        "o00": 3,
+        "o01": 13,
+        "o02": 43,
+        "o03": 60
+       },
+       "cost": 1,
+       "tie_break": 0.017678
+      },
+      {
+       "cells": {
+        "o00": 3,
+        "o01": 13,
+        "o02": 50,
+        "o03": 60
+       },
+       "cost": 1,
+       "tie_break": 0.017678
+      },
+      {
+       "cells": {
+        "o00": 3,
+        "o01": 13,
+        "o02": 35,
+        "o03": 60
+       },
+       "cost": 1,
+       "tie_break": 0.035355
+      },
+      {
+       "cells": {
+        "o00": 3,
+        "o01": 13,
+        "o02": 36,
+        "o03": 60
+       },
+       "cost": 1,
+       "tie_break": 0.039528
+      },
+      {
+       "cells": {
+        "o00": 3,
+        "o01": 13,
+        "o02": 61,
+        "o03": 60
+       },
+       "cost": 1,
+       "tie_break": 0.039528
+      },
+      {
+       "cells": {
+        "o00": 3,
+        "o01": 13,
+        "o02": 37,
+        "o03": 60
+       },
+       "cost": 1,
+       "tie_break": 0.05
+      },
+      {
+       "cells": {
+        "o00": 3,
+        "o01": 13,
+        "o02": 27,
+        "o03": 60
+       },
+       "cost": 1,
+       "tie_break": 0.053033
+      },
+      {
+       "cells": {
+        "o00": 3,
+        "o01": 13,
+        "o02": 54,
+        "o03": 60
+       },
+       "cost": 1,
+       "tie_break": 0.053033
+      },
+      {
+       "cells": {
+        "o00": 3,
+        "o01": 13,
+        "o02": 28,
+        "o03": 60
+       },
+       "cost": 1,
+       "tie_break": 0.055902
+      },
+      {
+       "cells": {
+        "o00": 3,
+        "o01": 13,
+        "o02": 46,
+        "o03": 60
+       },
+       "cost": 1,
+       "tie_break": 0.055902
+      },
+      {
+       "cells": {
+        "o00": 3,
+        "o01": 13,
+        "o02": 62,
+        "o03": 60
+       },
+       "cost": 1,
+       "tie_break": 0.055902
+      },
+      {
+       "cells": {
+        "o00": 3,
+        "o01": 13,
+        "o02": 29,
+        "o03": 60
+       },
+       "cost": 1,
+       "tie_break": 0.063738
+      }
+     ],
+     "cells": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+     ],
+     "direct_blockers": [
+      "o02"
+     ],
+     "hall": null,
+     "lower_bound": 1,
+     "objects": [
+      "o00",
+      "o01",
+      "o02",
+      "o03"
+     ]
+    }
+   }
+  },
+  "G3_D2": {
+   "cell_status": {
+    "INVALID": [
+     27,
+     34,
+     35,
+     36,
+     42,
+     43,
+     44,
+     45,
+     50,
+     51,
+     52,
+     53,
+     56,
+     57,
+     58,
+     59,
+     60
+    ],
+    "UNRESOLVED": [],
+    "VALID_count": 46
+   },
+   "compare": [
+    {
+     "cost": 2,
+     "failed_relocation": null,
+     "final_F_fixed": "VALID",
+     "final_whole_replay": "VALID",
+     "label": "G2 diagnostic endpoints",
+     "moved_history": [
+      "o02",
+      "o05"
+     ],
+     "order": [
+      [
+       "o02",
+       49
+      ],
+      [
+       "o05",
+       41
+      ]
+     ],
+     "rank": -1,
+     "reason": "ALL_RELOCATIONS_CONNECTOR_AND_GAMMA0_REPLAY_CERTIFIED",
+     "skill_status": [
+      "VERIFIED_FEASIBLE",
+      "VERIFIED_FEASIBLE"
+     ],
+     "status": "EXECUTABLE_VERIFIED",
+     "wall_clock_dependent": false
+    },
+    {
+     "cost": 2,
+     "failed_relocation": null,
+     "final_F_fixed": "VALID",
+     "final_whole_replay": "VALID",
+     "label": "G2 diagnostic endpoints",
+     "moved_history": [
+      "o05",
+      "o02"
+     ],
+     "order": [
+      [
+       "o05",
+       41
+      ],
+      [
+       "o02",
+       49
+      ]
+     ],
+     "rank": -1,
+     "reason": "ALL_RELOCATIONS_CONNECTOR_AND_GAMMA0_REPLAY_CERTIFIED",
+     "skill_status": [
+      "VERIFIED_FEASIBLE",
+      "VERIFIED_FEASIBLE"
+     ],
+     "status": "EXECUTABLE_VERIFIED",
+     "wall_clock_dependent": false
+    },
+    {
+     "cost": 2,
+     "failed_relocation": null,
+     "final_F_fixed": "VALID",
+     "final_whole_replay": "VALID",
+     "label": "reference restoration (lemma witness)",
+     "moved_history": [
+      "o02",
+      "o05"
+     ],
+     "order": [
+      [
+       "o02",
+       40
+      ],
+      [
+       "o05",
+       49
+      ]
+     ],
+     "rank": -1,
+     "reason": "ALL_RELOCATIONS_CONNECTOR_AND_GAMMA0_REPLAY_CERTIFIED",
+     "skill_status": [
+      "VERIFIED_FEASIBLE",
+      "VERIFIED_FEASIBLE"
+     ],
+     "status": "EXECUTABLE_VERIFIED",
+     "wall_clock_dependent": false
+    },
+    {
+     "cost": 2,
+     "failed_relocation": null,
+     "final_F_fixed": "VALID",
+     "final_whole_replay": "VALID",
+     "label": "reference restoration (lemma witness)",
+     "moved_history": [
+      "o05",
+      "o02"
+     ],
+     "order": [
+      [
+       "o05",
+       49
+      ],
+      [
+       "o02",
+       40
+      ]
+     ],
+     "rank": -1,
+     "reason": "ALL_RELOCATIONS_CONNECTOR_AND_GAMMA0_REPLAY_CERTIFIED",
+     "skill_status": [
+      "VERIFIED_FEASIBLE",
+      "VERIFIED_FEASIBLE"
+     ],
+     "status": "EXECUTABLE_VERIFIED",
+     "wall_clock_dependent": false
+    }
+   ],
+   "forced": {
+    "attempts": [
+     {
+      "cost": 3,
+      "failed_relocation": 0,
+      "final_F_fixed": null,
+      "final_whole_replay": null,
+      "moved_history": [],
+      "order": [
+       [
+        "o02",
+        61
+       ],
+       [
+        "o03",
+        62
+       ],
+       [
+        "o05",
+        49
+       ]
+      ],
+      "rank": -2,
+      "reason": "o02->61: CERTIFIED_INFEASIBLE NO_PLACE_CANDIDATE",
+      "skill_status": [
+       "CERTIFIED_INFEASIBLE"
+      ],
+      "status": "UNRESOLVED",
+      "wall_clock_dependent": false
+     },
+     {
+      "cost": 3,
+      "failed_relocation": null,
+      "final_F_fixed": "VALID",
+      "final_whole_replay": "VALID",
+      "moved_history": [
+       "o03",
+       "o02",
+       "o05"
+      ],
+      "order": [
+       [
+        "o03",
+        62
+       ],
+       [
+        "o02",
+        61
+       ],
+       [
+        "o05",
+        49
+       ]
+      ],
+      "rank": -2,
+      "reason": "ALL_RELOCATIONS_CONNECTOR_AND_GAMMA0_REPLAY_CERTIFIED",
+      "skill_status": [
+       "VERIFIED_FEASIBLE",
+       "VERIFIED_FEASIBLE",
+       "VERIFIED_FEASIBLE"
+      ],
+      "status": "EXECUTABLE_VERIFIED",
+      "wall_clock_dependent": false
+     },
+     {
+      "cost": 3,
+      "failed_relocation": null,
+      "final_F_fixed": "VALID",
+      "final_whole_replay": "VALID",
+      "moved_history": [
+       "o03",
+       "o05",
+       "o02"
+      ],
+      "order": [
+       [
+        "o03",
+        62
+       ],
+       [
+        "o05",
+        49
+       ],
+       [
+        "o02",
+        61
+       ]
+      ],
+      "rank": -2,
+      "reason": "ALL_RELOCATIONS_CONNECTOR_AND_GAMMA0_REPLAY_CERTIFIED",
+      "skill_status": [
+       "VERIFIED_FEASIBLE",
+       "VERIFIED_FEASIBLE",
+       "VERIFIED_FEASIBLE"
+      ],
+      "status": "EXECUTABLE_VERIFIED",
+      "wall_clock_dependent": false
+     },
+     {
+      "cost": 3,
+      "failed_relocation": 1,
+      "final_F_fixed": null,
+      "final_whole_replay": null,
+      "moved_history": [
+       "o05"
+      ],
+      "order": [
+       [
+        "o05",
+        49
+       ],
+       [
+        "o02",
+        61
+       ],
+       [
+        "o03",
+        62
+       ]
+      ],
+      "rank": -2,
+      "reason": "o02->61: CERTIFIED_INFEASIBLE NO_PLACE_CANDIDATE",
+      "skill_status": [
+       "VERIFIED_FEASIBLE",
+       "CERTIFIED_INFEASIBLE"
+      ],
+      "status": "UNRESOLVED",
+      "wall_clock_dependent": false
+     },
+     {
+      "cost": 3,
+      "failed_relocation": null,
+      "final_F_fixed": "VALID",
+      "final_whole_replay": "VALID",
+      "moved_history": [
+       "o05",
+       "o03",
+       "o02"
+      ],
+      "order": [
+       [
+        "o05",
+        49
+       ],
+       [
+        "o03",
+        62
+       ],
+       [
+        "o02",
+        61
+       ]
+      ],
+      "rank": -2,
+      "reason": "ALL_RELOCATIONS_CONNECTOR_AND_GAMMA0_REPLAY_CERTIFIED",
+      "skill_status": [
+       "VERIFIED_FEASIBLE",
+       "VERIFIED_FEASIBLE",
+       "VERIFIED_FEASIBLE"
+      ],
+      "status": "EXECUTABLE_VERIFIED",
+      "wall_clock_dependent": false
+     }
+    ],
+    "blocker": "o02",
+    "cell": 61,
+    "cost": 3,
+    "owner": "o03"
+   },
+   "frozen_action_hash": "sha256:27cb5a04f8caac257dc622bbe3fc32e460de092928e2b64701152bb79a99295f",
+   "lineage": [
+    "archived G2_D2/block_ab"
+   ],
+   "replay": {
+    "final_F_fixed": "VALID",
+    "moved_history": [
+     "o02",
+     "o05"
+    ],
+    "moves": 2,
+    "replay_passed": true
+   },
+   "restoration": {
+    "assignment": {
+     "o02": 40,
+     "o05": 49
+    },
+    "direct_blockers": [
+     "o02",
+     "o05"
+    ],
+    "moves": 2,
+    "terminal_valid": true
+   },
+   "restricted_domain": null,
+   "search": {
+    "attempts": [
+     {
+      "cost": 2,
+      "failed_relocation": null,
+      "final_F_fixed": "VALID",
+      "final_whole_replay": "VALID",
+      "moved_history": [
+       "o02",
+       "o05"
+      ],
+      "order": [
+       [
+        "o02",
+        49
+       ],
+       [
+        "o05",
+        41
+       ]
+      ],
+      "rank": 0,
+      "reason": "ALL_RELOCATIONS_CONNECTOR_AND_GAMMA0_REPLAY_CERTIFIED",
+      "skill_status": [
+       "VERIFIED_FEASIBLE",
+       "VERIFIED_FEASIBLE"
+      ],
+      "status": "EXECUTABLE_VERIFIED",
+      "wall_clock_dependent": false
+     }
+    ],
+    "lower_bound": 2,
+    "minimality": "MINIMUM_CERTIFIED",
+    "pruned_orders": 0,
+    "relocation_plans": 2,
+    "status": "EXECUTABLE_VERIFIED",
+    "stop_reason": "WITNESS_FOUND",
+    "upper_bound": 2,
+    "witness": {
+     "cost": 2,
+     "failed_relocation": null,
+     "final_F_fixed": "VALID",
+     "final_whole_replay": "VALID",
+     "moved_history": [
+      "o02",
+      "o05"
+     ],
+     "order": [
+      [
+       "o02",
+       49
+      ],
+      [
+       "o05",
+       41
+      ]
+     ],
+     "rank": 0,
+     "reason": "ALL_RELOCATIONS_CONNECTOR_AND_GAMMA0_REPLAY_CERTIFIED",
+     "skill_status": [
+      "VERIFIED_FEASIBLE",
+      "VERIFIED_FEASIBLE"
+     ],
+     "status": "EXECUTABLE_VERIFIED",
+     "wall_clock_dependent": false
+    }
+   },
+   "terminal": {
+    "ALL_SUPPORTED": {
+     "assignments": [
+      {
+       "cells": {
+        "o00": 4,
+        "o01": 15,
+        "o02": 49,
+        "o03": 61,
+        "o04": 7,
+        "o05": 41
+       },
+       "cost": 2,
+       "tie_break": 0.030484
+      },
+      {
+       "cells": {
+        "o00": 4,
+        "o01": 15,
+        "o02": 48,
+        "o03": 61,
+        "o04": 7,
+        "o05": 49
+       },
+       "cost": 2,
+       "tie_break": 0.030484
+      },
+      {
+       "cells": {
+        "o00": 4,
+        "o01": 15,
+        "o02": 48,
+        "o03": 61,
+        "o04": 7,
+        "o05": 41
+       },
+       "cost": 2,
+       "tie_break": 0.035714
+      },
+      {
+       "cells": {
+        "o00": 4,
+        "o01": 15,
+        "o02": 49,
+        "o03": 61,
+        "o04": 7,
+        "o05": 48
+       },
+       "cost": 2,
+       "tie_break": 0.037881
+      },
+      {
+       "cells": {
+        "o00": 4,
+        "o01": 15,
+        "o02": 41,
+        "o03": 61,
+        "o04": 7,
+        "o05": 49
+       },
+       "cost": 2,
+       "tie_break": 0.037881
+      },
+      {
+       "cells": {
+        "o00": 4,
+        "o01": 15,
+        "o02": 49,
+        "o03": 61,
+        "o04": 7,
+        "o05": 33
+       },
+       "cost": 2,
+       "tie_break": 0.040862
+      },
+      {
+       "cells": {
+        "o00": 4,
+        "o01": 15,
+        "o02": 40,
+        "o03": 61,
+        "o04": 7,
+        "o05": 49
+       },
+       "cost": 2,
+       "tie_break": 0.040862
+      },
+      {
+       "cells": {
+        "o00": 4,
+        "o01": 15,
+        "o02": 49,
+        "o03": 61,
+        "o04": 7,
+        "o05": 40
+       },
+       "cost": 2,
+       "tie_break": 0.040862
+      },
+      {
+       "cells": {
+        "o00": 4,
+        "o01": 15,
+        "o02": 48,
+        "o03": 61,
+        "o04": 7,
+        "o05": 33
+       },
+       "cost": 2,
+       "tie_break": 0.046092
+      },
+      {
+       "cells": {
+        "o00": 4,
+        "o01": 15,
+        "o02": 40,
+        "o03": 61,
+        "o04": 7,
+        "o05": 41
+       },
+       "cost": 2,
+       "tie_break": 0.046092
+      },
+      {
+       "cells": {
+        "o00": 4,
+        "o01": 15,
+        "o02": 48,
+        "o03": 61,
+        "o04": 7,
+        "o05": 40
+       },
+       "cost": 2,
+       "tie_break": 0.046092
+      },
+      {
+       "cells": {
+        "o00": 4,
+        "o01": 15,
+        "o02": 49,
+        "o03": 61,
+        "o04": 7,
+        "o05": 32
+       },
+       "cost": 2,
+       "tie_break": 0.048341
+      }
+     ],
+     "cells": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+     ],
+     "direct_blockers": [
+      "o02",
+      "o05"
+     ],
+     "hall": null,
+     "lower_bound": 2,
+     "objects": [
+      "o00",
+      "o01",
+      "o02",
+      "o03",
+      "o04",
+      "o05"
+     ]
+    }
+   }
+  },
+  "G3_D3": {
+   "cell_status": {
+    "INVALID": [
+     19,
+     24,
+     25,
+     26,
+     27,
+     28,
+     32,
+     33,
+     34,
+     35,
+     36,
+     40,
+     41,
+     42,
+     43,
+     44,
+     48,
+     49,
+     50,
+     51,
+     52,
+     56,
+     57
+    ],
+    "UNRESOLVED": [],
+    "VALID_count": 40
+   },
+   "compare": [
+    {
+     "cost": 2,
+     "failed_relocation": 0,
+     "final_F_fixed": null,
+     "final_whole_replay": null,
+     "label": "low-ID endpoints (A0 ties broken by cell ID, no carry-distance tie-break)",
+     "moved_history": [],
+     "order": [
+      [
+       "o00",
+       0
+      ],
+      [
+       "o01",
+       1
+      ]
+     ],
+     "rank": -1,
+     "reason": "o00->0: CERTIFIED_INFEASIBLE NO_PICK_CANDIDATE",
+     "skill_status": [
+      "CERTIFIED_INFEASIBLE"
+     ],
+     "status": "UNRESOLVED",
+     "wall_clock_dependent": false
+    },
+    {
+     "cost": 2,
+     "failed_relocation": 0,
+     "final_F_fixed": null,
+     "final_whole_replay": null,
+     "label": "low-ID endpoints (A0 ties broken by cell ID, no carry-distance tie-break)",
+     "moved_history": [],
+     "order": [
+      [
+       "o01",
+       1
+      ],
+      [
+       "o00",
+       0
+      ]
+     ],
+     "rank": -1,
+     "reason": "o01->1: CERTIFIED_INFEASIBLE ALL_CONNECTORS_CERTIFIED_BLOCKED",
+     "skill_status": [
+      "CERTIFIED_INFEASIBLE"
+     ],
+     "status": "UNRESOLVED",
+     "wall_clock_dependent": false
+    },
+    {
+     "cost": 2,
+     "failed_relocation": 0,
+     "final_F_fixed": null,
+     "final_whole_replay": null,
+     "label": "reference restoration (lemma witness)",
+     "moved_history": [],
+     "order": [
+      [
+       "o00",
+       5
+      ],
+      [
+       "o01",
+       9
+      ]
+     ],
+     "rank": -1,
+     "reason": "o00->5: CERTIFIED_INFEASIBLE NO_PICK_CANDIDATE",
+     "skill_status": [
+      "CERTIFIED_INFEASIBLE"
+     ],
+     "status": "UNRESOLVED",
+     "wall_clock_dependent": false
+    },
+    {
+     "cost": 2,
+     "failed_relocation": 1,
+     "final_F_fixed": null,
+     "final_whole_replay": null,
+     "label": "reference restoration (lemma witness)",
+     "moved_history": [
+      "o01"
+     ],
+     "order": [
+      [
+       "o01",
+       9
+      ],
+      [
+       "o00",
+       5
+      ]
+     ],
+     "rank": -1,
+     "reason": "o00->5: UNRESOLVED PLANNER_BUDGET",
+     "skill_status": [
+      "VERIFIED_FEASIBLE",
+      "UNRESOLVED"
+     ],
+     "status": "UNRESOLVED",
+     "wall_clock_dependent": false
+    }
+   ],
+   "forced": {
+    "attempts": [
+     {
+      "cost": 3,
+      "failed_relocation": 0,
+      "final_F_fixed": null,
+      "final_whole_replay": null,
+      "moved_history": [],
+      "order": [
+       [
+        "o00",
+        31
+       ],
+       [
+        "o01",
+        18
+       ],
+       [
+        "o02",
+        23
+       ]
+      ],
+      "rank": -2,
+      "reason": "o00->31: CERTIFIED_INFEASIBLE NO_PICK_CANDIDATE",
+      "skill_status": [
+       "CERTIFIED_INFEASIBLE"
+      ],
+      "status": "UNRESOLVED",
+      "wall_clock_dependent": false
+     },
+     {
+      "cost": 3,
+      "failed_relocation": 1,
+      "final_F_fixed": null,
+      "final_whole_replay": null,
+      "moved_history": [
+       "o01"
+      ],
+      "order": [
+       [
+        "o01",
+        18
+       ],
+       [
+        "o00",
+        31
+       ],
+       [
+        "o02",
+        23
+       ]
+      ],
+      "rank": -2,
+      "reason": "o00->31: CERTIFIED_INFEASIBLE NO_PLACE_CANDIDATE",
+      "skill_status": [
+       "VERIFIED_FEASIBLE",
+       "CERTIFIED_INFEASIBLE"
+      ],
+      "status": "UNRESOLVED",
+      "wall_clock_dependent": false
+     },
+     {
+      "cost": 3,
+      "failed_relocation": 1,
+      "final_F_fixed": null,
+      "final_whole_replay": null,
+      "moved_history": [
+       "o01"
+      ],
+      "order": [
+       [
+        "o01",
+        18
+       ],
+       [
+        "o02",
+        23
+       ],
+       [
+        "o00",
+        31
+       ]
+      ],
+      "rank": -2,
+      "reason": "o02->23: CERTIFIED_INFEASIBLE ALL_CONNECTORS_CERTIFIED_BLOCKED",
+      "skill_status": [
+       "VERIFIED_FEASIBLE",
+       "CERTIFIED_INFEASIBLE"
+      ],
+      "status": "UNRESOLVED",
+      "wall_clock_dependent": false
+     },
+     {
+      "cost": 3,
+      "failed_relocation": 0,
+      "final_F_fixed": null,
+      "final_whole_replay": null,
+      "moved_history": [],
+      "order": [
+       [
+        "o02",
+        23
+       ],
+       [
+        "o00",
+        31
+       ],
+       [
+        "o01",
+        18
+       ]
+      ],
+      "rank": -2,
+      "reason": "o02->23: CERTIFIED_INFEASIBLE ALL_CONNECTORS_CERTIFIED_BLOCKED",
+      "skill_status": [
+       "CERTIFIED_INFEASIBLE"
+      ],
+      "status": "UNRESOLVED",
+      "wall_clock_dependent": false
+     }
+    ],
+    "blocker": "o00",
+    "cell": 31,
+    "cost": 3,
+    "owner": "o02"
+   },
+   "frozen_action_hash": "sha256:6f3dfb6948f35e7e1f82cba38cbc5732a27009bf978efacce6c572b18e0b566e",
+   "lineage": [
+    "o00 5->28",
+    "o01 9->27"
+   ],
+   "replay": {
+    "final_F_fixed": "VALID",
+    "moved_history": [
+     "o01",
+     "o00"
+    ],
+    "moves": 2,
+    "replay_passed": true
+   },
+   "restoration": {
+    "assignment": {
+     "o00": 5,
+     "o01": 9
+    },
+    "direct_blockers": [
+     "o00",
+     "o01"
+    ],
+    "moves": 2,
+    "terminal_valid": true
+   },
+   "restricted_domain": null,
+   "search": {
+    "attempts": [
+     {
+      "cost": 2,
+      "failed_relocation": 0,
+      "final_F_fixed": null,
+      "final_whole_replay": null,
+      "moved_history": [],
+      "order": [
+       [
+        "o00",
+        29
+       ],
+       [
+        "o01",
+        18
+       ]
+      ],
+      "rank": 0,
+      "reason": "o00->29: CERTIFIED_INFEASIBLE NO_PICK_CANDIDATE",
+      "skill_status": [
+       "CERTIFIED_INFEASIBLE"
+      ],
+      "status": "UNRESOLVED",
+      "wall_clock_dependent": false
+     },
+     {
+      "cost": 2,
+      "failed_relocation": null,
+      "final_F_fixed": "VALID",
+      "final_whole_replay": "VALID",
+      "moved_history": [
+       "o01",
+       "o00"
+      ],
+      "order": [
+       [
+        "o01",
+        18
+       ],
+       [
+        "o00",
+        29
+       ]
+      ],
+      "rank": 0,
+      "reason": "ALL_RELOCATIONS_CONNECTOR_AND_GAMMA0_REPLAY_CERTIFIED",
+      "skill_status": [
+       "VERIFIED_FEASIBLE",
+       "VERIFIED_FEASIBLE"
+      ],
+      "status": "EXECUTABLE_VERIFIED",
+      "wall_clock_dependent": false
+     }
+    ],
+    "lower_bound": 2,
+    "minimality": "MINIMUM_CERTIFIED",
+    "pruned_orders": 0,
+    "relocation_plans": 3,
+    "status": "EXECUTABLE_VERIFIED",
+    "stop_reason": "WITNESS_FOUND",
+    "upper_bound": 2,
+    "witness": {
+     "cost": 2,
+     "failed_relocation": null,
+     "final_F_fixed": "VALID",
+     "final_whole_replay": "VALID",
+     "moved_history": [
+      "o01",
+      "o00"
+     ],
+     "order": [
+      [
+       "o01",
+       18
+      ],
+      [
+       "o00",
+       29
+      ]
+     ],
+     "rank": 0,
+     "reason": "ALL_RELOCATIONS_CONNECTOR_AND_GAMMA0_REPLAY_CERTIFIED",
+     "skill_status": [
+      "VERIFIED_FEASIBLE",
+      "VERIFIED_FEASIBLE"
+     ],
+     "status": "EXECUTABLE_VERIFIED",
+     "wall_clock_dependent": false
+    }
+   },
+   "terminal": {
+    "ALL_SUPPORTED": {
+     "assignments": [
+      {
+       "cells": {
+        "o00": 29,
+        "o01": 18,
+        "o02": 31,
+        "o03": 58,
+        "o04": 63
+       },
+       "cost": 2,
+       "tie_break": 0.035565
+      },
+      {
+       "cells": {
+        "o00": 21,
+        "o01": 18,
+        "o02": 31,
+        "o03": 58,
+        "o04": 63
+       },
+       "cost": 2,
+       "tie_break": 0.041667
+      },
+      {
+       "cells": {
+        "o00": 37,
+        "o01": 18,
+        "o02": 31,
+        "o03": 58,
+        "o04": 63
+       },
+       "cost": 2,
+       "tie_break": 0.041667
+      },
+      {
+       "cells": {
+        "o00": 29,
+        "o01": 11,
+        "o02": 31,
+        "o03": 58,
+        "o04": 63
+       },
+       "cost": 2,
+       "tie_break": 0.044194
+      },
+      {
+       "cells": {
+        "o00": 29,
+        "o01": 10,
+        "o02": 31,
+        "o03": 58,
+        "o04": 63
+       },
+       "cost": 2,
+       "tie_break": 0.047672
+      },
+      {
+       "cells": {
+        "o00": 29,
+        "o01": 12,
+        "o02": 31,
+        "o03": 58,
+        "o04": 63
+       },
+       "cost": 2,
+       "tie_break": 0.047672
+      },
+      {
+       "cells": {
+        "o00": 29,
+        "o01": 17,
+        "o02": 31,
+        "o03": 58,
+        "o04": 63
+       },
+       "cost": 2,
+       "tie_break": 0.047672
+      },
+      {
+       "cells": {
+        "o00": 29,
+        "o01": 21,
+        "o02": 31,
+        "o03": 58,
+        "o04": 63
+       },
+       "cost": 2,
+       "tie_break": 0.047672
+      },
+      {
+       "cells": {
+        "o00": 29,
+        "o01": 37,
+        "o02": 31,
+        "o03": 58,
+        "o04": 63
+       },
+       "cost": 2,
+       "tie_break": 0.047672
+      },
+      {
+       "cells": {
+        "o00": 21,
+        "o01": 11,
+        "o02": 31,
+        "o03": 58,
+        "o04": 63
+       },
+       "cost": 2,
+       "tie_break": 0.050296
+      },
+      {
+       "cells": {
+        "o00": 12,
+        "o01": 18,
+        "o02": 31,
+        "o03": 58,
+        "o04": 63
+       },
+       "cost": 2,
+       "tie_break": 0.050296
+      },
+      {
+       "cells": {
+        "o00": 37,
+        "o01": 11,
+        "o02": 31,
+        "o03": 58,
+        "o04": 63
+       },
+       "cost": 2,
+       "tie_break": 0.050296
+      }
+     ],
+     "cells": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+     ],
+     "direct_blockers": [
+      "o00",
+      "o01"
+     ],
+     "hall": null,
+     "lower_bound": 2,
+     "objects": [
+      "o00",
+      "o01",
+      "o02",
+      "o03",
+      "o04"
+     ]
+    }
+   }
+  },
+  "G3_T07_DENSE": {
+   "cell_status": {
+    "INVALID": [
+     1,
+     8,
+     9,
+     10,
+     17,
+     18,
+     25,
+     26,
+     33,
+     34,
+     40,
+     41,
+     42,
+     48,
+     49,
+     50,
+     56,
+     57,
+     58
+    ],
+    "UNRESOLVED": [],
+    "VALID_count": 44
+   },
+   "compare": [
+    {
+     "cost": 5,
+     "failed_relocation": 0,
+     "final_F_fixed": null,
+     "final_whole_replay": null,
+     "label": "reference restoration (lemma witness)",
+     "moved_history": [],
+     "order": [
+      [
+       "o00",
+       3
+      ],
+      [
+       "o21",
+       44
+      ],
+      [
+       "o25",
+       51
+      ],
+      [
+       "o26",
+       52
+      ],
+      [
+       "o30",
+       59
+      ]
+     ],
+     "rank": -1,
+     "reason": "o00->3: CERTIFIED_INFEASIBLE ALL_CONNECTORS_CERTIFIED_BLOCKED",
+     "skill_status": [
+      "CERTIFIED_INFEASIBLE"
+     ],
+     "status": "UNRESOLVED",
+     "wall_clock_dependent": false
+    },
+    {
+     "cost": 5,
+     "failed_relocation": 0,
+     "final_F_fixed": null,
+     "final_whole_replay": null,
+     "label": "reference restoration (lemma witness)",
+     "moved_history": [],
+     "order": [
+      [
+       "o21",
+       44
+      ],
+      [
+       "o00",
+       3
+      ],
+      [
+       "o25",
+       51
+      ],
+      [
+       "o26",
+       52
+      ],
+      [
+       "o30",
+       59
+      ]
+     ],
+     "rank": -1,
+     "reason": "o21->44: CERTIFIED_INFEASIBLE NO_PICK_CANDIDATE",
+     "skill_status": [
+      "CERTIFIED_INFEASIBLE"
+     ],
+     "status": "UNRESOLVED",
+     "wall_clock_dependent": false
+    },
+    {
+     "cost": 5,
+     "failed_relocation": 0,
+     "final_F_fixed": null,
+     "final_whole_replay": null,
+     "label": "reference restoration (lemma witness)",
+     "moved_history": [],
+     "order": [
+      [
+       "o25",
+       51
+      ],
+      [
+       "o00",
+       3
+      ],
+      [
+       "o21",
+       44
+      ],
+      [
+       "o26",
+       52
+      ],
+      [
+       "o30",
+       59
+      ]
+     ],
+     "rank": -1,
+     "reason": "o25->51: UNRESOLVED PLANNER_BUDGET",
+     "skill_status": [
+      "UNRESOLVED"
+     ],
+     "status": "UNRESOLVED",
+     "wall_clock_dependent": true
+    },
+    {
+     "cost": 5,
+     "failed_relocation": 0,
+     "final_F_fixed": null,
+     "final_whole_replay": null,
+     "label": "reference restoration (lemma witness)",
+     "moved_history": [],
+     "order": [
+      [
+       "o26",
+       52
+      ],
+      [
+       "o00",
+       3
+      ],
+      [
+       "o21",
+       44
+      ],
+      [
+       "o25",
+       51
+      ],
+      [
+       "o30",
+       59
+      ]
+     ],
+     "rank": -1,
+     "reason": "o26->52: CERTIFIED_INFEASIBLE NO_PLACE_CANDIDATE",
+     "skill_status": [
+      "CERTIFIED_INFEASIBLE"
+     ],
+     "status": "UNRESOLVED",
+     "wall_clock_dependent": false
+    },
+    {
+     "cost": 5,
+     "failed_relocation": 1,
+     "final_F_fixed": null,
+     "final_whole_replay": null,
+     "label": "reference restoration (lemma witness)",
+     "moved_history": [
+      "o30"
+     ],
+     "order": [
+      [
+       "o30",
+       59
+      ],
+      [
+       "o00",
+       3
+      ],
+      [
+       "o21",
+       44
+      ],
+      [
+       "o25",
+       51
+      ],
+      [
+       "o26",
+       52
+      ]
+     ],
+     "rank": -1,
+     "reason": "o00->3: CERTIFIED_INFEASIBLE ALL_CONNECTORS_CERTIFIED_BLOCKED",
+     "skill_status": [
+      "VERIFIED_FEASIBLE",
+      "CERTIFIED_INFEASIBLE"
+     ],
+     "status": "UNRESOLVED",
+     "wall_clock_dependent": false
+    },
+    {
+     "cost": 5,
+     "failed_relocation": 2,
+     "final_F_fixed": null,
+     "final_whole_replay": null,
+     "label": "reference restoration (lemma witness)",
+     "moved_history": [
+      "o30",
+      "o21"
+     ],
+     "order": [
+      [
+       "o30",
+       59
+      ],
+      [
+       "o21",
+       44
+      ],
+      [
+       "o00",
+       3
+      ],
+      [
+       "o25",
+       51
+      ],
+      [
+       "o26",
+       52
+      ]
+     ],
+     "rank": -1,
+     "reason": "o00->3: CERTIFIED_INFEASIBLE ALL_CONNECTORS_CERTIFIED_BLOCKED",
+     "skill_status": [
+      "VERIFIED_FEASIBLE",
+      "VERIFIED_FEASIBLE",
+      "CERTIFIED_INFEASIBLE"
+     ],
+     "status": "UNRESOLVED",
+     "wall_clock_dependent": false
+    }
+   ],
+   "frozen_action_hash": "sha256:d3cbc6fd1d312f4c1c1ee1518cc43da780cbfd01b21550fffe304efdc4c3368d",
+   "lineage": [
+    "o30 59->57",
+    "o25 51->40",
+    "o26 52->48",
+    "o21 44->49",
+    "o00 3->8"
+   ],
+   "replay": {
+    "final_F_fixed": "VALID",
+    "moved_history": [
+     "o25",
+     "o30",
+     "o21",
+     "o26",
+     "o00"
+    ],
+    "moves": 5,
+    "replay_passed": true
+   },
+   "restoration": {
+    "assignment": {
+     "o00": 3,
+     "o21": 44,
+     "o25": 51,
+     "o26": 52,
+     "o30": 59
+    },
+    "direct_blockers": [
+     "o00",
+     "o21",
+     "o25",
+     "o26",
+     "o30"
+    ],
+    "moves": 5,
+    "terminal_valid": true
+   },
+   "restricted_domain": {
+    "o00": [
+     32,
+     24,
+     43,
+     35
+    ],
+    "o21": [
+     32,
+     24,
+     43,
+     35
+    ],
+    "o25": [
+     32,
+     24,
+     43,
+     35
+    ],
+    "o26": [
+     32,
+     24,
+     43,
+     35
+    ],
+    "o30": [
+     32,
+     24,
+     43,
+     35
+    ]
+   },
+   "search": {
+    "attempts": [
+     {
+      "cost": 5,
+      "failed_relocation": 0,
+      "final_F_fixed": null,
+      "final_whole_replay": null,
+      "moved_history": [],
+      "order": [
+       [
+        "o00",
+        16
+       ],
+       [
+        "o21",
+        51
+       ],
+       [
+        "o25",
+        32
+       ],
+       [
+        "o26",
+        24
+       ],
+       [
+        "o30",
+        59
+       ]
+      ],
+      "rank": 0,
+      "reason": "o00->16: CERTIFIED_INFEASIBLE ALL_CONNECTORS_CERTIFIED_BLOCKED",
+      "skill_status": [
+       "CERTIFIED_INFEASIBLE"
+      ],
+      "status": "UNRESOLVED",
+      "wall_clock_dependent": false
+     },
+     {
+      "cost": 5,
+      "failed_relocation": 0,
+      "final_F_fixed": null,
+      "final_whole_replay": null,
+      "moved_history": [],
+      "order": [
+       [
+        "o21",
+        51
+       ],
+       [
+        "o00",
+        16
+       ],
+       [
+        "o25",
+        32
+       ],
+       [
+        "o26",
+        24
+       ],
+       [
+        "o30",
+        59
+       ]
+      ],
+      "rank": 0,
+      "reason": "o21->51: CERTIFIED_INFEASIBLE NO_PICK_CANDIDATE",
+      "skill_status": [
+       "CERTIFIED_INFEASIBLE"
+      ],
+      "status": "UNRESOLVED",
+      "wall_clock_dependent": false
+     },
+     {
+      "cost": 5,
+      "failed_relocation": 1,
+      "final_F_fixed": null,
+      "final_whole_replay": null,
+      "moved_history": [
+       "o25"
+      ],
+      "order": [
+       [
+        "o25",
+        32
+       ],
+       [
+        "o00",
+        16
+       ],
+       [
+        "o21",
+        51
+       ],
+       [
+        "o26",
+        24
+       ],
+       [
+        "o30",
+        59
+       ]
+      ],
+      "rank": 0,
+      "reason": "o00->16: CERTIFIED_INFEASIBLE ALL_CONNECTORS_CERTIFIED_BLOCKED",
+      "skill_status": [
+       "VERIFIED_FEASIBLE",
+       "CERTIFIED_INFEASIBLE"
+      ],
+      "status": "UNRESOLVED",
+      "wall_clock_dependent": false
+     },
+     {
+      "cost": 5,
+      "failed_relocation": 1,
+      "final_F_fixed": null,
+      "final_whole_replay": null,
+      "moved_history": [
+       "o25"
+      ],
+      "order": [
+       [
+        "o25",
+        32
+       ],
+       [
+        "o21",
+        51
+       ],
+       [
+        "o00",
+        16
+       ],
+       [
+        "o26",
+        24
+       ],
+       [
+        "o30",
+        59
+       ]
+      ],
+      "rank": 0,
+      "reason": "o21->51: CERTIFIED_INFEASIBLE NO_PICK_CANDIDATE",
+      "skill_status": [
+       "VERIFIED_FEASIBLE",
+       "CERTIFIED_INFEASIBLE"
+      ],
+      "status": "UNRESOLVED",
+      "wall_clock_dependent": false
+     },
+     {
+      "cost": 5,
+      "failed_relocation": 1,
+      "final_F_fixed": null,
+      "final_whole_replay": null,
+      "moved_history": [
+       "o25"
+      ],
+      "order": [
+       [
+        "o25",
+        32
+       ],
+       [
+        "o26",
+        24
+       ],
+       [
+        "o00",
+        16
+       ],
+       [
+        "o21",
+        51
+       ],
+       [
+        "o30",
+        59
+       ]
+      ],
+      "rank": 0,
+      "reason": "o26->24: CERTIFIED_INFEASIBLE ALL_CONNECTORS_CERTIFIED_BLOCKED",
+      "skill_status": [
+       "VERIFIED_FEASIBLE",
+       "CERTIFIED_INFEASIBLE"
+      ],
+      "status": "UNRESOLVED",
+      "wall_clock_dependent": false
+     },
+     {
+      "cost": 5,
+      "failed_relocation": 2,
+      "final_F_fixed": null,
+      "final_whole_replay": null,
+      "moved_history": [
+       "o25",
+       "o30"
+      ],
+      "order": [
+       [
+        "o25",
+        32
+       ],
+       [
+        "o30",
+        59
+       ],
+       [
+        "o00",
+        16
+       ],
+       [
+        "o21",
+        51
+       ],
+       [
+        "o26",
+        24
+       ]
+      ],
+      "rank": 0,
+      "reason": "o00->16: CERTIFIED_INFEASIBLE ALL_CONNECTORS_CERTIFIED_BLOCKED",
+      "skill_status": [
+       "VERIFIED_FEASIBLE",
+       "VERIFIED_FEASIBLE",
+       "CERTIFIED_INFEASIBLE"
+      ],
+      "status": "UNRESOLVED",
+      "wall_clock_dependent": false
+     },
+     {
+      "cost": 5,
+      "failed_relocation": 1,
+      "final_F_fixed": null,
+      "final_whole_replay": null,
+      "moved_history": [
+       "o25"
+      ],
+      "order": [
+       [
+        "o25",
+        24
+       ],
+       [
+        "o00",
+        16
+       ],
+       [
+        "o21",
+        51
+       ],
+       [
+        "o26",
+        32
+       ],
+       [
+        "o30",
+        59
+       ]
+      ],
+      "rank": 1,
+      "reason": "o00->16: UNRESOLVED PLANNER_BUDGET",
+      "skill_status": [
+       "VERIFIED_FEASIBLE",
+       "UNRESOLVED"
+      ],
+      "status": "UNRESOLVED",
+      "wall_clock_dependent": false
+     },
+     {
+      "cost": 5,
+      "failed_relocation": 1,
+      "final_F_fixed": null,
+      "final_whole_replay": null,
+      "moved_history": [
+       "o25"
+      ],
+      "order": [
+       [
+        "o25",
+        24
+       ],
+       [
+        "o21",
+        51
+       ],
+       [
+        "o00",
+        16
+       ],
+       [
+        "o26",
+        32
+       ],
+       [
+        "o30",
+        59
+       ]
+      ],
+      "rank": 1,
+      "reason": "o21->51: CERTIFIED_INFEASIBLE NO_PICK_CANDIDATE",
+      "skill_status": [
+       "VERIFIED_FEASIBLE",
+       "CERTIFIED_INFEASIBLE"
+      ],
+      "status": "UNRESOLVED",
+      "wall_clock_dependent": false
+     },
+     {
+      "cost": 5,
+      "failed_relocation": 2,
+      "final_F_fixed": null,
+      "final_whole_replay": null,
+      "moved_history": [
+       "o25",
+       "o26"
+      ],
+      "order": [
+       [
+        "o25",
+        24
+       ],
+       [
+        "o26",
+        32
+       ],
+       [
+        "o00",
+        16
+       ],
+       [
+        "o21",
+        51
+       ],
+       [
+        "o30",
+        59
+       ]
+      ],
+      "rank": 1,
+      "reason": "o00->16: UNRESOLVED PLANNER_BUDGET",
+      "skill_status": [
+       "VERIFIED_FEASIBLE",
+       "VERIFIED_FEASIBLE",
+       "UNRESOLVED"
+      ],
+      "status": "UNRESOLVED",
+      "wall_clock_dependent": false
+     },
+     {
+      "cost": 5,
+      "failed_relocation": 3,
+      "final_F_fixed": null,
+      "final_whole_replay": null,
+      "moved_history": [
+       "o25",
+       "o26",
+       "o21"
+      ],
+      "order": [
+       [
+        "o25",
+        24
+       ],
+       [
+        "o26",
+        32
+       ],
+       [
+        "o21",
+        51
+       ],
+       [
+        "o00",
+        16
+       ],
+       [
+        "o30",
+        59
+       ]
+      ],
+      "rank": 1,
+      "reason": "o00->16: UNRESOLVED PLANNER_BUDGET",
+      "skill_status": [
+       "VERIFIED_FEASIBLE",
+       "VERIFIED_FEASIBLE",
+       "VERIFIED_FEASIBLE",
+       "UNRESOLVED"
+      ],
+      "status": "UNRESOLVED",
+      "wall_clock_dependent": false
+     },
+     {
+      "cost": 5,
+      "failed_relocation": 4,
+      "final_F_fixed": null,
+      "final_whole_replay": null,
+      "moved_history": [
+       "o25",
+       "o26",
+       "o21",
+       "o30"
+      ],
+      "order": [
+       [
+        "o25",
+        24
+       ],
+       [
+        "o26",
+        32
+       ],
+       [
+        "o21",
+        51
+       ],
+       [
+        "o30",
+        59
+       ],
+       [
+        "o00",
+        16
+       ]
+      ],
+      "rank": 1,
+      "reason": "o00->16: UNRESOLVED PLANNER_BUDGET",
+      "skill_status": [
+       "VERIFIED_FEASIBLE",
+       "VERIFIED_FEASIBLE",
+       "VERIFIED_FEASIBLE",
+       "VERIFIED_FEASIBLE",
+       "UNRESOLVED"
+      ],
+      "status": "UNRESOLVED",
+      "wall_clock_dependent": false
+     },
+     {
+      "cost": 5,
+      "failed_relocation": 3,
+      "final_F_fixed": null,
+      "final_whole_replay": null,
+      "moved_history": [
+       "o25",
+       "o26",
+       "o30"
+      ],
+      "order": [
+       [
+        "o25",
+        24
+       ],
+       [
+        "o26",
+        32
+       ],
+       [
+        "o30",
+        59
+       ],
+       [
+        "o00",
+        16
+       ],
+       [
+        "o21",
+        51
+       ]
+      ],
+      "rank": 1,
+      "reason": "o00->16: UNRESOLVED PLANNER_BUDGET",
+      "skill_status": [
+       "VERIFIED_FEASIBLE",
+       "VERIFIED_FEASIBLE",
+       "VERIFIED_FEASIBLE",
+       "UNRESOLVED"
+      ],
+      "status": "UNRESOLVED",
+      "wall_clock_dependent": false
+     },
+     {
+      "cost": 5,
+      "failed_relocation": 1,
+      "final_F_fixed": null,
+      "final_whole_replay": null,
+      "moved_history": [
+       "o25"
+      ],
+      "order": [
+       [
+        "o25",
+        32
+       ],
+       [
+        "o26",
+        43
+       ],
+       [
+        "o00",
+        16
+       ],
+       [
+        "o21",
+        51
+       ],
+       [
+        "o30",
+        59
+       ]
+      ],
+      "rank": 2,
+      "reason": "o26->43: UNRESOLVED PLANNER_BUDGET",
+      "skill_status": [
+       "VERIFIED_FEASIBLE",
+       "UNRESOLVED"
+      ],
+      "status": "UNRESOLVED",
+      "wall_clock_dependent": false
+     },
+     {
+      "cost": 5,
+      "failed_relocation": 3,
+      "final_F_fixed": null,
+      "final_whole_replay": null,
+      "moved_history": [
+       "o25",
+       "o30",
+       "o21"
+      ],
+      "order": [
+       [
+        "o25",
+        32
+       ],
+       [
+        "o30",
+        59
+       ],
+       [
+        "o21",
+        51
+       ],
+       [
+        "o00",
+        16
+       ],
+       [
+        "o26",
+        43
+       ]
+      ],
+      "rank": 2,
+      "reason": "o00->16: CERTIFIED_INFEASIBLE ALL_CONNECTORS_CERTIFIED_BLOCKED",
+      "skill_status": [
+       "VERIFIED_FEASIBLE",
+       "VERIFIED_FEASIBLE",
+       "VERIFIED_FEASIBLE",
+       "CERTIFIED_INFEASIBLE"
+      ],
+      "status": "UNRESOLVED",
+      "wall_clock_dependent": false
+     },
+     {
+      "cost": 5,
+      "failed_relocation": null,
+      "final_F_fixed": "VALID",
+      "final_whole_replay": "VALID",
+      "moved_history": [
+       "o25",
+       "o30",
+       "o21",
+       "o26",
+       "o00"
+      ],
+      "order": [
+       [
+        "o25",
+        32
+       ],
+       [
+        "o30",
+        59
+       ],
+       [
+        "o21",
+        51
+       ],
+       [
+        "o26",
+        43
+       ],
+       [
+        "o00",
+        16
+       ]
+      ],
+      "rank": 2,
+      "reason": "ALL_RELOCATIONS_CONNECTOR_AND_GAMMA0_REPLAY_CERTIFIED",
+      "skill_status": [
+       "VERIFIED_FEASIBLE",
+       "VERIFIED_FEASIBLE",
+       "VERIFIED_FEASIBLE",
+       "VERIFIED_FEASIBLE",
+       "VERIFIED_FEASIBLE"
+      ],
+      "status": "EXECUTABLE_VERIFIED",
+      "wall_clock_dependent": false
+     }
+    ],
+    "lower_bound": 5,
+    "minimality": "MINIMUM_CERTIFIED",
+    "pruned_orders": 187,
+    "relocation_plans": 24,
+    "status": "EXECUTABLE_VERIFIED",
+    "stop_reason": "WITNESS_FOUND",
+    "upper_bound": 5,
+    "witness": {
+     "cost": 5,
+     "failed_relocation": null,
+     "final_F_fixed": "VALID",
+     "final_whole_replay": "VALID",
+     "moved_history": [
+      "o25",
+      "o30",
+      "o21",
+      "o26",
+      "o00"
+     ],
+     "order": [
+      [
+       "o25",
+       32
+      ],
+      [
+       "o30",
+       59
+      ],
+      [
+       "o21",
+       51
+      ],
+      [
+       "o26",
+       43
+      ],
+      [
+       "o00",
+       16
+      ]
+     ],
+     "rank": 2,
+     "reason": "ALL_RELOCATIONS_CONNECTOR_AND_GAMMA0_REPLAY_CERTIFIED",
+     "skill_status": [
+      "VERIFIED_FEASIBLE",
+      "VERIFIED_FEASIBLE",
+      "VERIFIED_FEASIBLE",
+      "VERIFIED_FEASIBLE",
+      "VERIFIED_FEASIBLE"
+     ],
+     "status": "EXECUTABLE_VERIFIED",
+     "wall_clock_dependent": false
+    }
+   },
+   "terminal": {
+    "ALL_SUPPORTED": {
+     "assignments": [
+      {
+       "cells": {
+        "o00": 16,
+        "o01": 4,
+        "o02": 5,
+        "o03": 6,
+        "o04": 7,
+        "o05": 12,
+        "o06": 13,
+        "o07": 14,
+        "o08": 15,
+        "o09": 20,
+        "o10": 21,
+        "o11": 22,
+        "o12": 23,
+        "o13": 28,
+        "o14": 29,
+        "o15": 30,
+        "o16": 31,
+        "o17": 36,
+        "o18": 37,
+        "o19": 38,
+        "o20": 39,
+        "o21": 51,
+        "o22": 45,
+        "o23": 46,
+        "o24": 47,
+        "o25": 32,
+        "o26": 24,
+        "o27": 53,
+        "o28": 54,
+        "o29": 55,
+        "o30": 59,
+        "o31": 60,
+        "o32": 61,
+        "o33": 62,
+        "o34": 63
+       },
+       "cost": 5,
+       "tie_break": 0.022097
+      },
+      {
+       "cells": {
+        "o00": 16,
+        "o01": 4,
+        "o02": 5,
+        "o03": 6,
+        "o04": 7,
+        "o05": 12,
+        "o06": 13,
+        "o07": 14,
+        "o08": 15,
+        "o09": 20,
+        "o10": 21,
+        "o11": 22,
+        "o12": 23,
+        "o13": 28,
+        "o14": 29,
+        "o15": 30,
+        "o16": 31,
+        "o17": 36,
+        "o18": 37,
+        "o19": 38,
+        "o20": 39,
+        "o21": 51,
+        "o22": 45,
+        "o23": 46,
+        "o24": 47,
+        "o25": 24,
+        "o26": 32,
+        "o27": 53,
+        "o28": 54,
+        "o29": 55,
+        "o30": 59,
+        "o31": 60,
+        "o32": 61,
+        "o33": 62,
+        "o34": 63
+       },
+       "cost": 5,
+       "tie_break": 0.022097
+      },
+      {
+       "cells": {
+        "o00": 16,
+        "o01": 4,
+        "o02": 5,
+        "o03": 6,
+        "o04": 7,
+        "o05": 12,
+        "o06": 13,
+        "o07": 14,
+        "o08": 15,
+        "o09": 20,
+        "o10": 21,
+        "o11": 22,
+        "o12": 23,
+        "o13": 28,
+        "o14": 29,
+        "o15": 30,
+        "o16": 31,
+        "o17": 36,
+        "o18": 37,
+        "o19": 38,
+        "o20": 39,
+        "o21": 51,
+        "o22": 45,
+        "o23": 46,
+        "o24": 47,
+        "o25": 32,
+        "o26": 43,
+        "o27": 53,
+        "o28": 54,
+        "o29": 55,
+        "o30": 59,
+        "o31": 60,
+        "o32": 61,
+        "o33": 62,
+        "o34": 63
+       },
+       "cost": 5,
+       "tie_break": 0.022496
+      },
+      {
+       "cells": {
+        "o00": 16,
+        "o01": 4,
+        "o02": 5,
+        "o03": 6,
+        "o04": 7,
+        "o05": 12,
+        "o06": 13,
+        "o07": 14,
+        "o08": 15,
+        "o09": 20,
+        "o10": 21,
+        "o11": 22,
+        "o12": 23,
+        "o13": 28,
+        "o14": 29,
+        "o15": 30,
+        "o16": 31,
+        "o17": 36,
+        "o18": 37,
+        "o19": 38,
+        "o20": 39,
+        "o21": 43,
+        "o22": 45,
+        "o23": 46,
+        "o24": 47,
+        "o25": 32,
+        "o26": 24,
+        "o27": 53,
+        "o28": 54,
+        "o29": 55,
+        "o30": 59,
+        "o31": 60,
+        "o32": 61,
+        "o33": 62,
+        "o34": 63
+       },
+       "cost": 5,
+       "tie_break": 0.022677
+      },
+      {
+       "cells": {
+        "o00": 16,
+        "o01": 4,
+        "o02": 5,
+        "o03": 6,
+        "o04": 7,
+        "o05": 12,
+        "o06": 13,
+        "o07": 14,
+        "o08": 15,
+        "o09": 20,
+        "o10": 21,
+        "o11": 22,
+        "o12": 23,
+        "o13": 28,
+        "o14": 29,
+        "o15": 30,
+        "o16": 31,
+        "o17": 36,
+        "o18": 37,
+        "o19": 38,
+        "o20": 39,
+        "o21": 43,
+        "o22": 45,
+        "o23": 46,
+        "o24": 47,
+        "o25": 24,
+        "o26": 32,
+        "o27": 53,
+        "o28": 54,
+        "o29": 55,
+        "o30": 59,
+        "o31": 60,
+        "o32": 61,
+        "o33": 62,
+        "o34": 63
+       },
+       "cost": 5,
+       "tie_break": 0.022677
+      },
+      {
+       "cells": {
+        "o00": 16,
+        "o01": 4,
+        "o02": 5,
+        "o03": 6,
+        "o04": 7,
+        "o05": 12,
+        "o06": 13,
+        "o07": 14,
+        "o08": 15,
+        "o09": 20,
+        "o10": 21,
+        "o11": 22,
+        "o12": 23,
+        "o13": 28,
+        "o14": 29,
+        "o15": 30,
+        "o16": 31,
+        "o17": 36,
+        "o18": 37,
+        "o19": 38,
+        "o20": 39,
+        "o21": 43,
+        "o22": 45,
+        "o23": 46,
+        "o24": 47,
+        "o25": 32,
+        "o26": 51,
+        "o27": 53,
+        "o28": 54,
+        "o29": 55,
+        "o30": 59,
+        "o31": 60,
+        "o32": 61,
+        "o33": 62,
+        "o34": 63
+       },
+       "cost": 5,
+       "tie_break": 0.022677
+      },
+      {
+       "cells": {
+        "o00": 16,
+        "o01": 4,
+        "o02": 5,
+        "o03": 6,
+        "o04": 7,
+        "o05": 12,
+        "o06": 13,
+        "o07": 14,
+        "o08": 15,
+        "o09": 20,
+        "o10": 21,
+        "o11": 22,
+        "o12": 23,
+        "o13": 28,
+        "o14": 29,
+        "o15": 30,
+        "o16": 31,
+        "o17": 36,
+        "o18": 37,
+        "o19": 38,
+        "o20": 39,
+        "o21": 59,
+        "o22": 45,
+        "o23": 46,
+        "o24": 47,
+        "o25": 32,
+        "o26": 24,
+        "o27": 53,
+        "o28": 54,
+        "o29": 55,
+        "o30": 51,
+        "o31": 60,
+        "o32": 61,
+        "o33": 62,
+        "o34": 63
+       },
+       "cost": 5,
+       "tie_break": 0.023256
+      },
+      {
+       "cells": {
+        "o00": 16,
+        "o01": 4,
+        "o02": 5,
+        "o03": 6,
+        "o04": 7,
+        "o05": 12,
+        "o06": 13,
+        "o07": 14,
+        "o08": 15,
+        "o09": 20,
+        "o10": 21,
+        "o11": 22,
+        "o12": 23,
+        "o13": 28,
+        "o14": 29,
+        "o15": 30,
+        "o16": 31,
+        "o17": 36,
+        "o18": 37,
+        "o19": 38,
+        "o20": 39,
+        "o21": 43,
+        "o22": 45,
+        "o23": 46,
+        "o24": 47,
+        "o25": 32,
+        "o26": 24,
+        "o27": 53,
+        "o28": 54,
+        "o29": 55,
+        "o30": 51,
+        "o31": 60,
+        "o32": 61,
+        "o33": 62,
+        "o34": 63
+       },
+       "cost": 5,
+       "tie_break": 0.023256
+      },
+      {
+       "cells": {
+        "o00": 16,
+        "o01": 4,
+        "o02": 5,
+        "o03": 6,
+        "o04": 7,
+        "o05": 12,
+        "o06": 13,
+        "o07": 14,
+        "o08": 15,
+        "o09": 20,
+        "o10": 21,
+        "o11": 22,
+        "o12": 23,
+        "o13": 28,
+        "o14": 29,
+        "o15": 30,
+        "o16": 31,
+        "o17": 36,
+        "o18": 37,
+        "o19": 38,
+        "o20": 39,
+        "o21": 43,
+        "o22": 45,
+        "o23": 46,
+        "o24": 47,
+        "o25": 24,
+        "o26": 32,
+        "o27": 53,
+        "o28": 54,
+        "o29": 55,
+        "o30": 51,
+        "o31": 60,
+        "o32": 61,
+        "o33": 62,
+        "o34": 63
+       },
+       "cost": 5,
+       "tie_break": 0.023256
+      },
+      {
+       "cells": {
+        "o00": 16,
+        "o01": 4,
+        "o02": 5,
+        "o03": 6,
+        "o04": 7,
+        "o05": 12,
+        "o06": 13,
+        "o07": 14,
+        "o08": 15,
+        "o09": 20,
+        "o10": 21,
+        "o11": 22,
+        "o12": 23,
+        "o13": 28,
+        "o14": 29,
+        "o15": 30,
+        "o16": 31,
+        "o17": 36,
+        "o18": 37,
+        "o19": 38,
+        "o20": 39,
+        "o21": 59,
+        "o22": 45,
+        "o23": 46,
+        "o24": 47,
+        "o25": 24,
+        "o26": 32,
+        "o27": 53,
+        "o28": 54,
+        "o29": 55,
+        "o30": 51,
+        "o31": 60,
+        "o32": 61,
+        "o33": 62,
+        "o34": 63
+       },
+       "cost": 5,
+       "tie_break": 0.023256
+      },
+      {
+       "cells": {
+        "o00": 16,
+        "o01": 4,
+        "o02": 5,
+        "o03": 6,
+        "o04": 7,
+        "o05": 12,
+        "o06": 13,
+        "o07": 14,
+        "o08": 15,
+        "o09": 20,
+        "o10": 21,
+        "o11": 22,
+        "o12": 23,
+        "o13": 28,
+        "o14": 29,
+        "o15": 30,
+        "o16": 31,
+        "o17": 36,
+        "o18": 37,
+        "o19": 38,
+        "o20": 39,
+        "o21": 51,
+        "o22": 45,
+        "o23": 46,
+        "o24": 47,
+        "o25": 32,
+        "o26": 35,
+        "o27": 53,
+        "o28": 54,
+        "o29": 55,
+        "o30": 59,
+        "o31": 60,
+        "o32": 61,
+        "o33": 62,
+        "o34": 63
+       },
+       "cost": 5,
+       "tie_break": 0.023584
+      },
+      {
+       "cells": {
+        "o00": 16,
+        "o01": 4,
+        "o02": 5,
+        "o03": 6,
+        "o04": 7,
+        "o05": 12,
+        "o06": 13,
+        "o07": 14,
+        "o08": 15,
+        "o09": 20,
+        "o10": 21,
+        "o11": 22,
+        "o12": 23,
+        "o13": 28,
+        "o14": 29,
+        "o15": 30,
+        "o16": 31,
+        "o17": 36,
+        "o18": 37,
+        "o19": 38,
+        "o20": 39,
+        "o21": 43,
+        "o22": 45,
+        "o23": 46,
+        "o24": 47,
+        "o25": 32,
+        "o26": 59,
+        "o27": 53,
+        "o28": 54,
+        "o29": 55,
+        "o30": 51,
+        "o31": 60,
+        "o32": 61,
+        "o33": 62,
+        "o34": 63
+       },
+       "cost": 5,
+       "tie_break": 0.023655
+      }
+     ],
+     "cells": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+     ],
+     "direct_blockers": [
+      "o00",
+      "o21",
+      "o25",
+      "o26",
+      "o30"
+     ],
+     "hall": null,
+     "lower_bound": 5,
+     "objects": [
+      "o00",
+      "o01",
+      "o02",
+      "o03",
+      "o04",
+      "o05",
+      "o06",
+      "o07",
+      "o08",
+      "o09",
+      "o10",
+      "o11",
+      "o12",
+      "o13",
+      "o14",
+      "o15",
+      "o16",
+      "o17",
+      "o18",
+      "o19",
+      "o20",
+      "o21",
+      "o22",
+      "o23",
+      "o24",
+      "o25",
+      "o26",
+      "o27",
+      "o28",
+      "o29",
+      "o30",
+      "o31",
+      "o32",
+      "o33",
+      "o34"
+     ]
+    },
+    "RESTRICTED": {
+     "assignments": [],
+     "cells": [
+      4,
+      5,
+      6,
+      7,
+      8,
+      12,
+      13,
+      14,
+      15,
+      20,
+      21,
+      22,
+      23,
+      24,
+      28,
+      29,
+      30,
+      31,
+      32,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      43,
+      45,
+      46,
+      47,
+      48,
+      49,
+      53,
+      54,
+      55,
+      57,
+      60,
+      61,
+      62,
+      63
+     ],
+     "direct_blockers": [
+      "o00",
+      "o21",
+      "o25",
+      "o26",
+      "o30"
+     ],
+     "hall": {
+      "neighbourhood_cells": [
+       24,
+       32,
+       35,
+       43
+      ],
+      "objects": [
+       "o00",
+       "o21",
+       "o25",
+       "o26",
+       "o30"
+      ]
+     },
+     "lower_bound": null,
+     "objects": [
+      "o00",
+      "o01",
+      "o02",
+      "o03",
+      "o04",
+      "o05",
+      "o06",
+      "o07",
+      "o08",
+      "o09",
+      "o10",
+      "o11",
+      "o12",
+      "o13",
+      "o14",
+      "o15",
+      "o16",
+      "o17",
+      "o18",
+      "o19",
+      "o20",
+      "o21",
+      "o22",
+      "o23",
+      "o24",
+      "o25",
+      "o26",
+      "o27",
+      "o28",
+      "o29",
+      "o30",
+      "o31",
+      "o32",
+      "o33",
+      "o34"
+     ]
+    }
+   }
+  },
+  "G3_T07_PROXY": {
+   "cell_status": {
+    "INVALID": [
+     27,
+     34,
+     35,
+     36,
+     42,
+     43,
+     44,
+     45,
+     50,
+     51,
+     52,
+     53,
+     56,
+     57,
+     58,
+     59,
+     60
+    ],
+    "UNRESOLVED": [],
+    "VALID_count": 46
+   },
+   "compare": [],
+   "frozen_action_hash": "sha256:27cb5a04f8caac257dc622bbe3fc32e460de092928e2b64701152bb79a99295f",
+   "lineage": [
+    "archived G2_D2/block_ab"
+   ],
+   "replay": null,
+   "restoration": {
+    "assignment": {
+     "o02": 40,
+     "o05": 49
+    },
+    "direct_blockers": [
+     "o02",
+     "o05"
+    ],
+    "moves": 2,
+    "terminal_valid": true
+   },
+   "restricted_domain": {
+    "o02": [
+     48
+    ],
+    "o05": [
+     48
+    ]
+   },
+   "terminal": {
+    "ALL_SUPPORTED": {
+     "assignments": [
+      {
+       "cells": {
+        "o00": 4,
+        "o01": 15,
+        "o02": 49,
+        "o03": 61,
+        "o04": 7,
+        "o05": 41
+       },
+       "cost": 2,
+       "tie_break": 0.030484
+      },
+      {
+       "cells": {
+        "o00": 4,
+        "o01": 15,
+        "o02": 48,
+        "o03": 61,
+        "o04": 7,
+        "o05": 49
+       },
+       "cost": 2,
+       "tie_break": 0.030484
+      },
+      {
+       "cells": {
+        "o00": 4,
+        "o01": 15,
+        "o02": 48,
+        "o03": 61,
+        "o04": 7,
+        "o05": 41
+       },
+       "cost": 2,
+       "tie_break": 0.035714
+      },
+      {
+       "cells": {
+        "o00": 4,
+        "o01": 15,
+        "o02": 49,
+        "o03": 61,
+        "o04": 7,
+        "o05": 48
+       },
+       "cost": 2,
+       "tie_break": 0.037881
+      },
+      {
+       "cells": {
+        "o00": 4,
+        "o01": 15,
+        "o02": 41,
+        "o03": 61,
+        "o04": 7,
+        "o05": 49
+       },
+       "cost": 2,
+       "tie_break": 0.037881
+      },
+      {
+       "cells": {
+        "o00": 4,
+        "o01": 15,
+        "o02": 49,
+        "o03": 61,
+        "o04": 7,
+        "o05": 33
+       },
+       "cost": 2,
+       "tie_break": 0.040862
+      },
+      {
+       "cells": {
+        "o00": 4,
+        "o01": 15,
+        "o02": 40,
+        "o03": 61,
+        "o04": 7,
+        "o05": 49
+       },
+       "cost": 2,
+       "tie_break": 0.040862
+      },
+      {
+       "cells": {
+        "o00": 4,
+        "o01": 15,
+        "o02": 49,
+        "o03": 61,
+        "o04": 7,
+        "o05": 40
+       },
+       "cost": 2,
+       "tie_break": 0.040862
+      },
+      {
+       "cells": {
+        "o00": 4,
+        "o01": 15,
+        "o02": 48,
+        "o03": 61,
+        "o04": 7,
+        "o05": 33
+       },
+       "cost": 2,
+       "tie_break": 0.046092
+      },
+      {
+       "cells": {
+        "o00": 4,
+        "o01": 15,
+        "o02": 40,
+        "o03": 61,
+        "o04": 7,
+        "o05": 41
+       },
+       "cost": 2,
+       "tie_break": 0.046092
+      },
+      {
+       "cells": {
+        "o00": 4,
+        "o01": 15,
+        "o02": 48,
+        "o03": 61,
+        "o04": 7,
+        "o05": 40
+       },
+       "cost": 2,
+       "tie_break": 0.046092
+      },
+      {
+       "cells": {
+        "o00": 4,
+        "o01": 15,
+        "o02": 49,
+        "o03": 61,
+        "o04": 7,
+        "o05": 32
+       },
+       "cost": 2,
+       "tie_break": 0.048341
+      }
+     ],
+     "cells": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+     ],
+     "direct_blockers": [
+      "o02",
+      "o05"
+     ],
+     "hall": null,
+     "lower_bound": 2,
+     "objects": [
+      "o00",
+      "o01",
+      "o02",
+      "o03",
+      "o04",
+      "o05"
+     ]
+    },
+    "RESTRICTED": {
+     "assignments": [],
+     "cells": [
+      4,
+      7,
+      15,
+      48,
+      50,
+      57,
+      61
+     ],
+     "direct_blockers": [
+      "o02",
+      "o05"
+     ],
+     "hall": {
+      "neighbourhood_cells": [
+       48
+      ],
+      "objects": [
+       "o02",
+       "o05"
+      ]
+     },
+     "lower_bound": null,
+     "objects": [
+      "o00",
+      "o01",
+      "o02",
+      "o03",
+      "o04",
+      "o05"
+     ]
+    }
+   }
+  }
+ },
+ "gate_checks_passed": true,
+ "physical_execution_status": "NOT_RUN",
+ "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+ "simulation_replay_status": "NOT_RUN",
+ "solver": {
+  "k_best": "Murty partitioning (solve.kbest)",
+  "matching": "scipy.optimize.linear_sum_assignment",
+  "scipy": "1.16.3"
+ },
+ "stage": "G3",
+ "summary": [
+  {
+   "LB": 1,
+   "attempts": "1 exec / 0 rejected / 0 pruned",
+   "best verified": 1,
+   "domain": "ALL_SUPPORTED",
+   "fixture": "G3_D1",
+   "minimality": "MINIMUM_CERTIFIED",
+   "plans": 1,
+   "replay": true,
+   "status": "EXECUTABLE_VERIFIED",
+   "stop": "WITNESS_FOUND",
+   "|D|": 1
+  },
+  {
+   "LB": 2,
+   "attempts": "1 exec / 0 rejected / 0 pruned",
+   "best verified": 2,
+   "domain": "ALL_SUPPORTED",
+   "fixture": "G3_D2",
+   "minimality": "MINIMUM_CERTIFIED",
+   "plans": 2,
+   "replay": true,
+   "status": "EXECUTABLE_VERIFIED",
+   "stop": "WITNESS_FOUND",
+   "|D|": 2
+  },
+  {
+   "LB": 2,
+   "attempts": "1 exec / 1 rejected / 0 pruned",
+   "best verified": 2,
+   "domain": "ALL_SUPPORTED",
+   "fixture": "G3_D3",
+   "minimality": "MINIMUM_CERTIFIED",
+   "plans": 3,
+   "replay": true,
+   "status": "EXECUTABLE_VERIFIED",
+   "stop": "WITNESS_FOUND",
+   "|D|": 2
+  },
+  {
+   "LB": 5,
+   "attempts": "1 exec / 14 rejected / 187 pruned",
+   "best verified": 5,
+   "domain": "ALL_SUPPORTED",
+   "fixture": "G3_T07_DENSE",
+   "minimality": "MINIMUM_CERTIFIED",
+   "plans": 24,
+   "replay": true,
+   "status": "EXECUTABLE_VERIFIED",
+   "stop": "WITNESS_FOUND",
+   "|D|": 5
+  },
+  {
+   "LB": "none (Hall)",
+   "domain": "RESTRICTED",
+   "fixture": "G3_T07_DENSE",
+   "status": "CERTIFIED_TERMINAL_INFEASIBLE",
+   "stop": "|U|=5 > |N(U)|=4",
+   "|D|": 5
+  },
+  {
+   "LB": 2,
+   "domain": "ALL_SUPPORTED",
+   "fixture": "G3_T07_PROXY",
+   "status": "NOT_RUN",
+   "stop": "terminal-only control (no robot execution)",
+   "|D|": 2
+  },
+  {
+   "LB": "none (Hall)",
+   "domain": "RESTRICTED",
+   "fixture": "G3_T07_PROXY",
+   "status": "CERTIFIED_TERMINAL_INFEASIBLE",
+   "stop": "|U|=2 > |N(U)|=1",
+   "|D|": 2
+  }
+ ],
+ "tasks": {
+  "G3_D1.compare0.gamma0_final": {
+   "action_hash": "sha256:487ec18878068e01501c6737f1c58ec4cd1b9e410560bd4d8f7f8c32c5784355",
+   "hash_scene": "G3_D1.reference",
+   "target": "t0"
+  },
+  "G3_D1.compare0.m0": {
+   "action_hash": "sha256:2f1d76288fb549d168a5bc4ebe395a2d3139f4dd26df8b002344255211601bc2",
+   "target": "o02"
+  },
+  "G3_D1.compare1.gamma0_final": {
+   "action_hash": "sha256:487ec18878068e01501c6737f1c58ec4cd1b9e410560bd4d8f7f8c32c5784355",
+   "hash_scene": "G3_D1.reference",
+   "target": "t0"
+  },
+  "G3_D1.compare1.m0": {
+   "action_hash": "sha256:e1335604f1468b27560c1410c28864a383b68e0fbd9042e87ccef73f894d6140",
+   "target": "o02"
+  },
+  "G3_D1.forced1.gamma0_final": {
+   "action_hash": "sha256:487ec18878068e01501c6737f1c58ec4cd1b9e410560bd4d8f7f8c32c5784355",
+   "hash_scene": "G3_D1.reference",
+   "target": "t0"
+  },
+  "G3_D1.forced1.m0": {
+   "action_hash": "sha256:cac3ebaa6341884261dc93a5b56abdeab87cb0a93420c1258f281fcee4b2764d",
+   "target": "o03"
+  },
+  "G3_D1.forced1.m1": {
+   "action_hash": "sha256:24aea80e5098c8959c952a42d76d5d0081159ca0c7e44c8864b0ef14b02a94a5",
+   "target": "o02"
+  },
+  "G3_D1.gamma0": {
+   "action_hash": "sha256:487ec18878068e01501c6737f1c58ec4cd1b9e410560bd4d8f7f8c32c5784355",
+   "target": "t0"
+  },
+  "G3_D1.witness.gamma0_final": {
+   "action_hash": "sha256:487ec18878068e01501c6737f1c58ec4cd1b9e410560bd4d8f7f8c32c5784355",
+   "hash_scene": "G3_D1.reference",
+   "target": "t0"
+  },
+  "G3_D1.witness.m0": {
+   "action_hash": "sha256:2f1d76288fb549d168a5bc4ebe395a2d3139f4dd26df8b002344255211601bc2",
+   "target": "o02"
+  },
+  "G3_D2.compare0.gamma0_final": {
+   "action_hash": "sha256:27cb5a04f8caac257dc622bbe3fc32e460de092928e2b64701152bb79a99295f",
+   "hash_scene": "G3_D2.reference",
+   "target": "t0"
+  },
+  "G3_D2.compare0.m0": {
+   "action_hash": "sha256:efe5799f01db97c2f36fc253432fdb015134818f824bb148daac5bcfb0e7480c",
+   "target": "o02"
+  },
+  "G3_D2.compare0.m1": {
+   "action_hash": "sha256:92cf934d8a70a311fb63f469bd47f7f5067689b1e7aabedd558044bbacdbd27b",
+   "target": "o05"
+  },
+  "G3_D2.compare1.gamma0_final": {
+   "action_hash": "sha256:27cb5a04f8caac257dc622bbe3fc32e460de092928e2b64701152bb79a99295f",
+   "hash_scene": "G3_D2.reference",
+   "target": "t0"
+  },
+  "G3_D2.compare1.m0": {
+   "action_hash": "sha256:0b124cb69ca0703202c2354908fccd9758d59c2d87518ab9af19ef997ce0ce9f",
+   "target": "o05"
+  },
+  "G3_D2.compare1.m1": {
+   "action_hash": "sha256:a52108be809b52844520f20c8089a6797643db45db01278c9223b7cd1b799f49",
+   "target": "o02"
+  },
+  "G3_D2.compare2.gamma0_final": {
+   "action_hash": "sha256:27cb5a04f8caac257dc622bbe3fc32e460de092928e2b64701152bb79a99295f",
+   "hash_scene": "G3_D2.reference",
+   "target": "t0"
+  },
+  "G3_D2.compare2.m0": {
+   "action_hash": "sha256:c69dda1f73a78186408d2d4b3a2cd84c01cd9d9c66d5b92e92a0ce40190ba075",
+   "target": "o02"
+  },
+  "G3_D2.compare2.m1": {
+   "action_hash": "sha256:7dc8aba349582a1222f1b200e98373fe5df4b7d80de72fa48436107d657ffca7",
+   "target": "o05"
+  },
+  "G3_D2.compare3.gamma0_final": {
+   "action_hash": "sha256:27cb5a04f8caac257dc622bbe3fc32e460de092928e2b64701152bb79a99295f",
+   "hash_scene": "G3_D2.reference",
+   "target": "t0"
+  },
+  "G3_D2.compare3.m0": {
+   "action_hash": "sha256:a5149360ae7dd84ebae709f5e6def5b88c609493b03a71c18b6b4c2cc6b7752f",
+   "target": "o05"
+  },
+  "G3_D2.compare3.m1": {
+   "action_hash": "sha256:93e5dcb11ce400f35ae7baf335113f7f950c354e4830e03e66f317048e8a754a",
+   "target": "o02"
+  },
+  "G3_D2.forced1.gamma0_final": {
+   "action_hash": "sha256:27cb5a04f8caac257dc622bbe3fc32e460de092928e2b64701152bb79a99295f",
+   "hash_scene": "G3_D2.reference",
+   "target": "t0"
+  },
+  "G3_D2.forced1.m0": {
+   "action_hash": "sha256:429ea4c5cda0286bb6cfc8ca7d4b1bfbc9c80061a845add358442eee5323c1ee",
+   "target": "o03"
+  },
+  "G3_D2.forced1.m1": {
+   "action_hash": "sha256:f6e81722ad662cf85644a9c02d8e57207bce5511f9a38d58aad984a2dd499d8f",
+   "target": "o02"
+  },
+  "G3_D2.forced1.m2": {
+   "action_hash": "sha256:172eb9a9b17ea54407f20320baba8ab926844bbf95067fdc80214894d41f38d8",
+   "target": "o05"
+  },
+  "G3_D2.forced2.gamma0_final": {
+   "action_hash": "sha256:27cb5a04f8caac257dc622bbe3fc32e460de092928e2b64701152bb79a99295f",
+   "hash_scene": "G3_D2.reference",
+   "target": "t0"
+  },
+  "G3_D2.forced2.m0": {
+   "action_hash": "sha256:429ea4c5cda0286bb6cfc8ca7d4b1bfbc9c80061a845add358442eee5323c1ee",
+   "target": "o03"
+  },
+  "G3_D2.forced2.m1": {
+   "action_hash": "sha256:287fb1b2a78781e52c5747b4be19cba706cc3048df77d4247abf2bf21537356c",
+   "target": "o05"
+  },
+  "G3_D2.forced2.m2": {
+   "action_hash": "sha256:226021516640c846ce959f3d46202282166e8b4f3af0d366bcb0af353d15e162",
+   "target": "o02"
+  },
+  "G3_D2.forced4.gamma0_final": {
+   "action_hash": "sha256:27cb5a04f8caac257dc622bbe3fc32e460de092928e2b64701152bb79a99295f",
+   "hash_scene": "G3_D2.reference",
+   "target": "t0"
+  },
+  "G3_D2.forced4.m0": {
+   "action_hash": "sha256:a5149360ae7dd84ebae709f5e6def5b88c609493b03a71c18b6b4c2cc6b7752f",
+   "target": "o05"
+  },
+  "G3_D2.forced4.m1": {
+   "action_hash": "sha256:bfc7ded4bdcd685982b62dcb99b826cfa4bf4745d64cb172dbc6d3537c920935",
+   "target": "o03"
+  },
+  "G3_D2.forced4.m2": {
+   "action_hash": "sha256:ec4e4008ba0a12713aaad0820e003f3563a31fcb8989def53f3f597e793fe3a2",
+   "target": "o02"
+  },
+  "G3_D2.gamma0": {
+   "action_hash": "sha256:27cb5a04f8caac257dc622bbe3fc32e460de092928e2b64701152bb79a99295f",
+   "target": "t0"
+  },
+  "G3_D2.witness.gamma0_final": {
+   "action_hash": "sha256:27cb5a04f8caac257dc622bbe3fc32e460de092928e2b64701152bb79a99295f",
+   "hash_scene": "G3_D2.reference",
+   "target": "t0"
+  },
+  "G3_D2.witness.m0": {
+   "action_hash": "sha256:efe5799f01db97c2f36fc253432fdb015134818f824bb148daac5bcfb0e7480c",
+   "target": "o02"
+  },
+  "G3_D2.witness.m1": {
+   "action_hash": "sha256:a90f8ad2e829439764db4f09dad3de73e40f5a56be7bedb01a09107423e35d6b",
+   "target": "o05"
+  },
+  "G3_D3.gamma0": {
+   "action_hash": "sha256:6f3dfb6948f35e7e1f82cba38cbc5732a27009bf978efacce6c572b18e0b566e",
+   "target": "t0"
+  },
+  "G3_D3.witness.gamma0_final": {
+   "action_hash": "sha256:6f3dfb6948f35e7e1f82cba38cbc5732a27009bf978efacce6c572b18e0b566e",
+   "hash_scene": "G3_D3.reference",
+   "target": "t0"
+  },
+  "G3_D3.witness.m0": {
+   "action_hash": "sha256:5304578805b084ad82b551c769e81b2996948fbf37eb35b47e726ae45e538756",
+   "target": "o01"
+  },
+  "G3_D3.witness.m1": {
+   "action_hash": "sha256:4e08c84d040d5c0bc2cc92f519111578e0fffea73028929c3970445072e094b2",
+   "target": "o00"
+  },
+  "G3_T07_DENSE.gamma0": {
+   "action_hash": "sha256:d3cbc6fd1d312f4c1c1ee1518cc43da780cbfd01b21550fffe304efdc4c3368d",
+   "target": "t0"
+  },
+  "G3_T07_DENSE.witness.gamma0_final": {
+   "action_hash": "sha256:d3cbc6fd1d312f4c1c1ee1518cc43da780cbfd01b21550fffe304efdc4c3368d",
+   "hash_scene": "G3_T07_DENSE.reference",
+   "target": "t0"
+  },
+  "G3_T07_DENSE.witness.m0": {
+   "action_hash": "sha256:0580f3f97b62fca2beb0c28a2ab611d9af7049c32e927bd77d6316d94a252098",
+   "target": "o25"
+  },
+  "G3_T07_DENSE.witness.m1": {
+   "action_hash": "sha256:8f5c369560d5a2209123fe022ae9fc6ea5748dd95f77436c32cc0fa043a86da4",
+   "target": "o30"
+  },
+  "G3_T07_DENSE.witness.m2": {
+   "action_hash": "sha256:c9ca904adf8f6139c608b272252c54e116994f5870bd8a6fdfdb02260a738d9a",
+   "target": "o21"
+  },
+  "G3_T07_DENSE.witness.m3": {
+   "action_hash": "sha256:a915d059b4aee9752dcca361ecd9cc6d08d41f97943e2b5f7dff6037152418b1",
+   "target": "o26"
+  },
+  "G3_T07_DENSE.witness.m4": {
+   "action_hash": "sha256:7602ed7257935b5b1b0f7eace64c6b22b62fd5573cb63de3beda7d6db736f2d0",
+   "target": "o00"
+  },
+  "G3_T07_PROXY.gamma0": {
+   "action_hash": "sha256:27cb5a04f8caac257dc622bbe3fc32e460de092928e2b64701152bb79a99295f",
+   "target": "t0"
+  }
+ },
+ "verification_scope": "KINEMATIC_3R_RELOCATIONS_AND_FIXED_GAMMA0_REPLAY (no dynamics, no simulation)"
+}

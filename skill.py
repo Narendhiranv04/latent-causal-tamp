@@ -150,11 +150,18 @@ def _none_left(stage: str, cands: list, picks, places=()) -> SkillResult:
                        picks=picks, places=list(places))
 
 
-def plan_skill(robot, scene, target_id: str, dest_cell: int, cfg: dict, key: str) -> SkillResult:
-    """Home -> pregrasp -> approach -> close/attach -> carry -> release -> retreat -> home."""
+def plan_skill(robot, scene, target_id: str, dest_cell: int, cfg: dict, key: str, q_start=None,
+               q_goal="home") -> SkillResult:
+    """start -> pregrasp -> approach -> close/attach -> carry -> release -> retreat -> goal.
+
+    q_start is the robot's actual configuration (default: home, open gripper, nothing
+    held). q_goal is where the final connector ends (default: home); None ends the
+    record after the retreat, so the next skill starts exactly where this one stopped."""
     p, pc = params(cfg), cfg["planner2d"]
     target, dest = scene.get(target_id), scene.lattice.center(dest_cell)
-    home, gopen = np.array(robot.q_home), robot.open_gap
+    home = np.array(robot.q_home if q_start is None else q_start, float)
+    goal = np.array(robot.q_home) if isinstance(q_goal, str) else (None if q_goal is None else np.asarray(q_goal, float))
+    gopen = robot.open_gap
     ck0 = mo.checkers(robot, scene, target_id, None, None, p["delta"], p["eps"])
     v = ck0[("start", False)].status_at(home, gopen)
     if v.status != ge.CLEAR:
@@ -202,8 +209,11 @@ def plan_skill(robot, scene, target_id: str, dest_cell: int, cfg: dict, key: str
                                               pick.branch, p["line_step_m"], p["max_ik_jump_rad"])
                 p2 = connect(f"carry{i}.{j}", ck[("held", False)], pick.q_end, place.q_end, pick.gap,
                              rrt, guide, pose)
-                p3 = p2 and connect(f"home{i}.{j}", ck[("placed", False)], place.line[-1], home, gopen, rrt)
-                if p3:
+                if p2 is None:
+                    continue
+                p3 = None if goal is None else connect(f"home{i}.{j}", ck[("placed", False)], place.line[-1],
+                                                       goal, gopen, rrt)
+                if goal is None or p3:
                     return _finish(res, robot, scene, target_id, dest, (p1, pick, p2, place, p3), cfg)
     if failures >= p["max_plan_failures"]:
         return res
@@ -224,14 +234,14 @@ def _finish(res, robot, scene, target_id, dest, parts, cfg) -> SkillResult:
     for qs, gap, phase in ((p1.path[1:], gopen, "pregrasp"), (pick.line[1:], gopen, "approach"),
                            ([pick.q_end], pick.gap, "close_attach"), (p2.path[1:], pick.gap, "carry"),
                            ([place.q_end], gopen, "release"), (place.line[1:], gopen, "retreat"),
-                           (p3.path[1:], gopen, "return_home")):
+                           ([] if p3 is None else p3.path[1:], gopen, "return_home")):
         for q in qs:
             t.add(q, gap, phase)
     res.traj, res.place_error_m = t, float(np.linalg.norm(np.subtract(t.place_xy, dest)))
-    res.used = {"pregrasp": p1.reason, "carry": p2.reason, "return_home": p3.reason,
+    res.used = {"pregrasp": p1.reason, "carry": p2.reason, "return_home": p3 and p3.reason,
                 "costs": {k: {"nodes": c.nodes, "evals": c.evals, "seconds": round(c.seconds, 2),
                               "wall_clock_cut": c.wall_clock_cut} for k, c in (("pregrasp", p1), ("carry", p2),
-                                                                                ("return_home", p3))},
+                                                                                ("return_home", p3)) if c},
                 "pick": {"phi_rad": pick.phi, "branch": pick.branch},
                 "place": {"phi_rad": place.phi, "branch": place.branch}}
     verdicts = mo.certify_trajectory(robot, scene, target_id, t.arrays(), p["delta"], p["eps"], p["evals"])
