@@ -27,7 +27,9 @@ joint_limits_rad = [
   [-3.14159265, 3.14159265],
   [-3.14159265, 3.14159265],
 ]
-q_home_rad = [0.0, 0.0, 0.0]        # provisional: MUST PASS collision / reach checks (G1)
+# G1: [0,0,0] crossed the support and came 0.004 m (< delta) from cell 27/35 discs;
+# this folded home lies off the support and clears all 64 cells (see report 0003).
+q_home_rad = [1.5707963267948966, 1.5707963267948966, 1.5707963267948966]
 base_radius_m = 0.018                # provisional colliding fixed base
 joint_housing_radius_m = 0.012       # provisional joint geometry
 self_collision_exclusions = [[0, 1], [1, 2]]
@@ -44,9 +46,37 @@ tcp_at_palm_tip = true
 attachment_pose_policy = "validated_contact_at_closure"
 contact_pos_tolerance_m = 0.001
 release_xy_tolerance_m = 0.002
+rail_depth_m = 0.008                 # G1: finger slide rail joining both fingers to the palm
+grasp_center_x_m = 0.032             # G1: object centre ahead of the TCP when grasped
+
+[geometry]
+numeric_margin_band_m = 0.0002
+interval_max_step_rad = 0.02         # sampling aid ONLY (figure traces); not certification
+interval_certifier = "analytic_or_conservative_subdivision"
+certify_max_evals = 4000             # distance evaluations per segment before UNRESOLVED
+
+[planner2d]
+algorithm = "RRT_CONNECT_WITH_FULL_BODY_CALLBACK"   # every tree edge certified (geometry.certify)
+seed = 41
+max_nodes = 20000
+max_wall_seconds = 30.0
+extend_step_rad = 0.25
+shortcut_rounds = 150
+pose_step_m = 0.06                   # carry search in held-object pose space: step [m]
+pose_phi_weight_m = 0.1              # metres per radian of tool-axis turn in that metric
+edge_max_evals = 200                 # per search edge; uncertified edges are dropped, never accepted
+
+[skill2d]
+approach_dirs = 24                   # declared grasp set: tool axis every 15 deg, both elbows
+approach_dist_m = 0.06               # pregrasp offset behind the grasp pose
+retreat_dist_m = 0.06
+line_step_m = 0.005                  # IK waypoint spacing on straight approach/retreat lines
+max_ik_jump_rad = 0.1                # larger joint jump between line waypoints = discontinuous IK
+max_plan_failures = 4                # UNRESOLVED connector calls per skill before giving up
+max_direct_pairs = 64                # (pick, place) pairs tried with direct/guide connectors before RRT
 
 # Rendering of the clean learner observation and the fixed overview axes.
 [render]
 image_px = 320                       # square top-down image over the support; 0.002 m/px
-overview_xlim_m = [-0.22, 0.92]      # fixed for every comparative 2D panel
-overview_ylim_m = [-0.06, 0.70]
+overview_xlim_m = [-0.85, 0.85]      # fixed for every 2D robot panel; covers every recorded G1 frame
+overview_ylim_m = [-0.50, 1.40]

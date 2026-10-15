@@ -1,0 +1,4579 @@
+{
+ "audit_counts": {
+  "CERTIFIED_INFEASIBLE": 0,
+  "UNRESOLVED": 0,
+  "VERIFIED_FEASIBLE": 64
+ },
+ "config_hash": "sha256:bcfd8bd274d1ad563e153d1d632e00f0c7db32d2ca5aecb3cf2acb64990a3bd0",
+ "gate": {
+  "all_64_cells_verified_obstacle_free": true,
+  "corner_tasks_verified_D0_and_S1": true,
+  "home_clear_of_all_64_cells": true,
+  "nominal_skill_verified": true,
+  "robot_frames_within_fixed_axes": true
+ },
+ "gate_checks_passed": true,
+ "home_check": {
+  "home": {
+   "closest_pair": "link2|rail",
+   "distance_m": 0.013000000000000018,
+   "q": [
+    1.5707963267948966,
+    1.5707963267948966,
+    1.5707963267948966
+   ],
+   "status": "CLEAR"
+  },
+  "provisional_q0": {
+   "closest_pair": "housing1|o27",
+   "distance_m": 0.003999999999999979,
+   "q": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "status": "COLLISION"
+  }
+ },
+ "nominal_action_hash": "sha256:913799bfa2e5405d1ccaa52a32d47aaf423b40a35ecd995ab00f640fd7a7e464",
+ "nominal_task": "G1_S1_t4",
+ "physical_execution_status": "NOT_RUN",
+ "robot_extent_m": [
+  -0.7966010642120847,
+  0.7662603832873085,
+  -0.4347908592017294,
+  1.3330957651162803
+ ],
+ "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+ "robot_profile_status": "TESTED_G1",
+ "simulation_replay_status": "NOT_RUN",
+ "stage": "G1",
+ "target_replay_status": "KINEMATIC_REPLAY_CERTIFIED (see replay)",
+ "tasks": {
+  "G1_CLUTTER_t0": {
+   "action_hash": null,
+   "connectors_used": {},
+   "pick_candidates": {
+    "GRASP_POSE": 22,
+    "NO_IK": 26
+   },
+   "place_candidates": {},
+   "place_error_m": null,
+   "reason": "NO_PICK_CANDIDATE",
+   "root_id": "root_0000",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:da0046a382c159eca3f4a465e57c2a8640ea92790b157698be2a5d18ec1b28c4",
+   "seconds": 0.0,
+   "status": "CERTIFIED_INFEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL/DECLARED_GRASP_SET",
+   "waypoints": 0
+  },
+  "G1_D0_t0": {
+   "action_hash": "sha256:25510fa581ed2409061da55d44a81d70a2e31a2eeef96366733bd2a346aa7476",
+   "connectors_used": {
+    "carry": "GUIDE_LINE",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 4.1887902047863905
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 5.497787143782138
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 112,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "APPROACH": 4,
+    "GRASP_POSE": 12,
+    "OK": 32
+   },
+   "place_candidates": {
+    "NO_IK": 28,
+    "OK": 20
+   },
+   "place_error_m": 2.5673907444456745e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:7d27bf11702f7b866ba9e3cbeef76ed36891b31c68cf83f182f711db8e6a471b",
+   "seconds": 1.2,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 141
+  },
+  "G1_D0_t1": {
+   "action_hash": "sha256:e16f271b2542525cb410ff38720f23ba90775184a9b9897c9e8d6ee087528b2a",
+   "connectors_used": {
+    "carry": "GUIDE_LINE",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 5.759586531581287
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 0.0
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 112,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "NO_IK": 28,
+    "OK": 20
+   },
+   "place_candidates": {
+    "NO_IK": 28,
+    "OK": 20
+   },
+   "place_error_m": 2.482534153247273e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:1288746aed9bfbde03b8ed518900e68d815dd94a0f86cbe43e2eb538a35ecfa9",
+   "seconds": 1.9,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 141
+  },
+  "G1_D0_t2": {
+   "action_hash": "sha256:5813e315e8a5dfffc165750462c5cb1d26ed073067a7d85fc7a92fee17b286da",
+   "connectors_used": {
+    "carry": "RRT_JOINT",
+    "pick": {
+     "branch": 1,
+     "phi_rad": 1.5707963267948966
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 5.235987755982989
+    },
+    "pregrasp": "RRT_JOINT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 4,
+    "close_attach": 1,
+    "pregrasp": 2,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "NO_IK": 28,
+    "OK": 20
+   },
+   "place_candidates": {
+    "OK": 32,
+    "PLACE_POSE": 12,
+    "RETREAT": 4
+   },
+   "place_error_m": 1.1796119636642288e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [
+    {
+     "label": "pregrasp0",
+     "method": "RRT_JOINT",
+     "nodes": 35,
+     "seconds": 0.44,
+     "status": "CLEAR"
+    },
+    {
+     "label": "carry0.0",
+     "method": "GUIDE_LINE",
+     "nodes": 113,
+     "seconds": 0.07,
+     "status": "CLEAR"
+    },
+    {
+     "label": "home0.0",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "carry0.1",
+     "method": "GUIDE_LINE",
+     "nodes": 113,
+     "seconds": 0.06,
+     "status": "CLEAR"
+    },
+    {
+     "label": "home0.1",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "carry0.2",
+     "method": "GUIDE_LINE",
+     "nodes": 113,
+     "seconds": 0.06,
+     "status": "CLEAR"
+    },
+    {
+     "label": "home0.2",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "carry0.3",
+     "method": "GUIDE_LINE",
+     "nodes": 113,
+     "seconds": 0.06,
+     "status": "CLEAR"
+    },
+    {
+     "label": "home0.3",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "carry0.4",
+     "method": "GUIDE_LINE",
+     "nodes": 113,
+     "seconds": 0.06,
+     "status": "CLEAR"
+    },
+    {
+     "label": "home0.4",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "carry0.5",
+     "method": "GUIDE_LINE",
+     "nodes": 113,
+     "seconds": 0.06,
+     "status": "CLEAR"
+    },
+    {
+     "label": "home0.5",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "carry0.6",
+     "method": "GUIDE_LINE",
+     "nodes": 113,
+     "seconds": 0.06,
+     "status": "CLEAR"
+    },
+    {
+     "label": "home0.6",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "carry0.7",
+     "method": "RRT_OBJECT_POSE",
+     "nodes": 13,
+     "seconds": 0.26,
+     "status": "CLEAR"
+    },
+    {
+     "label": "home0.7",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "carry0.8",
+     "method": "GUIDE_LINE",
+     "nodes": 113,
+     "seconds": 0.06,
+     "status": "CLEAR"
+    },
+    {
+     "label": "home0.8",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "carry0.9",
+     "method": "RRT_OBJECT_POSE",
+     "nodes": 17,
+     "seconds": 0.24,
+     "status": "CLEAR"
+    },
+    {
+     "label": "home0.9",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "carry0.10",
+     "method": "RRT_OBJECT_POSE",
+     "nodes": 17,
+     "seconds": 0.23,
+     "status": "CLEAR"
+    },
+    {
+     "label": "home0.10",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "carry0.11",
+     "method": "GUIDE_LINE",
+     "nodes": 113,
+     "seconds": 0.06,
+     "status": "CLEAR"
+    },
+    {
+     "label": "home0.11",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "carry0.12",
+     "method": "RRT_OBJECT_POSE",
+     "nodes": 48,
+     "seconds": 0.76,
+     "status": "CLEAR"
+    },
+    {
+     "label": "home0.12",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "carry0.13",
+     "method": "GUIDE_LINE",
+     "nodes": 113,
+     "seconds": 0.06,
+     "status": "CLEAR"
+    },
+    {
+     "label": "home0.13",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "carry0.14",
+     "method": "GUIDE_LINE",
+     "nodes": 113,
+     "seconds": 0.07,
+     "status": "CLEAR"
+    },
+    {
+     "label": "home0.14",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "carry0.15",
+     "method": "GUIDE_LINE",
+     "nodes": 113,
+     "seconds": 0.07,
+     "status": "CLEAR"
+    },
+    {
+     "label": "home0.15",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "carry0.16",
+     "method": "RRT_JOINT",
+     "nodes": 108,
+     "seconds": 1.04,
+     "status": "CLEAR"
+    },
+    {
+     "label": "home0.16",
+     "method": "DIRECT",
+     "nodes": 2,
+     "seconds": 0.01,
+     "status": "CLEAR"
+    }
+   ],
+   "scene_hash": "sha256:b0eaa1bf82a3eba8e254746c717971ba53e6c79084300c4104776cdebfb7171b",
+   "seconds": 6.1,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 34
+  },
+  "G1_D0_t3": {
+   "action_hash": "sha256:9fb73fb596249672e2341afcd093943be198eab84705d109ea08abfbac393aed",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 5.497787143782138
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 3.926990816987241
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "APPROACH": 4,
+    "GRASP_POSE": 12,
+    "OK": 32
+   },
+   "place_candidates": {
+    "OK": 32,
+    "PLACE_POSE": 12,
+    "RETREAT": 4
+   },
+   "place_error_m": 4.1691147439348324e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:d85433070e5a9327f9e2647098bb78c19056cd064eb5e8f7de93e6c56865b4d3",
+   "seconds": 1.7,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "G1_S1_t0": {
+   "action_hash": "sha256:09498f76a29149de6297bff933426fb46d9b4b7d56a8ef4dbbb05aede854969f",
+   "connectors_used": {
+    "carry": "RRT_JOINT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 4.1887902047863905
+    },
+    "place": {
+     "branch": 1,
+     "phi_rad": 0.7853981633974483
+    },
+    "pregrasp": "RRT_JOINT",
+    "return_home": "RRT_JOINT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 22,
+    "close_attach": 1,
+    "pregrasp": 2,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 3
+   },
+   "pick_candidates": {
+    "APPROACH": 4,
+    "GRASP_POSE": 18,
+    "OK": 26
+   },
+   "place_candidates": {
+    "NO_IK": 28,
+    "OK": 4,
+    "PLACE_POSE": 7,
+    "RETREAT": 9
+   },
+   "place_error_m": 1.2118257228641695e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_s1",
+   "rrt_pass_connector_log": [
+    {
+     "label": "pregrasp0",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "pregrasp1",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "pregrasp2",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "pregrasp3",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.01,
+     "status": "COLLISION"
+    },
+    {
+     "label": "pregrasp4",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.01,
+     "status": "COLLISION"
+    },
+    {
+     "label": "pregrasp5",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.01,
+     "status": "COLLISION"
+    },
+    {
+     "label": "pregrasp6",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "pregrasp7",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "pregrasp8",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "pregrasp9",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "pregrasp10",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "pregrasp11",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.02,
+     "status": "COLLISION"
+    },
+    {
+     "label": "pregrasp12",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.01,
+     "status": "COLLISION"
+    },
+    {
+     "label": "pregrasp13",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.01,
+     "status": "COLLISION"
+    },
+    {
+     "label": "pregrasp14",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.01,
+     "status": "COLLISION"
+    },
+    {
+     "label": "pregrasp15",
+     "method": "RRT_JOINT",
+     "nodes": 60,
+     "seconds": 0.67,
+     "status": "CLEAR"
+    },
+    {
+     "label": "carry15.0",
+     "method": "RRT_JOINT",
+     "nodes": 293,
+     "seconds": 5.28,
+     "status": "CLEAR"
+    },
+    {
+     "label": "home15.0",
+     "method": "RRT_JOINT",
+     "nodes": 252,
+     "seconds": 1.05,
+     "status": "CLEAR"
+    }
+   ],
+   "scene_hash": "sha256:101a4fd84ba83243896d62698bf3fe081668ea87e298a51fda04b73d7ada9237",
+   "seconds": 8.4,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 54
+  },
+  "G1_S1_t1": {
+   "action_hash": "sha256:7eecdad153081d49b23a3d29f8bab349f5e85b7a5da28baf69cdd0d775db4668",
+   "connectors_used": {
+    "carry": "RRT_OBJECT_POSE",
+    "pick": {
+     "branch": 1,
+     "phi_rad": 0.7853981633974483
+    },
+    "place": {
+     "branch": 1,
+     "phi_rad": 6.021385919380436
+    },
+    "pregrasp": "RRT_JOINT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 273,
+    "close_attach": 1,
+    "pregrasp": 3,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "APPROACH": 9,
+    "GRASP_POSE": 7,
+    "NO_IK": 28,
+    "OK": 4
+   },
+   "place_candidates": {
+    "NO_IK": 28,
+    "OK": 7,
+    "PLACE_POSE": 12,
+    "RETREAT": 1
+   },
+   "place_error_m": 4.440892098500626e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_s1",
+   "rrt_pass_connector_log": [
+    {
+     "label": "pregrasp0",
+     "method": "RRT_JOINT",
+     "nodes": 294,
+     "seconds": 1.61,
+     "status": "CLEAR"
+    },
+    {
+     "label": "carry0.0",
+     "method": "RRT_OBJECT_POSE",
+     "nodes": 147,
+     "seconds": 5.83,
+     "status": "CLEAR"
+    },
+    {
+     "label": "home0.0",
+     "method": "DIRECT",
+     "nodes": 2,
+     "seconds": 0.0,
+     "status": "CLEAR"
+    }
+   ],
+   "scene_hash": "sha256:3362e415febc1ad35cd89fe9b21d9cba94681b39da69f38644f29486b49f6ab0",
+   "seconds": 8.1,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 304
+  },
+  "G1_S1_t2": {
+   "action_hash": "sha256:33420adc1c14f8515e672c08db9047c0438b780f96e287e016b49182ae15fb1e",
+   "connectors_used": {
+    "carry": "GUIDE_LINE",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 0.0
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 6.021385919380436
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 112,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "APPROACH": 1,
+    "GRASP_POSE": 12,
+    "NO_IK": 28,
+    "OK": 7
+   },
+   "place_candidates": {
+    "OK": 32,
+    "PLACE_POSE": 12,
+    "RETREAT": 4
+   },
+   "place_error_m": 3.3422138886441676e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_s1",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:2a245cf465007c7a349a8566e041e7fabbcf326f1774ade40caf80f48b4b40d2",
+   "seconds": 1.3,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 141
+  },
+  "G1_S1_t3": {
+   "action_hash": "sha256:94fadc4ceea67f1dfd607192d4c32957b4573a5b8e094a30b3e936f51b824f72",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 5.497787143782138
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 3.926990816987241
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "RRT_JOINT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 3
+   },
+   "pick_candidates": {
+    "APPROACH": 4,
+    "GRASP_POSE": 12,
+    "OK": 32
+   },
+   "place_candidates": {
+    "OK": 26,
+    "PLACE_POSE": 18,
+    "RETREAT": 4
+   },
+   "place_error_m": 4.1691147439348324e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_s1",
+   "rrt_pass_connector_log": [
+    {
+     "label": "pregrasp0",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "pregrasp1",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "pregrasp2",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "pregrasp3",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "pregrasp4",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "pregrasp5",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "pregrasp6",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "pregrasp7",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "pregrasp8",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "pregrasp9",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "pregrasp10",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "pregrasp11",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "pregrasp12",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "pregrasp13",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "pregrasp14",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "pregrasp15",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "pregrasp16",
+     "method": "DIRECT",
+     "nodes": 2,
+     "seconds": 0.01,
+     "status": "CLEAR"
+    },
+    {
+     "label": "carry16.0",
+     "method": "DIRECT",
+     "nodes": 2,
+     "seconds": 0.01,
+     "status": "CLEAR"
+    },
+    {
+     "label": "home16.0",
+     "method": "RRT_JOINT",
+     "nodes": 71,
+     "seconds": 0.39,
+     "status": "CLEAR"
+    }
+   ],
+   "scene_hash": "sha256:2104dd851c6fd5f2476ed1028e66ba6203354416e8dac00a5e4d058bca2d9c78",
+   "seconds": 2.8,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 32
+  },
+  "G1_S1_t4": {
+   "action_hash": "sha256:913799bfa2e5405d1ccaa52a32d47aaf423b40a35ecd995ab00f640fd7a7e464",
+   "connectors_used": {
+    "carry": "RRT_JOINT",
+    "pick": {
+     "branch": 1,
+     "phi_rad": 0.2617993877991494
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 4.71238898038469
+    },
+    "pregrasp": "RRT_JOINT",
+    "return_home": "RRT_JOINT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 9,
+    "close_attach": 1,
+    "pregrasp": 2,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 3
+   },
+   "pick_candidates": {
+    "APPROACH": 1,
+    "GRASP_POSE": 41,
+    "OK": 6
+   },
+   "place_candidates": {
+    "OK": 13,
+    "PLACE_POSE": 31,
+    "RETREAT": 4
+   },
+   "place_error_m": 1.3877787807814457e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_s1",
+   "rrt_pass_connector_log": [
+    {
+     "label": "pregrasp0",
+     "method": "RRT_JOINT",
+     "nodes": 28,
+     "seconds": 0.78,
+     "status": "CLEAR"
+    },
+    {
+     "label": "carry0.0",
+     "method": "RRT_OBJECT_POSE",
+     "nodes": 6,
+     "seconds": 0.3,
+     "status": "CLEAR"
+    },
+    {
+     "label": "home0.0",
+     "method": "LINK0_SWEEP:housing1|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "carry0.1",
+     "method": "RRT_OBJECT_POSE",
+     "nodes": 6,
+     "seconds": 0.5,
+     "status": "CLEAR"
+    },
+    {
+     "label": "home0.1",
+     "method": "LINK0_SWEEP:housing1|t0",
+     "nodes": 0,
+     "seconds": 1.74,
+     "status": "COLLISION"
+    },
+    {
+     "label": "carry0.2",
+     "method": "RRT_OBJECT_POSE",
+     "nodes": 9,
+     "seconds": 0.51,
+     "status": "CLEAR"
+    },
+    {
+     "label": "home0.2",
+     "method": "LINK0_SWEEP:housing1|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "carry0.3",
+     "method": "RRT_OBJECT_POSE",
+     "nodes": 7,
+     "seconds": 0.38,
+     "status": "CLEAR"
+    },
+    {
+     "label": "home0.3",
+     "method": "LINK0_SWEEP:housing1|t0",
+     "nodes": 0,
+     "seconds": 0.01,
+     "status": "COLLISION"
+    },
+    {
+     "label": "carry0.4",
+     "method": "RRT_OBJECT_POSE",
+     "nodes": 8,
+     "seconds": 0.38,
+     "status": "CLEAR"
+    },
+    {
+     "label": "home0.4",
+     "method": "LINK0_SWEEP:housing1|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "carry0.5",
+     "method": "RRT_JOINT",
+     "nodes": 254,
+     "seconds": 4.34,
+     "status": "CLEAR"
+    },
+    {
+     "label": "home0.5",
+     "method": "RRT_JOINT",
+     "nodes": 60,
+     "seconds": 0.31,
+     "status": "CLEAR"
+    }
+   ],
+   "scene_hash": "sha256:c516c27b642332f09ffbb8bfb58f4cf43954ed493db7be7e128e32af48a446ad",
+   "seconds": 12.4,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 41
+  },
+  "G1_S2_t0": {
+   "action_hash": "sha256:edf2556a78af0df55f47e8dcace8e07fbc6a444caaf085620264a9dd53dc7073",
+   "connectors_used": {
+    "carry": "RRT_JOINT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 4.1887902047863905
+    },
+    "place": {
+     "branch": 1,
+     "phi_rad": 0.7853981633974483
+    },
+    "pregrasp": "RRT_JOINT",
+    "return_home": "RRT_JOINT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 31,
+    "close_attach": 1,
+    "pregrasp": 3,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 4
+   },
+   "pick_candidates": {
+    "APPROACH": 4,
+    "GRASP_POSE": 18,
+    "OK": 26
+   },
+   "place_candidates": {
+    "NO_IK": 28,
+    "OK": 4,
+    "PLACE_POSE": 13,
+    "RETREAT": 3
+   },
+   "place_error_m": 1.2118257228641695e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_s2",
+   "rrt_pass_connector_log": [
+    {
+     "label": "pregrasp0",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "pregrasp1",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "pregrasp2",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "pregrasp3",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "pregrasp4",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "pregrasp5",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.05,
+     "status": "COLLISION"
+    },
+    {
+     "label": "pregrasp6",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "pregrasp7",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "pregrasp8",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "pregrasp9",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "pregrasp10",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "pregrasp11",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.05,
+     "status": "COLLISION"
+    },
+    {
+     "label": "pregrasp12",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.03,
+     "status": "COLLISION"
+    },
+    {
+     "label": "pregrasp13",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.04,
+     "status": "COLLISION"
+    },
+    {
+     "label": "pregrasp14",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.04,
+     "status": "COLLISION"
+    },
+    {
+     "label": "pregrasp15",
+     "method": "RRT_JOINT",
+     "nodes": 159,
+     "seconds": 0.98,
+     "status": "CLEAR"
+    },
+    {
+     "label": "carry15.0",
+     "method": "RRT_JOINT",
+     "nodes": 1387,
+     "seconds": 18.25,
+     "status": "CLEAR"
+    },
+    {
+     "label": "home15.0",
+     "method": "RRT_JOINT",
+     "nodes": 179,
+     "seconds": 0.75,
+     "status": "CLEAR"
+    }
+   ],
+   "scene_hash": "sha256:d1a7f7536a48f734ff23b4637e0eeb98b6078c69c4c08cdab7c2ac055e11da83",
+   "seconds": 21.7,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 65
+  },
+  "G1_S2_t1": {
+   "action_hash": "sha256:2fadfede8eaab0008702e88d4edbc5e7a2f46a72aadd7ee93ecc3f61472824da",
+   "connectors_used": {
+    "carry": "RRT_JOINT",
+    "pick": {
+     "branch": 1,
+     "phi_rad": 0.7853981633974483
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 0.0
+    },
+    "pregrasp": "RRT_JOINT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 13,
+    "close_attach": 1,
+    "pregrasp": 4,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "APPROACH": 3,
+    "GRASP_POSE": 13,
+    "NO_IK": 28,
+    "OK": 4
+   },
+   "place_candidates": {
+    "NO_IK": 28,
+    "OK": 4,
+    "PLACE_POSE": 11,
+    "RETREAT": 5
+   },
+   "place_error_m": 2.482534153247273e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_s2",
+   "rrt_pass_connector_log": [
+    {
+     "label": "pregrasp0",
+     "method": "RRT_JOINT",
+     "nodes": 311,
+     "seconds": 1.66,
+     "status": "CLEAR"
+    },
+    {
+     "label": "carry0.0",
+     "method": "RRT_JOINT",
+     "nodes": 761,
+     "seconds": 13.07,
+     "status": "CLEAR"
+    },
+    {
+     "label": "home0.0",
+     "method": "DIRECT",
+     "nodes": 2,
+     "seconds": 0.01,
+     "status": "CLEAR"
+    }
+   ],
+   "scene_hash": "sha256:c33b75ce908649f294b9499a913baf8256785fc2e7ad111106abfa419a54001d",
+   "seconds": 15.3,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 45
+  },
+  "G1_S2_t2": {
+   "action_hash": "sha256:810c4c66a7b5654659cc04358aff164488dad90d29a2f0729e9065867e466f23",
+   "connectors_used": {
+    "carry": "GUIDE_LINE",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 0.0
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 6.021385919380436
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 112,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "APPROACH": 5,
+    "GRASP_POSE": 11,
+    "NO_IK": 28,
+    "OK": 4
+   },
+   "place_candidates": {
+    "OK": 26,
+    "PLACE_POSE": 18,
+    "RETREAT": 4
+   },
+   "place_error_m": 3.3422138886441676e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_s2",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:cf1ddd8662481a750497616208911e1331aa4c6c95c08286a4c9e15a01ef5f20",
+   "seconds": 0.9,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 141
+  },
+  "G1_S2_t3": {
+   "action_hash": "sha256:0683b5f47e9785de88a47930da61c9b8fc7b9e5b7e98153ff83e72b22b46d164",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 5.497787143782138
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 3.926990816987241
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "RRT_JOINT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 3
+   },
+   "pick_candidates": {
+    "APPROACH": 4,
+    "GRASP_POSE": 18,
+    "OK": 26
+   },
+   "place_candidates": {
+    "OK": 26,
+    "PLACE_POSE": 18,
+    "RETREAT": 4
+   },
+   "place_error_m": 4.1691147439348324e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_s2",
+   "rrt_pass_connector_log": [
+    {
+     "label": "pregrasp0",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "pregrasp1",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "pregrasp2",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "pregrasp3",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "pregrasp4",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "pregrasp5",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "pregrasp6",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "pregrasp7",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "pregrasp8",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "pregrasp9",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "pregrasp10",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "pregrasp11",
+     "method": "DIRECT",
+     "nodes": 2,
+     "seconds": 0.01,
+     "status": "CLEAR"
+    },
+    {
+     "label": "carry11.0",
+     "method": "DIRECT",
+     "nodes": 2,
+     "seconds": 0.01,
+     "status": "CLEAR"
+    },
+    {
+     "label": "home11.0",
+     "method": "RRT_JOINT",
+     "nodes": 112,
+     "seconds": 0.74,
+     "status": "CLEAR"
+    }
+   ],
+   "scene_hash": "sha256:2a95f269024133b691a931c695a0abcb295e3c9cb8e6ff2dafc66b7eb16b0447",
+   "seconds": 2.8,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 32
+  },
+  "audit_c00": {
+   "action_hash": "sha256:ded984ec8b3359103099298519c66b2c134aa343acc07f8bb1f0f14b2150e58d",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 4.1887902047863905
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 6.021385919380436
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "APPROACH": 4,
+    "GRASP_POSE": 12,
+    "OK": 32
+   },
+   "place_candidates": {
+    "NO_IK": 28,
+    "OK": 20
+   },
+   "place_error_m": 7.850462293418876e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:7d27bf11702f7b866ba9e3cbeef76ed36891b31c68cf83f182f711db8e6a471b",
+   "seconds": 1.5,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c01": {
+   "action_hash": "sha256:1e7af4cae2384ac2f6e34a2ab2d8c20413ffa3d1d75f275892a17378b2c21821",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 4.4505895925855405
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 6.021385919380436
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "APPROACH": 7,
+    "GRASP_POSE": 12,
+    "OK": 29
+   },
+   "place_candidates": {
+    "NO_IK": 24,
+    "OK": 24
+   },
+   "place_error_m": 4.577566798522237e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:68f389b199ad16f58f82cd74273700b85633ce21ced2fb78510db6365df80b83",
+   "seconds": 1.0,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c02": {
+   "action_hash": "sha256:1cde2b85a1432c142fca6b4e6e27bfdc39b37eab84050a7b74efdf849229dec8",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 4.71238898038469
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 6.021385919380436
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "APPROACH": 7,
+    "GRASP_POSE": 12,
+    "OK": 29
+   },
+   "place_candidates": {
+    "NO_IK": 18,
+    "OK": 28,
+    "RETREAT": 2
+   },
+   "place_error_m": 3.3766115072321297e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:7934bd7cc65dd663a9a66b33572c6961e114a49918ab4fe27b78b13df2e70c0c",
+   "seconds": 5.1,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c03": {
+   "action_hash": "sha256:b48d7d14000c4eb57adb1efdc265584b54e6a785631085f60b1790303a48607e",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 4.71238898038469
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 5.759586531581287
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "APPROACH": 6,
+    "GRASP_POSE": 12,
+    "OK": 30
+   },
+   "place_candidates": {
+    "NO_IK": 10,
+    "OK": 30,
+    "RETREAT": 8
+   },
+   "place_error_m": 5.79553433516819e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:45b4872e602880cdeb5f989603552c22ee43260b15947ad73a11bce476f8c77b",
+   "seconds": 0.9,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c04": {
+   "action_hash": "sha256:2007d4762de092102bd0bdf3fbb3a2dd0947e1cfcdc4f0c4312ad89a06c94800",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 4.974188368183839
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 6.021385919380436
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "APPROACH": 8,
+    "NO_IK": 10,
+    "OK": 30
+   },
+   "place_candidates": {
+    "OK": 30,
+    "PLACE_POSE": 12,
+    "RETREAT": 6
+   },
+   "place_error_m": 1.2412670766236366e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:7e03b91998070870f97829cc5980b28790093e13f405f5e67a4bf39f4a2a789c",
+   "seconds": 1.6,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c05": {
+   "action_hash": "sha256:815a0d71166f0a9c1b4a44feae8cea087ed2a6a30d774c1671fe61827be5b95f",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 5.235987755982989
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 6.021385919380436
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "APPROACH": 2,
+    "NO_IK": 18,
+    "OK": 28
+   },
+   "place_candidates": {
+    "OK": 29,
+    "PLACE_POSE": 12,
+    "RETREAT": 7
+   },
+   "place_error_m": 8.252325904466732e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:139ca880d4ddbb8b556d969f7c2808de2fac3f35c37174f91558c1b5b0f4a68e",
+   "seconds": 4.9,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c06": {
+   "action_hash": "sha256:d9e66ad35f08b41e6f45f5d170fe13885cc99e2c1a4e67cc9c715af949eedb09",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 5.235987755982989
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 5.497787143782138
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "NO_IK": 24,
+    "OK": 24
+   },
+   "place_candidates": {
+    "OK": 29,
+    "PLACE_POSE": 12,
+    "RETREAT": 7
+   },
+   "place_error_m": 2.0816681711721685e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:b61ff88d600254717cb6926b2c09d62e275427671e95ae30dd484231f0834578",
+   "seconds": 1.5,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c07": {
+   "action_hash": "sha256:cc42c640e91bd6923673dbff4812b577f87b7fc85ac0d23c10a2dd9ea45c7b99",
+   "connectors_used": {
+    "carry": "GUIDE_LINE",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 5.759586531581287
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 0.2617993877991494
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 159,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "NO_IK": 28,
+    "OK": 20
+   },
+   "place_candidates": {
+    "OK": 32,
+    "PLACE_POSE": 12,
+    "RETREAT": 4
+   },
+   "place_error_m": 1.457167719820518e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:1288746aed9bfbde03b8ed518900e68d815dd94a0f86cbe43e2eb538a35ecfa9",
+   "seconds": 1.2,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 188
+  },
+  "audit_c08": {
+   "action_hash": "sha256:9bea7ae64932f637e430ee1f688430ab30dd662291fa8f244401beb23aa4c8c5",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 4.1887902047863905
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 5.759586531581287
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "APPROACH": 5,
+    "GRASP_POSE": 9,
+    "NO_IK": 4,
+    "OK": 30
+   },
+   "place_candidates": {
+    "NO_IK": 26,
+    "OK": 22
+   },
+   "place_error_m": 1.1102230246251565e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:cc0b4a24835b225b1ec65c2fdcac9a858530a3ab3065137bc3a2244c6fea9f99",
+   "seconds": 1.4,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c09": {
+   "action_hash": "sha256:a7b9e3f924e8e08ca96a6e99e4543af38e2dd03ebcc02f848dc84c425b915bca",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 4.4505895925855405
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 5.759586531581287
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "APPROACH": 4,
+    "GRASP_POSE": 12,
+    "OK": 32
+   },
+   "place_candidates": {
+    "NO_IK": 22,
+    "OK": 26
+   },
+   "place_error_m": 5.661048867003676e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:097508dd55f629d3efcd175e420c1d6f4e3c1a5701e1824c8f17d2d72b6031cb",
+   "seconds": 1.6,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c10": {
+   "action_hash": "sha256:4905cfc4169f15e3d8335cf3682f0703e9be44f8cc4ff6d72cc89188bdae969b",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 4.71238898038469
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 5.759586531581287
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "APPROACH": 8,
+    "GRASP_POSE": 12,
+    "OK": 28
+   },
+   "place_candidates": {
+    "NO_IK": 16,
+    "OK": 28,
+    "RETREAT": 4
+   },
+   "place_error_m": 4.440892098500626e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:4e99e14646a34715952f3160025ad482f6474a841c3a8aa011d5a10c4edfb39d",
+   "seconds": 0.8,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c11": {
+   "action_hash": "sha256:ee42954a5e834678927ebbf697d2c2987043562e0024328bad4e951f6d8a6fa3",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 4.974188368183839
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 5.759586531581287
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "APPROACH": 7,
+    "GRASP_POSE": 12,
+    "OK": 29
+   },
+   "place_candidates": {
+    "NO_IK": 4,
+    "OK": 32,
+    "PLACE_POSE": 8,
+    "RETREAT": 4
+   },
+   "place_error_m": 1.1102230246251565e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:d8025cf70ff0b55ee1e6f639c93d83619a515ab9bb1d3745d05e5cf779573401",
+   "seconds": 1.6,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c12": {
+   "action_hash": "sha256:065646dac5226ce81588decfe56809951db549cddacb3c91964bee1c482f0551",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 4.974188368183839
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 5.497787143782138
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "APPROACH": 4,
+    "GRASP_POSE": 8,
+    "NO_IK": 4,
+    "OK": 32
+   },
+   "place_candidates": {
+    "OK": 29,
+    "PLACE_POSE": 12,
+    "RETREAT": 7
+   },
+   "place_error_m": 2.220446049250313e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:2a0135310c53a0785553d2d8ecec83f0262eaae8468ff23bdca638e85597f5ba",
+   "seconds": 1.7,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c13": {
+   "action_hash": "sha256:b5b2954bdfc2fc3aefab6efb782d02664e09085947daabe2fec6ddea14ea3f6c",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 5.235987755982989
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 5.759586531581287
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "APPROACH": 4,
+    "NO_IK": 16,
+    "OK": 28
+   },
+   "place_candidates": {
+    "OK": 28,
+    "PLACE_POSE": 12,
+    "RETREAT": 8
+   },
+   "place_error_m": 1.1443916996305594e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:b0e53ad68da88e24d6fc35422e5401fecee8eef619fa3f449326f0ad09dfe0d6",
+   "seconds": 0.9,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c14": {
+   "action_hash": "sha256:2a604dd86a27ea3d8bb1d1b0e9c420412b936f8e61fd3bbf82eac52e822d2409",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 5.497787143782138
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 5.759586531581287
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "NO_IK": 22,
+    "OK": 26
+   },
+   "place_candidates": {
+    "OK": 32,
+    "PLACE_POSE": 12,
+    "RETREAT": 4
+   },
+   "place_error_m": 2.237726045655905e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:96c17bd5f2f9de4b4f7ae026449e3d6a39f98bb54c69891322bc9c00c4810b85",
+   "seconds": 0.9,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c15": {
+   "action_hash": "sha256:64d514eeffd53078a6bb022dfb5218bccb6da7e16f0776821fae37778704f679",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 5.759586531581287
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 5.497787143782138
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "NO_IK": 26,
+    "OK": 22
+   },
+   "place_candidates": {
+    "NO_IK": 4,
+    "OK": 30,
+    "PLACE_POSE": 9,
+    "RETREAT": 5
+   },
+   "place_error_m": 1.2738115944464653e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:a58f8480c726c68385f110bb52c4b8b152cbc21c4e3c16eb5767cb7e7a7db57b",
+   "seconds": 0.9,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c16": {
+   "action_hash": "sha256:a23f1f887adad9ceaf94e64eda872cd9bf05850f00258c075bfaea5da7e5b3d3",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 4.1887902047863905
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 5.759586531581287
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "APPROACH": 4,
+    "GRASP_POSE": 10,
+    "NO_IK": 6,
+    "OK": 28
+   },
+   "place_candidates": {
+    "NO_IK": 26,
+    "OK": 22
+   },
+   "place_error_m": 2.220446049250313e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:70b6e8c5313db8bd86acc80a1a62165c985f53042b16320546e791b0748b9562",
+   "seconds": 0.8,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c17": {
+   "action_hash": "sha256:4db48a8415fd636faffe0511a566c85a70637b64eb7952f8e527b97123e20d4f",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 4.4505895925855405
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 5.497787143782138
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "APPROACH": 4,
+    "GRASP_POSE": 8,
+    "NO_IK": 4,
+    "OK": 32
+   },
+   "place_candidates": {
+    "NO_IK": 20,
+    "OK": 26,
+    "RETREAT": 2
+   },
+   "place_error_m": 5.551115123125783e-17,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:62491752a9807b4c177919742e5a61a8d5cef3d41adad19aa61a3a61d944e3bb",
+   "seconds": 1.5,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c18": {
+   "action_hash": "sha256:024aa2bb55694950e8c92ac13a20ff16a8947e6b9eb751694cf8d4988970c2df",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 4.71238898038469
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 5.497787143782138
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "APPROACH": 6,
+    "GRASP_POSE": 12,
+    "OK": 30
+   },
+   "place_candidates": {
+    "NO_IK": 14,
+    "OK": 30,
+    "RETREAT": 4
+   },
+   "place_error_m": 4.2276033262255756e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:f3af0ba925003111b7e8afbea7a39e62f6978c64494d6b5be323e42db877b2c6",
+   "seconds": 1.6,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c19": {
+   "action_hash": "sha256:60c2f65326521e466dfbd0585f7211a6ddb2898adc3ca5ab0faff566b14f9db8",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 4.974188368183839
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 5.497787143782138
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "APPROACH": 6,
+    "GRASP_POSE": 12,
+    "OK": 30
+   },
+   "place_candidates": {
+    "OK": 31,
+    "PLACE_POSE": 12,
+    "RETREAT": 5
+   },
+   "place_error_m": 2.220446049250313e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:1cea378765ac7cb157c3d5c6bd5876e3431407d6d21557564fd82e20e6a9894b",
+   "seconds": 5.3,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c20": {
+   "action_hash": "sha256:a87e0a89ce0ebe30167facfbf090c5365bb40594a2d83a27fc43e34b034ec360",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 4.974188368183839
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 5.235987755982989
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "APPROACH": 5,
+    "GRASP_POSE": 12,
+    "OK": 31
+   },
+   "place_candidates": {
+    "OK": 30,
+    "PLACE_POSE": 12,
+    "RETREAT": 6
+   },
+   "place_error_m": 1.1102230246251565e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:b741721dd2a9aaf4598a9a89865cf6dd00044dc8aad06d1aa3878acee0da9084",
+   "seconds": 5.3,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c21": {
+   "action_hash": "sha256:3b30904fceeaad024f43d94b0a9712b59ff551c4f602fe7c1659e08213f18d7b",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 5.235987755982989
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 5.235987755982989
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "APPROACH": 4,
+    "NO_IK": 14,
+    "OK": 30
+   },
+   "place_candidates": {
+    "OK": 30,
+    "PLACE_POSE": 12,
+    "RETREAT": 6
+   },
+   "place_error_m": 2.7755575615628914e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:fd9eb4d1e362ea68977139cbf4f33ceb0e4efa19683fc4ad2f8533af63f2ea46",
+   "seconds": 1.6,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c22": {
+   "action_hash": "sha256:9038fdaf50331a971528de5fa21a4a81711a3831422510688b8a6174733a0233",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 5.497787143782138
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 5.235987755982989
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "APPROACH": 2,
+    "NO_IK": 20,
+    "OK": 26
+   },
+   "place_candidates": {
+    "NO_IK": 4,
+    "OK": 32,
+    "PLACE_POSE": 8,
+    "RETREAT": 4
+   },
+   "place_error_m": 3.6638411145107034e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:62b6130a826ed043fa62dac7c9f5b1294d5df2dd5e5588e025fc112f22290357",
+   "seconds": 1.9,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c23": {
+   "action_hash": "sha256:302da5ee51d40c396bc0e3386a7b999ee317450c9e7419788730f0c1cfed5b52",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 5.759586531581287
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 4.974188368183839
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "NO_IK": 26,
+    "OK": 22
+   },
+   "place_candidates": {
+    "NO_IK": 6,
+    "OK": 28,
+    "PLACE_POSE": 10,
+    "RETREAT": 4
+   },
+   "place_error_m": 4.163336342344337e-17,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:c0c4ba5876ffb7691ee55dbcfa05e1293374bf527184d18111beb2cc61a1011d",
+   "seconds": 2.9,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c24": {
+   "action_hash": "sha256:8121693edb84b37d6d19133a3447412efbab39266174bdde74117c59f4e19c34",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 4.4505895925855405
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 5.497787143782138
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "APPROACH": 3,
+    "GRASP_POSE": 12,
+    "NO_IK": 6,
+    "OK": 27
+   },
+   "place_candidates": {
+    "NO_IK": 26,
+    "OK": 22
+   },
+   "place_error_m": 1.1102230246251565e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:3950edb88bf8fd024109660de54816a5fc78a88a18d86960c461cfd4b2d31e47",
+   "seconds": 3.1,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c25": {
+   "action_hash": "sha256:8f81180063b8997a262c30d589de2b34e6cc571b28d161ffa3b5c41d0680c1cb",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 4.71238898038469
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 5.497787143782138
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "APPROACH": 2,
+    "GRASP_POSE": 10,
+    "NO_IK": 4,
+    "OK": 32
+   },
+   "place_candidates": {
+    "NO_IK": 20,
+    "OK": 26,
+    "RETREAT": 2
+   },
+   "place_error_m": 2.7755575615628914e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:7b6375d8a50ee63c6c5122a6c50c1dcddb0166d27c0da9d50a12824a52c34f2a",
+   "seconds": 0.9,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c26": {
+   "action_hash": "sha256:e827a585727ed78efaadf2acb297785e1c973d20ea7de8cbfccd87f0f00643b3",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 4.974188368183839
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 5.497787143782138
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "APPROACH": 6,
+    "GRASP_POSE": 12,
+    "OK": 30
+   },
+   "place_candidates": {
+    "NO_IK": 12,
+    "OK": 32,
+    "RETREAT": 4
+   },
+   "place_error_m": 2.0014830212433605e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:46e87ffb93efcb291eba808d82497cf2c053661f8416228e186fd0bbc1e655fc",
+   "seconds": 0.9,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c27": {
+   "action_hash": "sha256:27fbf73fd3dc2b094b73d0051518fbf218f9e76fd8403548d82f390d4d755b30",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 4.974188368183839
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 5.235987755982989
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "APPROACH": 6,
+    "GRASP_POSE": 12,
+    "OK": 30
+   },
+   "place_candidates": {
+    "OK": 29,
+    "PLACE_POSE": 12,
+    "RETREAT": 7
+   },
+   "place_error_m": 4.002966042486721e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:4be87ccd4a44d17bac8e8db453c362ec546d1cb7ecc193b3ec7663b7c183982e",
+   "seconds": 0.9,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c28": {
+   "action_hash": "sha256:1e03c94fc71462b5862226c6763bfce8d672028edd9c8bcf7764a2d07897b31d",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 5.235987755982989
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 5.235987755982989
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "APPROACH": 7,
+    "GRASP_POSE": 12,
+    "OK": 29
+   },
+   "place_candidates": {
+    "OK": 30,
+    "PLACE_POSE": 12,
+    "RETREAT": 6
+   },
+   "place_error_m": 5.551115123125783e-17,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:aa9b04585f3a922fc180c7a6a0782c20374eff253ba64b8583b97a5f64ef78ec",
+   "seconds": 2.9,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c29": {
+   "action_hash": "sha256:ca642edaa3d02d05f93178a0bae4f334177cd08849e4c5b78a215d3bece12787",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 5.497787143782138
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 5.497787143782138
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "APPROACH": 4,
+    "NO_IK": 12,
+    "OK": 32
+   },
+   "place_candidates": {
+    "OK": 30,
+    "PLACE_POSE": 12,
+    "RETREAT": 6
+   },
+   "place_error_m": 2.498001805406602e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:9f38c20eccb5790b25e8ca28eae5cf4f29b7cb4ee941750e481c15f87f3f43b6",
+   "seconds": 1.0,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c30": {
+   "action_hash": "sha256:3460360b10f4983f35dc70b2249242535dda2a3f48cd76fa040b111d0d6e58de",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 5.497787143782138
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 4.974188368183839
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "APPROACH": 2,
+    "NO_IK": 20,
+    "OK": 26
+   },
+   "place_candidates": {
+    "NO_IK": 4,
+    "OK": 32,
+    "PLACE_POSE": 10,
+    "RETREAT": 2
+   },
+   "place_error_m": 2.8877805767053584e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:ac8059aac135cdadc6ab1450a3761018eb7eedc235ef8a2963511a8a8e6952e8",
+   "seconds": 1.7,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c31": {
+   "action_hash": "sha256:c1aaf6fc17ef46dd45fef8ace731a00c3be9917b4beab2d23f451d90dd77f5bb",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 5.759586531581287
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 4.71238898038469
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "NO_IK": 26,
+    "OK": 22
+   },
+   "place_candidates": {
+    "NO_IK": 6,
+    "OK": 27,
+    "PLACE_POSE": 12,
+    "RETREAT": 3
+   },
+   "place_error_m": 3.3081863473783437e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:864ca461a80747edefdef0ad6d4e1d6ff48e722bb7a2c06e5cf585b76393251c",
+   "seconds": 6.0,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c32": {
+   "action_hash": "sha256:03a9926895ff2697273bc5e6acea4a4391106d4f9ac3e3e40e9b807d89e71b23",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 4.71238898038469
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 5.235987755982989
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "APPROACH": 3,
+    "GRASP_POSE": 12,
+    "NO_IK": 6,
+    "OK": 27
+   },
+   "place_candidates": {
+    "NO_IK": 26,
+    "OK": 22
+   },
+   "place_error_m": 4.002966042486721e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:de50538a1b40f4a54985edd311bafbded77364344ceb6097bda11a81ee4bdc39",
+   "seconds": 5.0,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c33": {
+   "action_hash": "sha256:221fd6526760c36900d0026ed10e223027ed5aa4d8c406ebc9c0de02b516be19",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 4.974188368183839
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 5.235987755982989
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "APPROACH": 2,
+    "GRASP_POSE": 10,
+    "NO_IK": 4,
+    "OK": 32
+   },
+   "place_candidates": {
+    "NO_IK": 20,
+    "OK": 26,
+    "RETREAT": 2
+   },
+   "place_error_m": 2.482534153247273e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:df4e05f1713e6e3c4f6cf7c9bd85f5b5baf0b7256bb880381a01d0876ad6e36d",
+   "seconds": 1.7,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c34": {
+   "action_hash": "sha256:951bc7ba7f65f1db65403557cd268b80443e45fca2e0be4291cd9ba253f051fa",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 4.974188368183839
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 5.235987755982989
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "APPROACH": 6,
+    "GRASP_POSE": 12,
+    "OK": 30
+   },
+   "place_candidates": {
+    "NO_IK": 12,
+    "OK": 32,
+    "RETREAT": 4
+   },
+   "place_error_m": 1.1102230246251565e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:52bd90b444c6b4e6d6238248faab75823d0d27a48dce3ce62731d6bb1e48c542",
+   "seconds": 1.8,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c35": {
+   "action_hash": "sha256:bc2357c1a789d0d6a9041e3cc93053b7a4b94daf3a6ecd38b8b561392473d550",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 5.235987755982989
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 5.235987755982989
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "APPROACH": 6,
+    "GRASP_POSE": 12,
+    "OK": 30
+   },
+   "place_candidates": {
+    "OK": 29,
+    "PLACE_POSE": 12,
+    "RETREAT": 7
+   },
+   "place_error_m": 5.551115123125783e-17,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:fa8e2355c8f71eb886ebfbf39bb1a0b19fff28ed4ffad75dc044aba2b3bc81a1",
+   "seconds": 1.8,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c36": {
+   "action_hash": "sha256:ec9c4810753b3c31a17829e3412ba2b11ebd04f2f9999ad95b7f4c93f38f3456",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 5.235987755982989
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 4.974188368183839
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "APPROACH": 7,
+    "GRASP_POSE": 12,
+    "OK": 29
+   },
+   "place_candidates": {
+    "OK": 30,
+    "PLACE_POSE": 12,
+    "RETREAT": 6
+   },
+   "place_error_m": 3.554447978966673e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:0837b50202bddbd3e20413d5d230fe9cd963dc95960741736841f58e8aa7a22a",
+   "seconds": 1.9,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c37": {
+   "action_hash": "sha256:afc57d2a79bfc53120350e3ddf2e43c8d1ed66f9c54347ab173dbc0db17d9eab",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 5.497787143782138
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 4.974188368183839
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "APPROACH": 4,
+    "NO_IK": 12,
+    "OK": 32
+   },
+   "place_candidates": {
+    "OK": 30,
+    "PLACE_POSE": 12,
+    "RETREAT": 6
+   },
+   "place_error_m": 2.0206364052201326e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:8d60723dbb2472bf9fc75c85ba2ef68f1c52d77e6cbc1ded14fb19eea1f4b183",
+   "seconds": 2.0,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c38": {
+   "action_hash": "sha256:0b32a809b223cd9f25dfd631da48235f4581479557c91ef6c41c279de15b20a5",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 5.759586531581287
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 4.974188368183839
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "APPROACH": 2,
+    "NO_IK": 20,
+    "OK": 26
+   },
+   "place_candidates": {
+    "NO_IK": 4,
+    "OK": 32,
+    "PLACE_POSE": 10,
+    "RETREAT": 2
+   },
+   "place_error_m": 1.7554167342883506e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:17d3027e6d8b15c808aebf70e245d47e8165a9864a368959d5d5d4166bd9a190",
+   "seconds": 1.8,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c39": {
+   "action_hash": "sha256:db1bddb5f5f8ab8e16e0f143f44875575155df0c3f9344a3ff94dd2c39bb89e8",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 6.021385919380436
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 4.71238898038469
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "NO_IK": 26,
+    "OK": 22
+   },
+   "place_candidates": {
+    "NO_IK": 6,
+    "OK": 27,
+    "PLACE_POSE": 12,
+    "RETREAT": 3
+   },
+   "place_error_m": 2.6945789820192466e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:1f98709833925bffb1abecdae6241f27a6f142f0de53adc33c9e96079f2b1f3a",
+   "seconds": 5.5,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c40": {
+   "action_hash": "sha256:082308337813b1534059e9a6fc96cfbef525f93b250d72d9a1559c97e6bf43f2",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 4.974188368183839
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 5.235987755982989
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "APPROACH": 4,
+    "GRASP_POSE": 10,
+    "NO_IK": 6,
+    "OK": 28
+   },
+   "place_candidates": {
+    "NO_IK": 26,
+    "OK": 22
+   },
+   "place_error_m": 3.3306690738754696e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:ffde7b0710511b139e65d46a7028a7bc222d559bc6a31a8b14712a975b2a6317",
+   "seconds": 1.5,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c41": {
+   "action_hash": "sha256:180578507335a236deb78f267669ab1b0a4cbe307d928ca66f3f5aede6c55afa",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 4.974188368183839
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 4.974188368183839
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "APPROACH": 4,
+    "GRASP_POSE": 8,
+    "NO_IK": 4,
+    "OK": 32
+   },
+   "place_candidates": {
+    "NO_IK": 20,
+    "OK": 26,
+    "RETREAT": 2
+   },
+   "place_error_m": 4.163336342344337e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:d71aeb94927ea8e539dee75966863d06b7ffe93ce264c6c39fa3b918ef735c03",
+   "seconds": 1.7,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c42": {
+   "action_hash": "sha256:fb546dfa1757684bc7ea12e7aefa2eedcd126d73a5b2b8e5e58ec5e2ade7d20b",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 5.235987755982989
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 4.974188368183839
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "APPROACH": 6,
+    "GRASP_POSE": 12,
+    "OK": 30
+   },
+   "place_candidates": {
+    "NO_IK": 14,
+    "OK": 30,
+    "RETREAT": 4
+   },
+   "place_error_m": 7.850462293418876e-17,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:0eaaeca6c7d98b5fa4c0aea191ffa996f6a090957797040539ebb5fc12de0b64",
+   "seconds": 0.9,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c43": {
+   "action_hash": "sha256:a5f7e45dda2866566a4c9692a68e6a383e5139384347dcc52b0d4bb65c538894",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 5.235987755982989
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 4.974188368183839
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "APPROACH": 6,
+    "GRASP_POSE": 12,
+    "OK": 30
+   },
+   "place_candidates": {
+    "OK": 31,
+    "PLACE_POSE": 12,
+    "RETREAT": 5
+   },
+   "place_error_m": 1.1443916996305594e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:50e31363b5795dc0f99cf8ff08f0c9cc7a71327a8aaf4b6523c609c39c4b8cdb",
+   "seconds": 3.1,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c44": {
+   "action_hash": "sha256:838b15928c0af0944feb1921435dfb5d1c589792319ddb273ac1eefbef8ad2c6",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 5.497787143782138
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 4.974188368183839
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "APPROACH": 5,
+    "GRASP_POSE": 12,
+    "OK": 31
+   },
+   "place_candidates": {
+    "OK": 30,
+    "PLACE_POSE": 12,
+    "RETREAT": 6
+   },
+   "place_error_m": 2.237726045655905e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:014176efdf924712473f720496b5ddca54378cc535f13984f7d04aa3807bd2f1",
+   "seconds": 5.5,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c45": {
+   "action_hash": "sha256:d07a4095fde18f4297c0d172416933d566fe25a839ba2afe647e6390ee94a8de",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 5.497787143782138
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 4.71238898038469
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "APPROACH": 4,
+    "NO_IK": 14,
+    "OK": 30
+   },
+   "place_candidates": {
+    "OK": 30,
+    "PLACE_POSE": 12,
+    "RETREAT": 6
+   },
+   "place_error_m": 4.484050470211362e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:138c945e2b5723e42b38cbf761a65e2bdc52784bb71b6f81cdc55bac15147633",
+   "seconds": 1.3,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c46": {
+   "action_hash": "sha256:250e2d9636988a2c28dc31ae96da844b5c2a6f51bc90d514ccea315bf9828d96",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 5.759586531581287
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 4.71238898038469
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "APPROACH": 2,
+    "NO_IK": 20,
+    "OK": 26
+   },
+   "place_candidates": {
+    "NO_IK": 4,
+    "OK": 32,
+    "PLACE_POSE": 8,
+    "RETREAT": 4
+   },
+   "place_error_m": 1.0838898772828417e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:94591eb467b8c20347c07520e1cc8e5e8dd1b1a44e19e9d9991bf544df26004c",
+   "seconds": 1.8,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c47": {
+   "action_hash": "sha256:e89903eae955ff583099beef4ccb98896885e0c1259fe95f95357f48e00f9e69",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 6.021385919380436
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 4.71238898038469
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "NO_IK": 26,
+    "OK": 22
+   },
+   "place_candidates": {
+    "NO_IK": 6,
+    "OK": 28,
+    "PLACE_POSE": 10,
+    "RETREAT": 4
+   },
+   "place_error_m": 3.787898901196402e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:51e26f62c49fbb0874bd37e05fd918853b810bfcb56372493f6838a17a163fd9",
+   "seconds": 1.4,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c48": {
+   "action_hash": "sha256:351667e77fcc49dfcce9a313f38aab65c8e000d03ee5480d7d9212637fbb19f4",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 5.235987755982989
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 5.235987755982989
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "APPROACH": 5,
+    "GRASP_POSE": 9,
+    "NO_IK": 4,
+    "OK": 30
+   },
+   "place_candidates": {
+    "NO_IK": 26,
+    "OK": 22
+   },
+   "place_error_m": 5.117875266520903e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:c4e67feb1d1e2ce80cf2d414486667d3da94688d7896f7e9e884948113b313c8",
+   "seconds": 1.7,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c49": {
+   "action_hash": "sha256:f23ec604cb70c01cc18acbe6772d275acfc72e59b172ca66a0f23d193798978f",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 5.235987755982989
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 4.974188368183839
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "APPROACH": 4,
+    "GRASP_POSE": 12,
+    "OK": 32
+   },
+   "place_candidates": {
+    "NO_IK": 22,
+    "OK": 26
+   },
+   "place_error_m": 2.2247786310271853e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:b9e0404c0e09893ba4118633e9f5cf78fc977364202f34031c987dc796928b80",
+   "seconds": 1.0,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c50": {
+   "action_hash": "sha256:05f216f73bf603f2ccf9091e59b487e2051de83ad4348244ffabb67309a077ed",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 5.497787143782138
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 4.974188368183839
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "APPROACH": 8,
+    "GRASP_POSE": 12,
+    "OK": 28
+   },
+   "place_candidates": {
+    "NO_IK": 16,
+    "OK": 28,
+    "RETREAT": 4
+   },
+   "place_error_m": 3.3422138886441676e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:cde6a56171114ac42c41495d3eb0524c9bae3da7df90bbdcada7bb3310e90e4e",
+   "seconds": 1.8,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c51": {
+   "action_hash": "sha256:e5b1a5440c3e367140a8105f94345fb231384a939ada58b1b61458a8c5ef9d5b",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 5.497787143782138
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 4.974188368183839
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "APPROACH": 7,
+    "GRASP_POSE": 12,
+    "OK": 29
+   },
+   "place_candidates": {
+    "NO_IK": 4,
+    "OK": 32,
+    "PLACE_POSE": 8,
+    "RETREAT": 4
+   },
+   "place_error_m": 2.482534153247273e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:95e9d5fe0e89abe5cf506176ab108220ef63e5f235e592590532210c6eec2c08",
+   "seconds": 1.2,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c52": {
+   "action_hash": "sha256:d5221bbf08cc64e9045fbaa8b96c991b637112f263f8846ea2524e6bbc5a42d4",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 5.497787143782138
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 4.71238898038469
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "APPROACH": 4,
+    "GRASP_POSE": 8,
+    "NO_IK": 4,
+    "OK": 32
+   },
+   "place_candidates": {
+    "OK": 29,
+    "PLACE_POSE": 12,
+    "RETREAT": 7
+   },
+   "place_error_m": 2.5589376332604516e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:0a9fd24ed6653cc54d2dd0ec15764c792830be05ee4d21f2ddeee4d8f0eeb811",
+   "seconds": 2.0,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c53": {
+   "action_hash": "sha256:d3fb0535e5b427ada2e0956dad191587ab08e5e5b1752cc8910ed6da624433de",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 5.759586531581287
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 4.71238898038469
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "APPROACH": 4,
+    "NO_IK": 16,
+    "OK": 28
+   },
+   "place_candidates": {
+    "OK": 28,
+    "PLACE_POSE": 12,
+    "RETREAT": 8
+   },
+   "place_error_m": 4.344434768182728e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:9ba19adfb04d9d451f0d2da367cff558335512df3818dc5d50ceec12461d0afb",
+   "seconds": 4.6,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c54": {
+   "action_hash": "sha256:a0c12021814238510b77689ba98dbeda3e866a45aa9cb7961db852422e30c99f",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 6.021385919380436
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 4.71238898038469
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "NO_IK": 22,
+    "OK": 26
+   },
+   "place_candidates": {
+    "OK": 32,
+    "PLACE_POSE": 12,
+    "RETREAT": 4
+   },
+   "place_error_m": 7.850462293418876e-17,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:f870d05fd60d9fa3d840afe9d4ee5883cdac6e57ace6a79df130bdf90d12d93f",
+   "seconds": 2.3,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c55": {
+   "action_hash": "sha256:91719fcdac45fa8b500e73ce69f2dc3a3d97cc64e4f7fbbb201b5027edb1eda3",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 0.0
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 4.71238898038469
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "NO_IK": 26,
+    "OK": 22
+   },
+   "place_candidates": {
+    "NO_IK": 4,
+    "OK": 30,
+    "PLACE_POSE": 9,
+    "RETREAT": 5
+   },
+   "place_error_m": 3.469446951953614e-17,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:496c54f38d5b1e16fa4031d40da4c50ab7d827a3fcd45aebd80863e6a3a4da27",
+   "seconds": 4.6,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c56": {
+   "action_hash": "sha256:39b6fa4e7701cb610f545d09d273a12057e49af40fad0b7627977af7f77e592b",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 5.497787143782138
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 5.235987755982989
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "APPROACH": 4,
+    "GRASP_POSE": 12,
+    "OK": 32
+   },
+   "place_candidates": {
+    "NO_IK": 28,
+    "OK": 20
+   },
+   "place_error_m": 2.482534153247273e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:d85433070e5a9327f9e2647098bb78c19056cd064eb5e8f7de93e6c56865b4d3",
+   "seconds": 1.7,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c57": {
+   "action_hash": "sha256:457d937001d2df0f27a5219bdbfd870aa0a52df9e3370342fc52d74f2cbc97df",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 5.497787143782138
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 4.974188368183839
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "APPROACH": 7,
+    "GRASP_POSE": 12,
+    "OK": 29
+   },
+   "place_candidates": {
+    "NO_IK": 24,
+    "OK": 24
+   },
+   "place_error_m": 3.337167946540778e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:7c9cda6d095c0d5e204045d3da7feff1f2a13dfc7fb6685b8dfb8d22405d1ec0",
+   "seconds": 1.7,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c58": {
+   "action_hash": "sha256:ceae48cc7be65a1c9476915c5f4aea69347d4d3a8ca7f3a79027a2794dc5f5f5",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 5.497787143782138
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 4.71238898038469
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "APPROACH": 7,
+    "GRASP_POSE": 12,
+    "OK": 29
+   },
+   "place_candidates": {
+    "NO_IK": 18,
+    "OK": 28,
+    "RETREAT": 2
+   },
+   "place_error_m": 5.000338538839874e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:dd7ee4e45a2d331fcdb74ef04b93eb18dc6397a2fcd6f0565442938ce5e961c7",
+   "seconds": 1.9,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c59": {
+   "action_hash": "sha256:511e2be25e58419b6386ed5509589e07f6a1796ad232d6afce9aea43db068990",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": 1,
+     "phi_rad": 0.5235987755982988
+    },
+    "place": {
+     "branch": 1,
+     "phi_rad": 5.235987755982989
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "APPROACH": 6,
+    "GRASP_POSE": 12,
+    "OK": 30
+   },
+   "place_candidates": {
+    "NO_IK": 10,
+    "OK": 30,
+    "RETREAT": 8
+   },
+   "place_error_m": 2.944741002975224e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:2d4ae8c8537afe6df66986763c8e2901e1d6b7fa42d216f6262dfce60db528aa",
+   "seconds": 2.9,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c60": {
+   "action_hash": "sha256:1b3b9a56527c63371b6d48b62367003bb3df866813bcb6613c84344ce1f983cd",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": 1,
+     "phi_rad": 0.5235987755982988
+    },
+    "place": {
+     "branch": 1,
+     "phi_rad": 5.497787143782138
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "APPROACH": 8,
+    "NO_IK": 10,
+    "OK": 30
+   },
+   "place_candidates": {
+    "OK": 30,
+    "PLACE_POSE": 12,
+    "RETREAT": 6
+   },
+   "place_error_m": 2.2301825219878386e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:fedf40f386d7f00d6061ce85ed8bb7b626a5c6fb2a4d04dc346b687b69c70fa6",
+   "seconds": 1.0,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c61": {
+   "action_hash": "sha256:81c9343c47cee1dc76084fccf93afdbcc78303c6dd11330598d93bd3b84ed7a9",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 6.021385919380436
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 4.71238898038469
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "APPROACH": 2,
+    "NO_IK": 18,
+    "OK": 28
+   },
+   "place_candidates": {
+    "OK": 29,
+    "PLACE_POSE": 12,
+    "RETREAT": 7
+   },
+   "place_error_m": 3.693291056919641e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:50ef14dcbb96cd02ad031a08a5f1ce6f5f26896d92fae200d314c5034d3f6706",
+   "seconds": 1.8,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c62": {
+   "action_hash": "sha256:a8a56cd21f91d6efe54c25ec8b25452e81ffeeaaf601aa8ee39db3508df4b071",
+   "connectors_used": {
+    "carry": "DIRECT",
+    "pick": {
+     "branch": -1,
+     "phi_rad": 0.0
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 4.71238898038469
+    },
+    "pregrasp": "DIRECT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 1,
+    "close_attach": 1,
+    "pregrasp": 1,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "NO_IK": 24,
+    "OK": 24
+   },
+   "place_candidates": {
+    "OK": 29,
+    "PLACE_POSE": 12,
+    "RETREAT": 7
+   },
+   "place_error_m": 3.841541122891592e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [],
+   "scene_hash": "sha256:f313a9863b5a4c86aca243f0264f78dfad0daac70f42f40935d3d1f9b6f6a56f",
+   "seconds": 2.0,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 30
+  },
+  "audit_c63": {
+   "action_hash": "sha256:64caa9755be17be9a62649d37284d70f299bfa5394e4b4b8374719febfd9c7de",
+   "connectors_used": {
+    "carry": "RRT_JOINT",
+    "pick": {
+     "branch": 1,
+     "phi_rad": 1.5707963267948966
+    },
+    "place": {
+     "branch": -1,
+     "phi_rad": 4.71238898038469
+    },
+    "pregrasp": "RRT_JOINT",
+    "return_home": "DIRECT"
+   },
+   "phase_segments": {
+    "approach": 12,
+    "carry": 4,
+    "close_attach": 1,
+    "pregrasp": 2,
+    "release": 1,
+    "retreat": 12,
+    "return_home": 1
+   },
+   "pick_candidates": {
+    "NO_IK": 28,
+    "OK": 20
+   },
+   "place_candidates": {
+    "OK": 32,
+    "PLACE_POSE": 12,
+    "RETREAT": 4
+   },
+   "place_error_m": 3.281884095148032e-16,
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "root_id": "root_d0",
+   "rrt_pass_connector_log": [
+    {
+     "label": "pregrasp0",
+     "method": "RRT_JOINT",
+     "nodes": 40,
+     "seconds": 0.32,
+     "status": "CLEAR"
+    },
+    {
+     "label": "carry0.0",
+     "method": "DIRECT",
+     "nodes": 2,
+     "seconds": 0.01,
+     "status": "CLEAR"
+    },
+    {
+     "label": "home0.0",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.01,
+     "status": "COLLISION"
+    },
+    {
+     "label": "carry0.1",
+     "method": "DIRECT",
+     "nodes": 2,
+     "seconds": 0.01,
+     "status": "CLEAR"
+    },
+    {
+     "label": "home0.1",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "carry0.2",
+     "method": "DIRECT",
+     "nodes": 2,
+     "seconds": 0.02,
+     "status": "CLEAR"
+    },
+    {
+     "label": "home0.2",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.01,
+     "status": "COLLISION"
+    },
+    {
+     "label": "carry0.3",
+     "method": "DIRECT",
+     "nodes": 2,
+     "seconds": 0.01,
+     "status": "CLEAR"
+    },
+    {
+     "label": "home0.3",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "carry0.4",
+     "method": "DIRECT",
+     "nodes": 2,
+     "seconds": 0.02,
+     "status": "CLEAR"
+    },
+    {
+     "label": "home0.4",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "carry0.5",
+     "method": "DIRECT",
+     "nodes": 2,
+     "seconds": 0.01,
+     "status": "CLEAR"
+    },
+    {
+     "label": "home0.5",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "carry0.6",
+     "method": "DIRECT",
+     "nodes": 2,
+     "seconds": 0.01,
+     "status": "CLEAR"
+    },
+    {
+     "label": "home0.6",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "carry0.7",
+     "method": "DIRECT",
+     "nodes": 2,
+     "seconds": 0.03,
+     "status": "CLEAR"
+    },
+    {
+     "label": "home0.7",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "carry0.8",
+     "method": "DIRECT",
+     "nodes": 2,
+     "seconds": 0.01,
+     "status": "CLEAR"
+    },
+    {
+     "label": "home0.8",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "carry0.9",
+     "method": "DIRECT",
+     "nodes": 2,
+     "seconds": 0.15,
+     "status": "CLEAR"
+    },
+    {
+     "label": "home0.9",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "carry0.10",
+     "method": "GUIDE_LINE",
+     "nodes": 160,
+     "seconds": 0.1,
+     "status": "CLEAR"
+    },
+    {
+     "label": "home0.10",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "carry0.11",
+     "method": "GUIDE_LINE",
+     "nodes": 160,
+     "seconds": 0.1,
+     "status": "CLEAR"
+    },
+    {
+     "label": "home0.11",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "carry0.12",
+     "method": "GUIDE_LINE",
+     "nodes": 160,
+     "seconds": 0.11,
+     "status": "CLEAR"
+    },
+    {
+     "label": "home0.12",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "carry0.13",
+     "method": "GUIDE_LINE",
+     "nodes": 160,
+     "seconds": 0.15,
+     "status": "CLEAR"
+    },
+    {
+     "label": "home0.13",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "carry0.14",
+     "method": "GUIDE_LINE",
+     "nodes": 160,
+     "seconds": 0.08,
+     "status": "CLEAR"
+    },
+    {
+     "label": "home0.14",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "carry0.15",
+     "method": "GUIDE_LINE",
+     "nodes": 160,
+     "seconds": 0.08,
+     "status": "CLEAR"
+    },
+    {
+     "label": "home0.15",
+     "method": "LINK0_SWEEP:link0|t0",
+     "nodes": 0,
+     "seconds": 0.0,
+     "status": "COLLISION"
+    },
+    {
+     "label": "carry0.16",
+     "method": "RRT_JOINT",
+     "nodes": 48,
+     "seconds": 0.67,
+     "status": "CLEAR"
+    },
+    {
+     "label": "home0.16",
+     "method": "DIRECT",
+     "nodes": 2,
+     "seconds": 0.01,
+     "status": "CLEAR"
+    }
+   ],
+   "scene_hash": "sha256:b0eaa1bf82a3eba8e254746c717971ba53e6c79084300c4104776cdebfb7171b",
+   "seconds": 9.2,
+   "status": "VERIFIED_FEASIBLE",
+   "verification_scope": "PLANAR_ARM_KINEMATIC_SKILL",
+   "waypoints": 34
+  }
+ }
+}

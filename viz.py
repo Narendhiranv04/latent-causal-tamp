@@ -18,16 +18,19 @@ import numpy as np  # noqa: E402
 from matplotlib.lines import Line2D  # noqa: E402
 from matplotlib.patches import Circle, FancyArrowPatch, Polygon, Rectangle  # noqa: E402
 
+from geometry import bodies, make_robot  # noqa: E402
 from scene import Scene, candidate_map, occupancy  # noqa: E402
 
-# One small palette for the whole project. Oracle valid/invalid/unresolved
-# colours are reserved for G2+ and are deliberately not defined yet.
+# One small palette for the whole project. valid / invalid / unresolved are the
+# status colours (verified or clear / certified collision / unresolved) and are
+# always paired with a written label.
 COLORS = {
     "support": "#fcfcfb", "cell_edge": "#d6d5d0", "text": "#0b0b0b", "muted": "#7a7975",
     "obstacle": "#a7b4c2", "obstacle_edge": "#3b4a5a",
     "target": "#eb6834", "target_edge": "#9a3a12",
     "link": "#3b4351", "housing": "#22262e", "gripper": "#596273",
     "hypothetical": "#2a78d6", "excluded": "#52514e",
+    "valid": "#008300", "invalid": "#e34948", "unresolved": "#eda100",
 }
 SUPPORT_RGB, OBJECT_RGB, RIM_RGB = (236, 234, 228), (167, 180, 194), (59, 74, 90)
 
@@ -74,51 +77,31 @@ def render_observation(scene: Scene, image_px: int):
     return rgb, inst, ids
 
 
-# ------------------------------------------------------------------ robot bodies
-def _box(origin, angle, x0, x1, y0, y1):
-    """World vertices of the rectangle [x0,x1]x[y0,y1] in a frame at origin/angle."""
-    c, s = math.cos(angle), math.sin(angle)
-    local = np.array([[x0, y0], [x1, y0], [x1, y1], [x0, y1]])
-    return np.asarray(origin) + local @ np.array([[c, s], [-s, c]])
+# ------------------------------------------------------------------ robot drawing
+ROLE = {"base": "housing", "housing1": "housing", "housing2": "housing", "link0": "link",
+        "link1": "link", "link2": "link", "palm": "gripper", "rail": "gripper",
+        "finger_l": "gripper", "finger_r": "gripper", "held": "target"}
 
 
-def robot_shapes(scene: Scene, cfg: dict) -> list[tuple]:
-    """Every robot body as (role, 'circle', centre, r) or (role, 'poly', verts).
-
-    Drawing-only planar FK: theta_j = q_1 + ... + q_j, joints at
-    b + sum L_j (cos theta_j, sin theta_j). G1 moves FK into geometry.py and this
-    function then uses it. Tool frame: x along theta_3 at the TCP; the palm spans
-    x in [-palm_length, 0] (tcp_at_palm_tip) and fingers x in [0, finger_length]
-    with inner faces at y = +-gap/2 for the current clear gap g.
-    """
-    a, g = cfg["arm2d"], cfg["gripper2d"]
-    pts, angles, theta = [np.array(a["base_xy_m"])], [], 0.0
-    for length, q in zip(a["link_lengths_m"], scene.robot.q_rad):
-        theta += q
-        pts.append(pts[-1] + length * np.array([math.cos(theta), math.sin(theta)]))
-        angles.append(theta)
-    shapes = [("base", "circle", pts[0], a["base_radius_m"])]
-    for j, w in enumerate(a["link_full_widths_m"]):
-        shapes.append(("link", "poly", _box(pts[j], angles[j], 0, a["link_lengths_m"][j], -w / 2, w / 2)))
-        shapes += [("link", "circle", pts[j], w / 2), ("link", "circle", pts[j + 1], w / 2)]
-    shapes += [("housing", "circle", pts[j], a["joint_housing_radius_m"]) for j in (1, 2)]
-    tcp, phi, half = pts[3], angles[2], scene.robot.gripper_gap_m / 2
-    pw, t = g["palm_full_width_m"] / 2, g["finger_thickness_m"]
-    shapes.append(("palm", "poly", _box(tcp, phi, -g["palm_length_m"], 0, -pw, pw)))
-    shapes.append(("finger", "poly", _box(tcp, phi, 0, g["finger_length_m"], half, half + t)))
-    shapes.append(("finger", "poly", _box(tcp, phi, 0, g["finger_length_m"], -half - t, -half)))
-    return shapes
+def _outline(core: np.ndarray, r: float, n: int = 14) -> np.ndarray:
+    """Drawing outline of a core dilated by r: polygon, disc or capsule."""
+    if r == 0:
+        return core
+    a, b = core[0], core[-1]
+    ang = math.atan2(b[1] - a[1], b[0] - a[0])
+    arc = lambda c, t0: [c + r * np.array([math.cos(t), math.sin(t)])  # noqa: E731
+                         for t in np.linspace(t0, t0 + math.pi, n)]
+    return np.array(arc(b, ang - math.pi / 2) + arc(a, ang + math.pi / 2))
 
 
-def shapes_extent(shapes) -> tuple[float, float, float, float]:
-    """(xmin, xmax, ymin, ymax) [m] covering every robot body."""
-    pts = []
-    for s in shapes:
-        if s[1] == "circle":
-            pts += [s[2] - s[3], s[2] + s[3]]
-        else:
-            pts += list(s[2])
-    pts = np.array(pts)
+def robot_outlines(robot, q, gap: float, held=None) -> list[tuple[str, np.ndarray]]:
+    """(body name, outline vertices) for every collision body, from geometry.bodies:
+    the drawing shows exactly the geometry that the certifier checks."""
+    return [(n, _outline(core, r)) for n, (core, r) in bodies(robot, q, gap, held).items()]
+
+
+def robot_extent(robot, q, gap: float, held=None) -> tuple[float, float, float, float]:
+    pts = np.vstack([v for _, v in robot_outlines(robot, q, gap, held)])
     return pts[:, 0].min(), pts[:, 0].max(), pts[:, 1].min(), pts[:, 1].max()
 
 
@@ -143,13 +126,16 @@ def draw_objects(ax, scene: Scene, labels: bool = True, alpha: float = 1.0):
             ax.text(*o.xy_m, o.id, fontsize=6, ha="center", va="center", color=COLORS["text"], zorder=4)
 
 
-def draw_robot(ax, scene: Scene, cfg: dict):
-    color = {"base": COLORS["housing"], "link": COLORS["link"], "housing": COLORS["housing"],
-             "palm": COLORS["gripper"], "finger": COLORS["gripper"]}
-    for s in robot_shapes(scene, cfg):
-        patch = Circle(s[2], s[3]) if s[1] == "circle" else Polygon(s[2], closed=True)
-        patch.set(fc=color[s[0]], ec="none", alpha=0.92, zorder=5)
-        ax.add_patch(patch)
+def draw_robot(ax, robot, q, gap: float, held=None, alpha: float = 0.92, zorder: int = 5,
+               highlight=()):
+    """Full arm, housings, palm, rail, fingers (and held disc); bodies named in
+    `highlight` get a red outline (offending collision pair)."""
+    for name, verts in robot_outlines(robot, q, gap, held):
+        ax.add_patch(Polygon(verts, closed=True, fc=COLORS[ROLE[name]], ec="none", alpha=alpha,
+                             zorder=zorder))
+        if name in highlight:
+            ax.add_patch(Polygon(verts, closed=True, fc="none", ec=COLORS["invalid"], lw=2.2,
+                                 zorder=zorder + 2))
 
 
 def draw_candidate_domain(ax, scene: Scene, obj_id: str, ghost_k: int):
@@ -174,17 +160,17 @@ def draw_candidate_domain(ax, scene: Scene, obj_id: str, ghost_k: int):
                                  color=COLORS["hypothetical"], shrinkA=10, shrinkB=10, zorder=6))
 
 
-def _legend_handles():
+def legend_handles():
     def dot(fc, ec, label):
         return Line2D([], [], ls="none", marker="o", ms=9, mfc=fc, mec=ec, label=label)
     return [dot(COLORS["obstacle"], COLORS["obstacle_edge"], "movable obstacle"),
             dot(COLORS["target"], COLORS["target_edge"], "active target"),
             Line2D([], [], color=COLORS["link"], lw=5, label="3R links (finite width)"),
             dot(COLORS["housing"], COLORS["housing"], "base / joint housings"),
-            Line2D([], [], color=COLORS["gripper"], lw=5, label="palm + 2 fingers (open)")]
+            Line2D([], [], color=COLORS["gripper"], lw=5, label="palm + rail + 2 fingers")]
 
 
-def _world_axes(ax, scene: Scene, xlim, ylim, title):
+def world_axes(ax, scene: Scene, xlim, ylim, title):
     lat = scene.lattice
     ax.set(xlim=xlim, ylim=ylim, aspect="equal", xlabel="world x [m]  (right)",
            ylabel="world y [m]  (backward on support)")
@@ -211,23 +197,23 @@ def overview_figure(scene: Scene, cfg: dict, obs, notes: list[str]):
     ghost_k = min(free, key=lambda k: math.dist(lat.center(cmap.cell_of(k)), cmap.stay_xy_m))
     fig, axes = plt.subplots(2, 2, figsize=(16, 14.2))
     fig.suptitle(f"G0 scene record  |  root {scene.root_id} / variant {scene.variant_id}  |  "
-                 "robot pose: SCHEMATIC / NOT_RUN (provisional home, unvalidated)",
+                 "robot drawn at the stored home q (static pose; no motion evidence here)",
                  fontsize=12, x=0.02, ha="left")
 
     ax = axes[0, 0]
-    _world_axes(ax, scene, rcfg["overview_xlim_m"], rcfg["overview_ylim_m"],
+    world_axes(ax, scene, rcfg["overview_xlim_m"], rcfg["overview_ylim_m"],
                 "A. Diagnostic world view: 64 cells (physical IDs), objects, full 3R arm + fingers")
     draw_support(ax, scene)
     draw_objects(ax, scene)
-    draw_robot(ax, scene, cfg)
-    ax.legend(handles=_legend_handles(), loc="lower right", fontsize=7, framealpha=0.95)
+    draw_robot(ax, make_robot(cfg), scene.robot.q_rad, scene.robot.gripper_gap_m)
+    ax.legend(handles=legend_handles(), loc="lower right", fontsize=7, framealpha=0.95)
     ax.text(rcfg["overview_xlim_m"][0] + 0.01, rcfg["overview_ylim_m"][1] - 0.01,
-            f"q = {list(scene.robot.q_rad)} rad (provisional q_home)\ncollision / reach NOT checked "
-            "(G1)", fontsize=7, va="top", color=COLORS["text"])
+            f"q = {[round(v, 4) for v in scene.robot.q_rad]} rad (scene record)", fontsize=7,
+            va="top", color=COLORS["text"])
 
     ax = axes[0, 1]
     pad = 0.02
-    _world_axes(ax, scene, (-pad, side[0] + pad), (-pad, side[1] + pad),
+    world_axes(ax, scene, (-pad, side[0] + pad), (-pad, side[1] + pad),
                 f"B. Domain of {focus}: x_i in {{0..{cmap.size - 1}}}; k is per-object, not a cell ID\n"
                 f"    ghost k={ghost_k} -> cell {cmap.cell_of(ghost_k)} (same ID, no clone); "
                 "occupied cells stay candidates")

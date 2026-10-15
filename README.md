@@ -17,10 +17,11 @@ pushed to `main` of `github.com/Narendhiranv04/latent-causal-tamp`.
 | Stage | Scope | State |
 |---|---|---|
 | G0 | scene, records, visual foundations | implemented; report `responses-phases/0001_G0_completion.md` |
-| G1–G10 | see Guide v1.6 §5 | not started |
+| G1 | 3R kinematics, collision bodies, certified six-phase skill, 64-cell audit | implemented; report `responses-phases/0003_G1_completion.md` |
+| G2–G10 | see Guide v1.6 §5 | not started |
 
-The 2D robot profile in `config.toml` is **provisional** and untested; robot poses
-drawn before G1 are `SCHEMATIC / NOT_RUN`.
+The 2D robot profile was tested at G1 (`robot_profile_hash` in `runs/g1_robot/result.json`);
+robot motion claims are kinematic only (`PLANAR_ARM_KINEMATIC_SKILL`), never dynamic or hardware.
 
 ## Layout (flat; files appear only when their stage arrives)
 
@@ -29,7 +30,12 @@ drawn before G1 are `SCHEMATIC / NOT_RUN`.
 | `config.toml` | 2D suite values; unknown/missing keys fail |
 | `fixtures.json` | reproducible cases: root/variant IDs, seeds, lineage |
 | `scene.py` | config validation, lattice, scene state, candidate maps, snapshots, hashes |
-| `viz.py` | clean learner observation, robot body shapes, overview figures |
+| `geometry.py` | 3R FK/IK, collision bodies (links, housings, palm, rail, fingers), exact 2D distances, conservative interval certifier |
+| `motion.py` | recorded trajectories and hashes, IK-tracked lines, certified chains, replay, path sampling |
+| `planner.py` | certified connectors: direct, guide line, link-0 sweep certificate, seeded RRT-Connect (joint or held-object pose space) |
+| `skill.py` | six-phase side-grasp skill (pick/place screening, connectors) and its JSON summary |
+| `viz.py` | clean learner observation, drawing primitives (robot drawn from `geometry.bodies`), G0 overview |
+| `figures.py` | G1 figures and GIFs composed from recorded results |
 | `run.py` | the sole command dispatcher |
 | `tests/` | one test file per stage component |
 | `runs/` | flat per-run output directories |
@@ -48,6 +54,8 @@ support. Lattice row r grows with +y, column c with +x; cell (r, c) has physical
 ```sh
 python -m pytest tests -q
 python run.py scene --config config.toml --case G0_ILLUSTRATIVE --out runs/g0_scene
+python run.py check --config config.toml --out runs/g1_robot   # ~1.5 min with 24 workers
+python run.py replay --run runs/g1_robot                      # re-certify stored trajectories
 ```
 
 Each run writes `config.json`, `scene.json`, `result.json`, `overview.png`,

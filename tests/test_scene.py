@@ -14,6 +14,7 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
+import geometry  # noqa: E402
 import scene as sc  # noqa: E402
 import viz  # noqa: E402
 
@@ -133,11 +134,12 @@ def test_mask_area_and_equal_aspect(cfg, scene):
 
 
 def test_robot_drawing_inside_fixed_axes(cfg, scene):
-    x0, x1, y0, y1 = viz.shapes_extent(viz.robot_shapes(scene, cfg))
+    robot = geometry.make_robot(cfg)
+    x0, x1, y0, y1 = viz.robot_extent(robot, scene.robot.q_rad, scene.robot.gripper_gap_m)
     (xl0, xl1), (yl0, yl1) = cfg["render"]["overview_xlim_m"], cfg["render"]["overview_ylim_m"]
     assert xl0 <= x0 and x1 <= xl1 and yl0 <= y0 and y1 <= yl1
-    roles = [s[0] for s in viz.robot_shapes(scene, cfg)]
-    assert roles.count("finger") == 2 and roles.count("palm") == 1 and roles.count("housing") == 2
+    names = [n for n, _ in viz.robot_outlines(robot, scene.robot.q_rad, scene.robot.gripper_gap_m)]
+    assert {"finger_l", "finger_r", "palm", "rail", "housing1", "housing2"} <= set(names)
 
 
 # ---------------------------------------------------------------- candidates

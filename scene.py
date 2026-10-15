@@ -39,7 +39,16 @@ SCHEMA = {
                   "finger_length_m": float, "finger_thickness_m": float,
                   "open_gap_m": float, "closed_gap_m": float, "tcp_at_palm_tip": bool,
                   "attachment_pose_policy": str, "contact_pos_tolerance_m": float,
-                  "release_xy_tolerance_m": float},
+                  "release_xy_tolerance_m": float, "rail_depth_m": float,
+                  "grasp_center_x_m": float},
+    "geometry": {"numeric_margin_band_m": float, "interval_max_step_rad": float,
+                 "interval_certifier": str, "certify_max_evals": int},
+    "planner2d": {"algorithm": str, "seed": int, "max_nodes": int, "max_wall_seconds": float,
+                  "extend_step_rad": float, "shortcut_rounds": int, "pose_step_m": float,
+                  "pose_phi_weight_m": float, "edge_max_evals": int},
+    "skill2d": {"approach_dirs": int, "approach_dist_m": float, "retreat_dist_m": float,
+                "line_step_m": float, "max_ik_jump_rad": float, "max_plan_failures": int,
+                "max_direct_pairs": int},
     "render": {"image_px": int, "overview_xlim_m": VEC2, "overview_ylim_m": VEC2},
 }
 
@@ -119,6 +128,16 @@ def _check_physics(cfg: dict) -> None:
         (0 < g["closed_gap_m"] < g["open_gap_m"], "need 0 < closed_gap < open_gap"),
         (min(g["palm_length_m"], g["palm_full_width_m"], g["finger_length_m"],
              g["finger_thickness_m"]) > 0, "gripper dimensions must be > 0"),
+        (g["rail_depth_m"] > 0, "rail_depth must be > 0"),
+        (g["grasp_center_x_m"] - rad >= delta, "held object must clear the rail/palm by delta"),
+        (0 <= g["grasp_center_x_m"] <= g["finger_length_m"], "grasp contact must lie on the fingers"),
+        (cfg["skill2d"]["approach_dist_m"] >= g["finger_length_m"] - g["grasp_center_x_m"] + rad + delta,
+         "pregrasp finger tips must clear the object by delta"),
+        (cfg["geometry"]["interval_certifier"] == "analytic_or_conservative_subdivision",
+         "unknown interval_certifier"),
+        (min(cfg["geometry"]["certify_max_evals"], cfg["planner2d"]["max_nodes"],
+             cfg["skill2d"]["approach_dirs"], cfg["skill2d"]["max_plan_failures"]) > 0
+         and cfg["skill2d"]["line_step_m"] > 0, "budgets and steps must be > 0"),
         (r["image_px"] > 0, "image_px must be > 0"),
         (r["overview_xlim_m"][0] < r["overview_xlim_m"][1]
          and r["overview_ylim_m"][0] < r["overview_ylim_m"][1], "overview limits need lo < hi"),
@@ -241,13 +260,20 @@ class Scene:
 def make_scene(cfg: dict, root_id: str, variant_id: str, seed: int) -> Scene:
     """Seeded scene: targets then obstacles drawn without replacement from all
     cells, so every object rests at a distinct supported cell centre."""
+    s = cfg["suite"]
+    order = np.random.default_rng(seed).permutation(s["rows"] * s["cols"]).tolist()
+    nt, no = s["num_targets"], s["num_obstacles"]
+    return place_scene(cfg, root_id, variant_id, order[:nt], order[nt:nt + no])
+
+
+def place_scene(cfg: dict, root_id: str, variant_id: str, target_cells, obstacle_cells) -> Scene:
+    """Scene with targets t0.. and obstacles o00.. at the given distinct cells."""
     s, a, g = cfg["suite"], cfg["arm2d"], cfg["gripper2d"]
-    lat = Lattice(s["rows"], s["cols"], s["pitch_m"])
-    order = np.random.default_rng(seed).permutation(lat.n_cells).tolist()
-    nt, no, rad = s["num_targets"], s["num_obstacles"], s["obstacle_radius_m"]
-    objs = [Obj(f"t{i}", "target", rad, lat.center(c), c) for i, c in enumerate(order[:nt])]
-    objs += [Obj(f"o{i:02d}", "obstacle", rad, lat.center(c), c)
-             for i, c in enumerate(order[nt:nt + no])]
+    if len(set(target_cells) | set(obstacle_cells)) != len(target_cells) + len(obstacle_cells):
+        raise ValueError("objects must occupy distinct cells")
+    lat, rad = Lattice(s["rows"], s["cols"], s["pitch_m"]), s["obstacle_radius_m"]
+    objs = [Obj(f"t{i}", "target", rad, lat.center(c), c) for i, c in enumerate(target_cells)]
+    objs += [Obj(f"o{i:02d}", "obstacle", rad, lat.center(c), c) for i, c in enumerate(obstacle_cells)]
     robot = RobotState(tuple(a["q_home_rad"]), g["open_gap_m"])
     return Scene(root_id, variant_id, lat, tuple(objs), robot, tuple(range(lat.n_cells)),
                  s["domain_policy"], robot_profile_hash(cfg))
