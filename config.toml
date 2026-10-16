@@ -83,6 +83,31 @@ max_orders = 6                       # legal move orders tried per assignment
 max_relocations = 40                 # distinct relocation skills planned per repair search (budget)
 skill_plan_failures = 2              # UNRESOLVED connectors allowed per relocation skill in repair search
 
+# G3.5 primary protocol (Methodology v1.5 §9, Guide v1.7 §2). FROZEN_CONTROL runs (solve,
+# replay) keep their archived semantics and ignore these three sections.
+[protocol]
+name = "INITIAL_SCENE_ONE_SHOT_V1"
+proposal_observation = "INITIAL_ONLY"
+target_feedback_to_selection = false
+target_calls_between_relocations = 0
+target_reference_required = false
+execution_observation = "VALIDATE_OR_ABORT"
+move_once = true
+
+[proposal]
+source = "MANUAL_CASE_CANDIDATES"    # G3.5: hand-authored per query (fixtures.json), ranked by a fixed rule
+budget_cap = 6                       # at most this many moved objects per proposed assignment
+max_candidates_to_verify = 12        # ranked candidates the relocation planner may try before giving up
+include_all_stay = true
+task_score_threshold = 0.5           # deterministic geometric score (goal occupancy); never tuned on outcomes
+
+[target_evaluation]
+when = "AFTER_REPAIR_COMMIT_AND_COMPLETION"
+start_state = "ACHIEVED"
+scope = "COMPLETE_TARGET_SKILL"      # the tested six-phase skill (skill2d budgets), planned afresh
+final_connector = "HOME"             # as in the G1 skill; the goal is reached at release/retreat
+max_queries_per_primary_episode = 1
+
 # Rendering of the clean learner observation and the fixed overview axes.
 [render]
 image_px = 320                       # square top-down image over the support; 0.002 m/px

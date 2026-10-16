@@ -1,5 +1,5 @@
 {
-  "version": 4,
+  "version": 5,
   "fixtures": {
     "G0_ILLUSTRATIVE": {
       "stage": "G0",
@@ -328,6 +328,212 @@
       },
       "execute": true,
       "description": "Dense T07/F8 terminal control: 35 obstacles on every cell outside the 0.461 m link-0 sweep zone except the nearest one; gamma_0 (t0 0 -> 34) planned and certified with this final dense background present; five existing IDs relocated into the frozen sweep (G2 rule). Restricted: blockers may use only the 4 nearest vacant action-clear non-reference cells (Hall); paired ALL_SUPPORTED twin."
+    },
+    "G35_R0_D1REF": {
+      "stage": "G3_5",
+      "protocol": "INITIAL_SCENE_ONE_SHOT_V1",
+      "cases": [
+        "R0"
+      ],
+      "scene": {
+        "source_run": "runs/g2_interventions",
+        "family": "G2_D1",
+        "variant": "ref"
+      },
+      "action": {
+        "target": "t0",
+        "goal_cell": 45
+      },
+      "candidates": [
+        {
+          "label": "unnecessary move o02->43",
+          "cells": {
+            "o02": 43
+          }
+        }
+      ],
+      "description": "Archived G2 D1 reference scene (read-only). New query: transport t0 to goal cell 45. R0: all-stay should succeed; the one-move candidate tests unnecessary moves."
+    },
+    "G35_R1_D1BLOCK": {
+      "stage": "G3_5",
+      "protocol": "INITIAL_SCENE_ONE_SHOT_V1",
+      "cases": [
+        "R1",
+        "R6"
+      ],
+      "scene": {
+        "source_run": "runs/g2_interventions",
+        "family": "G2_D1",
+        "variant": "block_a"
+      },
+      "action": {
+        "target": "t0",
+        "goal_cell": 45
+      },
+      "candidates": [
+        {
+          "label": "G3 frozen-control repair o02->43",
+          "cells": {
+            "o02": 43
+          }
+        }
+      ],
+      "privileged": {
+        "frozen_family": "G2_D1"
+      },
+      "controls": {
+        "planner_exhaustion": {
+          "planner2d": {
+            "max_nodes": 20
+          },
+          "skill2d": {
+            "max_plan_failures": 1
+          }
+        }
+      },
+      "description": "Archived G2 D1 blocked scene: the frozen G2/G3 gamma_0 collides with o02 (privileged diagnostic). R1: does a newly planned zero-move target action succeed from the same initial state? R6: the same all-stay query under a forced tiny planner budget."
+    },
+    "G35_R2_GOAL": {
+      "stage": "G3_5",
+      "protocol": "INITIAL_SCENE_ONE_SHOT_V1",
+      "cases": [
+        "R2",
+        "R3",
+        "R5",
+        "R6"
+      ],
+      "scene": {
+        "root_id": "root_r2",
+        "target_cells": [
+          18
+        ],
+        "obstacle_cells": [
+          3,
+          13,
+          50,
+          45
+        ],
+        "lineage": "D1 reference layout with o03 placed on the goal cell 45 (constructed directly; no relocation)"
+      },
+      "action": {
+        "target": "t0",
+        "goal_cell": 45
+      },
+      "candidates": [
+        {
+          "label": "o03->60",
+          "cells": {
+            "o03": 60
+          }
+        },
+        {
+          "label": "o03->38",
+          "cells": {
+            "o03": 38
+          }
+        },
+        {
+          "label": "o01->21 (goal stays occupied)",
+          "cells": {
+            "o01": 21
+          }
+        },
+        {
+          "label": "duplicate destination",
+          "cells": {
+            "o03": 60,
+            "o02": 60
+          }
+        },
+        {
+          "label": "onto the resting target",
+          "cells": {
+            "o03": 18
+          }
+        },
+        {
+          "label": "unsupported pose",
+          "cells": {
+            "o03": [
+              -0.01,
+              0.3
+            ]
+          }
+        },
+        {
+          "label": "numerical boundary (clearance = delta)",
+          "cells": {
+            "o03": [
+              0.253,
+              0.52
+            ]
+          }
+        }
+      ],
+      "description": "Goal cell 45 occupied by o03. R2: goal-overlap certificate (LB 1) plus a one-move witness. R3: two destinations. R5: static-valid o01 move leaves the goal occupied. R6: duplicate, target-at-rest, unsupported and gray-band endpoints."
+    },
+    "G35_R4_ACCESS": {
+      "stage": "G3_5",
+      "protocol": "INITIAL_SCENE_ONE_SHOT_V1",
+      "cases": [
+        "R4",
+        "R2"
+      ],
+      "scene": {
+        "root_id": "root_r4",
+        "target_cells": [
+          20
+        ],
+        "obstacle_cells": [
+          28,
+          27,
+          31,
+          58,
+          63
+        ],
+        "lineage": "G3 D3 blocked layout (o00 5->28, o01 9->27 from the D3 reference), constructed directly"
+      },
+      "action": {
+        "target": "t0",
+        "goal_cell": 28
+      },
+      "candidates": [
+        {
+          "label": "o00->29",
+          "cells": {
+            "o00": 29
+          }
+        },
+        {
+          "label": "o00->29, o01->18",
+          "cells": {
+            "o00": 29,
+            "o01": 18
+          }
+        }
+      ],
+      "description": "Goal cell 28 occupied by o00, whose grasp access is blocked by o01. R4: the same two-move assignment with o00 first (rejected) and o01 first (verified), then the newly planned target action."
+    },
+    "G35_R5_D2BLOCK": {
+      "stage": "G3_5",
+      "protocol": "INITIAL_SCENE_ONE_SHOT_V1",
+      "cases": [
+        "R5"
+      ],
+      "scene": {
+        "source_run": "runs/g2_interventions",
+        "family": "G2_D2",
+        "variant": "block_ab"
+      },
+      "action": {
+        "target": "t0",
+        "goal_cell": 53
+      },
+      "candidates": [],
+      "privileged": {
+        "frozen_family": "G2_D2"
+      },
+      "description": "Archived G2 D2 blocked scene. R5: all-stay is static-valid; the target evaluation result is recorded as found (a probe returned UNRESOLVED planner budget)."
     }
   }
 }

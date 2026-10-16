@@ -150,6 +150,17 @@ def _none_left(stage: str, cands: list, picks, places=()) -> SkillResult:
                        picks=picks, places=list(places))
 
 
+def pick_certificate(robot, scene, obj_id: str, cfg: dict) -> SkillResult | None:
+    """The pick screen alone. It depends only on object poses (not on the robot's start
+    state or the destination), so CERTIFIED_INFEASIBLE NO_PICK_CANDIDATE here holds for
+    every relocation of obj_id begun in this scene, within the declared grasp family."""
+    p = params(cfg)
+    o = scene.get(obj_id)
+    picks = screen_pick(robot, mo.checkers(robot, scene, obj_id, None, None, p["delta"], p["eps"]), o.xy_m,
+                        o.radius_m, p)
+    return None if any(c.stage == "OK" for c in picks) else _none_left("PICK", picks, picks)
+
+
 def plan_skill(robot, scene, target_id: str, dest_cell: int, cfg: dict, key: str, q_start=None,
                q_goal="home") -> SkillResult:
     """start -> pregrasp -> approach -> close/attach -> carry -> release -> retreat -> goal.

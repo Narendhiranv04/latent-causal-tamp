@@ -1,0 +1,2585 @@
+{
+ "G35_R0_D1REF": {
+  "bounds": {
+   "lower_bound": 0,
+   "minimality": "MINIMUM_CERTIFIED",
+   "premises": [
+    "no sound bound beyond 0"
+   ],
+   "upper_bound": 0
+  },
+  "cases": [
+   "R0"
+  ],
+  "description": "Archived G2 D1 reference scene (read-only). New query: transport t0 to goal cell 45. R0: all-stay should succeed; the one-move candidate tests unnecessary moves.",
+  "execution": {
+   "achieved_moved_history": [],
+   "candidates_tried": [
+    {
+     "label": "all-stay",
+     "orders": [
+      {
+       "failed_relocation": null,
+       "moved_history": [],
+       "order": [],
+       "reason": "ALL_RELOCATIONS_CERTIFIED",
+       "relocation_status": "VERIFIED_FEASIBLE",
+       "wall_clock_dependent": false
+      }
+     ],
+     "rank": 0,
+     "static_status": "VALID",
+     "stop": "WITNESS_FOUND"
+    }
+   ],
+   "commit": {
+    "cells": {},
+    "label": "all-stay",
+    "order": [],
+    "proposal_hash": "sha256:a42b99e43e7b8e10bcbb66fb3c890039f835474a38f188f553bed35233a7e341",
+    "rank": 0,
+    "source_observation_hash": "sha256:2111eb51c04cbde874da43e7ce10396c9a0a4c693205027a404eb7942a26828c",
+    "witness_hash": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+   },
+   "events": [
+    {
+     "candidates": 2,
+     "component": "proposal",
+     "i": 0,
+     "kind": "PROPOSE",
+     "proposal_hash": "sha256:a42b99e43e7b8e10bcbb66fb3c890039f835474a38f188f553bed35233a7e341",
+     "state_hash": "sha256:2111eb51c04cbde874da43e7ce10396c9a0a4c693205027a404eb7942a26828c",
+     "t_s": 0.0
+    },
+    {
+     "component": "static_screen",
+     "i": 1,
+     "kind": "STATIC_CHECK",
+     "rank": 0,
+     "state_hash": "sha256:f635e6aa76d6e6bd40d535df97eda3669323917a19c128f48f84802289b2a977",
+     "status": "VALID",
+     "t_s": 0.0
+    },
+    {
+     "component": "relocation_planner",
+     "i": 2,
+     "kind": "REPAIR_PLAN",
+     "orders": 1,
+     "rank": 0,
+     "relocation_plans": 0,
+     "state_hash": "sha256:f635e6aa76d6e6bd40d535df97eda3669323917a19c128f48f84802289b2a977",
+     "stop": "WITNESS_FOUND",
+     "t_s": 0.0
+    },
+    {
+     "component": "commitment",
+     "i": 3,
+     "kind": "COMMIT",
+     "rank": 0,
+     "state_hash": "sha256:f635e6aa76d6e6bd40d535df97eda3669323917a19c128f48f84802289b2a977",
+     "t_s": 0.0,
+     "witness_hash": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+     "component": "target_evaluator",
+     "i": 4,
+     "kind": "TARGET_EVALUATE",
+     "start_gap": 0.07,
+     "start_q": [
+      1.5707963267948966,
+      1.5707963267948966,
+      1.5707963267948966
+     ],
+     "state_hash": "sha256:f635e6aa76d6e6bd40d535df97eda3669323917a19c128f48f84802289b2a977",
+     "t_s": 0.0
+    },
+    {
+     "component": "episode",
+     "i": 5,
+     "kind": "FINISH",
+     "outcome": "SUCCESS",
+     "state_hash": "sha256:f635e6aa76d6e6bd40d535df97eda3669323917a19c128f48f84802289b2a977",
+     "t_s": 10.681,
+     "target_reason": "ALL_SEGMENTS_CERTIFIED"
+    }
+   ],
+   "outcome": "SUCCESS",
+   "target": {
+    "goal_reached": true,
+    "place_error_m": 5.551115123125783e-17,
+    "reason": "ALL_SEGMENTS_CERTIFIED",
+    "seconds": 10.68,
+    "start": {
+     "attachment": "free",
+     "gripper_gap_m": 0.07,
+     "q": [
+      1.5707963267948966,
+      1.5707963267948966,
+      1.5707963267948966
+     ]
+    },
+    "status": "VERIFIED_FEASIBLE",
+    "wall_clock_dependent": false
+   }
+  },
+  "hashes": {
+   "action_context": "sha256:70e8d0633f131311d727e25d786d87373155e1d1e5eb394e67a25f7bc4d158cc",
+   "observation": "sha256:2111eb51c04cbde874da43e7ce10396c9a0a4c693205027a404eb7942a26828c"
+  },
+  "leakage_audit": {
+   "tensor_keys": [
+    "candidate_xy",
+    "goal_tolerance",
+    "goal_xy",
+    "is_active_target",
+    "is_obstacle",
+    "object_radius",
+    "object_xy",
+    "rgb",
+    "robot_attached",
+    "robot_gripper_gap",
+    "robot_q",
+    "support_extent"
+   ],
+   "tensors_unchanged_after_poison_and_delete": true
+  },
+  "learner": {
+   "action": {
+    "action": "TRANSPORT_TARGET_TO_GOAL",
+    "contact_mode": "PLANAR_SUPPORT_CONTACT_SIDE_GRASP",
+    "final_connector": "HOME",
+    "goal_cell": 45,
+    "goal_orientation": "ANY (rotationally symmetric disc)",
+    "goal_tolerance_m": 0.002,
+    "goal_xy_m": [
+     0.44,
+     0.44
+    ],
+    "grasp_family": {
+     "approach_dirs": 24,
+     "approach_dist_m": 0.06,
+     "ik_branches": 2,
+     "retreat_dist_m": 0.06
+    },
+    "no_lift": true,
+    "pushing_allowed": false,
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "target_id": "t0"
+   },
+   "scene": {
+    "domain_policy": "ALL_SUPPORTED",
+    "lattice": {
+     "cols": 8,
+     "pitch_m": 0.08,
+     "rows": 8
+    },
+    "legal_cells": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     25,
+     26,
+     27,
+     28,
+     29,
+     30,
+     31,
+     32,
+     33,
+     34,
+     35,
+     36,
+     37,
+     38,
+     39,
+     40,
+     41,
+     42,
+     43,
+     44,
+     45,
+     46,
+     47,
+     48,
+     49,
+     50,
+     51,
+     52,
+     53,
+     54,
+     55,
+     56,
+     57,
+     58,
+     59,
+     60,
+     61,
+     62,
+     63
+    ],
+    "objects": [
+     {
+      "cell": 3,
+      "id": "o00",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.28,
+       0.04
+      ]
+     },
+     {
+      "cell": 13,
+      "id": "o01",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.44,
+       0.12
+      ]
+     },
+     {
+      "cell": 50,
+      "id": "o02",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.2,
+       0.52
+      ]
+     },
+     {
+      "cell": 60,
+      "id": "o03",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.36,
+       0.6
+      ]
+     },
+     {
+      "cell": 18,
+      "id": "t0",
+      "kind": "target",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.2,
+       0.2
+      ]
+     }
+    ],
+    "robot": {
+     "attached_id": null,
+     "attachment": "free",
+     "gripper_gap_m": 0.07,
+     "q_rad": [
+      1.5707963267948966,
+      1.5707963267948966,
+      1.5707963267948966
+     ]
+    }
+   }
+  },
+  "offline_case_audit": [
+   {
+    "assignment_feasibility_status": "VERIFIED_FEASIBLE",
+    "cells": {},
+    "certificate": null,
+    "goal_blockers": [],
+    "label": "all-stay",
+    "moved": 0,
+    "orders": [
+     {
+      "failed_relocation": null,
+      "moved_history": [],
+      "order": [],
+      "reason": "ALL_RELOCATIONS_CERTIFIED",
+      "relocation_status": "VERIFIED_FEASIBLE",
+      "target": {
+       "goal_reached": true,
+       "place_error_m": 5.551115123125783e-17,
+       "reason": "ALL_SEGMENTS_CERTIFIED",
+       "seconds": 8.18,
+       "start": {
+        "attachment": "free",
+        "gripper_gap_m": 0.07,
+        "q": [
+         1.5707963267948966,
+         1.5707963267948966,
+         1.5707963267948966
+        ]
+       },
+       "status": "VERIFIED_FEASIBLE",
+       "wall_clock_dependent": false
+      },
+      "wall_clock_dependent": false
+     }
+    ],
+    "static_failed": [],
+    "static_status": "VALID",
+    "unknown_reason": null
+   },
+   {
+    "assignment_feasibility_status": "VERIFIED_FEASIBLE",
+    "cells": {
+     "o02": 43
+    },
+    "certificate": null,
+    "goal_blockers": [],
+    "label": "unnecessary move o02->43",
+    "moved": 1,
+    "orders": [
+     {
+      "failed_relocation": null,
+      "moved_history": [
+       "o02"
+      ],
+      "order": [
+       [
+        "o02",
+        43
+       ]
+      ],
+      "reason": "ALL_RELOCATIONS_CERTIFIED",
+      "relocation_status": "VERIFIED_FEASIBLE",
+      "target": {
+       "goal_reached": true,
+       "place_error_m": 4.2276033262255756e-16,
+       "reason": "ALL_SEGMENTS_CERTIFIED",
+       "seconds": 4.11,
+       "start": {
+        "attachment": "free",
+        "gripper_gap_m": 0.07,
+        "q": [
+         1.722223464580793,
+         -1.84700123285035,
+         -0.9224197829270402
+        ]
+       },
+       "status": "VERIFIED_FEASIBLE",
+       "wall_clock_dependent": false
+      },
+      "wall_clock_dependent": false
+     }
+    ],
+    "static_failed": [],
+    "static_status": "VALID",
+    "unknown_reason": null
+   }
+  ],
+  "oracle_only": {
+   "construction": "archived G2_D1/ref",
+   "reference_action_hash": "sha256:487ec18878068e01501c6737f1c58ec4cd1b9e410560bd4d8f7f8c32c5784355",
+   "root_id": "root_d1"
+  },
+  "pick_certificates": {},
+  "protocol": "INITIAL_SCENE_ONE_SHOT_V1",
+  "ranked_proposals": [
+   {
+    "cells": {},
+    "declared_rank": 0,
+    "label": "all-stay",
+    "moved": 0,
+    "score": 1.0
+   },
+   {
+    "cells": {
+     "o02": 43
+    },
+    "declared_rank": 1,
+    "label": "unnecessary move o02->43",
+    "moved": 1,
+    "score": 1.0
+   }
+  ]
+ },
+ "G35_R1_D1BLOCK": {
+  "bounds": {
+   "lower_bound": 0,
+   "minimality": "MINIMUM_CERTIFIED",
+   "premises": [
+    "no sound bound beyond 0"
+   ],
+   "upper_bound": 0
+  },
+  "cases": [
+   "R1",
+   "R6"
+  ],
+  "controls": {
+   "planner_exhaustion": {
+    "assignment_feasibility_status": "UNRESOLVED",
+    "note": "finite budget: unknown, never a negative or a bound",
+    "overrides": {
+     "planner2d": {
+      "max_nodes": 20
+     },
+     "skill2d": {
+      "max_plan_failures": 1
+     }
+    },
+    "target": {
+     "goal_reached": false,
+     "place_error_m": null,
+     "reason": "PLANNER_BUDGET",
+     "seconds": 0.65,
+     "start": {
+      "attachment": "free",
+      "gripper_gap_m": 0.07,
+      "q": [
+       1.5707963267948966,
+       1.5707963267948966,
+       1.5707963267948966
+      ]
+     },
+     "status": "UNRESOLVED",
+     "wall_clock_dependent": false
+    }
+   }
+  },
+  "description": "Archived G2 D1 blocked scene: the frozen G2/G3 gamma_0 collides with o02 (privileged diagnostic). R1: does a newly planned zero-move target action succeed from the same initial state? R6: the same all-stay query under a forced tiny planner budget.",
+  "execution": {
+   "achieved_moved_history": [],
+   "candidates_tried": [
+    {
+     "label": "all-stay",
+     "orders": [
+      {
+       "failed_relocation": null,
+       "moved_history": [],
+       "order": [],
+       "reason": "ALL_RELOCATIONS_CERTIFIED",
+       "relocation_status": "VERIFIED_FEASIBLE",
+       "wall_clock_dependent": false
+      }
+     ],
+     "rank": 0,
+     "static_status": "VALID",
+     "stop": "WITNESS_FOUND"
+    }
+   ],
+   "commit": {
+    "cells": {},
+    "label": "all-stay",
+    "order": [],
+    "proposal_hash": "sha256:aeb484cb33a4772dd2d511ff597a569c81653c182b2fdd397d14c11c6a1816d9",
+    "rank": 0,
+    "source_observation_hash": "sha256:0cf5e9bb527414414fb76d7ad2665664afd50f3a85d12282d3e1cb36a32e5851",
+    "witness_hash": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+   },
+   "events": [
+    {
+     "candidates": 2,
+     "component": "proposal",
+     "i": 0,
+     "kind": "PROPOSE",
+     "proposal_hash": "sha256:aeb484cb33a4772dd2d511ff597a569c81653c182b2fdd397d14c11c6a1816d9",
+     "state_hash": "sha256:0cf5e9bb527414414fb76d7ad2665664afd50f3a85d12282d3e1cb36a32e5851",
+     "t_s": 0.0
+    },
+    {
+     "component": "static_screen",
+     "i": 1,
+     "kind": "STATIC_CHECK",
+     "rank": 0,
+     "state_hash": "sha256:561d871f195e2f3e91375cd781a55a8d6094eb5cdc34571f53ed36a84279494c",
+     "status": "VALID",
+     "t_s": 0.0
+    },
+    {
+     "component": "relocation_planner",
+     "i": 2,
+     "kind": "REPAIR_PLAN",
+     "orders": 1,
+     "rank": 0,
+     "relocation_plans": 0,
+     "state_hash": "sha256:561d871f195e2f3e91375cd781a55a8d6094eb5cdc34571f53ed36a84279494c",
+     "stop": "WITNESS_FOUND",
+     "t_s": 0.0
+    },
+    {
+     "component": "commitment",
+     "i": 3,
+     "kind": "COMMIT",
+     "rank": 0,
+     "state_hash": "sha256:561d871f195e2f3e91375cd781a55a8d6094eb5cdc34571f53ed36a84279494c",
+     "t_s": 0.0,
+     "witness_hash": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+     "component": "target_evaluator",
+     "i": 4,
+     "kind": "TARGET_EVALUATE",
+     "start_gap": 0.07,
+     "start_q": [
+      1.5707963267948966,
+      1.5707963267948966,
+      1.5707963267948966
+     ],
+     "state_hash": "sha256:561d871f195e2f3e91375cd781a55a8d6094eb5cdc34571f53ed36a84279494c",
+     "t_s": 0.0
+    },
+    {
+     "component": "episode",
+     "i": 5,
+     "kind": "FINISH",
+     "outcome": "SUCCESS",
+     "state_hash": "sha256:561d871f195e2f3e91375cd781a55a8d6094eb5cdc34571f53ed36a84279494c",
+     "t_s": 67.129,
+     "target_reason": "ALL_SEGMENTS_CERTIFIED"
+    }
+   ],
+   "outcome": "SUCCESS",
+   "target": {
+    "goal_reached": true,
+    "place_error_m": 1.1102230246251565e-16,
+    "reason": "ALL_SEGMENTS_CERTIFIED",
+    "seconds": 67.13,
+    "start": {
+     "attachment": "free",
+     "gripper_gap_m": 0.07,
+     "q": [
+      1.5707963267948966,
+      1.5707963267948966,
+      1.5707963267948966
+     ]
+    },
+    "status": "VERIFIED_FEASIBLE",
+    "wall_clock_dependent": false
+   }
+  },
+  "hashes": {
+   "action_context": "sha256:70e8d0633f131311d727e25d786d87373155e1d1e5eb394e67a25f7bc4d158cc",
+   "observation": "sha256:0cf5e9bb527414414fb76d7ad2665664afd50f3a85d12282d3e1cb36a32e5851"
+  },
+  "leakage_audit": {
+   "tensor_keys": [
+    "candidate_xy",
+    "goal_tolerance",
+    "goal_xy",
+    "is_active_target",
+    "is_obstacle",
+    "object_radius",
+    "object_xy",
+    "rgb",
+    "robot_attached",
+    "robot_gripper_gap",
+    "robot_q",
+    "support_extent"
+   ],
+   "tensors_unchanged_after_poison_and_delete": true
+  },
+  "learner": {
+   "action": {
+    "action": "TRANSPORT_TARGET_TO_GOAL",
+    "contact_mode": "PLANAR_SUPPORT_CONTACT_SIDE_GRASP",
+    "final_connector": "HOME",
+    "goal_cell": 45,
+    "goal_orientation": "ANY (rotationally symmetric disc)",
+    "goal_tolerance_m": 0.002,
+    "goal_xy_m": [
+     0.44,
+     0.44
+    ],
+    "grasp_family": {
+     "approach_dirs": 24,
+     "approach_dist_m": 0.06,
+     "ik_branches": 2,
+     "retreat_dist_m": 0.06
+    },
+    "no_lift": true,
+    "pushing_allowed": false,
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "target_id": "t0"
+   },
+   "scene": {
+    "domain_policy": "ALL_SUPPORTED",
+    "lattice": {
+     "cols": 8,
+     "pitch_m": 0.08,
+     "rows": 8
+    },
+    "legal_cells": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     25,
+     26,
+     27,
+     28,
+     29,
+     30,
+     31,
+     32,
+     33,
+     34,
+     35,
+     36,
+     37,
+     38,
+     39,
+     40,
+     41,
+     42,
+     43,
+     44,
+     45,
+     46,
+     47,
+     48,
+     49,
+     50,
+     51,
+     52,
+     53,
+     54,
+     55,
+     56,
+     57,
+     58,
+     59,
+     60,
+     61,
+     62,
+     63
+    ],
+    "objects": [
+     {
+      "cell": 3,
+      "id": "o00",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.28,
+       0.04
+      ]
+     },
+     {
+      "cell": 13,
+      "id": "o01",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.44,
+       0.12
+      ]
+     },
+     {
+      "cell": 51,
+      "id": "o02",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.28,
+       0.52
+      ]
+     },
+     {
+      "cell": 60,
+      "id": "o03",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.36,
+       0.6
+      ]
+     },
+     {
+      "cell": 18,
+      "id": "t0",
+      "kind": "target",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.2,
+       0.2
+      ]
+     }
+    ],
+    "robot": {
+     "attached_id": null,
+     "attachment": "free",
+     "gripper_gap_m": 0.07,
+     "q_rad": [
+      1.5707963267948966,
+      1.5707963267948966,
+      1.5707963267948966
+     ]
+    }
+   }
+  },
+  "offline_case_audit": [
+   {
+    "assignment_feasibility_status": "VERIFIED_FEASIBLE",
+    "cells": {},
+    "certificate": null,
+    "goal_blockers": [],
+    "label": "all-stay",
+    "moved": 0,
+    "orders": [
+     {
+      "failed_relocation": null,
+      "moved_history": [],
+      "order": [],
+      "reason": "ALL_RELOCATIONS_CERTIFIED",
+      "relocation_status": "VERIFIED_FEASIBLE",
+      "target": {
+       "goal_reached": true,
+       "place_error_m": 1.1102230246251565e-16,
+       "reason": "ALL_SEGMENTS_CERTIFIED",
+       "seconds": 66.7,
+       "start": {
+        "attachment": "free",
+        "gripper_gap_m": 0.07,
+        "q": [
+         1.5707963267948966,
+         1.5707963267948966,
+         1.5707963267948966
+        ]
+       },
+       "status": "VERIFIED_FEASIBLE",
+       "wall_clock_dependent": false
+      },
+      "wall_clock_dependent": false
+     }
+    ],
+    "static_failed": [],
+    "static_status": "VALID",
+    "unknown_reason": null
+   },
+   {
+    "assignment_feasibility_status": "VERIFIED_FEASIBLE",
+    "cells": {
+     "o02": 43
+    },
+    "certificate": null,
+    "goal_blockers": [],
+    "label": "G3 frozen-control repair o02->43",
+    "moved": 1,
+    "orders": [
+     {
+      "failed_relocation": null,
+      "moved_history": [
+       "o02"
+      ],
+      "order": [
+       [
+        "o02",
+        43
+       ]
+      ],
+      "reason": "ALL_RELOCATIONS_CERTIFIED",
+      "relocation_status": "VERIFIED_FEASIBLE",
+      "target": {
+       "goal_reached": true,
+       "place_error_m": 4.2276033262255756e-16,
+       "reason": "ALL_SEGMENTS_CERTIFIED",
+       "seconds": 4.93,
+       "start": {
+        "attachment": "free",
+        "gripper_gap_m": 0.07,
+        "q": [
+         1.722223464580793,
+         -1.84700123285035,
+         -0.9224197829270402
+        ]
+       },
+       "status": "VERIFIED_FEASIBLE",
+       "wall_clock_dependent": false
+      },
+      "wall_clock_dependent": false
+     }
+    ],
+    "static_failed": [],
+    "static_status": "VALID",
+    "unknown_reason": null
+   }
+  ],
+  "oracle_only": {
+   "construction": "archived G2_D1/block_a",
+   "frozen_diagnostic": {
+    "F_fixed": "INVALID",
+    "action_hash": "sha256:487ec18878068e01501c6737f1c58ec4cd1b9e410560bd4d8f7f8c32c5784355",
+    "blockers": [
+     "o02"
+    ],
+    "protocol": "FROZEN_CONTROL (privileged diagnostic only)"
+   },
+   "reference_action_hash": "sha256:487ec18878068e01501c6737f1c58ec4cd1b9e410560bd4d8f7f8c32c5784355",
+   "root_id": "root_d1"
+  },
+  "pick_certificates": {},
+  "protocol": "INITIAL_SCENE_ONE_SHOT_V1",
+  "ranked_proposals": [
+   {
+    "cells": {},
+    "declared_rank": 0,
+    "label": "all-stay",
+    "moved": 0,
+    "score": 1.0
+   },
+   {
+    "cells": {
+     "o02": 43
+    },
+    "declared_rank": 1,
+    "label": "G3 frozen-control repair o02->43",
+    "moved": 1,
+    "score": 1.0
+   }
+  ]
+ },
+ "G35_R2_GOAL": {
+  "bounds": {
+   "lower_bound": 1,
+   "minimality": "MINIMUM_CERTIFIED",
+   "premises": [
+    "goal occupied by o03 (goal-overlap certificate)"
+   ],
+   "upper_bound": 1
+  },
+  "cases": [
+   "R2",
+   "R3",
+   "R5",
+   "R6"
+  ],
+  "description": "Goal cell 45 occupied by o03. R2: goal-overlap certificate (LB 1) plus a one-move witness. R3: two destinations. R5: static-valid o01 move leaves the goal occupied. R6: duplicate, target-at-rest, unsupported and gray-band endpoints.",
+  "execution": {
+   "achieved_moved_history": [
+    "o03"
+   ],
+   "candidates_tried": [
+    {
+     "label": "o03->60",
+     "orders": [
+      {
+       "failed_relocation": null,
+       "moved_history": [
+        "o03"
+       ],
+       "order": [
+        [
+         "o03",
+         60
+        ]
+       ],
+       "reason": "ALL_RELOCATIONS_CERTIFIED",
+       "relocation_status": "VERIFIED_FEASIBLE",
+       "wall_clock_dependent": false
+      }
+     ],
+     "rank": 0,
+     "static_status": "VALID",
+     "stop": "WITNESS_FOUND"
+    }
+   ],
+   "commit": {
+    "cells": {
+     "o03": 60
+    },
+    "label": "o03->60",
+    "order": [
+     [
+      "o03",
+      60
+     ]
+    ],
+    "proposal_hash": "sha256:8818637fb356a93ed3ce39cacf7284e362ebbbedc9b250afd240a361ce0261f2",
+    "rank": 0,
+    "source_observation_hash": "sha256:656cd4cfd726461c01e01ac9821aaa7689f743c18db14ead84b7d26e0a081028",
+    "witness_hash": "sha256:c1a71b5b149ed7bedcd09abd5ccef72d115bde52ed9e7cdded435a946a33e151"
+   },
+   "events": [
+    {
+     "candidates": 6,
+     "component": "proposal",
+     "i": 0,
+     "kind": "PROPOSE",
+     "proposal_hash": "sha256:8818637fb356a93ed3ce39cacf7284e362ebbbedc9b250afd240a361ce0261f2",
+     "state_hash": "sha256:656cd4cfd726461c01e01ac9821aaa7689f743c18db14ead84b7d26e0a081028",
+     "t_s": 0.0
+    },
+    {
+     "component": "static_screen",
+     "i": 1,
+     "kind": "STATIC_CHECK",
+     "rank": 0,
+     "state_hash": "sha256:f1238490a23ab6318497489b94ae5d693d7887e4dbb1d1f0ca80a7f231b5aa4f",
+     "status": "VALID",
+     "t_s": 0.0
+    },
+    {
+     "component": "relocation_planner",
+     "i": 2,
+     "kind": "REPAIR_PLAN",
+     "orders": 1,
+     "rank": 0,
+     "relocation_plans": 1,
+     "state_hash": "sha256:f1238490a23ab6318497489b94ae5d693d7887e4dbb1d1f0ca80a7f231b5aa4f",
+     "stop": "WITNESS_FOUND",
+     "t_s": 0.436
+    },
+    {
+     "component": "commitment",
+     "i": 3,
+     "kind": "COMMIT",
+     "rank": 0,
+     "state_hash": "sha256:f1238490a23ab6318497489b94ae5d693d7887e4dbb1d1f0ca80a7f231b5aa4f",
+     "t_s": 0.436,
+     "witness_hash": "sha256:c1a71b5b149ed7bedcd09abd5ccef72d115bde52ed9e7cdded435a946a33e151"
+    },
+    {
+     "cell": 60,
+     "certified": true,
+     "component": "executor",
+     "i": 4,
+     "kind": "RELOCATE",
+     "object": "o03",
+     "state_hash": "sha256:f1238490a23ab6318497489b94ae5d693d7887e4dbb1d1f0ca80a7f231b5aa4f",
+     "t_s": 0.473
+    },
+    {
+     "component": "executor",
+     "i": 5,
+     "kind": "REOBSERVE",
+     "matches_commitment": true,
+     "state_hash": "sha256:1cc591aea8a58cfb7bc0e0557aac9e3a5321a0ebf181ea1f23f6a83d186e6d10",
+     "t_s": 0.473
+    },
+    {
+     "component": "target_evaluator",
+     "i": 6,
+     "kind": "TARGET_EVALUATE",
+     "start_gap": 0.07,
+     "start_q": [
+      1.7928255807840925,
+      -1.7448368425121947,
+      -0.5715875138701971
+     ],
+     "state_hash": "sha256:1cc591aea8a58cfb7bc0e0557aac9e3a5321a0ebf181ea1f23f6a83d186e6d10",
+     "t_s": 0.473
+    },
+    {
+     "component": "episode",
+     "i": 7,
+     "kind": "FINISH",
+     "outcome": "SUCCESS",
+     "state_hash": "sha256:1cc591aea8a58cfb7bc0e0557aac9e3a5321a0ebf181ea1f23f6a83d186e6d10",
+     "t_s": 8.251,
+     "target_reason": "ALL_SEGMENTS_CERTIFIED"
+    }
+   ],
+   "outcome": "SUCCESS",
+   "target": {
+    "goal_reached": true,
+    "place_error_m": 5.551115123125783e-17,
+    "reason": "ALL_SEGMENTS_CERTIFIED",
+    "seconds": 7.78,
+    "start": {
+     "attachment": "free",
+     "gripper_gap_m": 0.07,
+     "q": [
+      1.7928255807840925,
+      -1.7448368425121947,
+      -0.5715875138701971
+     ]
+    },
+    "status": "VERIFIED_FEASIBLE",
+    "wall_clock_dependent": false
+   }
+  },
+  "hashes": {
+   "action_context": "sha256:70e8d0633f131311d727e25d786d87373155e1d1e5eb394e67a25f7bc4d158cc",
+   "observation": "sha256:656cd4cfd726461c01e01ac9821aaa7689f743c18db14ead84b7d26e0a081028"
+  },
+  "leakage_audit": {
+   "tensor_keys": [
+    "candidate_xy",
+    "goal_tolerance",
+    "goal_xy",
+    "is_active_target",
+    "is_obstacle",
+    "object_radius",
+    "object_xy",
+    "rgb",
+    "robot_attached",
+    "robot_gripper_gap",
+    "robot_q",
+    "support_extent"
+   ],
+   "tensors_unchanged_after_poison_and_delete": true
+  },
+  "learner": {
+   "action": {
+    "action": "TRANSPORT_TARGET_TO_GOAL",
+    "contact_mode": "PLANAR_SUPPORT_CONTACT_SIDE_GRASP",
+    "final_connector": "HOME",
+    "goal_cell": 45,
+    "goal_orientation": "ANY (rotationally symmetric disc)",
+    "goal_tolerance_m": 0.002,
+    "goal_xy_m": [
+     0.44,
+     0.44
+    ],
+    "grasp_family": {
+     "approach_dirs": 24,
+     "approach_dist_m": 0.06,
+     "ik_branches": 2,
+     "retreat_dist_m": 0.06
+    },
+    "no_lift": true,
+    "pushing_allowed": false,
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "target_id": "t0"
+   },
+   "scene": {
+    "domain_policy": "ALL_SUPPORTED",
+    "lattice": {
+     "cols": 8,
+     "pitch_m": 0.08,
+     "rows": 8
+    },
+    "legal_cells": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     25,
+     26,
+     27,
+     28,
+     29,
+     30,
+     31,
+     32,
+     33,
+     34,
+     35,
+     36,
+     37,
+     38,
+     39,
+     40,
+     41,
+     42,
+     43,
+     44,
+     45,
+     46,
+     47,
+     48,
+     49,
+     50,
+     51,
+     52,
+     53,
+     54,
+     55,
+     56,
+     57,
+     58,
+     59,
+     60,
+     61,
+     62,
+     63
+    ],
+    "objects": [
+     {
+      "cell": 3,
+      "id": "o00",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.28,
+       0.04
+      ]
+     },
+     {
+      "cell": 13,
+      "id": "o01",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.44,
+       0.12
+      ]
+     },
+     {
+      "cell": 50,
+      "id": "o02",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.2,
+       0.52
+      ]
+     },
+     {
+      "cell": 45,
+      "id": "o03",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.44,
+       0.44
+      ]
+     },
+     {
+      "cell": 18,
+      "id": "t0",
+      "kind": "target",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.2,
+       0.2
+      ]
+     }
+    ],
+    "robot": {
+     "attached_id": null,
+     "attachment": "free",
+     "gripper_gap_m": 0.07,
+     "q_rad": [
+      1.5707963267948966,
+      1.5707963267948966,
+      1.5707963267948966
+     ]
+    }
+   }
+  },
+  "offline_case_audit": [
+   {
+    "assignment_feasibility_status": "CERTIFIED_INFEASIBLE",
+    "cells": {},
+    "certificate": "GOAL_OVERLAP:o03",
+    "goal_blockers": [
+     "o03"
+    ],
+    "label": "all-stay",
+    "moved": 0,
+    "orders": [
+     {
+      "failed_relocation": null,
+      "moved_history": [],
+      "order": [],
+      "reason": "ALL_RELOCATIONS_CERTIFIED",
+      "relocation_status": "VERIFIED_FEASIBLE",
+      "target": {
+       "goal_reached": false,
+       "place_error_m": null,
+       "reason": "NO_PLACE_CANDIDATE",
+       "seconds": 0.27,
+       "start": {
+        "attachment": "free",
+        "gripper_gap_m": 0.07,
+        "q": [
+         1.5707963267948966,
+         1.5707963267948966,
+         1.5707963267948966
+        ]
+       },
+       "status": "CERTIFIED_INFEASIBLE",
+       "wall_clock_dependent": false
+      },
+      "wall_clock_dependent": false
+     }
+    ],
+    "static_failed": [],
+    "static_status": "VALID",
+    "unknown_reason": null
+   },
+   {
+    "assignment_feasibility_status": "VERIFIED_FEASIBLE",
+    "cells": {
+     "o03": 60
+    },
+    "certificate": null,
+    "goal_blockers": [],
+    "label": "o03->60",
+    "moved": 1,
+    "orders": [
+     {
+      "failed_relocation": null,
+      "moved_history": [
+       "o03"
+      ],
+      "order": [
+       [
+        "o03",
+        60
+       ]
+      ],
+      "reason": "ALL_RELOCATIONS_CERTIFIED",
+      "relocation_status": "VERIFIED_FEASIBLE",
+      "target": {
+       "goal_reached": true,
+       "place_error_m": 5.551115123125783e-17,
+       "reason": "ALL_SEGMENTS_CERTIFIED",
+       "seconds": 5.04,
+       "start": {
+        "attachment": "free",
+        "gripper_gap_m": 0.07,
+        "q": [
+         1.7928255807840925,
+         -1.7448368425121947,
+         -0.5715875138701971
+        ]
+       },
+       "status": "VERIFIED_FEASIBLE",
+       "wall_clock_dependent": false
+      },
+      "wall_clock_dependent": false
+     }
+    ],
+    "static_failed": [],
+    "static_status": "VALID",
+    "unknown_reason": null
+   },
+   {
+    "assignment_feasibility_status": "VERIFIED_FEASIBLE",
+    "cells": {
+     "o03": 38
+    },
+    "certificate": null,
+    "goal_blockers": [],
+    "label": "o03->38",
+    "moved": 1,
+    "orders": [
+     {
+      "failed_relocation": null,
+      "moved_history": [
+       "o03"
+      ],
+      "order": [
+       [
+        "o03",
+        38
+       ]
+      ],
+      "reason": "ALL_RELOCATIONS_CERTIFIED",
+      "relocation_status": "VERIFIED_FEASIBLE",
+      "target": {
+       "goal_reached": true,
+       "place_error_m": 5.551115123125783e-17,
+       "reason": "ALL_SEGMENTS_CERTIFIED",
+       "seconds": 6.85,
+       "start": {
+        "attachment": "free",
+        "gripper_gap_m": 0.07,
+        "q": [
+         1.2133847830050897,
+         -1.660430389859089,
+         -0.3383525565434482
+        ]
+       },
+       "status": "VERIFIED_FEASIBLE",
+       "wall_clock_dependent": false
+      },
+      "wall_clock_dependent": false
+     }
+    ],
+    "static_failed": [],
+    "static_status": "VALID",
+    "unknown_reason": null
+   },
+   {
+    "assignment_feasibility_status": "CERTIFIED_INFEASIBLE",
+    "cells": {
+     "o01": 21
+    },
+    "certificate": "GOAL_OVERLAP:o03",
+    "goal_blockers": [
+     "o03"
+    ],
+    "label": "o01->21 (goal stays occupied)",
+    "moved": 1,
+    "orders": [
+     {
+      "failed_relocation": 0,
+      "moved_history": [],
+      "order": [
+       [
+        "o01",
+        21
+       ]
+      ],
+      "reason": "o01->21: UNRESOLVED PLANNER_BUDGET",
+      "relocation_status": "UNRESOLVED",
+      "target": null,
+      "wall_clock_dependent": false
+     }
+    ],
+    "static_failed": [],
+    "static_status": "VALID",
+    "unknown_reason": null
+   },
+   {
+    "assignment_feasibility_status": "CERTIFIED_INFEASIBLE",
+    "cells": {
+     "o02": 60,
+     "o03": 60
+    },
+    "certificate": "STATIC_ENDPOINT_INVALID",
+    "goal_blockers": [],
+    "label": "duplicate destination",
+    "moved": 2,
+    "orders": [],
+    "static_failed": [
+     {
+      "factor": "pair",
+      "objects": [
+       "o02",
+       "o03"
+      ],
+      "status": "INVALID",
+      "value_m": -0.048
+     }
+    ],
+    "static_status": "INVALID",
+    "unknown_reason": null
+   },
+   {
+    "assignment_feasibility_status": "CERTIFIED_INFEASIBLE",
+    "cells": {
+     "o03": 18
+    },
+    "certificate": "STATIC_ENDPOINT_INVALID",
+    "goal_blockers": [],
+    "label": "onto the resting target",
+    "moved": 1,
+    "orders": [],
+    "static_failed": [
+     {
+      "factor": "target_at_rest",
+      "objects": [
+       "o03",
+       "t0"
+      ],
+      "status": "INVALID",
+      "value_m": -0.048
+     }
+    ],
+    "static_status": "INVALID",
+    "unknown_reason": null
+   },
+   {
+    "assignment_feasibility_status": "CERTIFIED_INFEASIBLE",
+    "cells": {
+     "o03": [
+      -0.01,
+      0.3
+     ]
+    },
+    "certificate": "STATIC_ENDPOINT_INVALID",
+    "goal_blockers": [],
+    "label": "unsupported pose",
+    "moved": 1,
+    "orders": [],
+    "static_failed": [
+     {
+      "factor": "support",
+      "objects": [
+       "o03"
+      ],
+      "status": "INVALID",
+      "value_m": -0.034
+     }
+    ],
+    "static_status": "INVALID",
+    "unknown_reason": null
+   },
+   {
+    "assignment_feasibility_status": "UNRESOLVED",
+    "cells": {
+     "o03": [
+      0.253,
+      0.52
+     ]
+    },
+    "certificate": null,
+    "goal_blockers": [],
+    "label": "numerical boundary (clearance = delta)",
+    "moved": 1,
+    "orders": [],
+    "static_failed": [
+     {
+      "factor": "pair",
+      "objects": [
+       "o02",
+       "o03"
+      ],
+      "status": "UNRESOLVED",
+      "value_m": 0.005
+     }
+    ],
+    "static_status": "UNRESOLVED",
+    "unknown_reason": "STATIC_GRAY_BAND"
+   }
+  ],
+  "oracle_only": {
+   "construction": "D1 reference layout with o03 placed on the goal cell 45 (constructed directly; no relocation)",
+   "root_id": "root_r2"
+  },
+  "pick_certificates": {
+   "o03": null
+  },
+  "protocol": "INITIAL_SCENE_ONE_SHOT_V1",
+  "ranked_proposals": [
+   {
+    "cells": {
+     "o03": 60
+    },
+    "declared_rank": 1,
+    "label": "o03->60",
+    "moved": 1,
+    "score": 1.0
+   },
+   {
+    "cells": {
+     "o03": 38
+    },
+    "declared_rank": 2,
+    "label": "o03->38",
+    "moved": 1,
+    "score": 1.0
+   },
+   {
+    "cells": {
+     "o03": 18
+    },
+    "declared_rank": 5,
+    "label": "onto the resting target",
+    "moved": 1,
+    "score": 1.0
+   },
+   {
+    "cells": {
+     "o03": [
+      -0.01,
+      0.3
+     ]
+    },
+    "declared_rank": 6,
+    "label": "unsupported pose",
+    "moved": 1,
+    "score": 1.0
+   },
+   {
+    "cells": {
+     "o03": [
+      0.253,
+      0.52
+     ]
+    },
+    "declared_rank": 7,
+    "label": "numerical boundary (clearance = delta)",
+    "moved": 1,
+    "score": 1.0
+   },
+   {
+    "cells": {
+     "o02": 60,
+     "o03": 60
+    },
+    "declared_rank": 4,
+    "label": "duplicate destination",
+    "moved": 2,
+    "score": 1.0
+   }
+  ]
+ },
+ "G35_R4_ACCESS": {
+  "bounds": {
+   "lower_bound": 2,
+   "minimality": "MINIMUM_CERTIFIED",
+   "premises": [
+    "goal occupied by o00 (goal-overlap certificate)",
+    "o00: pick certified infeasible in S0, so another object must move first"
+   ],
+   "upper_bound": 2
+  },
+  "cases": [
+   "R4",
+   "R2"
+  ],
+  "description": "Goal cell 28 occupied by o00, whose grasp access is blocked by o01. R4: the same two-move assignment with o00 first (rejected) and o01 first (verified), then the newly planned target action.",
+  "execution": {
+   "achieved_moved_history": [
+    "o01",
+    "o00"
+   ],
+   "candidates_tried": [
+    {
+     "label": "o00->29",
+     "orders": [
+      {
+       "failed_relocation": 0,
+       "moved_history": [],
+       "order": [
+        [
+         "o00",
+         29
+        ]
+       ],
+       "reason": "o00->29: CERTIFIED_INFEASIBLE NO_PICK_CANDIDATE",
+       "relocation_status": "UNRESOLVED",
+       "wall_clock_dependent": false
+      }
+     ],
+     "rank": 0,
+     "static_status": "VALID",
+     "stop": "ORDERS_EXHAUSTED"
+    },
+    {
+     "label": "o00->29, o01->18",
+     "orders": [
+      {
+       "failed_relocation": 0,
+       "moved_history": [],
+       "order": [
+        [
+         "o00",
+         29
+        ],
+        [
+         "o01",
+         18
+        ]
+       ],
+       "reason": "o00->29: CERTIFIED_INFEASIBLE NO_PICK_CANDIDATE",
+       "relocation_status": "UNRESOLVED",
+       "wall_clock_dependent": false
+      },
+      {
+       "failed_relocation": null,
+       "moved_history": [
+        "o01",
+        "o00"
+       ],
+       "order": [
+        [
+         "o01",
+         18
+        ],
+        [
+         "o00",
+         29
+        ]
+       ],
+       "reason": "ALL_RELOCATIONS_CERTIFIED",
+       "relocation_status": "VERIFIED_FEASIBLE",
+       "wall_clock_dependent": false
+      }
+     ],
+     "rank": 1,
+     "static_status": "VALID",
+     "stop": "WITNESS_FOUND"
+    }
+   ],
+   "commit": {
+    "cells": {
+     "o00": 29,
+     "o01": 18
+    },
+    "label": "o00->29, o01->18",
+    "order": [
+     [
+      "o01",
+      18
+     ],
+     [
+      "o00",
+      29
+     ]
+    ],
+    "proposal_hash": "sha256:4247dfc41e917f62460d9b4b073787d792398d51e8e3fb0a5f6bf99f63bae7b7",
+    "rank": 1,
+    "source_observation_hash": "sha256:a89c4ea165a40861df57a4ce6c7692b47bf94bfae44443ffdb5479f30678febd",
+    "witness_hash": "sha256:218506d445670c3b7c96626f04d0a9d18d9c082abf0966b1acfebf69d05dd558"
+   },
+   "events": [
+    {
+     "candidates": 2,
+     "component": "proposal",
+     "i": 0,
+     "kind": "PROPOSE",
+     "proposal_hash": "sha256:4247dfc41e917f62460d9b4b073787d792398d51e8e3fb0a5f6bf99f63bae7b7",
+     "state_hash": "sha256:a89c4ea165a40861df57a4ce6c7692b47bf94bfae44443ffdb5479f30678febd",
+     "t_s": 0.0
+    },
+    {
+     "component": "static_screen",
+     "i": 1,
+     "kind": "STATIC_CHECK",
+     "rank": 0,
+     "state_hash": "sha256:3fc61f265423cea5a67022d9e0dbd9a994b0bbc477be662518023fb76a2d2f58",
+     "status": "VALID",
+     "t_s": 0.0
+    },
+    {
+     "component": "relocation_planner",
+     "i": 2,
+     "kind": "REPAIR_PLAN",
+     "orders": 1,
+     "rank": 0,
+     "relocation_plans": 1,
+     "state_hash": "sha256:3fc61f265423cea5a67022d9e0dbd9a994b0bbc477be662518023fb76a2d2f58",
+     "stop": "ORDERS_EXHAUSTED",
+     "t_s": 0.025
+    },
+    {
+     "component": "static_screen",
+     "i": 3,
+     "kind": "STATIC_CHECK",
+     "rank": 1,
+     "state_hash": "sha256:3fc61f265423cea5a67022d9e0dbd9a994b0bbc477be662518023fb76a2d2f58",
+     "status": "VALID",
+     "t_s": 0.025
+    },
+    {
+     "component": "relocation_planner",
+     "i": 4,
+     "kind": "REPAIR_PLAN",
+     "orders": 2,
+     "rank": 1,
+     "relocation_plans": 3,
+     "state_hash": "sha256:3fc61f265423cea5a67022d9e0dbd9a994b0bbc477be662518023fb76a2d2f58",
+     "stop": "WITNESS_FOUND",
+     "t_s": 2.232
+    },
+    {
+     "component": "commitment",
+     "i": 5,
+     "kind": "COMMIT",
+     "rank": 1,
+     "state_hash": "sha256:3fc61f265423cea5a67022d9e0dbd9a994b0bbc477be662518023fb76a2d2f58",
+     "t_s": 2.232,
+     "witness_hash": "sha256:218506d445670c3b7c96626f04d0a9d18d9c082abf0966b1acfebf69d05dd558"
+    },
+    {
+     "cell": 18,
+     "certified": true,
+     "component": "executor",
+     "i": 6,
+     "kind": "RELOCATE",
+     "object": "o01",
+     "state_hash": "sha256:3fc61f265423cea5a67022d9e0dbd9a994b0bbc477be662518023fb76a2d2f58",
+     "t_s": 2.281
+    },
+    {
+     "component": "executor",
+     "i": 7,
+     "kind": "REOBSERVE",
+     "matches_commitment": true,
+     "state_hash": "sha256:95cbab3f6ea0b2a8f168ab39b4073d635515161988ff1a9f31b53786f7eb26d4",
+     "t_s": 2.282
+    },
+    {
+     "cell": 29,
+     "certified": true,
+     "component": "executor",
+     "i": 8,
+     "kind": "RELOCATE",
+     "object": "o00",
+     "state_hash": "sha256:95cbab3f6ea0b2a8f168ab39b4073d635515161988ff1a9f31b53786f7eb26d4",
+     "t_s": 2.321
+    },
+    {
+     "component": "executor",
+     "i": 9,
+     "kind": "REOBSERVE",
+     "matches_commitment": true,
+     "state_hash": "sha256:578e41d3fec23aabb717acfa451cee7ea03daf9d91c23cd8080da00f811e9d3e",
+     "t_s": 2.321
+    },
+    {
+     "component": "target_evaluator",
+     "i": 10,
+     "kind": "TARGET_EVALUATE",
+     "start_gap": 0.07,
+     "start_q": [
+      1.2641261905797663,
+      -2.0228935590605306,
+      -0.026630794916684408
+     ],
+     "state_hash": "sha256:578e41d3fec23aabb717acfa451cee7ea03daf9d91c23cd8080da00f811e9d3e",
+     "t_s": 2.321
+    },
+    {
+     "component": "episode",
+     "i": 11,
+     "kind": "FINISH",
+     "outcome": "SUCCESS",
+     "state_hash": "sha256:578e41d3fec23aabb717acfa451cee7ea03daf9d91c23cd8080da00f811e9d3e",
+     "t_s": 4.271,
+     "target_reason": "ALL_SEGMENTS_CERTIFIED"
+    }
+   ],
+   "outcome": "SUCCESS",
+   "target": {
+    "goal_reached": true,
+    "place_error_m": 4.041272810440265e-16,
+    "reason": "ALL_SEGMENTS_CERTIFIED",
+    "seconds": 1.95,
+    "start": {
+     "attachment": "free",
+     "gripper_gap_m": 0.07,
+     "q": [
+      1.2641261905797663,
+      -2.0228935590605306,
+      -0.026630794916684408
+     ]
+    },
+    "status": "VERIFIED_FEASIBLE",
+    "wall_clock_dependent": false
+   }
+  },
+  "hashes": {
+   "action_context": "sha256:8fca4b48e0540cb073808b5b7d99e034743c42571a4cad90d8056deaf6cab9a9",
+   "observation": "sha256:a89c4ea165a40861df57a4ce6c7692b47bf94bfae44443ffdb5479f30678febd"
+  },
+  "leakage_audit": {
+   "tensor_keys": [
+    "candidate_xy",
+    "goal_tolerance",
+    "goal_xy",
+    "is_active_target",
+    "is_obstacle",
+    "object_radius",
+    "object_xy",
+    "rgb",
+    "robot_attached",
+    "robot_gripper_gap",
+    "robot_q",
+    "support_extent"
+   ],
+   "tensors_unchanged_after_poison_and_delete": true
+  },
+  "learner": {
+   "action": {
+    "action": "TRANSPORT_TARGET_TO_GOAL",
+    "contact_mode": "PLANAR_SUPPORT_CONTACT_SIDE_GRASP",
+    "final_connector": "HOME",
+    "goal_cell": 28,
+    "goal_orientation": "ANY (rotationally symmetric disc)",
+    "goal_tolerance_m": 0.002,
+    "goal_xy_m": [
+     0.36,
+     0.28
+    ],
+    "grasp_family": {
+     "approach_dirs": 24,
+     "approach_dist_m": 0.06,
+     "ik_branches": 2,
+     "retreat_dist_m": 0.06
+    },
+    "no_lift": true,
+    "pushing_allowed": false,
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "target_id": "t0"
+   },
+   "scene": {
+    "domain_policy": "ALL_SUPPORTED",
+    "lattice": {
+     "cols": 8,
+     "pitch_m": 0.08,
+     "rows": 8
+    },
+    "legal_cells": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     25,
+     26,
+     27,
+     28,
+     29,
+     30,
+     31,
+     32,
+     33,
+     34,
+     35,
+     36,
+     37,
+     38,
+     39,
+     40,
+     41,
+     42,
+     43,
+     44,
+     45,
+     46,
+     47,
+     48,
+     49,
+     50,
+     51,
+     52,
+     53,
+     54,
+     55,
+     56,
+     57,
+     58,
+     59,
+     60,
+     61,
+     62,
+     63
+    ],
+    "objects": [
+     {
+      "cell": 28,
+      "id": "o00",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.36,
+       0.28
+      ]
+     },
+     {
+      "cell": 27,
+      "id": "o01",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.28,
+       0.28
+      ]
+     },
+     {
+      "cell": 31,
+      "id": "o02",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.6,
+       0.28
+      ]
+     },
+     {
+      "cell": 58,
+      "id": "o03",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.2,
+       0.6
+      ]
+     },
+     {
+      "cell": 63,
+      "id": "o04",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.6,
+       0.6
+      ]
+     },
+     {
+      "cell": 20,
+      "id": "t0",
+      "kind": "target",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.36,
+       0.2
+      ]
+     }
+    ],
+    "robot": {
+     "attached_id": null,
+     "attachment": "free",
+     "gripper_gap_m": 0.07,
+     "q_rad": [
+      1.5707963267948966,
+      1.5707963267948966,
+      1.5707963267948966
+     ]
+    }
+   }
+  },
+  "offline_case_audit": [
+   {
+    "assignment_feasibility_status": "CERTIFIED_INFEASIBLE",
+    "cells": {},
+    "certificate": "GOAL_OVERLAP:o00",
+    "goal_blockers": [
+     "o00"
+    ],
+    "label": "all-stay",
+    "moved": 0,
+    "orders": [
+     {
+      "failed_relocation": null,
+      "moved_history": [],
+      "order": [],
+      "reason": "ALL_RELOCATIONS_CERTIFIED",
+      "relocation_status": "VERIFIED_FEASIBLE",
+      "target": {
+       "goal_reached": false,
+       "place_error_m": null,
+       "reason": "NO_PLACE_CANDIDATE",
+       "seconds": 0.19,
+       "start": {
+        "attachment": "free",
+        "gripper_gap_m": 0.07,
+        "q": [
+         1.5707963267948966,
+         1.5707963267948966,
+         1.5707963267948966
+        ]
+       },
+       "status": "CERTIFIED_INFEASIBLE",
+       "wall_clock_dependent": false
+      },
+      "wall_clock_dependent": false
+     }
+    ],
+    "static_failed": [],
+    "static_status": "VALID",
+    "unknown_reason": null
+   },
+   {
+    "assignment_feasibility_status": "CERTIFIED_INFEASIBLE",
+    "cells": {
+     "o00": 29
+    },
+    "certificate": "FIRST_MOVER_POSE_ONLY_SCREEN_IN_S0",
+    "goal_blockers": [],
+    "label": "o00->29",
+    "moved": 1,
+    "orders": [
+     {
+      "failed_relocation": 0,
+      "moved_history": [],
+      "order": [
+       [
+        "o00",
+        29
+       ]
+      ],
+      "reason": "o00->29: CERTIFIED_INFEASIBLE NO_PICK_CANDIDATE",
+      "relocation_status": "UNRESOLVED",
+      "target": null,
+      "wall_clock_dependent": false
+     }
+    ],
+    "static_failed": [],
+    "static_status": "VALID",
+    "unknown_reason": null
+   },
+   {
+    "assignment_feasibility_status": "VERIFIED_FEASIBLE",
+    "cells": {
+     "o00": 29,
+     "o01": 18
+    },
+    "certificate": null,
+    "goal_blockers": [],
+    "label": "o00->29, o01->18",
+    "moved": 2,
+    "orders": [
+     {
+      "failed_relocation": 0,
+      "moved_history": [],
+      "order": [
+       [
+        "o00",
+        29
+       ],
+       [
+        "o01",
+        18
+       ]
+      ],
+      "reason": "o00->29: CERTIFIED_INFEASIBLE NO_PICK_CANDIDATE",
+      "relocation_status": "UNRESOLVED",
+      "target": null,
+      "wall_clock_dependent": false
+     },
+     {
+      "failed_relocation": null,
+      "moved_history": [
+       "o01",
+       "o00"
+      ],
+      "order": [
+       [
+        "o01",
+        18
+       ],
+       [
+        "o00",
+        29
+       ]
+      ],
+      "reason": "ALL_RELOCATIONS_CERTIFIED",
+      "relocation_status": "VERIFIED_FEASIBLE",
+      "target": {
+       "goal_reached": true,
+       "place_error_m": 4.041272810440265e-16,
+       "reason": "ALL_SEGMENTS_CERTIFIED",
+       "seconds": 3.02,
+       "start": {
+        "attachment": "free",
+        "gripper_gap_m": 0.07,
+        "q": [
+         1.2641261905797663,
+         -2.0228935590605306,
+         -0.026630794916684408
+        ]
+       },
+       "status": "VERIFIED_FEASIBLE",
+       "wall_clock_dependent": false
+      },
+      "wall_clock_dependent": false
+     }
+    ],
+    "static_failed": [],
+    "static_status": "VALID",
+    "unknown_reason": null
+   }
+  ],
+  "oracle_only": {
+   "construction": "G3 D3 blocked layout (o00 5->28, o01 9->27 from the D3 reference), constructed directly",
+   "root_id": "root_r4"
+  },
+  "pick_certificates": {
+   "o00": "NO_PICK_CANDIDATE"
+  },
+  "protocol": "INITIAL_SCENE_ONE_SHOT_V1",
+  "ranked_proposals": [
+   {
+    "cells": {
+     "o00": 29
+    },
+    "declared_rank": 1,
+    "label": "o00->29",
+    "moved": 1,
+    "score": 1.0
+   },
+   {
+    "cells": {
+     "o00": 29,
+     "o01": 18
+    },
+    "declared_rank": 2,
+    "label": "o00->29, o01->18",
+    "moved": 2,
+    "score": 1.0
+   }
+  ]
+ },
+ "G35_R5_D2BLOCK": {
+  "bounds": {
+   "lower_bound": 0,
+   "minimality": "MINIMUM_UNRESOLVED",
+   "premises": [
+    "no sound bound beyond 0"
+   ],
+   "upper_bound": null
+  },
+  "cases": [
+   "R5"
+  ],
+  "description": "Archived G2 D2 blocked scene. R5: all-stay is static-valid; the target evaluation result is recorded as found (a probe returned UNRESOLVED planner budget).",
+  "execution": {
+   "achieved_moved_history": [],
+   "candidates_tried": [
+    {
+     "label": "all-stay",
+     "orders": [
+      {
+       "failed_relocation": null,
+       "moved_history": [],
+       "order": [],
+       "reason": "ALL_RELOCATIONS_CERTIFIED",
+       "relocation_status": "VERIFIED_FEASIBLE",
+       "wall_clock_dependent": false
+      }
+     ],
+     "rank": 0,
+     "static_status": "VALID",
+     "stop": "WITNESS_FOUND"
+    }
+   ],
+   "commit": {
+    "cells": {},
+    "label": "all-stay",
+    "order": [],
+    "proposal_hash": "sha256:29c129a9acef4642f3791d85a07913239ff7a81b0c6a4b50ffef5792b2f7b545",
+    "rank": 0,
+    "source_observation_hash": "sha256:98b01a18a736950e6d19d19754ea8ca35642682cedd563ae84175355ca11d754",
+    "witness_hash": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+   },
+   "events": [
+    {
+     "candidates": 1,
+     "component": "proposal",
+     "i": 0,
+     "kind": "PROPOSE",
+     "proposal_hash": "sha256:29c129a9acef4642f3791d85a07913239ff7a81b0c6a4b50ffef5792b2f7b545",
+     "state_hash": "sha256:98b01a18a736950e6d19d19754ea8ca35642682cedd563ae84175355ca11d754",
+     "t_s": 0.0
+    },
+    {
+     "component": "static_screen",
+     "i": 1,
+     "kind": "STATIC_CHECK",
+     "rank": 0,
+     "state_hash": "sha256:728c11aee407853d68739fe1a36e028e4d34cbbb2b1fe78eb37fa0b2e7015708",
+     "status": "VALID",
+     "t_s": 0.0
+    },
+    {
+     "component": "relocation_planner",
+     "i": 2,
+     "kind": "REPAIR_PLAN",
+     "orders": 1,
+     "rank": 0,
+     "relocation_plans": 0,
+     "state_hash": "sha256:728c11aee407853d68739fe1a36e028e4d34cbbb2b1fe78eb37fa0b2e7015708",
+     "stop": "WITNESS_FOUND",
+     "t_s": 0.0
+    },
+    {
+     "component": "commitment",
+     "i": 3,
+     "kind": "COMMIT",
+     "rank": 0,
+     "state_hash": "sha256:728c11aee407853d68739fe1a36e028e4d34cbbb2b1fe78eb37fa0b2e7015708",
+     "t_s": 0.0,
+     "witness_hash": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+     "component": "target_evaluator",
+     "i": 4,
+     "kind": "TARGET_EVALUATE",
+     "start_gap": 0.07,
+     "start_q": [
+      1.5707963267948966,
+      1.5707963267948966,
+      1.5707963267948966
+     ],
+     "state_hash": "sha256:728c11aee407853d68739fe1a36e028e4d34cbbb2b1fe78eb37fa0b2e7015708",
+     "t_s": 0.0
+    },
+    {
+     "component": "episode",
+     "i": 5,
+     "kind": "FINISH",
+     "outcome": "TARGET_UNRESOLVED",
+     "state_hash": "sha256:728c11aee407853d68739fe1a36e028e4d34cbbb2b1fe78eb37fa0b2e7015708",
+     "t_s": 4.536,
+     "target_reason": "PLANNER_BUDGET"
+    }
+   ],
+   "outcome": "TARGET_UNRESOLVED",
+   "target": {
+    "goal_reached": false,
+    "place_error_m": null,
+    "reason": "PLANNER_BUDGET",
+    "seconds": 4.54,
+    "start": {
+     "attachment": "free",
+     "gripper_gap_m": 0.07,
+     "q": [
+      1.5707963267948966,
+      1.5707963267948966,
+      1.5707963267948966
+     ]
+    },
+    "status": "UNRESOLVED",
+    "wall_clock_dependent": false
+   }
+  },
+  "hashes": {
+   "action_context": "sha256:3f67441514bd1f29316572fb9f532f2ad3c85e3101a7e147794a3096e6fc36c8",
+   "observation": "sha256:98b01a18a736950e6d19d19754ea8ca35642682cedd563ae84175355ca11d754"
+  },
+  "leakage_audit": {
+   "tensor_keys": [
+    "candidate_xy",
+    "goal_tolerance",
+    "goal_xy",
+    "is_active_target",
+    "is_obstacle",
+    "object_radius",
+    "object_xy",
+    "rgb",
+    "robot_attached",
+    "robot_gripper_gap",
+    "robot_q",
+    "support_extent"
+   ],
+   "tensors_unchanged_after_poison_and_delete": true
+  },
+  "learner": {
+   "action": {
+    "action": "TRANSPORT_TARGET_TO_GOAL",
+    "contact_mode": "PLANAR_SUPPORT_CONTACT_SIDE_GRASP",
+    "final_connector": "HOME",
+    "goal_cell": 53,
+    "goal_orientation": "ANY (rotationally symmetric disc)",
+    "goal_tolerance_m": 0.002,
+    "goal_xy_m": [
+     0.44,
+     0.52
+    ],
+    "grasp_family": {
+     "approach_dirs": 24,
+     "approach_dist_m": 0.06,
+     "ik_branches": 2,
+     "retreat_dist_m": 0.06
+    },
+    "no_lift": true,
+    "pushing_allowed": false,
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "target_id": "t0"
+   },
+   "scene": {
+    "domain_policy": "ALL_SUPPORTED",
+    "lattice": {
+     "cols": 8,
+     "pitch_m": 0.08,
+     "rows": 8
+    },
+    "legal_cells": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     25,
+     26,
+     27,
+     28,
+     29,
+     30,
+     31,
+     32,
+     33,
+     34,
+     35,
+     36,
+     37,
+     38,
+     39,
+     40,
+     41,
+     42,
+     43,
+     44,
+     45,
+     46,
+     47,
+     48,
+     49,
+     50,
+     51,
+     52,
+     53,
+     54,
+     55,
+     56,
+     57,
+     58,
+     59,
+     60,
+     61,
+     62,
+     63
+    ],
+    "objects": [
+     {
+      "cell": 4,
+      "id": "o00",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.36,
+       0.04
+      ]
+     },
+     {
+      "cell": 15,
+      "id": "o01",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.6,
+       0.12
+      ]
+     },
+     {
+      "cell": 57,
+      "id": "o02",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.12,
+       0.6
+      ]
+     },
+     {
+      "cell": 61,
+      "id": "o03",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.44,
+       0.6
+      ]
+     },
+     {
+      "cell": 7,
+      "id": "o04",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.6,
+       0.04
+      ]
+     },
+     {
+      "cell": 50,
+      "id": "o05",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.2,
+       0.52
+      ]
+     },
+     {
+      "cell": 26,
+      "id": "t0",
+      "kind": "target",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.2,
+       0.28
+      ]
+     }
+    ],
+    "robot": {
+     "attached_id": null,
+     "attachment": "free",
+     "gripper_gap_m": 0.07,
+     "q_rad": [
+      1.5707963267948966,
+      1.5707963267948966,
+      1.5707963267948966
+     ]
+    }
+   }
+  },
+  "offline_case_audit": [
+   {
+    "assignment_feasibility_status": "UNRESOLVED",
+    "cells": {},
+    "certificate": null,
+    "goal_blockers": [],
+    "label": "all-stay",
+    "moved": 0,
+    "orders": [
+     {
+      "failed_relocation": null,
+      "moved_history": [],
+      "order": [],
+      "reason": "ALL_RELOCATIONS_CERTIFIED",
+      "relocation_status": "VERIFIED_FEASIBLE",
+      "target": {
+       "goal_reached": false,
+       "place_error_m": null,
+       "reason": "PLANNER_BUDGET",
+       "seconds": 5.79,
+       "start": {
+        "attachment": "free",
+        "gripper_gap_m": 0.07,
+        "q": [
+         1.5707963267948966,
+         1.5707963267948966,
+         1.5707963267948966
+        ]
+       },
+       "status": "UNRESOLVED",
+       "wall_clock_dependent": false
+      },
+      "wall_clock_dependent": false
+     }
+    ],
+    "static_failed": [],
+    "static_status": "VALID",
+    "unknown_reason": "TARGET_UNRESOLVED:PLANNER_BUDGET"
+   }
+  ],
+  "oracle_only": {
+   "construction": "archived G2_D2/block_ab",
+   "frozen_diagnostic": {
+    "F_fixed": "INVALID",
+    "action_hash": "sha256:27cb5a04f8caac257dc622bbe3fc32e460de092928e2b64701152bb79a99295f",
+    "blockers": [
+     "o02",
+     "o05"
+    ],
+    "protocol": "FROZEN_CONTROL (privileged diagnostic only)"
+   },
+   "reference_action_hash": "sha256:27cb5a04f8caac257dc622bbe3fc32e460de092928e2b64701152bb79a99295f",
+   "root_id": "root_d2"
+  },
+  "pick_certificates": {},
+  "protocol": "INITIAL_SCENE_ONE_SHOT_V1",
+  "ranked_proposals": [
+   {
+    "cells": {},
+    "declared_rank": 0,
+    "label": "all-stay",
+    "moved": 0,
+    "score": 1.0
+   }
+  ]
+ }
+}

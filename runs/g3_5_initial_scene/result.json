@@ -1,0 +1,163 @@
+{
+ "config_hash": "sha256:c1854e4e5adab543cf570e290d358a1ac7596299f5d2f22426c8a0851bf4a73a",
+ "hardware_status": "NOT_RUN",
+ "learned_components": "NONE",
+ "proposal_source": "MANUAL_CASE_CANDIDATES",
+ "protocol": "INITIAL_SCENE_ONE_SHOT_V1",
+ "readiness": {
+  "R0_zero_move_witness_and_R1_objective_distinction": "PASS",
+  "R2_occupancy_certificate_and_witness": "PASS",
+  "R3_alternative_positives_and_R4_order_dependence": "PASS",
+  "R5_static_valid_not_action_valid": "PASS",
+  "goal_conditioned_query_without_trajectory_fields": "PASS",
+  "primary_selection_has_no_target_feedback": "PASS"
+ },
+ "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+ "simulation_status": "NOT_RUN",
+ "stage": "G3.5",
+ "summary": [
+  {
+   "cases": "R0",
+   "committed": "all-stay",
+   "episode_seconds": 10.681,
+   "lower_bound": 0,
+   "minimality": "MINIMUM_CERTIFIED",
+   "moved": 0,
+   "outcome": "SUCCESS",
+   "query": "G35_R0_D1REF",
+   "target_seconds": 10.68,
+   "upper_bound": 0
+  },
+  {
+   "cases": "R1 R6",
+   "committed": "all-stay",
+   "episode_seconds": 67.129,
+   "lower_bound": 0,
+   "minimality": "MINIMUM_CERTIFIED",
+   "moved": 0,
+   "outcome": "SUCCESS",
+   "query": "G35_R1_D1BLOCK",
+   "target_seconds": 67.13,
+   "upper_bound": 0
+  },
+  {
+   "cases": "R2 R3 R5 R6",
+   "committed": "o03->60",
+   "episode_seconds": 8.251,
+   "lower_bound": 1,
+   "minimality": "MINIMUM_CERTIFIED",
+   "moved": 1,
+   "outcome": "SUCCESS",
+   "query": "G35_R2_GOAL",
+   "target_seconds": 7.78,
+   "upper_bound": 1
+  },
+  {
+   "cases": "R4 R2",
+   "committed": "o00->29, o01->18",
+   "episode_seconds": 4.271,
+   "lower_bound": 2,
+   "minimality": "MINIMUM_CERTIFIED",
+   "moved": 2,
+   "outcome": "SUCCESS",
+   "query": "G35_R4_ACCESS",
+   "target_seconds": 1.95,
+   "upper_bound": 2
+  },
+  {
+   "cases": "R5",
+   "committed": "all-stay",
+   "episode_seconds": 4.536,
+   "lower_bound": 0,
+   "minimality": "MINIMUM_UNRESOLVED",
+   "moved": 0,
+   "outcome": "TARGET_UNRESOLVED",
+   "query": "G35_R5_D2BLOCK",
+   "target_seconds": 4.54,
+   "upper_bound": null
+  }
+ ],
+ "tasks": {
+  "G35_R0_D1REF.audit0.target": {
+   "action_hash": "sha256:1e9706eca8ede9a71dbc1a9c1d2f243c923ea589db86a234a2f5d89269c4f0dc",
+   "target": "t0"
+  },
+  "G35_R0_D1REF.audit1.m0": {
+   "action_hash": "sha256:4ac80cf5ee16222164eecd35a6f72b0d7981025a234b322f1eb06716aba06da0",
+   "target": "o02"
+  },
+  "G35_R0_D1REF.audit1.target": {
+   "action_hash": "sha256:c9b30383e8d6107bed5ef7648e85d32ba642af145fbba7a15124a671dec9420d",
+   "target": "t0"
+  },
+  "G35_R0_D1REF.primary.target": {
+   "action_hash": "sha256:a91d01719917f5323dfdb7b15af970cad660da779d0553ae6ab81de0118ffdf5",
+   "target": "t0"
+  },
+  "G35_R1_D1BLOCK.audit0.target": {
+   "action_hash": "sha256:960ed0f6b17fb9330f123db0fa728fef9998244edf0ad6334d90ed7a497bd63d",
+   "target": "t0"
+  },
+  "G35_R1_D1BLOCK.audit1.m0": {
+   "action_hash": "sha256:4d71706e637205bb40dd8fb2a188916831975bcb18a1770f5c22e83e852a4609",
+   "target": "o02"
+  },
+  "G35_R1_D1BLOCK.audit1.target": {
+   "action_hash": "sha256:b803d0431d9e24dac288ffde01024ed3558f43916e99dcd983b94bf8cdc33e16",
+   "target": "t0"
+  },
+  "G35_R1_D1BLOCK.primary.target": {
+   "action_hash": "sha256:f77ff2870ea2b2378f16c9f3bb4d3d8105e0c07b9d691eed2bca25bbd59ff14b",
+   "target": "t0"
+  },
+  "G35_R2_GOAL.audit1.m0": {
+   "action_hash": "sha256:4ddf6f1a87ce310dbcc65ce032b62d1eee7ce3dadc4989e8a08a7bd0dbfd3035",
+   "target": "o03"
+  },
+  "G35_R2_GOAL.audit1.target": {
+   "action_hash": "sha256:4ade0b5a77574bef1c82a1b3b0a4e21f38d407efc3ea5b3bada5e526d2ad9eb4",
+   "target": "t0"
+  },
+  "G35_R2_GOAL.audit2.m0": {
+   "action_hash": "sha256:2d9409a72d52a076302876e673b6b7a11f87107e1a34ae1612ce8b7cc255500b",
+   "target": "o03"
+  },
+  "G35_R2_GOAL.audit2.target": {
+   "action_hash": "sha256:2859c8d40a0f159706bc903aad710c54a875521db11fec2f1fcacf503bd4677d",
+   "target": "t0"
+  },
+  "G35_R2_GOAL.primary.m0": {
+   "action_hash": "sha256:4ddf6f1a87ce310dbcc65ce032b62d1eee7ce3dadc4989e8a08a7bd0dbfd3035",
+   "target": "o03"
+  },
+  "G35_R2_GOAL.primary.target": {
+   "action_hash": "sha256:4338b7c3f206176600e64094f3564d5cd7face059de24207cb00e3482d625a17",
+   "target": "t0"
+  },
+  "G35_R4_ACCESS.audit2.m0": {
+   "action_hash": "sha256:0b24f118ea16a137ab8770f479c854843da96200541eaaa2a216ca4512e7e1b5",
+   "target": "o01"
+  },
+  "G35_R4_ACCESS.audit2.m1": {
+   "action_hash": "sha256:bf8baa56fe9a9ec2c1d07647b6a7b503e7681a40061728a3ae81a95a0e97b114",
+   "target": "o00"
+  },
+  "G35_R4_ACCESS.audit2.target": {
+   "action_hash": "sha256:090b99eee4ecc8f048475527414861c5b10b394be7bd0b4ebc8047b72b545ac4",
+   "target": "t0"
+  },
+  "G35_R4_ACCESS.primary.m0": {
+   "action_hash": "sha256:d5c88c3bcd2f5c878ff9b3240069570b0d468a29e1d5b795f743d6a9b2bf025c",
+   "target": "o01"
+  },
+  "G35_R4_ACCESS.primary.m1": {
+   "action_hash": "sha256:bf8baa56fe9a9ec2c1d07647b6a7b503e7681a40061728a3ae81a95a0e97b114",
+   "target": "o00"
+  },
+  "G35_R4_ACCESS.primary.target": {
+   "action_hash": "sha256:42f5d0ca4449ad5bcf83268f047f0463ef803b6216442c4f7ec24748e2a4c8e5",
+   "target": "t0"
+  }
+ },
+ "verification_scope": "KINEMATIC_3R_RELOCATIONS_AND_NEWLY_PLANNED_TARGET_SKILL (no dynamics, no simulation)"
+}

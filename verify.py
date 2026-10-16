@@ -143,26 +143,80 @@ def search(robot, cfg, frozen, scene: Scene, terminal: dict, key: str) -> dict:
             "relocation_plans": len(memo), "pruned_orders": len(pruned), "witness": witness, "attempts": attempts}
 
 
-def replay_repair(robot, cfg, frozen, s0: RepairState, att: Attempt) -> dict:
-    """Independent re-check of a recorded episode: every relocation record re-certified
-    in its own starting scene, exact state continuity, move-once history, final pose
-    at gamma_0's start, and the unchanged gamma_0 clear in the final scene."""
+def replay_step(robot, cfg, state: RepairState, oid: str, res, nxt: RepairState) -> bool:
+    """One recorded relocation re-checked in its own starting scene: record starts at the
+    achieved q and g, certifies clear, ends at the next state's q and g, and the moved
+    object's achieved pose and the move-once history match."""
     delta, eps, evals = iv._params(cfg)
+    arr = res.traj.arrays()
+    ok = oid not in state.moved and np.array_equal(arr["q"][0], np.asarray(state.q)) and arr["gap"][0] == state.gap
+    ok &= all(v.status == ge.CLEAR for v in mo.certify_trajectory(robot, state.scene, oid, arr, delta, eps, evals))
+    ok &= nxt.scene.get(oid).xy_m == tuple(arr["place_xy"]) and nxt.moved == state.moved + (oid,)
+    ok &= np.array_equal(np.asarray(nxt.q), arr["q"][-1]) and nxt.gap == float(arr["gap"][-1])
+    return bool(ok)
+
+
+def replay_repair(robot, cfg, frozen, s0: RepairState, att: Attempt) -> dict:
+    """FROZEN_CONTROL re-check of a recorded episode: every relocation (replay_step), final
+    pose at gamma_0's start, and the unchanged gamma_0 clear in the final scene."""
     frozen.verify()
-    state, ok, seen = s0, True, set()
-    for (oid, cell), res, nxt in zip(att.order, att.skills, att.states):
-        arr = res.traj.arrays()
-        ok &= oid not in seen and np.array_equal(arr["q"][0], np.asarray(state.q)) and arr["gap"][0] == state.gap
-        ok &= all(v.status == ge.CLEAR for v in mo.certify_trajectory(robot, state.scene, oid, arr, delta, eps, evals))
-        ok &= nxt.scene.get(oid).xy_m == tuple(arr["place_xy"]) and nxt.moved == state.moved + (oid,)
-        ok &= np.array_equal(np.asarray(nxt.q), arr["q"][-1]) and nxt.gap == float(arr["gap"][-1])
-        seen.add(oid)
+    state, ok = s0, True
+    for (oid, _), res, nxt in zip(att.order, att.skills, att.states):
+        ok &= replay_step(robot, cfg, state, oid, res, nxt)
         state = nxt
     final = iv.evaluate(robot, cfg, frozen, iv.Snapshot("replay", None, None, state.scene))
     ok &= np.array_equal(np.asarray(state.q), frozen.arrays["q"][0]) and state.gap == float(frozen.arrays["gap"][0])
     ok &= final.F == final.whole_replay == mo.VALID
     return {"replay_passed": bool(ok), "moves": len(att.states), "final_F_fixed": final.F,
             "moved_history": list(state.moved)}
+
+
+# ------------------------------------------------------------------ INITIAL_SCENE_ONE_SHOT_V1 (G3.5)
+RELOCATED = "VERIFIED_FEASIBLE"        # complete relocation witness for one order (no target claim)
+
+
+def realize(robot, cfg, s0: RepairState, order, memo: dict, key: str) -> Attempt:
+    """New-mode relocation sequence: each skill planned from the achieved state and ending
+    after its retreat. There is no connector to any reference start and no target query.
+    The memo maps an executed prefix from s0 to its deterministic outcome."""
+    att, state = Attempt(-1, len(order), tuple(order)), s0
+    for k, (oid, cell) in enumerate(order):
+        mkey = (tuple(order[: k + 1]), False)
+        if mkey not in memo:
+            memo[mkey] = relocate(robot, cfg, state, oid, cell, f"{key}/{'.'.join(f'{o}>{c}' for o, c in order[:k + 1])}")
+        res, nxt = memo[mkey]
+        att.skills.append(res)
+        if nxt is None:
+            att.stop, att.reason = k, f"{oid}->{cell}: {res.status} {res.reason}"
+            return att                                  # UNRESOLVED for the assignment; this order only
+        state = nxt
+        att.states.append(state)
+    att.status, att.reason = RELOCATED, "ALL_RELOCATIONS_CERTIFIED"
+    return att
+
+
+def plan_repair(robot, cfg, s0: RepairState, assignment: dict, key: str, used: dict) -> dict:
+    """Relocation planner/verifier for one assignment. Works on immutable clones of S0
+    (frozen dataclasses: a failed search cannot change the live state). Tries
+    non-dominated orders within the order cap and the episode's shared relocation-plan
+    budget (`used`). It has no access to any target evaluator."""
+    rc, rcfg = cfg["repair2d"], repair_cfg(cfg)
+    memo, pruned, attempts, stop = {}, [], [], "ORDERS_EXHAUSTED"
+    for order in fresh_orders(sorted(assignment.items()), memo, rc["max_orders"], pruned):
+        if used["plans"] + len(memo) >= rc["max_relocations"] and order:
+            stop = "RELOCATION_BUDGET"
+            break
+        attempts.append(realize(robot, rcfg, s0, order, memo, key))
+        if attempts[-1].status == RELOCATED:
+            stop = "WITNESS_FOUND"
+            break
+    used["plans"] += len(memo)
+    return {"witness": attempts[-1] if stop == "WITNESS_FOUND" else None, "attempts": attempts,
+            "pruned_orders": len(pruned), "relocation_plans": len(memo), "stop": stop}
+
+
+def final_state(s0: RepairState, att: Attempt) -> RepairState:
+    return att.states[-1] if att.states else s0
 
 
 # ------------------------------------------------------------------ fixtures

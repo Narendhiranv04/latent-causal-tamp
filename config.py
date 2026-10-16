@@ -36,6 +36,13 @@ SCHEMA = {
                 "line_step_m": float, "max_ik_jump_rad": float, "max_plan_failures": int,
                 "max_direct_pairs": int},
     "repair2d": {"k_best": int, "max_orders": int, "max_relocations": int, "skill_plan_failures": int},
+    "protocol": {"name": str, "proposal_observation": str, "target_feedback_to_selection": bool,
+                 "target_calls_between_relocations": int, "target_reference_required": bool,
+                 "execution_observation": str, "move_once": bool},
+    "proposal": {"source": str, "budget_cap": int, "max_candidates_to_verify": int, "include_all_stay": bool,
+                 "task_score_threshold": float},
+    "target_evaluation": {"when": str, "start_state": str, "scope": str, "final_connector": str,
+                          "max_queries_per_primary_episode": int},
     "render": {"image_px": int, "overview_xlim_m": VEC2, "overview_ylim_m": VEC2},
 }
 
@@ -126,6 +133,7 @@ def _check_physics(cfg: dict) -> None:
              cfg["skill2d"]["approach_dirs"], cfg["skill2d"]["max_plan_failures"]) > 0
          and cfg["skill2d"]["line_step_m"] > 0, "budgets and steps must be > 0"),
         (min(cfg["repair2d"].values()) > 0, "repair budgets must be > 0"),
+        *_protocol_rules(cfg),
         (r["image_px"] > 0, "image_px must be > 0"),
         (r["overview_xlim_m"][0] < r["overview_xlim_m"][1]
          and r["overview_ylim_m"][0] < r["overview_ylim_m"][1], "overview limits need lo < hi"),
@@ -133,6 +141,36 @@ def _check_physics(cfg: dict) -> None:
     errors = [msg for ok, msg in rules if not ok]
     if errors:
         raise ConfigError("; ".join(errors))
+
+
+PROTOCOLS = ("FROZEN_CONTROL", "INITIAL_SCENE_ONE_SHOT_V1")
+
+
+def _protocol_rules(cfg: dict) -> list:
+    """Methodology v1.5 §9 / Guide v1.7 §2: contradictory protocol settings are rejected.
+    [protocol] describes the primary case-analysis protocol; FROZEN_CONTROL runs (solve,
+    replay) keep their archived semantics and never read these sections."""
+    p, q, t = cfg["protocol"], cfg["proposal"], cfg["target_evaluation"]
+    new = p["name"] == "INITIAL_SCENE_ONE_SHOT_V1"
+    return [
+        (p["name"] in PROTOCOLS, f"protocol name must be one of {PROTOCOLS}"),
+        (not new or p["proposal_observation"] == "INITIAL_ONLY", "one-shot proposals use the initial observation only"),
+        (not new or not p["target_feedback_to_selection"], "one-shot selection cannot receive target feedback"),
+        (not new or p["target_calls_between_relocations"] == 0, "one-shot allows no target calls between relocations"),
+        (not new or not p["target_reference_required"], "one-shot queries cannot require a frozen target path"),
+        (not new or p["execution_observation"] == "VALIDATE_OR_ABORT", "reobservation may only validate or abort"),
+        (not new or p["move_once"], "one-shot episodes are move-once"),
+        (new or p["target_reference_required"], "FROZEN_CONTROL requires its frozen target path"),
+        (q["source"] in ("MANUAL_CASE_CANDIDATES", "DETERMINISTIC_CASE_CANDIDATES"),
+         "G3.5 proposals are manual or deterministic (no learned source before G5)"),
+        (q["budget_cap"] > 0 and q["max_candidates_to_verify"] > 0, "proposal budgets must be > 0"),
+        (0.0 <= q["task_score_threshold"] <= 1.0, "task_score_threshold must lie in [0, 1]"),
+        (t["when"] == "AFTER_REPAIR_COMMIT_AND_COMPLETION" and t["start_state"] == "ACHIEVED",
+         "target evaluation runs once, after the committed repair, from the achieved state"),
+        (t["scope"] == "COMPLETE_TARGET_SKILL" and t["final_connector"] in ("HOME", "NONE"),
+         "target evaluation plans the complete skill; final connector HOME or NONE"),
+        (t["max_queries_per_primary_episode"] == 1, "exactly one target query per primary episode"),
+    ]
 
 
 def load_config(path: str | Path) -> dict:
@@ -169,7 +207,14 @@ def validate_fixtures(fixtures: dict) -> dict:
     """Reject G2+ fixtures without an allowed policy/role pair, explicit dense roots
     outside 30-40 obstacles, and development scenes that are not explicitly sparse."""
     for name, fx in fixtures.items():
-        if int(fx["stage"].lstrip("G")) < 2:
+        if float(fx["stage"].lstrip("G").replace("_", ".")) < 2:
+            continue
+        if fx.get("protocol", "FROZEN_CONTROL") not in PROTOCOLS:
+            raise ConfigError(f"{name}: unknown protocol {fx.get('protocol')!r}")
+        if fx["stage"] == "G3_5":
+            if fx.get("protocol") != "INITIAL_SCENE_ONE_SHOT_V1" or "reference_policy" in fx:
+                raise ConfigError(f"{name}: G3.5 queries declare protocol INITIAL_SCENE_ONE_SHOT_V1 "
+                                  "and no frozen reference policy")
             continue
         policy, role = fx.get("reference_policy"), fx.get("benchmark_role")
         if policy not in REFERENCE_POLICIES or REFERENCE_POLICIES[policy] != role:

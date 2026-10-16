@@ -1,12 +1,14 @@
 """Sole command dispatcher (Guide v1.6 §1). Never imported by other modules.
 
-Active commands: scene (G0), check and replay (G1), intervene (G2), solve (G3). Later commands arrive with their stage.
+Active commands: scene (G0), check and replay (G1), intervene (G2), solve (G3, FROZEN_CONTROL),
+case-analysis (G3.5, INITIAL_SCENE_ONE_SHOT_V1). Later commands arrive with their stage.
 
     python run.py scene --config config.toml --case G0_ILLUSTRATIVE --out runs/g0_scene
     python run.py check --config config.toml --out runs/g1_robot
     python run.py replay --run runs/g1_robot
     python run.py intervene --config config.toml --out runs/g2_interventions
     python run.py solve --config config.toml --out runs/g3_repairs
+    python run.py case-analysis --config config.toml --out runs/g3_5_initial_scene
 """
 from __future__ import annotations
 
@@ -29,6 +31,8 @@ import scipy
 from PIL import Image
 
 import assignment_figures as afig
+import case_figures as cfig
+import cases
 import config as cf
 import diagnostics as dg
 import figures as fig
@@ -295,6 +299,41 @@ def cmd_solve(args) -> int:
     return 0 if ok else 1
 
 
+# ------------------------------------------------------------------ G3.5
+def cmd_case_analysis(args) -> int:
+    """R0-R6 under INITIAL_SCENE_ONE_SHOT_V1; the work lives in cases/evaluate (thin I/O here)."""
+    cfg = cf.load_config(args.config)
+    fixtures = cf.validate_fixtures(json.loads(Path(args.fixtures).read_text())["fixtures"])
+    queries = {k: fx for k, fx in fixtures.items() if fx["stage"] == "G3_5"}
+    out = Path(args.out)
+    out.mkdir(parents=True, exist_ok=True)
+    robot, chash, rhash = ge.make_robot(cfg), cf.config_hash(cfg), cf.robot_profile_hash(cfg)
+    with Pool(len(queries)) as pool:
+        res = {r["name"]: r for r in pool.imap_unordered(cases.run_query, [(cfg, k, fx) for k, fx in queries.items()])}
+    records = {n: cases.record(r) for n, r in sorted(res.items())}
+    tasks, scenes, arrays = cases.archive(res, rhash)
+    cfig.g35_figures(out, robot, cfg, res)
+    gate = cases.readiness(res)
+    _write_json(out / "config.json", {"config_hash": chash, "config": cfg})
+    _write_json(out / "cases.json", records)
+    _write_json(out / "scenes.json", scenes)
+    np.savez_compressed(out / "arrays.npz", **arrays)
+    rows = cases.summary_rows(records)
+    _write_json(out / "result.json", {
+        "stage": "G3.5", "protocol": cfg["protocol"]["name"], "readiness": gate, "summary": rows, "tasks": tasks,
+        "config_hash": chash, "robot_profile_hash": rhash, "proposal_source": cfg["proposal"]["source"],
+        "verification_scope": "KINEMATIC_3R_RELOCATIONS_AND_NEWLY_PLANNED_TARGET_SKILL (no dynamics, no simulation)",
+        "simulation_status": "NOT_RUN", "hardware_status": "NOT_RUN", "learned_components": "NONE"})
+    with open(out / "metrics.csv", "w", newline="") as fh:
+        w = csv.DictWriter(fh, list(rows[0]))
+        w.writeheader()
+        w.writerows(rows)
+    _write_manifest(out, {"planner_base": cfg["planner2d"]["seed"], "per_query": "crc32(query/component key)"}, chash,
+                    {"queries": {n: r["hashes"] for n, r in records.items()}})
+    print(json.dumps({"out": str(out), "readiness": gate, "summary": rows}))
+    return 0
+
+
 def traj_extent(robot, done) -> list[float]:
     """Bounding box of every body over every recorded waypoint and figure sample."""
     boxes = [viz.robot_extent(robot, q, g) for _, res, _ in done.values() if res.traj is not None
@@ -359,7 +398,12 @@ def main(argv=None) -> int:
     q.add_argument("--fixtures", default="fixtures.json")
     q.add_argument("--out", required=True)
     q.set_defaults(func=cmd_solve)
-    q = sub.add_parser("replay", help="G1-G3: independently re-certify a run's stored trajectories")
+    q = sub.add_parser("case-analysis", help="G3.5: R0-R6 one-shot initial-scene protocol cases, figures")
+    q.add_argument("--config", default="config.toml")
+    q.add_argument("--fixtures", default="fixtures.json")
+    q.add_argument("--out", required=True)
+    q.set_defaults(func=cmd_case_analysis)
+    q = sub.add_parser("replay", help="G1-G3.5: independently re-certify a run's stored trajectories")
     q.add_argument("--run", required=True)
     q.add_argument("--report", help="where to write the replay record (default: <run>/replay.json)")
     q.add_argument("--config", default="config.toml", help="only for config sections the run predates")
