@@ -112,3 +112,51 @@ def coverage(plan: dict, col: dict, rows: list, protocol_ok: dict) -> dict:
     out["protocol_checks"] = protocol_ok
     out["decision"] = "READY_TO_SCALE" if all(v == "PASS" for v in out["readiness"].values()) else "NOT_READY_TO_SCALE"
     return out
+
+
+# ------------------------------------------------------------------ G4A follow-up reconciliation (from saved records)
+def certificate_reconciliation(rows: list) -> dict:
+    """Records vs unique negative assignments, keyed by (root, query, physical signature)."""
+    import json as _json
+    key = lambda r: f"{r['root_id']}|{r['query_id']}|{_json.dumps(r['signature'])}"  # noqa: E731
+    acc = [(key(r), c["kind"]) for r in rows for c in r["certificates"] if c["checker_accepted"]]
+    neg = {key(r): r for r in rows if r[FIRST] == data.NEGATIVE}
+    kinds = sorted({k for _, k in acc})
+    combos = Counter("+".join(sorted({k for kk, k in acc if kk == n})) for n in neg)
+    dup = sum(v - 1 for v in Counter(acc).values() if v > 1)
+    return {"accepted_records": len(acc), "rejected_records": sum(not c["checker_accepted"] for r in rows for c in r["certificates"]),
+            "records_by_kind": dict(Counter(k for _, k in acc)), "unique_negative_assignments": len(neg),
+            "unique_negative_assignments_by_kind": {k: sum(any(kk == n and kind == k for kk, kind in acc) for n in neg) for k in kinds},
+            "certificate_combinations": dict(combos), "duplicate_records": dup,
+            "assignments_with_two_or_more_distinct_certificates": sum(c.count("+") >= 1 for c in combos.elements()),
+            "negatives_without_accepted_certificate": sum(not any(kk == n for kk, _ in acc) for n in neg),
+            "accepted_certificate_on_non_negative": sum(1 for r in rows if r[FIRST] != data.NEGATIVE and any(
+                c["checker_accepted"] for c in r["certificates"])),
+            "contradictions": sum(r[t] == data.CONTRADICTION for r in rows for t in (FIRST, "diagnostic_enriched"))}
+
+
+def call_accounting(primary: dict) -> dict:
+    """Primary target evaluations per episode from the recorded event traces."""
+    per = {}
+    for q, p in sorted(primary.items()):
+        k = [e["kind"] for e in p["events"]]
+        c = k.index("COMMIT") if "COMMIT" in k else None
+        t = [i for i, x in enumerate(k) if x == "TARGET_EVALUATE"]
+        r = [i for i, x in enumerate(k) if x == "RELOCATE"]
+        per[q] = {"outcome": p["outcome"], "committed": c is not None, "all_stay_commit": bool(p["commit"]) and not p["commit"]["cells"],
+                  "aborted": "ABORT" in k, "primary_target_calls": len(t), "calls_before_commit": sum(c is None or i < c for i in t),
+                  "calls_between_relocations": sum(bool(r) and i < max(r) for i in t),
+                  "home_diagnostic": (p.get("target") or {}).get("home_return_status")}
+    v = list(per.values())
+    completed = [x for x in v if x["committed"] and not x["aborted"]]
+    return {"episodes": len(v), "completed_repair_episodes": len(completed),
+            "completed_with_exactly_one_call": sum(x["primary_target_calls"] == 1 for x in completed),
+            "no_repair_episodes": sum(not x["committed"] for x in v),
+            "no_repair_with_zero_calls": sum(not x["committed"] and x["primary_target_calls"] == 0 for x in v),
+            "aborted_episodes": sum(x["aborted"] for x in v), "all_stay_commits": sum(x["all_stay_commit"] for x in v),
+            "calls_before_commit": sum(x["calls_before_commit"] for x in v),
+            "calls_between_relocations": sum(x["calls_between_relocations"] for x in v),
+            "home_diagnostics_in_primary": dict(Counter(str(x["home_diagnostic"]) for x in v)), "per_episode": per,
+            "invariant_holds": all(x["primary_target_calls"] <= 1 and x["calls_before_commit"] == 0
+                                   and x["calls_between_relocations"] == 0 and (x["committed"] and not x["aborted"]
+                                                                                 or x["primary_target_calls"] == 0) for x in v)}

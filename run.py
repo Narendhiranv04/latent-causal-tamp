@@ -8,6 +8,7 @@ with the module that owns that stage (moved here-from at G4A, behaviour unchange
     solve (G3)          assignment_figures.cmd_solve  runs/g3_repairs        (FROZEN_CONTROL)
     case-analysis (G3.5) case_figures.cmd_case_analysis runs/g3_5_initial_scene (INITIAL_SCENE_ONE_SHOT_V1)
     g4a-plan, g4a-audit audit.cmd_g4a_plan / cmd_g4a_audit runs/g4a_evidence_audit
+    teacher-plan/-run   teacher.cmd_teacher_plan / cmd_teacher_run runs/g4a_teacher_budget_diagnostic (G4A follow-up)
     replay              run.cmd_replay                any run directory
 
     python run.py scene --config config.toml --case G0_ILLUSTRATIVE --out runs/g0_scene
@@ -31,6 +32,7 @@ import geometry as ge
 import intervention_figures as ifig
 import motion as mo
 import scene as sc
+import teacher
 import viz
 
 
@@ -106,6 +108,13 @@ def main(argv=None) -> int:
     q.add_argument("--out", required=True, help="directory holding g4a_plan.json")
     q.add_argument("--limit", type=int, help="pilot: only the first N planned queries")
     q.set_defaults(func=audit.cmd_g4a_audit)
+    for name, fn, hlp in (("teacher-plan", teacher.cmd_teacher_plan, "G4A follow-up: freeze the bounded teacher diagnostic"),
+                          ("teacher-run", teacher.cmd_teacher_run, "G4A follow-up: guarded teacher-budget evaluations")):
+        q = sub.add_parser(name, help=hlp)
+        q.add_argument("--config", default="config.toml")
+        q.add_argument("--g4a", default="runs/g4a_evidence_audit")
+        q.add_argument("--out", required=True)
+        q.set_defaults(func=fn)
     q = sub.add_parser("replay", help="G1-G3.5: independently re-certify a run's stored trajectories")
     q.add_argument("--run", required=True)
     q.add_argument("--report", help="where to write the replay record (default: <run>/replay.json)")

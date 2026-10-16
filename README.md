@@ -30,6 +30,7 @@ pushed to `main` of `github.com/Narendhiranv04/latent-causal-tamp`.
 | G3 | A0 min-cost matching + Murty k-best, Hall certificates, executable move-once 3R repair search, restricted-domain control | implemented; report `responses-phases/0006_G3_completion.md` |
 | G3.5 | objective migration: one-shot initial-scene protocol, static/relocation/target separation, R0-R6 cases | implemented; report `responses-phases/0007_G3_5_completion.md` |
 | G4A | certificate audit, automatic candidates, abort tests, 20-root audit, seed/order panels | implemented; report `responses-phases/0008_G4A_completion.md` |
+| G4A follow-up | reporting reconciliation; bounded offline teacher-budget diagnostic on g4a_r04/r14/r15 (all-stay) | implemented; report `responses-phases/0009_G4A_followup_completion.md` |
 | G4B–G10 | see Guide v1.7 | not started |
 
 The 2D robot profile was tested at G1 (`robot_profile_hash` in `runs/g1_robot/result.json`);
@@ -66,6 +67,8 @@ robot motion claims are kinematic only (`PLANAR_ARM_KINEMATIC_SKILL`), never dyn
 | `coverage.py` | G4A first-pass / enriched labels, coverage, cohorts and readiness |
 | `controls.py` | G4A adversarial certificate suite, G3.5 certificate re-audit, execution fault injection |
 | `audit_figures.py` | G4A figures A-H, repair GIFs, clean learner observations |
+| `teacher.py` | G4A follow-up: named offline teacher schedule `TEACHER_BUDGET_V1`, frozen plan, in-flight process-tree CPU guard, isolated worker, witness check |
+| `teacher_figures.py` | G4A follow-up figures: reconciliation, budget panel, scenes, witness GIFs |
 | `diagnostics.py` | figures that explain verification verdicts (rejections, certificates, budgets, IK tracking) |
 | `run.py` | the sole command dispatcher and cross-stage replay; stage command bodies live in their owning modules (split at G4A) |
 | `tests/` | one test file per stage component |
@@ -110,6 +113,8 @@ python run.py replay --run runs/g3_repairs --report <path>    # re-certify reloc
 python run.py case-analysis --out runs/g3_5_initial_scene     # G3.5: R0-R6 under INITIAL_SCENE_ONE_SHOT_V1 (~2.5 min)
 python run.py g4a-plan --out runs/g4a_evidence_audit          # G4A: freeze roots/candidates/panels (no outcomes)
 python run.py g4a-audit --out runs/g4a_evidence_audit         # G4A: bounded audit, panels, controls, figures
+python run.py teacher-plan --out runs/g4a_teacher_budget_diagnostic   # G4A follow-up: freeze (no outcomes)
+python run.py teacher-run --out runs/g4a_teacher_budget_diagnostic    # guarded: <= 6 evals, 900 CPU-s each, 2 CPU-h
 ```
 
 Each run writes `config.json`, `scene.json`, `result.json`, `overview.png`,

@@ -1,0 +1,814 @@
+{
+ "cases": [
+  {
+   "action": {
+    "action": "TRANSPORT_TARGET_TO_GOAL",
+    "contact_mode": "PLANAR_SUPPORT_CONTACT_SIDE_GRASP",
+    "contract_addendum": "docs/addenda/A1_target_end_policy_v1.md",
+    "end_policy": "SAFE_RETREAT",
+    "goal_alternatives_xy": [],
+    "goal_cell": 32,
+    "goal_orientation": "ANY (rotationally symmetric disc)",
+    "goal_tolerance_m": 0.002,
+    "goal_xy_m": [
+     0.04,
+     0.36
+    ],
+    "grasp_family": {
+     "approach_dirs": 24,
+     "approach_dist_m": 0.06,
+     "ik_branches": 2,
+     "retreat_dist_m": 0.06
+    },
+    "home_return": "OPTIONAL_DIAGNOSTIC",
+    "no_lift": true,
+    "pushing_allowed": false,
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "state_pose_uncertainty_m": 0.0,
+    "target_id": "t0"
+   },
+   "assignment": {},
+   "baseline": {
+    "first_pass": {
+     "key": "g4a_r04/audit/0/target",
+     "per_query_records_archived": false,
+     "reason": "TARGET_UNRESOLVED:PLANNER_BUDGET",
+     "status": "UNRESOLVED"
+    },
+    "primary": {
+     "key": "g4a_r04/primary/target",
+     "reason": "PLANNER_BUDGET",
+     "seconds": 536.61,
+     "status": "UNRESOLVED"
+    }
+   },
+   "goal_cell": 32,
+   "hashes": {
+    "action_context": "sha256:444533a9206d49f51a5bd399fdccb9c5035300dbaa64cbad2798d2fe080c5447",
+    "observation": "sha256:340a5e66d817a660bd3db0ee55af56e96d3379e55b540d951b9d4fad09e37f35"
+   },
+   "key": "g4a_r04/audit/0/target",
+   "query_id": "g4a_r04",
+   "robot": {
+    "attachment": "free",
+    "gripper_gap_m": 0.07,
+    "q": [
+     1.5707963267948966,
+     1.5707963267948966,
+     1.5707963267948966
+    ]
+   },
+   "scene": {
+    "action_hash": null,
+    "domain_policy": "ALL_SUPPORTED",
+    "lattice": {
+     "cols": 8,
+     "pitch_m": 0.08,
+     "rows": 8
+    },
+    "legal_cells": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     25,
+     26,
+     27,
+     28,
+     29,
+     30,
+     31,
+     32,
+     33,
+     34,
+     35,
+     36,
+     37,
+     38,
+     39,
+     40,
+     41,
+     42,
+     43,
+     44,
+     45,
+     46,
+     47,
+     48,
+     49,
+     50,
+     51,
+     52,
+     53,
+     54,
+     55,
+     56,
+     57,
+     58,
+     59,
+     60,
+     61,
+     62,
+     63
+    ],
+    "objects": [
+     {
+      "cell": 7,
+      "id": "o00",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.6,
+       0.04
+      ]
+     },
+     {
+      "cell": 57,
+      "id": "o01",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.12,
+       0.6
+      ]
+     },
+     {
+      "cell": 15,
+      "id": "o02",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.6,
+       0.12
+      ]
+     },
+     {
+      "cell": 12,
+      "id": "o03",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.36,
+       0.12
+      ]
+     },
+     {
+      "cell": 8,
+      "id": "o04",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.04,
+       0.12
+      ]
+     },
+     {
+      "cell": 61,
+      "id": "o05",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.44,
+       0.6
+      ]
+     },
+     {
+      "cell": 3,
+      "id": "o06",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.28,
+       0.04
+      ]
+     },
+     {
+      "cell": 9,
+      "id": "o07",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.12,
+       0.12
+      ]
+     },
+     {
+      "cell": 30,
+      "id": "t0",
+      "kind": "target",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.52,
+       0.28
+      ]
+     }
+    ],
+    "robot": {
+     "attached_id": null,
+     "attachment": "free",
+     "gripper_gap_m": 0.07,
+     "q_rad": [
+      1.5707963267948966,
+      1.5707963267948966,
+      1.5707963267948966
+     ]
+    },
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "root_id": "g4a_2026101609",
+    "variant_id": "initial"
+   },
+   "seed_base": 41
+  },
+  {
+   "action": {
+    "action": "TRANSPORT_TARGET_TO_GOAL",
+    "contact_mode": "PLANAR_SUPPORT_CONTACT_SIDE_GRASP",
+    "contract_addendum": "docs/addenda/A1_target_end_policy_v1.md",
+    "end_policy": "SAFE_RETREAT",
+    "goal_alternatives_xy": [],
+    "goal_cell": 47,
+    "goal_orientation": "ANY (rotationally symmetric disc)",
+    "goal_tolerance_m": 0.002,
+    "goal_xy_m": [
+     0.6,
+     0.44
+    ],
+    "grasp_family": {
+     "approach_dirs": 24,
+     "approach_dist_m": 0.06,
+     "ik_branches": 2,
+     "retreat_dist_m": 0.06
+    },
+    "home_return": "OPTIONAL_DIAGNOSTIC",
+    "no_lift": true,
+    "pushing_allowed": false,
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "state_pose_uncertainty_m": 0.0,
+    "target_id": "t0"
+   },
+   "assignment": {},
+   "baseline": {
+    "first_pass": {
+     "key": "g4a_r14/audit/0/target",
+     "per_query_records_archived": false,
+     "reason": "TARGET_UNRESOLVED:PLANNER_BUDGET",
+     "status": "UNRESOLVED"
+    },
+    "primary": {
+     "key": "g4a_r14/primary/target",
+     "reason": "PLANNER_BUDGET",
+     "seconds": 0.22,
+     "status": "UNRESOLVED"
+    }
+   },
+   "goal_cell": 47,
+   "hashes": {
+    "action_context": "sha256:59027fbbbacba7083150508c74410503cc7b5c5143b792b3f1ee428bcb09d2bd",
+    "observation": "sha256:dbd022557e5e49b61a5b698a05b580b9586834d720a3b43315023bbc16d42a9e"
+   },
+   "key": "g4a_r14/audit/0/target",
+   "query_id": "g4a_r14",
+   "robot": {
+    "attachment": "free",
+    "gripper_gap_m": 0.07,
+    "q": [
+     1.5707963267948966,
+     1.5707963267948966,
+     1.5707963267948966
+    ]
+   },
+   "scene": {
+    "action_hash": null,
+    "domain_policy": "ALL_SUPPORTED",
+    "lattice": {
+     "cols": 8,
+     "pitch_m": 0.08,
+     "rows": 8
+    },
+    "legal_cells": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     25,
+     26,
+     27,
+     28,
+     29,
+     30,
+     31,
+     32,
+     33,
+     34,
+     35,
+     36,
+     37,
+     38,
+     39,
+     40,
+     41,
+     42,
+     43,
+     44,
+     45,
+     46,
+     47,
+     48,
+     49,
+     50,
+     51,
+     52,
+     53,
+     54,
+     55,
+     56,
+     57,
+     58,
+     59,
+     60,
+     61,
+     62,
+     63
+    ],
+    "objects": [
+     {
+      "cell": 50,
+      "id": "o00",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.2,
+       0.52
+      ]
+     },
+     {
+      "cell": 17,
+      "id": "o01",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.12,
+       0.2
+      ]
+     },
+     {
+      "cell": 48,
+      "id": "o02",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.04,
+       0.52
+      ]
+     },
+     {
+      "cell": 59,
+      "id": "o03",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.28,
+       0.6
+      ]
+     },
+     {
+      "cell": 2,
+      "id": "o04",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.2,
+       0.04
+      ]
+     },
+     {
+      "cell": 52,
+      "id": "o05",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.36,
+       0.52
+      ]
+     },
+     {
+      "cell": 12,
+      "id": "t0",
+      "kind": "target",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.36,
+       0.12
+      ]
+     }
+    ],
+    "robot": {
+     "attached_id": null,
+     "attachment": "free",
+     "gripper_gap_m": 0.07,
+     "q_rad": [
+      1.5707963267948966,
+      1.5707963267948966,
+      1.5707963267948966
+     ]
+    },
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "root_id": "g4a_2026101621",
+    "variant_id": "initial"
+   },
+   "seed_base": 41
+  },
+  {
+   "action": {
+    "action": "TRANSPORT_TARGET_TO_GOAL",
+    "contact_mode": "PLANAR_SUPPORT_CONTACT_SIDE_GRASP",
+    "contract_addendum": "docs/addenda/A1_target_end_policy_v1.md",
+    "end_policy": "SAFE_RETREAT",
+    "goal_alternatives_xy": [],
+    "goal_cell": 8,
+    "goal_orientation": "ANY (rotationally symmetric disc)",
+    "goal_tolerance_m": 0.002,
+    "goal_xy_m": [
+     0.04,
+     0.12
+    ],
+    "grasp_family": {
+     "approach_dirs": 24,
+     "approach_dist_m": 0.06,
+     "ik_branches": 2,
+     "retreat_dist_m": 0.06
+    },
+    "home_return": "OPTIONAL_DIAGNOSTIC",
+    "no_lift": true,
+    "pushing_allowed": false,
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "state_pose_uncertainty_m": 0.0,
+    "target_id": "t0"
+   },
+   "assignment": {},
+   "baseline": {
+    "first_pass": {
+     "key": "g4a_r15/audit/0/target",
+     "per_query_records_archived": false,
+     "reason": "TARGET_UNRESOLVED:PLANNER_BUDGET",
+     "status": "UNRESOLVED"
+    },
+    "primary": {
+     "key": "g4a_r15/primary/target",
+     "reason": "PLANNER_BUDGET",
+     "seconds": 0.26,
+     "status": "UNRESOLVED"
+    }
+   },
+   "goal_cell": 8,
+   "hashes": {
+    "action_context": "sha256:a816faeef2ad038953d7fdf334c02f7ef4f8ae1dbd3168080d5ebf911a2ba4bf",
+    "observation": "sha256:f3d785a0978a23e49b208001e51c552e309fae637f45211262807086b0c07705"
+   },
+   "key": "g4a_r15/audit/0/target",
+   "query_id": "g4a_r15",
+   "robot": {
+    "attachment": "free",
+    "gripper_gap_m": 0.07,
+    "q": [
+     1.5707963267948966,
+     1.5707963267948966,
+     1.5707963267948966
+    ]
+   },
+   "scene": {
+    "action_hash": null,
+    "domain_policy": "ALL_SUPPORTED",
+    "lattice": {
+     "cols": 8,
+     "pitch_m": 0.08,
+     "rows": 8
+    },
+    "legal_cells": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     25,
+     26,
+     27,
+     28,
+     29,
+     30,
+     31,
+     32,
+     33,
+     34,
+     35,
+     36,
+     37,
+     38,
+     39,
+     40,
+     41,
+     42,
+     43,
+     44,
+     45,
+     46,
+     47,
+     48,
+     49,
+     50,
+     51,
+     52,
+     53,
+     54,
+     55,
+     56,
+     57,
+     58,
+     59,
+     60,
+     61,
+     62,
+     63
+    ],
+    "objects": [
+     {
+      "cell": 0,
+      "id": "o00",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.04,
+       0.04
+      ]
+     },
+     {
+      "cell": 1,
+      "id": "o01",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.12,
+       0.04
+      ]
+     },
+     {
+      "cell": 62,
+      "id": "o02",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.52,
+       0.6
+      ]
+     },
+     {
+      "cell": 16,
+      "id": "o03",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.04,
+       0.2
+      ]
+     },
+     {
+      "cell": 48,
+      "id": "o04",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.04,
+       0.52
+      ]
+     },
+     {
+      "cell": 53,
+      "id": "o05",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.44,
+       0.52
+      ]
+     },
+     {
+      "cell": 28,
+      "id": "o06",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.36,
+       0.28
+      ]
+     },
+     {
+      "cell": 22,
+      "id": "t0",
+      "kind": "target",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.52,
+       0.2
+      ]
+     }
+    ],
+    "robot": {
+     "attached_id": null,
+     "attachment": "free",
+     "gripper_gap_m": 0.07,
+     "q_rad": [
+      1.5707963267948966,
+      1.5707963267948966,
+      1.5707963267948966
+     ]
+    },
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "root_id": "g4a_2026101622",
+    "variant_id": "initial"
+   },
+   "seed_base": 41
+  }
+ ],
+ "deployment_config_hash": "sha256:a9f3f2360e17d9827e24b4e9bb32727569afdf04aa4f87c72ba3cccf50953ae3",
+ "evidence_namespace": "OFFLINE_TEACHER",
+ "g4a_plan_hash": "sha256:0537694b9c1d649b9dc857192050c1a97ef0cae1047f514edf274b04e9441c07",
+ "limits": {
+  "cpu_aggregate_s": 7200.0,
+  "cpu_per_eval_s": 900.0,
+  "guard_margin_s": 30.0,
+  "max_evaluations": 6,
+  "poll_s": 0.25,
+  "wall_total_s": 10800.0,
+  "workers": 1
+ },
+ "order": [
+  [
+   "B1",
+   "g4a_r04"
+  ],
+  [
+   "B1",
+   "g4a_r14"
+  ],
+  [
+   "B1",
+   "g4a_r15"
+  ],
+  [
+   "B2",
+   "g4a_r04"
+  ],
+  [
+   "B2",
+   "g4a_r14"
+  ],
+  [
+   "B2",
+   "g4a_r15"
+  ]
+ ],
+ "plan_hash": "sha256:5edcb81595b5be9da524a8a1f6add3b047dac595c0c43e8f71cab255678fcb36",
+ "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+ "schedule": "TEACHER_BUDGET_V1",
+ "source": {
+  "head": "44679ce67f2ffdf88afdcf3c58e09b48c6dbd76f",
+  "uncommitted_diff_sha256": "0091ab8bcca31794dd0956dbb382f7c0913378539fac00d07e71bf3a54d75046",
+  "untracked_py": [
+   "teacher.py",
+   "teacher_figures.py",
+   "tests/test_teacher.py"
+  ]
+ },
+ "stage": "G4A_FOLLOWUP",
+ "stopping": "per case: skip later tiers once a checked witness or accepted assignment-wide negative exists; aggregate CPU or wall guard ends collection; censored evaluations stay UNKNOWN",
+ "threads": {
+  "MKL_NUM_THREADS": "1",
+  "NUMEXPR_NUM_THREADS": "1",
+  "OMP_NUM_THREADS": "1",
+  "OPENBLAS_NUM_THREADS": "1"
+ },
+ "tiers": {
+  "B0": {
+   "config_hash": "sha256:a9f3f2360e17d9827e24b4e9bb32727569afdf04aa4f87c72ba3cccf50953ae3",
+   "factor": 1,
+   "grasp_family": 48,
+   "max_direct_pairs": 64,
+   "max_nodes": 4000,
+   "max_plan_failures": 4,
+   "max_wall_seconds_per_query": 300.0
+  },
+  "B1": {
+   "config_hash": "sha256:61f6c0f93edef8ced4edb7fb7a63fab790e2a424bdd27efb15707cb4219ae062",
+   "factor": 2,
+   "grasp_family": 48,
+   "max_direct_pairs": 128,
+   "max_nodes": 8000,
+   "max_plan_failures": 8,
+   "max_wall_seconds_per_query": 600.0
+  },
+  "B2": {
+   "config_hash": "sha256:f1e011f0dc8fe200b0f21b87257af8b7436db1e7557c188d242543cca53b1b7b",
+   "factor": 4,
+   "grasp_family": 48,
+   "max_direct_pairs": 256,
+   "max_nodes": 16000,
+   "max_plan_failures": 16,
+   "max_wall_seconds_per_query": 1200.0
+  }
+ },
+ "unchanged": [
+  "grasp family and order",
+  "geometry/collision/margins",
+  "tolerances",
+  "SAFE_RETREAT policy",
+  "seeds (archived keys)",
+  "candidate generation and ranking",
+  "primary episodes"
+ ]
+}
