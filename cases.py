@@ -15,7 +15,7 @@ import geometry as ge
 import interventions as iv
 import motion as mo
 import skill as sk
-import solve
+import proposals as pr
 import verify as vf
 from config import robot_profile_hash, validate_config
 from scene import place_scene, scene_hash, scene_to_dict
@@ -55,10 +55,10 @@ def run_query(job) -> dict:
     def target(state, key, c=cfg):
         return ev.evaluate_target(robot, c, state, act, key)
 
-    ranked = solve.rank_proposals(data.initial_scene(query), act, fx["candidates"], cfg)
-    occ = solve.goal_blockers(scene, {}, act, cfg)
+    ranked = pr.rank_proposals(data.initial_scene(query), act, fx["candidates"], cfg)
+    occ = pr.goal_blockers(scene, {}, act, cfg)
     certs = {o: sk.pick_certificate(robot, scene, o, cfg) for o in occ}
-    bound = solve.action_lower_bound(scene, act, cfg, {o for o, c in certs.items() if c and c.status == sk.INFEASIBLE})
+    bound = pr.action_lower_bound(scene, act, cfg, {o for o, c in certs.items() if c and c.status == sk.INFEASIBLE})
     primary = ev.primary_episode(robot, cfg, query, scene, ranked, target, rhash)
     pool = [{"label": "all-stay", "cells": {}}] + fx["candidates"]
     audit = [ev.audit_candidate(robot, cfg, query, scene, c, target, f"{name}/audit/{i}") for i, c in enumerate(pool)]
@@ -195,7 +195,7 @@ def _boundary_ok(events: list) -> bool:
 
 
 def json_cells(cells: dict) -> tuple:
-    return tuple(sorted((o, solve.json_key(d)) for o, d in cells.items()))
+    return tuple(sorted((o, pr.json_key(d)) for o, d in cells.items()))
 
 
 def summary_rows(records: dict) -> list:

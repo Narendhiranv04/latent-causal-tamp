@@ -7,6 +7,15 @@ edits (dashed arrows), never as robot motion.
 """
 from __future__ import annotations
 
+import csv
+import json
+from multiprocessing import Pool
+from pathlib import Path
+from PIL import Image
+import config as cf
+import interventions as iv
+import scene as sc
+
 import numpy as np
 from matplotlib.patches import Circle, FancyArrowPatch
 
@@ -195,3 +204,55 @@ def g2_figures(out, robot, cfg, fams: dict) -> None:
     replay_gif(robot, cfg, replay, out / "fixed_action_replay.gif")
     seq = [(n, ok[n]["frozen"], by[n][v], blk[n]) for n, (vs, _) in plan.items() if n in ok for v in vs]
     snapshot_gif(robot, cfg, seq, out / "interventions.gif")
+
+
+# ------------------------------------------------------------------ G2 command (moved from run.py at G4A)
+def run_family(job):
+    """Pool worker: plan, freeze and intervene on one G2 fixture."""
+    cfg, name, fx = job
+    return iv.reference_family(ge.make_robot(cfg), cfg, name, fx)
+
+
+def cmd_intervene(args) -> int:
+    cfg = cf.load_config(args.config)
+    fixtures = cf.validate_fixtures(json.loads(Path(args.fixtures).read_text())["fixtures"])
+    g2 = {k: fx for k, fx in fixtures.items() if fx["stage"] == "G2"}
+    out = Path(args.out)
+    out.mkdir(parents=True, exist_ok=True)
+    robot, chash = ge.make_robot(cfg), cf.config_hash(cfg)
+    with Pool(len(g2)) as pool:
+        fams = {f["name"]: f for f in pool.imap_unordered(run_family, [(cfg, k, fx) for k, fx in g2.items()])}
+    families, gates, tasks, scenes, arrays = {}, {}, {}, {}, {}
+    for name in sorted(fams):
+        f = fams[name]
+        families[name] = iv.family_summary(f, cfg)
+        gates[name] = iv.family_gates(families[name], g2[name]["blockers"])
+        if f["frozen"] is not None:              # replay-compatible: <name>__q etc. + scenes[name]
+            tasks[name] = {"action_hash": f["frozen"].action_hash}
+            scenes[name] = sc.scene_to_dict(f["scene"])
+            arrays.update({f"{name}__{k}": v for k, v in f["frozen"].arrays.items()})
+        for s in f["snaps"]:
+            scenes[f"{name}/{s.variant}"] = sc.scene_to_dict(s.scene)
+            Image.fromarray(viz.render_observation(s.scene, cfg["render"]["image_px"])[0]).save(
+                out / f"obs_{name}_{s.variant}.png")             # clean learner observation, no overlays
+    g2_figures(out, robot, cfg, fams)
+    ok = all(g and all(g.values()) for g in gates.values())
+    cf.write_json(out / "config.json", {"config_hash": chash, "config": cfg})
+    cf.write_json(out / "scenes.json", scenes)
+    np.savez_compressed(out / "arrays.npz", **arrays)
+    cf.write_json(out / "result.json", {
+        "stage": "G2", "gate_checks_passed": ok, "gates": gates, "families": families, "tasks": tasks,
+        "config_hash": chash, "robot_profile_hash": cf.robot_profile_hash(cfg),
+        "verification_scope": "FIXED_ACTION_KINEMATIC_REPLAY (privileged diagnostic edits; no corrective motion)",
+        "simulation_replay_status": "NOT_RUN", "physical_execution_status": "NOT_RUN"})
+    with open(out / "metrics.csv", "w", newline="") as fh:
+        w = csv.writer(fh)
+        w.writerow(["family", "variant", "parent", "edit", "F_fixed", "whole_scene_replay", "Delta_I", "c", "oracle_evals"])
+        w.writerows([[n, x["variant"], x["parent"], x["edit"] and f"{x['edit']['kind']} {x['edit']['obj_id']}",
+                      x["F_fixed"], x["whole_scene_replay"], x.get("Delta_I"),
+                      " ".join(f"{i}={c['c']}" for i, c in x["contributions"].items()), x["oracle_evals"]]
+                     for n, fam in families.items() for x in fam["nodes"]])
+    cf.write_manifest(out, {"planner_base": cfg["planner2d"]["seed"], "per_query": "crc32(task/connector)"}, chash,
+                    {"families": {n: f["frozen"] for n, f in families.items()}})
+    print(json.dumps({"out": str(out), "gates": gates}))
+    return 0 if ok else 1

@@ -5,8 +5,12 @@ Intervention-supervised joint relocation for a prescribed, frozen target motion.
 - Scientific semantics: `latent_causal_tamp_specification_v1_5.pdf` (Methodology v1.5, initial-scene repair
   without trajectory inputs; protocol `INITIAL_SCENE_ONE_SHOT_V1`)
 - Stages, configs, files, gates: `latent_causal_tamp_implementation_guide_v1_7.pdf` (Guide v1.7)
-- G0-G3 were built under Methodology v1.4 / Guide v1.6; their frozen-motion runs remain valid at their
+- G0-G3 were built under Methodology v1.4 / Guide v1.6, archived byte-identically in
+  [`docs/archive/`](docs/archive/) (sha256 recorded there); their frozen-motion runs remain valid at their
   original scope as `FROZEN_CONTROL` (archives byte-unchanged).
+- Contract addenda (versioned refinements, never edits of the PDFs):
+  [`docs/addenda/A1_target_end_policy_v1.md`](docs/addenda/A1_target_end_policy_v1.md) — G4A target completion =
+  goal + certified safe retreat; HOME return is an optional diagnostic.
 
 Development follows the guide's stage registry **G0–G10** one gate at a time; each
 gate ends with a stage report and an explicit STOP.
@@ -25,7 +29,8 @@ pushed to `main` of `github.com/Narendhiranv04/latent-causal-tamp`.
 | G2 | frozen reference actions (D1, D2), privileged one-edit interventions, per-object fixed-action oracle | implemented; report `responses-phases/0005_G2_completion.md` |
 | G3 | A0 min-cost matching + Murty k-best, Hall certificates, executable move-once 3R repair search, restricted-domain control | implemented; report `responses-phases/0006_G3_completion.md` |
 | G3.5 | objective migration: one-shot initial-scene protocol, static/relocation/target separation, R0-R6 cases | implemented; report `responses-phases/0007_G3_5_completion.md` |
-| G4–G10 | see Guide v1.7 | not started |
+| G4A | certificate audit, automatic candidates, abort tests, 20-root audit, seed/order panels | implemented; report `responses-phases/0008_G4A_completion.md` |
+| G4B–G10 | see Guide v1.7 | not started |
 
 The 2D robot profile was tested at G1 (`robot_profile_hash` in `runs/g1_robot/result.json`);
 robot motion claims are kinematic only (`PLANAR_ARM_KINEMATIC_SKILL`), never dynamic or hardware.
@@ -46,7 +51,9 @@ robot motion claims are kinematic only (`PLANAR_ARM_KINEMATIC_SKILL`), never dyn
 | `figures.py` | G1 task, audit and corner figures and GIFs composed from recorded results |
 | `interventions.py` | frozen action identity, privileged diagnostic edits and their audit, F_fixed / c_i / d_I / Delta_I, families |
 | `intervention_figures.py` | G2 lineage, attribution and fixed-action replay figures and GIFs |
-| `solve.py` | frozen A0 control (cell status, matching, Murty k-best, Hall, restoration); G3.5 static endpoint check, goal-overlap certificate, action-level lower bound, deterministic proposal ranking |
+| `solve.py` | frozen A0 control (cell status, matching, Murty k-best, Hall, restoration) |
+| `proposals.py` | initial-scene endpoint geometry: static endpoint check, goal-overlap producer, action-level lower bound, frozen primary ranking, G4A automatic generator `B1_GEOMETRIC_V1` (moved from `solve.py` at G4A) |
+| `certificates.py` | G4A independent certificate checker (goal overlap, first mover, static, lower bound) |
 | `verify.py` | move-once relocations from the achieved state; FROZEN_CONTROL search (gamma_0 connector, replay, LB/UB) and G3.5 `realize`/`plan_repair` (end at retreat, no target query) |
 | `repair_figures.py` | G3 relocation panels, rejected-move panels, repair GIFs |
 | `assignment_figures.py` | G3 A0 boards, restricted vs all-supported control, verification summary, G3 figure set |
@@ -54,8 +61,13 @@ robot motion claims are kinematic only (`PLANAR_ARM_KINEMATIC_SKILL`), never dyn
 | `evaluate.py` | G3.5 post-commit target evaluation, primary one-shot episode (event trace, commitment boundary), offline case audit |
 | `cases.py` | G3.5 R0-R6 queries: scene construction, controls, evidence and bounds, run record, readiness |
 | `case_figures.py` | G3.5 figures A-F and clean learner observations |
+| `roots.py` | G4A stratified development roots, construction ledger, frozen audit plan and panel selection |
+| `audit.py` | G4A collection (primary episodes, first-pass teacher audit, seed/order panels) and its commands |
+| `coverage.py` | G4A first-pass / enriched labels, coverage, cohorts and readiness |
+| `controls.py` | G4A adversarial certificate suite, G3.5 certificate re-audit, execution fault injection |
+| `audit_figures.py` | G4A figures A-H, repair GIFs, clean learner observations |
 | `diagnostics.py` | figures that explain verification verdicts (rejections, certificates, budgets, IK tracking) |
-| `run.py` | the sole command dispatcher |
+| `run.py` | the sole command dispatcher and cross-stage replay; stage command bodies live in their owning modules (split at G4A) |
 | `tests/` | one test file per stage component |
 | `runs/` | flat per-run output directories |
 | `responses-phases/` | one numbered, immutable Markdown report per substantive response (`NNNN_<topic>.md`) |
@@ -96,6 +108,8 @@ python run.py intervene --out runs/g2_interventions           # ~2.5 min: D1/D2 
 python run.py solve --out runs/g3_repairs                     # G3: A0 + executable repairs (see report 0006 for time)
 python run.py replay --run runs/g3_repairs --report <path>    # re-certify relocations and gamma_0 in the final scenes
 python run.py case-analysis --out runs/g3_5_initial_scene     # G3.5: R0-R6 under INITIAL_SCENE_ONE_SHOT_V1 (~2.5 min)
+python run.py g4a-plan --out runs/g4a_evidence_audit          # G4A: freeze roots/candidates/panels (no outcomes)
+python run.py g4a-audit --out runs/g4a_evidence_audit         # G4A: bounded audit, panels, controls, figures
 ```
 
 Each run writes `config.json`, `scene.json`, `result.json`, `overview.png`,

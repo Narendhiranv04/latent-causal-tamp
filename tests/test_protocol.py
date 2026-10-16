@@ -20,7 +20,7 @@ import geometry as ge  # noqa: E402
 import interventions as iv  # noqa: E402
 import motion as mo  # noqa: E402
 import skill as sk  # noqa: E402
-import solve  # noqa: E402
+import proposals as pr  # noqa: E402
 import verify as vf  # noqa: E402
 from scene import scene_hash  # noqa: E402
 
@@ -66,7 +66,7 @@ def test_new_protocol_query_needs_no_reference_path(cfg, robot):
     blob = json.dumps(q["learner"])
     for word in ("gamma", "envelope", "trajectory", "action_hash", "root_id", "reference"):
         assert word not in blob
-    ranked = solve.rank_proposals(data.initial_scene(q), q["learner"]["action"], FX["G35_R2_GOAL"]["candidates"], cfg)
+    ranked = pr.rank_proposals(data.initial_scene(q), q["learner"]["action"], FX["G35_R2_GOAL"]["candidates"], cfg)
     assert ranked and ranked[0]["cells"] == {"o03": 60}        # all-stay screened out: goal provably occupied
     bad = copy.deepcopy(cf.load_config(ROOT / "config.toml"))
     for sec, key, val in (("protocol", "target_reference_required", True), ("protocol", "target_calls_between_relocations", 1),
@@ -82,8 +82,8 @@ def test_privileged_fields_cannot_change_learner_inputs_or_proposals(cfg):
     assert cases.poison_check(q, 64)["tensors_unchanged_after_poison_and_delete"]
     poisoned = {**q, "oracle_only": {"reference_action_hash": "x", "blockers": ["o02"], "root_id": "leak"}}
     cands = FX["G35_R1_D1BLOCK"]["candidates"]
-    assert solve.rank_proposals(data.initial_scene(q), q["learner"]["action"], cands, cfg) == \
-        solve.rank_proposals(data.initial_scene(poisoned), poisoned["learner"]["action"], cands, cfg)
+    assert pr.rank_proposals(data.initial_scene(q), q["learner"]["action"], cands, cfg) == \
+        pr.rank_proposals(data.initial_scene(poisoned), poisoned["learner"]["action"], cands, cfg)
     goal2 = data.make_query(cfg, "g", scene, "t0", 46, {})
     assert goal2["hashes"]["action_context"] != q["hashes"]["action_context"]
     assert goal2["hashes"]["observation"] == q["hashes"]["observation"]
@@ -129,7 +129,7 @@ def test_static_validity_and_timeouts_never_become_labels(cfg, robot):
     s4, q4 = query_of(cfg, "G35_R4_ACCESS")
     stuck = ev.audit_candidate(robot, cfg, q4, s4, {"label": "o00 first", "cells": {"o00": 29}}, stub, "t4")
     assert stuck["static"]["status"] == mo.VALID and stuck["status"] != sk.VERIFIED   # no relocation witness
-    r = {"audit": [row], "primary": {"outcome": "TARGET_UNRESOLVED"}, "bound": solve.action_lower_bound(scene, q["learner"]["action"], cfg, set())}
+    r = {"audit": [row], "primary": {"outcome": "TARGET_UNRESOLVED"}, "bound": pr.action_lower_bound(scene, q["learner"]["action"], cfg, set())}
     b = cases.bounds(r)
     assert (b["lower_bound"], b["upper_bound"], b["minimality"]) == (0, None, "MINIMUM_UNRESOLVED")
 
@@ -139,13 +139,13 @@ def test_frozen_blocker_count_is_not_a_new_lower_bound(cfg, robot):
     frozen, _ = iv.load_archived("runs/g2_interventions", "G2_D1")
     snap = iv.evaluate(robot, cfg, frozen, iv.Snapshot("x", None, None, scene))
     assert snap.F == mo.INVALID                                         # the frozen path is blocked by o02 ...
-    assert solve.action_lower_bound(scene, q["learner"]["action"], cfg, set())["lower_bound"] == 0   # ... LB stays 0
+    assert pr.action_lower_bound(scene, q["learner"]["action"], cfg, set())["lower_bound"] == 0   # ... LB stays 0
     s2, q2 = query_of(cfg, "G35_R2_GOAL")
-    assert solve.action_lower_bound(s2, q2["learner"]["action"], cfg, set())["lower_bound"] == 1
+    assert pr.action_lower_bound(s2, q2["learner"]["action"], cfg, set())["lower_bound"] == 1
     s4, q4 = query_of(cfg, "G35_R4_ACCESS")
     cert = sk.pick_certificate(robot, s4, "o00", cfg)
     assert cert is not None and cert.status == sk.INFEASIBLE
-    assert solve.action_lower_bound(s4, q4["learner"]["action"], cfg, {"o00"})["lower_bound"] == 2
+    assert pr.action_lower_bound(s4, q4["learner"]["action"], cfg, {"o00"})["lower_bound"] == 2
 
 
 def test_rejected_order_does_not_exclude_the_assignment(cfg, robot):

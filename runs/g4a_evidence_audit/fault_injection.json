@@ -1,0 +1,170 @@
+[
+ {
+  "abort_reasons": [
+   "o01: achieved pose deviates 6.00 mm > 2.00 mm"
+  ],
+  "case": "pose beyond tolerance (3x)",
+  "commanded_gap": 0.07,
+  "commanded_o01_xy": [
+   0.20000000000000037,
+   0.2
+  ],
+  "commits": 1,
+  "events": [
+   "PROPOSE",
+   "STATIC_CHECK",
+   "REPAIR_PLAN",
+   "COMMIT",
+   "RELOCATE",
+   "REOBSERVE",
+   "ABORT"
+  ],
+  "observation_hash": "sha256:a89c4ea165a40861df57a4ce6c7692b47bf94bfae44443ffdb5479f30678febd",
+  "observed_gap": 0.07,
+  "observed_o01_xy": [
+   0.20600000000000038,
+   0.2
+  ],
+  "outcome": "ABORTED",
+  "proposal_hash": "sha256:5d41f48210947924bdb59e7dbcf911aefc8acc0bbe5feb084c7fb36781971b1e",
+  "proposals": 1,
+  "relocations_executed": 1,
+  "target_calls": 0,
+  "target_start_carries_observed_o01": false,
+  "target_status": null
+ },
+ {
+  "abort_reasons": [],
+  "case": "pose within tolerance (0.5x)",
+  "commanded_gap": 0.07,
+  "commanded_o01_xy": [
+   0.20000000000000037,
+   0.2
+  ],
+  "commits": 1,
+  "events": [
+   "PROPOSE",
+   "STATIC_CHECK",
+   "REPAIR_PLAN",
+   "COMMIT",
+   "RELOCATE",
+   "REOBSERVE",
+   "RELOCATE",
+   "REOBSERVE",
+   "TARGET_EVALUATE",
+   "FINISH"
+  ],
+  "observation_hash": "sha256:a89c4ea165a40861df57a4ce6c7692b47bf94bfae44443ffdb5479f30678febd",
+  "observed_gap": 0.07,
+  "observed_o01_xy": [
+   0.20100000000000037,
+   0.2
+  ],
+  "outcome": "SUCCESS",
+  "proposal_hash": "sha256:5d41f48210947924bdb59e7dbcf911aefc8acc0bbe5feb084c7fb36781971b1e",
+  "proposals": 1,
+  "relocations_executed": 2,
+  "target_calls": 1,
+  "target_start_carries_observed_o01": true,
+  "target_status": "VERIFIED_FEASIBLE"
+ },
+ {
+  "abort_reasons": [
+   "gripper gap 0.0350 != committed 0.0700"
+  ],
+  "case": "gripper gap inconsistent",
+  "commanded_gap": 0.07,
+  "commanded_o01_xy": [
+   0.20000000000000037,
+   0.2
+  ],
+  "commits": 1,
+  "events": [
+   "PROPOSE",
+   "STATIC_CHECK",
+   "REPAIR_PLAN",
+   "COMMIT",
+   "RELOCATE",
+   "REOBSERVE",
+   "ABORT"
+  ],
+  "observation_hash": "sha256:a89c4ea165a40861df57a4ce6c7692b47bf94bfae44443ffdb5479f30678febd",
+  "observed_gap": 0.035,
+  "observed_o01_xy": [
+   0.20000000000000037,
+   0.2
+  ],
+  "outcome": "ABORTED",
+  "proposal_hash": "sha256:5d41f48210947924bdb59e7dbcf911aefc8acc0bbe5feb084c7fb36781971b1e",
+  "proposals": 1,
+  "relocations_executed": 1,
+  "target_calls": 0,
+  "target_start_carries_observed_o01": false,
+  "target_status": null
+ },
+ {
+  "abort_reasons": [
+   "gripper still attached after release"
+  ],
+  "case": "attachment inconsistent",
+  "commanded_gap": 0.07,
+  "commanded_o01_xy": [
+   0.20000000000000037,
+   0.2
+  ],
+  "commits": 1,
+  "events": [
+   "PROPOSE",
+   "STATIC_CHECK",
+   "REPAIR_PLAN",
+   "COMMIT",
+   "RELOCATE",
+   "REOBSERVE",
+   "ABORT"
+  ],
+  "observation_hash": "sha256:a89c4ea165a40861df57a4ce6c7692b47bf94bfae44443ffdb5479f30678febd",
+  "observed_gap": 0.07,
+  "observed_o01_xy": [
+   0.20000000000000037,
+   0.2
+  ],
+  "outcome": "ABORTED",
+  "proposal_hash": "sha256:5d41f48210947924bdb59e7dbcf911aefc8acc0bbe5feb084c7fb36781971b1e",
+  "proposals": 1,
+  "relocations_executed": 1,
+  "target_calls": 0,
+  "target_start_carries_observed_o01": false,
+  "target_status": null
+ },
+ {
+  "abort_reasons": [
+   "object identity mismatch"
+  ],
+  "case": "object identity changed",
+  "commanded_gap": 0.07,
+  "commanded_o01_xy": [
+   0.20000000000000037,
+   0.2
+  ],
+  "commits": 1,
+  "events": [
+   "PROPOSE",
+   "STATIC_CHECK",
+   "REPAIR_PLAN",
+   "COMMIT",
+   "RELOCATE",
+   "REOBSERVE",
+   "ABORT"
+  ],
+  "observation_hash": "sha256:a89c4ea165a40861df57a4ce6c7692b47bf94bfae44443ffdb5479f30678febd",
+  "observed_gap": 0.07,
+  "observed_o01_xy": null,
+  "outcome": "ABORTED",
+  "proposal_hash": "sha256:5d41f48210947924bdb59e7dbcf911aefc8acc0bbe5feb084c7fb36781971b1e",
+  "proposals": 1,
+  "relocations_executed": 1,
+  "target_calls": 0,
+  "target_start_carries_observed_o01": false,
+  "target_status": null
+ }
+]

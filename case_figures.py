@@ -7,6 +7,13 @@ privileged diagnostics. Clean learner images are written separately (no overlays
 """
 from __future__ import annotations
 
+import csv
+import json
+from multiprocessing import Pool
+from pathlib import Path
+import config as cf
+import geometry as ge
+
 import numpy as np
 from matplotlib.patches import Circle
 from PIL import Image
@@ -19,7 +26,7 @@ import intervention_figures as ifig
 import motion as mo
 import repair_figures as rf
 import skill as sk
-import solve
+import proposals as pr
 import verify as vf
 import viz
 from viz import COLORS, plt
@@ -39,7 +46,7 @@ def _goal(ax, r):
 
 def _proposal(ax, scene, cells, color, lw=1.6, alpha=1.0):
     for o, d in cells.items():
-        rf._arrow(ax, scene.get(o).xy_m, solve.endpoint_xy(scene, d), color, ls="--", lw=lw, alpha=alpha)
+        rf._arrow(ax, scene.get(o).xy_m, pr.endpoint_xy(scene, d), color, ls="--", lw=lw, alpha=alpha)
 
 
 def case_panel(ax, robot, cfg, r):
@@ -124,8 +131,9 @@ def r1_route(robot, cfg, r):
 def r2_gif(robot, cfg, r, path, n=45):
     p, act = r["primary"], r["query"]["learner"]["action"]
     w, s0 = p["commit"]["attempt"], ev_start(r)
-    seq = [lambda ax: (viz.scene_panel(ax, r["scene"], cfg, f"{r['name']}: initial scene, goal occupied by "
-                                       f"{', '.join(solve.goal_blockers(r['scene'], {}, act, cfg))}"),
+    occ = pr.goal_blockers(r["scene"], {}, act, cfg)
+    head = f"goal occupied by {', '.join(occ)}" if occ else "goal free"
+    seq = [lambda ax: (viz.scene_panel(ax, r["scene"], cfg, f"{r['name']}: initial scene, {head}"),
                        viz.draw_robot(ax, robot, s0.q, s0.gap, zorder=8),
                        rf._ids(ax, r["scene"]), _goal(ax, r), _proposal(ax, r["scene"], p["commit"]["cells"],
                                                                         COLORS["hypothetical"]), rf._view(ax))] * 8
@@ -241,3 +249,38 @@ def g35_figures(out, robot, cfg, res) -> None:
     save(call_trace(res), "F_call_trace.png", 90)
     for n, r in res.items():                                       # clean learner observations (no overlays)
         Image.fromarray(data.learner_tensors(r["query"], cfg["render"]["image_px"])["rgb"]).save(out / f"obs_{n}.png")
+
+
+# ------------------------------------------------------------------ G3.5 command (moved from run.py at G4A)
+def cmd_case_analysis(args) -> int:
+    """R0-R6 under INITIAL_SCENE_ONE_SHOT_V1; the work lives in cases/evaluate (thin I/O here)."""
+    cfg = cf.load_config(args.config)
+    fixtures = cf.validate_fixtures(json.loads(Path(args.fixtures).read_text())["fixtures"])
+    queries = {k: fx for k, fx in fixtures.items() if fx["stage"] == "G3_5"}
+    out = Path(args.out)
+    out.mkdir(parents=True, exist_ok=True)
+    robot, chash, rhash = ge.make_robot(cfg), cf.config_hash(cfg), cf.robot_profile_hash(cfg)
+    with Pool(len(queries)) as pool:
+        res = {r["name"]: r for r in pool.imap_unordered(cases.run_query, [(cfg, k, fx) for k, fx in queries.items()])}
+    records = {n: cases.record(r) for n, r in sorted(res.items())}
+    tasks, scenes, arrays = cases.archive(res, rhash)
+    g35_figures(out, robot, cfg, res)
+    gate = cases.readiness(res)
+    cf.write_json(out / "config.json", {"config_hash": chash, "config": cfg})
+    cf.write_json(out / "cases.json", records)
+    cf.write_json(out / "scenes.json", scenes)
+    np.savez_compressed(out / "arrays.npz", **arrays)
+    rows = cases.summary_rows(records)
+    cf.write_json(out / "result.json", {
+        "stage": "G3.5", "protocol": cfg["protocol"]["name"], "readiness": gate, "summary": rows, "tasks": tasks,
+        "config_hash": chash, "robot_profile_hash": rhash, "proposal_source": cfg["proposal"]["source"],
+        "verification_scope": "KINEMATIC_3R_RELOCATIONS_AND_NEWLY_PLANNED_TARGET_SKILL (no dynamics, no simulation)",
+        "simulation_status": "NOT_RUN", "hardware_status": "NOT_RUN", "learned_components": "NONE"})
+    with open(out / "metrics.csv", "w", newline="") as fh:
+        w = csv.DictWriter(fh, list(rows[0]))
+        w.writeheader()
+        w.writerows(rows)
+    cf.write_manifest(out, {"planner_base": cfg["planner2d"]["seed"], "per_query": "crc32(query/component key)"}, chash,
+                    {"queries": {n: r["hashes"] for n, r in records.items()}})
+    print(json.dumps({"out": str(out), "readiness": gate, "summary": rows}))
+    return 0

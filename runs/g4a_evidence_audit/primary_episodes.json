@@ -1,0 +1,3032 @@
+{
+ "g4a_r00": {
+  "boundary_ok": true,
+  "commit": {
+   "cells": {},
+   "label": "all-stay",
+   "order": [],
+   "proposal_hash": "sha256:ba6f3f1b2fb17d2bc006a052dc49a376eb3016cdf3657a0b0082d613a82944ca",
+   "rank": 0,
+   "source_observation_hash": "sha256:be40141369726dd57dbedc9eb3b11a2c06d25c7d8f4cfe4de862155a31ada6f2",
+   "witness_hash": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "cpu_s": 416.46,
+  "events": [
+   {
+    "candidates": 12,
+    "component": "proposal",
+    "i": 0,
+    "kind": "PROPOSE",
+    "proposal_hash": "sha256:ba6f3f1b2fb17d2bc006a052dc49a376eb3016cdf3657a0b0082d613a82944ca",
+    "state_hash": "sha256:be40141369726dd57dbedc9eb3b11a2c06d25c7d8f4cfe4de862155a31ada6f2",
+    "t_s": 0.0
+   },
+   {
+    "component": "static_screen",
+    "i": 1,
+    "kind": "STATIC_CHECK",
+    "rank": 0,
+    "state_hash": "sha256:9b19a0a2ae216becfd6b8f35cb5ec6d1d6fcc3826babb42829b20bb8f4cf9a0e",
+    "status": "VALID",
+    "t_s": 0.0
+   },
+   {
+    "component": "relocation_planner",
+    "i": 2,
+    "kind": "REPAIR_PLAN",
+    "orders": 1,
+    "rank": 0,
+    "relocation_plans": 0,
+    "state_hash": "sha256:9b19a0a2ae216becfd6b8f35cb5ec6d1d6fcc3826babb42829b20bb8f4cf9a0e",
+    "stop": "WITNESS_FOUND",
+    "t_s": 0.0
+   },
+   {
+    "component": "commitment",
+    "i": 3,
+    "kind": "COMMIT",
+    "rank": 0,
+    "state_hash": "sha256:9b19a0a2ae216becfd6b8f35cb5ec6d1d6fcc3826babb42829b20bb8f4cf9a0e",
+    "t_s": 0.0,
+    "witness_hash": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+   },
+   {
+    "component": "target_evaluator",
+    "i": 4,
+    "kind": "TARGET_EVALUATE",
+    "start_gap": 0.07,
+    "start_q": [
+     1.5707963267948966,
+     1.5707963267948966,
+     1.5707963267948966
+    ],
+    "state_hash": "sha256:9b19a0a2ae216becfd6b8f35cb5ec6d1d6fcc3826babb42829b20bb8f4cf9a0e",
+    "t_s": 0.001
+   },
+   {
+    "component": "episode",
+    "i": 5,
+    "kind": "FINISH",
+    "outcome": "TARGET_CERTIFIED_INFEASIBLE",
+    "state_hash": "sha256:9b19a0a2ae216becfd6b8f35cb5ec6d1d6fcc3826babb42829b20bb8f4cf9a0e",
+    "t_s": 0.015,
+    "target_reason": "NO_PICK_CANDIDATE"
+   }
+  ],
+  "hashes": {
+   "action_context": "sha256:1d31987e272bd97bcc7885d9a2f99a8a0b8bdfe14f14915cddf8357cd232a752",
+   "observation": "sha256:be40141369726dd57dbedc9eb3b11a2c06d25c7d8f4cfe4de862155a31ada6f2"
+  },
+  "outcome": "TARGET_CERTIFIED_INFEASIBLE",
+  "query_id": "g4a_r00",
+  "stratum": "UNOCCUPIED_GOAL",
+  "target": {
+   "complete_target_status": "CERTIFIED_INFEASIBLE",
+   "goal_achieved": false,
+   "home_return_status": "NOT_RUN",
+   "reason": "NO_PICK_CANDIDATE",
+   "safe_retreat_status": "NOT_REACHED",
+   "seconds": 0.01,
+   "start": {
+    "attachment": "free",
+    "gripper_gap_m": 0.07,
+    "q": [
+     1.5707963267948966,
+     1.5707963267948966,
+     1.5707963267948966
+    ]
+   },
+   "status": "CERTIFIED_INFEASIBLE",
+   "wall_clock_dependent": false
+  },
+  "tried": [
+   {
+    "label": "all-stay",
+    "rank": 0,
+    "static": "VALID",
+    "stop": "WITNESS_FOUND"
+   }
+  ],
+  "wall_s": 416.66
+ },
+ "g4a_r01": {
+  "boundary_ok": true,
+  "commit": {
+   "cells": {
+    "o00": 29
+   },
+   "label": "single:o00>29",
+   "order": [
+    [
+     "o00",
+     29
+    ]
+   ],
+   "proposal_hash": "sha256:8d47ab62a4cdb91a77b3b51783794b60a080b6f7155b44ef52449104927970d9",
+   "rank": 0,
+   "source_observation_hash": "sha256:3e7d0c98f3ba9b525d65e51119184add9c6bfd4ff388589f79401fcdbce217cd",
+   "witness_hash": "sha256:7e1a8164c4d36d8368c6cdbac88cf71b45fccd883613c7f9b913ce3202cb8fd6"
+  },
+  "cpu_s": 28.17,
+  "events": [
+   {
+    "candidates": 2,
+    "component": "proposal",
+    "i": 0,
+    "kind": "PROPOSE",
+    "proposal_hash": "sha256:8d47ab62a4cdb91a77b3b51783794b60a080b6f7155b44ef52449104927970d9",
+    "state_hash": "sha256:3e7d0c98f3ba9b525d65e51119184add9c6bfd4ff388589f79401fcdbce217cd",
+    "t_s": 0.0
+   },
+   {
+    "component": "static_screen",
+    "i": 1,
+    "kind": "STATIC_CHECK",
+    "rank": 0,
+    "state_hash": "sha256:05c407a064c3cca84cedcdc9dc6b05dcf16e28aabcc634d068e379525f1faeba",
+    "status": "VALID",
+    "t_s": 0.0
+   },
+   {
+    "component": "relocation_planner",
+    "i": 2,
+    "kind": "REPAIR_PLAN",
+    "orders": 1,
+    "rank": 0,
+    "relocation_plans": 1,
+    "state_hash": "sha256:05c407a064c3cca84cedcdc9dc6b05dcf16e28aabcc634d068e379525f1faeba",
+    "stop": "WITNESS_FOUND",
+    "t_s": 0.474
+   },
+   {
+    "component": "commitment",
+    "i": 3,
+    "kind": "COMMIT",
+    "rank": 0,
+    "state_hash": "sha256:05c407a064c3cca84cedcdc9dc6b05dcf16e28aabcc634d068e379525f1faeba",
+    "t_s": 0.474,
+    "witness_hash": "sha256:7e1a8164c4d36d8368c6cdbac88cf71b45fccd883613c7f9b913ce3202cb8fd6"
+   },
+   {
+    "cell": 29,
+    "certified": true,
+    "component": "executor",
+    "i": 4,
+    "kind": "RELOCATE",
+    "object": "o00",
+    "state_hash": "sha256:05c407a064c3cca84cedcdc9dc6b05dcf16e28aabcc634d068e379525f1faeba",
+    "t_s": 0.508
+   },
+   {
+    "component": "executor",
+    "i": 5,
+    "kind": "REOBSERVE",
+    "matches_commitment": true,
+    "reasons": [],
+    "state_hash": "sha256:518146a8d9dc78a1400657452220d83e045c5bb6c6a86c79073c38b391250f35",
+    "t_s": 0.508
+   },
+   {
+    "component": "target_evaluator",
+    "i": 6,
+    "kind": "TARGET_EVALUATE",
+    "start_gap": 0.07,
+    "start_q": [
+     1.2154838871754858,
+     -1.7764671864725852,
+     -0.4862142518994972
+    ],
+    "state_hash": "sha256:518146a8d9dc78a1400657452220d83e045c5bb6c6a86c79073c38b391250f35",
+    "t_s": 0.508
+   },
+   {
+    "component": "episode",
+    "i": 7,
+    "kind": "FINISH",
+    "outcome": "SUCCESS",
+    "state_hash": "sha256:518146a8d9dc78a1400657452220d83e045c5bb6c6a86c79073c38b391250f35",
+    "t_s": 1.36,
+    "target_reason": "ALL_SEGMENTS_CERTIFIED"
+   }
+  ],
+  "hashes": {
+   "action_context": "sha256:0dae5d45e4b7d4c241d530d38812ff7a489f077218188181103139803eaf7fae",
+   "observation": "sha256:3e7d0c98f3ba9b525d65e51119184add9c6bfd4ff388589f79401fcdbce217cd"
+  },
+  "outcome": "SUCCESS",
+  "query_id": "g4a_r01",
+  "stratum": "OCCUPIED_GOAL",
+  "target": {
+   "complete_target_status": "VERIFIED_FEASIBLE",
+   "goal_achieved": true,
+   "home_return_status": "VERIFIED_FEASIBLE",
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "safe_retreat_status": "VERIFIED_FEASIBLE",
+   "seconds": 0.85,
+   "start": {
+    "attachment": "free",
+    "gripper_gap_m": 0.07,
+    "q": [
+     1.2154838871754858,
+     -1.7764671864725852,
+     -0.4862142518994972
+    ]
+   },
+   "status": "VERIFIED_FEASIBLE",
+   "wall_clock_dependent": false
+  },
+  "tried": [
+   {
+    "label": "single:o00>29",
+    "rank": 0,
+    "static": "VALID",
+    "stop": "WITNESS_FOUND"
+   }
+  ],
+  "wall_s": 28.2
+ },
+ "g4a_r02": {
+  "boundary_ok": true,
+  "commit": {
+   "cells": {
+    "o00": 41
+   },
+   "label": "single:o00>41",
+   "order": [
+    [
+     "o00",
+     41
+    ]
+   ],
+   "proposal_hash": "sha256:d5cacf220de670f7a4ad5bb448ea2331ea7cdc28fcc345e3c71f238a3e9bc4d3",
+   "rank": 0,
+   "source_observation_hash": "sha256:6bdfe0c1736ed1afcea7c5b48a86b027e191a1b53ff4e5204cf423682ed881ac",
+   "witness_hash": "sha256:e2f9eb554559fb62208e65f78122d6fc95003dea40b6d097c98ec816b98a05a7"
+  },
+  "cpu_s": 85.39,
+  "events": [
+   {
+    "candidates": 6,
+    "component": "proposal",
+    "i": 0,
+    "kind": "PROPOSE",
+    "proposal_hash": "sha256:d5cacf220de670f7a4ad5bb448ea2331ea7cdc28fcc345e3c71f238a3e9bc4d3",
+    "state_hash": "sha256:6bdfe0c1736ed1afcea7c5b48a86b027e191a1b53ff4e5204cf423682ed881ac",
+    "t_s": 0.0
+   },
+   {
+    "component": "static_screen",
+    "i": 1,
+    "kind": "STATIC_CHECK",
+    "rank": 0,
+    "state_hash": "sha256:3e1f14e39006d610727ad215ede291c633cc38cca2795c6073fd3a3eda15925b",
+    "status": "VALID",
+    "t_s": 0.0
+   },
+   {
+    "component": "relocation_planner",
+    "i": 2,
+    "kind": "REPAIR_PLAN",
+    "orders": 1,
+    "rank": 0,
+    "relocation_plans": 1,
+    "state_hash": "sha256:3e1f14e39006d610727ad215ede291c633cc38cca2795c6073fd3a3eda15925b",
+    "stop": "WITNESS_FOUND",
+    "t_s": 2.959
+   },
+   {
+    "component": "commitment",
+    "i": 3,
+    "kind": "COMMIT",
+    "rank": 0,
+    "state_hash": "sha256:3e1f14e39006d610727ad215ede291c633cc38cca2795c6073fd3a3eda15925b",
+    "t_s": 2.96,
+    "witness_hash": "sha256:e2f9eb554559fb62208e65f78122d6fc95003dea40b6d097c98ec816b98a05a7"
+   },
+   {
+    "cell": 41,
+    "certified": true,
+    "component": "executor",
+    "i": 4,
+    "kind": "RELOCATE",
+    "object": "o00",
+    "state_hash": "sha256:3e1f14e39006d610727ad215ede291c633cc38cca2795c6073fd3a3eda15925b",
+    "t_s": 3.179
+   },
+   {
+    "component": "executor",
+    "i": 5,
+    "kind": "REOBSERVE",
+    "matches_commitment": true,
+    "reasons": [],
+    "state_hash": "sha256:61ff2e608b065f9f50494b8644e0164cebd9d4f235dde182a2482f128e4bd517",
+    "t_s": 3.179
+   },
+   {
+    "component": "target_evaluator",
+    "i": 6,
+    "kind": "TARGET_EVALUATE",
+    "start_gap": 0.07,
+    "start_q": [
+     1.2458508698729407,
+     -1.4578633684643416,
+     -2.144181991600945
+    ],
+    "state_hash": "sha256:61ff2e608b065f9f50494b8644e0164cebd9d4f235dde182a2482f128e4bd517",
+    "t_s": 3.179
+   },
+   {
+    "component": "episode",
+    "i": 7,
+    "kind": "FINISH",
+    "outcome": "SUCCESS",
+    "state_hash": "sha256:61ff2e608b065f9f50494b8644e0164cebd9d4f235dde182a2482f128e4bd517",
+    "t_s": 7.292,
+    "target_reason": "ALL_SEGMENTS_CERTIFIED"
+   }
+  ],
+  "hashes": {
+   "action_context": "sha256:578465168b1d2546dda6dbca845de83117e4f11a297ef104c354aaee5c9734d5",
+   "observation": "sha256:6bdfe0c1736ed1afcea7c5b48a86b027e191a1b53ff4e5204cf423682ed881ac"
+  },
+  "outcome": "SUCCESS",
+  "query_id": "g4a_r02",
+  "stratum": "ACCESS_DEPENDENCY",
+  "target": {
+   "complete_target_status": "VERIFIED_FEASIBLE",
+   "goal_achieved": true,
+   "home_return_status": "VERIFIED_FEASIBLE",
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "safe_retreat_status": "VERIFIED_FEASIBLE",
+   "seconds": 4.11,
+   "start": {
+    "attachment": "free",
+    "gripper_gap_m": 0.07,
+    "q": [
+     1.2458508698729407,
+     -1.4578633684643416,
+     -2.144181991600945
+    ]
+   },
+   "status": "VERIFIED_FEASIBLE",
+   "wall_clock_dependent": false
+  },
+  "tried": [
+   {
+    "label": "single:o00>41",
+    "rank": 0,
+    "static": "VALID",
+    "stop": "WITNESS_FOUND"
+   }
+  ],
+  "wall_s": 85.43
+ },
+ "g4a_r03": {
+  "boundary_ok": true,
+  "commit": {
+   "cells": {
+    "o00": 58,
+    "o01": 45
+   },
+   "label": "pair:o00>58 o01>45",
+   "order": [
+    [
+     "o01",
+     45
+    ],
+    [
+     "o00",
+     58
+    ]
+   ],
+   "proposal_hash": "sha256:9b1478822d58e9271d80564971e71438a87484f61d61e16870edd1dd24b01831",
+   "rank": 2,
+   "source_observation_hash": "sha256:eb9e811fac8f8ddb20da63e70ab5b0f8cd0bd7f1326a2cc908c3aef0f2bb7908",
+   "witness_hash": "sha256:fa3bd1dbbb9724b92c8d4c7ab06cc9c561ce5d219c710e834d480a884ed711e1"
+  },
+  "cpu_s": 3743.44,
+  "events": [
+   {
+    "candidates": 6,
+    "component": "proposal",
+    "i": 0,
+    "kind": "PROPOSE",
+    "proposal_hash": "sha256:9b1478822d58e9271d80564971e71438a87484f61d61e16870edd1dd24b01831",
+    "state_hash": "sha256:eb9e811fac8f8ddb20da63e70ab5b0f8cd0bd7f1326a2cc908c3aef0f2bb7908",
+    "t_s": 0.0
+   },
+   {
+    "component": "static_screen",
+    "i": 1,
+    "kind": "STATIC_CHECK",
+    "rank": 0,
+    "state_hash": "sha256:eb2c9b15284f9c3057fb17fe371ecf416e34847c613dece754d82cd13a66f31f",
+    "status": "VALID",
+    "t_s": 0.0
+   },
+   {
+    "component": "relocation_planner",
+    "i": 2,
+    "kind": "REPAIR_PLAN",
+    "orders": 1,
+    "rank": 0,
+    "relocation_plans": 1,
+    "state_hash": "sha256:eb2c9b15284f9c3057fb17fe371ecf416e34847c613dece754d82cd13a66f31f",
+    "stop": "ORDERS_EXHAUSTED",
+    "t_s": 218.179
+   },
+   {
+    "component": "static_screen",
+    "i": 3,
+    "kind": "STATIC_CHECK",
+    "rank": 1,
+    "state_hash": "sha256:eb2c9b15284f9c3057fb17fe371ecf416e34847c613dece754d82cd13a66f31f",
+    "status": "VALID",
+    "t_s": 218.18
+   },
+   {
+    "component": "relocation_planner",
+    "i": 4,
+    "kind": "REPAIR_PLAN",
+    "orders": 1,
+    "rank": 1,
+    "relocation_plans": 1,
+    "state_hash": "sha256:eb2c9b15284f9c3057fb17fe371ecf416e34847c613dece754d82cd13a66f31f",
+    "stop": "ORDERS_EXHAUSTED",
+    "t_s": 436.82
+   },
+   {
+    "component": "static_screen",
+    "i": 5,
+    "kind": "STATIC_CHECK",
+    "rank": 2,
+    "state_hash": "sha256:eb2c9b15284f9c3057fb17fe371ecf416e34847c613dece754d82cd13a66f31f",
+    "status": "VALID",
+    "t_s": 436.821
+   },
+   {
+    "component": "relocation_planner",
+    "i": 6,
+    "kind": "REPAIR_PLAN",
+    "orders": 2,
+    "rank": 2,
+    "relocation_plans": 3,
+    "state_hash": "sha256:eb2c9b15284f9c3057fb17fe371ecf416e34847c613dece754d82cd13a66f31f",
+    "stop": "WITNESS_FOUND",
+    "t_s": 673.747
+   },
+   {
+    "component": "commitment",
+    "i": 7,
+    "kind": "COMMIT",
+    "rank": 2,
+    "state_hash": "sha256:eb2c9b15284f9c3057fb17fe371ecf416e34847c613dece754d82cd13a66f31f",
+    "t_s": 673.747,
+    "witness_hash": "sha256:fa3bd1dbbb9724b92c8d4c7ab06cc9c561ce5d219c710e834d480a884ed711e1"
+   },
+   {
+    "cell": 45,
+    "certified": true,
+    "component": "executor",
+    "i": 8,
+    "kind": "RELOCATE",
+    "object": "o01",
+    "state_hash": "sha256:eb2c9b15284f9c3057fb17fe371ecf416e34847c613dece754d82cd13a66f31f",
+    "t_s": 673.85
+   },
+   {
+    "component": "executor",
+    "i": 9,
+    "kind": "REOBSERVE",
+    "matches_commitment": true,
+    "reasons": [],
+    "state_hash": "sha256:176f4887d06d02800db2d2992d3449a1e1f99bc870c42e90e0a7b3541bb3c6ae",
+    "t_s": 673.85
+   },
+   {
+    "cell": 58,
+    "certified": true,
+    "component": "executor",
+    "i": 10,
+    "kind": "RELOCATE",
+    "object": "o00",
+    "state_hash": "sha256:176f4887d06d02800db2d2992d3449a1e1f99bc870c42e90e0a7b3541bb3c6ae",
+    "t_s": 674.043
+   },
+   {
+    "component": "executor",
+    "i": 11,
+    "kind": "REOBSERVE",
+    "matches_commitment": true,
+    "reasons": [],
+    "state_hash": "sha256:066d7ee2c0d3a09565c501cddff8c62e9330094f4d9024f9491ea734429fb780",
+    "t_s": 674.043
+   },
+   {
+    "component": "target_evaluator",
+    "i": 12,
+    "kind": "TARGET_EVALUATE",
+    "start_gap": 0.07,
+    "start_q": [
+     0.9338124107217816,
+     -2.4615956173180007,
+     2.836780145591966
+    ],
+    "state_hash": "sha256:066d7ee2c0d3a09565c501cddff8c62e9330094f4d9024f9491ea734429fb780",
+    "t_s": 674.044
+   },
+   {
+    "component": "episode",
+    "i": 13,
+    "kind": "FINISH",
+    "outcome": "SUCCESS",
+    "state_hash": "sha256:066d7ee2c0d3a09565c501cddff8c62e9330094f4d9024f9491ea734429fb780",
+    "t_s": 678.405,
+    "target_reason": "ALL_SEGMENTS_CERTIFIED"
+   }
+  ],
+  "hashes": {
+   "action_context": "sha256:79222ce1bd22c48ae67adf6004e519d5aa4cb736bc7d7eaba3f602c1f9465dc6",
+   "observation": "sha256:eb9e811fac8f8ddb20da63e70ab5b0f8cd0bd7f1326a2cc908c3aef0f2bb7908"
+  },
+  "outcome": "SUCCESS",
+  "query_id": "g4a_r03",
+  "stratum": "COMPETING_DESTINATIONS",
+  "target": {
+   "complete_target_status": "VERIFIED_FEASIBLE",
+   "goal_achieved": true,
+   "home_return_status": "VERIFIED_FEASIBLE",
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "safe_retreat_status": "VERIFIED_FEASIBLE",
+   "seconds": 4.36,
+   "start": {
+    "attachment": "free",
+    "gripper_gap_m": 0.07,
+    "q": [
+     0.9338124107217816,
+     -2.4615956173180007,
+     2.836780145591966
+    ]
+   },
+   "status": "VERIFIED_FEASIBLE",
+   "wall_clock_dependent": false
+  },
+  "tried": [
+   {
+    "label": "single:o00>58",
+    "rank": 0,
+    "static": "VALID",
+    "stop": "ORDERS_EXHAUSTED"
+   },
+   {
+    "label": "single:o00>62",
+    "rank": 1,
+    "static": "VALID",
+    "stop": "ORDERS_EXHAUSTED"
+   },
+   {
+    "label": "pair:o00>58 o01>45",
+    "rank": 2,
+    "static": "VALID",
+    "stop": "WITNESS_FOUND"
+   }
+  ],
+  "wall_s": 3743.94
+ },
+ "g4a_r04": {
+  "boundary_ok": true,
+  "commit": {
+   "cells": {},
+   "label": "all-stay",
+   "order": [],
+   "proposal_hash": "sha256:e0168f41836be1914873a3ef9dd3c2a872d94d5a135f1fa237a18d1a7b761a15",
+   "rank": 0,
+   "source_observation_hash": "sha256:340a5e66d817a660bd3db0ee55af56e96d3379e55b540d951b9d4fad09e37f35",
+   "witness_hash": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "cpu_s": 1996.26,
+  "events": [
+   {
+    "candidates": 12,
+    "component": "proposal",
+    "i": 0,
+    "kind": "PROPOSE",
+    "proposal_hash": "sha256:e0168f41836be1914873a3ef9dd3c2a872d94d5a135f1fa237a18d1a7b761a15",
+    "state_hash": "sha256:340a5e66d817a660bd3db0ee55af56e96d3379e55b540d951b9d4fad09e37f35",
+    "t_s": 0.0
+   },
+   {
+    "component": "static_screen",
+    "i": 1,
+    "kind": "STATIC_CHECK",
+    "rank": 0,
+    "state_hash": "sha256:0013a04a1e12146a57d87df10a64756c36a52bbcd46b1f83000770b0ba27e6a4",
+    "status": "VALID",
+    "t_s": 0.0
+   },
+   {
+    "component": "relocation_planner",
+    "i": 2,
+    "kind": "REPAIR_PLAN",
+    "orders": 1,
+    "rank": 0,
+    "relocation_plans": 0,
+    "state_hash": "sha256:0013a04a1e12146a57d87df10a64756c36a52bbcd46b1f83000770b0ba27e6a4",
+    "stop": "WITNESS_FOUND",
+    "t_s": 0.0
+   },
+   {
+    "component": "commitment",
+    "i": 3,
+    "kind": "COMMIT",
+    "rank": 0,
+    "state_hash": "sha256:0013a04a1e12146a57d87df10a64756c36a52bbcd46b1f83000770b0ba27e6a4",
+    "t_s": 0.001,
+    "witness_hash": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+   },
+   {
+    "component": "target_evaluator",
+    "i": 4,
+    "kind": "TARGET_EVALUATE",
+    "start_gap": 0.07,
+    "start_q": [
+     1.5707963267948966,
+     1.5707963267948966,
+     1.5707963267948966
+    ],
+    "state_hash": "sha256:0013a04a1e12146a57d87df10a64756c36a52bbcd46b1f83000770b0ba27e6a4",
+    "t_s": 0.001
+   },
+   {
+    "component": "episode",
+    "i": 5,
+    "kind": "FINISH",
+    "outcome": "TARGET_UNRESOLVED",
+    "state_hash": "sha256:0013a04a1e12146a57d87df10a64756c36a52bbcd46b1f83000770b0ba27e6a4",
+    "t_s": 536.61,
+    "target_reason": "PLANNER_BUDGET"
+   }
+  ],
+  "hashes": {
+   "action_context": "sha256:444533a9206d49f51a5bd399fdccb9c5035300dbaa64cbad2798d2fe080c5447",
+   "observation": "sha256:340a5e66d817a660bd3db0ee55af56e96d3379e55b540d951b9d4fad09e37f35"
+  },
+  "outcome": "TARGET_UNRESOLVED",
+  "query_id": "g4a_r04",
+  "stratum": "NUISANCE_CONTROL",
+  "target": {
+   "complete_target_status": "UNRESOLVED",
+   "goal_achieved": false,
+   "home_return_status": "NOT_RUN",
+   "reason": "PLANNER_BUDGET",
+   "safe_retreat_status": "NOT_REACHED",
+   "seconds": 536.61,
+   "start": {
+    "attachment": "free",
+    "gripper_gap_m": 0.07,
+    "q": [
+     1.5707963267948966,
+     1.5707963267948966,
+     1.5707963267948966
+    ]
+   },
+   "status": "UNRESOLVED",
+   "wall_clock_dependent": false
+  },
+  "tried": [
+   {
+    "label": "all-stay",
+    "rank": 0,
+    "static": "VALID",
+    "stop": "WITNESS_FOUND"
+   }
+  ],
+  "wall_s": 1996.69
+ },
+ "g4a_r05": {
+  "boundary_ok": true,
+  "commit": {
+   "cells": {},
+   "label": "all-stay",
+   "order": [],
+   "proposal_hash": "sha256:1a40cc30b1a98abee8bc392dcb0ee77df2e480e6f890b547cd602877a17d429d",
+   "rank": 0,
+   "source_observation_hash": "sha256:790e34770412a739383514fc3e0adbc9091911d223ebf105f6a80092c376fe99",
+   "witness_hash": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "cpu_s": 105.96,
+  "events": [
+   {
+    "candidates": 12,
+    "component": "proposal",
+    "i": 0,
+    "kind": "PROPOSE",
+    "proposal_hash": "sha256:1a40cc30b1a98abee8bc392dcb0ee77df2e480e6f890b547cd602877a17d429d",
+    "state_hash": "sha256:790e34770412a739383514fc3e0adbc9091911d223ebf105f6a80092c376fe99",
+    "t_s": 0.0
+   },
+   {
+    "component": "static_screen",
+    "i": 1,
+    "kind": "STATIC_CHECK",
+    "rank": 0,
+    "state_hash": "sha256:16b4dc7b53c39ae003cfc5c07f3d78a9f63b1519c9ed8d28537e031702f984a3",
+    "status": "VALID",
+    "t_s": 0.0
+   },
+   {
+    "component": "relocation_planner",
+    "i": 2,
+    "kind": "REPAIR_PLAN",
+    "orders": 1,
+    "rank": 0,
+    "relocation_plans": 0,
+    "state_hash": "sha256:16b4dc7b53c39ae003cfc5c07f3d78a9f63b1519c9ed8d28537e031702f984a3",
+    "stop": "WITNESS_FOUND",
+    "t_s": 0.001
+   },
+   {
+    "component": "commitment",
+    "i": 3,
+    "kind": "COMMIT",
+    "rank": 0,
+    "state_hash": "sha256:16b4dc7b53c39ae003cfc5c07f3d78a9f63b1519c9ed8d28537e031702f984a3",
+    "t_s": 0.001,
+    "witness_hash": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+   },
+   {
+    "component": "target_evaluator",
+    "i": 4,
+    "kind": "TARGET_EVALUATE",
+    "start_gap": 0.07,
+    "start_q": [
+     1.5707963267948966,
+     1.5707963267948966,
+     1.5707963267948966
+    ],
+    "state_hash": "sha256:16b4dc7b53c39ae003cfc5c07f3d78a9f63b1519c9ed8d28537e031702f984a3",
+    "t_s": 0.001
+   },
+   {
+    "component": "episode",
+    "i": 5,
+    "kind": "FINISH",
+    "outcome": "SUCCESS",
+    "state_hash": "sha256:16b4dc7b53c39ae003cfc5c07f3d78a9f63b1519c9ed8d28537e031702f984a3",
+    "t_s": 1.937,
+    "target_reason": "ALL_SEGMENTS_CERTIFIED"
+   }
+  ],
+  "hashes": {
+   "action_context": "sha256:f64886f86d5f19329d2cec41e94eef43139f1a82da9d15f9022a539caea98821",
+   "observation": "sha256:790e34770412a739383514fc3e0adbc9091911d223ebf105f6a80092c376fe99"
+  },
+  "outcome": "SUCCESS",
+  "query_id": "g4a_r05",
+  "stratum": "UNOCCUPIED_GOAL",
+  "target": {
+   "complete_target_status": "VERIFIED_FEASIBLE",
+   "goal_achieved": true,
+   "home_return_status": "VERIFIED_FEASIBLE",
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "safe_retreat_status": "VERIFIED_FEASIBLE",
+   "seconds": 1.94,
+   "start": {
+    "attachment": "free",
+    "gripper_gap_m": 0.07,
+    "q": [
+     1.5707963267948966,
+     1.5707963267948966,
+     1.5707963267948966
+    ]
+   },
+   "status": "VERIFIED_FEASIBLE",
+   "wall_clock_dependent": false
+  },
+  "tried": [
+   {
+    "label": "all-stay",
+    "rank": 0,
+    "static": "VALID",
+    "stop": "WITNESS_FOUND"
+   }
+  ],
+  "wall_s": 106.27
+ },
+ "g4a_r06": {
+  "boundary_ok": true,
+  "commit": {
+   "cells": {
+    "o00": 25,
+    "o02": 24
+   },
+   "label": "pair:o00>25 o02>24",
+   "order": [
+    [
+     "o02",
+     24
+    ],
+    [
+     "o00",
+     25
+    ]
+   ],
+   "proposal_hash": "sha256:94cb803170ac509c005161d348ffca40b5bac19bff4012cfe8636f9bd9baf14b",
+   "rank": 3,
+   "source_observation_hash": "sha256:670e773df9a408c7febaa4c9cc68fe0e9f9d43fd9333c10a397116c1791d18d6",
+   "witness_hash": "sha256:6258078bb805b16d1e86baa8613f3dc93b31626180c2eb4e6c5eeaba26a4b929"
+  },
+  "cpu_s": 48.96,
+  "events": [
+   {
+    "candidates": 7,
+    "component": "proposal",
+    "i": 0,
+    "kind": "PROPOSE",
+    "proposal_hash": "sha256:94cb803170ac509c005161d348ffca40b5bac19bff4012cfe8636f9bd9baf14b",
+    "state_hash": "sha256:670e773df9a408c7febaa4c9cc68fe0e9f9d43fd9333c10a397116c1791d18d6",
+    "t_s": 0.0
+   },
+   {
+    "component": "static_screen",
+    "i": 1,
+    "kind": "STATIC_CHECK",
+    "rank": 0,
+    "state_hash": "sha256:b9c4c14cc250356d3ddd58b8bf3736f06609904de55dab7699ae9eb2b1ade9e8",
+    "status": "VALID",
+    "t_s": 0.0
+   },
+   {
+    "component": "relocation_planner",
+    "i": 2,
+    "kind": "REPAIR_PLAN",
+    "orders": 1,
+    "rank": 0,
+    "relocation_plans": 1,
+    "state_hash": "sha256:b9c4c14cc250356d3ddd58b8bf3736f06609904de55dab7699ae9eb2b1ade9e8",
+    "stop": "ORDERS_EXHAUSTED",
+    "t_s": 0.398
+   },
+   {
+    "component": "static_screen",
+    "i": 3,
+    "kind": "STATIC_CHECK",
+    "rank": 1,
+    "state_hash": "sha256:b9c4c14cc250356d3ddd58b8bf3736f06609904de55dab7699ae9eb2b1ade9e8",
+    "status": "VALID",
+    "t_s": 0.398
+   },
+   {
+    "component": "relocation_planner",
+    "i": 4,
+    "kind": "REPAIR_PLAN",
+    "orders": 1,
+    "rank": 1,
+    "relocation_plans": 1,
+    "state_hash": "sha256:b9c4c14cc250356d3ddd58b8bf3736f06609904de55dab7699ae9eb2b1ade9e8",
+    "stop": "ORDERS_EXHAUSTED",
+    "t_s": 0.722
+   },
+   {
+    "component": "static_screen",
+    "i": 5,
+    "kind": "STATIC_CHECK",
+    "rank": 2,
+    "state_hash": "sha256:b9c4c14cc250356d3ddd58b8bf3736f06609904de55dab7699ae9eb2b1ade9e8",
+    "status": "VALID",
+    "t_s": 0.722
+   },
+   {
+    "component": "relocation_planner",
+    "i": 6,
+    "kind": "REPAIR_PLAN",
+    "orders": 1,
+    "rank": 2,
+    "relocation_plans": 1,
+    "state_hash": "sha256:b9c4c14cc250356d3ddd58b8bf3736f06609904de55dab7699ae9eb2b1ade9e8",
+    "stop": "ORDERS_EXHAUSTED",
+    "t_s": 1.175
+   },
+   {
+    "component": "static_screen",
+    "i": 7,
+    "kind": "STATIC_CHECK",
+    "rank": 3,
+    "state_hash": "sha256:b9c4c14cc250356d3ddd58b8bf3736f06609904de55dab7699ae9eb2b1ade9e8",
+    "status": "VALID",
+    "t_s": 1.175
+   },
+   {
+    "component": "relocation_planner",
+    "i": 8,
+    "kind": "REPAIR_PLAN",
+    "orders": 2,
+    "rank": 3,
+    "relocation_plans": 3,
+    "state_hash": "sha256:b9c4c14cc250356d3ddd58b8bf3736f06609904de55dab7699ae9eb2b1ade9e8",
+    "stop": "WITNESS_FOUND",
+    "t_s": 3.653
+   },
+   {
+    "component": "commitment",
+    "i": 9,
+    "kind": "COMMIT",
+    "rank": 3,
+    "state_hash": "sha256:b9c4c14cc250356d3ddd58b8bf3736f06609904de55dab7699ae9eb2b1ade9e8",
+    "t_s": 3.654,
+    "witness_hash": "sha256:6258078bb805b16d1e86baa8613f3dc93b31626180c2eb4e6c5eeaba26a4b929"
+   },
+   {
+    "cell": 24,
+    "certified": true,
+    "component": "executor",
+    "i": 10,
+    "kind": "RELOCATE",
+    "object": "o02",
+    "state_hash": "sha256:b9c4c14cc250356d3ddd58b8bf3736f06609904de55dab7699ae9eb2b1ade9e8",
+    "t_s": 3.711
+   },
+   {
+    "component": "executor",
+    "i": 11,
+    "kind": "REOBSERVE",
+    "matches_commitment": true,
+    "reasons": [],
+    "state_hash": "sha256:b0ecfef1b44cf6ae8c3999bd68033b62e178364ed8b2aba4d10d9014e756635e",
+    "t_s": 3.711
+   },
+   {
+    "cell": 25,
+    "certified": true,
+    "component": "executor",
+    "i": 12,
+    "kind": "RELOCATE",
+    "object": "o00",
+    "state_hash": "sha256:b0ecfef1b44cf6ae8c3999bd68033b62e178364ed8b2aba4d10d9014e756635e",
+    "t_s": 3.82
+   },
+   {
+    "component": "executor",
+    "i": 13,
+    "kind": "REOBSERVE",
+    "matches_commitment": true,
+    "reasons": [],
+    "state_hash": "sha256:6c34ee11b4eb496ef1b8639e323f6d0343dc54ae3d82ac5c0cb4bf1c7ab6dcc2",
+    "t_s": 3.82
+   },
+   {
+    "component": "target_evaluator",
+    "i": 14,
+    "kind": "TARGET_EVALUATE",
+    "start_gap": 0.07,
+    "start_q": [
+     1.8468453267506124,
+     -2.343643121517074,
+     -0.812199144229286
+    ],
+    "state_hash": "sha256:6c34ee11b4eb496ef1b8639e323f6d0343dc54ae3d82ac5c0cb4bf1c7ab6dcc2",
+    "t_s": 3.82
+   },
+   {
+    "component": "episode",
+    "i": 15,
+    "kind": "FINISH",
+    "outcome": "TARGET_UNRESOLVED",
+    "state_hash": "sha256:6c34ee11b4eb496ef1b8639e323f6d0343dc54ae3d82ac5c0cb4bf1c7ab6dcc2",
+    "t_s": 4.177,
+    "target_reason": "PLANNER_BUDGET"
+   }
+  ],
+  "hashes": {
+   "action_context": "sha256:6712907c18622bc9bb80ebf843717e5972fe3d4cfc5c486e235911801cb56d07",
+   "observation": "sha256:670e773df9a408c7febaa4c9cc68fe0e9f9d43fd9333c10a397116c1791d18d6"
+  },
+  "outcome": "TARGET_UNRESOLVED",
+  "query_id": "g4a_r06",
+  "stratum": "OCCUPIED_GOAL",
+  "target": {
+   "complete_target_status": "UNRESOLVED",
+   "goal_achieved": false,
+   "home_return_status": "NOT_RUN",
+   "reason": "PLANNER_BUDGET",
+   "safe_retreat_status": "NOT_REACHED",
+   "seconds": 0.36,
+   "start": {
+    "attachment": "free",
+    "gripper_gap_m": 0.07,
+    "q": [
+     1.8468453267506124,
+     -2.343643121517074,
+     -0.812199144229286
+    ]
+   },
+   "status": "UNRESOLVED",
+   "wall_clock_dependent": false
+  },
+  "tried": [
+   {
+    "label": "single:o00>25",
+    "rank": 0,
+    "static": "VALID",
+    "stop": "ORDERS_EXHAUSTED"
+   },
+   {
+    "label": "broad:o00>7",
+    "rank": 1,
+    "static": "VALID",
+    "stop": "ORDERS_EXHAUSTED"
+   },
+   {
+    "label": "single:o00>24",
+    "rank": 2,
+    "static": "VALID",
+    "stop": "ORDERS_EXHAUSTED"
+   },
+   {
+    "label": "pair:o00>25 o02>24",
+    "rank": 3,
+    "static": "VALID",
+    "stop": "WITNESS_FOUND"
+   }
+  ],
+  "wall_s": 49.08
+ },
+ "g4a_r07": {
+  "boundary_ok": true,
+  "commit": {
+   "cells": {
+    "o00": 59
+   },
+   "label": "broad:o00>59",
+   "order": [
+    [
+     "o00",
+     59
+    ]
+   ],
+   "proposal_hash": "sha256:fdda628b47fbcd140b08074d03224c0bcb8d6396cab996e7af8fffc2fb43bffb",
+   "rank": 0,
+   "source_observation_hash": "sha256:5d8992969e05cd5bd48c69a83e82dd552d507bf67d63a5a0908fd082b36cfb3f",
+   "witness_hash": "sha256:d9e1b77d9cdb021cd7595fd94c487f93136aac09ff17601bc72f69b2ed64f289"
+  },
+  "cpu_s": 2910.6,
+  "events": [
+   {
+    "candidates": 4,
+    "component": "proposal",
+    "i": 0,
+    "kind": "PROPOSE",
+    "proposal_hash": "sha256:fdda628b47fbcd140b08074d03224c0bcb8d6396cab996e7af8fffc2fb43bffb",
+    "state_hash": "sha256:5d8992969e05cd5bd48c69a83e82dd552d507bf67d63a5a0908fd082b36cfb3f",
+    "t_s": 0.0
+   },
+   {
+    "component": "static_screen",
+    "i": 1,
+    "kind": "STATIC_CHECK",
+    "rank": 0,
+    "state_hash": "sha256:aac791f55204ecd73292c0cb4bdd0fa35bc5165109028d231fc91cc1ce49b3fe",
+    "status": "VALID",
+    "t_s": 0.0
+   },
+   {
+    "component": "relocation_planner",
+    "i": 2,
+    "kind": "REPAIR_PLAN",
+    "orders": 1,
+    "rank": 0,
+    "relocation_plans": 1,
+    "state_hash": "sha256:aac791f55204ecd73292c0cb4bdd0fa35bc5165109028d231fc91cc1ce49b3fe",
+    "stop": "WITNESS_FOUND",
+    "t_s": 0.467
+   },
+   {
+    "component": "commitment",
+    "i": 3,
+    "kind": "COMMIT",
+    "rank": 0,
+    "state_hash": "sha256:aac791f55204ecd73292c0cb4bdd0fa35bc5165109028d231fc91cc1ce49b3fe",
+    "t_s": 0.467,
+    "witness_hash": "sha256:d9e1b77d9cdb021cd7595fd94c487f93136aac09ff17601bc72f69b2ed64f289"
+   },
+   {
+    "cell": 59,
+    "certified": true,
+    "component": "executor",
+    "i": 4,
+    "kind": "RELOCATE",
+    "object": "o00",
+    "state_hash": "sha256:aac791f55204ecd73292c0cb4bdd0fa35bc5165109028d231fc91cc1ce49b3fe",
+    "t_s": 0.544
+   },
+   {
+    "component": "executor",
+    "i": 5,
+    "kind": "REOBSERVE",
+    "matches_commitment": true,
+    "reasons": [],
+    "state_hash": "sha256:6cb26f83e6a6443f9ccad40682cda09a63f49185acf44c76a8c0f614f95fa682",
+    "t_s": 0.544
+   },
+   {
+    "component": "target_evaluator",
+    "i": 6,
+    "kind": "TARGET_EVALUATE",
+    "start_gap": 0.07,
+    "start_q": [
+     2.067294146594956,
+     -2.33302093176815,
+     0.2657267851731939
+    ],
+    "state_hash": "sha256:6cb26f83e6a6443f9ccad40682cda09a63f49185acf44c76a8c0f614f95fa682",
+    "t_s": 0.544
+   },
+   {
+    "component": "episode",
+    "i": 7,
+    "kind": "FINISH",
+    "outcome": "TARGET_UNRESOLVED",
+    "state_hash": "sha256:6cb26f83e6a6443f9ccad40682cda09a63f49185acf44c76a8c0f614f95fa682",
+    "t_s": 30.655,
+    "target_reason": "PLANNER_BUDGET"
+   }
+  ],
+  "hashes": {
+   "action_context": "sha256:8a9ee13b2b923a30c10f8ac042d1e6ee3cd36d50ba7f481aa6f0850f0ee40d05",
+   "observation": "sha256:5d8992969e05cd5bd48c69a83e82dd552d507bf67d63a5a0908fd082b36cfb3f"
+  },
+  "outcome": "TARGET_UNRESOLVED",
+  "query_id": "g4a_r07",
+  "stratum": "ACCESS_DEPENDENCY",
+  "target": {
+   "complete_target_status": "UNRESOLVED",
+   "goal_achieved": false,
+   "home_return_status": "NOT_RUN",
+   "reason": "PLANNER_BUDGET",
+   "safe_retreat_status": "NOT_REACHED",
+   "seconds": 30.11,
+   "start": {
+    "attachment": "free",
+    "gripper_gap_m": 0.07,
+    "q": [
+     2.067294146594956,
+     -2.33302093176815,
+     0.2657267851731939
+    ]
+   },
+   "status": "UNRESOLVED",
+   "wall_clock_dependent": false
+  },
+  "tried": [
+   {
+    "label": "broad:o00>59",
+    "rank": 0,
+    "static": "VALID",
+    "stop": "WITNESS_FOUND"
+   }
+  ],
+  "wall_s": 2911.1
+ },
+ "g4a_r08": {
+  "boundary_ok": true,
+  "commit": null,
+  "cpu_s": 31.58,
+  "events": [
+   {
+    "candidates": 6,
+    "component": "proposal",
+    "i": 0,
+    "kind": "PROPOSE",
+    "proposal_hash": "sha256:b56d78603986ebf76da842e544387ce7e924f124c8821e97c3942e93d2f41e75",
+    "state_hash": "sha256:860811b5a0ee89f0617d3eabd6eade2341aeee94a8ffea0eade17d92455aff03",
+    "t_s": 0.0
+   },
+   {
+    "component": "static_screen",
+    "i": 1,
+    "kind": "STATIC_CHECK",
+    "rank": 0,
+    "state_hash": "sha256:c9781e70d7bccf02c986b3f0c32c6f577d3e1b90c1f1d5b6b4dd22a4d640208a",
+    "status": "VALID",
+    "t_s": 0.0
+   },
+   {
+    "component": "relocation_planner",
+    "i": 2,
+    "kind": "REPAIR_PLAN",
+    "orders": 1,
+    "rank": 0,
+    "relocation_plans": 1,
+    "state_hash": "sha256:c9781e70d7bccf02c986b3f0c32c6f577d3e1b90c1f1d5b6b4dd22a4d640208a",
+    "stop": "ORDERS_EXHAUSTED",
+    "t_s": 0.143
+   },
+   {
+    "component": "static_screen",
+    "i": 3,
+    "kind": "STATIC_CHECK",
+    "rank": 1,
+    "state_hash": "sha256:c9781e70d7bccf02c986b3f0c32c6f577d3e1b90c1f1d5b6b4dd22a4d640208a",
+    "status": "VALID",
+    "t_s": 0.144
+   },
+   {
+    "component": "relocation_planner",
+    "i": 4,
+    "kind": "REPAIR_PLAN",
+    "orders": 1,
+    "rank": 1,
+    "relocation_plans": 1,
+    "state_hash": "sha256:c9781e70d7bccf02c986b3f0c32c6f577d3e1b90c1f1d5b6b4dd22a4d640208a",
+    "stop": "ORDERS_EXHAUSTED",
+    "t_s": 0.316
+   },
+   {
+    "component": "static_screen",
+    "i": 5,
+    "kind": "STATIC_CHECK",
+    "rank": 2,
+    "state_hash": "sha256:c9781e70d7bccf02c986b3f0c32c6f577d3e1b90c1f1d5b6b4dd22a4d640208a",
+    "status": "VALID",
+    "t_s": 0.316
+   },
+   {
+    "component": "relocation_planner",
+    "i": 6,
+    "kind": "REPAIR_PLAN",
+    "orders": 2,
+    "rank": 2,
+    "relocation_plans": 2,
+    "state_hash": "sha256:c9781e70d7bccf02c986b3f0c32c6f577d3e1b90c1f1d5b6b4dd22a4d640208a",
+    "stop": "ORDERS_EXHAUSTED",
+    "t_s": 1.246
+   },
+   {
+    "component": "static_screen",
+    "i": 7,
+    "kind": "STATIC_CHECK",
+    "rank": 3,
+    "state_hash": "sha256:c9781e70d7bccf02c986b3f0c32c6f577d3e1b90c1f1d5b6b4dd22a4d640208a",
+    "status": "VALID",
+    "t_s": 1.246
+   },
+   {
+    "component": "relocation_planner",
+    "i": 8,
+    "kind": "REPAIR_PLAN",
+    "orders": 2,
+    "rank": 3,
+    "relocation_plans": 2,
+    "state_hash": "sha256:c9781e70d7bccf02c986b3f0c32c6f577d3e1b90c1f1d5b6b4dd22a4d640208a",
+    "stop": "ORDERS_EXHAUSTED",
+    "t_s": 2.012
+   },
+   {
+    "component": "static_screen",
+    "i": 9,
+    "kind": "STATIC_CHECK",
+    "rank": 4,
+    "state_hash": "sha256:c9781e70d7bccf02c986b3f0c32c6f577d3e1b90c1f1d5b6b4dd22a4d640208a",
+    "status": "VALID",
+    "t_s": 2.012
+   },
+   {
+    "component": "relocation_planner",
+    "i": 10,
+    "kind": "REPAIR_PLAN",
+    "orders": 2,
+    "rank": 4,
+    "relocation_plans": 3,
+    "state_hash": "sha256:c9781e70d7bccf02c986b3f0c32c6f577d3e1b90c1f1d5b6b4dd22a4d640208a",
+    "stop": "ORDERS_EXHAUSTED",
+    "t_s": 4.889
+   },
+   {
+    "component": "static_screen",
+    "i": 11,
+    "kind": "STATIC_CHECK",
+    "rank": 5,
+    "state_hash": "sha256:c9781e70d7bccf02c986b3f0c32c6f577d3e1b90c1f1d5b6b4dd22a4d640208a",
+    "status": "VALID",
+    "t_s": 4.889
+   },
+   {
+    "component": "relocation_planner",
+    "i": 12,
+    "kind": "REPAIR_PLAN",
+    "orders": 4,
+    "rank": 5,
+    "relocation_plans": 5,
+    "state_hash": "sha256:c9781e70d7bccf02c986b3f0c32c6f577d3e1b90c1f1d5b6b4dd22a4d640208a",
+    "stop": "ORDERS_EXHAUSTED",
+    "t_s": 8.803
+   },
+   {
+    "component": "episode",
+    "i": 13,
+    "kind": "FINISH",
+    "outcome": "NO_REPAIR_WITNESS_WITHIN_BUDGET",
+    "state_hash": "sha256:c9781e70d7bccf02c986b3f0c32c6f577d3e1b90c1f1d5b6b4dd22a4d640208a",
+    "t_s": 8.803
+   }
+  ],
+  "hashes": {
+   "action_context": "sha256:ad1069f97163d3571462028aa0ca766a34e7803f757230756e09621aa7694266",
+   "observation": "sha256:860811b5a0ee89f0617d3eabd6eade2341aeee94a8ffea0eade17d92455aff03"
+  },
+  "outcome": "NO_REPAIR_WITNESS_WITHIN_BUDGET",
+  "query_id": "g4a_r08",
+  "stratum": "COMPETING_DESTINATIONS",
+  "target": null,
+  "tried": [
+   {
+    "label": "single:o00>3",
+    "rank": 0,
+    "static": "VALID",
+    "stop": "ORDERS_EXHAUSTED"
+   },
+   {
+    "label": "single:o00>11",
+    "rank": 1,
+    "static": "VALID",
+    "stop": "ORDERS_EXHAUSTED"
+   },
+   {
+    "label": "pair:o00>3 o01>11",
+    "rank": 2,
+    "static": "VALID",
+    "stop": "ORDERS_EXHAUSTED"
+   },
+   {
+    "label": "pair:o00>9 o01>11",
+    "rank": 3,
+    "static": "VALID",
+    "stop": "ORDERS_EXHAUSTED"
+   },
+   {
+    "label": "pair:o00>3 o06>34",
+    "rank": 4,
+    "static": "VALID",
+    "stop": "ORDERS_EXHAUSTED"
+   },
+   {
+    "label": "triple:o00>3 o01>11 o06>34",
+    "rank": 5,
+    "static": "VALID",
+    "stop": "ORDERS_EXHAUSTED"
+   }
+  ],
+  "wall_s": 31.61
+ },
+ "g4a_r09": {
+  "boundary_ok": true,
+  "commit": {
+   "cells": {},
+   "label": "all-stay",
+   "order": [],
+   "proposal_hash": "sha256:493b46c06e70fb2e070035377a630286cb9f1615b12df1281b22edd18bd68b89",
+   "rank": 0,
+   "source_observation_hash": "sha256:7c771cef640009f1933b43c7950bd08c0bc87f1facec2f326a65c8aff9a82974",
+   "witness_hash": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "cpu_s": 580.86,
+  "events": [
+   {
+    "candidates": 12,
+    "component": "proposal",
+    "i": 0,
+    "kind": "PROPOSE",
+    "proposal_hash": "sha256:493b46c06e70fb2e070035377a630286cb9f1615b12df1281b22edd18bd68b89",
+    "state_hash": "sha256:7c771cef640009f1933b43c7950bd08c0bc87f1facec2f326a65c8aff9a82974",
+    "t_s": 0.0
+   },
+   {
+    "component": "static_screen",
+    "i": 1,
+    "kind": "STATIC_CHECK",
+    "rank": 0,
+    "state_hash": "sha256:fa9975b24fb658d3b057081129a6f30707040d7de9c0dc0819263cfbd73a2a7c",
+    "status": "VALID",
+    "t_s": 0.0
+   },
+   {
+    "component": "relocation_planner",
+    "i": 2,
+    "kind": "REPAIR_PLAN",
+    "orders": 1,
+    "rank": 0,
+    "relocation_plans": 0,
+    "state_hash": "sha256:fa9975b24fb658d3b057081129a6f30707040d7de9c0dc0819263cfbd73a2a7c",
+    "stop": "WITNESS_FOUND",
+    "t_s": 0.0
+   },
+   {
+    "component": "commitment",
+    "i": 3,
+    "kind": "COMMIT",
+    "rank": 0,
+    "state_hash": "sha256:fa9975b24fb658d3b057081129a6f30707040d7de9c0dc0819263cfbd73a2a7c",
+    "t_s": 0.0,
+    "witness_hash": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+   },
+   {
+    "component": "target_evaluator",
+    "i": 4,
+    "kind": "TARGET_EVALUATE",
+    "start_gap": 0.07,
+    "start_q": [
+     1.5707963267948966,
+     1.5707963267948966,
+     1.5707963267948966
+    ],
+    "state_hash": "sha256:fa9975b24fb658d3b057081129a6f30707040d7de9c0dc0819263cfbd73a2a7c",
+    "t_s": 0.001
+   },
+   {
+    "component": "episode",
+    "i": 5,
+    "kind": "FINISH",
+    "outcome": "TARGET_CERTIFIED_INFEASIBLE",
+    "state_hash": "sha256:fa9975b24fb658d3b057081129a6f30707040d7de9c0dc0819263cfbd73a2a7c",
+    "t_s": 1.002,
+    "target_reason": "ALL_CONNECTORS_CERTIFIED_BLOCKED"
+   }
+  ],
+  "hashes": {
+   "action_context": "sha256:236b254069f8225f48d605c1b03764674ef4ebf72f06407d8d47f5a495ee0294",
+   "observation": "sha256:7c771cef640009f1933b43c7950bd08c0bc87f1facec2f326a65c8aff9a82974"
+  },
+  "outcome": "TARGET_CERTIFIED_INFEASIBLE",
+  "query_id": "g4a_r09",
+  "stratum": "NUISANCE_CONTROL",
+  "target": {
+   "complete_target_status": "CERTIFIED_INFEASIBLE",
+   "goal_achieved": false,
+   "home_return_status": "NOT_RUN",
+   "reason": "ALL_CONNECTORS_CERTIFIED_BLOCKED",
+   "safe_retreat_status": "NOT_REACHED",
+   "seconds": 1.0,
+   "start": {
+    "attachment": "free",
+    "gripper_gap_m": 0.07,
+    "q": [
+     1.5707963267948966,
+     1.5707963267948966,
+     1.5707963267948966
+    ]
+   },
+   "status": "CERTIFIED_INFEASIBLE",
+   "wall_clock_dependent": false
+  },
+  "tried": [
+   {
+    "label": "all-stay",
+    "rank": 0,
+    "static": "VALID",
+    "stop": "WITNESS_FOUND"
+   }
+  ],
+  "wall_s": 581.0
+ },
+ "g4a_r10": {
+  "boundary_ok": true,
+  "commit": {
+   "cells": {},
+   "label": "all-stay",
+   "order": [],
+   "proposal_hash": "sha256:f35d4319c6fb49ae7bb17b15b351c74837384d1049ef5ec6737d0eec5c8ea9a2",
+   "rank": 0,
+   "source_observation_hash": "sha256:96c62dcacc712db20153ce80f000e219e678bcc1fc56b4e8cc142f5058a8808f",
+   "witness_hash": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "cpu_s": 155.64,
+  "events": [
+   {
+    "candidates": 12,
+    "component": "proposal",
+    "i": 0,
+    "kind": "PROPOSE",
+    "proposal_hash": "sha256:f35d4319c6fb49ae7bb17b15b351c74837384d1049ef5ec6737d0eec5c8ea9a2",
+    "state_hash": "sha256:96c62dcacc712db20153ce80f000e219e678bcc1fc56b4e8cc142f5058a8808f",
+    "t_s": 0.0
+   },
+   {
+    "component": "static_screen",
+    "i": 1,
+    "kind": "STATIC_CHECK",
+    "rank": 0,
+    "state_hash": "sha256:cbecc4f0323681a822a9b46b048dd631633e7fd599058f2be69c8713bc53f29b",
+    "status": "VALID",
+    "t_s": 0.0
+   },
+   {
+    "component": "relocation_planner",
+    "i": 2,
+    "kind": "REPAIR_PLAN",
+    "orders": 1,
+    "rank": 0,
+    "relocation_plans": 0,
+    "state_hash": "sha256:cbecc4f0323681a822a9b46b048dd631633e7fd599058f2be69c8713bc53f29b",
+    "stop": "WITNESS_FOUND",
+    "t_s": 0.0
+   },
+   {
+    "component": "commitment",
+    "i": 3,
+    "kind": "COMMIT",
+    "rank": 0,
+    "state_hash": "sha256:cbecc4f0323681a822a9b46b048dd631633e7fd599058f2be69c8713bc53f29b",
+    "t_s": 0.0,
+    "witness_hash": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+   },
+   {
+    "component": "target_evaluator",
+    "i": 4,
+    "kind": "TARGET_EVALUATE",
+    "start_gap": 0.07,
+    "start_q": [
+     1.5707963267948966,
+     1.5707963267948966,
+     1.5707963267948966
+    ],
+    "state_hash": "sha256:cbecc4f0323681a822a9b46b048dd631633e7fd599058f2be69c8713bc53f29b",
+    "t_s": 0.0
+   },
+   {
+    "component": "episode",
+    "i": 5,
+    "kind": "FINISH",
+    "outcome": "SUCCESS",
+    "state_hash": "sha256:cbecc4f0323681a822a9b46b048dd631633e7fd599058f2be69c8713bc53f29b",
+    "t_s": 8.66,
+    "target_reason": "ALL_SEGMENTS_CERTIFIED"
+   }
+  ],
+  "hashes": {
+   "action_context": "sha256:39134c5f53569245c8dfbe22c5b9fcd530301b04f70b34278ca14eba8d570600",
+   "observation": "sha256:96c62dcacc712db20153ce80f000e219e678bcc1fc56b4e8cc142f5058a8808f"
+  },
+  "outcome": "SUCCESS",
+  "query_id": "g4a_r10",
+  "stratum": "UNOCCUPIED_GOAL",
+  "target": {
+   "complete_target_status": "VERIFIED_FEASIBLE",
+   "goal_achieved": true,
+   "home_return_status": "VERIFIED_FEASIBLE",
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "safe_retreat_status": "VERIFIED_FEASIBLE",
+   "seconds": 8.66,
+   "start": {
+    "attachment": "free",
+    "gripper_gap_m": 0.07,
+    "q": [
+     1.5707963267948966,
+     1.5707963267948966,
+     1.5707963267948966
+    ]
+   },
+   "status": "VERIFIED_FEASIBLE",
+   "wall_clock_dependent": false
+  },
+  "tried": [
+   {
+    "label": "all-stay",
+    "rank": 0,
+    "static": "VALID",
+    "stop": "WITNESS_FOUND"
+   }
+  ],
+  "wall_s": 155.75
+ },
+ "g4a_r11": {
+  "boundary_ok": true,
+  "commit": {
+   "cells": {
+    "o00": 59
+   },
+   "label": "single:o00>59",
+   "order": [
+    [
+     "o00",
+     59
+    ]
+   ],
+   "proposal_hash": "sha256:5835679af5b73c64757466afb9add6e6aa589474ca08a5b82e034fa1ad935ca1",
+   "rank": 0,
+   "source_observation_hash": "sha256:792577bf2832dd64bcbc31fe6b932023717919c1fd358976b349c0302895f260",
+   "witness_hash": "sha256:41d86a871f7515389a358b73f1f30624914ae19dbd12457bd3861ffaf01f3270"
+  },
+  "cpu_s": 658.84,
+  "events": [
+   {
+    "candidates": 5,
+    "component": "proposal",
+    "i": 0,
+    "kind": "PROPOSE",
+    "proposal_hash": "sha256:5835679af5b73c64757466afb9add6e6aa589474ca08a5b82e034fa1ad935ca1",
+    "state_hash": "sha256:792577bf2832dd64bcbc31fe6b932023717919c1fd358976b349c0302895f260",
+    "t_s": 0.0
+   },
+   {
+    "component": "static_screen",
+    "i": 1,
+    "kind": "STATIC_CHECK",
+    "rank": 0,
+    "state_hash": "sha256:7758b74b4c97c4290dfc036dd37e0ba3b7b09d782b4f31e6916348d5e46406ee",
+    "status": "VALID",
+    "t_s": 0.0
+   },
+   {
+    "component": "relocation_planner",
+    "i": 2,
+    "kind": "REPAIR_PLAN",
+    "orders": 1,
+    "rank": 0,
+    "relocation_plans": 1,
+    "state_hash": "sha256:7758b74b4c97c4290dfc036dd37e0ba3b7b09d782b4f31e6916348d5e46406ee",
+    "stop": "WITNESS_FOUND",
+    "t_s": 0.46
+   },
+   {
+    "component": "commitment",
+    "i": 3,
+    "kind": "COMMIT",
+    "rank": 0,
+    "state_hash": "sha256:7758b74b4c97c4290dfc036dd37e0ba3b7b09d782b4f31e6916348d5e46406ee",
+    "t_s": 0.46,
+    "witness_hash": "sha256:41d86a871f7515389a358b73f1f30624914ae19dbd12457bd3861ffaf01f3270"
+   },
+   {
+    "cell": 59,
+    "certified": true,
+    "component": "executor",
+    "i": 4,
+    "kind": "RELOCATE",
+    "object": "o00",
+    "state_hash": "sha256:7758b74b4c97c4290dfc036dd37e0ba3b7b09d782b4f31e6916348d5e46406ee",
+    "t_s": 0.518
+   },
+   {
+    "component": "executor",
+    "i": 5,
+    "kind": "REOBSERVE",
+    "matches_commitment": true,
+    "reasons": [],
+    "state_hash": "sha256:ab6a86adc918469c2bb13d0e14e7337692efc28ac452c6fd83da01617f966658",
+    "t_s": 0.518
+   },
+   {
+    "component": "target_evaluator",
+    "i": 6,
+    "kind": "TARGET_EVALUATE",
+    "start_gap": 0.07,
+    "start_q": [
+     2.0720230768346095,
+     -2.1095678400701487,
+     -0.22425462456361167
+    ],
+    "state_hash": "sha256:ab6a86adc918469c2bb13d0e14e7337692efc28ac452c6fd83da01617f966658",
+    "t_s": 0.519
+   },
+   {
+    "component": "episode",
+    "i": 7,
+    "kind": "FINISH",
+    "outcome": "TARGET_UNRESOLVED",
+    "state_hash": "sha256:ab6a86adc918469c2bb13d0e14e7337692efc28ac452c6fd83da01617f966658",
+    "t_s": 265.799,
+    "target_reason": "PLANNER_BUDGET"
+   }
+  ],
+  "hashes": {
+   "action_context": "sha256:14f865f0ba8bc75c8c8be6df647c86d99638900d8aeb23d88d4c1099a7767ecd",
+   "observation": "sha256:792577bf2832dd64bcbc31fe6b932023717919c1fd358976b349c0302895f260"
+  },
+  "outcome": "TARGET_UNRESOLVED",
+  "query_id": "g4a_r11",
+  "stratum": "OCCUPIED_GOAL",
+  "target": {
+   "complete_target_status": "UNRESOLVED",
+   "goal_achieved": false,
+   "home_return_status": "NOT_RUN",
+   "reason": "PLANNER_BUDGET",
+   "safe_retreat_status": "NOT_REACHED",
+   "seconds": 265.28,
+   "start": {
+    "attachment": "free",
+    "gripper_gap_m": 0.07,
+    "q": [
+     2.0720230768346095,
+     -2.1095678400701487,
+     -0.22425462456361167
+    ]
+   },
+   "status": "UNRESOLVED",
+   "wall_clock_dependent": false
+  },
+  "tried": [
+   {
+    "label": "single:o00>59",
+    "rank": 0,
+    "static": "VALID",
+    "stop": "WITNESS_FOUND"
+   }
+  ],
+  "wall_s": 659.05
+ },
+ "g4a_r12": {
+  "boundary_ok": true,
+  "commit": {
+   "cells": {
+    "o00": 42,
+    "o03": 41
+   },
+   "label": "pair:o00>42 o03>41",
+   "order": [
+    [
+     "o03",
+     41
+    ],
+    [
+     "o00",
+     42
+    ]
+   ],
+   "proposal_hash": "sha256:3404add248f86b899ec943ab172c6c9746c53dd3ea25d96e37c1429891bb34a7",
+   "rank": 4,
+   "source_observation_hash": "sha256:2a6f4a51f90760d1db94d44b3bc6ec1cc70ee04f0bb0a206a5054be9d0eed44a",
+   "witness_hash": "sha256:db86d214b0e27ad10815fe3db2270a5084202f2127bf785cacc41a779ae2a780"
+  },
+  "cpu_s": 60.45,
+  "events": [
+   {
+    "candidates": 6,
+    "component": "proposal",
+    "i": 0,
+    "kind": "PROPOSE",
+    "proposal_hash": "sha256:3404add248f86b899ec943ab172c6c9746c53dd3ea25d96e37c1429891bb34a7",
+    "state_hash": "sha256:2a6f4a51f90760d1db94d44b3bc6ec1cc70ee04f0bb0a206a5054be9d0eed44a",
+    "t_s": 0.0
+   },
+   {
+    "component": "static_screen",
+    "i": 1,
+    "kind": "STATIC_CHECK",
+    "rank": 0,
+    "state_hash": "sha256:0496b765078f0978f862ff92d90ca75cef1b43c2f77811d0fc333d2cacd49a69",
+    "status": "VALID",
+    "t_s": 0.0
+   },
+   {
+    "component": "relocation_planner",
+    "i": 2,
+    "kind": "REPAIR_PLAN",
+    "orders": 1,
+    "rank": 0,
+    "relocation_plans": 1,
+    "state_hash": "sha256:0496b765078f0978f862ff92d90ca75cef1b43c2f77811d0fc333d2cacd49a69",
+    "stop": "ORDERS_EXHAUSTED",
+    "t_s": 0.251
+   },
+   {
+    "component": "static_screen",
+    "i": 3,
+    "kind": "STATIC_CHECK",
+    "rank": 1,
+    "state_hash": "sha256:0496b765078f0978f862ff92d90ca75cef1b43c2f77811d0fc333d2cacd49a69",
+    "status": "VALID",
+    "t_s": 0.251
+   },
+   {
+    "component": "relocation_planner",
+    "i": 4,
+    "kind": "REPAIR_PLAN",
+    "orders": 1,
+    "rank": 1,
+    "relocation_plans": 1,
+    "state_hash": "sha256:0496b765078f0978f862ff92d90ca75cef1b43c2f77811d0fc333d2cacd49a69",
+    "stop": "ORDERS_EXHAUSTED",
+    "t_s": 0.534
+   },
+   {
+    "component": "static_screen",
+    "i": 5,
+    "kind": "STATIC_CHECK",
+    "rank": 2,
+    "state_hash": "sha256:0496b765078f0978f862ff92d90ca75cef1b43c2f77811d0fc333d2cacd49a69",
+    "status": "VALID",
+    "t_s": 0.534
+   },
+   {
+    "component": "relocation_planner",
+    "i": 6,
+    "kind": "REPAIR_PLAN",
+    "orders": 2,
+    "rank": 2,
+    "relocation_plans": 2,
+    "state_hash": "sha256:0496b765078f0978f862ff92d90ca75cef1b43c2f77811d0fc333d2cacd49a69",
+    "stop": "ORDERS_EXHAUSTED",
+    "t_s": 1.84
+   },
+   {
+    "component": "static_screen",
+    "i": 7,
+    "kind": "STATIC_CHECK",
+    "rank": 3,
+    "state_hash": "sha256:0496b765078f0978f862ff92d90ca75cef1b43c2f77811d0fc333d2cacd49a69",
+    "status": "VALID",
+    "t_s": 1.84
+   },
+   {
+    "component": "relocation_planner",
+    "i": 8,
+    "kind": "REPAIR_PLAN",
+    "orders": 2,
+    "rank": 3,
+    "relocation_plans": 2,
+    "state_hash": "sha256:0496b765078f0978f862ff92d90ca75cef1b43c2f77811d0fc333d2cacd49a69",
+    "stop": "ORDERS_EXHAUSTED",
+    "t_s": 2.714
+   },
+   {
+    "component": "static_screen",
+    "i": 9,
+    "kind": "STATIC_CHECK",
+    "rank": 4,
+    "state_hash": "sha256:0496b765078f0978f862ff92d90ca75cef1b43c2f77811d0fc333d2cacd49a69",
+    "status": "VALID",
+    "t_s": 2.715
+   },
+   {
+    "component": "relocation_planner",
+    "i": 10,
+    "kind": "REPAIR_PLAN",
+    "orders": 2,
+    "rank": 4,
+    "relocation_plans": 3,
+    "state_hash": "sha256:0496b765078f0978f862ff92d90ca75cef1b43c2f77811d0fc333d2cacd49a69",
+    "stop": "WITNESS_FOUND",
+    "t_s": 3.934
+   },
+   {
+    "component": "commitment",
+    "i": 11,
+    "kind": "COMMIT",
+    "rank": 4,
+    "state_hash": "sha256:0496b765078f0978f862ff92d90ca75cef1b43c2f77811d0fc333d2cacd49a69",
+    "t_s": 3.934,
+    "witness_hash": "sha256:db86d214b0e27ad10815fe3db2270a5084202f2127bf785cacc41a779ae2a780"
+   },
+   {
+    "cell": 41,
+    "certified": true,
+    "component": "executor",
+    "i": 12,
+    "kind": "RELOCATE",
+    "object": "o03",
+    "state_hash": "sha256:0496b765078f0978f862ff92d90ca75cef1b43c2f77811d0fc333d2cacd49a69",
+    "t_s": 3.97
+   },
+   {
+    "component": "executor",
+    "i": 13,
+    "kind": "REOBSERVE",
+    "matches_commitment": true,
+    "reasons": [],
+    "state_hash": "sha256:4fe047deffa99875f4c61f43e02ccedd2d17404bfa5feeaba2f4bfff46550f42",
+    "t_s": 3.97
+   },
+   {
+    "cell": 42,
+    "certified": true,
+    "component": "executor",
+    "i": 14,
+    "kind": "RELOCATE",
+    "object": "o00",
+    "state_hash": "sha256:4fe047deffa99875f4c61f43e02ccedd2d17404bfa5feeaba2f4bfff46550f42",
+    "t_s": 4.031
+   },
+   {
+    "component": "executor",
+    "i": 15,
+    "kind": "REOBSERVE",
+    "matches_commitment": true,
+    "reasons": [],
+    "state_hash": "sha256:296ad5ad535a96f4f231112ef7ed29108e4f4134185dfcb6b913aba2bd507fa4",
+    "t_s": 4.031
+   },
+   {
+    "component": "target_evaluator",
+    "i": 16,
+    "kind": "TARGET_EVALUATE",
+    "start_gap": 0.07,
+    "start_q": [
+     1.7512818176292413,
+     -1.7840154740396779,
+     -1.2762632825853117
+    ],
+    "state_hash": "sha256:296ad5ad535a96f4f231112ef7ed29108e4f4134185dfcb6b913aba2bd507fa4",
+    "t_s": 4.031
+   },
+   {
+    "component": "episode",
+    "i": 17,
+    "kind": "FINISH",
+    "outcome": "SUCCESS",
+    "state_hash": "sha256:296ad5ad535a96f4f231112ef7ed29108e4f4134185dfcb6b913aba2bd507fa4",
+    "t_s": 5.845,
+    "target_reason": "ALL_SEGMENTS_CERTIFIED"
+   }
+  ],
+  "hashes": {
+   "action_context": "sha256:39134c5f53569245c8dfbe22c5b9fcd530301b04f70b34278ca14eba8d570600",
+   "observation": "sha256:2a6f4a51f90760d1db94d44b3bc6ec1cc70ee04f0bb0a206a5054be9d0eed44a"
+  },
+  "outcome": "SUCCESS",
+  "query_id": "g4a_r12",
+  "stratum": "ACCESS_DEPENDENCY",
+  "target": {
+   "complete_target_status": "VERIFIED_FEASIBLE",
+   "goal_achieved": true,
+   "home_return_status": "VERIFIED_FEASIBLE",
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "safe_retreat_status": "VERIFIED_FEASIBLE",
+   "seconds": 1.81,
+   "start": {
+    "attachment": "free",
+    "gripper_gap_m": 0.07,
+    "q": [
+     1.7512818176292413,
+     -1.7840154740396779,
+     -1.2762632825853117
+    ]
+   },
+   "status": "VERIFIED_FEASIBLE",
+   "wall_clock_dependent": false
+  },
+  "tried": [
+   {
+    "label": "single:o00>42",
+    "rank": 0,
+    "static": "VALID",
+    "stop": "ORDERS_EXHAUSTED"
+   },
+   {
+    "label": "single:o00>24",
+    "rank": 1,
+    "static": "VALID",
+    "stop": "ORDERS_EXHAUSTED"
+   },
+   {
+    "label": "pair:o00>42 o01>20",
+    "rank": 2,
+    "static": "VALID",
+    "stop": "ORDERS_EXHAUSTED"
+   },
+   {
+    "label": "pair:o00>27 o01>20",
+    "rank": 3,
+    "static": "VALID",
+    "stop": "ORDERS_EXHAUSTED"
+   },
+   {
+    "label": "pair:o00>42 o03>41",
+    "rank": 4,
+    "static": "VALID",
+    "stop": "WITNESS_FOUND"
+   }
+  ],
+  "wall_s": 60.46
+ },
+ "g4a_r13": {
+  "boundary_ok": true,
+  "commit": null,
+  "cpu_s": 3509.49,
+  "events": [
+   {
+    "candidates": 7,
+    "component": "proposal",
+    "i": 0,
+    "kind": "PROPOSE",
+    "proposal_hash": "sha256:995eda31a2ccd157f1f699e5277342e79d0400f8ca0dc6187937aaa71b2c3138",
+    "state_hash": "sha256:ee5555fe452ce57caef020946769c4fed15cd3c66351ae0d52ce875e8f9bcf8a",
+    "t_s": 0.0
+   },
+   {
+    "component": "static_screen",
+    "i": 1,
+    "kind": "STATIC_CHECK",
+    "rank": 0,
+    "state_hash": "sha256:4917c8b0d60590b4848043b67f78bae4a18e4f2b73717f7b438ad934bae1830c",
+    "status": "VALID",
+    "t_s": 0.0
+   },
+   {
+    "component": "relocation_planner",
+    "i": 2,
+    "kind": "REPAIR_PLAN",
+    "orders": 1,
+    "rank": 0,
+    "relocation_plans": 1,
+    "state_hash": "sha256:4917c8b0d60590b4848043b67f78bae4a18e4f2b73717f7b438ad934bae1830c",
+    "stop": "ORDERS_EXHAUSTED",
+    "t_s": 0.278
+   },
+   {
+    "component": "static_screen",
+    "i": 3,
+    "kind": "STATIC_CHECK",
+    "rank": 1,
+    "state_hash": "sha256:4917c8b0d60590b4848043b67f78bae4a18e4f2b73717f7b438ad934bae1830c",
+    "status": "VALID",
+    "t_s": 0.279
+   },
+   {
+    "component": "relocation_planner",
+    "i": 4,
+    "kind": "REPAIR_PLAN",
+    "orders": 1,
+    "rank": 1,
+    "relocation_plans": 1,
+    "state_hash": "sha256:4917c8b0d60590b4848043b67f78bae4a18e4f2b73717f7b438ad934bae1830c",
+    "stop": "ORDERS_EXHAUSTED",
+    "t_s": 279.727
+   },
+   {
+    "component": "static_screen",
+    "i": 5,
+    "kind": "STATIC_CHECK",
+    "rank": 2,
+    "state_hash": "sha256:4917c8b0d60590b4848043b67f78bae4a18e4f2b73717f7b438ad934bae1830c",
+    "status": "VALID",
+    "t_s": 279.728
+   },
+   {
+    "component": "relocation_planner",
+    "i": 6,
+    "kind": "REPAIR_PLAN",
+    "orders": 2,
+    "rank": 2,
+    "relocation_plans": 3,
+    "state_hash": "sha256:4917c8b0d60590b4848043b67f78bae4a18e4f2b73717f7b438ad934bae1830c",
+    "stop": "ORDERS_EXHAUSTED",
+    "t_s": 281.411
+   },
+   {
+    "component": "static_screen",
+    "i": 7,
+    "kind": "STATIC_CHECK",
+    "rank": 3,
+    "state_hash": "sha256:4917c8b0d60590b4848043b67f78bae4a18e4f2b73717f7b438ad934bae1830c",
+    "status": "VALID",
+    "t_s": 281.411
+   },
+   {
+    "component": "relocation_planner",
+    "i": 8,
+    "kind": "REPAIR_PLAN",
+    "orders": 2,
+    "rank": 3,
+    "relocation_plans": 3,
+    "state_hash": "sha256:4917c8b0d60590b4848043b67f78bae4a18e4f2b73717f7b438ad934bae1830c",
+    "stop": "ORDERS_EXHAUSTED",
+    "t_s": 563.824
+   },
+   {
+    "component": "static_screen",
+    "i": 9,
+    "kind": "STATIC_CHECK",
+    "rank": 4,
+    "state_hash": "sha256:4917c8b0d60590b4848043b67f78bae4a18e4f2b73717f7b438ad934bae1830c",
+    "status": "VALID",
+    "t_s": 563.824
+   },
+   {
+    "component": "relocation_planner",
+    "i": 10,
+    "kind": "REPAIR_PLAN",
+    "orders": 2,
+    "rank": 4,
+    "relocation_plans": 3,
+    "state_hash": "sha256:4917c8b0d60590b4848043b67f78bae4a18e4f2b73717f7b438ad934bae1830c",
+    "stop": "ORDERS_EXHAUSTED",
+    "t_s": 565.04
+   },
+   {
+    "component": "static_screen",
+    "i": 11,
+    "kind": "STATIC_CHECK",
+    "rank": 5,
+    "state_hash": "sha256:4917c8b0d60590b4848043b67f78bae4a18e4f2b73717f7b438ad934bae1830c",
+    "status": "VALID",
+    "t_s": 565.04
+   },
+   {
+    "component": "relocation_planner",
+    "i": 12,
+    "kind": "REPAIR_PLAN",
+    "orders": 5,
+    "rank": 5,
+    "relocation_plans": 9,
+    "state_hash": "sha256:4917c8b0d60590b4848043b67f78bae4a18e4f2b73717f7b438ad934bae1830c",
+    "stop": "ORDERS_EXHAUSTED",
+    "t_s": 579.81
+   },
+   {
+    "component": "static_screen",
+    "i": 13,
+    "kind": "STATIC_CHECK",
+    "rank": 6,
+    "state_hash": "sha256:4917c8b0d60590b4848043b67f78bae4a18e4f2b73717f7b438ad934bae1830c",
+    "status": "VALID",
+    "t_s": 579.81
+   },
+   {
+    "component": "relocation_planner",
+    "i": 14,
+    "kind": "REPAIR_PLAN",
+    "orders": 4,
+    "rank": 6,
+    "relocation_plans": 5,
+    "state_hash": "sha256:4917c8b0d60590b4848043b67f78bae4a18e4f2b73717f7b438ad934bae1830c",
+    "stop": "ORDERS_EXHAUSTED",
+    "t_s": 1789.058
+   },
+   {
+    "component": "episode",
+    "i": 15,
+    "kind": "FINISH",
+    "outcome": "NO_REPAIR_WITNESS_WITHIN_BUDGET",
+    "state_hash": "sha256:4917c8b0d60590b4848043b67f78bae4a18e4f2b73717f7b438ad934bae1830c",
+    "t_s": 1789.058
+   }
+  ],
+  "hashes": {
+   "action_context": "sha256:0a76211dc30105b85390cd0e29844ecfed3eacc0ef2b1eaa9c7a2770dc4d4747",
+   "observation": "sha256:ee5555fe452ce57caef020946769c4fed15cd3c66351ae0d52ce875e8f9bcf8a"
+  },
+  "outcome": "NO_REPAIR_WITNESS_WITHIN_BUDGET",
+  "query_id": "g4a_r13",
+  "stratum": "COMPETING_DESTINATIONS",
+  "target": null,
+  "tried": [
+   {
+    "label": "single:o00>24",
+    "rank": 0,
+    "static": "VALID",
+    "stop": "ORDERS_EXHAUSTED"
+   },
+   {
+    "label": "single:o00>56",
+    "rank": 1,
+    "static": "VALID",
+    "stop": "ORDERS_EXHAUSTED"
+   },
+   {
+    "label": "pair:o00>24 o04>19",
+    "rank": 2,
+    "static": "VALID",
+    "stop": "ORDERS_EXHAUSTED"
+   },
+   {
+    "label": "pair:o00>35 o04>19",
+    "rank": 3,
+    "static": "VALID",
+    "stop": "ORDERS_EXHAUSTED"
+   },
+   {
+    "label": "pair:o00>24 o03>50",
+    "rank": 4,
+    "static": "VALID",
+    "stop": "ORDERS_EXHAUSTED"
+   },
+   {
+    "label": "triple:o00>24 o03>50 o04>19",
+    "rank": 5,
+    "static": "VALID",
+    "stop": "ORDERS_EXHAUSTED"
+   },
+   {
+    "label": "triple:o00>16 o02>0 o05>60",
+    "rank": 6,
+    "static": "VALID",
+    "stop": "ORDERS_EXHAUSTED"
+   }
+  ],
+  "wall_s": 3509.87
+ },
+ "g4a_r14": {
+  "boundary_ok": true,
+  "commit": {
+   "cells": {},
+   "label": "all-stay",
+   "order": [],
+   "proposal_hash": "sha256:c29adc218de35c7b9cf35b3988fed586fbd49051ea880f3fe748944bf264c1e5",
+   "rank": 0,
+   "source_observation_hash": "sha256:dbd022557e5e49b61a5b698a05b580b9586834d720a3b43315023bbc16d42a9e",
+   "witness_hash": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "cpu_s": 601.19,
+  "events": [
+   {
+    "candidates": 12,
+    "component": "proposal",
+    "i": 0,
+    "kind": "PROPOSE",
+    "proposal_hash": "sha256:c29adc218de35c7b9cf35b3988fed586fbd49051ea880f3fe748944bf264c1e5",
+    "state_hash": "sha256:dbd022557e5e49b61a5b698a05b580b9586834d720a3b43315023bbc16d42a9e",
+    "t_s": 0.0
+   },
+   {
+    "component": "static_screen",
+    "i": 1,
+    "kind": "STATIC_CHECK",
+    "rank": 0,
+    "state_hash": "sha256:ac189bc97f491aa5fa33fe84927b62ecb4483ad88770ab4d758fca9f6ea91915",
+    "status": "VALID",
+    "t_s": 0.0
+   },
+   {
+    "component": "relocation_planner",
+    "i": 2,
+    "kind": "REPAIR_PLAN",
+    "orders": 1,
+    "rank": 0,
+    "relocation_plans": 0,
+    "state_hash": "sha256:ac189bc97f491aa5fa33fe84927b62ecb4483ad88770ab4d758fca9f6ea91915",
+    "stop": "WITNESS_FOUND",
+    "t_s": 0.0
+   },
+   {
+    "component": "commitment",
+    "i": 3,
+    "kind": "COMMIT",
+    "rank": 0,
+    "state_hash": "sha256:ac189bc97f491aa5fa33fe84927b62ecb4483ad88770ab4d758fca9f6ea91915",
+    "t_s": 0.0,
+    "witness_hash": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+   },
+   {
+    "component": "target_evaluator",
+    "i": 4,
+    "kind": "TARGET_EVALUATE",
+    "start_gap": 0.07,
+    "start_q": [
+     1.5707963267948966,
+     1.5707963267948966,
+     1.5707963267948966
+    ],
+    "state_hash": "sha256:ac189bc97f491aa5fa33fe84927b62ecb4483ad88770ab4d758fca9f6ea91915",
+    "t_s": 0.001
+   },
+   {
+    "component": "episode",
+    "i": 5,
+    "kind": "FINISH",
+    "outcome": "TARGET_UNRESOLVED",
+    "state_hash": "sha256:ac189bc97f491aa5fa33fe84927b62ecb4483ad88770ab4d758fca9f6ea91915",
+    "t_s": 0.221,
+    "target_reason": "PLANNER_BUDGET"
+   }
+  ],
+  "hashes": {
+   "action_context": "sha256:59027fbbbacba7083150508c74410503cc7b5c5143b792b3f1ee428bcb09d2bd",
+   "observation": "sha256:dbd022557e5e49b61a5b698a05b580b9586834d720a3b43315023bbc16d42a9e"
+  },
+  "outcome": "TARGET_UNRESOLVED",
+  "query_id": "g4a_r14",
+  "stratum": "NUISANCE_CONTROL",
+  "target": {
+   "complete_target_status": "UNRESOLVED",
+   "goal_achieved": false,
+   "home_return_status": "NOT_RUN",
+   "reason": "PLANNER_BUDGET",
+   "safe_retreat_status": "NOT_REACHED",
+   "seconds": 0.22,
+   "start": {
+    "attachment": "free",
+    "gripper_gap_m": 0.07,
+    "q": [
+     1.5707963267948966,
+     1.5707963267948966,
+     1.5707963267948966
+    ]
+   },
+   "status": "UNRESOLVED",
+   "wall_clock_dependent": false
+  },
+  "tried": [
+   {
+    "label": "all-stay",
+    "rank": 0,
+    "static": "VALID",
+    "stop": "WITNESS_FOUND"
+   }
+  ],
+  "wall_s": 601.33
+ },
+ "g4a_r15": {
+  "boundary_ok": true,
+  "commit": {
+   "cells": {},
+   "label": "all-stay",
+   "order": [],
+   "proposal_hash": "sha256:4a0601bc314529140943818d7033eaa451ff3ba453f7830ab9e85ce24dca7d50",
+   "rank": 0,
+   "source_observation_hash": "sha256:f3d785a0978a23e49b208001e51c552e309fae637f45211262807086b0c07705",
+   "witness_hash": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "cpu_s": 296.71,
+  "events": [
+   {
+    "candidates": 12,
+    "component": "proposal",
+    "i": 0,
+    "kind": "PROPOSE",
+    "proposal_hash": "sha256:4a0601bc314529140943818d7033eaa451ff3ba453f7830ab9e85ce24dca7d50",
+    "state_hash": "sha256:f3d785a0978a23e49b208001e51c552e309fae637f45211262807086b0c07705",
+    "t_s": 0.0
+   },
+   {
+    "component": "static_screen",
+    "i": 1,
+    "kind": "STATIC_CHECK",
+    "rank": 0,
+    "state_hash": "sha256:8fbdfd9d98c98765f20172ebf9093dd88b26c08f4b6fea67a14ebc23d48714a0",
+    "status": "VALID",
+    "t_s": 0.0
+   },
+   {
+    "component": "relocation_planner",
+    "i": 2,
+    "kind": "REPAIR_PLAN",
+    "orders": 1,
+    "rank": 0,
+    "relocation_plans": 0,
+    "state_hash": "sha256:8fbdfd9d98c98765f20172ebf9093dd88b26c08f4b6fea67a14ebc23d48714a0",
+    "stop": "WITNESS_FOUND",
+    "t_s": 0.0
+   },
+   {
+    "component": "commitment",
+    "i": 3,
+    "kind": "COMMIT",
+    "rank": 0,
+    "state_hash": "sha256:8fbdfd9d98c98765f20172ebf9093dd88b26c08f4b6fea67a14ebc23d48714a0",
+    "t_s": 0.0,
+    "witness_hash": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+   },
+   {
+    "component": "target_evaluator",
+    "i": 4,
+    "kind": "TARGET_EVALUATE",
+    "start_gap": 0.07,
+    "start_q": [
+     1.5707963267948966,
+     1.5707963267948966,
+     1.5707963267948966
+    ],
+    "state_hash": "sha256:8fbdfd9d98c98765f20172ebf9093dd88b26c08f4b6fea67a14ebc23d48714a0",
+    "t_s": 0.0
+   },
+   {
+    "component": "episode",
+    "i": 5,
+    "kind": "FINISH",
+    "outcome": "TARGET_UNRESOLVED",
+    "state_hash": "sha256:8fbdfd9d98c98765f20172ebf9093dd88b26c08f4b6fea67a14ebc23d48714a0",
+    "t_s": 0.257,
+    "target_reason": "PLANNER_BUDGET"
+   }
+  ],
+  "hashes": {
+   "action_context": "sha256:a816faeef2ad038953d7fdf334c02f7ef4f8ae1dbd3168080d5ebf911a2ba4bf",
+   "observation": "sha256:f3d785a0978a23e49b208001e51c552e309fae637f45211262807086b0c07705"
+  },
+  "outcome": "TARGET_UNRESOLVED",
+  "query_id": "g4a_r15",
+  "stratum": "UNOCCUPIED_GOAL",
+  "target": {
+   "complete_target_status": "UNRESOLVED",
+   "goal_achieved": false,
+   "home_return_status": "NOT_RUN",
+   "reason": "PLANNER_BUDGET",
+   "safe_retreat_status": "NOT_REACHED",
+   "seconds": 0.26,
+   "start": {
+    "attachment": "free",
+    "gripper_gap_m": 0.07,
+    "q": [
+     1.5707963267948966,
+     1.5707963267948966,
+     1.5707963267948966
+    ]
+   },
+   "status": "UNRESOLVED",
+   "wall_clock_dependent": false
+  },
+  "tried": [
+   {
+    "label": "all-stay",
+    "rank": 0,
+    "static": "VALID",
+    "stop": "WITNESS_FOUND"
+   }
+  ],
+  "wall_s": 296.79
+ },
+ "g4a_r16": {
+  "boundary_ok": true,
+  "commit": {
+   "cells": {
+    "o00": 11
+   },
+   "label": "single:o00>11",
+   "order": [
+    [
+     "o00",
+     11
+    ]
+   ],
+   "proposal_hash": "sha256:9f1e4883c1dd4741fb5284235cef908fa48c406a4ea711f9f9913303d37318f0",
+   "rank": 0,
+   "source_observation_hash": "sha256:694864df15f7a18e19f16426254a7095e18a9f996aa7a92b875838d534d63378",
+   "witness_hash": "sha256:ad61a8f0af1ad1702ce5d3a9ac8f3738d6e95eb5b9da986b97c36d1fb0f55478"
+  },
+  "cpu_s": 266.44,
+  "events": [
+   {
+    "candidates": 8,
+    "component": "proposal",
+    "i": 0,
+    "kind": "PROPOSE",
+    "proposal_hash": "sha256:9f1e4883c1dd4741fb5284235cef908fa48c406a4ea711f9f9913303d37318f0",
+    "state_hash": "sha256:694864df15f7a18e19f16426254a7095e18a9f996aa7a92b875838d534d63378",
+    "t_s": 0.0
+   },
+   {
+    "component": "static_screen",
+    "i": 1,
+    "kind": "STATIC_CHECK",
+    "rank": 0,
+    "state_hash": "sha256:f8af9852a85dc7c7b454c1a69708e4a23b98c264af89ad8ecd42b58cd146df0f",
+    "status": "VALID",
+    "t_s": 0.0
+   },
+   {
+    "component": "relocation_planner",
+    "i": 2,
+    "kind": "REPAIR_PLAN",
+    "orders": 1,
+    "rank": 0,
+    "relocation_plans": 1,
+    "state_hash": "sha256:f8af9852a85dc7c7b454c1a69708e4a23b98c264af89ad8ecd42b58cd146df0f",
+    "stop": "WITNESS_FOUND",
+    "t_s": 3.284
+   },
+   {
+    "component": "commitment",
+    "i": 3,
+    "kind": "COMMIT",
+    "rank": 0,
+    "state_hash": "sha256:f8af9852a85dc7c7b454c1a69708e4a23b98c264af89ad8ecd42b58cd146df0f",
+    "t_s": 3.285,
+    "witness_hash": "sha256:ad61a8f0af1ad1702ce5d3a9ac8f3738d6e95eb5b9da986b97c36d1fb0f55478"
+   },
+   {
+    "cell": 11,
+    "certified": true,
+    "component": "executor",
+    "i": 4,
+    "kind": "RELOCATE",
+    "object": "o00",
+    "state_hash": "sha256:f8af9852a85dc7c7b454c1a69708e4a23b98c264af89ad8ecd42b58cd146df0f",
+    "t_s": 3.38
+   },
+   {
+    "component": "executor",
+    "i": 5,
+    "kind": "REOBSERVE",
+    "matches_commitment": true,
+    "reasons": [],
+    "state_hash": "sha256:52b6180fbf40043ddc38795df2818d000406350587cc22af1585f923895f19c8",
+    "t_s": 3.38
+   },
+   {
+    "component": "target_evaluator",
+    "i": 6,
+    "kind": "TARGET_EVALUATE",
+    "start_gap": 0.07,
+    "start_q": [
+     -1.3548980349111228,
+     1.1120759653836387,
+     1.8136183963223802
+    ],
+    "state_hash": "sha256:52b6180fbf40043ddc38795df2818d000406350587cc22af1585f923895f19c8",
+    "t_s": 3.38
+   },
+   {
+    "component": "episode",
+    "i": 7,
+    "kind": "FINISH",
+    "outcome": "SUCCESS",
+    "state_hash": "sha256:52b6180fbf40043ddc38795df2818d000406350587cc22af1585f923895f19c8",
+    "t_s": 13.973,
+    "target_reason": "ALL_SEGMENTS_CERTIFIED"
+   }
+  ],
+  "hashes": {
+   "action_context": "sha256:e72d9aa55e181b4642fd16f4826764df52e5fe950d285a30353ce2add4cb7590",
+   "observation": "sha256:694864df15f7a18e19f16426254a7095e18a9f996aa7a92b875838d534d63378"
+  },
+  "outcome": "SUCCESS",
+  "query_id": "g4a_r16",
+  "stratum": "OCCUPIED_GOAL",
+  "target": {
+   "complete_target_status": "VERIFIED_FEASIBLE",
+   "goal_achieved": true,
+   "home_return_status": "VERIFIED_FEASIBLE",
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "safe_retreat_status": "VERIFIED_FEASIBLE",
+   "seconds": 10.59,
+   "start": {
+    "attachment": "free",
+    "gripper_gap_m": 0.07,
+    "q": [
+     -1.3548980349111228,
+     1.1120759653836387,
+     1.8136183963223802
+    ]
+   },
+   "status": "VERIFIED_FEASIBLE",
+   "wall_clock_dependent": false
+  },
+  "tried": [
+   {
+    "label": "single:o00>11",
+    "rank": 0,
+    "static": "VALID",
+    "stop": "WITNESS_FOUND"
+   }
+  ],
+  "wall_s": 266.47
+ },
+ "g4a_r17": {
+  "boundary_ok": true,
+  "commit": {
+   "cells": {
+    "o00": 58
+   },
+   "label": "single:o00>58",
+   "order": [
+    [
+     "o00",
+     58
+    ]
+   ],
+   "proposal_hash": "sha256:802e1c09ddfa8707a12237724ace36c39039d80366de9b5e2c684dd496cbd38b",
+   "rank": 0,
+   "source_observation_hash": "sha256:cfae8842228de022d78c5c040b2071f40c5d0bbc812ad40ae4407fbfa69b27a6",
+   "witness_hash": "sha256:bb5a01694d043475856986be345ab80a6104e48183c8b8e0cb320f93c337637e"
+  },
+  "cpu_s": 870.62,
+  "events": [
+   {
+    "candidates": 8,
+    "component": "proposal",
+    "i": 0,
+    "kind": "PROPOSE",
+    "proposal_hash": "sha256:802e1c09ddfa8707a12237724ace36c39039d80366de9b5e2c684dd496cbd38b",
+    "state_hash": "sha256:cfae8842228de022d78c5c040b2071f40c5d0bbc812ad40ae4407fbfa69b27a6",
+    "t_s": 0.0
+   },
+   {
+    "component": "static_screen",
+    "i": 1,
+    "kind": "STATIC_CHECK",
+    "rank": 0,
+    "state_hash": "sha256:b92e2c346492b15b5dafc66ea95f13a4bc40e626b27f4b5bce6c9e105f2bfd63",
+    "status": "VALID",
+    "t_s": 0.0
+   },
+   {
+    "component": "relocation_planner",
+    "i": 2,
+    "kind": "REPAIR_PLAN",
+    "orders": 1,
+    "rank": 0,
+    "relocation_plans": 1,
+    "state_hash": "sha256:b92e2c346492b15b5dafc66ea95f13a4bc40e626b27f4b5bce6c9e105f2bfd63",
+    "stop": "WITNESS_FOUND",
+    "t_s": 0.514
+   },
+   {
+    "component": "commitment",
+    "i": 3,
+    "kind": "COMMIT",
+    "rank": 0,
+    "state_hash": "sha256:b92e2c346492b15b5dafc66ea95f13a4bc40e626b27f4b5bce6c9e105f2bfd63",
+    "t_s": 0.514,
+    "witness_hash": "sha256:bb5a01694d043475856986be345ab80a6104e48183c8b8e0cb320f93c337637e"
+   },
+   {
+    "cell": 58,
+    "certified": true,
+    "component": "executor",
+    "i": 4,
+    "kind": "RELOCATE",
+    "object": "o00",
+    "state_hash": "sha256:b92e2c346492b15b5dafc66ea95f13a4bc40e626b27f4b5bce6c9e105f2bfd63",
+    "t_s": 0.569
+   },
+   {
+    "component": "executor",
+    "i": 5,
+    "kind": "REOBSERVE",
+    "matches_commitment": true,
+    "reasons": [],
+    "state_hash": "sha256:914f9eb36195c6d4f5708f361d728db4013b54b88f07a8d5e232b4eff2652f4d",
+    "t_s": 0.569
+   },
+   {
+    "component": "target_evaluator",
+    "i": 6,
+    "kind": "TARGET_EVALUATE",
+    "start_gap": 0.07,
+    "start_q": [
+     2.1864934097055695,
+     -1.9395071316309533,
+     -0.7705850536729155
+    ],
+    "state_hash": "sha256:914f9eb36195c6d4f5708f361d728db4013b54b88f07a8d5e232b4eff2652f4d",
+    "t_s": 0.569
+   },
+   {
+    "component": "episode",
+    "i": 7,
+    "kind": "FINISH",
+    "outcome": "TARGET_CERTIFIED_INFEASIBLE",
+    "state_hash": "sha256:914f9eb36195c6d4f5708f361d728db4013b54b88f07a8d5e232b4eff2652f4d",
+    "t_s": 0.581,
+    "target_reason": "NO_PICK_CANDIDATE"
+   }
+  ],
+  "hashes": {
+   "action_context": "sha256:79222ce1bd22c48ae67adf6004e519d5aa4cb736bc7d7eaba3f602c1f9465dc6",
+   "observation": "sha256:cfae8842228de022d78c5c040b2071f40c5d0bbc812ad40ae4407fbfa69b27a6"
+  },
+  "outcome": "TARGET_CERTIFIED_INFEASIBLE",
+  "query_id": "g4a_r17",
+  "stratum": "ACCESS_DEPENDENCY",
+  "target": {
+   "complete_target_status": "CERTIFIED_INFEASIBLE",
+   "goal_achieved": false,
+   "home_return_status": "NOT_RUN",
+   "reason": "NO_PICK_CANDIDATE",
+   "safe_retreat_status": "NOT_REACHED",
+   "seconds": 0.01,
+   "start": {
+    "attachment": "free",
+    "gripper_gap_m": 0.07,
+    "q": [
+     2.1864934097055695,
+     -1.9395071316309533,
+     -0.7705850536729155
+    ]
+   },
+   "status": "CERTIFIED_INFEASIBLE",
+   "wall_clock_dependent": false
+  },
+  "tried": [
+   {
+    "label": "single:o00>58",
+    "rank": 0,
+    "static": "VALID",
+    "stop": "WITNESS_FOUND"
+   }
+  ],
+  "wall_s": 870.7
+ },
+ "g4a_r18": {
+  "boundary_ok": true,
+  "commit": {
+   "cells": {
+    "o00": 40,
+    "o03": 41
+   },
+   "label": "pair:o00>40 o03>41",
+   "order": [
+    [
+     "o03",
+     41
+    ],
+    [
+     "o00",
+     40
+    ]
+   ],
+   "proposal_hash": "sha256:4b659fa095b0d333aa43739f5811cf7ad7d82270c4f7d0fc83ccfaccf0a79eaa",
+   "rank": 2,
+   "source_observation_hash": "sha256:10cc3f62d4202a0b2c3938b7dfe6411f936b6d841d76dadff09b7f26a131f1c0",
+   "witness_hash": "sha256:a065d21da2033e585a6ba946937f72e9b271fc682d7276bfdb6255b8b1a6ccc3"
+  },
+  "cpu_s": 25.85,
+  "events": [
+   {
+    "candidates": 7,
+    "component": "proposal",
+    "i": 0,
+    "kind": "PROPOSE",
+    "proposal_hash": "sha256:4b659fa095b0d333aa43739f5811cf7ad7d82270c4f7d0fc83ccfaccf0a79eaa",
+    "state_hash": "sha256:10cc3f62d4202a0b2c3938b7dfe6411f936b6d841d76dadff09b7f26a131f1c0",
+    "t_s": 0.0
+   },
+   {
+    "component": "static_screen",
+    "i": 1,
+    "kind": "STATIC_CHECK",
+    "rank": 0,
+    "state_hash": "sha256:4ae492099e75bc467115fcc759fb4742771f199e47bcbcf15c14261023203a07",
+    "status": "VALID",
+    "t_s": 0.0
+   },
+   {
+    "component": "relocation_planner",
+    "i": 2,
+    "kind": "REPAIR_PLAN",
+    "orders": 1,
+    "rank": 0,
+    "relocation_plans": 1,
+    "state_hash": "sha256:4ae492099e75bc467115fcc759fb4742771f199e47bcbcf15c14261023203a07",
+    "stop": "ORDERS_EXHAUSTED",
+    "t_s": 0.022
+   },
+   {
+    "component": "static_screen",
+    "i": 3,
+    "kind": "STATIC_CHECK",
+    "rank": 1,
+    "state_hash": "sha256:4ae492099e75bc467115fcc759fb4742771f199e47bcbcf15c14261023203a07",
+    "status": "VALID",
+    "t_s": 0.022
+   },
+   {
+    "component": "relocation_planner",
+    "i": 4,
+    "kind": "REPAIR_PLAN",
+    "orders": 1,
+    "rank": 1,
+    "relocation_plans": 1,
+    "state_hash": "sha256:4ae492099e75bc467115fcc759fb4742771f199e47bcbcf15c14261023203a07",
+    "stop": "ORDERS_EXHAUSTED",
+    "t_s": 0.044
+   },
+   {
+    "component": "static_screen",
+    "i": 5,
+    "kind": "STATIC_CHECK",
+    "rank": 2,
+    "state_hash": "sha256:4ae492099e75bc467115fcc759fb4742771f199e47bcbcf15c14261023203a07",
+    "status": "VALID",
+    "t_s": 0.044
+   },
+   {
+    "component": "relocation_planner",
+    "i": 6,
+    "kind": "REPAIR_PLAN",
+    "orders": 2,
+    "rank": 2,
+    "relocation_plans": 3,
+    "state_hash": "sha256:4ae492099e75bc467115fcc759fb4742771f199e47bcbcf15c14261023203a07",
+    "stop": "WITNESS_FOUND",
+    "t_s": 2.711
+   },
+   {
+    "component": "commitment",
+    "i": 7,
+    "kind": "COMMIT",
+    "rank": 2,
+    "state_hash": "sha256:4ae492099e75bc467115fcc759fb4742771f199e47bcbcf15c14261023203a07",
+    "t_s": 2.711,
+    "witness_hash": "sha256:a065d21da2033e585a6ba946937f72e9b271fc682d7276bfdb6255b8b1a6ccc3"
+   },
+   {
+    "cell": 41,
+    "certified": true,
+    "component": "executor",
+    "i": 8,
+    "kind": "RELOCATE",
+    "object": "o03",
+    "state_hash": "sha256:4ae492099e75bc467115fcc759fb4742771f199e47bcbcf15c14261023203a07",
+    "t_s": 2.757
+   },
+   {
+    "component": "executor",
+    "i": 9,
+    "kind": "REOBSERVE",
+    "matches_commitment": true,
+    "reasons": [],
+    "state_hash": "sha256:e52596ab2572072ebd797b6b3e130b1fcbb6b231cc271e4b1be1544a1ed1f961",
+    "t_s": 2.757
+   },
+   {
+    "cell": 40,
+    "certified": true,
+    "component": "executor",
+    "i": 10,
+    "kind": "RELOCATE",
+    "object": "o00",
+    "state_hash": "sha256:e52596ab2572072ebd797b6b3e130b1fcbb6b231cc271e4b1be1544a1ed1f961",
+    "t_s": 3.121
+   },
+   {
+    "component": "executor",
+    "i": 11,
+    "kind": "REOBSERVE",
+    "matches_commitment": true,
+    "reasons": [],
+    "state_hash": "sha256:d309b1b836396afe34d72c7d28e2f8309ea6c6b9239fc88f2e2cc9524b09b204",
+    "t_s": 3.121
+   },
+   {
+    "component": "target_evaluator",
+    "i": 12,
+    "kind": "TARGET_EVALUATE",
+    "start_gap": 0.07,
+    "start_q": [
+     1.772870609778737,
+     -1.8005319474560546,
+     -1.8049343769167274
+    ],
+    "state_hash": "sha256:d309b1b836396afe34d72c7d28e2f8309ea6c6b9239fc88f2e2cc9524b09b204",
+    "t_s": 3.121
+   },
+   {
+    "component": "episode",
+    "i": 13,
+    "kind": "FINISH",
+    "outcome": "TARGET_CERTIFIED_INFEASIBLE",
+    "state_hash": "sha256:d309b1b836396afe34d72c7d28e2f8309ea6c6b9239fc88f2e2cc9524b09b204",
+    "t_s": 3.33,
+    "target_reason": "ALL_CONNECTORS_CERTIFIED_BLOCKED"
+   }
+  ],
+  "hashes": {
+   "action_context": "sha256:3877c30ece3ee8827c33c9817e7d3899c0035bac92ef26cf8db5f92dbb294294",
+   "observation": "sha256:10cc3f62d4202a0b2c3938b7dfe6411f936b6d841d76dadff09b7f26a131f1c0"
+  },
+  "outcome": "TARGET_CERTIFIED_INFEASIBLE",
+  "query_id": "g4a_r18",
+  "stratum": "COMPETING_DESTINATIONS",
+  "target": {
+   "complete_target_status": "CERTIFIED_INFEASIBLE",
+   "goal_achieved": false,
+   "home_return_status": "NOT_RUN",
+   "reason": "ALL_CONNECTORS_CERTIFIED_BLOCKED",
+   "safe_retreat_status": "NOT_REACHED",
+   "seconds": 0.21,
+   "start": {
+    "attachment": "free",
+    "gripper_gap_m": 0.07,
+    "q": [
+     1.772870609778737,
+     -1.8005319474560546,
+     -1.8049343769167274
+    ]
+   },
+   "status": "CERTIFIED_INFEASIBLE",
+   "wall_clock_dependent": false
+  },
+  "tried": [
+   {
+    "label": "single:o00>40",
+    "rank": 0,
+    "static": "VALID",
+    "stop": "ORDERS_EXHAUSTED"
+   },
+   {
+    "label": "single:o00>8",
+    "rank": 1,
+    "static": "VALID",
+    "stop": "ORDERS_EXHAUSTED"
+   },
+   {
+    "label": "pair:o00>40 o03>41",
+    "rank": 2,
+    "static": "VALID",
+    "stop": "WITNESS_FOUND"
+   }
+  ],
+  "wall_s": 25.85
+ },
+ "g4a_r19": {
+  "boundary_ok": true,
+  "commit": {
+   "cells": {},
+   "label": "all-stay",
+   "order": [],
+   "proposal_hash": "sha256:a7cce9bb776effba238f72a8ad96dbbe103e5daf26c8c49fcacdce233a37f4db",
+   "rank": 0,
+   "source_observation_hash": "sha256:1154263f2e50557455dc14f4376f50739fb517ced5a5ccb4476c998719397f2d",
+   "witness_hash": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "cpu_s": 22.52,
+  "events": [
+   {
+    "candidates": 12,
+    "component": "proposal",
+    "i": 0,
+    "kind": "PROPOSE",
+    "proposal_hash": "sha256:a7cce9bb776effba238f72a8ad96dbbe103e5daf26c8c49fcacdce233a37f4db",
+    "state_hash": "sha256:1154263f2e50557455dc14f4376f50739fb517ced5a5ccb4476c998719397f2d",
+    "t_s": 0.0
+   },
+   {
+    "component": "static_screen",
+    "i": 1,
+    "kind": "STATIC_CHECK",
+    "rank": 0,
+    "state_hash": "sha256:b9b3ea7587a39d2f667bd9a301f3f2a92364dfbe3ed0564dac0d780b3a9ec866",
+    "status": "VALID",
+    "t_s": 0.0
+   },
+   {
+    "component": "relocation_planner",
+    "i": 2,
+    "kind": "REPAIR_PLAN",
+    "orders": 1,
+    "rank": 0,
+    "relocation_plans": 0,
+    "state_hash": "sha256:b9b3ea7587a39d2f667bd9a301f3f2a92364dfbe3ed0564dac0d780b3a9ec866",
+    "stop": "WITNESS_FOUND",
+    "t_s": 0.0
+   },
+   {
+    "component": "commitment",
+    "i": 3,
+    "kind": "COMMIT",
+    "rank": 0,
+    "state_hash": "sha256:b9b3ea7587a39d2f667bd9a301f3f2a92364dfbe3ed0564dac0d780b3a9ec866",
+    "t_s": 0.0,
+    "witness_hash": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+   },
+   {
+    "component": "target_evaluator",
+    "i": 4,
+    "kind": "TARGET_EVALUATE",
+    "start_gap": 0.07,
+    "start_q": [
+     1.5707963267948966,
+     1.5707963267948966,
+     1.5707963267948966
+    ],
+    "state_hash": "sha256:b9b3ea7587a39d2f667bd9a301f3f2a92364dfbe3ed0564dac0d780b3a9ec866",
+    "t_s": 0.001
+   },
+   {
+    "component": "episode",
+    "i": 5,
+    "kind": "FINISH",
+    "outcome": "SUCCESS",
+    "state_hash": "sha256:b9b3ea7587a39d2f667bd9a301f3f2a92364dfbe3ed0564dac0d780b3a9ec866",
+    "t_s": 0.65,
+    "target_reason": "ALL_SEGMENTS_CERTIFIED"
+   }
+  ],
+  "hashes": {
+   "action_context": "sha256:79222ce1bd22c48ae67adf6004e519d5aa4cb736bc7d7eaba3f602c1f9465dc6",
+   "observation": "sha256:1154263f2e50557455dc14f4376f50739fb517ced5a5ccb4476c998719397f2d"
+  },
+  "outcome": "SUCCESS",
+  "query_id": "g4a_r19",
+  "stratum": "NUISANCE_CONTROL",
+  "target": {
+   "complete_target_status": "VERIFIED_FEASIBLE",
+   "goal_achieved": true,
+   "home_return_status": "VERIFIED_FEASIBLE",
+   "reason": "ALL_SEGMENTS_CERTIFIED",
+   "safe_retreat_status": "VERIFIED_FEASIBLE",
+   "seconds": 0.65,
+   "start": {
+    "attachment": "free",
+    "gripper_gap_m": 0.07,
+    "q": [
+     1.5707963267948966,
+     1.5707963267948966,
+     1.5707963267948966
+    ]
+   },
+   "status": "VERIFIED_FEASIBLE",
+   "wall_clock_dependent": false
+  },
+  "tried": [
+   {
+    "label": "all-stay",
+    "rank": 0,
+    "static": "VALID",
+    "stop": "WITNESS_FOUND"
+   }
+  ],
+  "wall_s": 22.53
+ }
+}

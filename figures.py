@@ -8,6 +8,13 @@ path itself); object poses follow from the phase context and the attachment.
 """
 from __future__ import annotations
 
+import csv
+import json
+from multiprocessing import Pool
+from pathlib import Path
+import config as cf
+import scene as sc
+
 import math
 
 import numpy as np
@@ -191,3 +198,67 @@ def g1_figures(out, robot, cfg, fixtures: dict, done: dict) -> None:
         dg.rejection_panel(axes[1], robot, clutter["scene"], cfg, res)
     f.savefig(out / "clutter.png", dpi=90)
     plt.close(f)
+
+
+# ------------------------------------------------------------------ G1 command (moved from run.py at G4A)
+def cmd_check(args) -> int:
+    cfg = cf.load_config(args.config)
+    fixtures = cf.validate_fixtures(json.loads(Path(args.fixtures).read_text())["fixtures"])
+    out = Path(args.out)
+    out.mkdir(parents=True, exist_ok=True)
+    robot, chash, rhash = ge.make_robot(cfg), cf.config_hash(cfg), cf.robot_profile_hash(cfg)
+    with Pool(args.workers) as pool:
+        done = {tid: (s, res, secs) for tid, s, res, secs in pool.imap_unordered(sk.run_task, sk.g1_jobs(cfg, fixtures))}
+    tasks, arrays, scenes = {}, {}, {}
+    for tid in sorted(done):
+        s, res, secs = done[tid]
+        tasks[tid] = {**sk.summary(res, sc.scene_hash(s), rhash), "seconds": round(secs, 1),
+                      "scene_hash": sc.scene_hash(s), "root_id": s.root_id}
+        scenes[tid] = sc.scene_to_dict(s)
+        if res.traj is not None:
+            arrays.update({f"{tid}__{k}": v for k, v in res.traj.arrays().items()})
+    if not args.no_figures:
+        g1_figures(out, robot, cfg, fixtures, done)
+    f = dg.ik_tracking_figure(robot, cfg, dg.ik_examples(robot, cfg, done))
+    f.savefig(out / "ik_tracking.png", dpi=90)
+    extent = traj_extent(robot, done)
+    xl, yl = cfg["render"]["overview_xlim_m"], cfg["render"]["overview_ylim_m"]
+    nominal = "G1_S1_t%d" % fixtures["G1_S1"]["tasks"].index(fixtures["G1_S1"]["nominal_task"])
+    audit = [t for k, t in tasks.items() if k.startswith("audit_")]
+    corners = {k: t["status"] for k, t in tasks.items() if k.startswith(("G1_D0", "G1_S1")) and k != nominal}
+    gate = {"home_clear_of_all_64_cells": sk.home_check(cfg)["home"]["status"] == ge.CLEAR,
+            "all_64_cells_verified_obstacle_free": all(t["status"] == sk.VERIFIED for t in audit),
+            "corner_tasks_verified_D0_and_S1": all(v == sk.VERIFIED for v in corners.values()),
+            "nominal_skill_verified": tasks[nominal]["status"] == sk.VERIFIED,
+            "robot_frames_within_fixed_axes": bool(xl[0] <= extent[0] and extent[1] <= xl[1]
+                                                   and yl[0] <= extent[2] and extent[3] <= yl[1])}
+    sc.save_scene_json(sc.scene_from_dict(scenes[nominal]), out / "scene.json")
+    cf.write_json(out / "scenes.json", scenes)
+    np.savez_compressed(out / "arrays.npz", **arrays)
+    cf.write_json(out / "config.json", {"config_hash": chash, "config": cfg})
+    counts = {st: sum(t["status"] == st for t in audit) for st in (sk.VERIFIED, sk.INFEASIBLE, sk.UNRESOLVED)}
+    cf.write_json(out / "result.json", {
+        "stage": "G1", "gate_checks_passed": all(gate.values()), "gate": gate, "home_check": sk.home_check(cfg),
+        "config_hash": chash, "robot_profile_hash": rhash, "robot_profile_status": "TESTED_G1",
+        "nominal_task": nominal, "nominal_action_hash": tasks[nominal]["action_hash"],
+        "audit_counts": counts, "robot_extent_m": extent, "tasks": tasks,
+        "wall_clock_dependent_tasks": sorted(k for k, t in tasks.items() if t["wall_clock_dependent"]),
+        "target_replay_status": "KINEMATIC_REPLAY_CERTIFIED (see replay)", "simulation_replay_status": "NOT_RUN",
+        "physical_execution_status": "NOT_RUN"})
+    with open(out / "metrics.csv", "w", newline="") as f:
+        w = csv.writer(f)
+        w.writerow(["task", "status", "reason", "waypoints", "seconds"])
+        w.writerows([[k, t["status"], t["reason"], t["waypoints"], t["seconds"]] for k, t in tasks.items()])
+    cf.write_manifest(out, {"planner_base": cfg["planner2d"]["seed"], "per_query": "crc32(task/connector)"},
+                    chash, {"nominal_action_hash": tasks[nominal]["action_hash"]})
+    print(json.dumps({"out": str(out), "gate": gate, "audit_counts": counts}))
+    return 0 if all(gate.values()) else 1
+
+
+def traj_extent(robot, done) -> list[float]:
+    """Bounding box of every body over every recorded waypoint and figure sample."""
+    boxes = [viz.robot_extent(robot, q, g) for _, res, _ in done.values() if res.traj is not None
+             for q, g, _ in mo.samples(res.traj.arrays(), 120)]
+    boxes.append(viz.robot_extent(robot, robot.q_home, robot.open_gap))
+    b = np.array(boxes)
+    return [float(b[:, 0].min()), float(b[:, 1].max()), float(b[:, 2].min()), float(b[:, 3].max())]

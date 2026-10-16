@@ -6,6 +6,15 @@ support only; robot motion (relocation panels, repair GIFs) lives in repair_figu
 """
 from __future__ import annotations
 
+import csv
+import json
+from multiprocessing import Pool
+from pathlib import Path
+import scipy
+import config as cf
+import geometry as ge
+import interventions as iv
+
 from collections import Counter
 
 import numpy as np
@@ -232,3 +241,47 @@ def g3_figures(out, robot, cfg, res: dict) -> None:
            if ok[n]["search"] and ok[n]["search"]["witness"]]
     save(summary_figure(robot, cfg, summary_rows(res), wit), "F_verification_summary.png")
     save(attempts_figure(attempt_rows(res)), "F_attempts.png")
+
+
+# ------------------------------------------------------------------ G3 command (moved from run.py at G4A)
+def run_repair(job):
+    """Pool worker: A0 terminal problem, executable repair search and replay for one G3 fixture."""
+    cfg, name, fx = job
+    try:
+        return name, vf.run_fixture(ge.make_robot(cfg), cfg, name, fx)
+    except iv.FixtureUnavailable as e:
+        return name, {"name": name, "unavailable": f"CONSTRUCTION_UNAVAILABLE: {e}"}
+
+
+def cmd_solve(args) -> int:
+    cfg = cf.load_config(args.config)
+    fixtures = cf.validate_fixtures(json.loads(Path(args.fixtures).read_text())["fixtures"])
+    g3 = {k: fx for k, fx in fixtures.items() if fx["stage"] == "G3"}
+    out = Path(args.out)
+    out.mkdir(parents=True, exist_ok=True)
+    robot, chash, rhash = ge.make_robot(cfg), cf.config_hash(cfg), cf.robot_profile_hash(cfg)
+    with Pool(len(g3)) as pool:
+        res = dict(pool.imap_unordered(run_repair, [(cfg, k, fx) for k, fx in g3.items()]))
+    records, tasks, scenes, arrays = vf.archive(res, rhash)
+    g3_figures(out, robot, cfg, res)
+    rows = summary_rows(res)
+    ok = all(r["replay"]["replay_passed"] for r in res.values() if r.get("replay"))
+    cf.write_json(out / "config.json", {"config_hash": chash, "config": cfg})
+    cf.write_json(out / "scenes.json", scenes)
+    np.savez_compressed(out / "arrays.npz", **arrays)
+    cf.write_json(out / "result.json", {
+        "stage": "G3", "gate_checks_passed": ok, "fixtures": records, "tasks": tasks, "summary": rows,
+        "config_hash": chash, "robot_profile_hash": rhash,
+        "solver": {"matching": "scipy.optimize.linear_sum_assignment", "k_best": "Murty partitioning (solve.kbest)",
+                   "scipy": scipy.__version__},
+        "verification_scope": "KINEMATIC_3R_RELOCATIONS_AND_FIXED_GAMMA0_REPLAY (no dynamics, no simulation)",
+        "simulation_replay_status": "NOT_RUN", "physical_execution_status": "NOT_RUN"})
+    with open(out / "metrics.csv", "w", newline="") as fh:
+        w = csv.DictWriter(fh, ["fixture", "domain", "|D|", "LB", "best verified", "minimality", "status", "stop",
+                                "plans", "attempts", "replay"])
+        w.writeheader()
+        w.writerows(rows)
+    cf.write_manifest(out, {"planner_base": cfg["planner2d"]["seed"], "per_query": "crc32(episode key)"}, chash,
+                    {"frozen_actions": {n: r["frozen"].action_hash for n, r in res.items() if "frozen" in r}})
+    print(json.dumps({"out": str(out), "replay_passed": ok, "summary": rows}))
+    return 0 if ok else 1

@@ -1,0 +1,10375 @@
+{
+ "budgets": {
+  "planner2d": {
+   "algorithm": "RRT_CONNECT_WITH_FULL_BODY_CALLBACK",
+   "edge_max_evals": 200,
+   "extend_step_rad": 0.25,
+   "max_nodes": 4000,
+   "max_wall_seconds": 300.0,
+   "pose_phi_weight_m": 0.1,
+   "pose_step_m": 0.06,
+   "seed": 41,
+   "shortcut_rounds": 150
+  },
+  "repair2d": {
+   "k_best": 12,
+   "max_orders": 6,
+   "max_relocations": 40,
+   "skill_plan_failures": 2
+  },
+  "skill2d": {
+   "approach_dirs": 24,
+   "approach_dist_m": 0.06,
+   "line_step_m": 0.005,
+   "max_direct_pairs": 64,
+   "max_ik_jump_rad": 0.1,
+   "max_plan_failures": 4,
+   "retreat_dist_m": 0.06
+  }
+ },
+ "caps": {
+  "diagnostic_cpu_hours": 2.0,
+  "main_cpu_hours": 4.0,
+  "max_construction_attempts": 100,
+  "max_diagnostic_target_calls": 120,
+  "max_obstacles": 8,
+  "min_obstacles": 4,
+  "order_panel_cases": 6,
+  "order_panel_orders": 3,
+  "order_panel_seeds": 2,
+  "pilot_roots": 4,
+  "queries_per_root": 1,
+  "root_seed": 2026101604,
+  "roots": 20,
+  "seed_panel_cases": 12,
+  "seed_panel_seeds": 5,
+  "workers": 8
+ },
+ "config_hash": "sha256:a9f3f2360e17d9827e24b4e9bb32727569afdf04aa4f87c72ba3cccf50953ae3",
+ "end_policy": "SAFE_RETREAT",
+ "generator": {
+  "broad_draws": 4,
+  "corridor_m": 0.12,
+  "destinations_per_object": 2,
+  "max_moved": 3,
+  "max_raw": 120,
+  "max_static_valid": 12,
+  "name": "B1_GEOMETRIC_V1",
+  "seed": 4501
+ },
+ "ledger": [
+  {
+   "accepted": true,
+   "attempt": 0,
+   "goal_cell": 42,
+   "obstacle_cells": [
+    17,
+    44,
+    48,
+    49,
+    37,
+    32,
+    25,
+    30
+   ],
+   "obstacles": 8,
+   "rejection": null,
+   "seed": 2026101604,
+   "stratum": "UNOCCUPIED_GOAL",
+   "target_cell": 38
+  },
+  {
+   "accepted": false,
+   "attempt": 1,
+   "goal_cell": 38,
+   "obstacle_cells": [
+    38,
+    6,
+    17,
+    58,
+    54,
+    18,
+    53,
+    27
+   ],
+   "obstacles": 8,
+   "rejection": "target and goal closer than 2 cells",
+   "seed": 2026101605,
+   "stratum": "OCCUPIED_GOAL",
+   "target_cell": 30
+  },
+  {
+   "accepted": true,
+   "attempt": 2,
+   "goal_cell": 45,
+   "obstacle_cells": [
+    45,
+    9,
+    30,
+    62
+   ],
+   "obstacles": 4,
+   "rejection": null,
+   "seed": 2026101606,
+   "stratum": "OCCUPIED_GOAL",
+   "target_cell": 48
+  },
+  {
+   "accepted": true,
+   "attempt": 3,
+   "goal_cell": 25,
+   "obstacle_cells": [
+    25,
+    24,
+    33,
+    14,
+    31,
+    52,
+    60,
+    34
+   ],
+   "obstacles": 8,
+   "rejection": null,
+   "seed": 2026101607,
+   "stratum": "ACCESS_DEPENDENCY",
+   "target_cell": 47
+  },
+  {
+   "accepted": true,
+   "attempt": 4,
+   "goal_cell": 60,
+   "obstacle_cells": [
+    60,
+    52,
+    59,
+    61,
+    21,
+    19,
+    2
+   ],
+   "obstacles": 7,
+   "rejection": null,
+   "seed": 2026101608,
+   "stratum": "COMPETING_DESTINATIONS",
+   "target_cell": 34
+  },
+  {
+   "accepted": true,
+   "attempt": 5,
+   "goal_cell": 32,
+   "obstacle_cells": [
+    7,
+    57,
+    15,
+    12,
+    8,
+    61,
+    3,
+    9
+   ],
+   "obstacles": 8,
+   "rejection": null,
+   "seed": 2026101609,
+   "stratum": "NUISANCE_CONTROL",
+   "target_cell": 30
+  },
+  {
+   "accepted": true,
+   "attempt": 6,
+   "goal_cell": 11,
+   "obstacle_cells": [
+    28,
+    41,
+    0,
+    35,
+    3,
+    7,
+    2,
+    32
+   ],
+   "obstacles": 8,
+   "rejection": null,
+   "seed": 2026101610,
+   "stratum": "UNOCCUPIED_GOAL",
+   "target_cell": 26
+  },
+  {
+   "accepted": true,
+   "attempt": 7,
+   "goal_cell": 9,
+   "obstacle_cells": [
+    9,
+    52,
+    17,
+    27,
+    59,
+    26,
+    21
+   ],
+   "obstacles": 7,
+   "rejection": null,
+   "seed": 2026101611,
+   "stratum": "OCCUPIED_GOAL",
+   "target_cell": 20
+  },
+  {
+   "accepted": false,
+   "attempt": 8,
+   "goal_cell": 44,
+   "obstacle_cells": [
+    44,
+    45,
+    52,
+    58,
+    21,
+    22
+   ],
+   "obstacles": 6,
+   "rejection": "target and goal closer than 2 cells",
+   "seed": 2026101612,
+   "stratum": "ACCESS_DEPENDENCY",
+   "target_cell": 43
+  },
+  {
+   "accepted": true,
+   "attempt": 9,
+   "goal_cell": 62,
+   "obstacle_cells": [
+    62,
+    63,
+    54,
+    13,
+    18,
+    28,
+    29
+   ],
+   "obstacles": 7,
+   "rejection": null,
+   "seed": 2026101613,
+   "stratum": "ACCESS_DEPENDENCY",
+   "target_cell": 30
+  },
+  {
+   "accepted": true,
+   "attempt": 10,
+   "goal_cell": 1,
+   "obstacle_cells": [
+    1,
+    9,
+    0,
+    2,
+    62,
+    22,
+    32,
+    29
+   ],
+   "obstacles": 8,
+   "rejection": null,
+   "seed": 2026101614,
+   "stratum": "COMPETING_DESTINATIONS",
+   "target_cell": 48
+  },
+  {
+   "accepted": true,
+   "attempt": 11,
+   "goal_cell": 3,
+   "obstacle_cells": [
+    25,
+    26,
+    61,
+    58,
+    43,
+    57
+   ],
+   "obstacles": 6,
+   "rejection": null,
+   "seed": 2026101615,
+   "stratum": "NUISANCE_CONTROL",
+   "target_cell": 46
+  },
+  {
+   "accepted": true,
+   "attempt": 12,
+   "goal_cell": 26,
+   "obstacle_cells": [
+    21,
+    1,
+    62,
+    30
+   ],
+   "obstacles": 4,
+   "rejection": null,
+   "seed": 2026101616,
+   "stratum": "UNOCCUPIED_GOAL",
+   "target_cell": 3
+  },
+  {
+   "accepted": true,
+   "attempt": 13,
+   "goal_cell": 61,
+   "obstacle_cells": [
+    61,
+    52,
+    25,
+    7,
+    16
+   ],
+   "obstacles": 5,
+   "rejection": null,
+   "seed": 2026101617,
+   "stratum": "OCCUPIED_GOAL",
+   "target_cell": 37
+  },
+  {
+   "accepted": true,
+   "attempt": 14,
+   "goal_cell": 26,
+   "obstacle_cells": [
+    26,
+    27,
+    18,
+    34,
+    31,
+    28,
+    7
+   ],
+   "obstacles": 7,
+   "rejection": null,
+   "seed": 2026101618,
+   "stratum": "ACCESS_DEPENDENCY",
+   "target_cell": 36
+  },
+  {
+   "accepted": false,
+   "attempt": 15,
+   "goal_cell": 30,
+   "obstacle_cells": [
+    30,
+    22,
+    38,
+    29,
+    60,
+    12,
+    55
+   ],
+   "obstacles": 7,
+   "rejection": "more than two free spots near the goal occupant",
+   "seed": 2026101619,
+   "stratum": "COMPETING_DESTINATIONS",
+   "target_cell": 62
+  },
+  {
+   "accepted": true,
+   "attempt": 16,
+   "goal_cell": 40,
+   "obstacle_cells": [
+    40,
+    32,
+    48,
+    41,
+    35,
+    47,
+    63
+   ],
+   "obstacles": 7,
+   "rejection": null,
+   "seed": 2026101620,
+   "stratum": "COMPETING_DESTINATIONS",
+   "target_cell": 29
+  },
+  {
+   "accepted": true,
+   "attempt": 17,
+   "goal_cell": 47,
+   "obstacle_cells": [
+    50,
+    17,
+    48,
+    59,
+    2,
+    52
+   ],
+   "obstacles": 6,
+   "rejection": null,
+   "seed": 2026101621,
+   "stratum": "NUISANCE_CONTROL",
+   "target_cell": 12
+  },
+  {
+   "accepted": true,
+   "attempt": 18,
+   "goal_cell": 8,
+   "obstacle_cells": [
+    0,
+    1,
+    62,
+    16,
+    48,
+    53,
+    28
+   ],
+   "obstacles": 7,
+   "rejection": null,
+   "seed": 2026101622,
+   "stratum": "UNOCCUPIED_GOAL",
+   "target_cell": 22
+  },
+  {
+   "accepted": true,
+   "attempt": 19,
+   "goal_cell": 13,
+   "obstacle_cells": [
+    13,
+    31,
+    21,
+    62,
+    15
+   ],
+   "obstacles": 5,
+   "rejection": null,
+   "seed": 2026101623,
+   "stratum": "OCCUPIED_GOAL",
+   "target_cell": 44
+  },
+  {
+   "accepted": true,
+   "attempt": 20,
+   "goal_cell": 60,
+   "obstacle_cells": [
+    60,
+    52,
+    61,
+    51,
+    38,
+    25,
+    12,
+    28
+   ],
+   "obstacles": 8,
+   "rejection": null,
+   "seed": 2026101624,
+   "stratum": "ACCESS_DEPENDENCY",
+   "target_cell": 39
+  },
+  {
+   "accepted": false,
+   "attempt": 21,
+   "goal_cell": 20,
+   "obstacle_cells": [
+    20,
+    12,
+    28,
+    19,
+    47
+   ],
+   "obstacles": 5,
+   "rejection": "more than two free spots near the goal occupant",
+   "seed": 2026101625,
+   "stratum": "COMPETING_DESTINATIONS",
+   "target_cell": 50
+  },
+  {
+   "accepted": false,
+   "attempt": 22,
+   "goal_cell": 53,
+   "obstacle_cells": [
+    53,
+    45,
+    61,
+    52,
+    17,
+    21,
+    28
+   ],
+   "obstacles": 7,
+   "rejection": "more than two free spots near the goal occupant",
+   "seed": 2026101626,
+   "stratum": "COMPETING_DESTINATIONS",
+   "target_cell": 18
+  },
+  {
+   "accepted": false,
+   "attempt": 23,
+   "goal_cell": 29,
+   "obstacle_cells": [
+    29,
+    21,
+    37,
+    28,
+    11
+   ],
+   "obstacles": 5,
+   "rejection": "more than two free spots near the goal occupant",
+   "seed": 2026101627,
+   "stratum": "COMPETING_DESTINATIONS",
+   "target_cell": 32
+  },
+  {
+   "accepted": true,
+   "attempt": 24,
+   "goal_cell": 24,
+   "obstacle_cells": [
+    24,
+    16,
+    32,
+    25
+   ],
+   "obstacles": 4,
+   "rejection": null,
+   "seed": 2026101628,
+   "stratum": "COMPETING_DESTINATIONS",
+   "target_cell": 23
+  },
+  {
+   "accepted": true,
+   "attempt": 25,
+   "goal_cell": 60,
+   "obstacle_cells": [
+    23,
+    33,
+    25,
+    49
+   ],
+   "obstacles": 4,
+   "rejection": null,
+   "seed": 2026101629,
+   "stratum": "NUISANCE_CONTROL",
+   "target_cell": 13
+  }
+ ],
+ "order_panel": [
+  {
+   "cells": {
+    "o00": 58,
+    "o01": 43
+   },
+   "keys": [
+    "g4a_r17/orderpanel/(('o00', 58), ('o01', 43))/s0",
+    "g4a_r17/orderpanel/(('o00', 58), ('o01', 43))/s1"
+   ],
+   "orders": 3,
+   "query_id": "g4a_r17"
+  },
+  {
+   "cells": {
+    "o00": 35,
+    "o04": 19
+   },
+   "keys": [
+    "g4a_r13/orderpanel/(('o00', 35), ('o04', 19))/s0",
+    "g4a_r13/orderpanel/(('o00', 35), ('o04', 19))/s1"
+   ],
+   "orders": 3,
+   "query_id": "g4a_r13"
+  },
+  {
+   "cells": {
+    "o01": 15,
+    "o03": 42,
+    "o06": 44
+   },
+   "keys": [
+    "g4a_r06/orderpanel/(('o01', 15), ('o03', 42), ('o06', 44))/s0",
+    "g4a_r06/orderpanel/(('o01', 15), ('o03', 42), ('o06', 44))/s1"
+   ],
+   "orders": 3,
+   "query_id": "g4a_r06"
+  },
+  {
+   "cells": {
+    "o00": 25,
+    "o01": 4,
+    "o03": 24
+   },
+   "keys": [
+    "g4a_r15/orderpanel/(('o00', 25), ('o01', 4), ('o03', 24))/s0",
+    "g4a_r15/orderpanel/(('o00', 25), ('o01', 4), ('o03', 24))/s1"
+   ],
+   "orders": 3,
+   "query_id": "g4a_r15"
+  },
+  {
+   "cells": {
+    "o04": 5,
+    "o06": 1
+   },
+   "keys": [
+    "g4a_r05/orderpanel/(('o04', 5), ('o06', 1))/s0",
+    "g4a_r05/orderpanel/(('o04', 5), ('o06', 1))/s1"
+   ],
+   "orders": 3,
+   "query_id": "g4a_r05"
+  },
+  {
+   "cells": {
+    "o00": 41,
+    "o02": 40
+   },
+   "keys": [
+    "g4a_r02/orderpanel/(('o00', 41), ('o02', 40))/s0",
+    "g4a_r02/orderpanel/(('o00', 41), ('o02', 40))/s1"
+   ],
+   "orders": 3,
+   "query_id": "g4a_r02"
+  }
+ ],
+ "pilot": [
+  "g4a_r00",
+  "g4a_r01",
+  "g4a_r02",
+  "g4a_r03"
+ ],
+ "plan_hash": "sha256:0537694b9c1d649b9dc857192050c1a97ef0cae1047f514edf274b04e9441c07",
+ "protocol": "INITIAL_SCENE_ONE_SHOT_V1",
+ "queries": [
+  {
+   "action": {
+    "action": "TRANSPORT_TARGET_TO_GOAL",
+    "contact_mode": "PLANAR_SUPPORT_CONTACT_SIDE_GRASP",
+    "contract_addendum": "docs/addenda/A1_target_end_policy_v1.md",
+    "end_policy": "SAFE_RETREAT",
+    "goal_alternatives_xy": [],
+    "goal_cell": 42,
+    "goal_orientation": "ANY (rotationally symmetric disc)",
+    "goal_tolerance_m": 0.002,
+    "goal_xy_m": [
+     0.2,
+     0.44
+    ],
+    "grasp_family": {
+     "approach_dirs": 24,
+     "approach_dist_m": 0.06,
+     "ik_branches": 2,
+     "retreat_dist_m": 0.06
+    },
+    "home_return": "OPTIONAL_DIAGNOSTIC",
+    "no_lift": true,
+    "pushing_allowed": false,
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "state_pose_uncertainty_m": 0.0,
+    "target_id": "t0"
+   },
+   "audit_pool": [
+    {
+     "category": "all-stay",
+     "cells": {},
+     "label": "all-stay"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o04": 21
+     },
+     "label": "single:o04>21"
+    },
+    {
+     "category": "pair",
+     "cells": {
+      "o01": 53,
+      "o04": 21
+     },
+     "label": "pair:o01>53 o04>21"
+    },
+    {
+     "category": "triple",
+     "cells": {
+      "o01": 53,
+      "o04": 21,
+      "o07": 22
+     },
+     "label": "triple:o01>53 o04>21 o07>22"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o00": 51
+     },
+     "label": "broad:o00>51"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o04": 53
+     },
+     "label": "single:o04>53"
+    },
+    {
+     "category": "pair",
+     "cells": {
+      "o01": 53,
+      "o04": 44
+     },
+     "label": "pair:o01>53 o04>44"
+    },
+    {
+     "category": "triple",
+     "cells": {
+      "o01": 10,
+      "o03": 40,
+      "o04": 28
+     },
+     "label": "triple:o01>10 o03>40 o04>28"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o06": 62
+     },
+     "label": "broad:o06>62"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o01": 53
+     },
+     "label": "single:o01>53"
+    },
+    {
+     "category": "pair",
+     "cells": {
+      "o04": 21,
+      "o07": 22
+     },
+     "label": "pair:o04>21 o07>22"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o05": 18
+     },
+     "label": "broad:o05>18"
+    }
+   ],
+   "generator": {
+    "candidates": [
+     {
+      "category": "single",
+      "cells": {
+       "o04": 21
+      },
+      "label": "single:o04>21"
+     },
+     {
+      "category": "pair",
+      "cells": {
+       "o01": 53,
+       "o04": 21
+      },
+      "label": "pair:o01>53 o04>21"
+     },
+     {
+      "category": "triple",
+      "cells": {
+       "o01": 53,
+       "o04": 21,
+       "o07": 22
+      },
+      "label": "triple:o01>53 o04>21 o07>22"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o00": 51
+      },
+      "label": "broad:o00>51"
+     },
+     {
+      "category": "single",
+      "cells": {
+       "o04": 53
+      },
+      "label": "single:o04>53"
+     },
+     {
+      "category": "pair",
+      "cells": {
+       "o01": 53,
+       "o04": 44
+      },
+      "label": "pair:o01>53 o04>44"
+     },
+     {
+      "category": "triple",
+      "cells": {
+       "o01": 10,
+       "o03": 40,
+       "o04": 28
+      },
+      "label": "triple:o01>10 o03>40 o04>28"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o06": 62
+      },
+      "label": "broad:o06>62"
+     },
+     {
+      "category": "single",
+      "cells": {
+       "o01": 53
+      },
+      "label": "single:o01>53"
+     },
+     {
+      "category": "pair",
+      "cells": {
+       "o04": 21,
+       "o07": 22
+      },
+      "label": "pair:o04>21 o07>22"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o05": 18
+      },
+      "label": "broad:o05>18"
+     }
+    ],
+    "generator": "B1_GEOMETRIC_V1",
+    "geometry_seed": 837648586,
+    "proximal": [
+     "o04",
+     "o01",
+     "o07",
+     "o03"
+    ],
+    "raw": 29,
+    "rejected": {
+     "duplicate": 0,
+     "static_invalid": 0,
+     "static_unresolved": 0,
+     "too_many_moves": 0
+    }
+   },
+   "goal_cell": 42,
+   "hashes": {
+    "action_context": "sha256:1d31987e272bd97bcc7885d9a2f99a8a0b8bdfe14f14915cddf8357cd232a752",
+    "observation": "sha256:be40141369726dd57dbedc9eb3b11a2c06d25c7d8f4cfe4de862155a31ada6f2"
+   },
+   "primary_ranking": [
+    {
+     "cells": {},
+     "declared_rank": 0,
+     "label": "all-stay",
+     "moved": 0,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o04": 21
+     },
+     "declared_rank": 1,
+     "label": "single:o04>21",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 51
+     },
+     "declared_rank": 4,
+     "label": "broad:o00>51",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o04": 53
+     },
+     "declared_rank": 5,
+     "label": "single:o04>53",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o06": 62
+     },
+     "declared_rank": 8,
+     "label": "broad:o06>62",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o01": 53
+     },
+     "declared_rank": 9,
+     "label": "single:o01>53",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o05": 18
+     },
+     "declared_rank": 11,
+     "label": "broad:o05>18",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o01": 53,
+      "o04": 21
+     },
+     "declared_rank": 2,
+     "label": "pair:o01>53 o04>21",
+     "moved": 2,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o01": 53,
+      "o04": 44
+     },
+     "declared_rank": 6,
+     "label": "pair:o01>53 o04>44",
+     "moved": 2,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o04": 21,
+      "o07": 22
+     },
+     "declared_rank": 10,
+     "label": "pair:o04>21 o07>22",
+     "moved": 2,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o01": 53,
+      "o04": 21,
+      "o07": 22
+     },
+     "declared_rank": 3,
+     "label": "triple:o01>53 o04>21 o07>22",
+     "moved": 3,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o01": 10,
+      "o03": 40,
+      "o04": 28
+     },
+     "declared_rank": 7,
+     "label": "triple:o01>10 o03>40 o04>28",
+     "moved": 3,
+     "score": 1.0
+    }
+   ],
+   "query_id": "g4a_r00",
+   "root_id": "g4a_r00",
+   "scene": {
+    "action_hash": null,
+    "domain_policy": "ALL_SUPPORTED",
+    "lattice": {
+     "cols": 8,
+     "pitch_m": 0.08,
+     "rows": 8
+    },
+    "legal_cells": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     25,
+     26,
+     27,
+     28,
+     29,
+     30,
+     31,
+     32,
+     33,
+     34,
+     35,
+     36,
+     37,
+     38,
+     39,
+     40,
+     41,
+     42,
+     43,
+     44,
+     45,
+     46,
+     47,
+     48,
+     49,
+     50,
+     51,
+     52,
+     53,
+     54,
+     55,
+     56,
+     57,
+     58,
+     59,
+     60,
+     61,
+     62,
+     63
+    ],
+    "objects": [
+     {
+      "cell": 17,
+      "id": "o00",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.12,
+       0.2
+      ]
+     },
+     {
+      "cell": 44,
+      "id": "o01",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.36,
+       0.44
+      ]
+     },
+     {
+      "cell": 48,
+      "id": "o02",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.04,
+       0.52
+      ]
+     },
+     {
+      "cell": 49,
+      "id": "o03",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.12,
+       0.52
+      ]
+     },
+     {
+      "cell": 37,
+      "id": "o04",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.44,
+       0.36
+      ]
+     },
+     {
+      "cell": 32,
+      "id": "o05",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.04,
+       0.36
+      ]
+     },
+     {
+      "cell": 25,
+      "id": "o06",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.12,
+       0.28
+      ]
+     },
+     {
+      "cell": 30,
+      "id": "o07",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.52,
+       0.28
+      ]
+     },
+     {
+      "cell": 38,
+      "id": "t0",
+      "kind": "target",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.52,
+       0.36
+      ]
+     }
+    ],
+    "robot": {
+     "attached_id": null,
+     "attachment": "free",
+     "gripper_gap_m": 0.07,
+     "q_rad": [
+      1.5707963267948966,
+      1.5707963267948966,
+      1.5707963267948966
+     ]
+    },
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "root_id": "g4a_2026101604",
+    "variant_id": "initial"
+   },
+   "seed": 2026101604,
+   "stratum": "UNOCCUPIED_GOAL"
+  },
+  {
+   "action": {
+    "action": "TRANSPORT_TARGET_TO_GOAL",
+    "contact_mode": "PLANAR_SUPPORT_CONTACT_SIDE_GRASP",
+    "contract_addendum": "docs/addenda/A1_target_end_policy_v1.md",
+    "end_policy": "SAFE_RETREAT",
+    "goal_alternatives_xy": [],
+    "goal_cell": 45,
+    "goal_orientation": "ANY (rotationally symmetric disc)",
+    "goal_tolerance_m": 0.002,
+    "goal_xy_m": [
+     0.44,
+     0.44
+    ],
+    "grasp_family": {
+     "approach_dirs": 24,
+     "approach_dist_m": 0.06,
+     "ik_branches": 2,
+     "retreat_dist_m": 0.06
+    },
+    "home_return": "OPTIONAL_DIAGNOSTIC",
+    "no_lift": true,
+    "pushing_allowed": false,
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "state_pose_uncertainty_m": 0.0,
+    "target_id": "t0"
+   },
+   "audit_pool": [
+    {
+     "category": "all-stay",
+     "cells": {},
+     "label": "all-stay"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o00": 29
+     },
+     "label": "single:o00>29"
+    },
+    {
+     "category": "triple",
+     "cells": {
+      "o01": 40,
+      "o02": 12,
+      "o03": 36
+     },
+     "label": "triple:o01>40 o02>12 o03>36"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o01": 27
+     },
+     "label": "broad:o01>27"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o00": 61
+     },
+     "label": "single:o00>61"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o01": 29
+     },
+     "label": "broad:o01>29"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o02": 31
+     },
+     "label": "single:o02>31"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o01": 35
+     },
+     "label": "broad:o01>35"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o02": 29
+     },
+     "label": "single:o02>29"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o01": 37
+     },
+     "label": "broad:o01>37"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o03": 63
+     },
+     "label": "single:o03>63"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o03": 61
+     },
+     "label": "single:o03>61"
+    }
+   ],
+   "generator": {
+    "candidates": [
+     {
+      "category": "single",
+      "cells": {
+       "o00": 29
+      },
+      "label": "single:o00>29"
+     },
+     {
+      "category": "triple",
+      "cells": {
+       "o01": 40,
+       "o02": 12,
+       "o03": 36
+      },
+      "label": "triple:o01>40 o02>12 o03>36"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o01": 27
+      },
+      "label": "broad:o01>27"
+     },
+     {
+      "category": "single",
+      "cells": {
+       "o00": 61
+      },
+      "label": "single:o00>61"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o01": 29
+      },
+      "label": "broad:o01>29"
+     },
+     {
+      "category": "single",
+      "cells": {
+       "o02": 31
+      },
+      "label": "single:o02>31"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o01": 35
+      },
+      "label": "broad:o01>35"
+     },
+     {
+      "category": "single",
+      "cells": {
+       "o02": 29
+      },
+      "label": "single:o02>29"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o01": 37
+      },
+      "label": "broad:o01>37"
+     },
+     {
+      "category": "single",
+      "cells": {
+       "o03": 63
+      },
+      "label": "single:o03>63"
+     },
+     {
+      "category": "single",
+      "cells": {
+       "o03": 61
+      },
+      "label": "single:o03>61"
+     }
+    ],
+    "generator": "B1_GEOMETRIC_V1",
+    "geometry_seed": 1374874424,
+    "proximal": [
+     "o00"
+    ],
+    "raw": 14,
+    "rejected": {
+     "duplicate": 0,
+     "static_invalid": 0,
+     "static_unresolved": 0,
+     "too_many_moves": 0
+    }
+   },
+   "goal_cell": 45,
+   "hashes": {
+    "action_context": "sha256:0dae5d45e4b7d4c241d530d38812ff7a489f077218188181103139803eaf7fae",
+    "observation": "sha256:3e7d0c98f3ba9b525d65e51119184add9c6bfd4ff388589f79401fcdbce217cd"
+   },
+   "primary_ranking": [
+    {
+     "cells": {
+      "o00": 29
+     },
+     "declared_rank": 1,
+     "label": "single:o00>29",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 61
+     },
+     "declared_rank": 4,
+     "label": "single:o00>61",
+     "moved": 1,
+     "score": 1.0
+    }
+   ],
+   "query_id": "g4a_r01",
+   "root_id": "g4a_r01",
+   "scene": {
+    "action_hash": null,
+    "domain_policy": "ALL_SUPPORTED",
+    "lattice": {
+     "cols": 8,
+     "pitch_m": 0.08,
+     "rows": 8
+    },
+    "legal_cells": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     25,
+     26,
+     27,
+     28,
+     29,
+     30,
+     31,
+     32,
+     33,
+     34,
+     35,
+     36,
+     37,
+     38,
+     39,
+     40,
+     41,
+     42,
+     43,
+     44,
+     45,
+     46,
+     47,
+     48,
+     49,
+     50,
+     51,
+     52,
+     53,
+     54,
+     55,
+     56,
+     57,
+     58,
+     59,
+     60,
+     61,
+     62,
+     63
+    ],
+    "objects": [
+     {
+      "cell": 45,
+      "id": "o00",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.44,
+       0.44
+      ]
+     },
+     {
+      "cell": 9,
+      "id": "o01",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.12,
+       0.12
+      ]
+     },
+     {
+      "cell": 30,
+      "id": "o02",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.52,
+       0.28
+      ]
+     },
+     {
+      "cell": 62,
+      "id": "o03",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.52,
+       0.6
+      ]
+     },
+     {
+      "cell": 48,
+      "id": "t0",
+      "kind": "target",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.04,
+       0.52
+      ]
+     }
+    ],
+    "robot": {
+     "attached_id": null,
+     "attachment": "free",
+     "gripper_gap_m": 0.07,
+     "q_rad": [
+      1.5707963267948966,
+      1.5707963267948966,
+      1.5707963267948966
+     ]
+    },
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "root_id": "g4a_2026101606",
+    "variant_id": "initial"
+   },
+   "seed": 2026101606,
+   "stratum": "OCCUPIED_GOAL"
+  },
+  {
+   "action": {
+    "action": "TRANSPORT_TARGET_TO_GOAL",
+    "contact_mode": "PLANAR_SUPPORT_CONTACT_SIDE_GRASP",
+    "contract_addendum": "docs/addenda/A1_target_end_policy_v1.md",
+    "end_policy": "SAFE_RETREAT",
+    "goal_alternatives_xy": [],
+    "goal_cell": 25,
+    "goal_orientation": "ANY (rotationally symmetric disc)",
+    "goal_tolerance_m": 0.002,
+    "goal_xy_m": [
+     0.12,
+     0.28
+    ],
+    "grasp_family": {
+     "approach_dirs": 24,
+     "approach_dist_m": 0.06,
+     "ik_branches": 2,
+     "retreat_dist_m": 0.06
+    },
+    "home_return": "OPTIONAL_DIAGNOSTIC",
+    "no_lift": true,
+    "pushing_allowed": false,
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "state_pose_uncertainty_m": 0.0,
+    "target_id": "t0"
+   },
+   "audit_pool": [
+    {
+     "category": "all-stay",
+     "cells": {},
+     "label": "all-stay"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o00": 41
+     },
+     "label": "single:o00>41"
+    },
+    {
+     "category": "pair",
+     "cells": {
+      "o00": 41,
+      "o07": 42
+     },
+     "label": "pair:o00>41 o07>42"
+    },
+    {
+     "category": "triple",
+     "cells": {
+      "o00": 41,
+      "o02": 40,
+      "o07": 42
+     },
+     "label": "triple:o00>41 o02>40 o07>42"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o05": 46
+     },
+     "label": "broad:o05>46"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o00": 9
+     },
+     "label": "single:o00>9"
+    },
+    {
+     "category": "pair",
+     "cells": {
+      "o00": 34,
+      "o07": 42
+     },
+     "label": "pair:o00>34 o07>42"
+    },
+    {
+     "category": "triple",
+     "cells": {
+      "o01": 59,
+      "o02": 28,
+      "o05": 8
+     },
+     "label": "triple:o01>59 o02>28 o05>8"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o03": 57
+     },
+     "label": "broad:o03>57"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o07": 42
+     },
+     "label": "single:o07>42"
+    },
+    {
+     "category": "pair",
+     "cells": {
+      "o00": 41,
+      "o02": 40
+     },
+     "label": "pair:o00>41 o02>40"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o06": 41
+     },
+     "label": "broad:o06>41"
+    }
+   ],
+   "generator": {
+    "candidates": [
+     {
+      "category": "single",
+      "cells": {
+       "o00": 41
+      },
+      "label": "single:o00>41"
+     },
+     {
+      "category": "pair",
+      "cells": {
+       "o00": 41,
+       "o07": 42
+      },
+      "label": "pair:o00>41 o07>42"
+     },
+     {
+      "category": "triple",
+      "cells": {
+       "o00": 41,
+       "o02": 40,
+       "o07": 42
+      },
+      "label": "triple:o00>41 o02>40 o07>42"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o05": 46
+      },
+      "label": "broad:o05>46"
+     },
+     {
+      "category": "single",
+      "cells": {
+       "o00": 9
+      },
+      "label": "single:o00>9"
+     },
+     {
+      "category": "pair",
+      "cells": {
+       "o00": 34,
+       "o07": 42
+      },
+      "label": "pair:o00>34 o07>42"
+     },
+     {
+      "category": "triple",
+      "cells": {
+       "o01": 59,
+       "o02": 28,
+       "o05": 8
+      },
+      "label": "triple:o01>59 o02>28 o05>8"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o03": 57
+      },
+      "label": "broad:o03>57"
+     },
+     {
+      "category": "single",
+      "cells": {
+       "o07": 42
+      },
+      "label": "single:o07>42"
+     },
+     {
+      "category": "pair",
+      "cells": {
+       "o00": 41,
+       "o02": 40
+      },
+      "label": "pair:o00>41 o02>40"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o06": 41
+      },
+      "label": "broad:o06>41"
+     }
+    ],
+    "generator": "B1_GEOMETRIC_V1",
+    "geometry_seed": 1208672040,
+    "proximal": [
+     "o00",
+     "o07",
+     "o02",
+     "o01"
+    ],
+    "raw": 29,
+    "rejected": {
+     "duplicate": 0,
+     "static_invalid": 0,
+     "static_unresolved": 0,
+     "too_many_moves": 0
+    }
+   },
+   "goal_cell": 25,
+   "hashes": {
+    "action_context": "sha256:578465168b1d2546dda6dbca845de83117e4f11a297ef104c354aaee5c9734d5",
+    "observation": "sha256:6bdfe0c1736ed1afcea7c5b48a86b027e191a1b53ff4e5204cf423682ed881ac"
+   },
+   "primary_ranking": [
+    {
+     "cells": {
+      "o00": 41
+     },
+     "declared_rank": 1,
+     "label": "single:o00>41",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 9
+     },
+     "declared_rank": 5,
+     "label": "single:o00>9",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 41,
+      "o07": 42
+     },
+     "declared_rank": 2,
+     "label": "pair:o00>41 o07>42",
+     "moved": 2,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 34,
+      "o07": 42
+     },
+     "declared_rank": 6,
+     "label": "pair:o00>34 o07>42",
+     "moved": 2,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 41,
+      "o02": 40
+     },
+     "declared_rank": 10,
+     "label": "pair:o00>41 o02>40",
+     "moved": 2,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 41,
+      "o02": 40,
+      "o07": 42
+     },
+     "declared_rank": 3,
+     "label": "triple:o00>41 o02>40 o07>42",
+     "moved": 3,
+     "score": 1.0
+    }
+   ],
+   "query_id": "g4a_r02",
+   "root_id": "g4a_r02",
+   "scene": {
+    "action_hash": null,
+    "domain_policy": "ALL_SUPPORTED",
+    "lattice": {
+     "cols": 8,
+     "pitch_m": 0.08,
+     "rows": 8
+    },
+    "legal_cells": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     25,
+     26,
+     27,
+     28,
+     29,
+     30,
+     31,
+     32,
+     33,
+     34,
+     35,
+     36,
+     37,
+     38,
+     39,
+     40,
+     41,
+     42,
+     43,
+     44,
+     45,
+     46,
+     47,
+     48,
+     49,
+     50,
+     51,
+     52,
+     53,
+     54,
+     55,
+     56,
+     57,
+     58,
+     59,
+     60,
+     61,
+     62,
+     63
+    ],
+    "objects": [
+     {
+      "cell": 25,
+      "id": "o00",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.12,
+       0.28
+      ]
+     },
+     {
+      "cell": 24,
+      "id": "o01",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.04,
+       0.28
+      ]
+     },
+     {
+      "cell": 33,
+      "id": "o02",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.12,
+       0.36
+      ]
+     },
+     {
+      "cell": 14,
+      "id": "o03",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.52,
+       0.12
+      ]
+     },
+     {
+      "cell": 31,
+      "id": "o04",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.6,
+       0.28
+      ]
+     },
+     {
+      "cell": 52,
+      "id": "o05",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.36,
+       0.52
+      ]
+     },
+     {
+      "cell": 60,
+      "id": "o06",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.36,
+       0.6
+      ]
+     },
+     {
+      "cell": 34,
+      "id": "o07",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.2,
+       0.36
+      ]
+     },
+     {
+      "cell": 47,
+      "id": "t0",
+      "kind": "target",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.6,
+       0.44
+      ]
+     }
+    ],
+    "robot": {
+     "attached_id": null,
+     "attachment": "free",
+     "gripper_gap_m": 0.07,
+     "q_rad": [
+      1.5707963267948966,
+      1.5707963267948966,
+      1.5707963267948966
+     ]
+    },
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "root_id": "g4a_2026101607",
+    "variant_id": "initial"
+   },
+   "seed": 2026101607,
+   "stratum": "ACCESS_DEPENDENCY"
+  },
+  {
+   "action": {
+    "action": "TRANSPORT_TARGET_TO_GOAL",
+    "contact_mode": "PLANAR_SUPPORT_CONTACT_SIDE_GRASP",
+    "contract_addendum": "docs/addenda/A1_target_end_policy_v1.md",
+    "end_policy": "SAFE_RETREAT",
+    "goal_alternatives_xy": [],
+    "goal_cell": 60,
+    "goal_orientation": "ANY (rotationally symmetric disc)",
+    "goal_tolerance_m": 0.002,
+    "goal_xy_m": [
+     0.36,
+     0.6
+    ],
+    "grasp_family": {
+     "approach_dirs": 24,
+     "approach_dist_m": 0.06,
+     "ik_branches": 2,
+     "retreat_dist_m": 0.06
+    },
+    "home_return": "OPTIONAL_DIAGNOSTIC",
+    "no_lift": true,
+    "pushing_allowed": false,
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "state_pose_uncertainty_m": 0.0,
+    "target_id": "t0"
+   },
+   "audit_pool": [
+    {
+     "category": "all-stay",
+     "cells": {},
+     "label": "all-stay"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o00": 58
+     },
+     "label": "single:o00>58"
+    },
+    {
+     "category": "pair",
+     "cells": {
+      "o00": 58,
+      "o01": 45
+     },
+     "label": "pair:o00>58 o01>45"
+    },
+    {
+     "category": "triple",
+     "cells": {
+      "o00": 58,
+      "o01": 45,
+      "o02": 57
+     },
+     "label": "triple:o00>58 o01>45 o02>57"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o04": 42
+     },
+     "label": "broad:o04>42"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o00": 62
+     },
+     "label": "single:o00>62"
+    },
+    {
+     "category": "pair",
+     "cells": {
+      "o00": 52,
+      "o01": 45
+     },
+     "label": "pair:o00>52 o01>45"
+    },
+    {
+     "category": "triple",
+     "cells": {
+      "o01": 22,
+      "o05": 24,
+      "o06": 17
+     },
+     "label": "triple:o01>22 o05>24 o06>17"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o06": 17
+     },
+     "label": "broad:o06>17"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o01": 45
+     },
+     "label": "single:o01>45"
+    },
+    {
+     "category": "pair",
+     "cells": {
+      "o00": 58,
+      "o02": 57
+     },
+     "label": "pair:o00>58 o02>57"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o02": 28
+     },
+     "label": "broad:o02>28"
+    }
+   ],
+   "generator": {
+    "candidates": [
+     {
+      "category": "single",
+      "cells": {
+       "o00": 58
+      },
+      "label": "single:o00>58"
+     },
+     {
+      "category": "pair",
+      "cells": {
+       "o00": 58,
+       "o01": 45
+      },
+      "label": "pair:o00>58 o01>45"
+     },
+     {
+      "category": "triple",
+      "cells": {
+       "o00": 58,
+       "o01": 45,
+       "o02": 57
+      },
+      "label": "triple:o00>58 o01>45 o02>57"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o04": 42
+      },
+      "label": "broad:o04>42"
+     },
+     {
+      "category": "single",
+      "cells": {
+       "o00": 62
+      },
+      "label": "single:o00>62"
+     },
+     {
+      "category": "pair",
+      "cells": {
+       "o00": 52,
+       "o01": 45
+      },
+      "label": "pair:o00>52 o01>45"
+     },
+     {
+      "category": "triple",
+      "cells": {
+       "o01": 22,
+       "o05": 24,
+       "o06": 17
+      },
+      "label": "triple:o01>22 o05>24 o06>17"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o06": 17
+      },
+      "label": "broad:o06>17"
+     },
+     {
+      "category": "single",
+      "cells": {
+       "o01": 45
+      },
+      "label": "single:o01>45"
+     },
+     {
+      "category": "pair",
+      "cells": {
+       "o00": 58,
+       "o02": 57
+      },
+      "label": "pair:o00>58 o02>57"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o02": 28
+      },
+      "label": "broad:o02>28"
+     }
+    ],
+    "generator": "B1_GEOMETRIC_V1",
+    "geometry_seed": 498098748,
+    "proximal": [
+     "o00",
+     "o01",
+     "o02",
+     "o03"
+    ],
+    "raw": 27,
+    "rejected": {
+     "duplicate": 0,
+     "static_invalid": 0,
+     "static_unresolved": 0,
+     "too_many_moves": 0
+    }
+   },
+   "goal_cell": 60,
+   "hashes": {
+    "action_context": "sha256:79222ce1bd22c48ae67adf6004e519d5aa4cb736bc7d7eaba3f602c1f9465dc6",
+    "observation": "sha256:eb9e811fac8f8ddb20da63e70ab5b0f8cd0bd7f1326a2cc908c3aef0f2bb7908"
+   },
+   "primary_ranking": [
+    {
+     "cells": {
+      "o00": 58
+     },
+     "declared_rank": 1,
+     "label": "single:o00>58",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 62
+     },
+     "declared_rank": 5,
+     "label": "single:o00>62",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 58,
+      "o01": 45
+     },
+     "declared_rank": 2,
+     "label": "pair:o00>58 o01>45",
+     "moved": 2,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 52,
+      "o01": 45
+     },
+     "declared_rank": 6,
+     "label": "pair:o00>52 o01>45",
+     "moved": 2,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 58,
+      "o02": 57
+     },
+     "declared_rank": 10,
+     "label": "pair:o00>58 o02>57",
+     "moved": 2,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 58,
+      "o01": 45,
+      "o02": 57
+     },
+     "declared_rank": 3,
+     "label": "triple:o00>58 o01>45 o02>57",
+     "moved": 3,
+     "score": 1.0
+    }
+   ],
+   "query_id": "g4a_r03",
+   "root_id": "g4a_r03",
+   "scene": {
+    "action_hash": null,
+    "domain_policy": "ALL_SUPPORTED",
+    "lattice": {
+     "cols": 8,
+     "pitch_m": 0.08,
+     "rows": 8
+    },
+    "legal_cells": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     25,
+     26,
+     27,
+     28,
+     29,
+     30,
+     31,
+     32,
+     33,
+     34,
+     35,
+     36,
+     37,
+     38,
+     39,
+     40,
+     41,
+     42,
+     43,
+     44,
+     45,
+     46,
+     47,
+     48,
+     49,
+     50,
+     51,
+     52,
+     53,
+     54,
+     55,
+     56,
+     57,
+     58,
+     59,
+     60,
+     61,
+     62,
+     63
+    ],
+    "objects": [
+     {
+      "cell": 60,
+      "id": "o00",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.36,
+       0.6
+      ]
+     },
+     {
+      "cell": 52,
+      "id": "o01",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.36,
+       0.52
+      ]
+     },
+     {
+      "cell": 59,
+      "id": "o02",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.28,
+       0.6
+      ]
+     },
+     {
+      "cell": 61,
+      "id": "o03",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.44,
+       0.6
+      ]
+     },
+     {
+      "cell": 21,
+      "id": "o04",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.44,
+       0.2
+      ]
+     },
+     {
+      "cell": 19,
+      "id": "o05",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.28,
+       0.2
+      ]
+     },
+     {
+      "cell": 2,
+      "id": "o06",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.2,
+       0.04
+      ]
+     },
+     {
+      "cell": 34,
+      "id": "t0",
+      "kind": "target",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.2,
+       0.36
+      ]
+     }
+    ],
+    "robot": {
+     "attached_id": null,
+     "attachment": "free",
+     "gripper_gap_m": 0.07,
+     "q_rad": [
+      1.5707963267948966,
+      1.5707963267948966,
+      1.5707963267948966
+     ]
+    },
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "root_id": "g4a_2026101608",
+    "variant_id": "initial"
+   },
+   "seed": 2026101608,
+   "stratum": "COMPETING_DESTINATIONS"
+  },
+  {
+   "action": {
+    "action": "TRANSPORT_TARGET_TO_GOAL",
+    "contact_mode": "PLANAR_SUPPORT_CONTACT_SIDE_GRASP",
+    "contract_addendum": "docs/addenda/A1_target_end_policy_v1.md",
+    "end_policy": "SAFE_RETREAT",
+    "goal_alternatives_xy": [],
+    "goal_cell": 32,
+    "goal_orientation": "ANY (rotationally symmetric disc)",
+    "goal_tolerance_m": 0.002,
+    "goal_xy_m": [
+     0.04,
+     0.36
+    ],
+    "grasp_family": {
+     "approach_dirs": 24,
+     "approach_dist_m": 0.06,
+     "ik_branches": 2,
+     "retreat_dist_m": 0.06
+    },
+    "home_return": "OPTIONAL_DIAGNOSTIC",
+    "no_lift": true,
+    "pushing_allowed": false,
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "state_pose_uncertainty_m": 0.0,
+    "target_id": "t0"
+   },
+   "audit_pool": [
+    {
+     "category": "all-stay",
+     "cells": {},
+     "label": "all-stay"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o02": 14
+     },
+     "label": "single:o02>14"
+    },
+    {
+     "category": "triple",
+     "cells": {
+      "o00": 50,
+      "o01": 49,
+      "o07": 23
+     },
+     "label": "triple:o00>50 o01>49 o07>23"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o01": 51
+     },
+     "label": "broad:o01>51"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o02": 6
+     },
+     "label": "single:o02>6"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o03": 58
+     },
+     "label": "broad:o03>58"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o03": 11
+     },
+     "label": "single:o03>11"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o05": 62
+     },
+     "label": "broad:o05>62"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o03": 4
+     },
+     "label": "single:o03>4"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o01": 19
+     },
+     "label": "broad:o01>19"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o07": 1
+     },
+     "label": "single:o07>1"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o07": 17
+     },
+     "label": "single:o07>17"
+    }
+   ],
+   "generator": {
+    "candidates": [
+     {
+      "category": "single",
+      "cells": {
+       "o02": 14
+      },
+      "label": "single:o02>14"
+     },
+     {
+      "category": "triple",
+      "cells": {
+       "o00": 50,
+       "o01": 49,
+       "o07": 23
+      },
+      "label": "triple:o00>50 o01>49 o07>23"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o01": 51
+      },
+      "label": "broad:o01>51"
+     },
+     {
+      "category": "single",
+      "cells": {
+       "o02": 6
+      },
+      "label": "single:o02>6"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o03": 58
+      },
+      "label": "broad:o03>58"
+     },
+     {
+      "category": "single",
+      "cells": {
+       "o03": 11
+      },
+      "label": "single:o03>11"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o05": 62
+      },
+      "label": "broad:o05>62"
+     },
+     {
+      "category": "single",
+      "cells": {
+       "o03": 4
+      },
+      "label": "single:o03>4"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o01": 19
+      },
+      "label": "broad:o01>19"
+     },
+     {
+      "category": "single",
+      "cells": {
+       "o07": 1
+      },
+      "label": "single:o07>1"
+     },
+     {
+      "category": "single",
+      "cells": {
+       "o07": 17
+      },
+      "label": "single:o07>17"
+     }
+    ],
+    "generator": "B1_GEOMETRIC_V1",
+    "geometry_seed": 1225617663,
+    "proximal": [
+     "o02"
+    ],
+    "raw": 22,
+    "rejected": {
+     "duplicate": 0,
+     "static_invalid": 0,
+     "static_unresolved": 0,
+     "too_many_moves": 0
+    }
+   },
+   "goal_cell": 32,
+   "hashes": {
+    "action_context": "sha256:444533a9206d49f51a5bd399fdccb9c5035300dbaa64cbad2798d2fe080c5447",
+    "observation": "sha256:340a5e66d817a660bd3db0ee55af56e96d3379e55b540d951b9d4fad09e37f35"
+   },
+   "primary_ranking": [
+    {
+     "cells": {},
+     "declared_rank": 0,
+     "label": "all-stay",
+     "moved": 0,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o02": 14
+     },
+     "declared_rank": 1,
+     "label": "single:o02>14",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o01": 51
+     },
+     "declared_rank": 3,
+     "label": "broad:o01>51",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o02": 6
+     },
+     "declared_rank": 4,
+     "label": "single:o02>6",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o03": 58
+     },
+     "declared_rank": 5,
+     "label": "broad:o03>58",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o03": 11
+     },
+     "declared_rank": 6,
+     "label": "single:o03>11",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o05": 62
+     },
+     "declared_rank": 7,
+     "label": "broad:o05>62",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o03": 4
+     },
+     "declared_rank": 8,
+     "label": "single:o03>4",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o01": 19
+     },
+     "declared_rank": 9,
+     "label": "broad:o01>19",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o07": 1
+     },
+     "declared_rank": 10,
+     "label": "single:o07>1",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o07": 17
+     },
+     "declared_rank": 11,
+     "label": "single:o07>17",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 50,
+      "o01": 49,
+      "o07": 23
+     },
+     "declared_rank": 2,
+     "label": "triple:o00>50 o01>49 o07>23",
+     "moved": 3,
+     "score": 1.0
+    }
+   ],
+   "query_id": "g4a_r04",
+   "root_id": "g4a_r04",
+   "scene": {
+    "action_hash": null,
+    "domain_policy": "ALL_SUPPORTED",
+    "lattice": {
+     "cols": 8,
+     "pitch_m": 0.08,
+     "rows": 8
+    },
+    "legal_cells": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     25,
+     26,
+     27,
+     28,
+     29,
+     30,
+     31,
+     32,
+     33,
+     34,
+     35,
+     36,
+     37,
+     38,
+     39,
+     40,
+     41,
+     42,
+     43,
+     44,
+     45,
+     46,
+     47,
+     48,
+     49,
+     50,
+     51,
+     52,
+     53,
+     54,
+     55,
+     56,
+     57,
+     58,
+     59,
+     60,
+     61,
+     62,
+     63
+    ],
+    "objects": [
+     {
+      "cell": 7,
+      "id": "o00",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.6,
+       0.04
+      ]
+     },
+     {
+      "cell": 57,
+      "id": "o01",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.12,
+       0.6
+      ]
+     },
+     {
+      "cell": 15,
+      "id": "o02",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.6,
+       0.12
+      ]
+     },
+     {
+      "cell": 12,
+      "id": "o03",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.36,
+       0.12
+      ]
+     },
+     {
+      "cell": 8,
+      "id": "o04",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.04,
+       0.12
+      ]
+     },
+     {
+      "cell": 61,
+      "id": "o05",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.44,
+       0.6
+      ]
+     },
+     {
+      "cell": 3,
+      "id": "o06",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.28,
+       0.04
+      ]
+     },
+     {
+      "cell": 9,
+      "id": "o07",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.12,
+       0.12
+      ]
+     },
+     {
+      "cell": 30,
+      "id": "t0",
+      "kind": "target",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.52,
+       0.28
+      ]
+     }
+    ],
+    "robot": {
+     "attached_id": null,
+     "attachment": "free",
+     "gripper_gap_m": 0.07,
+     "q_rad": [
+      1.5707963267948966,
+      1.5707963267948966,
+      1.5707963267948966
+     ]
+    },
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "root_id": "g4a_2026101609",
+    "variant_id": "initial"
+   },
+   "seed": 2026101609,
+   "stratum": "NUISANCE_CONTROL"
+  },
+  {
+   "action": {
+    "action": "TRANSPORT_TARGET_TO_GOAL",
+    "contact_mode": "PLANAR_SUPPORT_CONTACT_SIDE_GRASP",
+    "contract_addendum": "docs/addenda/A1_target_end_policy_v1.md",
+    "end_policy": "SAFE_RETREAT",
+    "goal_alternatives_xy": [],
+    "goal_cell": 11,
+    "goal_orientation": "ANY (rotationally symmetric disc)",
+    "goal_tolerance_m": 0.002,
+    "goal_xy_m": [
+     0.28,
+     0.12
+    ],
+    "grasp_family": {
+     "approach_dirs": 24,
+     "approach_dist_m": 0.06,
+     "ik_branches": 2,
+     "retreat_dist_m": 0.06
+    },
+    "home_return": "OPTIONAL_DIAGNOSTIC",
+    "no_lift": true,
+    "pushing_allowed": false,
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "state_pose_uncertainty_m": 0.0,
+    "target_id": "t0"
+   },
+   "audit_pool": [
+    {
+     "category": "all-stay",
+     "cells": {},
+     "label": "all-stay"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o04": 5
+     },
+     "label": "single:o04>5"
+    },
+    {
+     "category": "pair",
+     "cells": {
+      "o03": 36,
+      "o04": 5
+     },
+     "label": "pair:o03>36 o04>5"
+    },
+    {
+     "category": "triple",
+     "cells": {
+      "o03": 36,
+      "o04": 5,
+      "o06": 1
+     },
+     "label": "triple:o03>36 o04>5 o06>1"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o00": 48
+     },
+     "label": "broad:o00>48"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o04": 1
+     },
+     "label": "single:o04>1"
+    },
+    {
+     "category": "pair",
+     "cells": {
+      "o03": 36,
+      "o04": 35
+     },
+     "label": "pair:o03>36 o04>35"
+    },
+    {
+     "category": "triple",
+     "cells": {
+      "o00": 62,
+      "o02": 18,
+      "o07": 45
+     },
+     "label": "triple:o00>62 o02>18 o07>45"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o07": 6
+     },
+     "label": "broad:o07>6"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o03": 36
+     },
+     "label": "single:o03>36"
+    },
+    {
+     "category": "pair",
+     "cells": {
+      "o04": 5,
+      "o06": 1
+     },
+     "label": "pair:o04>5 o06>1"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o03": 47
+     },
+     "label": "broad:o03>47"
+    }
+   ],
+   "generator": {
+    "candidates": [
+     {
+      "category": "single",
+      "cells": {
+       "o04": 5
+      },
+      "label": "single:o04>5"
+     },
+     {
+      "category": "pair",
+      "cells": {
+       "o03": 36,
+       "o04": 5
+      },
+      "label": "pair:o03>36 o04>5"
+     },
+     {
+      "category": "triple",
+      "cells": {
+       "o03": 36,
+       "o04": 5,
+       "o06": 1
+      },
+      "label": "triple:o03>36 o04>5 o06>1"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o00": 48
+      },
+      "label": "broad:o00>48"
+     },
+     {
+      "category": "single",
+      "cells": {
+       "o04": 1
+      },
+      "label": "single:o04>1"
+     },
+     {
+      "category": "pair",
+      "cells": {
+       "o03": 36,
+       "o04": 35
+      },
+      "label": "pair:o03>36 o04>35"
+     },
+     {
+      "category": "triple",
+      "cells": {
+       "o00": 62,
+       "o02": 18,
+       "o07": 45
+      },
+      "label": "triple:o00>62 o02>18 o07>45"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o07": 6
+      },
+      "label": "broad:o07>6"
+     },
+     {
+      "category": "single",
+      "cells": {
+       "o03": 36
+      },
+      "label": "single:o03>36"
+     },
+     {
+      "category": "pair",
+      "cells": {
+       "o04": 5,
+       "o06": 1
+      },
+      "label": "pair:o04>5 o06>1"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o03": 47
+      },
+      "label": "broad:o03>47"
+     }
+    ],
+    "generator": "B1_GEOMETRIC_V1",
+    "geometry_seed": 1236168709,
+    "proximal": [
+     "o04",
+     "o03",
+     "o06"
+    ],
+    "raw": 29,
+    "rejected": {
+     "duplicate": 0,
+     "static_invalid": 0,
+     "static_unresolved": 0,
+     "too_many_moves": 0
+    }
+   },
+   "goal_cell": 11,
+   "hashes": {
+    "action_context": "sha256:f64886f86d5f19329d2cec41e94eef43139f1a82da9d15f9022a539caea98821",
+    "observation": "sha256:790e34770412a739383514fc3e0adbc9091911d223ebf105f6a80092c376fe99"
+   },
+   "primary_ranking": [
+    {
+     "cells": {},
+     "declared_rank": 0,
+     "label": "all-stay",
+     "moved": 0,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o04": 5
+     },
+     "declared_rank": 1,
+     "label": "single:o04>5",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 48
+     },
+     "declared_rank": 4,
+     "label": "broad:o00>48",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o04": 1
+     },
+     "declared_rank": 5,
+     "label": "single:o04>1",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o07": 6
+     },
+     "declared_rank": 8,
+     "label": "broad:o07>6",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o03": 36
+     },
+     "declared_rank": 9,
+     "label": "single:o03>36",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o03": 47
+     },
+     "declared_rank": 11,
+     "label": "broad:o03>47",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o03": 36,
+      "o04": 5
+     },
+     "declared_rank": 2,
+     "label": "pair:o03>36 o04>5",
+     "moved": 2,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o03": 36,
+      "o04": 35
+     },
+     "declared_rank": 6,
+     "label": "pair:o03>36 o04>35",
+     "moved": 2,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o04": 5,
+      "o06": 1
+     },
+     "declared_rank": 10,
+     "label": "pair:o04>5 o06>1",
+     "moved": 2,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o03": 36,
+      "o04": 5,
+      "o06": 1
+     },
+     "declared_rank": 3,
+     "label": "triple:o03>36 o04>5 o06>1",
+     "moved": 3,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 62,
+      "o02": 18,
+      "o07": 45
+     },
+     "declared_rank": 7,
+     "label": "triple:o00>62 o02>18 o07>45",
+     "moved": 3,
+     "score": 1.0
+    }
+   ],
+   "query_id": "g4a_r05",
+   "root_id": "g4a_r05",
+   "scene": {
+    "action_hash": null,
+    "domain_policy": "ALL_SUPPORTED",
+    "lattice": {
+     "cols": 8,
+     "pitch_m": 0.08,
+     "rows": 8
+    },
+    "legal_cells": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     25,
+     26,
+     27,
+     28,
+     29,
+     30,
+     31,
+     32,
+     33,
+     34,
+     35,
+     36,
+     37,
+     38,
+     39,
+     40,
+     41,
+     42,
+     43,
+     44,
+     45,
+     46,
+     47,
+     48,
+     49,
+     50,
+     51,
+     52,
+     53,
+     54,
+     55,
+     56,
+     57,
+     58,
+     59,
+     60,
+     61,
+     62,
+     63
+    ],
+    "objects": [
+     {
+      "cell": 28,
+      "id": "o00",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.36,
+       0.28
+      ]
+     },
+     {
+      "cell": 41,
+      "id": "o01",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.12,
+       0.44
+      ]
+     },
+     {
+      "cell": 0,
+      "id": "o02",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.04,
+       0.04
+      ]
+     },
+     {
+      "cell": 35,
+      "id": "o03",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.28,
+       0.36
+      ]
+     },
+     {
+      "cell": 3,
+      "id": "o04",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.28,
+       0.04
+      ]
+     },
+     {
+      "cell": 7,
+      "id": "o05",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.6,
+       0.04
+      ]
+     },
+     {
+      "cell": 2,
+      "id": "o06",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.2,
+       0.04
+      ]
+     },
+     {
+      "cell": 32,
+      "id": "o07",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.04,
+       0.36
+      ]
+     },
+     {
+      "cell": 26,
+      "id": "t0",
+      "kind": "target",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.2,
+       0.28
+      ]
+     }
+    ],
+    "robot": {
+     "attached_id": null,
+     "attachment": "free",
+     "gripper_gap_m": 0.07,
+     "q_rad": [
+      1.5707963267948966,
+      1.5707963267948966,
+      1.5707963267948966
+     ]
+    },
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "root_id": "g4a_2026101610",
+    "variant_id": "initial"
+   },
+   "seed": 2026101610,
+   "stratum": "UNOCCUPIED_GOAL"
+  },
+  {
+   "action": {
+    "action": "TRANSPORT_TARGET_TO_GOAL",
+    "contact_mode": "PLANAR_SUPPORT_CONTACT_SIDE_GRASP",
+    "contract_addendum": "docs/addenda/A1_target_end_policy_v1.md",
+    "end_policy": "SAFE_RETREAT",
+    "goal_alternatives_xy": [],
+    "goal_cell": 9,
+    "goal_orientation": "ANY (rotationally symmetric disc)",
+    "goal_tolerance_m": 0.002,
+    "goal_xy_m": [
+     0.12,
+     0.12
+    ],
+    "grasp_family": {
+     "approach_dirs": 24,
+     "approach_dist_m": 0.06,
+     "ik_branches": 2,
+     "retreat_dist_m": 0.06
+    },
+    "home_return": "OPTIONAL_DIAGNOSTIC",
+    "no_lift": true,
+    "pushing_allowed": false,
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "state_pose_uncertainty_m": 0.0,
+    "target_id": "t0"
+   },
+   "audit_pool": [
+    {
+     "category": "all-stay",
+     "cells": {},
+     "label": "all-stay"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o00": 25
+     },
+     "label": "single:o00>25"
+    },
+    {
+     "category": "pair",
+     "cells": {
+      "o00": 25,
+      "o02": 24
+     },
+     "label": "pair:o00>25 o02>24"
+    },
+    {
+     "category": "triple",
+     "cells": {
+      "o00": 25,
+      "o02": 24,
+      "o06": 22
+     },
+     "label": "triple:o00>25 o02>24 o06>22"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o00": 7
+     },
+     "label": "broad:o00>7"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o00": 24
+     },
+     "label": "single:o00>24"
+    },
+    {
+     "category": "pair",
+     "cells": {
+      "o00": 17,
+      "o02": 24
+     },
+     "label": "pair:o00>17 o02>24"
+    },
+    {
+     "category": "triple",
+     "cells": {
+      "o01": 15,
+      "o03": 42,
+      "o06": 44
+     },
+     "label": "triple:o01>15 o03>42 o06>44"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o02": 12
+     },
+     "label": "broad:o02>12"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o02": 25
+     },
+     "label": "single:o02>25"
+    },
+    {
+     "category": "pair",
+     "cells": {
+      "o00": 25,
+      "o06": 22
+     },
+     "label": "pair:o00>25 o06>22"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o01": 40
+     },
+     "label": "broad:o01>40"
+    }
+   ],
+   "generator": {
+    "candidates": [
+     {
+      "category": "single",
+      "cells": {
+       "o00": 25
+      },
+      "label": "single:o00>25"
+     },
+     {
+      "category": "pair",
+      "cells": {
+       "o00": 25,
+       "o02": 24
+      },
+      "label": "pair:o00>25 o02>24"
+     },
+     {
+      "category": "triple",
+      "cells": {
+       "o00": 25,
+       "o02": 24,
+       "o06": 22
+      },
+      "label": "triple:o00>25 o02>24 o06>22"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o00": 7
+      },
+      "label": "broad:o00>7"
+     },
+     {
+      "category": "single",
+      "cells": {
+       "o00": 24
+      },
+      "label": "single:o00>24"
+     },
+     {
+      "category": "pair",
+      "cells": {
+       "o00": 17,
+       "o02": 24
+      },
+      "label": "pair:o00>17 o02>24"
+     },
+     {
+      "category": "triple",
+      "cells": {
+       "o01": 15,
+       "o03": 42,
+       "o06": 44
+      },
+      "label": "triple:o01>15 o03>42 o06>44"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o02": 12
+      },
+      "label": "broad:o02>12"
+     },
+     {
+      "category": "single",
+      "cells": {
+       "o02": 25
+      },
+      "label": "single:o02>25"
+     },
+     {
+      "category": "pair",
+      "cells": {
+       "o00": 25,
+       "o06": 22
+      },
+      "label": "pair:o00>25 o06>22"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o01": 40
+      },
+      "label": "broad:o01>40"
+     }
+    ],
+    "generator": "B1_GEOMETRIC_V1",
+    "geometry_seed": 9356622,
+    "proximal": [
+     "o00",
+     "o02",
+     "o06",
+     "o03"
+    ],
+    "raw": 27,
+    "rejected": {
+     "duplicate": 0,
+     "static_invalid": 0,
+     "static_unresolved": 0,
+     "too_many_moves": 0
+    }
+   },
+   "goal_cell": 9,
+   "hashes": {
+    "action_context": "sha256:6712907c18622bc9bb80ebf843717e5972fe3d4cfc5c486e235911801cb56d07",
+    "observation": "sha256:670e773df9a408c7febaa4c9cc68fe0e9f9d43fd9333c10a397116c1791d18d6"
+   },
+   "primary_ranking": [
+    {
+     "cells": {
+      "o00": 25
+     },
+     "declared_rank": 1,
+     "label": "single:o00>25",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 7
+     },
+     "declared_rank": 4,
+     "label": "broad:o00>7",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 24
+     },
+     "declared_rank": 5,
+     "label": "single:o00>24",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 25,
+      "o02": 24
+     },
+     "declared_rank": 2,
+     "label": "pair:o00>25 o02>24",
+     "moved": 2,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 17,
+      "o02": 24
+     },
+     "declared_rank": 6,
+     "label": "pair:o00>17 o02>24",
+     "moved": 2,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 25,
+      "o06": 22
+     },
+     "declared_rank": 10,
+     "label": "pair:o00>25 o06>22",
+     "moved": 2,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 25,
+      "o02": 24,
+      "o06": 22
+     },
+     "declared_rank": 3,
+     "label": "triple:o00>25 o02>24 o06>22",
+     "moved": 3,
+     "score": 1.0
+    }
+   ],
+   "query_id": "g4a_r06",
+   "root_id": "g4a_r06",
+   "scene": {
+    "action_hash": null,
+    "domain_policy": "ALL_SUPPORTED",
+    "lattice": {
+     "cols": 8,
+     "pitch_m": 0.08,
+     "rows": 8
+    },
+    "legal_cells": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     25,
+     26,
+     27,
+     28,
+     29,
+     30,
+     31,
+     32,
+     33,
+     34,
+     35,
+     36,
+     37,
+     38,
+     39,
+     40,
+     41,
+     42,
+     43,
+     44,
+     45,
+     46,
+     47,
+     48,
+     49,
+     50,
+     51,
+     52,
+     53,
+     54,
+     55,
+     56,
+     57,
+     58,
+     59,
+     60,
+     61,
+     62,
+     63
+    ],
+    "objects": [
+     {
+      "cell": 9,
+      "id": "o00",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.12,
+       0.12
+      ]
+     },
+     {
+      "cell": 52,
+      "id": "o01",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.36,
+       0.52
+      ]
+     },
+     {
+      "cell": 17,
+      "id": "o02",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.12,
+       0.2
+      ]
+     },
+     {
+      "cell": 27,
+      "id": "o03",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.28,
+       0.28
+      ]
+     },
+     {
+      "cell": 59,
+      "id": "o04",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.28,
+       0.6
+      ]
+     },
+     {
+      "cell": 26,
+      "id": "o05",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.2,
+       0.28
+      ]
+     },
+     {
+      "cell": 21,
+      "id": "o06",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.44,
+       0.2
+      ]
+     },
+     {
+      "cell": 20,
+      "id": "t0",
+      "kind": "target",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.36,
+       0.2
+      ]
+     }
+    ],
+    "robot": {
+     "attached_id": null,
+     "attachment": "free",
+     "gripper_gap_m": 0.07,
+     "q_rad": [
+      1.5707963267948966,
+      1.5707963267948966,
+      1.5707963267948966
+     ]
+    },
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "root_id": "g4a_2026101611",
+    "variant_id": "initial"
+   },
+   "seed": 2026101611,
+   "stratum": "OCCUPIED_GOAL"
+  },
+  {
+   "action": {
+    "action": "TRANSPORT_TARGET_TO_GOAL",
+    "contact_mode": "PLANAR_SUPPORT_CONTACT_SIDE_GRASP",
+    "contract_addendum": "docs/addenda/A1_target_end_policy_v1.md",
+    "end_policy": "SAFE_RETREAT",
+    "goal_alternatives_xy": [],
+    "goal_cell": 62,
+    "goal_orientation": "ANY (rotationally symmetric disc)",
+    "goal_tolerance_m": 0.002,
+    "goal_xy_m": [
+     0.52,
+     0.6
+    ],
+    "grasp_family": {
+     "approach_dirs": 24,
+     "approach_dist_m": 0.06,
+     "ik_branches": 2,
+     "retreat_dist_m": 0.06
+    },
+    "home_return": "OPTIONAL_DIAGNOSTIC",
+    "no_lift": true,
+    "pushing_allowed": false,
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "state_pose_uncertainty_m": 0.0,
+    "target_id": "t0"
+   },
+   "audit_pool": [
+    {
+     "category": "all-stay",
+     "cells": {},
+     "label": "all-stay"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o02": 52
+     },
+     "label": "single:o02>52"
+    },
+    {
+     "category": "pair",
+     "cells": {
+      "o00": 60,
+      "o02": 52
+     },
+     "label": "pair:o00>60 o02>52"
+    },
+    {
+     "category": "triple",
+     "cells": {
+      "o00": 60,
+      "o01": 44,
+      "o02": 52
+     },
+     "label": "triple:o00>60 o01>44 o02>52"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o00": 59
+     },
+     "label": "broad:o00>59"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o02": 60
+     },
+     "label": "single:o02>60"
+    },
+    {
+     "category": "pair",
+     "cells": {
+      "o00": 60,
+      "o02": 62
+     },
+     "label": "pair:o00>60 o02>62"
+    },
+    {
+     "category": "triple",
+     "cells": {
+      "o01": 9,
+      "o02": 15,
+      "o04": 36
+     },
+     "label": "triple:o01>9 o02>15 o04>36"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o03": 61
+     },
+     "label": "broad:o03>61"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o00": 60
+     },
+     "label": "single:o00>60"
+    },
+    {
+     "category": "pair",
+     "cells": {
+      "o01": 60,
+      "o02": 52
+     },
+     "label": "pair:o01>60 o02>52"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o03": 52
+     },
+     "label": "broad:o03>52"
+    }
+   ],
+   "generator": {
+    "candidates": [
+     {
+      "category": "single",
+      "cells": {
+       "o02": 52
+      },
+      "label": "single:o02>52"
+     },
+     {
+      "category": "pair",
+      "cells": {
+       "o00": 60,
+       "o02": 52
+      },
+      "label": "pair:o00>60 o02>52"
+     },
+     {
+      "category": "triple",
+      "cells": {
+       "o00": 60,
+       "o01": 44,
+       "o02": 52
+      },
+      "label": "triple:o00>60 o01>44 o02>52"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o00": 59
+      },
+      "label": "broad:o00>59"
+     },
+     {
+      "category": "single",
+      "cells": {
+       "o02": 60
+      },
+      "label": "single:o02>60"
+     },
+     {
+      "category": "pair",
+      "cells": {
+       "o00": 60,
+       "o02": 62
+      },
+      "label": "pair:o00>60 o02>62"
+     },
+     {
+      "category": "triple",
+      "cells": {
+       "o01": 9,
+       "o02": 15,
+       "o04": 36
+      },
+      "label": "triple:o01>9 o02>15 o04>36"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o03": 61
+      },
+      "label": "broad:o03>61"
+     },
+     {
+      "category": "single",
+      "cells": {
+       "o00": 60
+      },
+      "label": "single:o00>60"
+     },
+     {
+      "category": "pair",
+      "cells": {
+       "o01": 60,
+       "o02": 52
+      },
+      "label": "pair:o01>60 o02>52"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o03": 52
+      },
+      "label": "broad:o03>52"
+     }
+    ],
+    "generator": "B1_GEOMETRIC_V1",
+    "geometry_seed": 1040685649,
+    "proximal": [
+     "o02",
+     "o00",
+     "o01",
+     "o06"
+    ],
+    "raw": 27,
+    "rejected": {
+     "duplicate": 1,
+     "static_invalid": 0,
+     "static_unresolved": 0,
+     "too_many_moves": 0
+    }
+   },
+   "goal_cell": 62,
+   "hashes": {
+    "action_context": "sha256:8a9ee13b2b923a30c10f8ac042d1e6ee3cd36d50ba7f481aa6f0850f0ee40d05",
+    "observation": "sha256:5d8992969e05cd5bd48c69a83e82dd552d507bf67d63a5a0908fd082b36cfb3f"
+   },
+   "primary_ranking": [
+    {
+     "cells": {
+      "o00": 59
+     },
+     "declared_rank": 4,
+     "label": "broad:o00>59",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 60
+     },
+     "declared_rank": 9,
+     "label": "single:o00>60",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 60,
+      "o02": 52
+     },
+     "declared_rank": 2,
+     "label": "pair:o00>60 o02>52",
+     "moved": 2,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 60,
+      "o01": 44,
+      "o02": 52
+     },
+     "declared_rank": 3,
+     "label": "triple:o00>60 o01>44 o02>52",
+     "moved": 3,
+     "score": 1.0
+    }
+   ],
+   "query_id": "g4a_r07",
+   "root_id": "g4a_r07",
+   "scene": {
+    "action_hash": null,
+    "domain_policy": "ALL_SUPPORTED",
+    "lattice": {
+     "cols": 8,
+     "pitch_m": 0.08,
+     "rows": 8
+    },
+    "legal_cells": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     25,
+     26,
+     27,
+     28,
+     29,
+     30,
+     31,
+     32,
+     33,
+     34,
+     35,
+     36,
+     37,
+     38,
+     39,
+     40,
+     41,
+     42,
+     43,
+     44,
+     45,
+     46,
+     47,
+     48,
+     49,
+     50,
+     51,
+     52,
+     53,
+     54,
+     55,
+     56,
+     57,
+     58,
+     59,
+     60,
+     61,
+     62,
+     63
+    ],
+    "objects": [
+     {
+      "cell": 62,
+      "id": "o00",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.52,
+       0.6
+      ]
+     },
+     {
+      "cell": 63,
+      "id": "o01",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.6,
+       0.6
+      ]
+     },
+     {
+      "cell": 54,
+      "id": "o02",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.52,
+       0.52
+      ]
+     },
+     {
+      "cell": 13,
+      "id": "o03",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.44,
+       0.12
+      ]
+     },
+     {
+      "cell": 18,
+      "id": "o04",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.2,
+       0.2
+      ]
+     },
+     {
+      "cell": 28,
+      "id": "o05",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.36,
+       0.28
+      ]
+     },
+     {
+      "cell": 29,
+      "id": "o06",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.44,
+       0.28
+      ]
+     },
+     {
+      "cell": 30,
+      "id": "t0",
+      "kind": "target",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.52,
+       0.28
+      ]
+     }
+    ],
+    "robot": {
+     "attached_id": null,
+     "attachment": "free",
+     "gripper_gap_m": 0.07,
+     "q_rad": [
+      1.5707963267948966,
+      1.5707963267948966,
+      1.5707963267948966
+     ]
+    },
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "root_id": "g4a_2026101613",
+    "variant_id": "initial"
+   },
+   "seed": 2026101613,
+   "stratum": "ACCESS_DEPENDENCY"
+  },
+  {
+   "action": {
+    "action": "TRANSPORT_TARGET_TO_GOAL",
+    "contact_mode": "PLANAR_SUPPORT_CONTACT_SIDE_GRASP",
+    "contract_addendum": "docs/addenda/A1_target_end_policy_v1.md",
+    "end_policy": "SAFE_RETREAT",
+    "goal_alternatives_xy": [],
+    "goal_cell": 1,
+    "goal_orientation": "ANY (rotationally symmetric disc)",
+    "goal_tolerance_m": 0.002,
+    "goal_xy_m": [
+     0.12,
+     0.04
+    ],
+    "grasp_family": {
+     "approach_dirs": 24,
+     "approach_dist_m": 0.06,
+     "ik_branches": 2,
+     "retreat_dist_m": 0.06
+    },
+    "home_return": "OPTIONAL_DIAGNOSTIC",
+    "no_lift": true,
+    "pushing_allowed": false,
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "state_pose_uncertainty_m": 0.0,
+    "target_id": "t0"
+   },
+   "audit_pool": [
+    {
+     "category": "all-stay",
+     "cells": {},
+     "label": "all-stay"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o00": 3
+     },
+     "label": "single:o00>3"
+    },
+    {
+     "category": "pair",
+     "cells": {
+      "o00": 3,
+      "o01": 11
+     },
+     "label": "pair:o00>3 o01>11"
+    },
+    {
+     "category": "triple",
+     "cells": {
+      "o00": 3,
+      "o01": 11,
+      "o06": 34
+     },
+     "label": "triple:o00>3 o01>11 o06>34"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o05": 15
+     },
+     "label": "broad:o05>15"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o00": 11
+     },
+     "label": "single:o00>11"
+    },
+    {
+     "category": "pair",
+     "cells": {
+      "o00": 9,
+      "o01": 11
+     },
+     "label": "pair:o00>9 o01>11"
+    },
+    {
+     "category": "triple",
+     "cells": {
+      "o03": 34,
+      "o04": 14,
+      "o06": 43
+     },
+     "label": "triple:o03>34 o04>14 o06>43"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o01": 30
+     },
+     "label": "broad:o01>30"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o01": 11
+     },
+     "label": "single:o01>11"
+    },
+    {
+     "category": "pair",
+     "cells": {
+      "o00": 3,
+      "o06": 34
+     },
+     "label": "pair:o00>3 o06>34"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o06": 61
+     },
+     "label": "broad:o06>61"
+    }
+   ],
+   "generator": {
+    "candidates": [
+     {
+      "category": "single",
+      "cells": {
+       "o00": 3
+      },
+      "label": "single:o00>3"
+     },
+     {
+      "category": "pair",
+      "cells": {
+       "o00": 3,
+       "o01": 11
+      },
+      "label": "pair:o00>3 o01>11"
+     },
+     {
+      "category": "triple",
+      "cells": {
+       "o00": 3,
+       "o01": 11,
+       "o06": 34
+      },
+      "label": "triple:o00>3 o01>11 o06>34"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o05": 15
+      },
+      "label": "broad:o05>15"
+     },
+     {
+      "category": "single",
+      "cells": {
+       "o00": 11
+      },
+      "label": "single:o00>11"
+     },
+     {
+      "category": "pair",
+      "cells": {
+       "o00": 9,
+       "o01": 11
+      },
+      "label": "pair:o00>9 o01>11"
+     },
+     {
+      "category": "triple",
+      "cells": {
+       "o03": 34,
+       "o04": 14,
+       "o06": 43
+      },
+      "label": "triple:o03>34 o04>14 o06>43"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o01": 30
+      },
+      "label": "broad:o01>30"
+     },
+     {
+      "category": "single",
+      "cells": {
+       "o01": 11
+      },
+      "label": "single:o01>11"
+     },
+     {
+      "category": "pair",
+      "cells": {
+       "o00": 3,
+       "o06": 34
+      },
+      "label": "pair:o00>3 o06>34"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o06": 61
+      },
+      "label": "broad:o06>61"
+     }
+    ],
+    "generator": "B1_GEOMETRIC_V1",
+    "geometry_seed": 1163405625,
+    "proximal": [
+     "o00",
+     "o01",
+     "o06",
+     "o02",
+     "o03"
+    ],
+    "raw": 29,
+    "rejected": {
+     "duplicate": 0,
+     "static_invalid": 0,
+     "static_unresolved": 0,
+     "too_many_moves": 0
+    }
+   },
+   "goal_cell": 1,
+   "hashes": {
+    "action_context": "sha256:ad1069f97163d3571462028aa0ca766a34e7803f757230756e09621aa7694266",
+    "observation": "sha256:860811b5a0ee89f0617d3eabd6eade2341aeee94a8ffea0eade17d92455aff03"
+   },
+   "primary_ranking": [
+    {
+     "cells": {
+      "o00": 3
+     },
+     "declared_rank": 1,
+     "label": "single:o00>3",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 11
+     },
+     "declared_rank": 5,
+     "label": "single:o00>11",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 3,
+      "o01": 11
+     },
+     "declared_rank": 2,
+     "label": "pair:o00>3 o01>11",
+     "moved": 2,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 9,
+      "o01": 11
+     },
+     "declared_rank": 6,
+     "label": "pair:o00>9 o01>11",
+     "moved": 2,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 3,
+      "o06": 34
+     },
+     "declared_rank": 10,
+     "label": "pair:o00>3 o06>34",
+     "moved": 2,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 3,
+      "o01": 11,
+      "o06": 34
+     },
+     "declared_rank": 3,
+     "label": "triple:o00>3 o01>11 o06>34",
+     "moved": 3,
+     "score": 1.0
+    }
+   ],
+   "query_id": "g4a_r08",
+   "root_id": "g4a_r08",
+   "scene": {
+    "action_hash": null,
+    "domain_policy": "ALL_SUPPORTED",
+    "lattice": {
+     "cols": 8,
+     "pitch_m": 0.08,
+     "rows": 8
+    },
+    "legal_cells": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     25,
+     26,
+     27,
+     28,
+     29,
+     30,
+     31,
+     32,
+     33,
+     34,
+     35,
+     36,
+     37,
+     38,
+     39,
+     40,
+     41,
+     42,
+     43,
+     44,
+     45,
+     46,
+     47,
+     48,
+     49,
+     50,
+     51,
+     52,
+     53,
+     54,
+     55,
+     56,
+     57,
+     58,
+     59,
+     60,
+     61,
+     62,
+     63
+    ],
+    "objects": [
+     {
+      "cell": 1,
+      "id": "o00",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.12,
+       0.04
+      ]
+     },
+     {
+      "cell": 9,
+      "id": "o01",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.12,
+       0.12
+      ]
+     },
+     {
+      "cell": 0,
+      "id": "o02",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.04,
+       0.04
+      ]
+     },
+     {
+      "cell": 2,
+      "id": "o03",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.2,
+       0.04
+      ]
+     },
+     {
+      "cell": 62,
+      "id": "o04",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.52,
+       0.6
+      ]
+     },
+     {
+      "cell": 22,
+      "id": "o05",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.52,
+       0.2
+      ]
+     },
+     {
+      "cell": 32,
+      "id": "o06",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.04,
+       0.36
+      ]
+     },
+     {
+      "cell": 29,
+      "id": "o07",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.44,
+       0.28
+      ]
+     },
+     {
+      "cell": 48,
+      "id": "t0",
+      "kind": "target",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.04,
+       0.52
+      ]
+     }
+    ],
+    "robot": {
+     "attached_id": null,
+     "attachment": "free",
+     "gripper_gap_m": 0.07,
+     "q_rad": [
+      1.5707963267948966,
+      1.5707963267948966,
+      1.5707963267948966
+     ]
+    },
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "root_id": "g4a_2026101614",
+    "variant_id": "initial"
+   },
+   "seed": 2026101614,
+   "stratum": "COMPETING_DESTINATIONS"
+  },
+  {
+   "action": {
+    "action": "TRANSPORT_TARGET_TO_GOAL",
+    "contact_mode": "PLANAR_SUPPORT_CONTACT_SIDE_GRASP",
+    "contract_addendum": "docs/addenda/A1_target_end_policy_v1.md",
+    "end_policy": "SAFE_RETREAT",
+    "goal_alternatives_xy": [],
+    "goal_cell": 3,
+    "goal_orientation": "ANY (rotationally symmetric disc)",
+    "goal_tolerance_m": 0.002,
+    "goal_xy_m": [
+     0.28,
+     0.04
+    ],
+    "grasp_family": {
+     "approach_dirs": 24,
+     "approach_dist_m": 0.06,
+     "ik_branches": 2,
+     "retreat_dist_m": 0.06
+    },
+    "home_return": "OPTIONAL_DIAGNOSTIC",
+    "no_lift": true,
+    "pushing_allowed": false,
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "state_pose_uncertainty_m": 0.0,
+    "target_id": "t0"
+   },
+   "audit_pool": [
+    {
+     "category": "all-stay",
+     "cells": {},
+     "label": "all-stay"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o02": 60
+     },
+     "label": "single:o02>60"
+    },
+    {
+     "category": "triple",
+     "cells": {
+      "o00": 32,
+      "o01": 36,
+      "o04": 23
+     },
+     "label": "triple:o00>32 o01>36 o04>23"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o05": 42
+     },
+     "label": "broad:o05>42"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o02": 62
+     },
+     "label": "single:o02>62"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o00": 0
+     },
+     "label": "broad:o00>0"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o01": 34
+     },
+     "label": "single:o01>34"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o05": 2
+     },
+     "label": "broad:o05>2"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o01": 18
+     },
+     "label": "single:o01>18"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o03": 4
+     },
+     "label": "broad:o03>4"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o04": 44
+     },
+     "label": "single:o04>44"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o04": 42
+     },
+     "label": "single:o04>42"
+    }
+   ],
+   "generator": {
+    "candidates": [
+     {
+      "category": "single",
+      "cells": {
+       "o02": 60
+      },
+      "label": "single:o02>60"
+     },
+     {
+      "category": "triple",
+      "cells": {
+       "o00": 32,
+       "o01": 36,
+       "o04": 23
+      },
+      "label": "triple:o00>32 o01>36 o04>23"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o05": 42
+      },
+      "label": "broad:o05>42"
+     },
+     {
+      "category": "single",
+      "cells": {
+       "o02": 62
+      },
+      "label": "single:o02>62"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o00": 0
+      },
+      "label": "broad:o00>0"
+     },
+     {
+      "category": "single",
+      "cells": {
+       "o01": 34
+      },
+      "label": "single:o01>34"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o05": 2
+      },
+      "label": "broad:o05>2"
+     },
+     {
+      "category": "single",
+      "cells": {
+       "o01": 18
+      },
+      "label": "single:o01>18"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o03": 4
+      },
+      "label": "broad:o03>4"
+     },
+     {
+      "category": "single",
+      "cells": {
+       "o04": 44
+      },
+      "label": "single:o04>44"
+     },
+     {
+      "category": "single",
+      "cells": {
+       "o04": 42
+      },
+      "label": "single:o04>42"
+     }
+    ],
+    "generator": "B1_GEOMETRIC_V1",
+    "geometry_seed": 1096497734,
+    "proximal": [
+     "o02"
+    ],
+    "raw": 18,
+    "rejected": {
+     "duplicate": 0,
+     "static_invalid": 0,
+     "static_unresolved": 0,
+     "too_many_moves": 0
+    }
+   },
+   "goal_cell": 3,
+   "hashes": {
+    "action_context": "sha256:236b254069f8225f48d605c1b03764674ef4ebf72f06407d8d47f5a495ee0294",
+    "observation": "sha256:7c771cef640009f1933b43c7950bd08c0bc87f1facec2f326a65c8aff9a82974"
+   },
+   "primary_ranking": [
+    {
+     "cells": {},
+     "declared_rank": 0,
+     "label": "all-stay",
+     "moved": 0,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o02": 60
+     },
+     "declared_rank": 1,
+     "label": "single:o02>60",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o05": 42
+     },
+     "declared_rank": 3,
+     "label": "broad:o05>42",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o02": 62
+     },
+     "declared_rank": 4,
+     "label": "single:o02>62",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 0
+     },
+     "declared_rank": 5,
+     "label": "broad:o00>0",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o01": 34
+     },
+     "declared_rank": 6,
+     "label": "single:o01>34",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o05": 2
+     },
+     "declared_rank": 7,
+     "label": "broad:o05>2",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o01": 18
+     },
+     "declared_rank": 8,
+     "label": "single:o01>18",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o03": 4
+     },
+     "declared_rank": 9,
+     "label": "broad:o03>4",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o04": 44
+     },
+     "declared_rank": 10,
+     "label": "single:o04>44",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o04": 42
+     },
+     "declared_rank": 11,
+     "label": "single:o04>42",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 32,
+      "o01": 36,
+      "o04": 23
+     },
+     "declared_rank": 2,
+     "label": "triple:o00>32 o01>36 o04>23",
+     "moved": 3,
+     "score": 1.0
+    }
+   ],
+   "query_id": "g4a_r09",
+   "root_id": "g4a_r09",
+   "scene": {
+    "action_hash": null,
+    "domain_policy": "ALL_SUPPORTED",
+    "lattice": {
+     "cols": 8,
+     "pitch_m": 0.08,
+     "rows": 8
+    },
+    "legal_cells": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     25,
+     26,
+     27,
+     28,
+     29,
+     30,
+     31,
+     32,
+     33,
+     34,
+     35,
+     36,
+     37,
+     38,
+     39,
+     40,
+     41,
+     42,
+     43,
+     44,
+     45,
+     46,
+     47,
+     48,
+     49,
+     50,
+     51,
+     52,
+     53,
+     54,
+     55,
+     56,
+     57,
+     58,
+     59,
+     60,
+     61,
+     62,
+     63
+    ],
+    "objects": [
+     {
+      "cell": 25,
+      "id": "o00",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.12,
+       0.28
+      ]
+     },
+     {
+      "cell": 26,
+      "id": "o01",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.2,
+       0.28
+      ]
+     },
+     {
+      "cell": 61,
+      "id": "o02",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.44,
+       0.6
+      ]
+     },
+     {
+      "cell": 58,
+      "id": "o03",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.2,
+       0.6
+      ]
+     },
+     {
+      "cell": 43,
+      "id": "o04",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.28,
+       0.44
+      ]
+     },
+     {
+      "cell": 57,
+      "id": "o05",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.12,
+       0.6
+      ]
+     },
+     {
+      "cell": 46,
+      "id": "t0",
+      "kind": "target",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.52,
+       0.44
+      ]
+     }
+    ],
+    "robot": {
+     "attached_id": null,
+     "attachment": "free",
+     "gripper_gap_m": 0.07,
+     "q_rad": [
+      1.5707963267948966,
+      1.5707963267948966,
+      1.5707963267948966
+     ]
+    },
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "root_id": "g4a_2026101615",
+    "variant_id": "initial"
+   },
+   "seed": 2026101615,
+   "stratum": "NUISANCE_CONTROL"
+  },
+  {
+   "action": {
+    "action": "TRANSPORT_TARGET_TO_GOAL",
+    "contact_mode": "PLANAR_SUPPORT_CONTACT_SIDE_GRASP",
+    "contract_addendum": "docs/addenda/A1_target_end_policy_v1.md",
+    "end_policy": "SAFE_RETREAT",
+    "goal_alternatives_xy": [],
+    "goal_cell": 26,
+    "goal_orientation": "ANY (rotationally symmetric disc)",
+    "goal_tolerance_m": 0.002,
+    "goal_xy_m": [
+     0.2,
+     0.28
+    ],
+    "grasp_family": {
+     "approach_dirs": 24,
+     "approach_dist_m": 0.06,
+     "ik_branches": 2,
+     "retreat_dist_m": 0.06
+    },
+    "home_return": "OPTIONAL_DIAGNOSTIC",
+    "no_lift": true,
+    "pushing_allowed": false,
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "state_pose_uncertainty_m": 0.0,
+    "target_id": "t0"
+   },
+   "audit_pool": [
+    {
+     "category": "all-stay",
+     "cells": {},
+     "label": "all-stay"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o01": 0
+     },
+     "label": "single:o01>0"
+    },
+    {
+     "category": "triple",
+     "cells": {
+      "o00": 11,
+      "o01": 37,
+      "o02": 38
+     },
+     "label": "triple:o00>11 o01>37 o02>38"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o00": 8
+     },
+     "label": "broad:o00>8"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o01": 9
+     },
+     "label": "single:o01>9"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o01": 41
+     },
+     "label": "broad:o01>41"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o00": 20
+     },
+     "label": "single:o00>20"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o00": 49
+     },
+     "label": "broad:o00>49"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o00": 13
+     },
+     "label": "single:o00>13"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o01": 15
+     },
+     "label": "broad:o01>15"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o03": 38
+     },
+     "label": "single:o03>38"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o03": 31
+     },
+     "label": "single:o03>31"
+    }
+   ],
+   "generator": {
+    "candidates": [
+     {
+      "category": "single",
+      "cells": {
+       "o01": 0
+      },
+      "label": "single:o01>0"
+     },
+     {
+      "category": "triple",
+      "cells": {
+       "o00": 11,
+       "o01": 37,
+       "o02": 38
+      },
+      "label": "triple:o00>11 o01>37 o02>38"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o00": 8
+      },
+      "label": "broad:o00>8"
+     },
+     {
+      "category": "single",
+      "cells": {
+       "o01": 9
+      },
+      "label": "single:o01>9"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o01": 41
+      },
+      "label": "broad:o01>41"
+     },
+     {
+      "category": "single",
+      "cells": {
+       "o00": 20
+      },
+      "label": "single:o00>20"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o00": 49
+      },
+      "label": "broad:o00>49"
+     },
+     {
+      "category": "single",
+      "cells": {
+       "o00": 13
+      },
+      "label": "single:o00>13"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o01": 15
+      },
+      "label": "broad:o01>15"
+     },
+     {
+      "category": "single",
+      "cells": {
+       "o03": 38
+      },
+      "label": "single:o03>38"
+     },
+     {
+      "category": "single",
+      "cells": {
+       "o03": 31
+      },
+      "label": "single:o03>31"
+     }
+    ],
+    "generator": "B1_GEOMETRIC_V1",
+    "geometry_seed": 209737450,
+    "proximal": [
+     "o01"
+    ],
+    "raw": 14,
+    "rejected": {
+     "duplicate": 0,
+     "static_invalid": 0,
+     "static_unresolved": 0,
+     "too_many_moves": 0
+    }
+   },
+   "goal_cell": 26,
+   "hashes": {
+    "action_context": "sha256:39134c5f53569245c8dfbe22c5b9fcd530301b04f70b34278ca14eba8d570600",
+    "observation": "sha256:96c62dcacc712db20153ce80f000e219e678bcc1fc56b4e8cc142f5058a8808f"
+   },
+   "primary_ranking": [
+    {
+     "cells": {},
+     "declared_rank": 0,
+     "label": "all-stay",
+     "moved": 0,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o01": 0
+     },
+     "declared_rank": 1,
+     "label": "single:o01>0",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 8
+     },
+     "declared_rank": 3,
+     "label": "broad:o00>8",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o01": 9
+     },
+     "declared_rank": 4,
+     "label": "single:o01>9",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o01": 41
+     },
+     "declared_rank": 5,
+     "label": "broad:o01>41",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 20
+     },
+     "declared_rank": 6,
+     "label": "single:o00>20",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 49
+     },
+     "declared_rank": 7,
+     "label": "broad:o00>49",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 13
+     },
+     "declared_rank": 8,
+     "label": "single:o00>13",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o01": 15
+     },
+     "declared_rank": 9,
+     "label": "broad:o01>15",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o03": 38
+     },
+     "declared_rank": 10,
+     "label": "single:o03>38",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o03": 31
+     },
+     "declared_rank": 11,
+     "label": "single:o03>31",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 11,
+      "o01": 37,
+      "o02": 38
+     },
+     "declared_rank": 2,
+     "label": "triple:o00>11 o01>37 o02>38",
+     "moved": 3,
+     "score": 1.0
+    }
+   ],
+   "query_id": "g4a_r10",
+   "root_id": "g4a_r10",
+   "scene": {
+    "action_hash": null,
+    "domain_policy": "ALL_SUPPORTED",
+    "lattice": {
+     "cols": 8,
+     "pitch_m": 0.08,
+     "rows": 8
+    },
+    "legal_cells": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     25,
+     26,
+     27,
+     28,
+     29,
+     30,
+     31,
+     32,
+     33,
+     34,
+     35,
+     36,
+     37,
+     38,
+     39,
+     40,
+     41,
+     42,
+     43,
+     44,
+     45,
+     46,
+     47,
+     48,
+     49,
+     50,
+     51,
+     52,
+     53,
+     54,
+     55,
+     56,
+     57,
+     58,
+     59,
+     60,
+     61,
+     62,
+     63
+    ],
+    "objects": [
+     {
+      "cell": 21,
+      "id": "o00",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.44,
+       0.2
+      ]
+     },
+     {
+      "cell": 1,
+      "id": "o01",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.12,
+       0.04
+      ]
+     },
+     {
+      "cell": 62,
+      "id": "o02",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.52,
+       0.6
+      ]
+     },
+     {
+      "cell": 30,
+      "id": "o03",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.52,
+       0.28
+      ]
+     },
+     {
+      "cell": 3,
+      "id": "t0",
+      "kind": "target",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.28,
+       0.04
+      ]
+     }
+    ],
+    "robot": {
+     "attached_id": null,
+     "attachment": "free",
+     "gripper_gap_m": 0.07,
+     "q_rad": [
+      1.5707963267948966,
+      1.5707963267948966,
+      1.5707963267948966
+     ]
+    },
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "root_id": "g4a_2026101616",
+    "variant_id": "initial"
+   },
+   "seed": 2026101616,
+   "stratum": "UNOCCUPIED_GOAL"
+  },
+  {
+   "action": {
+    "action": "TRANSPORT_TARGET_TO_GOAL",
+    "contact_mode": "PLANAR_SUPPORT_CONTACT_SIDE_GRASP",
+    "contract_addendum": "docs/addenda/A1_target_end_policy_v1.md",
+    "end_policy": "SAFE_RETREAT",
+    "goal_alternatives_xy": [],
+    "goal_cell": 61,
+    "goal_orientation": "ANY (rotationally symmetric disc)",
+    "goal_tolerance_m": 0.002,
+    "goal_xy_m": [
+     0.44,
+     0.6
+    ],
+    "grasp_family": {
+     "approach_dirs": 24,
+     "approach_dist_m": 0.06,
+     "ik_branches": 2,
+     "retreat_dist_m": 0.06
+    },
+    "home_return": "OPTIONAL_DIAGNOSTIC",
+    "no_lift": true,
+    "pushing_allowed": false,
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "state_pose_uncertainty_m": 0.0,
+    "target_id": "t0"
+   },
+   "audit_pool": [
+    {
+     "category": "all-stay",
+     "cells": {},
+     "label": "all-stay"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o00": 59
+     },
+     "label": "single:o00>59"
+    },
+    {
+     "category": "pair",
+     "cells": {
+      "o00": 59,
+      "o01": 51
+     },
+     "label": "pair:o00>59 o01>51"
+    },
+    {
+     "category": "triple",
+     "cells": {
+      "o00": 10,
+      "o03": 4,
+      "o04": 21
+     },
+     "label": "triple:o00>10 o03>4 o04>21"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o02": 23
+     },
+     "label": "broad:o02>23"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o00": 63
+     },
+     "label": "single:o00>63"
+    },
+    {
+     "category": "pair",
+     "cells": {
+      "o00": 52,
+      "o01": 51
+     },
+     "label": "pair:o00>52 o01>51"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o03": 26
+     },
+     "label": "broad:o03>26"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o01": 51
+     },
+     "label": "single:o01>51"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o01": 58
+     },
+     "label": "broad:o01>58"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o01": 59
+     },
+     "label": "single:o01>59"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o04": 53
+     },
+     "label": "broad:o04>53"
+    }
+   ],
+   "generator": {
+    "candidates": [
+     {
+      "category": "single",
+      "cells": {
+       "o00": 59
+      },
+      "label": "single:o00>59"
+     },
+     {
+      "category": "pair",
+      "cells": {
+       "o00": 59,
+       "o01": 51
+      },
+      "label": "pair:o00>59 o01>51"
+     },
+     {
+      "category": "triple",
+      "cells": {
+       "o00": 10,
+       "o03": 4,
+       "o04": 21
+      },
+      "label": "triple:o00>10 o03>4 o04>21"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o02": 23
+      },
+      "label": "broad:o02>23"
+     },
+     {
+      "category": "single",
+      "cells": {
+       "o00": 63
+      },
+      "label": "single:o00>63"
+     },
+     {
+      "category": "pair",
+      "cells": {
+       "o00": 52,
+       "o01": 51
+      },
+      "label": "pair:o00>52 o01>51"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o03": 26
+      },
+      "label": "broad:o03>26"
+     },
+     {
+      "category": "single",
+      "cells": {
+       "o01": 51
+      },
+      "label": "single:o01>51"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o01": 58
+      },
+      "label": "broad:o01>58"
+     },
+     {
+      "category": "single",
+      "cells": {
+       "o01": 59
+      },
+      "label": "single:o01>59"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o04": 53
+      },
+      "label": "broad:o04>53"
+     }
+    ],
+    "generator": "B1_GEOMETRIC_V1",
+    "geometry_seed": 814011452,
+    "proximal": [
+     "o00",
+     "o01"
+    ],
+    "raw": 18,
+    "rejected": {
+     "duplicate": 0,
+     "static_invalid": 0,
+     "static_unresolved": 0,
+     "too_many_moves": 0
+    }
+   },
+   "goal_cell": 61,
+   "hashes": {
+    "action_context": "sha256:14f865f0ba8bc75c8c8be6df647c86d99638900d8aeb23d88d4c1099a7767ecd",
+    "observation": "sha256:792577bf2832dd64bcbc31fe6b932023717919c1fd358976b349c0302895f260"
+   },
+   "primary_ranking": [
+    {
+     "cells": {
+      "o00": 59
+     },
+     "declared_rank": 1,
+     "label": "single:o00>59",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 63
+     },
+     "declared_rank": 5,
+     "label": "single:o00>63",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 59,
+      "o01": 51
+     },
+     "declared_rank": 2,
+     "label": "pair:o00>59 o01>51",
+     "moved": 2,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 52,
+      "o01": 51
+     },
+     "declared_rank": 6,
+     "label": "pair:o00>52 o01>51",
+     "moved": 2,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 10,
+      "o03": 4,
+      "o04": 21
+     },
+     "declared_rank": 3,
+     "label": "triple:o00>10 o03>4 o04>21",
+     "moved": 3,
+     "score": 1.0
+    }
+   ],
+   "query_id": "g4a_r11",
+   "root_id": "g4a_r11",
+   "scene": {
+    "action_hash": null,
+    "domain_policy": "ALL_SUPPORTED",
+    "lattice": {
+     "cols": 8,
+     "pitch_m": 0.08,
+     "rows": 8
+    },
+    "legal_cells": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     25,
+     26,
+     27,
+     28,
+     29,
+     30,
+     31,
+     32,
+     33,
+     34,
+     35,
+     36,
+     37,
+     38,
+     39,
+     40,
+     41,
+     42,
+     43,
+     44,
+     45,
+     46,
+     47,
+     48,
+     49,
+     50,
+     51,
+     52,
+     53,
+     54,
+     55,
+     56,
+     57,
+     58,
+     59,
+     60,
+     61,
+     62,
+     63
+    ],
+    "objects": [
+     {
+      "cell": 61,
+      "id": "o00",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.44,
+       0.6
+      ]
+     },
+     {
+      "cell": 52,
+      "id": "o01",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.36,
+       0.52
+      ]
+     },
+     {
+      "cell": 25,
+      "id": "o02",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.12,
+       0.28
+      ]
+     },
+     {
+      "cell": 7,
+      "id": "o03",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.6,
+       0.04
+      ]
+     },
+     {
+      "cell": 16,
+      "id": "o04",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.04,
+       0.2
+      ]
+     },
+     {
+      "cell": 37,
+      "id": "t0",
+      "kind": "target",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.44,
+       0.36
+      ]
+     }
+    ],
+    "robot": {
+     "attached_id": null,
+     "attachment": "free",
+     "gripper_gap_m": 0.07,
+     "q_rad": [
+      1.5707963267948966,
+      1.5707963267948966,
+      1.5707963267948966
+     ]
+    },
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "root_id": "g4a_2026101617",
+    "variant_id": "initial"
+   },
+   "seed": 2026101617,
+   "stratum": "OCCUPIED_GOAL"
+  },
+  {
+   "action": {
+    "action": "TRANSPORT_TARGET_TO_GOAL",
+    "contact_mode": "PLANAR_SUPPORT_CONTACT_SIDE_GRASP",
+    "contract_addendum": "docs/addenda/A1_target_end_policy_v1.md",
+    "end_policy": "SAFE_RETREAT",
+    "goal_alternatives_xy": [],
+    "goal_cell": 26,
+    "goal_orientation": "ANY (rotationally symmetric disc)",
+    "goal_tolerance_m": 0.002,
+    "goal_xy_m": [
+     0.2,
+     0.28
+    ],
+    "grasp_family": {
+     "approach_dirs": 24,
+     "approach_dist_m": 0.06,
+     "ik_branches": 2,
+     "retreat_dist_m": 0.06
+    },
+    "home_return": "OPTIONAL_DIAGNOSTIC",
+    "no_lift": true,
+    "pushing_allowed": false,
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "state_pose_uncertainty_m": 0.0,
+    "target_id": "t0"
+   },
+   "audit_pool": [
+    {
+     "category": "all-stay",
+     "cells": {},
+     "label": "all-stay"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o00": 42
+     },
+     "label": "single:o00>42"
+    },
+    {
+     "category": "pair",
+     "cells": {
+      "o00": 42,
+      "o01": 20
+     },
+     "label": "pair:o00>42 o01>20"
+    },
+    {
+     "category": "triple",
+     "cells": {
+      "o00": 42,
+      "o01": 20,
+      "o03": 41
+     },
+     "label": "triple:o00>42 o01>20 o03>41"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o05": 16
+     },
+     "label": "broad:o05>16"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o00": 24
+     },
+     "label": "single:o00>24"
+    },
+    {
+     "category": "pair",
+     "cells": {
+      "o00": 27,
+      "o01": 20
+     },
+     "label": "pair:o00>27 o01>20"
+    },
+    {
+     "category": "triple",
+     "cells": {
+      "o01": 59,
+      "o05": 20,
+      "o06": 47
+     },
+     "label": "triple:o01>59 o05>20 o06>47"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o04": 63
+     },
+     "label": "broad:o04>63"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o01": 20
+     },
+     "label": "single:o01>20"
+    },
+    {
+     "category": "pair",
+     "cells": {
+      "o00": 42,
+      "o03": 41
+     },
+     "label": "pair:o00>42 o03>41"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o01": 24
+     },
+     "label": "broad:o01>24"
+    }
+   ],
+   "generator": {
+    "candidates": [
+     {
+      "category": "single",
+      "cells": {
+       "o00": 42
+      },
+      "label": "single:o00>42"
+     },
+     {
+      "category": "pair",
+      "cells": {
+       "o00": 42,
+       "o01": 20
+      },
+      "label": "pair:o00>42 o01>20"
+     },
+     {
+      "category": "triple",
+      "cells": {
+       "o00": 42,
+       "o01": 20,
+       "o03": 41
+      },
+      "label": "triple:o00>42 o01>20 o03>41"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o05": 16
+      },
+      "label": "broad:o05>16"
+     },
+     {
+      "category": "single",
+      "cells": {
+       "o00": 24
+      },
+      "label": "single:o00>24"
+     },
+     {
+      "category": "pair",
+      "cells": {
+       "o00": 27,
+       "o01": 20
+      },
+      "label": "pair:o00>27 o01>20"
+     },
+     {
+      "category": "triple",
+      "cells": {
+       "o01": 59,
+       "o05": 20,
+       "o06": 47
+      },
+      "label": "triple:o01>59 o05>20 o06>47"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o04": 63
+      },
+      "label": "broad:o04>63"
+     },
+     {
+      "category": "single",
+      "cells": {
+       "o01": 20
+      },
+      "label": "single:o01>20"
+     },
+     {
+      "category": "pair",
+      "cells": {
+       "o00": 42,
+       "o03": 41
+      },
+      "label": "pair:o00>42 o03>41"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o01": 24
+      },
+      "label": "broad:o01>24"
+     }
+    ],
+    "generator": "B1_GEOMETRIC_V1",
+    "geometry_seed": 1696933322,
+    "proximal": [
+     "o00",
+     "o01",
+     "o03",
+     "o05",
+     "o02"
+    ],
+    "raw": 27,
+    "rejected": {
+     "duplicate": 0,
+     "static_invalid": 0,
+     "static_unresolved": 0,
+     "too_many_moves": 0
+    }
+   },
+   "goal_cell": 26,
+   "hashes": {
+    "action_context": "sha256:39134c5f53569245c8dfbe22c5b9fcd530301b04f70b34278ca14eba8d570600",
+    "observation": "sha256:2a6f4a51f90760d1db94d44b3bc6ec1cc70ee04f0bb0a206a5054be9d0eed44a"
+   },
+   "primary_ranking": [
+    {
+     "cells": {
+      "o00": 42
+     },
+     "declared_rank": 1,
+     "label": "single:o00>42",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 24
+     },
+     "declared_rank": 5,
+     "label": "single:o00>24",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 42,
+      "o01": 20
+     },
+     "declared_rank": 2,
+     "label": "pair:o00>42 o01>20",
+     "moved": 2,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 27,
+      "o01": 20
+     },
+     "declared_rank": 6,
+     "label": "pair:o00>27 o01>20",
+     "moved": 2,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 42,
+      "o03": 41
+     },
+     "declared_rank": 10,
+     "label": "pair:o00>42 o03>41",
+     "moved": 2,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 42,
+      "o01": 20,
+      "o03": 41
+     },
+     "declared_rank": 3,
+     "label": "triple:o00>42 o01>20 o03>41",
+     "moved": 3,
+     "score": 1.0
+    }
+   ],
+   "query_id": "g4a_r12",
+   "root_id": "g4a_r12",
+   "scene": {
+    "action_hash": null,
+    "domain_policy": "ALL_SUPPORTED",
+    "lattice": {
+     "cols": 8,
+     "pitch_m": 0.08,
+     "rows": 8
+    },
+    "legal_cells": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     25,
+     26,
+     27,
+     28,
+     29,
+     30,
+     31,
+     32,
+     33,
+     34,
+     35,
+     36,
+     37,
+     38,
+     39,
+     40,
+     41,
+     42,
+     43,
+     44,
+     45,
+     46,
+     47,
+     48,
+     49,
+     50,
+     51,
+     52,
+     53,
+     54,
+     55,
+     56,
+     57,
+     58,
+     59,
+     60,
+     61,
+     62,
+     63
+    ],
+    "objects": [
+     {
+      "cell": 26,
+      "id": "o00",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.2,
+       0.28
+      ]
+     },
+     {
+      "cell": 27,
+      "id": "o01",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.28,
+       0.28
+      ]
+     },
+     {
+      "cell": 18,
+      "id": "o02",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.2,
+       0.2
+      ]
+     },
+     {
+      "cell": 34,
+      "id": "o03",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.2,
+       0.36
+      ]
+     },
+     {
+      "cell": 31,
+      "id": "o04",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.6,
+       0.28
+      ]
+     },
+     {
+      "cell": 28,
+      "id": "o05",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.36,
+       0.28
+      ]
+     },
+     {
+      "cell": 7,
+      "id": "o06",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.6,
+       0.04
+      ]
+     },
+     {
+      "cell": 36,
+      "id": "t0",
+      "kind": "target",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.36,
+       0.36
+      ]
+     }
+    ],
+    "robot": {
+     "attached_id": null,
+     "attachment": "free",
+     "gripper_gap_m": 0.07,
+     "q_rad": [
+      1.5707963267948966,
+      1.5707963267948966,
+      1.5707963267948966
+     ]
+    },
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "root_id": "g4a_2026101618",
+    "variant_id": "initial"
+   },
+   "seed": 2026101618,
+   "stratum": "ACCESS_DEPENDENCY"
+  },
+  {
+   "action": {
+    "action": "TRANSPORT_TARGET_TO_GOAL",
+    "contact_mode": "PLANAR_SUPPORT_CONTACT_SIDE_GRASP",
+    "contract_addendum": "docs/addenda/A1_target_end_policy_v1.md",
+    "end_policy": "SAFE_RETREAT",
+    "goal_alternatives_xy": [],
+    "goal_cell": 40,
+    "goal_orientation": "ANY (rotationally symmetric disc)",
+    "goal_tolerance_m": 0.002,
+    "goal_xy_m": [
+     0.04,
+     0.44
+    ],
+    "grasp_family": {
+     "approach_dirs": 24,
+     "approach_dist_m": 0.06,
+     "ik_branches": 2,
+     "retreat_dist_m": 0.06
+    },
+    "home_return": "OPTIONAL_DIAGNOSTIC",
+    "no_lift": true,
+    "pushing_allowed": false,
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "state_pose_uncertainty_m": 0.0,
+    "target_id": "t0"
+   },
+   "audit_pool": [
+    {
+     "category": "all-stay",
+     "cells": {},
+     "label": "all-stay"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o00": 24
+     },
+     "label": "single:o00>24"
+    },
+    {
+     "category": "pair",
+     "cells": {
+      "o00": 24,
+      "o04": 19
+     },
+     "label": "pair:o00>24 o04>19"
+    },
+    {
+     "category": "triple",
+     "cells": {
+      "o00": 24,
+      "o03": 50,
+      "o04": 19
+     },
+     "label": "triple:o00>24 o03>50 o04>19"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o01": 21
+     },
+     "label": "broad:o01>21"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o00": 56
+     },
+     "label": "single:o00>56"
+    },
+    {
+     "category": "pair",
+     "cells": {
+      "o00": 35,
+      "o04": 19
+     },
+     "label": "pair:o00>35 o04>19"
+    },
+    {
+     "category": "triple",
+     "cells": {
+      "o00": 16,
+      "o02": 0,
+      "o05": 60
+     },
+     "label": "triple:o00>16 o02>0 o05>60"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o01": 4
+     },
+     "label": "broad:o01>4"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o04": 19
+     },
+     "label": "single:o04>19"
+    },
+    {
+     "category": "pair",
+     "cells": {
+      "o00": 24,
+      "o03": 50
+     },
+     "label": "pair:o00>24 o03>50"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o04": 13
+     },
+     "label": "broad:o04>13"
+    }
+   ],
+   "generator": {
+    "candidates": [
+     {
+      "category": "single",
+      "cells": {
+       "o00": 24
+      },
+      "label": "single:o00>24"
+     },
+     {
+      "category": "pair",
+      "cells": {
+       "o00": 24,
+       "o04": 19
+      },
+      "label": "pair:o00>24 o04>19"
+     },
+     {
+      "category": "triple",
+      "cells": {
+       "o00": 24,
+       "o03": 50,
+       "o04": 19
+      },
+      "label": "triple:o00>24 o03>50 o04>19"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o01": 21
+      },
+      "label": "broad:o01>21"
+     },
+     {
+      "category": "single",
+      "cells": {
+       "o00": 56
+      },
+      "label": "single:o00>56"
+     },
+     {
+      "category": "pair",
+      "cells": {
+       "o00": 35,
+       "o04": 19
+      },
+      "label": "pair:o00>35 o04>19"
+     },
+     {
+      "category": "triple",
+      "cells": {
+       "o00": 16,
+       "o02": 0,
+       "o05": 60
+      },
+      "label": "triple:o00>16 o02>0 o05>60"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o01": 4
+      },
+      "label": "broad:o01>4"
+     },
+     {
+      "category": "single",
+      "cells": {
+       "o04": 19
+      },
+      "label": "single:o04>19"
+     },
+     {
+      "category": "pair",
+      "cells": {
+       "o00": 24,
+       "o03": 50
+      },
+      "label": "pair:o00>24 o03>50"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o04": 13
+      },
+      "label": "broad:o04>13"
+     }
+    ],
+    "generator": "B1_GEOMETRIC_V1",
+    "geometry_seed": 983971423,
+    "proximal": [
+     "o00",
+     "o04",
+     "o03",
+     "o01",
+     "o02"
+    ],
+    "raw": 27,
+    "rejected": {
+     "duplicate": 0,
+     "static_invalid": 0,
+     "static_unresolved": 0,
+     "too_many_moves": 0
+    }
+   },
+   "goal_cell": 40,
+   "hashes": {
+    "action_context": "sha256:0a76211dc30105b85390cd0e29844ecfed3eacc0ef2b1eaa9c7a2770dc4d4747",
+    "observation": "sha256:ee5555fe452ce57caef020946769c4fed15cd3c66351ae0d52ce875e8f9bcf8a"
+   },
+   "primary_ranking": [
+    {
+     "cells": {
+      "o00": 24
+     },
+     "declared_rank": 1,
+     "label": "single:o00>24",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 56
+     },
+     "declared_rank": 5,
+     "label": "single:o00>56",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 24,
+      "o04": 19
+     },
+     "declared_rank": 2,
+     "label": "pair:o00>24 o04>19",
+     "moved": 2,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 35,
+      "o04": 19
+     },
+     "declared_rank": 6,
+     "label": "pair:o00>35 o04>19",
+     "moved": 2,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 24,
+      "o03": 50
+     },
+     "declared_rank": 10,
+     "label": "pair:o00>24 o03>50",
+     "moved": 2,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 24,
+      "o03": 50,
+      "o04": 19
+     },
+     "declared_rank": 3,
+     "label": "triple:o00>24 o03>50 o04>19",
+     "moved": 3,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 16,
+      "o02": 0,
+      "o05": 60
+     },
+     "declared_rank": 7,
+     "label": "triple:o00>16 o02>0 o05>60",
+     "moved": 3,
+     "score": 1.0
+    }
+   ],
+   "query_id": "g4a_r13",
+   "root_id": "g4a_r13",
+   "scene": {
+    "action_hash": null,
+    "domain_policy": "ALL_SUPPORTED",
+    "lattice": {
+     "cols": 8,
+     "pitch_m": 0.08,
+     "rows": 8
+    },
+    "legal_cells": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     25,
+     26,
+     27,
+     28,
+     29,
+     30,
+     31,
+     32,
+     33,
+     34,
+     35,
+     36,
+     37,
+     38,
+     39,
+     40,
+     41,
+     42,
+     43,
+     44,
+     45,
+     46,
+     47,
+     48,
+     49,
+     50,
+     51,
+     52,
+     53,
+     54,
+     55,
+     56,
+     57,
+     58,
+     59,
+     60,
+     61,
+     62,
+     63
+    ],
+    "objects": [
+     {
+      "cell": 40,
+      "id": "o00",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.04,
+       0.44
+      ]
+     },
+     {
+      "cell": 32,
+      "id": "o01",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.04,
+       0.36
+      ]
+     },
+     {
+      "cell": 48,
+      "id": "o02",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.04,
+       0.52
+      ]
+     },
+     {
+      "cell": 41,
+      "id": "o03",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.12,
+       0.44
+      ]
+     },
+     {
+      "cell": 35,
+      "id": "o04",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.28,
+       0.36
+      ]
+     },
+     {
+      "cell": 47,
+      "id": "o05",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.6,
+       0.44
+      ]
+     },
+     {
+      "cell": 63,
+      "id": "o06",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.6,
+       0.6
+      ]
+     },
+     {
+      "cell": 29,
+      "id": "t0",
+      "kind": "target",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.44,
+       0.28
+      ]
+     }
+    ],
+    "robot": {
+     "attached_id": null,
+     "attachment": "free",
+     "gripper_gap_m": 0.07,
+     "q_rad": [
+      1.5707963267948966,
+      1.5707963267948966,
+      1.5707963267948966
+     ]
+    },
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "root_id": "g4a_2026101620",
+    "variant_id": "initial"
+   },
+   "seed": 2026101620,
+   "stratum": "COMPETING_DESTINATIONS"
+  },
+  {
+   "action": {
+    "action": "TRANSPORT_TARGET_TO_GOAL",
+    "contact_mode": "PLANAR_SUPPORT_CONTACT_SIDE_GRASP",
+    "contract_addendum": "docs/addenda/A1_target_end_policy_v1.md",
+    "end_policy": "SAFE_RETREAT",
+    "goal_alternatives_xy": [],
+    "goal_cell": 47,
+    "goal_orientation": "ANY (rotationally symmetric disc)",
+    "goal_tolerance_m": 0.002,
+    "goal_xy_m": [
+     0.6,
+     0.44
+    ],
+    "grasp_family": {
+     "approach_dirs": 24,
+     "approach_dist_m": 0.06,
+     "ik_branches": 2,
+     "retreat_dist_m": 0.06
+    },
+    "home_return": "OPTIONAL_DIAGNOSTIC",
+    "no_lift": true,
+    "pushing_allowed": false,
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "state_pose_uncertainty_m": 0.0,
+    "target_id": "t0"
+   },
+   "audit_pool": [
+    {
+     "category": "all-stay",
+     "cells": {},
+     "label": "all-stay"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o04": 10
+     },
+     "label": "single:o04>10"
+    },
+    {
+     "category": "triple",
+     "cells": {
+      "o01": 44,
+      "o04": 32,
+      "o05": 20
+     },
+     "label": "triple:o01>44 o04>32 o05>20"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o02": 16
+     },
+     "label": "broad:o02>16"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o04": 1
+     },
+     "label": "single:o04>1"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o02": 51
+     },
+     "label": "broad:o02>51"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o05": 51
+     },
+     "label": "single:o05>51"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o02": 19
+     },
+     "label": "broad:o02>19"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o05": 60
+     },
+     "label": "single:o05>60"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o03": 62
+     },
+     "label": "broad:o03>62"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o01": 16
+     },
+     "label": "single:o01>16"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o01": 9
+     },
+     "label": "single:o01>9"
+    }
+   ],
+   "generator": {
+    "candidates": [
+     {
+      "category": "single",
+      "cells": {
+       "o04": 10
+      },
+      "label": "single:o04>10"
+     },
+     {
+      "category": "triple",
+      "cells": {
+       "o01": 44,
+       "o04": 32,
+       "o05": 20
+      },
+      "label": "triple:o01>44 o04>32 o05>20"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o02": 16
+      },
+      "label": "broad:o02>16"
+     },
+     {
+      "category": "single",
+      "cells": {
+       "o04": 1
+      },
+      "label": "single:o04>1"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o02": 51
+      },
+      "label": "broad:o02>51"
+     },
+     {
+      "category": "single",
+      "cells": {
+       "o05": 51
+      },
+      "label": "single:o05>51"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o02": 19
+      },
+      "label": "broad:o02>19"
+     },
+     {
+      "category": "single",
+      "cells": {
+       "o05": 60
+      },
+      "label": "single:o05>60"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o03": 62
+      },
+      "label": "broad:o03>62"
+     },
+     {
+      "category": "single",
+      "cells": {
+       "o01": 16
+      },
+      "label": "single:o01>16"
+     },
+     {
+      "category": "single",
+      "cells": {
+       "o01": 9
+      },
+      "label": "single:o01>9"
+     }
+    ],
+    "generator": "B1_GEOMETRIC_V1",
+    "geometry_seed": 730398135,
+    "proximal": [
+     "o04"
+    ],
+    "raw": 18,
+    "rejected": {
+     "duplicate": 0,
+     "static_invalid": 0,
+     "static_unresolved": 0,
+     "too_many_moves": 0
+    }
+   },
+   "goal_cell": 47,
+   "hashes": {
+    "action_context": "sha256:59027fbbbacba7083150508c74410503cc7b5c5143b792b3f1ee428bcb09d2bd",
+    "observation": "sha256:dbd022557e5e49b61a5b698a05b580b9586834d720a3b43315023bbc16d42a9e"
+   },
+   "primary_ranking": [
+    {
+     "cells": {},
+     "declared_rank": 0,
+     "label": "all-stay",
+     "moved": 0,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o04": 10
+     },
+     "declared_rank": 1,
+     "label": "single:o04>10",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o02": 16
+     },
+     "declared_rank": 3,
+     "label": "broad:o02>16",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o04": 1
+     },
+     "declared_rank": 4,
+     "label": "single:o04>1",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o02": 51
+     },
+     "declared_rank": 5,
+     "label": "broad:o02>51",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o05": 51
+     },
+     "declared_rank": 6,
+     "label": "single:o05>51",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o02": 19
+     },
+     "declared_rank": 7,
+     "label": "broad:o02>19",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o05": 60
+     },
+     "declared_rank": 8,
+     "label": "single:o05>60",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o03": 62
+     },
+     "declared_rank": 9,
+     "label": "broad:o03>62",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o01": 16
+     },
+     "declared_rank": 10,
+     "label": "single:o01>16",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o01": 9
+     },
+     "declared_rank": 11,
+     "label": "single:o01>9",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o01": 44,
+      "o04": 32,
+      "o05": 20
+     },
+     "declared_rank": 2,
+     "label": "triple:o01>44 o04>32 o05>20",
+     "moved": 3,
+     "score": 1.0
+    }
+   ],
+   "query_id": "g4a_r14",
+   "root_id": "g4a_r14",
+   "scene": {
+    "action_hash": null,
+    "domain_policy": "ALL_SUPPORTED",
+    "lattice": {
+     "cols": 8,
+     "pitch_m": 0.08,
+     "rows": 8
+    },
+    "legal_cells": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     25,
+     26,
+     27,
+     28,
+     29,
+     30,
+     31,
+     32,
+     33,
+     34,
+     35,
+     36,
+     37,
+     38,
+     39,
+     40,
+     41,
+     42,
+     43,
+     44,
+     45,
+     46,
+     47,
+     48,
+     49,
+     50,
+     51,
+     52,
+     53,
+     54,
+     55,
+     56,
+     57,
+     58,
+     59,
+     60,
+     61,
+     62,
+     63
+    ],
+    "objects": [
+     {
+      "cell": 50,
+      "id": "o00",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.2,
+       0.52
+      ]
+     },
+     {
+      "cell": 17,
+      "id": "o01",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.12,
+       0.2
+      ]
+     },
+     {
+      "cell": 48,
+      "id": "o02",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.04,
+       0.52
+      ]
+     },
+     {
+      "cell": 59,
+      "id": "o03",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.28,
+       0.6
+      ]
+     },
+     {
+      "cell": 2,
+      "id": "o04",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.2,
+       0.04
+      ]
+     },
+     {
+      "cell": 52,
+      "id": "o05",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.36,
+       0.52
+      ]
+     },
+     {
+      "cell": 12,
+      "id": "t0",
+      "kind": "target",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.36,
+       0.12
+      ]
+     }
+    ],
+    "robot": {
+     "attached_id": null,
+     "attachment": "free",
+     "gripper_gap_m": 0.07,
+     "q_rad": [
+      1.5707963267948966,
+      1.5707963267948966,
+      1.5707963267948966
+     ]
+    },
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "root_id": "g4a_2026101621",
+    "variant_id": "initial"
+   },
+   "seed": 2026101621,
+   "stratum": "NUISANCE_CONTROL"
+  },
+  {
+   "action": {
+    "action": "TRANSPORT_TARGET_TO_GOAL",
+    "contact_mode": "PLANAR_SUPPORT_CONTACT_SIDE_GRASP",
+    "contract_addendum": "docs/addenda/A1_target_end_policy_v1.md",
+    "end_policy": "SAFE_RETREAT",
+    "goal_alternatives_xy": [],
+    "goal_cell": 8,
+    "goal_orientation": "ANY (rotationally symmetric disc)",
+    "goal_tolerance_m": 0.002,
+    "goal_xy_m": [
+     0.04,
+     0.12
+    ],
+    "grasp_family": {
+     "approach_dirs": 24,
+     "approach_dist_m": 0.06,
+     "ik_branches": 2,
+     "retreat_dist_m": 0.06
+    },
+    "home_return": "OPTIONAL_DIAGNOSTIC",
+    "no_lift": true,
+    "pushing_allowed": false,
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "state_pose_uncertainty_m": 0.0,
+    "target_id": "t0"
+   },
+   "audit_pool": [
+    {
+     "category": "all-stay",
+     "cells": {},
+     "label": "all-stay"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o03": 24
+     },
+     "label": "single:o03>24"
+    },
+    {
+     "category": "pair",
+     "cells": {
+      "o00": 25,
+      "o03": 24
+     },
+     "label": "pair:o00>25 o03>24"
+    },
+    {
+     "category": "triple",
+     "cells": {
+      "o00": 25,
+      "o01": 4,
+      "o03": 24
+     },
+     "label": "triple:o00>25 o01>4 o03>24"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o05": 37
+     },
+     "label": "broad:o05>37"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o03": 25
+     },
+     "label": "single:o03>25"
+    },
+    {
+     "category": "pair",
+     "cells": {
+      "o00": 25,
+      "o03": 0
+     },
+     "label": "pair:o00>25 o03>0"
+    },
+    {
+     "category": "triple",
+     "cells": {
+      "o01": 13,
+      "o02": 25,
+      "o05": 37
+     },
+     "label": "triple:o01>13 o02>25 o05>37"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o03": 14
+     },
+     "label": "broad:o03>14"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o00": 24
+     },
+     "label": "single:o00>24"
+    },
+    {
+     "category": "pair",
+     "cells": {
+      "o01": 4,
+      "o03": 24
+     },
+     "label": "pair:o01>4 o03>24"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o00": 31
+     },
+     "label": "broad:o00>31"
+    }
+   ],
+   "generator": {
+    "candidates": [
+     {
+      "category": "single",
+      "cells": {
+       "o03": 24
+      },
+      "label": "single:o03>24"
+     },
+     {
+      "category": "pair",
+      "cells": {
+       "o00": 25,
+       "o03": 24
+      },
+      "label": "pair:o00>25 o03>24"
+     },
+     {
+      "category": "triple",
+      "cells": {
+       "o00": 25,
+       "o01": 4,
+       "o03": 24
+      },
+      "label": "triple:o00>25 o01>4 o03>24"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o05": 37
+      },
+      "label": "broad:o05>37"
+     },
+     {
+      "category": "single",
+      "cells": {
+       "o03": 25
+      },
+      "label": "single:o03>25"
+     },
+     {
+      "category": "pair",
+      "cells": {
+       "o00": 25,
+       "o03": 0
+      },
+      "label": "pair:o00>25 o03>0"
+     },
+     {
+      "category": "triple",
+      "cells": {
+       "o01": 13,
+       "o02": 25,
+       "o05": 37
+      },
+      "label": "triple:o01>13 o02>25 o05>37"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o03": 14
+      },
+      "label": "broad:o03>14"
+     },
+     {
+      "category": "single",
+      "cells": {
+       "o00": 24
+      },
+      "label": "single:o00>24"
+     },
+     {
+      "category": "pair",
+      "cells": {
+       "o01": 4,
+       "o03": 24
+      },
+      "label": "pair:o01>4 o03>24"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o00": 31
+      },
+      "label": "broad:o00>31"
+     }
+    ],
+    "generator": "B1_GEOMETRIC_V1",
+    "geometry_seed": 2146698048,
+    "proximal": [
+     "o03",
+     "o00",
+     "o01",
+     "o06"
+    ],
+    "raw": 27,
+    "rejected": {
+     "duplicate": 0,
+     "static_invalid": 0,
+     "static_unresolved": 0,
+     "too_many_moves": 0
+    }
+   },
+   "goal_cell": 8,
+   "hashes": {
+    "action_context": "sha256:a816faeef2ad038953d7fdf334c02f7ef4f8ae1dbd3168080d5ebf911a2ba4bf",
+    "observation": "sha256:f3d785a0978a23e49b208001e51c552e309fae637f45211262807086b0c07705"
+   },
+   "primary_ranking": [
+    {
+     "cells": {},
+     "declared_rank": 0,
+     "label": "all-stay",
+     "moved": 0,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o03": 24
+     },
+     "declared_rank": 1,
+     "label": "single:o03>24",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o05": 37
+     },
+     "declared_rank": 4,
+     "label": "broad:o05>37",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o03": 25
+     },
+     "declared_rank": 5,
+     "label": "single:o03>25",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o03": 14
+     },
+     "declared_rank": 8,
+     "label": "broad:o03>14",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 24
+     },
+     "declared_rank": 9,
+     "label": "single:o00>24",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 31
+     },
+     "declared_rank": 11,
+     "label": "broad:o00>31",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 25,
+      "o03": 24
+     },
+     "declared_rank": 2,
+     "label": "pair:o00>25 o03>24",
+     "moved": 2,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 25,
+      "o03": 0
+     },
+     "declared_rank": 6,
+     "label": "pair:o00>25 o03>0",
+     "moved": 2,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o01": 4,
+      "o03": 24
+     },
+     "declared_rank": 10,
+     "label": "pair:o01>4 o03>24",
+     "moved": 2,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 25,
+      "o01": 4,
+      "o03": 24
+     },
+     "declared_rank": 3,
+     "label": "triple:o00>25 o01>4 o03>24",
+     "moved": 3,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o01": 13,
+      "o02": 25,
+      "o05": 37
+     },
+     "declared_rank": 7,
+     "label": "triple:o01>13 o02>25 o05>37",
+     "moved": 3,
+     "score": 1.0
+    }
+   ],
+   "query_id": "g4a_r15",
+   "root_id": "g4a_r15",
+   "scene": {
+    "action_hash": null,
+    "domain_policy": "ALL_SUPPORTED",
+    "lattice": {
+     "cols": 8,
+     "pitch_m": 0.08,
+     "rows": 8
+    },
+    "legal_cells": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     25,
+     26,
+     27,
+     28,
+     29,
+     30,
+     31,
+     32,
+     33,
+     34,
+     35,
+     36,
+     37,
+     38,
+     39,
+     40,
+     41,
+     42,
+     43,
+     44,
+     45,
+     46,
+     47,
+     48,
+     49,
+     50,
+     51,
+     52,
+     53,
+     54,
+     55,
+     56,
+     57,
+     58,
+     59,
+     60,
+     61,
+     62,
+     63
+    ],
+    "objects": [
+     {
+      "cell": 0,
+      "id": "o00",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.04,
+       0.04
+      ]
+     },
+     {
+      "cell": 1,
+      "id": "o01",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.12,
+       0.04
+      ]
+     },
+     {
+      "cell": 62,
+      "id": "o02",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.52,
+       0.6
+      ]
+     },
+     {
+      "cell": 16,
+      "id": "o03",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.04,
+       0.2
+      ]
+     },
+     {
+      "cell": 48,
+      "id": "o04",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.04,
+       0.52
+      ]
+     },
+     {
+      "cell": 53,
+      "id": "o05",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.44,
+       0.52
+      ]
+     },
+     {
+      "cell": 28,
+      "id": "o06",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.36,
+       0.28
+      ]
+     },
+     {
+      "cell": 22,
+      "id": "t0",
+      "kind": "target",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.52,
+       0.2
+      ]
+     }
+    ],
+    "robot": {
+     "attached_id": null,
+     "attachment": "free",
+     "gripper_gap_m": 0.07,
+     "q_rad": [
+      1.5707963267948966,
+      1.5707963267948966,
+      1.5707963267948966
+     ]
+    },
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "root_id": "g4a_2026101622",
+    "variant_id": "initial"
+   },
+   "seed": 2026101622,
+   "stratum": "UNOCCUPIED_GOAL"
+  },
+  {
+   "action": {
+    "action": "TRANSPORT_TARGET_TO_GOAL",
+    "contact_mode": "PLANAR_SUPPORT_CONTACT_SIDE_GRASP",
+    "contract_addendum": "docs/addenda/A1_target_end_policy_v1.md",
+    "end_policy": "SAFE_RETREAT",
+    "goal_alternatives_xy": [],
+    "goal_cell": 13,
+    "goal_orientation": "ANY (rotationally symmetric disc)",
+    "goal_tolerance_m": 0.002,
+    "goal_xy_m": [
+     0.44,
+     0.12
+    ],
+    "grasp_family": {
+     "approach_dirs": 24,
+     "approach_dist_m": 0.06,
+     "ik_branches": 2,
+     "retreat_dist_m": 0.06
+    },
+    "home_return": "OPTIONAL_DIAGNOSTIC",
+    "no_lift": true,
+    "pushing_allowed": false,
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "state_pose_uncertainty_m": 0.0,
+    "target_id": "t0"
+   },
+   "audit_pool": [
+    {
+     "category": "all-stay",
+     "cells": {},
+     "label": "all-stay"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o00": 11
+     },
+     "label": "single:o00>11"
+    },
+    {
+     "category": "pair",
+     "cells": {
+      "o00": 11,
+      "o02": 19
+     },
+     "label": "pair:o00>11 o02>19"
+    },
+    {
+     "category": "triple",
+     "cells": {
+      "o00": 60,
+      "o01": 19,
+      "o04": 49
+     },
+     "label": "triple:o00>60 o01>19 o04>49"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o00": 1
+     },
+     "label": "broad:o00>1"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o00": 3
+     },
+     "label": "single:o00>3"
+    },
+    {
+     "category": "pair",
+     "cells": {
+      "o00": 21,
+      "o02": 19
+     },
+     "label": "pair:o00>21 o02>19"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o02": 55
+     },
+     "label": "broad:o02>55"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o02": 19
+     },
+     "label": "single:o02>19"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o00": 19
+     },
+     "label": "broad:o00>19"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o02": 23
+     },
+     "label": "single:o02>23"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o00": 39
+     },
+     "label": "broad:o00>39"
+    }
+   ],
+   "generator": {
+    "candidates": [
+     {
+      "category": "single",
+      "cells": {
+       "o00": 11
+      },
+      "label": "single:o00>11"
+     },
+     {
+      "category": "pair",
+      "cells": {
+       "o00": 11,
+       "o02": 19
+      },
+      "label": "pair:o00>11 o02>19"
+     },
+     {
+      "category": "triple",
+      "cells": {
+       "o00": 60,
+       "o01": 19,
+       "o04": 49
+      },
+      "label": "triple:o00>60 o01>19 o04>49"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o00": 1
+      },
+      "label": "broad:o00>1"
+     },
+     {
+      "category": "single",
+      "cells": {
+       "o00": 3
+      },
+      "label": "single:o00>3"
+     },
+     {
+      "category": "pair",
+      "cells": {
+       "o00": 21,
+       "o02": 19
+      },
+      "label": "pair:o00>21 o02>19"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o02": 55
+      },
+      "label": "broad:o02>55"
+     },
+     {
+      "category": "single",
+      "cells": {
+       "o02": 19
+      },
+      "label": "single:o02>19"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o00": 19
+      },
+      "label": "broad:o00>19"
+     },
+     {
+      "category": "single",
+      "cells": {
+       "o02": 23
+      },
+      "label": "single:o02>23"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o00": 39
+      },
+      "label": "broad:o00>39"
+     }
+    ],
+    "generator": "B1_GEOMETRIC_V1",
+    "geometry_seed": 1914378080,
+    "proximal": [
+     "o00",
+     "o02"
+    ],
+    "raw": 18,
+    "rejected": {
+     "duplicate": 0,
+     "static_invalid": 0,
+     "static_unresolved": 0,
+     "too_many_moves": 0
+    }
+   },
+   "goal_cell": 13,
+   "hashes": {
+    "action_context": "sha256:e72d9aa55e181b4642fd16f4826764df52e5fe950d285a30353ce2add4cb7590",
+    "observation": "sha256:694864df15f7a18e19f16426254a7095e18a9f996aa7a92b875838d534d63378"
+   },
+   "primary_ranking": [
+    {
+     "cells": {
+      "o00": 11
+     },
+     "declared_rank": 1,
+     "label": "single:o00>11",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 1
+     },
+     "declared_rank": 4,
+     "label": "broad:o00>1",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 3
+     },
+     "declared_rank": 5,
+     "label": "single:o00>3",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 19
+     },
+     "declared_rank": 9,
+     "label": "broad:o00>19",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 39
+     },
+     "declared_rank": 11,
+     "label": "broad:o00>39",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 11,
+      "o02": 19
+     },
+     "declared_rank": 2,
+     "label": "pair:o00>11 o02>19",
+     "moved": 2,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 21,
+      "o02": 19
+     },
+     "declared_rank": 6,
+     "label": "pair:o00>21 o02>19",
+     "moved": 2,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 60,
+      "o01": 19,
+      "o04": 49
+     },
+     "declared_rank": 3,
+     "label": "triple:o00>60 o01>19 o04>49",
+     "moved": 3,
+     "score": 1.0
+    }
+   ],
+   "query_id": "g4a_r16",
+   "root_id": "g4a_r16",
+   "scene": {
+    "action_hash": null,
+    "domain_policy": "ALL_SUPPORTED",
+    "lattice": {
+     "cols": 8,
+     "pitch_m": 0.08,
+     "rows": 8
+    },
+    "legal_cells": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     25,
+     26,
+     27,
+     28,
+     29,
+     30,
+     31,
+     32,
+     33,
+     34,
+     35,
+     36,
+     37,
+     38,
+     39,
+     40,
+     41,
+     42,
+     43,
+     44,
+     45,
+     46,
+     47,
+     48,
+     49,
+     50,
+     51,
+     52,
+     53,
+     54,
+     55,
+     56,
+     57,
+     58,
+     59,
+     60,
+     61,
+     62,
+     63
+    ],
+    "objects": [
+     {
+      "cell": 13,
+      "id": "o00",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.44,
+       0.12
+      ]
+     },
+     {
+      "cell": 31,
+      "id": "o01",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.6,
+       0.28
+      ]
+     },
+     {
+      "cell": 21,
+      "id": "o02",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.44,
+       0.2
+      ]
+     },
+     {
+      "cell": 62,
+      "id": "o03",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.52,
+       0.6
+      ]
+     },
+     {
+      "cell": 15,
+      "id": "o04",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.6,
+       0.12
+      ]
+     },
+     {
+      "cell": 44,
+      "id": "t0",
+      "kind": "target",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.36,
+       0.44
+      ]
+     }
+    ],
+    "robot": {
+     "attached_id": null,
+     "attachment": "free",
+     "gripper_gap_m": 0.07,
+     "q_rad": [
+      1.5707963267948966,
+      1.5707963267948966,
+      1.5707963267948966
+     ]
+    },
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "root_id": "g4a_2026101623",
+    "variant_id": "initial"
+   },
+   "seed": 2026101623,
+   "stratum": "OCCUPIED_GOAL"
+  },
+  {
+   "action": {
+    "action": "TRANSPORT_TARGET_TO_GOAL",
+    "contact_mode": "PLANAR_SUPPORT_CONTACT_SIDE_GRASP",
+    "contract_addendum": "docs/addenda/A1_target_end_policy_v1.md",
+    "end_policy": "SAFE_RETREAT",
+    "goal_alternatives_xy": [],
+    "goal_cell": 60,
+    "goal_orientation": "ANY (rotationally symmetric disc)",
+    "goal_tolerance_m": 0.002,
+    "goal_xy_m": [
+     0.36,
+     0.6
+    ],
+    "grasp_family": {
+     "approach_dirs": 24,
+     "approach_dist_m": 0.06,
+     "ik_branches": 2,
+     "retreat_dist_m": 0.06
+    },
+    "home_return": "OPTIONAL_DIAGNOSTIC",
+    "no_lift": true,
+    "pushing_allowed": false,
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "state_pose_uncertainty_m": 0.0,
+    "target_id": "t0"
+   },
+   "audit_pool": [
+    {
+     "category": "all-stay",
+     "cells": {},
+     "label": "all-stay"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o00": 58
+     },
+     "label": "single:o00>58"
+    },
+    {
+     "category": "pair",
+     "cells": {
+      "o00": 58,
+      "o01": 43
+     },
+     "label": "pair:o00>58 o01>43"
+    },
+    {
+     "category": "triple",
+     "cells": {
+      "o00": 58,
+      "o01": 43,
+      "o02": 63
+     },
+     "label": "triple:o00>58 o01>43 o02>63"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o00": 42
+     },
+     "label": "broad:o00>42"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o00": 50
+     },
+     "label": "single:o00>50"
+    },
+    {
+     "category": "pair",
+     "cells": {
+      "o00": 52,
+      "o01": 43
+     },
+     "label": "pair:o00>52 o01>43"
+    },
+    {
+     "category": "triple",
+     "cells": {
+      "o04": 14,
+      "o06": 59,
+      "o07": 16
+     },
+     "label": "triple:o04>14 o06>59 o07>16"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o06": 5
+     },
+     "label": "broad:o06>5"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o01": 43
+     },
+     "label": "single:o01>43"
+    },
+    {
+     "category": "pair",
+     "cells": {
+      "o00": 58,
+      "o02": 63
+     },
+     "label": "pair:o00>58 o02>63"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o00": 62
+     },
+     "label": "broad:o00>62"
+    }
+   ],
+   "generator": {
+    "candidates": [
+     {
+      "category": "single",
+      "cells": {
+       "o00": 58
+      },
+      "label": "single:o00>58"
+     },
+     {
+      "category": "pair",
+      "cells": {
+       "o00": 58,
+       "o01": 43
+      },
+      "label": "pair:o00>58 o01>43"
+     },
+     {
+      "category": "triple",
+      "cells": {
+       "o00": 58,
+       "o01": 43,
+       "o02": 63
+      },
+      "label": "triple:o00>58 o01>43 o02>63"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o00": 42
+      },
+      "label": "broad:o00>42"
+     },
+     {
+      "category": "single",
+      "cells": {
+       "o00": 50
+      },
+      "label": "single:o00>50"
+     },
+     {
+      "category": "pair",
+      "cells": {
+       "o00": 52,
+       "o01": 43
+      },
+      "label": "pair:o00>52 o01>43"
+     },
+     {
+      "category": "triple",
+      "cells": {
+       "o04": 14,
+       "o06": 59,
+       "o07": 16
+      },
+      "label": "triple:o04>14 o06>59 o07>16"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o06": 5
+      },
+      "label": "broad:o06>5"
+     },
+     {
+      "category": "single",
+      "cells": {
+       "o01": 43
+      },
+      "label": "single:o01>43"
+     },
+     {
+      "category": "pair",
+      "cells": {
+       "o00": 58,
+       "o02": 63
+      },
+      "label": "pair:o00>58 o02>63"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o00": 62
+      },
+      "label": "broad:o00>62"
+     }
+    ],
+    "generator": "B1_GEOMETRIC_V1",
+    "geometry_seed": 1827003086,
+    "proximal": [
+     "o00",
+     "o01",
+     "o02",
+     "o04",
+     "o03"
+    ],
+    "raw": 29,
+    "rejected": {
+     "duplicate": 0,
+     "static_invalid": 0,
+     "static_unresolved": 0,
+     "too_many_moves": 0
+    }
+   },
+   "goal_cell": 60,
+   "hashes": {
+    "action_context": "sha256:79222ce1bd22c48ae67adf6004e519d5aa4cb736bc7d7eaba3f602c1f9465dc6",
+    "observation": "sha256:cfae8842228de022d78c5c040b2071f40c5d0bbc812ad40ae4407fbfa69b27a6"
+   },
+   "primary_ranking": [
+    {
+     "cells": {
+      "o00": 58
+     },
+     "declared_rank": 1,
+     "label": "single:o00>58",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 42
+     },
+     "declared_rank": 4,
+     "label": "broad:o00>42",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 50
+     },
+     "declared_rank": 5,
+     "label": "single:o00>50",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 62
+     },
+     "declared_rank": 11,
+     "label": "broad:o00>62",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 58,
+      "o01": 43
+     },
+     "declared_rank": 2,
+     "label": "pair:o00>58 o01>43",
+     "moved": 2,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 52,
+      "o01": 43
+     },
+     "declared_rank": 6,
+     "label": "pair:o00>52 o01>43",
+     "moved": 2,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 58,
+      "o02": 63
+     },
+     "declared_rank": 10,
+     "label": "pair:o00>58 o02>63",
+     "moved": 2,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 58,
+      "o01": 43,
+      "o02": 63
+     },
+     "declared_rank": 3,
+     "label": "triple:o00>58 o01>43 o02>63",
+     "moved": 3,
+     "score": 1.0
+    }
+   ],
+   "query_id": "g4a_r17",
+   "root_id": "g4a_r17",
+   "scene": {
+    "action_hash": null,
+    "domain_policy": "ALL_SUPPORTED",
+    "lattice": {
+     "cols": 8,
+     "pitch_m": 0.08,
+     "rows": 8
+    },
+    "legal_cells": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     25,
+     26,
+     27,
+     28,
+     29,
+     30,
+     31,
+     32,
+     33,
+     34,
+     35,
+     36,
+     37,
+     38,
+     39,
+     40,
+     41,
+     42,
+     43,
+     44,
+     45,
+     46,
+     47,
+     48,
+     49,
+     50,
+     51,
+     52,
+     53,
+     54,
+     55,
+     56,
+     57,
+     58,
+     59,
+     60,
+     61,
+     62,
+     63
+    ],
+    "objects": [
+     {
+      "cell": 60,
+      "id": "o00",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.36,
+       0.6
+      ]
+     },
+     {
+      "cell": 52,
+      "id": "o01",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.36,
+       0.52
+      ]
+     },
+     {
+      "cell": 61,
+      "id": "o02",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.44,
+       0.6
+      ]
+     },
+     {
+      "cell": 51,
+      "id": "o03",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.28,
+       0.52
+      ]
+     },
+     {
+      "cell": 38,
+      "id": "o04",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.52,
+       0.36
+      ]
+     },
+     {
+      "cell": 25,
+      "id": "o05",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.12,
+       0.28
+      ]
+     },
+     {
+      "cell": 12,
+      "id": "o06",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.36,
+       0.12
+      ]
+     },
+     {
+      "cell": 28,
+      "id": "o07",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.36,
+       0.28
+      ]
+     },
+     {
+      "cell": 39,
+      "id": "t0",
+      "kind": "target",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.6,
+       0.36
+      ]
+     }
+    ],
+    "robot": {
+     "attached_id": null,
+     "attachment": "free",
+     "gripper_gap_m": 0.07,
+     "q_rad": [
+      1.5707963267948966,
+      1.5707963267948966,
+      1.5707963267948966
+     ]
+    },
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "root_id": "g4a_2026101624",
+    "variant_id": "initial"
+   },
+   "seed": 2026101624,
+   "stratum": "ACCESS_DEPENDENCY"
+  },
+  {
+   "action": {
+    "action": "TRANSPORT_TARGET_TO_GOAL",
+    "contact_mode": "PLANAR_SUPPORT_CONTACT_SIDE_GRASP",
+    "contract_addendum": "docs/addenda/A1_target_end_policy_v1.md",
+    "end_policy": "SAFE_RETREAT",
+    "goal_alternatives_xy": [],
+    "goal_cell": 24,
+    "goal_orientation": "ANY (rotationally symmetric disc)",
+    "goal_tolerance_m": 0.002,
+    "goal_xy_m": [
+     0.04,
+     0.28
+    ],
+    "grasp_family": {
+     "approach_dirs": 24,
+     "approach_dist_m": 0.06,
+     "ik_branches": 2,
+     "retreat_dist_m": 0.06
+    },
+    "home_return": "OPTIONAL_DIAGNOSTIC",
+    "no_lift": true,
+    "pushing_allowed": false,
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "state_pose_uncertainty_m": 0.0,
+    "target_id": "t0"
+   },
+   "audit_pool": [
+    {
+     "category": "all-stay",
+     "cells": {},
+     "label": "all-stay"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o00": 40
+     },
+     "label": "single:o00>40"
+    },
+    {
+     "category": "pair",
+     "cells": {
+      "o00": 40,
+      "o03": 41
+     },
+     "label": "pair:o00>40 o03>41"
+    },
+    {
+     "category": "triple",
+     "cells": {
+      "o00": 40,
+      "o01": 8,
+      "o03": 41
+     },
+     "label": "triple:o00>40 o01>8 o03>41"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o02": 53
+     },
+     "label": "broad:o02>53"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o00": 8
+     },
+     "label": "single:o00>8"
+    },
+    {
+     "category": "pair",
+     "cells": {
+      "o00": 25,
+      "o03": 41
+     },
+     "label": "pair:o00>25 o03>41"
+    },
+    {
+     "category": "triple",
+     "cells": {
+      "o00": 58,
+      "o01": 51,
+      "o02": 22
+     },
+     "label": "triple:o00>58 o01>51 o02>22"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o01": 28
+     },
+     "label": "broad:o01>28"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o03": 41
+     },
+     "label": "single:o03>41"
+    },
+    {
+     "category": "pair",
+     "cells": {
+      "o00": 40,
+      "o01": 8
+     },
+     "label": "pair:o00>40 o01>8"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o01": 37
+     },
+     "label": "broad:o01>37"
+    }
+   ],
+   "generator": {
+    "candidates": [
+     {
+      "category": "single",
+      "cells": {
+       "o00": 40
+      },
+      "label": "single:o00>40"
+     },
+     {
+      "category": "pair",
+      "cells": {
+       "o00": 40,
+       "o03": 41
+      },
+      "label": "pair:o00>40 o03>41"
+     },
+     {
+      "category": "triple",
+      "cells": {
+       "o00": 40,
+       "o01": 8,
+       "o03": 41
+      },
+      "label": "triple:o00>40 o01>8 o03>41"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o02": 53
+      },
+      "label": "broad:o02>53"
+     },
+     {
+      "category": "single",
+      "cells": {
+       "o00": 8
+      },
+      "label": "single:o00>8"
+     },
+     {
+      "category": "pair",
+      "cells": {
+       "o00": 25,
+       "o03": 41
+      },
+      "label": "pair:o00>25 o03>41"
+     },
+     {
+      "category": "triple",
+      "cells": {
+       "o00": 58,
+       "o01": 51,
+       "o02": 22
+      },
+      "label": "triple:o00>58 o01>51 o02>22"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o01": 28
+      },
+      "label": "broad:o01>28"
+     },
+     {
+      "category": "single",
+      "cells": {
+       "o03": 41
+      },
+      "label": "single:o03>41"
+     },
+     {
+      "category": "pair",
+      "cells": {
+       "o00": 40,
+       "o01": 8
+      },
+      "label": "pair:o00>40 o01>8"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o01": 37
+      },
+      "label": "broad:o01>37"
+     }
+    ],
+    "generator": "B1_GEOMETRIC_V1",
+    "geometry_seed": 395877996,
+    "proximal": [
+     "o00",
+     "o03",
+     "o01",
+     "o02"
+    ],
+    "raw": 21,
+    "rejected": {
+     "duplicate": 1,
+     "static_invalid": 0,
+     "static_unresolved": 0,
+     "too_many_moves": 0
+    }
+   },
+   "goal_cell": 24,
+   "hashes": {
+    "action_context": "sha256:3877c30ece3ee8827c33c9817e7d3899c0035bac92ef26cf8db5f92dbb294294",
+    "observation": "sha256:10cc3f62d4202a0b2c3938b7dfe6411f936b6d841d76dadff09b7f26a131f1c0"
+   },
+   "primary_ranking": [
+    {
+     "cells": {
+      "o00": 40
+     },
+     "declared_rank": 1,
+     "label": "single:o00>40",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 8
+     },
+     "declared_rank": 5,
+     "label": "single:o00>8",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 40,
+      "o03": 41
+     },
+     "declared_rank": 2,
+     "label": "pair:o00>40 o03>41",
+     "moved": 2,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 25,
+      "o03": 41
+     },
+     "declared_rank": 6,
+     "label": "pair:o00>25 o03>41",
+     "moved": 2,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 40,
+      "o01": 8
+     },
+     "declared_rank": 10,
+     "label": "pair:o00>40 o01>8",
+     "moved": 2,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 40,
+      "o01": 8,
+      "o03": 41
+     },
+     "declared_rank": 3,
+     "label": "triple:o00>40 o01>8 o03>41",
+     "moved": 3,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 58,
+      "o01": 51,
+      "o02": 22
+     },
+     "declared_rank": 7,
+     "label": "triple:o00>58 o01>51 o02>22",
+     "moved": 3,
+     "score": 1.0
+    }
+   ],
+   "query_id": "g4a_r18",
+   "root_id": "g4a_r18",
+   "scene": {
+    "action_hash": null,
+    "domain_policy": "ALL_SUPPORTED",
+    "lattice": {
+     "cols": 8,
+     "pitch_m": 0.08,
+     "rows": 8
+    },
+    "legal_cells": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     25,
+     26,
+     27,
+     28,
+     29,
+     30,
+     31,
+     32,
+     33,
+     34,
+     35,
+     36,
+     37,
+     38,
+     39,
+     40,
+     41,
+     42,
+     43,
+     44,
+     45,
+     46,
+     47,
+     48,
+     49,
+     50,
+     51,
+     52,
+     53,
+     54,
+     55,
+     56,
+     57,
+     58,
+     59,
+     60,
+     61,
+     62,
+     63
+    ],
+    "objects": [
+     {
+      "cell": 24,
+      "id": "o00",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.04,
+       0.28
+      ]
+     },
+     {
+      "cell": 16,
+      "id": "o01",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.04,
+       0.2
+      ]
+     },
+     {
+      "cell": 32,
+      "id": "o02",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.04,
+       0.36
+      ]
+     },
+     {
+      "cell": 25,
+      "id": "o03",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.12,
+       0.28
+      ]
+     },
+     {
+      "cell": 23,
+      "id": "t0",
+      "kind": "target",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.6,
+       0.2
+      ]
+     }
+    ],
+    "robot": {
+     "attached_id": null,
+     "attachment": "free",
+     "gripper_gap_m": 0.07,
+     "q_rad": [
+      1.5707963267948966,
+      1.5707963267948966,
+      1.5707963267948966
+     ]
+    },
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "root_id": "g4a_2026101628",
+    "variant_id": "initial"
+   },
+   "seed": 2026101628,
+   "stratum": "COMPETING_DESTINATIONS"
+  },
+  {
+   "action": {
+    "action": "TRANSPORT_TARGET_TO_GOAL",
+    "contact_mode": "PLANAR_SUPPORT_CONTACT_SIDE_GRASP",
+    "contract_addendum": "docs/addenda/A1_target_end_policy_v1.md",
+    "end_policy": "SAFE_RETREAT",
+    "goal_alternatives_xy": [],
+    "goal_cell": 60,
+    "goal_orientation": "ANY (rotationally symmetric disc)",
+    "goal_tolerance_m": 0.002,
+    "goal_xy_m": [
+     0.36,
+     0.6
+    ],
+    "grasp_family": {
+     "approach_dirs": 24,
+     "approach_dist_m": 0.06,
+     "ik_branches": 2,
+     "retreat_dist_m": 0.06
+    },
+    "home_return": "OPTIONAL_DIAGNOSTIC",
+    "no_lift": true,
+    "pushing_allowed": false,
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "state_pose_uncertainty_m": 0.0,
+    "target_id": "t0"
+   },
+   "audit_pool": [
+    {
+     "category": "all-stay",
+     "cells": {},
+     "label": "all-stay"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o00": 15
+     },
+     "label": "single:o00>15"
+    },
+    {
+     "category": "triple",
+     "cells": {
+      "o00": 47,
+      "o01": 63,
+      "o03": 9
+     },
+     "label": "triple:o00>47 o01>63 o03>9"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o03": 38
+     },
+     "label": "broad:o03>38"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o00": 31
+     },
+     "label": "single:o00>31"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o00": 28
+     },
+     "label": "broad:o00>28"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o03": 57
+     },
+     "label": "single:o03>57"
+    },
+    {
+     "category": "broad",
+     "cells": {
+      "o01": 3
+     },
+     "label": "broad:o01>3"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o03": 48
+     },
+     "label": "single:o03>48"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o01": 32
+     },
+     "label": "single:o01>32"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o01": 41
+     },
+     "label": "single:o01>41"
+    },
+    {
+     "category": "single",
+     "cells": {
+      "o02": 24
+     },
+     "label": "single:o02>24"
+    }
+   ],
+   "generator": {
+    "candidates": [
+     {
+      "category": "single",
+      "cells": {
+       "o00": 15
+      },
+      "label": "single:o00>15"
+     },
+     {
+      "category": "triple",
+      "cells": {
+       "o00": 47,
+       "o01": 63,
+       "o03": 9
+      },
+      "label": "triple:o00>47 o01>63 o03>9"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o03": 38
+      },
+      "label": "broad:o03>38"
+     },
+     {
+      "category": "single",
+      "cells": {
+       "o00": 31
+      },
+      "label": "single:o00>31"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o00": 28
+      },
+      "label": "broad:o00>28"
+     },
+     {
+      "category": "single",
+      "cells": {
+       "o03": 57
+      },
+      "label": "single:o03>57"
+     },
+     {
+      "category": "broad",
+      "cells": {
+       "o01": 3
+      },
+      "label": "broad:o01>3"
+     },
+     {
+      "category": "single",
+      "cells": {
+       "o03": 48
+      },
+      "label": "single:o03>48"
+     },
+     {
+      "category": "single",
+      "cells": {
+       "o01": 32
+      },
+      "label": "single:o01>32"
+     },
+     {
+      "category": "single",
+      "cells": {
+       "o01": 41
+      },
+      "label": "single:o01>41"
+     },
+     {
+      "category": "single",
+      "cells": {
+       "o02": 24
+      },
+      "label": "single:o02>24"
+     }
+    ],
+    "generator": "B1_GEOMETRIC_V1",
+    "geometry_seed": 937238014,
+    "proximal": [
+     "o00"
+    ],
+    "raw": 14,
+    "rejected": {
+     "duplicate": 1,
+     "static_invalid": 0,
+     "static_unresolved": 0,
+     "too_many_moves": 0
+    }
+   },
+   "goal_cell": 60,
+   "hashes": {
+    "action_context": "sha256:79222ce1bd22c48ae67adf6004e519d5aa4cb736bc7d7eaba3f602c1f9465dc6",
+    "observation": "sha256:1154263f2e50557455dc14f4376f50739fb517ced5a5ccb4476c998719397f2d"
+   },
+   "primary_ranking": [
+    {
+     "cells": {},
+     "declared_rank": 0,
+     "label": "all-stay",
+     "moved": 0,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 15
+     },
+     "declared_rank": 1,
+     "label": "single:o00>15",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o03": 38
+     },
+     "declared_rank": 3,
+     "label": "broad:o03>38",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 31
+     },
+     "declared_rank": 4,
+     "label": "single:o00>31",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 28
+     },
+     "declared_rank": 5,
+     "label": "broad:o00>28",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o03": 57
+     },
+     "declared_rank": 6,
+     "label": "single:o03>57",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o01": 3
+     },
+     "declared_rank": 7,
+     "label": "broad:o01>3",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o03": 48
+     },
+     "declared_rank": 8,
+     "label": "single:o03>48",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o01": 32
+     },
+     "declared_rank": 9,
+     "label": "single:o01>32",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o01": 41
+     },
+     "declared_rank": 10,
+     "label": "single:o01>41",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o02": 24
+     },
+     "declared_rank": 11,
+     "label": "single:o02>24",
+     "moved": 1,
+     "score": 1.0
+    },
+    {
+     "cells": {
+      "o00": 47,
+      "o01": 63,
+      "o03": 9
+     },
+     "declared_rank": 2,
+     "label": "triple:o00>47 o01>63 o03>9",
+     "moved": 3,
+     "score": 1.0
+    }
+   ],
+   "query_id": "g4a_r19",
+   "root_id": "g4a_r19",
+   "scene": {
+    "action_hash": null,
+    "domain_policy": "ALL_SUPPORTED",
+    "lattice": {
+     "cols": 8,
+     "pitch_m": 0.08,
+     "rows": 8
+    },
+    "legal_cells": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     25,
+     26,
+     27,
+     28,
+     29,
+     30,
+     31,
+     32,
+     33,
+     34,
+     35,
+     36,
+     37,
+     38,
+     39,
+     40,
+     41,
+     42,
+     43,
+     44,
+     45,
+     46,
+     47,
+     48,
+     49,
+     50,
+     51,
+     52,
+     53,
+     54,
+     55,
+     56,
+     57,
+     58,
+     59,
+     60,
+     61,
+     62,
+     63
+    ],
+    "objects": [
+     {
+      "cell": 23,
+      "id": "o00",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.6,
+       0.2
+      ]
+     },
+     {
+      "cell": 33,
+      "id": "o01",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.12,
+       0.36
+      ]
+     },
+     {
+      "cell": 25,
+      "id": "o02",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.12,
+       0.28
+      ]
+     },
+     {
+      "cell": 49,
+      "id": "o03",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.12,
+       0.52
+      ]
+     },
+     {
+      "cell": 13,
+      "id": "t0",
+      "kind": "target",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.44,
+       0.12
+      ]
+     }
+    ],
+    "robot": {
+     "attached_id": null,
+     "attachment": "free",
+     "gripper_gap_m": 0.07,
+     "q_rad": [
+      1.5707963267948966,
+      1.5707963267948966,
+      1.5707963267948966
+     ]
+    },
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "root_id": "g4a_2026101629",
+    "variant_id": "initial"
+   },
+   "seed": 2026101629,
+   "stratum": "NUISANCE_CONTROL"
+  }
+ ],
+ "seed_panel": [
+  {
+   "cells": {},
+   "keys": [
+    "g4a_r05/seedpanel/()/s0",
+    "g4a_r05/seedpanel/()/s1",
+    "g4a_r05/seedpanel/()/s2",
+    "g4a_r05/seedpanel/()/s3",
+    "g4a_r05/seedpanel/()/s4"
+   ],
+   "query_id": "g4a_r05"
+  },
+  {
+   "cells": {
+    "o00": 48
+   },
+   "keys": [
+    "g4a_r05/seedpanel/(('o00', 48),)/s0",
+    "g4a_r05/seedpanel/(('o00', 48),)/s1",
+    "g4a_r05/seedpanel/(('o00', 48),)/s2",
+    "g4a_r05/seedpanel/(('o00', 48),)/s3",
+    "g4a_r05/seedpanel/(('o00', 48),)/s4"
+   ],
+   "query_id": "g4a_r05"
+  },
+  {
+   "cells": {},
+   "keys": [
+    "g4a_r16/seedpanel/()/s0",
+    "g4a_r16/seedpanel/()/s1",
+    "g4a_r16/seedpanel/()/s2",
+    "g4a_r16/seedpanel/()/s3",
+    "g4a_r16/seedpanel/()/s4"
+   ],
+   "query_id": "g4a_r16"
+  },
+  {
+   "cells": {
+    "o02": 55
+   },
+   "keys": [
+    "g4a_r16/seedpanel/(('o02', 55),)/s0",
+    "g4a_r16/seedpanel/(('o02', 55),)/s1",
+    "g4a_r16/seedpanel/(('o02', 55),)/s2",
+    "g4a_r16/seedpanel/(('o02', 55),)/s3",
+    "g4a_r16/seedpanel/(('o02', 55),)/s4"
+   ],
+   "query_id": "g4a_r16"
+  },
+  {
+   "cells": {},
+   "keys": [
+    "g4a_r17/seedpanel/()/s0",
+    "g4a_r17/seedpanel/()/s1",
+    "g4a_r17/seedpanel/()/s2",
+    "g4a_r17/seedpanel/()/s3",
+    "g4a_r17/seedpanel/()/s4"
+   ],
+   "query_id": "g4a_r17"
+  },
+  {
+   "cells": {
+    "o00": 58,
+    "o01": 43
+   },
+   "keys": [
+    "g4a_r17/seedpanel/(('o00', 58), ('o01', 43))/s0",
+    "g4a_r17/seedpanel/(('o00', 58), ('o01', 43))/s1",
+    "g4a_r17/seedpanel/(('o00', 58), ('o01', 43))/s2",
+    "g4a_r17/seedpanel/(('o00', 58), ('o01', 43))/s3",
+    "g4a_r17/seedpanel/(('o00', 58), ('o01', 43))/s4"
+   ],
+   "query_id": "g4a_r17"
+  },
+  {
+   "cells": {},
+   "keys": [
+    "g4a_r08/seedpanel/()/s0",
+    "g4a_r08/seedpanel/()/s1",
+    "g4a_r08/seedpanel/()/s2",
+    "g4a_r08/seedpanel/()/s3",
+    "g4a_r08/seedpanel/()/s4"
+   ],
+   "query_id": "g4a_r08"
+  },
+  {
+   "cells": {
+    "o00": 3,
+    "o01": 11
+   },
+   "keys": [
+    "g4a_r08/seedpanel/(('o00', 3), ('o01', 11))/s0",
+    "g4a_r08/seedpanel/(('o00', 3), ('o01', 11))/s1",
+    "g4a_r08/seedpanel/(('o00', 3), ('o01', 11))/s2",
+    "g4a_r08/seedpanel/(('o00', 3), ('o01', 11))/s3",
+    "g4a_r08/seedpanel/(('o00', 3), ('o01', 11))/s4"
+   ],
+   "query_id": "g4a_r08"
+  },
+  {
+   "cells": {},
+   "keys": [
+    "g4a_r09/seedpanel/()/s0",
+    "g4a_r09/seedpanel/()/s1",
+    "g4a_r09/seedpanel/()/s2",
+    "g4a_r09/seedpanel/()/s3",
+    "g4a_r09/seedpanel/()/s4"
+   ],
+   "query_id": "g4a_r09"
+  },
+  {
+   "cells": {
+    "o00": 0
+   },
+   "keys": [
+    "g4a_r09/seedpanel/(('o00', 0),)/s0",
+    "g4a_r09/seedpanel/(('o00', 0),)/s1",
+    "g4a_r09/seedpanel/(('o00', 0),)/s2",
+    "g4a_r09/seedpanel/(('o00', 0),)/s3",
+    "g4a_r09/seedpanel/(('o00', 0),)/s4"
+   ],
+   "query_id": "g4a_r09"
+  },
+  {
+   "cells": {
+    "o01": 15
+   },
+   "keys": [
+    "g4a_r10/seedpanel/(('o01', 15),)/s0",
+    "g4a_r10/seedpanel/(('o01', 15),)/s1",
+    "g4a_r10/seedpanel/(('o01', 15),)/s2",
+    "g4a_r10/seedpanel/(('o01', 15),)/s3",
+    "g4a_r10/seedpanel/(('o01', 15),)/s4"
+   ],
+   "query_id": "g4a_r10"
+  },
+  {
+   "cells": {
+    "o01": 4
+   },
+   "keys": [
+    "g4a_r13/seedpanel/(('o01', 4),)/s0",
+    "g4a_r13/seedpanel/(('o01', 4),)/s1",
+    "g4a_r13/seedpanel/(('o01', 4),)/s2",
+    "g4a_r13/seedpanel/(('o01', 4),)/s3",
+    "g4a_r13/seedpanel/(('o01', 4),)/s4"
+   ],
+   "query_id": "g4a_r13"
+  }
+ ],
+ "stage": "G4A",
+ "strata": [
+  "UNOCCUPIED_GOAL",
+  "OCCUPIED_GOAL",
+  "ACCESS_DEPENDENCY",
+  "COMPETING_DESTINATIONS",
+  "NUISANCE_CONTROL"
+ ],
+ "targets": {
+  "access_negative_roots": 3,
+  "alternative_roots": 4,
+  "goal_negative_roots": 3,
+  "max_first_pass_unknown_fraction": 0.5,
+  "min_signatures_per_multi_alternative_query": 2,
+  "nonempty_witness_roots": 8,
+  "roots_complete": 20,
+  "semantic_failures": 0,
+  "zero_move_roots": 6
+ },
+ "tie_policy": "geometry keys (distance, x, y); object IDs never order candidates"
+}

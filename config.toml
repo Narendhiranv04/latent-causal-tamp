@@ -105,8 +105,45 @@ task_score_threshold = 0.5           # deterministic geometric score (goal occup
 when = "AFTER_REPAIR_COMMIT_AND_COMPLETION"
 start_state = "ACHIEVED"
 scope = "COMPLETE_TARGET_SKILL"      # the tested six-phase skill (skill2d budgets), planned afresh
-final_connector = "HOME"             # as in the G1 skill; the goal is reached at release/retreat
+final_connector = "HOME"             # G3.5 queries (HOME_REQUIRED scope, report 0007); unchanged
 max_queries_per_primary_episode = 1
+end_policy = "SAFE_RETREAT"          # G4A queries: success = goal reached + certified safe retreat
+home_return_diagnostic = true        # HOME return checked separately; never a prerequisite (addendum A1)
+
+# G4A evidence semantics (report 0008).
+[evidence]
+state_pose_uncertainty_m = 0.0       # kinematic benchmark: initial poses are exact (no perception)
+reobserve_pose_tolerance_m = 0.002   # executor accepts an achieved pose within this of the committed one
+
+# G4A automatic candidate generator: geometric B1-style control, not learned.
+[generator]
+name = "B1_GEOMETRIC_V1"
+corridor_m = 0.12                    # task-proximal: within 1.5 cells of the target-goal segment or goal
+destinations_per_object = 2
+seed = 4501                          # diversity draws; combined with a geometry-only scene hash
+broad_draws = 4
+max_raw = 120
+max_static_valid = 12                # including all-stay
+max_moved = 3
+
+# G4A bounded development audit (instruction §6); engineering caps, not statistics.
+[audit4a]
+roots = 20
+pilot_roots = 4
+min_obstacles = 4
+max_obstacles = 8
+queries_per_root = 1
+max_construction_attempts = 100
+max_diagnostic_target_calls = 120
+main_cpu_hours = 4.0
+diagnostic_cpu_hours = 2.0
+workers = 8
+root_seed = 2026101604
+seed_panel_cases = 12
+seed_panel_seeds = 5
+order_panel_cases = 6
+order_panel_orders = 3
+order_panel_seeds = 2
 
 # Rendering of the clean learner observation and the fixed overview axes.
 [render]

@@ -156,6 +156,15 @@ def replay_step(robot, cfg, state: RepairState, oid: str, res, nxt: RepairState)
     return bool(ok)
 
 
+def motion_valid(robot, cfg, state: RepairState, oid: str, res) -> bool:
+    """A committed relocation record may run from `state`: it starts at the state's exact q
+    and g, the object is not yet moved, and the record certifies in the state's scene."""
+    delta, eps, evals = iv._params(cfg)
+    arr = res.traj.arrays()
+    return bool(oid not in state.moved and np.array_equal(arr["q"][0], np.asarray(state.q)) and arr["gap"][0] == state.gap
+                and all(v.status == ge.CLEAR for v in mo.certify_trajectory(robot, state.scene, oid, arr, delta, eps, evals)))
+
+
 def replay_repair(robot, cfg, frozen, s0: RepairState, att: Attempt) -> dict:
     """FROZEN_CONTROL re-check of a recorded episode: every relocation (replay_step), final
     pose at gamma_0's start, and the unchanged gamma_0 clear in the final scene."""
@@ -213,6 +222,20 @@ def plan_repair(robot, cfg, s0: RepairState, assignment: dict, key: str, used: d
     used["plans"] += len(memo)
     return {"witness": attempts[-1] if stop == "WITNESS_FOUND" else None, "attempts": attempts,
             "pruned_orders": len(pruned), "relocation_plans": len(memo), "stop": stop}
+
+
+def executable_orders(robot, cfg, s0: RepairState, assignment: dict, key: str, n: int) -> dict:
+    """Order diagnostic (G4A §8.2): keep searching non-dominated orders (same caps as
+    plan_repair) until n complete relocation sequences; every attempt is returned."""
+    rc, rcfg = cfg["repair2d"], repair_cfg(cfg)
+    memo, pruned, attempts = {}, [], []
+    for order in fresh_orders(sorted(assignment.items()), memo, rc["max_orders"], pruned):
+        if len(memo) >= rc["max_relocations"]:
+            break
+        attempts.append(realize(robot, rcfg, s0, order, memo, key))
+        if sum(a.status == RELOCATED for a in attempts) >= n:
+            break
+    return {"attempts": attempts, "pruned_orders": len(pruned), "relocation_plans": len(memo)}
 
 
 def final_state(s0: RepairState, att: Attempt) -> RepairState:

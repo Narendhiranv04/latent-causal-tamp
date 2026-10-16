@@ -1,0 +1,180 @@
+{
+ "config": {
+  "arm2d": {
+   "base_radius_m": 0.018,
+   "base_xy_m": [
+    -0.14,
+    0.32
+   ],
+   "joint_housing_radius_m": 0.012,
+   "joint_limits_rad": [
+    [
+     -3.14159265,
+     3.14159265
+    ],
+    [
+     -3.14159265,
+     3.14159265
+    ],
+    [
+     -3.14159265,
+     3.14159265
+    ]
+   ],
+   "link_full_widths_m": [
+    0.018,
+    0.016,
+    0.014
+   ],
+   "link_lengths_m": [
+    0.42,
+    0.34,
+    0.2
+   ],
+   "q_home_rad": [
+    1.5707963267948966,
+    1.5707963267948966,
+    1.5707963267948966
+   ],
+   "self_collision_exclusions": [
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     2
+    ]
+   ]
+  },
+  "audit4a": {
+   "diagnostic_cpu_hours": 2.0,
+   "main_cpu_hours": 4.0,
+   "max_construction_attempts": 100,
+   "max_diagnostic_target_calls": 120,
+   "max_obstacles": 8,
+   "min_obstacles": 4,
+   "order_panel_cases": 6,
+   "order_panel_orders": 3,
+   "order_panel_seeds": 2,
+   "pilot_roots": 4,
+   "queries_per_root": 1,
+   "root_seed": 2026101604,
+   "roots": 20,
+   "seed_panel_cases": 12,
+   "seed_panel_seeds": 5,
+   "workers": 8
+  },
+  "evidence": {
+   "reobserve_pose_tolerance_m": 0.002,
+   "state_pose_uncertainty_m": 0.0
+  },
+  "generator": {
+   "broad_draws": 4,
+   "corridor_m": 0.12,
+   "destinations_per_object": 2,
+   "max_moved": 3,
+   "max_raw": 120,
+   "max_static_valid": 12,
+   "name": "B1_GEOMETRIC_V1",
+   "seed": 4501
+  },
+  "geometry": {
+   "certify_max_evals": 4000,
+   "interval_certifier": "analytic_or_conservative_subdivision",
+   "interval_max_step_rad": 0.02,
+   "numeric_margin_band_m": 0.0002
+  },
+  "gripper2d": {
+   "attachment_pose_policy": "validated_contact_at_closure",
+   "closed_gap_m": 0.046,
+   "contact_pos_tolerance_m": 0.001,
+   "finger_length_m": 0.05,
+   "finger_thickness_m": 0.007,
+   "grasp_center_x_m": 0.032,
+   "model": "two_finger_side",
+   "open_gap_m": 0.07,
+   "palm_full_width_m": 0.034,
+   "palm_length_m": 0.028,
+   "rail_depth_m": 0.008,
+   "release_xy_tolerance_m": 0.002,
+   "tcp_at_palm_tip": true
+  },
+  "planner2d": {
+   "algorithm": "RRT_CONNECT_WITH_FULL_BODY_CALLBACK",
+   "edge_max_evals": 200,
+   "extend_step_rad": 0.25,
+   "max_nodes": 4000,
+   "max_wall_seconds": 300.0,
+   "pose_phi_weight_m": 0.1,
+   "pose_step_m": 0.06,
+   "seed": 41,
+   "shortcut_rounds": 150
+  },
+  "proposal": {
+   "budget_cap": 6,
+   "include_all_stay": true,
+   "max_candidates_to_verify": 12,
+   "source": "MANUAL_CASE_CANDIDATES",
+   "task_score_threshold": 0.5
+  },
+  "protocol": {
+   "execution_observation": "VALIDATE_OR_ABORT",
+   "move_once": true,
+   "name": "INITIAL_SCENE_ONE_SHOT_V1",
+   "proposal_observation": "INITIAL_ONLY",
+   "target_calls_between_relocations": 0,
+   "target_feedback_to_selection": false,
+   "target_reference_required": false
+  },
+  "render": {
+   "image_px": 320,
+   "overview_xlim_m": [
+    -0.85,
+    0.85
+   ],
+   "overview_ylim_m": [
+    -0.5,
+    1.4
+   ]
+  },
+  "repair2d": {
+   "k_best": 12,
+   "max_orders": 6,
+   "max_relocations": 40,
+   "skill_plan_failures": 2
+  },
+  "skill2d": {
+   "approach_dirs": 24,
+   "approach_dist_m": 0.06,
+   "line_step_m": 0.005,
+   "max_direct_pairs": 64,
+   "max_ik_jump_rad": 0.1,
+   "max_plan_failures": 4,
+   "retreat_dist_m": 0.06
+  },
+  "suite": {
+   "cols": 8,
+   "coordinate_frame": "world_xy_y_back",
+   "domain_policy": "ALL_SUPPORTED",
+   "margin_m": 0.005,
+   "margin_policy": "UNINFLATED_ORACLE_DELTA_ONCE",
+   "name": "planar_3r",
+   "num_obstacles": 35,
+   "num_targets": 1,
+   "obstacle_radius_m": 0.024,
+   "pitch_m": 0.08,
+   "rows": 8
+  },
+  "target_evaluation": {
+   "end_policy": "SAFE_RETREAT",
+   "final_connector": "HOME",
+   "home_return_diagnostic": true,
+   "max_queries_per_primary_episode": 1,
+   "scope": "COMPLETE_TARGET_SKILL",
+   "start_state": "ACHIEVED",
+   "when": "AFTER_REPAIR_COMMIT_AND_COMPLETION"
+  }
+ },
+ "config_hash": "sha256:a9f3f2360e17d9827e24b4e9bb32727569afdf04aa4f87c72ba3cccf50953ae3"
+}

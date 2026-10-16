@@ -9,7 +9,11 @@ from __future__ import annotations
 
 import hashlib
 import json
+import platform
+import sys
 import tomllib
+from datetime import datetime, timezone
+from importlib.metadata import version
 from pathlib import Path
 
 VEC2, VEC3, LIMITS3, PAIRS = "vec2", "vec3", "limits3", "pairs"
@@ -42,7 +46,14 @@ SCHEMA = {
     "proposal": {"source": str, "budget_cap": int, "max_candidates_to_verify": int, "include_all_stay": bool,
                  "task_score_threshold": float},
     "target_evaluation": {"when": str, "start_state": str, "scope": str, "final_connector": str,
-                          "max_queries_per_primary_episode": int},
+                          "max_queries_per_primary_episode": int, "end_policy": str, "home_return_diagnostic": bool},
+    "evidence": {"state_pose_uncertainty_m": float, "reobserve_pose_tolerance_m": float},
+    "generator": {"name": str, "corridor_m": float, "destinations_per_object": int, "seed": int, "broad_draws": int,
+                  "max_raw": int, "max_static_valid": int, "max_moved": int},
+    "audit4a": {"roots": int, "pilot_roots": int, "min_obstacles": int, "max_obstacles": int, "queries_per_root": int,
+                "max_construction_attempts": int, "max_diagnostic_target_calls": int, "main_cpu_hours": float,
+                "diagnostic_cpu_hours": float, "workers": int, "root_seed": int, "seed_panel_cases": int,
+                "seed_panel_seeds": int, "order_panel_cases": int, "order_panel_orders": int, "order_panel_seeds": int},
     "render": {"image_px": int, "overview_xlim_m": VEC2, "overview_ylim_m": VEC2},
 }
 
@@ -170,6 +181,19 @@ def _protocol_rules(cfg: dict) -> list:
         (t["scope"] == "COMPLETE_TARGET_SKILL" and t["final_connector"] in ("HOME", "NONE"),
          "target evaluation plans the complete skill; final connector HOME or NONE"),
         (t["max_queries_per_primary_episode"] == 1, "exactly one target query per primary episode"),
+        (t["end_policy"] in ("SAFE_RETREAT", "HOME_REQUIRED"), "end_policy must be SAFE_RETREAT or HOME_REQUIRED"),
+        (cfg["evidence"]["state_pose_uncertainty_m"] >= 0 and cfg["evidence"]["reobserve_pose_tolerance_m"] >= 0,
+         "evidence tolerances must be >= 0"),
+        (cfg["evidence"]["reobserve_pose_tolerance_m"] <= cfg["gripper2d"]["release_xy_tolerance_m"],
+         "reobservation tolerance cannot exceed the declared placement (release) tolerance"),
+        (cfg["generator"]["name"] == "B1_GEOMETRIC_V1" and 1 <= cfg["generator"]["max_moved"] <= 3
+         and cfg["generator"]["max_static_valid"] >= 1 and cfg["generator"]["max_raw"] <= 120,
+         "G4A generator: B1_GEOMETRIC_V1, at most 3 moved, at most 120 raw proposals"),
+        (cfg["audit4a"]["workers"] <= 8 and cfg["audit4a"]["max_diagnostic_target_calls"] <= 120
+         and cfg["audit4a"]["main_cpu_hours"] <= 4.0 and cfg["audit4a"]["diagnostic_cpu_hours"] <= 2.0
+         and 4 <= cfg["audit4a"]["min_obstacles"] <= cfg["audit4a"]["max_obstacles"] <= 8
+         and cfg["audit4a"]["queries_per_root"] <= 2 and cfg["audit4a"]["max_construction_attempts"] <= 100,
+         "G4A audit caps exceed the instruction's limits"),
     ]
 
 
@@ -226,3 +250,21 @@ def validate_fixtures(fixtures: dict) -> dict:
         if policy == "FINAL_DEV_SCENE_PLANNED" and (n is None or n >= DENSE_OBSTACLES[0]):
             raise ConfigError(f"{name}: a development scene must list fewer than {DENSE_OBSTACLES[0]} obstacles")
     return fixtures
+
+
+
+# ------------------------------------------------------------------ run records (moved from run.py at G4A)
+def write_json(path: Path, obj) -> None:
+    path.write_text(json.dumps(obj, indent=1, sort_keys=True))
+
+
+def write_manifest(out: Path, seeds: dict, chash: str, extra: dict) -> None:
+    """Command, time, seeds, hashes, library versions and a sha256 per output file."""
+    files = sorted(p.name for p in out.iterdir() if p.name != "manifest.json")
+    write_json(out / "manifest.json", {
+        "command": sys.argv, "created_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "seeds": seeds, "config_hash": chash, **extra,
+        "versions": {"python": platform.python_version(), "numpy": version("numpy"),
+                     "matplotlib": version("matplotlib"), "pillow": version("pillow"),
+                     "platform": platform.platform()},
+        "files": {n: "sha256:" + hashlib.sha256((out / n).read_bytes()).hexdigest() for n in files}})
