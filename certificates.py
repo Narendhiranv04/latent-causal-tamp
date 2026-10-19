@@ -1,4 +1,4 @@
-"""Independent checker for G3.5/G4A impossibility certificates (G4A instruction §3).
+"""Independent checker for G3.5/G4A/G4D impossibility certificates (G4A instruction §3).
 
 A certificate is a record produced by the teacher path (evaluate.audit_candidate). The
 checker never trusts its boolean: it recomputes the scope (observation and action-
@@ -144,8 +144,35 @@ def check_static(scene, learner: dict, cells: dict, cert: dict, cfg: dict):
     return not why, why
 
 
+def check_order_first_action(robot, scene, learner: dict, cells: dict, cert: dict, cfg: dict):
+    """V2 order-specific proof: the FIRST action of this canonical sequence is excluded in
+    S0 by a definite pose-only PICK or PLACE screen over the whole declared grasp family.
+    Nothing has moved before the first action, so it covers every realization of this
+    order; it says nothing about other orders of the same endpoints."""
+    why = _scope(scene, learner, cells, cert, cfg)
+    seq = [tuple(a) for a in cert.get("sequence", [])]
+    if not seq or len({o for o, _ in seq}) != len(seq) or {o: d for o, d in seq} != cells:
+        return False, why + ["sequence missing, not canonical, or inconsistent with the assignment"]
+    o, d = seq[0]
+    probe = {o: d}
+    ok, w = check_first_mover(robot, scene, learner, probe, {**certificate_scope(scene, learner, probe), "movers": {
+        o: {"stage": cert.get("stage"), "candidates": cert.get("candidates")}}}, cfg)
+    return ok and not why, why + [f"first action: {x}" for x in w]
+
+
+# Which ordered proposals a certificate kind covers (Methodology v1.6 §4, Guide v1.8 §3).
+# Endpoint-only or start-independent premises hold for every order of the assignment.
+CERTIFICATE_SCOPE = {"GOAL_OVERLAP": "ASSIGNMENT",            # final endpoints only
+                     "STATIC_ENDPOINT_INVALID": "ASSIGNMENT", # final endpoints only
+                     "TARGET_PICK": "ASSIGNMENT",             # staying objects only; monotone in added obstacles
+                     "FIRST_MOVER": "ASSIGNMENT",             # every selected object is excluded as first mover
+                     "ORDER_FIRST_ACTION": "ORDER"}           # this sequence's first action only
+
+
 def check(robot, scene, learner: dict, cells: dict, cert: dict, cfg: dict):
     kind = cert.get("kind")
+    if kind == "ORDER_FIRST_ACTION":
+        return check_order_first_action(robot, scene, learner, cells, cert, cfg)
     if kind == "GOAL_OVERLAP":
         return check_goal_overlap(scene, learner, cells, cert, cfg)
     if kind == "FIRST_MOVER":

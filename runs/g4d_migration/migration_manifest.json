@@ -1,0 +1,115 @@
+{
+ "config": {
+  "config_v2_hash": "sha256:fd721f1578009c74b129ed08ff968504d8ca42b553460a371fe07b97b6e592b2",
+  "deployment_config_hash": "sha256:a9f3f2360e17d9827e24b4e9bb32727569afdf04aa4f87c72ba3cccf50953ae3"
+ },
+ "documents": {
+  "archived": {
+   "docs/archive/latent_causal_tamp_implementation_guide_v1_6.pdf": "sha256:15d1a6feeabd9f804ed9d5deb055e3e7f7826c18a939034e85e6c65c4e3f7606",
+   "docs/archive/latent_causal_tamp_implementation_guide_v1_7.pdf": "sha256:761cdd59cfc2650defc171f773febb2bb44481c6770445774844dec1d563fe48",
+   "docs/archive/latent_causal_tamp_specification_v1_4.pdf": "sha256:4afcd9197596a5ba455bf92568f33e7dafedef5257d59a83bf795c5647787bf5",
+   "docs/archive/latent_causal_tamp_specification_v1_5.pdf": "sha256:b2cd20967b2050dc6fdf8075abd6a46beda930cccb5fffc453d0a5bf2446c5a7"
+  },
+  "guide_v1_8": {
+   "path": "latent_causal_tamp_implementation_guide_v1_8.pdf",
+   "sha256": "sha256:702637b8b695f1f37ee9c81ab88f9802af6aba91b30446833d4c2b936abbc446"
+  },
+  "methodology_v1_6": {
+   "path": "latent_causal_tamp_specification_v1_6.pdf",
+   "sha256": "sha256:a4dcda1b308c4fbee4a830a5bfdc4a0a0ec3f34cbac3721a6dc1b080b77a4f42"
+  }
+ },
+ "field_map": [
+  {
+   "meaning": "same learner allowlist and SAFE_RETREAT action context (hash-identical); V2 forbids end_policy None",
+   "v1": "query.protocol INITIAL_SCENE_ONE_SHOT_V1",
+   "v2": "INITIAL_SCENE_ORDERED_ONE_SHOT_V2 + schema_version 1"
+  },
+  {
+   "meaning": "order is part of the proposal; no stay/padding/duplicate entries; empty list = unique no-repair",
+   "v1": "candidate {label, cells}",
+   "v2": "proposal {label, sequence=[[id, cell], ...]}; assignment derived (sequences.assignment)"
+  },
+  {
+   "meaning": "ordered physical-signature dedup; lexicographic V2 rank",
+   "v1": "proposals.rank_proposals",
+   "v2": "sequences.rank_sequences"
+  },
+  {
+   "meaning": "exactly the proposed order; V1 search kept for V1 and named baselines",
+   "v1": "verify.plan_repair (searches up to max_orders orders)",
+   "v2": "verify.plan_fixed_order"
+  },
+  {
+   "meaning": "witness order must equal the proposed sequence or the episode aborts before COMMIT",
+   "v1": "evaluate.primary_episode(planner=None)",
+   "v2": "ordered.primary_v2 (planner=fixed order) + ordered.episode_audit"
+  },
+  {
+   "meaning": "first relocation witness and its cost stored before the target is examined",
+   "v1": "evaluate.audit_candidate (assignment label)",
+   "v2": "ordered.teach_sequence (ordered label)"
+  },
+  {
+   "meaning": "evidence carries scope ORDER / ASSIGNMENT / TRAJECTORY",
+   "v1": "data.aggregate",
+   "v2": "data.ordered_aggregate"
+  },
+  {
+   "meaning": "separate evidence masks",
+   "v1": "single status field",
+   "v2": "static / ordered_feasibility / relocation_attempt / target_attempt / simulation / hardware"
+  },
+  {
+   "meaning": "assignment-wide vs order-specific",
+   "v1": "certificate kinds",
+   "v2": "certificates.CERTIFICATE_SCOPE (+ ORDER_FIRST_ACTION)"
+  },
+  {
+   "meaning": "V1 tensors unchanged",
+   "v1": "data.learner_tensors",
+   "v2": "data.learner_tensors_v2 (+ robot profile, FK, joint limits, instance masks, anchor)"
+  },
+  {
+   "meaning": "new",
+   "v1": "(none)",
+   "v2": "effects.* scene/robot-start substitutions, omissions, deletion diagnostic, effect records"
+  },
+  {
+   "meaning": "new; legacy traces are not V2 cost labels",
+   "v1": "(none)",
+   "v2": "ordered.cost_record: first-witness normalized joint travel"
+  },
+  {
+   "meaning": "additive trace fields; V1 decisions unchanged",
+   "v1": "REOBSERVE event {matches, reasons}",
+   "v2": "+ object, commanded/achieved pose, q, gap, attachment, moved history"
+  }
+ ],
+ "label_scope_rules": {
+  "G3.5 HOME_REQUIRED labels": "separate historical scope, not transferred",
+  "V1 NEGATIVE without such a certificate": "V2 UNRESOLVED",
+  "V1 NEGATIVE, ASSIGNMENT-scope certificate": "V2 NEGATIVE for every canonical order of the assignment",
+  "V1 UNRESOLVED": "V2 UNRESOLVED (no failed-search negatives)",
+  "V1 diagnostic-enriched positives": "not migrated here (separate source; would need the same validation)",
+  "V1 first-pass POSITIVE": "V2 POSITIVE for the exact recorded order only, after validation; other orders UNRESOLVED",
+  "legacy relocation traces": "joint travel reported under LEGACY policy; not V2 first-witness cost labels",
+  "scene-effect / omission / order-contrast labels": "none exist in V1 records; require G4D collection"
+ },
+ "legacy_sources": {
+  "arrays.npz": "sha256:65c15f7f6d429b7c167c026fe4cf2df5954ed000cc3d550218a50330fb4297d1",
+  "candidate_labels.json": "sha256:d240f09032c7b5e9e59da90e2bcc1643013f5fd2777fa5326a96e989f3ae7fa1",
+  "g4a_plan.json": "sha256:1343b40eb122b289d811452759bcaa96bcd325af1d20d83b086e614c14cbe5f0",
+  "result.json": "sha256:d473b0a87f9850fa98505612b40ea1cd4396172172cbb7256af1cafa585d55c8",
+  "scenes.json": "sha256:ed00fd84e7e8378248addddd4cf3ecdd63b771b05861ef114656fa4e716a5ed2"
+ },
+ "needs_scope_validation": [
+  "ordered positives (exact state, policy, schema, complete witness replay)",
+  "assignment-wide negatives (observation, action context, grasp family, move-once)",
+  "any reuse of G4A roots as V2 benchmark roots (they are V1 development roots)"
+ ],
+ "plan_hash": "sha256:c0f3bcb2c712ea7d1fd5ea36eb3e03428a0aa659e1f81ff8aaf7b8eeee13c4bf",
+ "protocol_from": "INITIAL_SCENE_ONE_SHOT_V1",
+ "protocol_to": "INITIAL_SCENE_ORDERED_ONE_SHOT_V2",
+ "schema_version": 1
+}

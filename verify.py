@@ -242,6 +242,33 @@ def final_state(s0: RepairState, att: Attempt) -> RepairState:
     return att.states[-1] if att.states else s0
 
 
+# ------------------------------------------------------------------ INITIAL_SCENE_ORDERED_ONE_SHOT_V2 (G4D)
+FIXED_ORDER_POLICY = "FIXED_ORDER_GREEDY_SKILL2D_V1"
+
+
+def plan_fixed_order(robot, cfg, s0: RepairState, sequence, key: str, used: dict) -> dict:
+    """V2 relocation verifier: exactly the proposed order, never another (V1 order search
+    above stays for V1 and named baselines only). Each action is the complete six-phase
+    skill planned from the previous achieved state with the repair skill budget; grasps
+    and paths vary only inside that skill's declared family and schedule, with no
+    backtracking into earlier actions. A failure is UNRESOLVED for this order only. The
+    episode's shared relocation budget (`used`) is respected; no target evaluator is
+    reachable from here."""
+    seq = tuple((o, d) for o, d in sequence)
+    if len({o for o, _ in seq}) != len(seq):
+        raise ValueError("fixed-order verification needs a canonical sequence (distinct objects)")
+    if seq and used["plans"] >= cfg["repair2d"]["max_relocations"]:
+        return {"witness": None, "attempts": [], "pruned_orders": 0, "relocation_plans": 0, "stop": "RELOCATION_BUDGET",
+                "policy": FIXED_ORDER_POLICY, "order_scope": "THIS_ORDER_ONLY"}
+    memo = {}
+    att = realize(robot, repair_cfg(cfg), s0, seq, memo, key)
+    used["plans"] += len(memo)
+    ok = att.status == RELOCATED
+    return {"witness": att if ok else None, "attempts": [att], "pruned_orders": 0, "relocation_plans": len(memo),
+            "stop": "WITNESS_FOUND" if ok else f"ACTION_{att.stop}_UNRESOLVED", "policy": FIXED_ORDER_POLICY,
+            "order_scope": "THIS_ORDER_ONLY"}
+
+
 # ------------------------------------------------------------------ fixtures
 def blocked_state(robot, cfg, name: str, fx: dict):
     """(frozen gamma_0, reference scene, blocked scene, lineage). Archived G2 states are

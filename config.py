@@ -202,6 +202,65 @@ def load_config(path: str | Path) -> dict:
         return validate_config(tomllib.load(f))
 
 
+# ------------------------------------------------------------------ V2 overlay (G4D; Guide v1.8 §4)
+STR_LIST = "str_list"
+SCHEMA_V2 = {
+    "protocol": {"name": str, "schema_version": int, "proposal_observation": str, "order_source": str,
+                 "executor_may_reorder": bool, "target_feedback_to_selection": bool,
+                 "max_primary_target_evaluations": int, "target_end_policy": str, "home_return": str, "move_once": bool},
+    "proposal": {"source": str, "move_cap": int, "max_candidates_to_verify": int, "task_score_threshold": float,
+                 "rank": STR_LIST},
+    "cost": {"policy": str, "relocation_backend": str, "waypoints_within_joint_limits": bool},
+    "explanation": {"counterfactual_appearance": str, "max_omission_subset": int, "max_tested_subsets": int},
+}
+V2_RANK = ["move_count", "predicted_joint_travel", "endpoint_distance", "feasibility_energy", "signature"]
+
+
+def validate_v2(raw: dict) -> dict:
+    """Strict keys/types for the V2 overlay, then the protocol contract (spec v1.6 §12)."""
+    if set(raw) != set(SCHEMA_V2):
+        raise ConfigError(f"V2 sections must be exactly {sorted(SCHEMA_V2)}, got {sorted(raw)}")
+    out = {}
+    for sec, spec in SCHEMA_V2.items():
+        if set(raw[sec]) != set(spec):
+            raise ConfigError(f"[{sec}] V2 keys differ: {sorted(set(raw[sec]) ^ set(spec))}")
+        out[sec] = {}
+        for k, kind in spec.items():
+            v = raw[sec][k]
+            if kind == STR_LIST:
+                norm = list(v) if isinstance(v, list) and all(isinstance(x, str) for x in v) else None
+            else:
+                norm = _normalize(v, kind)
+            if norm is None:
+                raise ConfigError(f"[{sec}] {k} has invalid type: {v!r}")
+            out[sec][k] = norm
+    p, q = out["protocol"], out["proposal"]
+    rules = [(p["name"] == "INITIAL_SCENE_ORDERED_ONE_SHOT_V2", "V2 overlay must name INITIAL_SCENE_ORDERED_ONE_SHOT_V2"),
+             (p["proposal_observation"] == "INITIAL_ONLY", "proposals use the initial observation only"),
+             (p["order_source"] == "PROPOSED_SEQUENCE" and not p["executor_may_reorder"], "the executor may not reorder"),
+             (not p["target_feedback_to_selection"], "no target feedback to selection"),
+             (p["max_primary_target_evaluations"] == 1, "at most one primary target evaluation"),
+             (p["target_end_policy"] == "GOAL_AND_SAFE_RETREAT" and p["home_return"] == "SEPARATE_DIAGNOSTIC",
+              "target success = goal + safe retreat; HOME is a separate diagnostic"),
+             (p["move_once"], "V2 repairs are move-once"),
+             (q["source"] == "MANUAL_OR_DETERMINISTIC_SEQUENCES", "no learned proposal source before G5"),
+             (1 <= q["move_cap"] <= 6 and q["max_candidates_to_verify"] > 0, "move cap in 1..6, positive verify budget"),
+             (q["rank"] == V2_RANK, f"selection rank must be {V2_RANK}"),
+             (out["cost"]["waypoints_within_joint_limits"], "joint travel needs waypoints inside finite limits"),
+             (out["explanation"]["counterfactual_appearance"] == "INITIAL_ANCHOR", "counterfactuals keep the initial anchor"),
+             (out["explanation"]["max_omission_subset"] >= 1 and out["explanation"]["max_tested_subsets"] >= 1,
+              "explanation budgets must be >= 1")]
+    errors = [m for ok, m in rules if not ok]
+    if errors:
+        raise ConfigError("; ".join(errors))
+    return out
+
+
+def load_config_v2(path: str | Path) -> dict:
+    with open(path, "rb") as f:
+        return validate_v2(tomllib.load(f))
+
+
 def stable_hash(obj) -> str:
     """sha256 of canonical JSON (sorted keys, exact float repr)."""
     text = json.dumps(obj, sort_keys=True, separators=(",", ":"), allow_nan=False)

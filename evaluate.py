@@ -159,19 +159,22 @@ def witness_hash(s0: vf.RepairState, att: vf.Attempt, robot_hash: str) -> str:
 
 
 def primary_episode(robot, cfg, query: dict, scene, ranked: list, target_eval, robot_hash: str,
-                    trace: Trace | None = None, executor=None) -> dict:
+                    trace: Trace | None = None, executor=None, planner=None) -> dict:
     """PROPOSE -> per candidate STATIC_CHECK, REPAIR_PLAN (clones) -> COMMIT the first
     relocation witness -> per move RELOCATE (the committed record must start at the
     observed state and certify in the observed scene) and REOBSERVE (validate, else
     ABORT) -> one TARGET_EVALUATE from the observed achieved state -> FINISH. No
     candidate is tried after the commitment, whatever happens. `executor(k, committed
     next state)` returns the observation (default: exactly the committed state); tests
-    inject deviations through it (fault injection, not physical robustness)."""
+    inject deviations through it (fault injection, not physical robustness).
+    `planner(robot, cfg, s0, cand, key, used)` replaces V1 order search; V2 passes the
+    fixed-order verifier, and a witness whose order differs from cand["sequence"] is
+    never committed (silent reordering aborts the episode before COMMIT)."""
     tr, s0, act = trace or Trace(query["query_id"]), start(scene, query), query["learner"]["action"]
     obs = query["hashes"]["observation"]
     phash = stable_hash({"observation": obs, "action": query["hashes"]["action_context"],
                          "ranked": [[c["label"], sorted((o, pr.json_key(d)) for o, d in c["cells"].items())]
-                                    for c in ranked]})
+                                    + ([[list(a) for a in c["sequence"]]] if "sequence" in c else []) for c in ranked]})
     tr.emit("PROPOSE", "proposal", obs, candidates=len(ranked), proposal_hash=phash)
     used, tried, commit = {"plans": 0}, [], None
     for rank, cand in enumerate(ranked):
@@ -181,12 +184,17 @@ def primary_episode(robot, cfg, query: dict, scene, ranked: list, target_eval, r
         tried.append(row)
         if st["status"] != mo.VALID:
             continue
-        plan = vf.plan_repair(robot, cfg, s0, cand["cells"], f"{query['query_id']}/primary/c{rank}", used)
+        key = f"{query['query_id']}/primary/c{rank}"
+        plan = planner(robot, cfg, s0, cand, key, used) if planner else vf.plan_repair(robot, cfg, s0, cand["cells"], key, used)
         row["plan"] = plan
         tr.emit("REPAIR_PLAN", "relocation_planner", scene, rank=rank, orders=len(plan["attempts"]),
                 relocation_plans=plan["relocation_plans"], stop=plan["stop"])
         if plan["witness"]:
             w = plan["witness"]
+            if "sequence" in cand and [list(m) for m in w.order] != [list(a) for a in cand["sequence"]]:
+                tr.emit("ABORT", "episode", scene, reason="WITNESS_ORDER_DIFFERS_FROM_PROPOSED_SEQUENCE")
+                return {"trace": tr, "tried": tried, "commit": None, "target": None, "achieved": None,
+                        "outcome": "ABORTED", "abort_reasons": ["silent reordering rejected"]}
             commit = {"rank": rank, "label": cand["label"], "cells": cand["cells"], "order": [list(m) for m in w.order],
                       "witness_hash": witness_hash(s0, w, robot_hash), "proposal_hash": phash,
                       "source_observation_hash": obs, "attempt": w}
@@ -208,7 +216,11 @@ def primary_episode(robot, cfg, query: dict, scene, ranked: list, target_eval, r
         expected = advance(state, nxt, oid)
         obs = executor(k, expected) if executor else {"state": expected, "attachment": "free", "attached_id": None}
         why = validate_observation(cfg, expected, obs)
-        tr.emit("REOBSERVE", "executor", obs["state"].scene, matches_commitment=not why, reasons=why)
+        got = obs["state"]
+        tr.emit("REOBSERVE", "executor", got.scene, matches_commitment=not why, reasons=why, object=oid,
+                commanded_xy=list(expected.scene.get(oid).xy_m), achieved_xy=list(got.scene.get(oid).xy_m)
+                if oid in {o.id for o in got.scene.objects} else None, q=list(got.q), gap=got.gap,
+                attachment=obs.get("attachment", "free"), moved=list(got.moved))
         if why:
             tr.emit("ABORT", "episode", obs["state"].scene, reason="ACHIEVED_STATE_DEVIATES_FROM_COMMITMENT")
             return {**out, "outcome": "ABORTED", "abort_reasons": why}

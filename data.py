@@ -9,13 +9,18 @@ keys, never by flattening a record, so nothing privileged can reach them.
 """
 from __future__ import annotations
 
+import hashlib
+
 import numpy as np
 
+import geometry as ge
 from config import robot_profile_hash, stable_hash
 from scene import Scene, scene_from_dict, scene_to_dict
 import viz
 
 PROTOCOL = "INITIAL_SCENE_ONE_SHOT_V1"
+PROTOCOL_V2 = "INITIAL_SCENE_ORDERED_ONE_SHOT_V2"
+SCHEMA_V2 = 1
 SCENE_KEYS = ("lattice", "objects", "robot", "legal_cells", "domain_policy")   # learner-visible scene fields
 OBJECT_KEYS = ("id", "kind", "radius_m", "xy_m", "cell", "support")
 
@@ -54,10 +59,15 @@ def learner_scene(scene: Scene) -> dict:
 
 
 def make_query(cfg: dict, name: str, scene: Scene, target_id: str, goal_cell: int, oracle_only: dict,
-               end_policy: str | None = None) -> dict:
+               end_policy: str | None = None, protocol: str = PROTOCOL) -> dict:
+    """V2 queries (protocol=PROTOCOL_V2) require the SAFE_RETREAT action context, so their
+    action-context hash equals the G4A one for the same scene, target and goal."""
+    if protocol == PROTOCOL_V2 and end_policy != "SAFE_RETREAT":
+        raise ValueError("V2 queries use the goal + safe-retreat end policy")
     learner = {"scene": learner_scene(scene), "action": action_context(cfg, scene, target_id, goal_cell, end_policy)}
-    return {"protocol": PROTOCOL, "query_id": name, "learner": learner, "labels": {}, "oracle_only": oracle_only,
-            "hashes": hashes(learner)}
+    q = {"protocol": protocol, "query_id": name, "learner": learner, "labels": {}, "oracle_only": oracle_only,
+         "hashes": hashes(learner)}
+    return {**q, "schema_version": SCHEMA_V2} if protocol == PROTOCOL_V2 else q
 
 
 def hashes(learner: dict) -> dict:
@@ -120,3 +130,82 @@ def label_masks(labels: list) -> dict:
     mask = np.array([l in (POSITIVE, NEGATIVE) for l in labels])
     pool = mask if (y[mask] == 1).any() and (y[mask] == 0).any() else np.zeros_like(mask)
     return {"y": y, "binary_mask": mask, "joint_pool_mask": pool}
+
+
+# ------------------------------------------------------------------ V2 learner inputs (G4D; Guide v1.8 §5)
+def appearance_anchor(query: dict, image_px: int) -> dict:
+    """The initial observation's image and instance masks: the only appearance source for
+    every hypothetical (prefix, scene-intervention, omission) context of this query."""
+    rgb, inst, ids = viz.render_observation(initial_scene(query), image_px)
+    digest = hashlib.sha256(rgb.tobytes() + inst.tobytes() + "|".join(ids).encode()).hexdigest()
+    return {"rgb": rgb, "instance": inst, "ids": ids, "hash": "sha256:" + digest}
+
+
+def learner_tensors_v2(query: dict, cfg: dict, anchor: dict) -> dict:
+    """V1 tensors plus the numeric robot profile (limits, link/gripper dimensions), FK joint
+    positions of the initial configuration, normalized joints and the anchored instance
+    masks. Built from allowlisted learner fields and the pinned config only."""
+    base = learner_tensors(query, anchor["rgb"].shape[0])
+    if not np.array_equal(base["rgb"], anchor["rgb"]):
+        raise ValueError("appearance anchor does not belong to this query's initial observation")
+    robot, q = ge.make_robot(cfg), query["learner"]["scene"]["robot"]["q_rad"]
+    lim = np.array(robot.limits, np.float64)
+    joints, theta = ge.fk(robot, q)
+    prof = [*robot.lengths, *robot.widths, robot.base_r, robot.housing_r, robot.palm_len, robot.palm_w, robot.rail_depth,
+            robot.finger_len, robot.finger_t, robot.open_gap, robot.closed_gap, robot.grasp_x]
+    return {**base, "instance": anchor["instance"].astype(np.int16), "appearance_anchor": anchor["hash"],
+            "robot_q_normalized": ((np.asarray(q) - lim[:, 0]) / (lim[:, 1] - lim[:, 0])).astype(np.float32),
+            "robot_joint_limits": lim.astype(np.float32), "robot_profile": np.array(prof, np.float32),
+            "robot_fk_joints": joints.astype(np.float32), "robot_fk_angles": theta.astype(np.float32)}
+
+
+def counterfactual_tensors(tensors: dict, query: dict, poses: dict) -> dict:
+    """Scene-intervention inputs: structured object poses replaced, everything else - robot
+    state, task, appearance anchor (image and masks) - identical. No counterfactual image."""
+    ids = [o["id"] for o in query["learner"]["scene"]["objects"]]
+    xy = tensors["object_xy"].copy()
+    for oid, p in poses.items():
+        xy[ids.index(oid)] = p
+    return {**tensors, "object_xy": xy}
+
+
+def prefix_tensors(tensors: dict, query: dict, scene: Scene, seq) -> list:
+    """One record per action of a canonical sequence: the ideal prefix object poses (all
+    objects, stay objects included), the selected slot, its destination, step and length.
+    Appearance and robot fields are the initial ones; no robot state is guessed."""
+    ids, out = [o["id"] for o in query["learner"]["scene"]["objects"]], []
+    xy = tensors["object_xy"].copy()
+    for t, (oid, cell) in enumerate(seq):
+        dest = np.array(scene.lattice.center(cell), np.float32)
+        out.append({"prefix_object_xy": xy.copy(), "selected_slot": ids.index(oid), "destination_xy": dest,
+                    "step": t, "length": len(seq)})
+        xy[ids.index(oid)] = dest
+    return out + [{"prefix_object_xy": xy.copy(), "selected_slot": -1, "destination_xy": None, "step": len(seq),
+                   "length": len(seq)}]
+
+
+# ------------------------------------------------------------------ V2 scoped labels and effect masks
+ORDER, ASSIGNMENT, TRAJECTORY = "ORDER", "ASSIGNMENT", "TRAJECTORY"
+
+
+def ordered_aggregate(evidence: list) -> dict:
+    """Label of one ordered proposal: a complete repair-plus-target witness for exactly
+    this order is positive; an accepted certificate is negative only if its scope covers
+    the order (an order-specific proof, or an assignment-wide proof valid for every
+    order). Trajectory-scope failures (one path, one connector, a timeout) never decide."""
+    keep = [e for e in evidence if (e["kind"] == "complete_witness" and e.get("scope") == ORDER)
+            or (e["kind"] == "certificate" and e.get("scope") in (ORDER, ASSIGNMENT))]
+    return {**aggregate(keep), "ignored_out_of_scope": len(evidence) - len(keep)}
+
+
+def effect_label(reference: str, alternative: str) -> dict:
+    """Delta = Y(alternative) - Y(reference) in {-1, 0, 1}, definite only when both sides
+    are decided; otherwise masked (delta None). Scene effect: reference = original scene,
+    alternative = intervened scene (empty repair on both). Omission effect: reference =
+    r without the omitted actions, alternative = r."""
+    if CONTRADICTION in (reference, alternative):
+        raise ValueError("contradictory evidence: effect labelling halted")
+    y = {POSITIVE: 1, NEGATIVE: 0}
+    if reference in y and alternative in y:
+        return {"delta": y[alternative] - y[reference], "mask": True}
+    return {"delta": None, "mask": False}

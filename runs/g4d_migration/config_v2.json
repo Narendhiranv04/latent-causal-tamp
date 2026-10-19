@@ -1,0 +1,40 @@
+{
+ "config_v2": {
+  "cost": {
+   "policy": "FIRST_RELOCATION_WITNESS_NORMALIZED_JOINT_TRAVEL_V1",
+   "relocation_backend": "FIXED_ORDER_GREEDY_SKILL2D_V1",
+   "waypoints_within_joint_limits": true
+  },
+  "explanation": {
+   "counterfactual_appearance": "INITIAL_ANCHOR",
+   "max_omission_subset": 2,
+   "max_tested_subsets": 16
+  },
+  "proposal": {
+   "max_candidates_to_verify": 12,
+   "move_cap": 3,
+   "rank": [
+    "move_count",
+    "predicted_joint_travel",
+    "endpoint_distance",
+    "feasibility_energy",
+    "signature"
+   ],
+   "source": "MANUAL_OR_DETERMINISTIC_SEQUENCES",
+   "task_score_threshold": 0.5
+  },
+  "protocol": {
+   "executor_may_reorder": false,
+   "home_return": "SEPARATE_DIAGNOSTIC",
+   "max_primary_target_evaluations": 1,
+   "move_once": true,
+   "name": "INITIAL_SCENE_ORDERED_ONE_SHOT_V2",
+   "order_source": "PROPOSED_SEQUENCE",
+   "proposal_observation": "INITIAL_ONLY",
+   "schema_version": 1,
+   "target_end_policy": "GOAL_AND_SAFE_RETREAT",
+   "target_feedback_to_selection": false
+  }
+ },
+ "config_v2_hash": "sha256:fd721f1578009c74b129ed08ff968504d8ca42b553460a371fe07b97b6e592b2"
+}
