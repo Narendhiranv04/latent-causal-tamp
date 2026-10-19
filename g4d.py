@@ -12,28 +12,24 @@ from __future__ import annotations
 import hashlib
 import json
 import math
-from dataclasses import replace
 from pathlib import Path
 
-import numpy as np
 
 import cases
-import certificates as cert
 import config as cf
 import data
 import effects as ef
 import geometry as ge
 import interventions as iv
-import motion as mo
-import ordered as od
+import legacy
 import sequences as sq
-import teacher
 import verify as vf
-from scene import scene_from_dict, scene_hash, scene_to_dict
+from scene import scene_hash, scene_to_dict
 
 DOCS = {"methodology_v1_6": "latent_causal_tamp_specification_v1_6.pdf",
         "guide_v1_8": "latent_causal_tamp_implementation_guide_v1_8.pdf"}
-LEGACY_POLICY = "LEGACY_V1_AUDIT_ORDER_SEARCH_FIRST_RELOCATION_WITNESS"
+LEGACY_POLICY = legacy.LEGACY_POLICY
+legacy_positive = legacy.legacy_positive          # re-exported (moved to legacy.py at report 0011)
 FIELD_MAP = [  # V1 field/API -> V2 field/API, and what changes in meaning
     ("query.protocol INITIAL_SCENE_ONE_SHOT_V1", "INITIAL_SCENE_ORDERED_ONE_SHOT_V2 + schema_version 1",
      "same learner allowlist and SAFE_RETREAT action context (hash-identical); V2 forbids end_policy None"),
@@ -68,83 +64,14 @@ def _rd(path: Path):
 
 
 # ------------------------------------------------------------------ legacy label scope audit
-def _certified(robot, scene, oid, a, d, e, n) -> bool:
-    try:
-        return all(v.status == ge.CLEAR for v in mo.certify_trajectory(robot, scene, oid, a, d, e, n))
-    except ValueError:                                  # malformed record (e.g. attachment inconsistent): not a witness
-        return False
-
-
-def legacy_positive(cfg, robot, q: dict, tag: str, cells: dict, tasks: dict, scenes: dict, npz) -> dict:
-    """Re-validate one archived first-pass witness for its exact recorded order: identity and
-    end policy, every relocation certified in its own pre-move scene from the previous
-    achieved state (hash-bound), placement at the destination, move-once, and the target
-    record starting at the last achieved state and ending in a certified safe retreat."""
-    s, act = scene_from_dict(q["scene"]), q["action"]
-    v2q = data.make_query(cfg, q["query_id"], s, act["target_id"], q["goal_cell"], {}, "SAFE_RETREAT", data.PROTOCOL_V2)
-    rhash, d, e, n = cf.robot_profile_hash(cfg), cfg["suite"]["margin_m"], cfg["geometry"]["numeric_margin_band_m"], \
-        cfg["geometry"]["certify_max_evals"]
-    arr = lambda t: {k.split("__")[1]: npz[k] for k in npz.files if k.startswith(t + "__")}  # noqa: E731
-    ms = sorted((k for k in tasks if k.startswith(tag + ".m")), key=lambda k: int(k.rsplit(".m", 1)[1]))
-    if tag + ".target" not in tasks:
-        return {"v2_status": data.UNKNOWN, "migration": "WITNESS_NOT_ARCHIVED"}
-    chk = {"identity_and_end_policy": v2q["hashes"] == q["hashes"] and v2q["learner"]["action"] == act}
-    scene, qs, gap, order, recs = s, np.asarray(s.robot.q_rad), s.robot.gripper_gap_m, [], []
-    for m in ms:
-        a, oid = arr(m), tasks[m]["target"]
-        order.append([oid, cells.get(oid)])
-        pre = scene_from_dict(scenes[m])
-        c = {"pre_scene": scene_hash(pre) == scene_hash(scene), "certified": _certified(robot, pre, oid, a, d, e, n),
-             "hash": mo.trajectory_hash(a, oid, scene_hash(pre), rhash) == tasks[m]["action_hash"],
-             "starts_at_achieved": bool(np.array_equal(a["q"][0], qs) and a["gap"][0] == gap),
-             "placed": oid in cells and math.dist(a["place_xy"], s.lattice.center(cells[oid])) <= 1e-9,
-             "ends_in_retreat": str(a["phase"][-1]) == "retreat" and a["gap"][-1] == robot.open_gap}
-        chk[m.rsplit(".", 1)[1]] = {k: bool(v) for k, v in c.items()}
-        recs.append(a)
-        if oid in cells:
-            scene = replace(scene, objects=tuple(replace(o, xy_m=tuple(a["place_xy"]), cell=cells[oid]) if o.id == oid else o
-                                                 for o in scene.objects))
-        qs, gap = a["q"][-1], float(a["gap"][-1])
-    t, pre = arr(tag + ".target"), scene_from_dict(scenes[tag + ".target"])
-    w = teacher.check_witness(robot, cfg, pre, vf.RepairState(pre, tuple(qs), gap), act, t)
-    chk["target"] = {k: bool(v) for k, v in {**w, "pre_scene": scene_hash(pre) == scene_hash(scene), "hash": mo.trajectory_hash(
-        t, act["target_id"], scene_hash(pre), rhash) == tasks[tag + ".target"]["action_hash"]}.items()}
-    chk["move_once_and_assignment"] = bool(len({o for o, _ in order}) == len(order) and sq.assignment(order) == cells)
-    chk["identity_and_end_policy"] = bool(chk["identity_and_end_policy"])
-    ok = all(all(v.values()) if isinstance(v, dict) else v for v in chk.values())
-    jt = od.joint_travel(robot, recs)
-    return {"recorded_sequence": order, "v2_status": data.POSITIVE if ok else data.UNKNOWN,
-            "migration": "VALIDATED_EXACT_RECORDED_ORDER" if ok else "VALIDATION_FAILED", "validation": chk,
-            "legacy_cost": {"policy": LEGACY_POLICY, "J": 0.0 if not recs else jt["J"], "per_record": jt["per_record"],
-                            "usable_as_v2_cost_label": False,
-                            "why": "V1 seed keys and order search differ from the frozen V2 first-witness backend"}}
-
-
 def legacy_audit(cfg, robot, g4a: Path) -> dict:
-    plan, rows = _rd(g4a / "g4a_plan.json"), _rd(g4a / "candidate_labels.json")
-    tasks, scenes, npz = _rd(g4a / "result.json")["tasks"], _rd(g4a / "scenes.json"), np.load(g4a / "arrays.npz")
-    qs, idx, out = {q["query_id"]: q for q in plan["queries"]}, {}, []
-    for r in rows:
-        i = idx.get(r["query_id"], 0)
-        idx[r["query_id"]] = i + 1
-        cells = {o: dd for o, dd in r["signature"]}
-        kinds = sorted({c["kind"] for c in r["certificates"] if c["checker_accepted"]})
-        row = {"query_id": r["query_id"], "audit_index": i, "assignment": cells, "moved": r["moved"],
-               "v1_first_pass": r["first_pass"], "v1_diagnostic_enriched": r["diagnostic_enriched"]}
-        if r["first_pass"] == data.POSITIVE:
-            row.update(legacy_positive(cfg, robot, qs[r["query_id"]], f"{r['query_id']}.audit{i}", cells, tasks, scenes, npz))
-            row["other_orders"] = "UNRESOLVED (a witness labels only its own order)"
-        elif r["first_pass"] == data.NEGATIVE:
-            wide = [k for k in kinds if cert.CERTIFICATE_SCOPE.get(k) == "ASSIGNMENT"]
-            row.update(v2_status=data.NEGATIVE if wide else data.UNKNOWN, certificate_kinds=kinds,
-                       migration="ASSIGNMENT_WIDE_TRANSFER_TO_ALL_ORDERS" if wide else "NO_TRANSFERABLE_SCOPE",
-                       orders_covered=math.factorial(r["moved"]), premises="archived checker verdict; same observation, "
-                       "action context (SAFE_RETREAT = GOAL_AND_SAFE_RETREAT), grasp family and move-once rule")
-        else:
-            row.update(v2_status=data.UNKNOWN, migration="UNKNOWN_STAYS_UNKNOWN", unknown_reason=r["unknown_reason"])
-        out.append(row)
+    """Migration view of legacy.revalidate (corrected at report 0011: negatives are now
+    reconstructed and re-checked by the independent checker, never transferred on the
+    archived acceptance boolean)."""
+    rv = legacy.revalidate(cfg, robot, g4a)
+    out = rv["rows"]
     pos = [r for r in out if r["v1_first_pass"] == data.POSITIVE]
-    return {"rows": out, "summary": {
+    return {"rows": out, "contradictions": rv["contradictions"], "summary": {
         "assignments": len(out), "v1_first_pass": {k: sum(r["v1_first_pass"] == k for r in out) for k in
                                                    (data.POSITIVE, data.NEGATIVE, data.UNKNOWN)},
         "v2_ordered_positive_exact_order": sum(r["v2_status"] == data.POSITIVE for r in pos),
@@ -152,10 +79,12 @@ def legacy_audit(cfg, robot, g4a: Path) -> dict:
         "v2_zero_move_positive_roots": sorted({r["query_id"] for r in pos if r["v2_status"] == data.POSITIVE and not r["moved"]}),
         "v2_multi_move_positive_sequences": sum(r["v2_status"] == data.POSITIVE and r["moved"] >= 2 for r in pos),
         "v2_negative_assignments_all_orders": sum(r["v2_status"] == data.NEGATIVE for r in out),
+        "v2_negative_transfer_rejected": sum(r["v1_first_pass"] == data.NEGATIVE and r["v2_status"] != data.NEGATIVE
+                                             for r in out),
         "v2_negative_ordered_sequences_covered": sum(r.get("orders_covered", 0) for r in out if r["v2_status"] == data.NEGATIVE),
         "unknown_assignments": sum(r["v1_first_pass"] == data.UNKNOWN for r in out),
-        "v2_cost_labels_from_legacy": 0, "decided_same_endpoint_order_contrasts": 0, "matched_scene_effect_pairs": 0,
-        "matched_omission_pairs": 0, "diagnostic_enriched_only_positives_not_migrated": sum(
+        "contradictions": len(rv["contradictions"]), "v2_cost_labels_from_legacy": 0,
+        "diagnostic_enriched_only_positives_not_migrated": sum(
             r["v1_diagnostic_enriched"] == data.POSITIVE and r["v1_first_pass"] != data.POSITIVE for r in out),
         "g3_5_labels": "NOT_TRANSFERRED: HOME_REQUIRED end policy (report 0007) is a separate historical scope"}}
 

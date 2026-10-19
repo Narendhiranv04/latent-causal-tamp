@@ -22,15 +22,41 @@ import math
 import motion as mo
 import proposals as pr
 from config import stable_hash
-from scene import POSE_EQ_TOL_M, substitute_pose
+from scene import POSE_EQ_TOL_M, scene_hash, substitute_pose
 
 V2 = "INITIAL_SCENE_ORDERED_ONE_SHOT_V2"
 EMPTY = ()
 
 
 def canonical(seq) -> tuple:
-    """Stored form ((object id, cell), ...) in the proposed order (never re-sorted)."""
-    return tuple((str(o), int(d)) for o, d in seq)
+    """Stored form ((object id, cell), ...) in the proposed order (never re-sorted). It
+    never converts: a non-str id or a non-int (or bool) cell raises instead of being
+    coerced (int(True) == 1, int(29.9) == 29 would silently change the request)."""
+    out = tuple(tuple(a) for a in seq)
+    if any(len(a) != 2 or not isinstance(a[0], str) or isinstance(a[1], bool) or not isinstance(a[1], int) for a in out):
+        raise TypeError(f"not a canonical sequence: {seq!r}")
+    return out
+
+
+def parse_sequence(scene, action: dict, raw, move_cap: int) -> tuple:
+    """The one public validation contract (ranking, teaching, explanations): returns
+    (canonical sequence or None, reasons). Raw shape and types are checked BEFORE any
+    conversion; then the physical rules of validate_sequence."""
+    if not isinstance(raw, (list, tuple)):
+        return None, [f"sequence must be a list of (object, cell) pairs, got {type(raw).__name__}"]
+    why = []
+    for t, a in enumerate(raw):
+        if not isinstance(a, (list, tuple)) or len(a) != 2:
+            why.append(f"action {t}: malformed pair {a!r}")
+        elif not isinstance(a[0], str):
+            why.append(f"action {t}: object id {a[0]!r} is not a string")
+        elif isinstance(a[1], bool) or not isinstance(a[1], int):
+            why.append(f"action {t}: destination {a[1]!r} is not an integer cell (bool/float/other rejected)")
+    if why:
+        return None, why
+    seq = canonical(raw)
+    why = validate_sequence(scene, action, seq, move_cap)
+    return (None, why) if why else (seq, [])
 
 
 def validate_sequence(scene, action: dict, seq, move_cap: int) -> list:
@@ -40,8 +66,8 @@ def validate_sequence(scene, action: dict, seq, move_cap: int) -> list:
     if len(seq) > move_cap:
         why.append(f"length {len(seq)} exceeds the move cap {move_cap}")
     for t, item in enumerate(seq):
-        if not (isinstance(item, (list, tuple)) and len(item) == 2):
-            why.append(f"action {t}: not an (object, destination) pair")
+        if not (isinstance(item, (list, tuple)) and len(item) == 2) or not isinstance(item[0], str):
+            why.append(f"action {t}: not an (object id, destination) pair")
             continue
         o, d = item
         if o in seen:
@@ -117,20 +143,19 @@ def rank_sequences(scene, action: dict, proposals: list, cfg: dict, v2: dict) ->
     derived assignment and thresholded, then ranked lexicographically by (move count,
     predicted joint travel, endpoint distance, feasibility energy, signature). Learned
     terms do not exist yet: they are recorded as None and contribute equally (0)."""
-    q, ctx = v2["proposal"], stable_hash({"scene": [(o.id, o.xy_m) for o in scene.objects], "action": action})
+    # context identity: every physical scene field incl. robot joints, gap, attachment, lattice, legal cells, profile
+    q, ctx = v2["proposal"], stable_hash({"scene": scene_hash(scene), "action": action})
     pool = [{"label": "empty", "sequence": EMPTY, "source": "EMPTY"}] + list(proposals)
     seen, rows, rejected = set(), [], []
     for k, p in enumerate(pool):
-        seq = tuple(tuple(a) for a in p["sequence"])
-        why = validate_sequence(scene, action, seq, q["move_cap"])
+        seq, why = parse_sequence(scene, action, p["sequence"], q["move_cap"])
         sig = None if why else ordered_signature(scene, seq)
         if not why and sig in seen:
             why = ["duplicate ordered physical signature"]
         if why:
-            rejected.append({"label": p["label"], "sequence": [list(a) for a in seq], "reasons": why})
+            rejected.append({"label": p["label"], "sequence": repr(p["sequence"]), "reasons": why})
             continue
         seen.add(sig)
-        seq = canonical(seq)
         st = pr.static_endpoints(scene, assignment(seq), action["target_id"], cfg)["status"]
         rows.append({"label": p["label"], "sequence": seq, "assignment": assignment(seq), "moved": len(seq),
                      "source": p.get("source", "MANUAL"), "proposal_seed": p.get("seed"), "initial_context_hash": ctx,

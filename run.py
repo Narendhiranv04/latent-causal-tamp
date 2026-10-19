@@ -10,6 +10,7 @@ with the module that owns that stage (moved here-from at G4A, behaviour unchange
     g4a-plan, g4a-audit audit.cmd_g4a_plan / cmd_g4a_audit runs/g4a_evidence_audit
     teacher-plan/-run   teacher.cmd_teacher_plan / cmd_teacher_run runs/g4a_teacher_budget_diagnostic (G4A follow-up)
     g4d-plan, g4d-migrate g4d.cmd_g4d_plan / cmd_g4d_migrate runs/g4d_migration (V2 migration; no collection)
+    g4d-legacy/-finalize/-run/-judge g4d_gate.*   runs/g4d_evidence (corrections, bounded collection, gate)
     replay              run.cmd_replay                any run directory
 
     python run.py scene --config config.toml --case G0_ILLUSTRATIVE --out runs/g0_scene
@@ -30,6 +31,7 @@ import case_figures as cfig
 import config as cf
 import figures as fig
 import g4d
+import g4d_gate
 import geometry as ge
 import intervention_figures as ifig
 import motion as mo
@@ -118,7 +120,11 @@ def main(argv=None) -> int:
         q.add_argument("--out", required=True)
         q.set_defaults(func=fn)
     for name, fn, hlp in (("g4d-plan", g4d.cmd_g4d_plan, "G4D: freeze the sparse V2 evidence plan (no outcomes, no budget)"),
-                          ("g4d-migrate", g4d.cmd_g4d_migrate, "G4D: V1->V2 migration manifest, legacy label scope audit, figures")):
+                          ("g4d-migrate", g4d.cmd_g4d_migrate, "G4D: V1->V2 migration manifest, legacy label scope audit, figures"),
+                          ("g4d-legacy", g4d_gate.cmd_g4d_legacy, "G4D: revalidate archived evidence, derived omission pairs"),
+                          ("g4d-finalize", g4d_gate.cmd_g4d_finalize, "G4D: final execution plan linked to the pending plan"),
+                          ("g4d-run", g4d_gate.cmd_g4d_run, "G4D: guarded, resumable bounded collection"),
+                          ("g4d-judge", g4d_gate.cmd_g4d_judge, "G4D: evidence from re-checked checkpoints, gate, figures")):
         q = sub.add_parser(name, help=hlp)
         q.add_argument("--config", default="config.toml")
         q.add_argument("--config-v2", default="config_v2.toml")

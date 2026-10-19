@@ -161,7 +161,7 @@ def test_scene_substitution_holds_the_robot_and_never_makes_an_ineligible_negati
     assert not ef.robot_start_substitution(robot, cfg, s, act, [4.0, 0.0, 0.0])["eligible"]       # outside limits
 
 
-def test_effect_labels_and_scoped_aggregation_mask_unknowns(v2):
+def test_effect_labels_and_scoped_aggregation_mask_unknowns(v2, r4):
     P, N, U = data.POSITIVE, data.NEGATIVE, data.UNKNOWN
     assert data.effect_label(N, P) == {"delta": 1, "mask": True} and data.effect_label(P, P)["delta"] == 0
     assert data.effect_label(U, P) == data.effect_label(P, U) == {"delta": None, "mask": False}
@@ -175,7 +175,7 @@ def test_effect_labels_and_scoped_aggregation_mask_unknowns(v2):
     assert data.ordered_aggregate([c(data.ASSIGNMENT)])["label"] == N and data.ordered_aggregate([c(data.ORDER)])["label"] == N
     assert data.ordered_aggregate([w, fail])["label"] == P and data.ordered_aggregate([w, c(data.ORDER)])["label"] == data.CONTRADICTION
     st = {GOOD: P, (("o00", 29),): N}                                    # (o01,18) alone and empty: unknown here
-    recs = ef.omission_records(GOOD, st, v2, "anchor")
+    recs = ef.omission_records(r4[1], GOOD, st, v2, "anchor")
     assert [r["objects"] for r in recs] == [["o01"], ["o00"], ["o00", "o01"]]
     assert [r["label"]["delta"] for r in recs] == [1, None, None] and all(r["kind"] == ef.OMISSION for r in recs)
 
@@ -241,8 +241,10 @@ def test_primary_v2_commits_the_proposed_order_and_calls_the_target_once(robot, 
     out = od.primary_v2(robot, cfg, q, s, pool, stub, cf.robot_profile_hash(cfg))
     a = out["audit"]
     assert out["commit"]["rank"] == 1 and out["commit"]["order"] == [list(x) for x in GOOD]
-    assert len(calls) == 1 and out["outcome"] == "TARGET_UNRESOLVED" and a["boundary_ok"] and a["commits"] == 1
-    assert a["committed_order_equals_proposed"] and a["joint_continuity"] and a["target_start_equals_achieved"]
+    assert len(calls) == 1 and out["outcome"] == "TARGET_UNRESOLVED" and a["protocol_compliant"] and a["commits"] == 1
+    assert a["decision"] == "PASS" and all(a["checks"][k] for k in (
+        "committed_order_equals_proposed", "joint_continuity", "achieved_state_matches_commitment",
+        "target_invocation_equals_achieved"))
     assert [r["object"] for r in a["reobserve"]] == ["o01", "o00"] and a["reobserve"][-1]["moved"] == ["o01", "o00"]
     assert all(r["commanded_xy"] == r["achieved_xy"] and r["attachment"] == "free" for r in a["reobserve"])
     assert calls[0].q == out["achieved"].q and [e["kind"] for e in out["trace"].events].count("REPAIR_PLAN") == 2

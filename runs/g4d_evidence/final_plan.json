@@ -1,0 +1,1673 @@
+{
+ "admission": "a unit starts only if spent CPU (units + coordinator) + cpu_per_unit_s + orchestration_reserve_s <= cpu_aggregate_s; its wall limit is min(wall_per_unit_s, remaining global wall)",
+ "call_caps": {
+  "relocation_skills": 13,
+  "target_evaluations": 20
+ },
+ "cases": [
+  {
+   "id": "D-V2-0",
+   "legacy": [
+    "g4a_r05",
+    "g4a_r10",
+    "g4a_r19"
+   ],
+   "requirement": "checked empty-repair target success with exact zero relocation cost",
+   "units": [
+    "seq:R0:empty"
+   ]
+  },
+  {
+   "id": "D-V2-1",
+   "requirement": "mandatory goal occupant plus a checked sufficient repair; original/edited target-only pair at fixed robot",
+   "scene": [
+    [
+     "R2",
+     {
+      "o03": 60
+     }
+    ],
+    [
+     "R2",
+     {
+      "o03": 38
+     }
+    ]
+   ],
+   "units": [
+    "seq:R2:empty",
+    "seq:R2:o03>60",
+    "seq:R2:o03>38"
+   ]
+  },
+  {
+   "contrast": [
+    [
+     "R4",
+     [
+      [
+       "o01",
+       18
+      ],
+      [
+       "o00",
+       29
+      ]
+     ],
+     [
+      [
+       "o00",
+       29
+      ],
+      [
+       "o01",
+       18
+      ]
+     ]
+    ],
+    [
+     "R2",
+     [
+      [
+       "o01",
+       21
+      ],
+      [
+       "o03",
+       13
+      ]
+     ],
+     [
+      [
+       "o03",
+       13
+      ],
+      [
+       "o01",
+       21
+      ]
+     ]
+    ]
+   ],
+   "id": "D-V2-2",
+   "requirement": "identical endpoints, two orders: one complete success and one order-wide certified negative",
+   "units": [
+    "seq:R4:o01>18.o00>29",
+    "seq:R4:o00>29.o01>18",
+    "seq:R2:o01>21.o03>13",
+    "seq:R2:o03>13.o01>21"
+   ]
+  },
+  {
+   "id": "D-V2-3",
+   "requirement": "destination choice changes whether another object must move (occupancy retained)",
+   "units": [
+    "seq:R2:o03>60",
+    "seq:R2:o01>21.o03>13",
+    "seq:R2:o03>13"
+   ]
+  },
+  {
+   "id": "D-V2-4",
+   "omissions": [
+    [
+     "R4",
+     [
+      [
+       "o01",
+       18
+      ],
+      [
+       "o00",
+       29
+      ]
+     ]
+    ]
+   ],
+   "requirement": "joint omission/intervention exposing an interaction singletons do not summarize",
+   "scene": "R5_BLOCKER_RESTORATIONS",
+   "units": [
+    "seq:R4:o01>18.o00>29",
+    "seq:R4:o00>29",
+    "seq:R4:o01>18",
+    "seq:R4:empty"
+   ]
+  },
+  {
+   "id": "D-V2-5",
+   "requirement": "complete relocation traces with measured joint travel for >= 2 alternatives vs endpoint distance",
+   "units": [
+    "seq:R2:o03>60",
+    "seq:R2:o03>38",
+    "seq:R4:o01>18.o00>29"
+   ]
+  },
+  {
+   "id": "D-V2-6",
+   "requirement": "robot-start counterfactual, identical object geometry, independently decided outcome per valid start",
+   "starts": [
+    "R1"
+   ],
+   "units": [
+    "seq:R1:empty"
+   ]
+  }
+ ],
+ "config_hash": "sha256:a9f3f2360e17d9827e24b4e9bb32727569afdf04aa4f87c72ba3cccf50953ae3",
+ "config_v2_hash": "sha256:fd721f1578009c74b129ed08ff968504d8ca42b553460a371fe07b97b6e592b2",
+ "documents": {
+  "guide_v1_8": "sha256:702637b8b695f1f37ee9c81ab88f9802af6aba91b30446833d4c2b936abbc446",
+  "methodology_v1_6": "sha256:a4dcda1b308c4fbee4a830a5bfdc4a0a0ec3f34cbac3721a6dc1b080b77a4f42"
+ },
+ "legacy_revalidation_sha256": "sha256:a08a0f46dee104b76c6078eb6335e899814dea6628a7e7fbf164857be43b9fbd",
+ "limits": {
+  "cpu_aggregate_s": 18000.0,
+  "cpu_per_unit_s": 900.0,
+  "guard_margin_s": 30.0,
+  "orchestration_reserve_s": 60.0,
+  "poll_s": 0.25,
+  "wall_per_unit_s": 1800.0,
+  "wall_total_s": 21600.0,
+  "workers": 1
+ },
+ "omission_plans": {
+  "R4:o01>18.o00>29": [
+   {
+    "omitted_objects": [
+     "o01"
+    ],
+    "omitted_positions": [
+     0
+    ],
+    "remaining": [
+     [
+      "o00",
+      29
+     ]
+    ]
+   },
+   {
+    "omitted_objects": [
+     "o00"
+    ],
+    "omitted_positions": [
+     1
+    ],
+    "remaining": [
+     [
+      "o01",
+      18
+     ]
+    ]
+   },
+   {
+    "omitted_objects": [
+     "o01",
+     "o00"
+    ],
+    "omitted_positions": [
+     0,
+     1
+    ],
+    "remaining": []
+   }
+  ]
+ },
+ "pending_plan": {
+  "file_sha256": "sha256:9b111b44e549398e9302e78942f8b1caa01cfbb45c3414e09691a6743e7092ec",
+  "path": "runs/g4d_migration/g4d_plan.json",
+  "plan_hash": "sha256:c0f3bcb2c712ea7d1fd5ea36eb3e03428a0aa659e1f81ff8aaf7b8eeee13c4bf",
+  "relationship": "units, roots, cases, seeds, order and action/search policies copied verbatim (regenerated identically by the corrected code); the pending file is unchanged",
+  "why_hashes_changed": "source files were corrected (report 0011: episode audit, per-call relocation budget, raw-proposal validation, negative revalidation, termination events, context identity, checkpoint hook, runner), and the authorized envelope was added"
+ },
+ "plan_hash": "sha256:a1b5a67fe36b21279e739bbb341c6f71647f87b3870c925c707e1fe5868eb215",
+ "policies": {
+  "cost": "FIRST_RELOCATION_WITNESS_NORMALIZED_JOINT_TRAVEL_V1",
+  "home_diagnostic": "kept ON (config.toml unchanged); the checked goal+safe-retreat witness is checkpointed through evaluate.evaluate_safe_retreat(on_witness) BEFORE the HOME diagnostic starts",
+  "no_relaxation": "no collision, tolerance or budget loosening",
+  "no_root_replacement": true,
+  "relocation_backend": "FIXED_ORDER_GREEDY_SKILL2D_V1",
+  "search_schedule": "unchanged: planner2d.max_nodes 4000, relocation failures 2, target failures 4, 48-grasp family, margins, tolerances, supported transport",
+  "skill_budgets": {
+   "planner_max_nodes": 4000,
+   "relocation": 2,
+   "target": 4
+  },
+  "target_end_policy": "GOAL_AND_SAFE_RETREAT (evaluate.evaluate_safe_retreat); HOME diagnostic only",
+  "target_when_certified": "NOT_RUN (an accepted covering certificate already decides the order)",
+  "unknowns": "timeouts, censoring, failed connectors and exhausted search stay UNRESOLVED"
+ },
+ "protocol": "INITIAL_SCENE_ORDERED_ONE_SHOT_V2",
+ "resume": "only never-started units run; persisted spent CPU and the original global deadline are reused; a STARTED unit without an end record becomes INTERRUPTED_AMBIGUOUS and is not repeated",
+ "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+ "roots": {
+  "R0": {
+   "construction": "archived G2_D1/ref",
+   "fixture": "G35_R0_D1REF",
+   "goal_cell": 45,
+   "hashes": {
+    "action_context": "sha256:0dae5d45e4b7d4c241d530d38812ff7a489f077218188181103139803eaf7fae",
+    "observation": "sha256:2111eb51c04cbde874da43e7ce10396c9a0a4c693205027a404eb7942a26828c"
+   },
+   "primary_pool_preview": [
+    []
+   ],
+   "scene": {
+    "action_hash": null,
+    "domain_policy": "ALL_SUPPORTED",
+    "lattice": {
+     "cols": 8,
+     "pitch_m": 0.08,
+     "rows": 8
+    },
+    "legal_cells": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     25,
+     26,
+     27,
+     28,
+     29,
+     30,
+     31,
+     32,
+     33,
+     34,
+     35,
+     36,
+     37,
+     38,
+     39,
+     40,
+     41,
+     42,
+     43,
+     44,
+     45,
+     46,
+     47,
+     48,
+     49,
+     50,
+     51,
+     52,
+     53,
+     54,
+     55,
+     56,
+     57,
+     58,
+     59,
+     60,
+     61,
+     62,
+     63
+    ],
+    "objects": [
+     {
+      "cell": 3,
+      "id": "o00",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.28,
+       0.04
+      ]
+     },
+     {
+      "cell": 13,
+      "id": "o01",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.44,
+       0.12
+      ]
+     },
+     {
+      "cell": 50,
+      "id": "o02",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.2,
+       0.52
+      ]
+     },
+     {
+      "cell": 60,
+      "id": "o03",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.36,
+       0.6
+      ]
+     },
+     {
+      "cell": 18,
+      "id": "t0",
+      "kind": "target",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.2,
+       0.2
+      ]
+     }
+    ],
+    "robot": {
+     "attached_id": null,
+     "attachment": "free",
+     "gripper_gap_m": 0.07,
+     "q_rad": [
+      1.5707963267948966,
+      1.5707963267948966,
+      1.5707963267948966
+     ]
+    },
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "root_id": "root_d1",
+    "variant_id": "ref"
+   },
+   "scene_hash": "sha256:f635e6aa76d6e6bd40d535df97eda3669323917a19c128f48f84802289b2a977",
+   "sequences": [
+    {
+     "endpoint_distance": 0.0,
+     "sequence": [],
+     "validation": []
+    }
+   ]
+  },
+  "R1": {
+   "construction": "archived G2_D1/block_a",
+   "fixture": "G35_R1_D1BLOCK",
+   "goal_cell": 45,
+   "hashes": {
+    "action_context": "sha256:0dae5d45e4b7d4c241d530d38812ff7a489f077218188181103139803eaf7fae",
+    "observation": "sha256:0cf5e9bb527414414fb76d7ad2665664afd50f3a85d12282d3e1cb36a32e5851"
+   },
+   "primary_pool_preview": [
+    []
+   ],
+   "scene": {
+    "action_hash": null,
+    "domain_policy": "ALL_SUPPORTED",
+    "lattice": {
+     "cols": 8,
+     "pitch_m": 0.08,
+     "rows": 8
+    },
+    "legal_cells": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     25,
+     26,
+     27,
+     28,
+     29,
+     30,
+     31,
+     32,
+     33,
+     34,
+     35,
+     36,
+     37,
+     38,
+     39,
+     40,
+     41,
+     42,
+     43,
+     44,
+     45,
+     46,
+     47,
+     48,
+     49,
+     50,
+     51,
+     52,
+     53,
+     54,
+     55,
+     56,
+     57,
+     58,
+     59,
+     60,
+     61,
+     62,
+     63
+    ],
+    "objects": [
+     {
+      "cell": 3,
+      "id": "o00",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.28,
+       0.04
+      ]
+     },
+     {
+      "cell": 13,
+      "id": "o01",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.44,
+       0.12
+      ]
+     },
+     {
+      "cell": 51,
+      "id": "o02",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.28,
+       0.52
+      ]
+     },
+     {
+      "cell": 60,
+      "id": "o03",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.36,
+       0.6
+      ]
+     },
+     {
+      "cell": 18,
+      "id": "t0",
+      "kind": "target",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.2,
+       0.2
+      ]
+     }
+    ],
+    "robot": {
+     "attached_id": null,
+     "attachment": "free",
+     "gripper_gap_m": 0.07,
+     "q_rad": [
+      1.5707963267948966,
+      1.5707963267948966,
+      1.5707963267948966
+     ]
+    },
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "root_id": "root_d1",
+    "variant_id": "block_a"
+   },
+   "scene_hash": "sha256:561d871f195e2f3e91375cd781a55a8d6094eb5cdc34571f53ed36a84279494c",
+   "sequences": [
+    {
+     "endpoint_distance": 0.0,
+     "sequence": [],
+     "validation": []
+    }
+   ]
+  },
+  "R2": {
+   "construction": "D1 reference layout with o03 placed on the goal cell 45 (constructed directly; no relocation)",
+   "fixture": "G35_R2_GOAL",
+   "goal_cell": 45,
+   "hashes": {
+    "action_context": "sha256:0dae5d45e4b7d4c241d530d38812ff7a489f077218188181103139803eaf7fae",
+    "observation": "sha256:656cd4cfd726461c01e01ac9821aaa7689f743c18db14ead84b7d26e0a081028"
+   },
+   "primary_pool_preview": [
+    [
+     [
+      "o03",
+      38
+     ]
+    ],
+    [
+     [
+      "o03",
+      60
+     ]
+    ],
+    [
+     [
+      "o03",
+      13
+     ],
+     [
+      "o01",
+      21
+     ]
+    ],
+    [
+     [
+      "o01",
+      21
+     ],
+     [
+      "o03",
+      13
+     ]
+    ]
+   ],
+   "scene": {
+    "action_hash": null,
+    "domain_policy": "ALL_SUPPORTED",
+    "lattice": {
+     "cols": 8,
+     "pitch_m": 0.08,
+     "rows": 8
+    },
+    "legal_cells": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     25,
+     26,
+     27,
+     28,
+     29,
+     30,
+     31,
+     32,
+     33,
+     34,
+     35,
+     36,
+     37,
+     38,
+     39,
+     40,
+     41,
+     42,
+     43,
+     44,
+     45,
+     46,
+     47,
+     48,
+     49,
+     50,
+     51,
+     52,
+     53,
+     54,
+     55,
+     56,
+     57,
+     58,
+     59,
+     60,
+     61,
+     62,
+     63
+    ],
+    "objects": [
+     {
+      "cell": 3,
+      "id": "o00",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.28,
+       0.04
+      ]
+     },
+     {
+      "cell": 13,
+      "id": "o01",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.44,
+       0.12
+      ]
+     },
+     {
+      "cell": 50,
+      "id": "o02",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.2,
+       0.52
+      ]
+     },
+     {
+      "cell": 45,
+      "id": "o03",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.44,
+       0.44
+      ]
+     },
+     {
+      "cell": 18,
+      "id": "t0",
+      "kind": "target",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.2,
+       0.2
+      ]
+     }
+    ],
+    "robot": {
+     "attached_id": null,
+     "attachment": "free",
+     "gripper_gap_m": 0.07,
+     "q_rad": [
+      1.5707963267948966,
+      1.5707963267948966,
+      1.5707963267948966
+     ]
+    },
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "root_id": "root_r2",
+    "variant_id": "initial"
+   },
+   "scene_hash": "sha256:f1238490a23ab6318497489b94ae5d693d7887e4dbb1d1f0ca80a7f231b5aa4f",
+   "sequences": [
+    {
+     "endpoint_distance": 0.0,
+     "sequence": [],
+     "validation": []
+    },
+    {
+     "endpoint_distance": 0.197642354,
+     "sequence": [
+      [
+       "o03",
+       60
+      ]
+     ],
+     "validation": []
+    },
+    {
+     "endpoint_distance": 0.125,
+     "sequence": [
+      [
+       "o03",
+       38
+      ]
+     ],
+     "validation": []
+    },
+    {
+     "endpoint_distance": 0.441941738,
+     "sequence": [
+      [
+       "o01",
+       21
+      ],
+      [
+       "o03",
+       13
+      ]
+     ],
+     "validation": []
+    },
+    {
+     "endpoint_distance": 0.441941738,
+     "sequence": [
+      [
+       "o03",
+       13
+      ],
+      [
+       "o01",
+       21
+      ]
+     ],
+     "validation": []
+    },
+    {
+     "endpoint_distance": 0.353553391,
+     "sequence": [
+      [
+       "o03",
+       13
+      ]
+     ],
+     "validation": []
+    }
+   ]
+  },
+  "R4": {
+   "construction": "G3 D3 blocked layout (o00 5->28, o01 9->27 from the D3 reference), constructed directly",
+   "fixture": "G35_R4_ACCESS",
+   "goal_cell": 28,
+   "hashes": {
+    "action_context": "sha256:bb632ca8d03f7ec1dea536b618e17627aa74b2637b2b704895be8e16947d3230",
+    "observation": "sha256:a89c4ea165a40861df57a4ce6c7692b47bf94bfae44443ffdb5479f30678febd"
+   },
+   "primary_pool_preview": [
+    [
+     [
+      "o00",
+      29
+     ]
+    ],
+    [
+     [
+      "o01",
+      18
+     ],
+     [
+      "o00",
+      29
+     ]
+    ],
+    [
+     [
+      "o00",
+      29
+     ],
+     [
+      "o01",
+      18
+     ]
+    ]
+   ],
+   "scene": {
+    "action_hash": null,
+    "domain_policy": "ALL_SUPPORTED",
+    "lattice": {
+     "cols": 8,
+     "pitch_m": 0.08,
+     "rows": 8
+    },
+    "legal_cells": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     25,
+     26,
+     27,
+     28,
+     29,
+     30,
+     31,
+     32,
+     33,
+     34,
+     35,
+     36,
+     37,
+     38,
+     39,
+     40,
+     41,
+     42,
+     43,
+     44,
+     45,
+     46,
+     47,
+     48,
+     49,
+     50,
+     51,
+     52,
+     53,
+     54,
+     55,
+     56,
+     57,
+     58,
+     59,
+     60,
+     61,
+     62,
+     63
+    ],
+    "objects": [
+     {
+      "cell": 28,
+      "id": "o00",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.36,
+       0.28
+      ]
+     },
+     {
+      "cell": 27,
+      "id": "o01",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.28,
+       0.28
+      ]
+     },
+     {
+      "cell": 31,
+      "id": "o02",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.6,
+       0.28
+      ]
+     },
+     {
+      "cell": 58,
+      "id": "o03",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.2,
+       0.6
+      ]
+     },
+     {
+      "cell": 63,
+      "id": "o04",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.6,
+       0.6
+      ]
+     },
+     {
+      "cell": 20,
+      "id": "t0",
+      "kind": "target",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.36,
+       0.2
+      ]
+     }
+    ],
+    "robot": {
+     "attached_id": null,
+     "attachment": "free",
+     "gripper_gap_m": 0.07,
+     "q_rad": [
+      1.5707963267948966,
+      1.5707963267948966,
+      1.5707963267948966
+     ]
+    },
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "root_id": "root_r4",
+    "variant_id": "initial"
+   },
+   "scene_hash": "sha256:3fc61f265423cea5a67022d9e0dbd9a994b0bbc477be662518023fb76a2d2f58",
+   "sequences": [
+    {
+     "endpoint_distance": 0.0,
+     "sequence": [],
+     "validation": []
+    },
+    {
+     "endpoint_distance": 0.213388348,
+     "sequence": [
+      [
+       "o01",
+       18
+      ],
+      [
+       "o00",
+       29
+      ]
+     ],
+     "validation": []
+    },
+    {
+     "endpoint_distance": 0.213388348,
+     "sequence": [
+      [
+       "o00",
+       29
+      ],
+      [
+       "o01",
+       18
+      ]
+     ],
+     "validation": []
+    },
+    {
+     "endpoint_distance": 0.088388348,
+     "sequence": [
+      [
+       "o00",
+       29
+      ]
+     ],
+     "validation": []
+    },
+    {
+     "endpoint_distance": 0.125,
+     "sequence": [
+      [
+       "o01",
+       18
+      ]
+     ],
+     "validation": []
+    }
+   ]
+  },
+  "R5": {
+   "construction": "archived G2_D2/block_ab",
+   "fixture": "G35_R5_D2BLOCK",
+   "goal_cell": 53,
+   "hashes": {
+    "action_context": "sha256:da2120134615d412ec259015c6ba9485572f1649898c4741ef4adce0557147fd",
+    "observation": "sha256:98b01a18a736950e6d19d19754ea8ca35642682cedd563ae84175355ca11d754"
+   },
+   "primary_pool_preview": [
+    []
+   ],
+   "scene": {
+    "action_hash": null,
+    "domain_policy": "ALL_SUPPORTED",
+    "lattice": {
+     "cols": 8,
+     "pitch_m": 0.08,
+     "rows": 8
+    },
+    "legal_cells": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     25,
+     26,
+     27,
+     28,
+     29,
+     30,
+     31,
+     32,
+     33,
+     34,
+     35,
+     36,
+     37,
+     38,
+     39,
+     40,
+     41,
+     42,
+     43,
+     44,
+     45,
+     46,
+     47,
+     48,
+     49,
+     50,
+     51,
+     52,
+     53,
+     54,
+     55,
+     56,
+     57,
+     58,
+     59,
+     60,
+     61,
+     62,
+     63
+    ],
+    "objects": [
+     {
+      "cell": 4,
+      "id": "o00",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.36,
+       0.04
+      ]
+     },
+     {
+      "cell": 15,
+      "id": "o01",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.6,
+       0.12
+      ]
+     },
+     {
+      "cell": 57,
+      "id": "o02",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.12,
+       0.6
+      ]
+     },
+     {
+      "cell": 61,
+      "id": "o03",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.44,
+       0.6
+      ]
+     },
+     {
+      "cell": 7,
+      "id": "o04",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.6,
+       0.04
+      ]
+     },
+     {
+      "cell": 50,
+      "id": "o05",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.2,
+       0.52
+      ]
+     },
+     {
+      "cell": 26,
+      "id": "t0",
+      "kind": "target",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.2,
+       0.28
+      ]
+     }
+    ],
+    "robot": {
+     "attached_id": null,
+     "attachment": "free",
+     "gripper_gap_m": 0.07,
+     "q_rad": [
+      1.5707963267948966,
+      1.5707963267948966,
+      1.5707963267948966
+     ]
+    },
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "root_id": "root_d2",
+    "variant_id": "block_ab"
+   },
+   "scene_hash": "sha256:728c11aee407853d68739fe1a36e028e4d34cbbb2b1fe78eb37fa0b2e7015708",
+   "sequences": [
+    {
+     "endpoint_distance": 0.0,
+     "sequence": [],
+     "validation": []
+    }
+   ]
+  }
+ },
+ "seeds": {
+  "keys": "unit relocation_key / target_key (frozen above)",
+  "per_call": "planner.call_seed(base, key/connector label)",
+  "planner_base": 41
+ },
+ "source": {
+  "files": {
+   "cases.py": "sha256:9e83c8f5c50058a959b2657ec5b42b28f983589cd2f74d35d4281b47a5734720",
+   "certificates.py": "sha256:fc1fa225303efb1c7aef6d77da02f722d2ed0b704aea66c401519fb02831c577",
+   "config.py": "sha256:450ad85b4774aa33581aed6d7bb6b84ac153175ae7787fba94e252b765f8e456",
+   "config.toml": "sha256:56ede7f0ea1bd7b0e76e9b1bfd7d04f237e96f65276b79e498edce0b51b28d79",
+   "config_v2.toml": "sha256:5a0ccf825cb9fa749f0367477ca706889b1bdcbdf1b898d7abe02aaa99c6bdb7",
+   "data.py": "sha256:e0eec7c3c3669a4b804474f68ed3bd3d13f661145cd25d7dbb43502c68d981ea",
+   "effects.py": "sha256:244ea78a2dec6de110764158c04d29d1c436a770012069b5e8ccfa40b11136ed",
+   "evaluate.py": "sha256:4ad6d4b00cf6fd1a45ac81e4726070a4455220e0e1a539787701d655b4ed90aa",
+   "fixtures.json": "sha256:b1cbe186eb5bba535193151570c2afcf2af1368182778d7f3f97728eb0140aa8",
+   "g4d.py": "sha256:738971656bcc6690eb2df13446cf438c463eeb184080a91262fa7ccca2719393",
+   "g4d_run.py": "sha256:479852f3d784734102d20376db43f9b999bba163af960d35e1da1cb2770b2912",
+   "geometry.py": "sha256:3db5ad2cee5dc506c6d3315c6a099c755897b2b07a4a432c7d309e642eab3917",
+   "interventions.py": "sha256:b8751099a3015ff60202c3856ebd79532996cb26ee53cfd9a2da1756f79d372b",
+   "legacy.py": "sha256:5d033d2e1b18d45a24de68ad6ad773866b2234e1bd88059c7b170505bd46f9be",
+   "motion.py": "sha256:f2052d6049e288036122f0a31bc70791d9da6824b59036866ad411b215dd9678",
+   "ordered.py": "sha256:05ddac72d7268ccf05b57f27cdfbfa7e9c6bf9952be1f43c81194ff204da124e",
+   "planner.py": "sha256:d48cc2f43a18c5b35456397fbf8fb5fa4fedd9f83ebe2371331f49696fc831d2",
+   "proposals.py": "sha256:75e8afc185f4b1a5a2a102288d78ad4a45d7bb0217a2eadb2cf090ac2ba27da0",
+   "runs/g2_interventions/arrays.npz": "sha256:7322cff010a2583f6083ad0e09d52df05ffa7c413f02612a017cf70573c7a53b",
+   "runs/g2_interventions/result.json": "sha256:d6e07043aa41fff5ebad66c883cb309ce7fbf8cfe05be4253fa58d4c2765a0e0",
+   "runs/g2_interventions/scenes.json": "sha256:755f92924a49a3a02fef7fb79804412269c9e1f9e62915801248f66d0e93d72a",
+   "runs/g4d_migration/g4d_plan.json": "sha256:9b111b44e549398e9302e78942f8b1caa01cfbb45c3414e09691a6743e7092ec",
+   "scene.py": "sha256:befae9f1d724120bc070a74b5145443af17b0a6ba592e460b1ce02a5872c807c",
+   "sequences.py": "sha256:9e9d3570ed7ad1d13bf7edff943d266a703654a6034f99bccb9ed3d60c0bfc6c",
+   "skill.py": "sha256:c45ba175171f80e7e62591df7c9822a986e608fd50a77378cc79ce31d64ea51a",
+   "teacher.py": "sha256:693faf5812a4a78f9aab97bc7e1ec68906e5ac88cbff0260208d97646d0d5741",
+   "verify.py": "sha256:fd735fcaa33be67e657addb26fc7ef20de51e0545836236521ce04d539f64e87",
+   "viz.py": "sha256:69083460c3477d9a5793fb84c071dbfc4555056ba66f56fa7f6507041ee23f3b"
+  },
+  "head": "5011e82398ef275bd4f8cdd99d598f70248bb370"
+ },
+ "stage": "G4D_COLLECTION",
+ "status": "FINAL_AUTHORIZED",
+ "threads": {
+  "MKL_NUM_THREADS": "1",
+  "NUMEXPR_NUM_THREADS": "1",
+  "OMP_NUM_THREADS": "1",
+  "OPENBLAS_NUM_THREADS": "1"
+ },
+ "units": [
+  {
+   "cases": [
+    "D-V2-1"
+   ],
+   "edit": {
+    "o03": 38
+   },
+   "eligibility_reasons": [],
+   "eligible": true,
+   "intervened_scene_hash": "sha256:adeddc49bc5a6d7f51f69e9ae0b66924995f001e45328f14776dd2339254df11",
+   "kind": "SCENE_TARGET_ONLY",
+   "reference_unit": "seq:R2:empty",
+   "relocation_skills_max": 0,
+   "root": "R2",
+   "target_evaluations_max": 1,
+   "target_key": "g4d/R2/scene/o03>38/target",
+   "unit": "scene:R2:o03>38"
+  },
+  {
+   "cases": [
+    "D-V2-1"
+   ],
+   "edit": {
+    "o03": 60
+   },
+   "eligibility_reasons": [],
+   "eligible": true,
+   "intervened_scene_hash": "sha256:f635e6aa76d6e6bd40d535df97eda3669323917a19c128f48f84802289b2a977",
+   "kind": "SCENE_TARGET_ONLY",
+   "reference_unit": "seq:R2:empty",
+   "relocation_skills_max": 0,
+   "root": "R2",
+   "target_evaluations_max": 1,
+   "target_key": "g4d/R2/scene/o03>60/target",
+   "unit": "scene:R2:o03>60"
+  },
+  {
+   "cases": [
+    "D-V2-4"
+   ],
+   "edit": {
+    "o02": 40
+   },
+   "eligibility_reasons": [],
+   "eligible": true,
+   "intervened_scene_hash": "sha256:1bd957e6252f66f90a3011cf974771ed091beb830c07352e3f2deb4cbd7573f0",
+   "kind": "SCENE_TARGET_ONLY",
+   "reference_unit": "seq:R5:empty",
+   "relocation_skills_max": 0,
+   "root": "R5",
+   "target_evaluations_max": 1,
+   "target_key": "g4d/R5/scene/o02>40/target",
+   "unit": "scene:R5:o02>40"
+  },
+  {
+   "cases": [
+    "D-V2-4"
+   ],
+   "edit": {
+    "o02": 40,
+    "o05": 49
+   },
+   "eligibility_reasons": [],
+   "eligible": true,
+   "intervened_scene_hash": "sha256:ea6ac30b4aad7e00d9209a8a88513fd5280e3cbfefa832ab9e196a1990e6754d",
+   "kind": "SCENE_TARGET_ONLY",
+   "reference_unit": "seq:R5:empty",
+   "relocation_skills_max": 0,
+   "root": "R5",
+   "target_evaluations_max": 1,
+   "target_key": "g4d/R5/scene/o02>40.o05>49/target",
+   "unit": "scene:R5:o02>40.o05>49"
+  },
+  {
+   "cases": [
+    "D-V2-4"
+   ],
+   "edit": {
+    "o05": 49
+   },
+   "eligibility_reasons": [],
+   "eligible": true,
+   "intervened_scene_hash": "sha256:a03cf77b876860af23255b519d1f8c159cfa94f18f138eb74a002a57180a97b2",
+   "kind": "SCENE_TARGET_ONLY",
+   "reference_unit": "seq:R5:empty",
+   "relocation_skills_max": 0,
+   "root": "R5",
+   "target_evaluations_max": 1,
+   "target_key": "g4d/R5/scene/o05>49/target",
+   "unit": "scene:R5:o05>49"
+  },
+  {
+   "cases": [
+    "D-V2-0"
+   ],
+   "kind": "ORDERED_TEACHER",
+   "relocation_key": "g4d/R0/empty/reloc",
+   "relocation_skills_max": 0,
+   "root": "R0",
+   "sequence": [],
+   "target_evaluations_max": 1,
+   "target_key": "g4d/R0/empty/target",
+   "unit": "seq:R0:empty"
+  },
+  {
+   "cases": [
+    "D-V2-6"
+   ],
+   "kind": "ORDERED_TEACHER",
+   "relocation_key": "g4d/R1/empty/reloc",
+   "relocation_skills_max": 0,
+   "root": "R1",
+   "sequence": [],
+   "target_evaluations_max": 1,
+   "target_key": "g4d/R1/empty/target",
+   "unit": "seq:R1:empty"
+  },
+  {
+   "cases": [
+    "D-V2-1"
+   ],
+   "kind": "ORDERED_TEACHER",
+   "relocation_key": "g4d/R2/empty/reloc",
+   "relocation_skills_max": 0,
+   "root": "R2",
+   "sequence": [],
+   "target_evaluations_max": 1,
+   "target_key": "g4d/R2/empty/target",
+   "unit": "seq:R2:empty"
+  },
+  {
+   "cases": [
+    "D-V2-2",
+    "D-V2-3"
+   ],
+   "kind": "ORDERED_TEACHER",
+   "relocation_key": "g4d/R2/o01>21.o03>13/reloc",
+   "relocation_skills_max": 2,
+   "root": "R2",
+   "sequence": [
+    [
+     "o01",
+     21
+    ],
+    [
+     "o03",
+     13
+    ]
+   ],
+   "target_evaluations_max": 1,
+   "target_key": "g4d/R2/o01>21.o03>13/target",
+   "unit": "seq:R2:o01>21.o03>13"
+  },
+  {
+   "cases": [
+    "D-V2-3"
+   ],
+   "kind": "ORDERED_TEACHER",
+   "relocation_key": "g4d/R2/o03>13/reloc",
+   "relocation_skills_max": 1,
+   "root": "R2",
+   "sequence": [
+    [
+     "o03",
+     13
+    ]
+   ],
+   "target_evaluations_max": 1,
+   "target_key": "g4d/R2/o03>13/target",
+   "unit": "seq:R2:o03>13"
+  },
+  {
+   "cases": [
+    "D-V2-2"
+   ],
+   "kind": "ORDERED_TEACHER",
+   "relocation_key": "g4d/R2/o03>13.o01>21/reloc",
+   "relocation_skills_max": 2,
+   "root": "R2",
+   "sequence": [
+    [
+     "o03",
+     13
+    ],
+    [
+     "o01",
+     21
+    ]
+   ],
+   "target_evaluations_max": 1,
+   "target_key": "g4d/R2/o03>13.o01>21/target",
+   "unit": "seq:R2:o03>13.o01>21"
+  },
+  {
+   "cases": [
+    "D-V2-1",
+    "D-V2-5"
+   ],
+   "kind": "ORDERED_TEACHER",
+   "relocation_key": "g4d/R2/o03>38/reloc",
+   "relocation_skills_max": 1,
+   "root": "R2",
+   "sequence": [
+    [
+     "o03",
+     38
+    ]
+   ],
+   "target_evaluations_max": 1,
+   "target_key": "g4d/R2/o03>38/target",
+   "unit": "seq:R2:o03>38"
+  },
+  {
+   "cases": [
+    "D-V2-1",
+    "D-V2-3",
+    "D-V2-5"
+   ],
+   "kind": "ORDERED_TEACHER",
+   "relocation_key": "g4d/R2/o03>60/reloc",
+   "relocation_skills_max": 1,
+   "root": "R2",
+   "sequence": [
+    [
+     "o03",
+     60
+    ]
+   ],
+   "target_evaluations_max": 1,
+   "target_key": "g4d/R2/o03>60/target",
+   "unit": "seq:R2:o03>60"
+  },
+  {
+   "cases": [
+    "D-V2-4"
+   ],
+   "kind": "ORDERED_TEACHER",
+   "relocation_key": "g4d/R4/empty/reloc",
+   "relocation_skills_max": 0,
+   "root": "R4",
+   "sequence": [],
+   "target_evaluations_max": 1,
+   "target_key": "g4d/R4/empty/target",
+   "unit": "seq:R4:empty"
+  },
+  {
+   "cases": [
+    "D-V2-4"
+   ],
+   "kind": "ORDERED_TEACHER",
+   "relocation_key": "g4d/R4/o00>29/reloc",
+   "relocation_skills_max": 1,
+   "root": "R4",
+   "sequence": [
+    [
+     "o00",
+     29
+    ]
+   ],
+   "target_evaluations_max": 1,
+   "target_key": "g4d/R4/o00>29/target",
+   "unit": "seq:R4:o00>29"
+  },
+  {
+   "cases": [
+    "D-V2-2"
+   ],
+   "kind": "ORDERED_TEACHER",
+   "relocation_key": "g4d/R4/o00>29.o01>18/reloc",
+   "relocation_skills_max": 2,
+   "root": "R4",
+   "sequence": [
+    [
+     "o00",
+     29
+    ],
+    [
+     "o01",
+     18
+    ]
+   ],
+   "target_evaluations_max": 1,
+   "target_key": "g4d/R4/o00>29.o01>18/target",
+   "unit": "seq:R4:o00>29.o01>18"
+  },
+  {
+   "cases": [
+    "D-V2-4"
+   ],
+   "kind": "ORDERED_TEACHER",
+   "relocation_key": "g4d/R4/o01>18/reloc",
+   "relocation_skills_max": 1,
+   "root": "R4",
+   "sequence": [
+    [
+     "o01",
+     18
+    ]
+   ],
+   "target_evaluations_max": 1,
+   "target_key": "g4d/R4/o01>18/target",
+   "unit": "seq:R4:o01>18"
+  },
+  {
+   "cases": [
+    "D-V2-2",
+    "D-V2-4",
+    "D-V2-5"
+   ],
+   "kind": "ORDERED_TEACHER",
+   "relocation_key": "g4d/R4/o01>18.o00>29/reloc",
+   "relocation_skills_max": 2,
+   "root": "R4",
+   "sequence": [
+    [
+     "o01",
+     18
+    ],
+    [
+     "o00",
+     29
+    ]
+   ],
+   "target_evaluations_max": 1,
+   "target_key": "g4d/R4/o01>18.o00>29/target",
+   "unit": "seq:R4:o01>18.o00>29"
+  },
+  {
+   "cases": [
+    "D-V2-4"
+   ],
+   "kind": "ORDERED_TEACHER",
+   "relocation_key": "g4d/R5/empty/reloc",
+   "relocation_skills_max": 0,
+   "root": "R5",
+   "sequence": [],
+   "target_evaluations_max": 1,
+   "target_key": "g4d/R5/empty/target",
+   "unit": "seq:R5:empty"
+  },
+  {
+   "candidates_skipped": 0,
+   "cases": [
+    "D-V2-6"
+   ],
+   "intervened_scene_hash": "sha256:52d00fb8ad340ccb9e25fb91897571117e34f7aad47eebbce691ef4d72ade026",
+   "kind": "ROBOT_START_TARGET_ONLY",
+   "q_start": [
+    1.5707963267948966,
+    -1.5707963267948966,
+    -1.5707963267948966
+   ],
+   "reference_unit": "seq:R1:empty",
+   "relocation_skills_max": 0,
+   "root": "R1",
+   "rule": "first eligible of ALT_STARTS",
+   "target_evaluations_max": 1,
+   "target_key": "g4d/R1/start0/target",
+   "unit": "start:R1:0"
+  }
+ ]
+}

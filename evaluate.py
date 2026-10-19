@@ -42,7 +42,7 @@ class Trace:
                             "t_s": round(time.perf_counter() - self.t0, 3), **info})
 
 
-def evaluate_target(robot, cfg, state: vf.RepairState, action: dict, key: str) -> dict:
+def evaluate_target(robot, cfg, state: vf.RepairState, action: dict, key: str, on_witness=None) -> dict:
     """Plan the complete target skill afresh from the final achieved state: its joints,
     gripper gap, attachment (free after every verified retreat) and object poses. One
     call is one skill query with the declared internal schedule (skill2d budgets,
@@ -53,7 +53,7 @@ def evaluate_target(robot, cfg, state: vf.RepairState, action: dict, key: str) -
     if state.gap != robot.open_gap:
         return {"status": UNRESOLVED, "reason": "START_GRIPPER_OUT_OF_SKILL_SCOPE", "result": None, "seconds": 0.0}
     if action.get("end_policy") == "SAFE_RETREAT":
-        return evaluate_safe_retreat(robot, cfg, state, action, key)
+        return evaluate_safe_retreat(robot, cfg, state, action, key, on_witness)
     final = "home" if cfg["target_evaluation"]["final_connector"] == "HOME" else None
     res = sk.plan_skill(robot, state.scene, action["target_id"], action["goal_cell"], cfg, key, q_start=state.q,
                         q_goal=final)
@@ -64,12 +64,13 @@ def evaluate_target(robot, cfg, state: vf.RepairState, action: dict, key: str) -
             "wall_clock_dependent": any(p.wall_clock_cut for _, p in res.plans), "seconds": round(time.perf_counter() - t, 2)}
 
 
-def evaluate_safe_retreat(robot, cfg, state: vf.RepairState, action: dict, key: str) -> dict:
+def evaluate_safe_retreat(robot, cfg, state: vf.RepairState, action: dict, key: str, on_witness=None) -> dict:
     """Addendum A1. Complete target success = approach, grasp, transport, release within
     the goal tolerance AND a certified retreat ending open-handed and clear; the record
     is re-certified independently from its first waypoint (the achieved state) to its
     last. HOME return is a separately planned, separately certified diagnostic that can
-    never erase a through-retreat witness."""
+    never erase a through-retreat witness. `on_witness(record, arrays)` (G4D checkpoint hook)
+    is called with the checked goal + safe-retreat witness before the HOME diagnostic."""
     t = time.perf_counter()
     res = sk.plan_skill(robot, state.scene, action["target_id"], action["goal_cell"], cfg, key, q_start=state.q,
                         q_goal=None)
@@ -77,7 +78,8 @@ def evaluate_safe_retreat(robot, cfg, state: vf.RepairState, action: dict, key: 
            "goal_achieved": False, "safe_retreat_status": "NOT_REACHED", "home_return_status": "NOT_RUN",
            "complete_target_status": res.status, "home": None, "place_error_m": res.place_error_m,
            "start": {"q": list(state.q), "gripper_gap_m": state.gap, "attachment": "free"},
-           "wall_clock_dependent": any(p.wall_clock_cut for _, p in res.plans)}
+           "wall_clock_dependent": any(p.wall_clock_cut for _, p in res.plans), "termination": res.termination,
+           "unresolved_connectors": sum(p.status == ge.UNRESOLVED for _, p in res.plans)}
     if res.status == VALID:
         arr, delta, eps, ev = res.traj.arrays(), cfg["suite"]["margin_m"], cfg["geometry"]["numeric_margin_band_m"], \
             cfg["geometry"]["certify_max_evals"]
@@ -92,7 +94,9 @@ def evaluate_safe_retreat(robot, cfg, state: vf.RepairState, action: dict, key: 
         out["status"] = out["complete_target_status"]
         if not (goal and retreat):
             out["reason"] = "THROUGH_RETREAT_RECHECK_FAILED"
-        elif cfg["target_evaluation"]["home_return_diagnostic"]:
+        elif on_witness is not None:
+            on_witness({k: v for k, v in out.items() if k != "result"}, arr)
+        if goal and retreat and cfg["target_evaluation"]["home_return_diagnostic"]:
             out["home"] = home_diagnostic(robot, cfg, state.scene, action["target_id"], arr, f"{key}/home")
             out["home_return_status"] = out["home"]["status"]
     out["seconds"] = round(time.perf_counter() - t, 2)

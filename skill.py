@@ -50,6 +50,7 @@ class SkillResult:
     plans: list = field(default_factory=list)       # (label, planner.Plan)
     place_error_m: float | None = None
     used: dict = field(default_factory=dict)        # connector method per phase of the returned skill
+    termination: str = ""                           # explicit end event (G4D); `reason` keeps its historical string
 
 
 def params(cfg: dict) -> dict:
@@ -147,7 +148,7 @@ def screen_place(robot, ck: dict, dest, local, gap: float, p: dict) -> list[Cand
 def _none_left(stage: str, cands: list, picks, places=()) -> SkillResult:
     status = INFEASIBLE if all(c.certified for c in cands) else UNRESOLVED
     return SkillResult(status, f"NO_{stage}_CANDIDATE", f"{SCOPE}/DECLARED_GRASP_SET",
-                       picks=picks, places=list(places))
+                       picks=picks, places=list(places), termination=f"{stage}_SCREEN_EXHAUSTED")
 
 
 def pick_certificate(robot, scene, obj_id: str, cfg: dict) -> SkillResult | None:
@@ -177,7 +178,7 @@ def plan_skill(robot, scene, target_id: str, dest_cell: int, cfg: dict, key: str
     v = ck0[("start", False)].status_at(home, gopen)
     if v.status != ge.CLEAR:
         st = INFEASIBLE if v.status == ge.COLLISION else UNRESOLVED
-        return SkillResult(st, f"HOME_NOT_CLEAR:{v.pair}", f"{SCOPE}/START_CONFIG")
+        return SkillResult(st, f"HOME_NOT_CLEAR:{v.pair}", f"{SCOPE}/START_CONFIG", termination="START_STATE_NOT_CLEAR")
     picks = screen_pick(robot, ck0, target.xy_m, target.radius_m, p)
     good = [c for c in picks if c.stage == "OK"]
     if not good:
@@ -227,11 +228,15 @@ def plan_skill(robot, scene, target_id: str, dest_cell: int, cfg: dict, key: str
                 if goal is None or p3:
                     return _finish(res, robot, scene, target_id, dest, (p1, pick, p2, place, p3), cfg)
     if failures >= p["max_plan_failures"]:
+        res.termination = "SEARCH_LIMIT_PLAN_FAILURES"            # the declared failure allowance ended the search
         return res
     rejected = [c for c in picks + res.places if c.stage != "OK"]
     if failures == 0 and all(c.certified for c in rejected):  # every pair certified blocked
         res.status, res.reason, res.scope = INFEASIBLE, "ALL_CONNECTORS_CERTIFIED_BLOCKED", \
             f"{SCOPE}/DECLARED_GRASP_SET+LINK0_SWEEP"
+        res.termination = "SCHEDULE_COMPLETED_ALL_CERTIFIED_BLOCKED"
+    else:   # enumeration finished below the failure allowance; historical reason string kept as PLANNER_BUDGET
+        res.termination = "SCHEDULE_COMPLETED_NO_WITNESS"
     return res
 
 
@@ -259,8 +264,10 @@ def _finish(res, robot, scene, target_id, dest, parts, cfg) -> SkillResult:
     bad = [v for v in verdicts if v.status != ge.CLEAR]
     if bad or res.place_error_m > p["release_tol"]:
         res.status, res.reason = UNRESOLVED, f"REPLAY_REJECTED:{bad[0].pair if bad else 'PLACE_ERROR'}"
+        res.termination = "WITNESS_REPLAY_REJECTED"
     else:
         res.status, res.reason = VERIFIED, "ALL_SEGMENTS_CERTIFIED"
+        res.termination = "WITNESS_RECHECKED"
     return res
 
 

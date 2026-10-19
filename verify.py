@@ -251,22 +251,35 @@ def plan_fixed_order(robot, cfg, s0: RepairState, sequence, key: str, used: dict
     above stays for V1 and named baselines only). Each action is the complete six-phase
     skill planned from the previous achieved state with the repair skill budget; grasps
     and paths vary only inside that skill's declared family and schedule, with no
-    backtracking into earlier actions. A failure is UNRESOLVED for this order only. The
-    episode's shared relocation budget (`used`) is respected; no target evaluator is
+    backtracking into earlier actions. The episode's relocation-planning allowance
+    (`used["plans"]` against repair2d.max_relocations) is checked before EVERY planner
+    invocation and every invocation is charged, failed or not. A sequence cut by the
+    allowance or by a failed action is UNRESOLVED for this order only: no witness, no
+    cost label; its achieved prefix is kept as a diagnostic. No target evaluator is
     reachable from here."""
     seq = tuple((o, d) for o, d in sequence)
-    if len({o for o, _ in seq}) != len(seq):
-        raise ValueError("fixed-order verification needs a canonical sequence (distinct objects)")
-    if seq and used["plans"] >= cfg["repair2d"]["max_relocations"]:
-        return {"witness": None, "attempts": [], "pruned_orders": 0, "relocation_plans": 0, "stop": "RELOCATION_BUDGET",
-                "policy": FIXED_ORDER_POLICY, "order_scope": "THIS_ORDER_ONLY"}
-    memo = {}
-    att = realize(robot, repair_cfg(cfg), s0, seq, memo, key)
-    used["plans"] += len(memo)
-    ok = att.status == RELOCATED
-    return {"witness": att if ok else None, "attempts": [att], "pruned_orders": 0, "relocation_plans": len(memo),
-            "stop": "WITNESS_FOUND" if ok else f"ACTION_{att.stop}_UNRESOLVED", "policy": FIXED_ORDER_POLICY,
-            "order_scope": "THIS_ORDER_ONLY"}
+    if any(not isinstance(o, str) or isinstance(d, bool) or not isinstance(d, int) for o, d in seq) \
+            or len({o for o, _ in seq}) != len(seq):
+        raise ValueError("fixed-order verification needs a canonical sequence (distinct str ids, int cells)")
+    rcfg, cap = repair_cfg(cfg), cfg["repair2d"]["max_relocations"]
+    att, state, calls, stop = Attempt(-1, len(seq), seq), s0, 0, "WITNESS_FOUND"
+    for k, (oid, cell) in enumerate(seq):
+        if used["plans"] >= cap:
+            att.stop, att.reason, stop = k, f"relocation allowance {cap} exhausted before action {k}", "RELOCATION_BUDGET"
+            break
+        used["plans"] += 1
+        calls += 1
+        res, nxt = relocate(robot, rcfg, state, oid, cell, f"{key}/{'.'.join(f'{o}>{c}' for o, c in seq[:k + 1])}")
+        att.skills.append(res)
+        if nxt is None:
+            att.stop, att.reason, stop = k, f"{oid}->{cell}: {res.status} {res.reason}", f"ACTION_{k}_UNRESOLVED"
+            break
+        state = nxt
+        att.states.append(state)
+    if stop == "WITNESS_FOUND":
+        att.status, att.reason = RELOCATED, "ALL_RELOCATIONS_CERTIFIED"
+    return {"witness": att if stop == "WITNESS_FOUND" else None, "attempts": [att], "pruned_orders": 0,
+            "relocation_plans": calls, "stop": stop, "policy": FIXED_ORDER_POLICY, "order_scope": "THIS_ORDER_ONLY"}
 
 
 # ------------------------------------------------------------------ fixtures

@@ -126,46 +126,85 @@ def certificates_for(robot, cfg: dict, scene, learner: dict, seq) -> list:
     return out
 
 
+# ------------------------------------------------------------------ explicit termination -> normalized V2 reasons
+def normalized_reason(status: str, termination: str, wall_cut: bool = False, unresolved_connectors: int = 0) -> str:
+    """V2 reason from the explicit end event; the historical `reason` string is kept beside
+    it. Only an independent, scope-matching proof turns any of these into a negative."""
+    base = {"WITNESS_RECHECKED": "WITNESS", "WITNESS_REPLAY_REJECTED": "WITNESS_REPLAY_REJECTED",
+            "SEARCH_LIMIT_PLAN_FAILURES": "SEARCH_LIMIT_PLAN_FAILURES",
+            "SCHEDULE_COMPLETED_ALL_CERTIFIED_BLOCKED": "SCHEDULE_COMPLETED_ALL_PAIRS_CERTIFIED_BLOCKED",
+            "SCHEDULE_COMPLETED_NO_WITNESS": "SCHEDULE_COMPLETED_NO_WITNESS"
+            + ("_WITH_UNRESOLVED_CONNECTORS" if unresolved_connectors else "_UNCERTIFIED_REJECTIONS"),
+            "START_STATE_NOT_CLEAR": "START_STATE_NOT_CLEAR"}.get(termination)
+    if base is None and termination.endswith("_SCREEN_EXHAUSTED"):
+        base = termination + ("_CERTIFIED" if status == sk.INFEASIBLE else "_UNCERTIFIED")
+    return (base or f"UNCLASSIFIED:{termination or 'NONE'}") + ("+WALL_LIMIT_INVOLVED" if wall_cut else "")
+
+
+def _skill_reason(res) -> str:
+    return normalized_reason(res.status, res.termination, any(p.wall_clock_cut for _, p in res.plans),
+                             sum(p.status == "UNRESOLVED" for _, p in res.plans))
+
+
+def state_record(st: vf.RepairState) -> dict:
+    return {"q": [float(v) for v in st.q], "gap": float(st.gap), "moved": list(st.moved), "attachment": "free",
+            "objects": {o.id: [o.kind, o.radius_m, list(o.xy_m), o.cell] for o in st.scene.objects}}
+
+
 # ------------------------------------------------------------------ offline teacher for one ordered proposal
-def teach_sequence(robot, cfg: dict, v2: dict, query: dict, scene, seq, target_eval, key: str, robot_hash: str) -> dict:
-    """Evidence for one canonical sequence from the immutable initial state. The relocation
-    witness and its cost are stored before the target is examined; the target is
-    evaluated once from that witness's achieved state, and skipped (NOT_RUN) when an
-    accepted certificate already covers this order."""
-    seq = sq.canonical(seq)
-    why = sq.validate_sequence(scene, query["learner"]["action"], seq, v2["proposal"]["move_cap"])
+def teach_sequence(robot, cfg: dict, v2: dict, query: dict, scene, seq, target_eval, key: str, robot_hash: str,
+                   checkpoint=None) -> dict:
+    """Evidence for one ordered proposal from the immutable initial state. The raw proposal
+    is validated before any conversion (sequences.parse_sequence). Stages, each handed to
+    `checkpoint(stage, record, arrays)` before the next starts: accepted/rejected
+    certificates; the fixed-order relocation result with its first-witness cost (partial
+    records only as diagnostics); then one target evaluation from that witness's achieved
+    state, skipped (NOT_RUN) when an accepted certificate already covers this order."""
+    seq, why = sq.parse_sequence(scene, query["learner"]["action"], seq, v2["proposal"]["move_cap"])
     if why:
         raise ValueError(f"not a canonical V2 sequence: {why}")
+    put = checkpoint or (lambda *a: None)
     learner, s0 = query["learner"], ev.start(scene, query)
     certs = certificates_for(robot, cfg, scene, learner, seq)
+    put("certificates", {"certificates": certs}, None)
     evidence = [{"kind": "certificate", "validated": c["checker_accepted"], "certificate": c["kind"], "scope": c["scope"],
                  "source": "teacher"} for c in certs]
     static = pr.static_endpoints(scene, sq.assignment(seq), learner["action"]["target_id"], cfg)["status"]
     rec = {"sequence": [list(a) for a in seq], "assignment": sq.assignment(seq), "moved": len(seq), "static_status": static,
            "certificates": certs, "relocation_attempt_status": NOT_RUN, "target_attempt_status": NOT_RUN,
            "simulation_status": NOT_RUN, "hardware_status": NOT_AUTHORIZED, "cost": None, "relocation": None,
-           "target": None, "target_start_matches_achieved": None}
+           "target": None, "target_start_matches_achieved": None, "calls": {"relocation_planner": 0, "target_evaluations": 0}}
     first_blocked = any(c["kind"] in ("ORDER_FIRST_ACTION", "STATIC_ENDPOINT_INVALID") and c["checker_accepted"]
                         for c in certs)
     if static == mo.VALID and not first_blocked:
         plan = vf.plan_fixed_order(robot, cfg, s0, seq, f"{key}/reloc", {"plans": 0})
-        att = plan["attempts"][0] if plan["attempts"] else None
+        att = plan["attempts"][0]
+        rec["calls"]["relocation_planner"] = plan["relocation_plans"]
         rec["relocation_attempt_status"] = vf.RELOCATED if plan["witness"] else data.UNKNOWN
         rec["relocation"] = {"stop": plan["stop"], "policy": plan["policy"], "relocation_plans": plan["relocation_plans"],
-                             "failed_action": att and att.stop, "reason": att and att.reason}
+                             "failed_action": att.stop, "reason": att.reason,
+                             "normalized_reasons": [_skill_reason(r) for r in att.skills],
+                             "complete_witness": plan["witness"] is not None,
+                             "achieved_states": [state_record(s0)] + [state_record(x) for x in att.states]}
         rec["cost"] = cost_record(robot, v2, s0, plan["witness"], robot_hash)
         rec["_attempt"] = att
+        put("relocation", {"relocation": rec["relocation"], "cost": rec["cost"]},
+            [r.traj.arrays() for r in att.skills if r.traj is not None and r.status == sk.VERIFIED])
         if not plan["witness"]:
-            evidence.append({"kind": "order_attempt", "scope": data.TRAJECTORY, "source": "teacher",
-                             "status": att.status if att else "RELOCATION_BUDGET"})
+            evidence.append({"kind": "order_attempt", "scope": data.TRAJECTORY, "source": "teacher", "status": att.status})
         elif not any(c["checker_accepted"] for c in certs):
             achieved = vf.final_state(s0, plan["witness"])
+            rec["calls"]["target_evaluations"] = 1
             t = target_eval(achieved, f"{key}/target")
             rec["target"], rec["target_attempt_status"] = t, t["status"]
+            if t.get("result") is not None:
+                t["normalized_reason"] = _skill_reason(t["result"])
             arr = t.get("result") and t["result"].traj is not None and t["result"].traj.arrays()
-            rec["target_start_matches_achieved"] = bool(arr) and bool(np.array_equal(arr["q"][0], np.asarray(achieved.q))
-                                                                     and arr["gap"][0] == achieved.gap)
-            if t["status"] == ev.VALID and rec["target_start_matches_achieved"]:
+            inv = t.get("start") or {}
+            rec["target_start_matches_achieved"] = bool(
+                inv.get("q") == [float(v) for v in achieved.q] and inv.get("gripper_gap_m") == achieved.gap
+                and (not arr or (np.array_equal(arr["q"][0], np.asarray(achieved.q)) and arr["gap"][0] == achieved.gap)))
+            if t["status"] == ev.VALID and arr and rec["target_start_matches_achieved"]:
                 evidence.append({"kind": "complete_witness", "scope": data.ORDER, "source": "teacher"})
     rec["aggregate"] = data.ordered_aggregate(evidence)
     rec["ordered_feasibility_status"] = rec["aggregate"]["label"]
@@ -179,39 +218,72 @@ def fixed_order_planner(robot, cfg, s0, cand, key, used):
 
 
 def primary_v2(robot, cfg, query: dict, scene, ranked: list, target_eval, robot_hash: str, trace=None, executor=None):
-    """One-shot V2 episode over a frozen ranked pool (sequences.rank_sequences)."""
+    """One-shot V2 episode over a frozen ranked pool (sequences.rank_sequences). Every
+    target invocation's input state is recorded for the audit."""
+    calls = []
+
+    def recorded(state, key):
+        calls.append(state_record(state))
+        return target_eval(state, key)
     cands = [{**r, "cells": dict(r["assignment"])} for r in ranked]
-    out = ev.primary_episode(robot, cfg, query, scene, cands, target_eval, robot_hash, trace, executor,
+    out = ev.primary_episode(robot, cfg, query, scene, cands, recorded, robot_hash, trace, executor,
                              planner=fixed_order_planner)
-    out["audit"] = episode_audit(out, ev.start(scene, query), ranked)
+    out["target_invocations"] = calls
+    out["audit"] = episode_audit(out, ev.start(scene, query), ranked, cfg)
     return out
 
 
-def episode_audit(out: dict, s0: vf.RepairState, ranked: list) -> dict:
-    """Boundary, order, continuity and target-start checks recomputed from the episode."""
+def episode_audit(out: dict, s0: vf.RepairState, ranked: list, cfg: dict) -> dict:
+    """Recomputed one-shot contract. Each check is True / False / None (applicable but
+    evidence missing); `decision` is PASS only if every applicable check is True, FAIL if
+    any is False, else UNKNOWN. Protocol compliance (the event contract) is separate from
+    the episode outcome: a no-witness or aborted episode can be compliant and unsuccessful."""
     ev_ = out["trace"].events
     kinds = [e["kind"] for e in ev_]
     t = [i for i, k in enumerate(kinds) if k == "TARGET_EVALUATE"]
-    c = kinds.index("COMMIT") if "COMMIT" in kinds else None
-    r = [i for i, k in enumerate(kinds) if k == "RELOCATE"]
-    w = out["commit"] and out["commit"]["attempt"]
-    order_ok = w is None or [list(m) for m in w.order] == [list(a) for a in ranked[out["commit"]["rank"]]["sequence"]]
-    cont, prev = True, (np.asarray(s0.q), s0.gap)
-    for res in (w.skills if w else []):
-        a = res.traj.arrays()
-        cont &= bool(np.array_equal(a["q"][0], prev[0]) and a["gap"][0] == prev[1])
-        prev = (a["q"][-1], a["gap"][-1])
-    tgt, ach = out["target"], out["achieved"]
-    start_ok = None
-    if tgt is not None and ach is not None:
-        arr = tgt.get("result") and tgt["result"].traj is not None and tgt["result"].traj.arrays()
-        start_ok = bool(np.array_equal(np.asarray(ach.q), prev[0]) and ach.gap == prev[1]) and (
-            not arr or bool(np.array_equal(arr["q"][0], np.asarray(ach.q)) and arr["gap"][0] == ach.gap))
-    return {"target_calls": len(t), "calls_before_commit": sum(c is None or i < c for i in t),
-            "calls_before_last_relocation": sum(bool(r) and i < max(r) for i in t),
-            "calls_after_abort": sum("ABORT" in kinds[:i] for i in t), "commits": kinds.count("COMMIT"),
-            "committed_order_equals_proposed": bool(order_ok), "joint_continuity": bool(cont),
-            "target_start_equals_achieved": start_ok,
+    commits = [i for i, k in enumerate(kinds) if k == "COMMIT"]
+    aborts = [i for i, k in enumerate(kinds) if k == "ABORT"]
+    ends = [i for i, k in enumerate(kinds) if k in ("FINISH", "ABORT")]
+    w = out["commit"] and out["commit"].get("attempt")
+    n = len(w.order) if w else 0
+    pre = kinds[:t[0]] if t else []
+    reloc_ok = [e.get("certified") for e in ev_[:t[0]] if e["kind"] == "RELOCATE"] if t else []
+    reob_ok = [e.get("matches_commitment") for e in ev_[:t[0]] if e["kind"] == "REOBSERVE"] if t else []
+    c = {"single_terminal_event_last": len(ends) == 1 and ends[0] == len(kinds) - 1,
+         "commits_at_most_one": len(commits) <= 1, "target_calls_at_most_one": len(t) <= 1,
+         "no_target_before_commit": all(commits and i > commits[0] for i in t),
+         "no_target_after_abort": all(not aborts or i < aborts[0] for i in t) and not (aborts and t),
+         "target_after_all_relocations_and_reobservations": (not t) or (
+             w is not None and pre.count("RELOCATE") == n and pre.count("REOBSERVE") == n
+             and all(reloc_ok) and all(reob_ok) and "ABORT" not in pre),
+         "no_target_without_completed_repair": bool(t) == (out.get("achieved") is not None)}
+    applicable = out.get("achieved") is not None and bool(t)
+    if w is not None:
+        c["committed_order_equals_proposed"] = [list(m) for m in w.order] == [list(a) for a in
+                                                                              ranked[out["commit"]["rank"]]["sequence"]]
+        cont, prev = True, (np.asarray(s0.q), s0.gap)
+        for res in w.skills:
+            a = res.traj.arrays()
+            cont &= bool(np.array_equal(a["q"][0], prev[0]) and a["gap"][0] == prev[1])
+            prev = (a["q"][-1], a["gap"][-1])
+        c["joint_continuity"] = cont
+    if applicable:
+        ach, final = out["achieved"], vf.final_state(s0, w)
+        c["achieved_state_matches_commitment"] = not ev.validate_observation(cfg, final, {"state": ach})
+        inv = out.get("target_invocations")
+        c["target_invocation_equals_achieved"] = None if inv is None or len(inv) != 1 else (
+            inv[0] == state_record(ach) and inv[0]["q"] == [float(v) for v in prev[0]] and inv[0]["gap"] == float(prev[1]))
+        tgt = out["target"] or {}
+        arr = tgt.get("result") is not None and tgt["result"].traj is not None and tgt["result"].traj.arrays()
+        if arr:
+            c["target_trajectory_starts_at_invocation"] = bool(np.array_equal(arr["q"][0], np.asarray(ach.q))
+                                                               and arr["gap"][0] == ach.gap)
+    protocol = [c[k] for k in ("single_terminal_event_last", "commits_at_most_one", "target_calls_at_most_one",
+                               "no_target_before_commit", "no_target_after_abort",
+                               "target_after_all_relocations_and_reobservations", "no_target_without_completed_repair")]
+    vals = list(c.values())
+    return {"checks": c, "protocol_compliant": all(protocol), "outcome": out.get("outcome"),
+            "decision": "FAIL" if any(v is False for v in vals) else "UNKNOWN" if any(v is None for v in vals) else "PASS",
+            "target_calls": len(t), "commits": len(commits),
             "reobserve": [{k: e.get(k) for k in ("object", "commanded_xy", "achieved_xy", "q", "gap", "attachment", "moved",
-                                                 "matches_commitment")} for e in ev_ if e["kind"] == "REOBSERVE"],
-            "boundary_ok": len(t) <= 1 and (not t or (c is not None and t[0] > c and (not r or t[0] > max(r))))}
+                                                 "matches_commitment")} for e in ev_ if e["kind"] == "REOBSERVE"]}

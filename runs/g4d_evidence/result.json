@@ -1,0 +1,824 @@
+{
+ "blocking": {
+  "B1_two_move_witness": true,
+  "B2_order_contrast": true,
+  "B3_scene_effect_pair": true,
+  "B4_omission_pair": true,
+  "B5_witness_consistency": true
+ },
+ "calls": {
+  "caps": {
+   "relocation_skills": 13,
+   "target_evaluations": 20
+  },
+  "home_diagnostics": 10,
+  "relocation_planner": 6,
+  "target_evaluations": 12
+ },
+ "collection_cpu_s": 133.8,
+ "coordinator_cpu_s": 0.57,
+ "enforcement_failure": null,
+ "evidence_suite_complete": true,
+ "figures": [
+  "A_order_contrast.png",
+  "B_scene_effects.png",
+  "C_omissions.png",
+  "D_joint_continuity.png",
+  "E_endpoint_vs_joint_travel.png",
+  "F_robot_start.png",
+  "G_unit_ledger.png"
+ ],
+ "final_plan_hash": "sha256:a1b5a67fe36b21279e739bbb341c6f71647f87b3870c925c707e1fe5868eb215",
+ "gate": "PASS",
+ "hardware_status": "NOT_AUTHORIZED",
+ "judge_cpu_s": 4.0,
+ "judge_wall_s": 4.0,
+ "judgement": {
+  "blocking": {
+   "B1_two_move_witness": {
+    "derived_legacy": [
+     "g4a_r02.audit2",
+     "g4a_r02.audit6",
+     "g4a_r03.audit2",
+     "g4a_r05.audit2",
+     "g4a_r05.audit6",
+     "g4a_r11.audit2",
+     "g4a_r11.audit6",
+     "g4a_r12.audit10",
+     "g4a_r16.audit2",
+     "g4a_r16.audit6"
+    ],
+    "new_v2": [
+     "seq:R4:o01>18.o00>29"
+    ],
+    "pass": true
+   },
+   "B2_order_contrast": {
+    "attempted": [
+     {
+      "labels": [
+       "VERIFIED_FEASIBLE",
+       "CERTIFIED_INFEASIBLE"
+      ],
+      "orders": [
+       [
+        [
+         "o01",
+         18
+        ],
+        [
+         "o00",
+         29
+        ]
+       ],
+       [
+        [
+         "o00",
+         29
+        ],
+        [
+         "o01",
+         18
+        ]
+       ]
+      ],
+      "root": "R4",
+      "stops": [
+       "COMPLETED",
+       "COMPLETED"
+      ]
+     },
+     {
+      "labels": [
+       "UNRESOLVED",
+       "CERTIFIED_INFEASIBLE"
+      ],
+      "orders": [
+       [
+        [
+         "o01",
+         21
+        ],
+        [
+         "o03",
+         13
+        ]
+       ],
+       [
+        [
+         "o03",
+         13
+        ],
+        [
+         "o01",
+         21
+        ]
+       ]
+      ],
+      "root": "R2",
+      "stops": [
+       "COMPLETED",
+       "COMPLETED"
+      ]
+     }
+    ],
+    "decided": [
+     {
+      "negative": [
+       [
+        "o00",
+        29
+       ],
+       [
+        "o01",
+        18
+       ]
+      ],
+      "negative_certificate": [
+       "ORDER_FIRST_ACTION"
+      ],
+      "positive": [
+       [
+        "o01",
+        18
+       ],
+       [
+        "o00",
+        29
+       ]
+      ],
+      "root": "R4"
+     }
+    ],
+    "pass": true
+   },
+   "B3_scene_effect_pair": {
+    "pairs": [
+     {
+      "alternative": "VERIFIED_FEASIBLE",
+      "delta": 1,
+      "edit": {
+       "o03": 38
+      },
+      "eligible": true,
+      "mask": true,
+      "reference": "CERTIFIED_INFEASIBLE",
+      "unit": "scene:R2:o03>38"
+     },
+     {
+      "alternative": "VERIFIED_FEASIBLE",
+      "delta": 1,
+      "edit": {
+       "o03": 60
+      },
+      "eligible": true,
+      "mask": true,
+      "reference": "CERTIFIED_INFEASIBLE",
+      "unit": "scene:R2:o03>60"
+     },
+     {
+      "alternative": "VERIFIED_FEASIBLE",
+      "delta": null,
+      "edit": {
+       "o02": 40
+      },
+      "eligible": true,
+      "mask": false,
+      "reference": "UNRESOLVED",
+      "unit": "scene:R5:o02>40"
+     },
+     {
+      "alternative": "VERIFIED_FEASIBLE",
+      "delta": null,
+      "edit": {
+       "o02": 40,
+       "o05": 49
+      },
+      "eligible": true,
+      "mask": false,
+      "reference": "UNRESOLVED",
+      "unit": "scene:R5:o02>40.o05>49"
+     },
+     {
+      "alternative": "UNRESOLVED",
+      "delta": null,
+      "edit": {
+       "o05": 49
+      },
+      "eligible": true,
+      "mask": false,
+      "reference": "UNRESOLVED",
+      "unit": "scene:R5:o05>49"
+     }
+    ],
+    "pass": true
+   },
+   "B4_omission_pair": {
+    "derived_legacy_decided": 47,
+    "new_v2": [
+     {
+      "alternative": "VERIFIED_FEASIBLE",
+      "delta": 1,
+      "mask": true,
+      "omitted": [
+       "o01"
+      ],
+      "reference": "CERTIFIED_INFEASIBLE",
+      "remaining": [
+       [
+        "o00",
+        29
+       ]
+      ],
+      "root": "R4",
+      "sequence": [
+       [
+        "o01",
+        18
+       ],
+       [
+        "o00",
+        29
+       ]
+      ]
+     },
+     {
+      "alternative": "VERIFIED_FEASIBLE",
+      "delta": 1,
+      "mask": true,
+      "omitted": [
+       "o00"
+      ],
+      "reference": "CERTIFIED_INFEASIBLE",
+      "remaining": [
+       [
+        "o01",
+        18
+       ]
+      ],
+      "root": "R4",
+      "sequence": [
+       [
+        "o01",
+        18
+       ],
+       [
+        "o00",
+        29
+       ]
+      ]
+     },
+     {
+      "alternative": "VERIFIED_FEASIBLE",
+      "delta": 1,
+      "mask": true,
+      "omitted": [
+       "o01",
+       "o00"
+      ],
+      "reference": "CERTIFIED_INFEASIBLE",
+      "remaining": [],
+      "root": "R4",
+      "sequence": [
+       [
+        "o01",
+        18
+       ],
+       [
+        "o00",
+        29
+       ]
+      ]
+     }
+    ],
+    "new_v2_decided": 3,
+    "pass": true
+   },
+   "B5_witness_consistency": {
+    "pass": true,
+    "per_witness": {
+     "scene:R2:o03>38": {
+      "achieved_state_consistency": true,
+      "joint_continuity": true,
+      "target_start_equality": true
+     },
+     "scene:R2:o03>60": {
+      "achieved_state_consistency": true,
+      "joint_continuity": true,
+      "target_start_equality": true
+     },
+     "scene:R5:o02>40": {
+      "achieved_state_consistency": true,
+      "joint_continuity": true,
+      "target_start_equality": true
+     },
+     "scene:R5:o02>40.o05>49": {
+      "achieved_state_consistency": true,
+      "joint_continuity": true,
+      "target_start_equality": true
+     },
+     "seq:R0:empty": {
+      "achieved_state_consistency": true,
+      "joint_continuity": true,
+      "target_start_equality": true
+     },
+     "seq:R1:empty": {
+      "achieved_state_consistency": true,
+      "joint_continuity": true,
+      "target_start_equality": true
+     },
+     "seq:R2:o03>38": {
+      "achieved_state_consistency": true,
+      "joint_continuity": true,
+      "target_start_equality": true
+     },
+     "seq:R2:o03>60": {
+      "achieved_state_consistency": true,
+      "joint_continuity": true,
+      "target_start_equality": true
+     },
+     "seq:R4:o01>18.o00>29": {
+      "achieved_state_consistency": true,
+      "joint_continuity": true,
+      "target_start_equality": true
+     },
+     "start:R1:0": {
+      "achieved_state_consistency": true,
+      "joint_continuity": true,
+      "target_start_equality": true
+     }
+    }
+   }
+  },
+  "cases": {
+   "D-V2-0": {
+    "derived_legacy_zero_move_roots": [
+     "g4a_r05",
+     "g4a_r10",
+     "g4a_r19"
+    ],
+    "met": true,
+    "new_v2": {
+     "J": 0.0,
+     "seq:R0:empty": "VERIFIED_FEASIBLE"
+    }
+   },
+   "D-V2-1": {
+    "empty_goal_overlap_certificate": true,
+    "met": true,
+    "repairs": {
+     "o03>38": "VERIFIED_FEASIBLE",
+     "o03>60": "VERIFIED_FEASIBLE"
+    },
+    "scene_pairs": [
+     {
+      "alternative": "VERIFIED_FEASIBLE",
+      "delta": 1,
+      "edit": {
+       "o03": 38
+      },
+      "eligible": true,
+      "mask": true,
+      "reference": "CERTIFIED_INFEASIBLE",
+      "unit": "scene:R2:o03>38"
+     },
+     {
+      "alternative": "VERIFIED_FEASIBLE",
+      "delta": 1,
+      "edit": {
+       "o03": 60
+      },
+      "eligible": true,
+      "mask": true,
+      "reference": "CERTIFIED_INFEASIBLE",
+      "unit": "scene:R2:o03>60"
+     }
+    ]
+   },
+   "D-V2-2": {
+    "attempted": [
+     {
+      "labels": [
+       "VERIFIED_FEASIBLE",
+       "CERTIFIED_INFEASIBLE"
+      ],
+      "orders": [
+       [
+        [
+         "o01",
+         18
+        ],
+        [
+         "o00",
+         29
+        ]
+       ],
+       [
+        [
+         "o00",
+         29
+        ],
+        [
+         "o01",
+         18
+        ]
+       ]
+      ],
+      "root": "R4",
+      "stops": [
+       "COMPLETED",
+       "COMPLETED"
+      ]
+     },
+     {
+      "labels": [
+       "UNRESOLVED",
+       "CERTIFIED_INFEASIBLE"
+      ],
+      "orders": [
+       [
+        [
+         "o01",
+         21
+        ],
+        [
+         "o03",
+         13
+        ]
+       ],
+       [
+        [
+         "o03",
+         13
+        ],
+        [
+         "o01",
+         21
+        ]
+       ]
+      ],
+      "root": "R2",
+      "stops": [
+       "COMPLETED",
+       "COMPLETED"
+      ]
+     }
+    ],
+    "decided": [
+     {
+      "negative": [
+       [
+        "o00",
+        29
+       ],
+       [
+        "o01",
+        18
+       ]
+      ],
+      "negative_certificate": [
+       "ORDER_FIRST_ACTION"
+      ],
+      "positive": [
+       [
+        "o01",
+        18
+       ],
+       [
+        "o00",
+        29
+       ]
+      ],
+      "root": "R4"
+     }
+    ],
+    "met": true
+   },
+   "D-V2-3": {
+    "chain o01>21,o03>13": "UNRESOLVED",
+    "met": true,
+    "o03>13 alone (o01 still on 13)": "CERTIFIED_INFEASIBLE",
+    "o03>60 (o01 stays)": "VERIFIED_FEASIBLE"
+   },
+   "D-V2-4": {
+    "met": true,
+    "omission_joint": [
+     {
+      "alternative": "VERIFIED_FEASIBLE",
+      "delta": 1,
+      "mask": true,
+      "omitted": [
+       "o01",
+       "o00"
+      ],
+      "reference": "CERTIFIED_INFEASIBLE",
+      "remaining": [],
+      "root": "R4",
+      "sequence": [
+       [
+        "o01",
+        18
+       ],
+       [
+        "o00",
+        29
+       ]
+      ]
+     }
+    ],
+    "omission_non_additive": true,
+    "omission_singletons": [
+     {
+      "alternative": "VERIFIED_FEASIBLE",
+      "delta": 1,
+      "mask": true,
+      "omitted": [
+       "o01"
+      ],
+      "reference": "CERTIFIED_INFEASIBLE",
+      "remaining": [
+       [
+        "o00",
+        29
+       ]
+      ],
+      "root": "R4",
+      "sequence": [
+       [
+        "o01",
+        18
+       ],
+       [
+        "o00",
+        29
+       ]
+      ]
+     },
+     {
+      "alternative": "VERIFIED_FEASIBLE",
+      "delta": 1,
+      "mask": true,
+      "omitted": [
+       "o00"
+      ],
+      "reference": "CERTIFIED_INFEASIBLE",
+      "remaining": [
+       [
+        "o01",
+        18
+       ]
+      ],
+      "root": "R4",
+      "sequence": [
+       [
+        "o01",
+        18
+       ],
+       [
+        "o00",
+        29
+       ]
+      ]
+     }
+    ],
+    "scene_R5": [
+     {
+      "alternative": "VERIFIED_FEASIBLE",
+      "delta": null,
+      "edit": {
+       "o02": 40
+      },
+      "eligible": true,
+      "mask": false,
+      "reference": "UNRESOLVED",
+      "unit": "scene:R5:o02>40"
+     },
+     {
+      "alternative": "VERIFIED_FEASIBLE",
+      "delta": null,
+      "edit": {
+       "o02": 40,
+       "o05": 49
+      },
+      "eligible": true,
+      "mask": false,
+      "reference": "UNRESOLVED",
+      "unit": "scene:R5:o02>40.o05>49"
+     },
+     {
+      "alternative": "UNRESOLVED",
+      "delta": null,
+      "edit": {
+       "o05": 49
+      },
+      "eligible": true,
+      "mask": false,
+      "reference": "UNRESOLVED",
+      "unit": "scene:R5:o05>49"
+     }
+    ],
+    "scene_non_additive": null
+   },
+   "D-V2-5": {
+    "cost_labels": [
+     {
+      "J": 1.0407617969424034,
+      "endpoint_distance": 0.125,
+      "root": "R2",
+      "sequence": [
+       [
+        "o03",
+        38
+       ]
+      ],
+      "unit": "seq:R2:o03>38"
+     },
+     {
+      "J": 1.0212049588277645,
+      "endpoint_distance": 0.197642,
+      "root": "R2",
+      "sequence": [
+       [
+        "o03",
+        60
+       ]
+      ],
+      "unit": "seq:R2:o03>60"
+     },
+     {
+      "J": 1.393685547365056,
+      "endpoint_distance": 0.125,
+      "root": "R4",
+      "sequence": [
+       [
+        "o01",
+        18
+       ]
+      ],
+      "unit": "seq:R4:o01>18"
+     },
+     {
+      "J": 1.7226615990865815,
+      "endpoint_distance": 0.213388,
+      "root": "R4",
+      "sequence": [
+       [
+        "o01",
+        18
+       ],
+       [
+        "o00",
+        29
+       ]
+      ],
+      "unit": "seq:R4:o01>18.o00>29"
+     }
+    ],
+    "met": true
+   },
+   "D-V2-6": {
+    "alternative_start": "VERIFIED_FEASIBLE",
+    "home": "VERIFIED_FEASIBLE",
+    "met": true,
+    "pair": {
+     "alternative": "VERIFIED_FEASIBLE",
+     "delta": 0,
+     "mask": true,
+     "reference": "VERIFIED_FEASIBLE"
+    }
+   }
+  },
+  "evidence_suite_complete": true,
+  "gate": "PASS",
+  "unmet_case_requirements": []
+ },
+ "learned_components": "NONE",
+ "pending_plan_hash": "sha256:c0f3bcb2c712ea7d1fd5ea36eb3e03428a0aa659e1f81ff8aaf7b8eeee13c4bf",
+ "protocol": "INITIAL_SCENE_ORDERED_ONE_SHOT_V2",
+ "simulation_status": "NOT_RUN",
+ "stage": "G4D",
+ "unit_cpu_s": 133.3,
+ "units": {
+  "scene:R2:o03>38": {
+   "cpu_s": 6.71,
+   "label": "VERIFIED_FEASIBLE",
+   "stop": "COMPLETED",
+   "wall_s": 6.78
+  },
+  "scene:R2:o03>60": {
+   "cpu_s": 8.55,
+   "label": "VERIFIED_FEASIBLE",
+   "stop": "COMPLETED",
+   "wall_s": 8.79
+  },
+  "scene:R5:o02>40": {
+   "cpu_s": 5.02,
+   "label": "VERIFIED_FEASIBLE",
+   "stop": "COMPLETED",
+   "wall_s": 5.02
+  },
+  "scene:R5:o02>40.o05>49": {
+   "cpu_s": 1.9,
+   "label": "VERIFIED_FEASIBLE",
+   "stop": "COMPLETED",
+   "wall_s": 2.01
+  },
+  "scene:R5:o05>49": {
+   "cpu_s": 5.95,
+   "label": "UNRESOLVED",
+   "stop": "COMPLETED",
+   "wall_s": 6.03
+  },
+  "seq:R0:empty": {
+   "cpu_s": 10.43,
+   "label": "VERIFIED_FEASIBLE",
+   "stop": "COMPLETED",
+   "wall_s": 10.55
+  },
+  "seq:R1:empty": {
+   "cpu_s": 60.16,
+   "label": "VERIFIED_FEASIBLE",
+   "stop": "COMPLETED",
+   "wall_s": 60.26
+  },
+  "seq:R2:empty": {
+   "cpu_s": 0.56,
+   "label": "CERTIFIED_INFEASIBLE",
+   "stop": "COMPLETED",
+   "wall_s": 0.75
+  },
+  "seq:R2:o01>21.o03>13": {
+   "cpu_s": 1.07,
+   "label": "UNRESOLVED",
+   "stop": "COMPLETED",
+   "wall_s": 1.26
+  },
+  "seq:R2:o03>13": {
+   "cpu_s": 0.37,
+   "label": "CERTIFIED_INFEASIBLE",
+   "stop": "COMPLETED",
+   "wall_s": 0.5
+  },
+  "seq:R2:o03>13.o01>21": {
+   "cpu_s": 1.07,
+   "label": "CERTIFIED_INFEASIBLE",
+   "stop": "COMPLETED",
+   "wall_s": 1.26
+  },
+  "seq:R2:o03>38": {
+   "cpu_s": 6.34,
+   "label": "VERIFIED_FEASIBLE",
+   "stop": "COMPLETED",
+   "wall_s": 6.53
+  },
+  "seq:R2:o03>60": {
+   "cpu_s": 7.32,
+   "label": "VERIFIED_FEASIBLE",
+   "stop": "COMPLETED",
+   "wall_s": 7.53
+  },
+  "seq:R4:empty": {
+   "cpu_s": 0.49,
+   "label": "CERTIFIED_INFEASIBLE",
+   "stop": "COMPLETED",
+   "wall_s": 0.5
+  },
+  "seq:R4:o00>29": {
+   "cpu_s": 0.58,
+   "label": "CERTIFIED_INFEASIBLE",
+   "stop": "COMPLETED",
+   "wall_s": 0.75
+  },
+  "seq:R4:o00>29.o01>18": {
+   "cpu_s": 2.56,
+   "label": "CERTIFIED_INFEASIBLE",
+   "stop": "COMPLETED",
+   "wall_s": 2.76
+  },
+  "seq:R4:o01>18": {
+   "cpu_s": 2.4,
+   "label": "CERTIFIED_INFEASIBLE",
+   "stop": "COMPLETED",
+   "wall_s": 2.51
+  },
+  "seq:R4:o01>18.o00>29": {
+   "cpu_s": 5.15,
+   "label": "VERIFIED_FEASIBLE",
+   "stop": "COMPLETED",
+   "wall_s": 5.28
+  },
+  "seq:R5:empty": {
+   "cpu_s": 4.44,
+   "label": "UNRESOLVED",
+   "stop": "COMPLETED",
+   "wall_s": 4.52
+  },
+  "start:R1:0": {
+   "cpu_s": 2.2,
+   "label": "VERIFIED_FEASIBLE",
+   "stop": "COMPLETED",
+   "wall_s": 2.26
+  }
+ },
+ "unmet_case_requirements": []
+}

@@ -119,17 +119,32 @@ def omission_plan(seq, v2: dict) -> list:
             for s in sq.omission_subsets(seq, e["max_omission_subset"], e["max_tested_subsets"])]
 
 
-def omission_records(seq, status: dict, v2: dict, anchor_hash: str | None) -> list:
-    """Effect records for every planned omission of `seq`, from ordered labels keyed by the
-    canonical sequence tuple (missing entries count as UNRESOLVED, never negative)."""
+def context_identity(query: dict, sequence=None, intervention=None, anchor_hash: str | None = None,
+                     evidence=None) -> str:
+    """Complete identity of one side of a comparison: the query's initial observation (all
+    scene and robot fields), action context (task, goal, policy, robot profile), protocol
+    and schema, the ordered proposal or intervention, the appearance anchor and the
+    evidence identifiers. Identical sequences in different scenes or robot states differ."""
+    return stable_hash({"observation": query["hashes"]["observation"], "action_context": query["hashes"]["action_context"],
+                        "protocol": query["protocol"], "schema_version": query.get("schema_version"),
+                        "sequence": None if sequence is None else [list(a) for a in sequence],
+                        "intervention": intervention, "appearance_anchor": anchor_hash, "evidence": evidence})
+
+
+def omission_records(query: dict, seq, status: dict, v2: dict, anchor_hash: str | None, evidence: dict | None = None) -> list:
+    """Effect records for every planned omission of `seq` in `query`, from ordered labels
+    keyed by the canonical sequence tuple (missing entries count as UNRESOLVED, never
+    negative). `evidence` maps a sequence tuple to its evidence identifiers."""
     key = lambda s: tuple(tuple(a) for a in s)  # noqa: E731
-    full = {"context_hash": stable_hash([list(a) for a in seq]), "status": status.get(key(seq), data.UNKNOWN)}
+    ev_ = evidence or {}
+    side = lambda s: {"context_hash": context_identity(query, s, None, anchor_hash, ev_.get(key(s))),  # noqa: E731
+                      "status": status.get(key(s), data.UNKNOWN), "sequence": [list(a) for a in s],
+                      "evidence": ev_.get(key(s))}
     out = []
     for o in omission_plan(seq, v2):
-        rem = {"context_hash": stable_hash(o["remaining"]), "status": status.get(key(o["remaining"]), data.UNKNOWN)}
-        out.append(effect_record(OMISSION, o["omitted_objects"], o["omitted_positions"], rem, full, True, anchor_hash,
-                                 ["initial scene", "robot state", "remaining action order", "omitted objects stay"],
-                                 conditioning=[list(a) for a in seq]))
+        out.append(effect_record(OMISSION, o["omitted_objects"], o["omitted_positions"], side(o["remaining"]), side(seq),
+                                 True, anchor_hash, ["initial scene", "robot state", "remaining action order",
+                                                     "omitted objects stay"], conditioning=[list(a) for a in seq]))
     return out
 
 
