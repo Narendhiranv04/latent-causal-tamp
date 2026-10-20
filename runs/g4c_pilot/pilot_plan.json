@@ -1,0 +1,4424 @@
+{
+ "authorization_file_sha256": "sha256:fce8a313c30927ad1fb49c6b5b33f17c8ad19fa1ddb26e31d19486d313a44954",
+ "authorization_hash": "sha256:464b6345c0c72bead727dde29333a42395096052bb98f63ebe81188337a24895",
+ "call_caps": {
+  "enforcement": "each unit plans at most len(sequence) relocations and one target evaluation; the summed maxima equal the caps, so no admitted schedule can exceed them",
+  "relocation_skills": 60,
+  "structural_maxima": {
+   "relocation_skills": 60,
+   "target_evaluations": 59
+  },
+  "target_evaluations": 59
+ },
+ "config_hash": "sha256:a9f3f2360e17d9827e24b4e9bb32727569afdf04aa4f87c72ba3cccf50953ae3",
+ "dataset_version": "2D-ABC-v1",
+ "limits": {
+  "cpu_aggregate_s": 10800.0,
+  "cpu_per_unit_s": 900.0,
+  "guard_margin_s": 30.0,
+  "orchestration_reserve_s": 60.0,
+  "poll_s": 0.25,
+  "wall_per_unit_s": 1800.0,
+  "wall_total_s": 14400.0,
+  "workers": 1
+ },
+ "parent_plan_file_sha256": "sha256:c6c8a0169a8274a031ecb42e00d666e260db458f800efcacd6af27a8469d5b95",
+ "parent_plan_hash": "sha256:c761c68497309f6b631f6740237e75f08c2376ade179b7f644731dc775f193a3",
+ "plan_hash": "sha256:a10ef74dcf6040e1467f4e37358c490756fa2dae9e75bc0fa712147816eda3c1",
+ "protocol": "INITIAL_SCENE_ORDERED_ONE_SHOT_V2",
+ "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+ "roots": {
+  "g4c_r00": {
+   "bc_mini_pool": {
+    "catalogue_hash": "sha256:5f27e01cbd928f05c3d8ea5ce316d99fb2ca6fea3f6e912bef6da4f49bf1d90c",
+    "full_decision_rule": "every active slot of every pool sequence decided (z0, catalogue zS, zR, zO)",
+    "required_units": [
+     "scene:g4c_r00:o03>51",
+     "seq:g4c_r00:empty"
+    ],
+    "sequences": [
+     []
+    ]
+   },
+   "ceilings": {
+    "omission_remainders": 8,
+    "robot_starts": 1,
+    "scene_edits": 5,
+    "sequences": 14
+   },
+   "family": "J0",
+   "goal_cell": 20,
+   "hashes": {
+    "action_context": "sha256:de7d0c0d595e12a2318d9b04ddfb11210ce98c448e71f1e303b47cb256facb58",
+    "observation": "sha256:4c656919b6619a0421c6e3c40674c646a2f215ab510c5857e7556c9e4ff5230c"
+   },
+   "lineage": {
+    "family_id": "g4c_r00",
+    "split": "DEVELOPMENT"
+   },
+   "queries": {
+    "catalogue": {
+     "hash": "sha256:5f27e01cbd928f05c3d8ea5ce316d99fb2ca6fea3f6e912bef6da4f49bf1d90c",
+     "queries": [
+      "nuisance"
+     ],
+     "rule": "first <=3 geometrically eligible scene edits in declared rule order",
+     "version": "2D-ABC-v1"
+    },
+    "pool": [
+     {
+      "bc_layout": {
+       "active": [
+        true,
+        true,
+        false,
+        false,
+        false,
+        false
+       ],
+       "active_count": 2,
+       "inactive_value": 0,
+       "slots": [
+        "z0",
+        "zS[nuisance]",
+        "zR",
+        "zO[0]",
+        "zO[1]",
+        "zO[2]"
+       ]
+      },
+      "endpoint_distance": 0.0,
+      "moved": 0,
+      "origin": "declared",
+      "sequence": [],
+      "static_status": "VALID"
+     }
+    ],
+    "robot_starts": [],
+    "scene_queries": [
+     {
+      "changed_fields": {
+       "added": [],
+       "changed_objects": {
+        "o03": [
+         "cell",
+         "xy_m"
+        ]
+       },
+       "other_fields_changed": [],
+       "removed": [],
+       "robot_unchanged": true
+      },
+      "edit": {
+       "o03": 51
+      },
+      "eligible": true,
+      "intervened_scene_hash": "sha256:5b6185496b5aeb1f139a9506cb0dc96b9174dd742b3f0e28fc3043c08b9e2cde",
+      "kind": "nuisance",
+      "reasons": []
+     }
+    ]
+   },
+   "roles": {},
+   "scene": {
+    "action_hash": null,
+    "domain_policy": "ALL_SUPPORTED",
+    "lattice": {
+     "cols": 8,
+     "pitch_m": 0.08,
+     "rows": 8
+    },
+    "legal_cells": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     25,
+     26,
+     27,
+     28,
+     29,
+     30,
+     31,
+     32,
+     33,
+     34,
+     35,
+     36,
+     37,
+     38,
+     39,
+     40,
+     41,
+     42,
+     43,
+     44,
+     45,
+     46,
+     47,
+     48,
+     49,
+     50,
+     51,
+     52,
+     53,
+     54,
+     55,
+     56,
+     57,
+     58,
+     59,
+     60,
+     61,
+     62,
+     63
+    ],
+    "objects": [
+     {
+      "cell": 47,
+      "id": "o00",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.6,
+       0.44
+      ]
+     },
+     {
+      "cell": 60,
+      "id": "o01",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.36,
+       0.6
+      ]
+     },
+     {
+      "cell": 3,
+      "id": "o02",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.28,
+       0.04
+      ]
+     },
+     {
+      "cell": 59,
+      "id": "o03",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.28,
+       0.6
+      ]
+     },
+     {
+      "cell": 45,
+      "id": "t0",
+      "kind": "target",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.44,
+       0.44
+      ]
+     }
+    ],
+    "robot": {
+     "attached_id": null,
+     "attachment": "free",
+     "gripper_gap_m": 0.07,
+     "q_rad": [
+      1.5707963267948966,
+      1.5707963267948966,
+      1.5707963267948966
+     ]
+    },
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "root_id": "g4c_2026102001",
+    "variant_id": "initial"
+   },
+   "scene_hash": "sha256:7293486192f61a4d89baccead6336a52a40e9dfebedfdc6f1d60b1fece7ae3d9",
+   "seed": 2026102001,
+   "supports": [
+    "zero_move",
+    "nuisance_zero_effect"
+   ]
+  },
+  "g4c_r08": {
+   "bc_mini_pool": {
+    "catalogue_hash": "sha256:364dbfac383f4ca65313fefa1c42b7778ddd35c7b2ffe41920d44d21cf14e4a3",
+    "full_decision_rule": "every active slot of every pool sequence decided (z0, catalogue zS, zR, zO)",
+    "required_units": [
+     "scene:g4c_r08:o00>47",
+     "scene:g4c_r08:o00>47.o01>46",
+     "scene:g4c_r08:o01>46",
+     "scene:g4c_r08:o03>49",
+     "seq:g4c_r08:empty",
+     "seq:g4c_r08:o00>15",
+     "seq:g4c_r08:o00>47",
+     "seq:g4c_r08:o00>47.o01>46",
+     "seq:g4c_r08:o01>46",
+     "seq:g4c_r08:o01>46.o00>47"
+    ],
+    "sequences": [
+     [],
+     [
+      [
+       "o00",
+       47
+      ]
+     ],
+     [
+      [
+       "o00",
+       15
+      ]
+     ],
+     [
+      [
+       "o01",
+       46
+      ],
+      [
+       "o00",
+       47
+      ]
+     ],
+     [
+      [
+       "o00",
+       47
+      ],
+      [
+       "o01",
+       46
+      ]
+     ],
+     [
+      [
+       "o01",
+       46
+      ]
+     ]
+    ]
+   },
+   "ceilings": {
+    "omission_remainders": 8,
+    "robot_starts": 1,
+    "scene_edits": 5,
+    "sequences": 14
+   },
+   "family": "J2",
+   "goal_cell": 31,
+   "hashes": {
+    "action_context": "sha256:3bc121f2557c7dc332ce4e6a821c64c3e50048e7ffb0ae1004bc58345f4f0c04",
+    "observation": "sha256:015362e1a844a43a848631119421bbda050236ef1196e73bf9cca2352e65627f"
+   },
+   "lineage": {
+    "family_id": "g4c_r08",
+    "split": "DEVELOPMENT"
+   },
+   "queries": {
+    "catalogue": {
+     "hash": "sha256:364dbfac383f4ca65313fefa1c42b7778ddd35c7b2ffe41920d44d21cf14e4a3",
+     "queries": [
+      "singleton:A",
+      "singleton:B",
+      "joint:A+B"
+     ],
+     "rule": "first <=3 geometrically eligible scene edits in declared rule order",
+     "version": "2D-ABC-v1"
+    },
+    "pool": [
+     {
+      "bc_layout": {
+       "active": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false
+       ],
+       "active_count": 4,
+       "inactive_value": 0,
+       "slots": [
+        "z0",
+        "zS[singleton:A]",
+        "zS[singleton:B]",
+        "zS[joint:A+B]",
+        "zR",
+        "zO[0]",
+        "zO[1]",
+        "zO[2]"
+       ]
+      },
+      "endpoint_distance": 0.0,
+      "moved": 0,
+      "origin": "declared",
+      "sequence": [],
+      "static_status": "VALID"
+     },
+     {
+      "bc_layout": {
+       "active": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        false
+       ],
+       "active_count": 5,
+       "inactive_value": 0,
+       "slots": [
+        "z0",
+        "zS[singleton:A]",
+        "zS[singleton:B]",
+        "zS[joint:A+B]",
+        "zR",
+        "zO[0]",
+        "zO[1]",
+        "zO[2]"
+       ]
+      },
+      "endpoint_distance": 0.176776695,
+      "moved": 1,
+      "origin": "declared",
+      "sequence": [
+       [
+        "o00",
+        47
+       ]
+      ],
+      "static_status": "VALID"
+     },
+     {
+      "bc_layout": {
+       "active": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        false
+       ],
+       "active_count": 5,
+       "inactive_value": 0,
+       "slots": [
+        "z0",
+        "zS[singleton:A]",
+        "zS[singleton:B]",
+        "zS[joint:A+B]",
+        "zR",
+        "zO[0]",
+        "zO[1]",
+        "zO[2]"
+       ]
+      },
+      "endpoint_distance": 0.176776695,
+      "moved": 1,
+      "origin": "declared",
+      "sequence": [
+       [
+        "o00",
+        15
+       ]
+      ],
+      "static_status": "VALID"
+     },
+     {
+      "bc_layout": {
+       "active": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+       ],
+       "active_count": 8,
+       "inactive_value": 0,
+       "slots": [
+        "z0",
+        "zS[singleton:A]",
+        "zS[singleton:B]",
+        "zS[joint:A+B]",
+        "zR",
+        "zO[0]",
+        "zO[1]",
+        "zO[2]"
+       ]
+      },
+      "endpoint_distance": 0.301776695,
+      "moved": 2,
+      "origin": "declared",
+      "sequence": [
+       [
+        "o01",
+        46
+       ],
+       [
+        "o00",
+        47
+       ]
+      ],
+      "static_status": "VALID"
+     },
+     {
+      "bc_layout": {
+       "active": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+       ],
+       "active_count": 8,
+       "inactive_value": 0,
+       "slots": [
+        "z0",
+        "zS[singleton:A]",
+        "zS[singleton:B]",
+        "zS[joint:A+B]",
+        "zR",
+        "zO[0]",
+        "zO[1]",
+        "zO[2]"
+       ]
+      },
+      "endpoint_distance": 0.301776695,
+      "moved": 2,
+      "origin": "declared",
+      "sequence": [
+       [
+        "o00",
+        47
+       ],
+       [
+        "o01",
+        46
+       ]
+      ],
+      "static_status": "VALID"
+     },
+     {
+      "bc_layout": {
+       "active": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        false
+       ],
+       "active_count": 5,
+       "inactive_value": 0,
+       "slots": [
+        "z0",
+        "zS[singleton:A]",
+        "zS[singleton:B]",
+        "zS[joint:A+B]",
+        "zR",
+        "zO[0]",
+        "zO[1]",
+        "zO[2]"
+       ]
+      },
+      "endpoint_distance": 0.125,
+      "moved": 1,
+      "origin": "omission_of:o01>46.o00>47",
+      "sequence": [
+       [
+        "o01",
+        46
+       ]
+      ],
+      "static_status": "VALID"
+     }
+    ],
+    "robot_starts": [],
+    "scene_queries": [
+     {
+      "changed_fields": {
+       "added": [],
+       "changed_objects": {
+        "o00": [
+         "cell",
+         "xy_m"
+        ]
+       },
+       "other_fields_changed": [],
+       "removed": [],
+       "robot_unchanged": true
+      },
+      "edit": {
+       "o00": 47
+      },
+      "eligible": true,
+      "intervened_scene_hash": "sha256:6fb0b63e66f835fe1db58694277e58e39a54957e105e6e6e59b58041d5ec6dcb",
+      "kind": "singleton:A",
+      "reasons": []
+     },
+     {
+      "changed_fields": {
+       "added": [],
+       "changed_objects": {
+        "o01": [
+         "cell",
+         "xy_m"
+        ]
+       },
+       "other_fields_changed": [],
+       "removed": [],
+       "robot_unchanged": true
+      },
+      "edit": {
+       "o01": 46
+      },
+      "eligible": true,
+      "intervened_scene_hash": "sha256:1fba0d5be27921c5a450bfc0fb5789479e2f539e92c07abaf848cf0f9dd041e5",
+      "kind": "singleton:B",
+      "reasons": []
+     },
+     {
+      "changed_fields": {
+       "added": [],
+       "changed_objects": {
+        "o00": [
+         "cell",
+         "xy_m"
+        ],
+        "o01": [
+         "cell",
+         "xy_m"
+        ]
+       },
+       "other_fields_changed": [],
+       "removed": [],
+       "robot_unchanged": true
+      },
+      "edit": {
+       "o00": 47,
+       "o01": 46
+      },
+      "eligible": true,
+      "intervened_scene_hash": "sha256:79a5c47e2894ec259ca2036f57fb3f68f1389edca44a68b0d757f9f77b4c1b67",
+      "kind": "joint:A+B",
+      "reasons": []
+     },
+     {
+      "changed_fields": {
+       "added": [],
+       "changed_objects": {
+        "o03": [
+         "cell",
+         "xy_m"
+        ]
+       },
+       "other_fields_changed": [],
+       "removed": [],
+       "robot_unchanged": true
+      },
+      "edit": {
+       "o03": 49
+      },
+      "eligible": true,
+      "intervened_scene_hash": "sha256:08f03d2a10b4db2084247b443b5438735c1c6198311a5e26099b13eb6f7d254f",
+      "kind": "nuisance",
+      "reasons": []
+     }
+    ]
+   },
+   "roles": {
+    "A": "o00",
+    "B": "o01"
+   },
+   "scene": {
+    "action_hash": null,
+    "domain_policy": "ALL_SUPPORTED",
+    "lattice": {
+     "cols": 8,
+     "pitch_m": 0.08,
+     "rows": 8
+    },
+    "legal_cells": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     25,
+     26,
+     27,
+     28,
+     29,
+     30,
+     31,
+     32,
+     33,
+     34,
+     35,
+     36,
+     37,
+     38,
+     39,
+     40,
+     41,
+     42,
+     43,
+     44,
+     45,
+     46,
+     47,
+     48,
+     49,
+     50,
+     51,
+     52,
+     53,
+     54,
+     55,
+     56,
+     57,
+     58,
+     59,
+     60,
+     61,
+     62,
+     63
+    ],
+    "objects": [
+     {
+      "cell": 31,
+      "id": "o00",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.6,
+       0.28
+      ]
+     },
+     {
+      "cell": 39,
+      "id": "o01",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.6,
+       0.36
+      ]
+     },
+     {
+      "cell": 6,
+      "id": "o02",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.52,
+       0.04
+      ]
+     },
+     {
+      "cell": 57,
+      "id": "o03",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.12,
+       0.6
+      ]
+     },
+     {
+      "cell": 45,
+      "id": "o04",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.44,
+       0.44
+      ]
+     },
+     {
+      "cell": 12,
+      "id": "o05",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.36,
+       0.12
+      ]
+     },
+     {
+      "cell": 16,
+      "id": "t0",
+      "kind": "target",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.04,
+       0.2
+      ]
+     }
+    ],
+    "robot": {
+     "attached_id": null,
+     "attachment": "free",
+     "gripper_gap_m": 0.07,
+     "q_rad": [
+      1.5707963267948966,
+      1.5707963267948966,
+      1.5707963267948966
+     ]
+    },
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "root_id": "g4c_2026102014",
+    "variant_id": "initial"
+   },
+   "scene_hash": "sha256:28c7564c63df5ab4c268340ef35ace156a255509d5ae97b22000d785a34e3e6e",
+   "seed": 2026102014,
+   "supports": [
+    "nonempty_witness",
+    "order_contrast",
+    "omission",
+    "scene_effect",
+    "cost",
+    "multi_move_cost",
+    "bc_full_mini_pool"
+   ]
+  },
+  "g4c_r10": {
+   "bc_mini_pool": {
+    "catalogue_hash": "sha256:9b894799d357635dfd1ca10c131ebd8d8df2aed909ca38a5fc39e78a8c283b4a",
+    "full_decision_rule": "every active slot of every pool sequence decided (z0, catalogue zS, zR, zO)",
+    "required_units": [
+     "scene:g4c_r10:o00>20",
+     "scene:g4c_r10:o00>20.o01>14",
+     "scene:g4c_r10:o01>14",
+     "scene:g4c_r10:o03>62",
+     "seq:g4c_r10:empty",
+     "seq:g4c_r10:o00>20",
+     "seq:g4c_r10:o00>5",
+     "seq:g4c_r10:o00>5.o01>14",
+     "seq:g4c_r10:o00>6",
+     "seq:g4c_r10:o01>14",
+     "seq:g4c_r10:o01>14.o00>5"
+    ],
+    "sequences": [
+     [],
+     [
+      [
+       "o00",
+       20
+      ]
+     ],
+     [
+      [
+       "o00",
+       6
+      ]
+     ],
+     [
+      [
+       "o00",
+       5
+      ]
+     ],
+     [
+      [
+       "o01",
+       14
+      ],
+      [
+       "o00",
+       5
+      ]
+     ],
+     [
+      [
+       "o00",
+       5
+      ],
+      [
+       "o01",
+       14
+      ]
+     ],
+     [
+      [
+       "o01",
+       14
+      ]
+     ]
+    ]
+   },
+   "ceilings": {
+    "omission_remainders": 8,
+    "robot_starts": 1,
+    "scene_edits": 5,
+    "sequences": 14
+   },
+   "family": "J3",
+   "goal_cell": 4,
+   "hashes": {
+    "action_context": "sha256:aa33fa0979494dcf970fb119464d7906d82377e893f1f656f97a4d7d122ac00a",
+    "observation": "sha256:e8c3ab6518f90833ecb1dcd74386aafd86f006694321924223517d8ac5ec1bf4"
+   },
+   "lineage": {
+    "family_id": "g4c_r10",
+    "split": "DEVELOPMENT"
+   },
+   "queries": {
+    "catalogue": {
+     "hash": "sha256:9b894799d357635dfd1ca10c131ebd8d8df2aed909ca38a5fc39e78a8c283b4a",
+     "queries": [
+      "singleton:A",
+      "singleton:C",
+      "joint:A+C"
+     ],
+     "rule": "first <=3 geometrically eligible scene edits in declared rule order",
+     "version": "2D-ABC-v1"
+    },
+    "pool": [
+     {
+      "bc_layout": {
+       "active": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false
+       ],
+       "active_count": 4,
+       "inactive_value": 0,
+       "slots": [
+        "z0",
+        "zS[singleton:A]",
+        "zS[singleton:C]",
+        "zS[joint:A+C]",
+        "zR",
+        "zO[0]",
+        "zO[1]",
+        "zO[2]"
+       ]
+      },
+      "endpoint_distance": 0.0,
+      "moved": 0,
+      "origin": "declared",
+      "sequence": [],
+      "static_status": "VALID"
+     },
+     {
+      "bc_layout": {
+       "active": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        false
+       ],
+       "active_count": 5,
+       "inactive_value": 0,
+       "slots": [
+        "z0",
+        "zS[singleton:A]",
+        "zS[singleton:C]",
+        "zS[joint:A+C]",
+        "zR",
+        "zO[0]",
+        "zO[1]",
+        "zO[2]"
+       ]
+      },
+      "endpoint_distance": 0.176776695,
+      "moved": 1,
+      "origin": "declared",
+      "sequence": [
+       [
+        "o00",
+        20
+       ]
+      ],
+      "static_status": "VALID"
+     },
+     {
+      "bc_layout": {
+       "active": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        false
+       ],
+       "active_count": 5,
+       "inactive_value": 0,
+       "slots": [
+        "z0",
+        "zS[singleton:A]",
+        "zS[singleton:C]",
+        "zS[joint:A+C]",
+        "zR",
+        "zO[0]",
+        "zO[1]",
+        "zO[2]"
+       ]
+      },
+      "endpoint_distance": 0.176776695,
+      "moved": 1,
+      "origin": "declared",
+      "sequence": [
+       [
+        "o00",
+        6
+       ]
+      ],
+      "static_status": "VALID"
+     },
+     {
+      "bc_layout": {
+       "active": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        false
+       ],
+       "active_count": 5,
+       "inactive_value": 0,
+       "slots": [
+        "z0",
+        "zS[singleton:A]",
+        "zS[singleton:C]",
+        "zS[joint:A+C]",
+        "zR",
+        "zO[0]",
+        "zO[1]",
+        "zO[2]"
+       ]
+      },
+      "endpoint_distance": 0.088388348,
+      "moved": 1,
+      "origin": "declared",
+      "sequence": [
+       [
+        "o00",
+        5
+       ]
+      ],
+      "static_status": "INVALID"
+     },
+     {
+      "bc_layout": {
+       "active": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+       ],
+       "active_count": 8,
+       "inactive_value": 0,
+       "slots": [
+        "z0",
+        "zS[singleton:A]",
+        "zS[singleton:C]",
+        "zS[joint:A+C]",
+        "zR",
+        "zO[0]",
+        "zO[1]",
+        "zO[2]"
+       ]
+      },
+      "endpoint_distance": 0.213388348,
+      "moved": 2,
+      "origin": "declared",
+      "sequence": [
+       [
+        "o01",
+        14
+       ],
+       [
+        "o00",
+        5
+       ]
+      ],
+      "static_status": "VALID"
+     },
+     {
+      "bc_layout": {
+       "active": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+       ],
+       "active_count": 8,
+       "inactive_value": 0,
+       "slots": [
+        "z0",
+        "zS[singleton:A]",
+        "zS[singleton:C]",
+        "zS[joint:A+C]",
+        "zR",
+        "zO[0]",
+        "zO[1]",
+        "zO[2]"
+       ]
+      },
+      "endpoint_distance": 0.213388348,
+      "moved": 2,
+      "origin": "declared",
+      "sequence": [
+       [
+        "o00",
+        5
+       ],
+       [
+        "o01",
+        14
+       ]
+      ],
+      "static_status": "VALID"
+     },
+     {
+      "bc_layout": {
+       "active": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        false
+       ],
+       "active_count": 5,
+       "inactive_value": 0,
+       "slots": [
+        "z0",
+        "zS[singleton:A]",
+        "zS[singleton:C]",
+        "zS[joint:A+C]",
+        "zR",
+        "zO[0]",
+        "zO[1]",
+        "zO[2]"
+       ]
+      },
+      "endpoint_distance": 0.125,
+      "moved": 1,
+      "origin": "omission_of:o01>14.o00>5",
+      "sequence": [
+       [
+        "o01",
+        14
+       ]
+      ],
+      "static_status": "VALID"
+     }
+    ],
+    "robot_starts": [],
+    "scene_queries": [
+     {
+      "changed_fields": {
+       "added": [],
+       "changed_objects": {
+        "o00": [
+         "cell",
+         "xy_m"
+        ]
+       },
+       "other_fields_changed": [],
+       "removed": [],
+       "robot_unchanged": true
+      },
+      "edit": {
+       "o00": 20
+      },
+      "eligible": true,
+      "intervened_scene_hash": "sha256:bf43a5c01d9372678202cdcd7649aa8ef059e6811b4f1a0e63fa44f07db505cf",
+      "kind": "singleton:A",
+      "reasons": []
+     },
+     {
+      "changed_fields": {
+       "added": [],
+       "changed_objects": {
+        "o01": [
+         "cell",
+         "xy_m"
+        ]
+       },
+       "other_fields_changed": [],
+       "removed": [],
+       "robot_unchanged": true
+      },
+      "edit": {
+       "o01": 14
+      },
+      "eligible": true,
+      "intervened_scene_hash": "sha256:d62c536749055f9dbfffa536640b4002987741df604fca8de784735b980ad380",
+      "kind": "singleton:C",
+      "reasons": []
+     },
+     {
+      "changed_fields": {
+       "added": [],
+       "changed_objects": {
+        "o00": [
+         "cell",
+         "xy_m"
+        ],
+        "o01": [
+         "cell",
+         "xy_m"
+        ]
+       },
+       "other_fields_changed": [],
+       "removed": [],
+       "robot_unchanged": true
+      },
+      "edit": {
+       "o00": 20,
+       "o01": 14
+      },
+      "eligible": true,
+      "intervened_scene_hash": "sha256:91c775f01fe24959692565e4e68f0e8a921fc8f7ab3a023f93734730d22fa998",
+      "kind": "joint:A+C",
+      "reasons": []
+     },
+     {
+      "changed_fields": {
+       "added": [],
+       "changed_objects": {
+        "o03": [
+         "cell",
+         "xy_m"
+        ]
+       },
+       "other_fields_changed": [],
+       "removed": [],
+       "robot_unchanged": true
+      },
+      "edit": {
+       "o03": 62
+      },
+      "eligible": true,
+      "intervened_scene_hash": "sha256:34f1b137ca646ea2d0ecc1e1defc6ea1debc399b2c9e9203ac75a038495b58a6",
+      "kind": "nuisance",
+      "reasons": []
+     }
+    ]
+   },
+   "roles": {
+    "A": "o00",
+    "C": "o01"
+   },
+   "scene": {
+    "action_hash": null,
+    "domain_policy": "ALL_SUPPORTED",
+    "lattice": {
+     "cols": 8,
+     "pitch_m": 0.08,
+     "rows": 8
+    },
+    "legal_cells": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     25,
+     26,
+     27,
+     28,
+     29,
+     30,
+     31,
+     32,
+     33,
+     34,
+     35,
+     36,
+     37,
+     38,
+     39,
+     40,
+     41,
+     42,
+     43,
+     44,
+     45,
+     46,
+     47,
+     48,
+     49,
+     50,
+     51,
+     52,
+     53,
+     54,
+     55,
+     56,
+     57,
+     58,
+     59,
+     60,
+     61,
+     62,
+     63
+    ],
+    "objects": [
+     {
+      "cell": 4,
+      "id": "o00",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.36,
+       0.04
+      ]
+     },
+     {
+      "cell": 5,
+      "id": "o01",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.44,
+       0.04
+      ]
+     },
+     {
+      "cell": 53,
+      "id": "o02",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.44,
+       0.52
+      ]
+     },
+     {
+      "cell": 54,
+      "id": "o03",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.52,
+       0.52
+      ]
+     },
+     {
+      "cell": 33,
+      "id": "o04",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.12,
+       0.36
+      ]
+     },
+     {
+      "cell": 51,
+      "id": "o05",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.28,
+       0.52
+      ]
+     },
+     {
+      "cell": 29,
+      "id": "o06",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.44,
+       0.28
+      ]
+     },
+     {
+      "cell": 1,
+      "id": "t0",
+      "kind": "target",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.12,
+       0.04
+      ]
+     }
+    ],
+    "robot": {
+     "attached_id": null,
+     "attachment": "free",
+     "gripper_gap_m": 0.07,
+     "q_rad": [
+      1.5707963267948966,
+      1.5707963267948966,
+      1.5707963267948966
+     ]
+    },
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "root_id": "g4c_2026102017",
+    "variant_id": "initial"
+   },
+   "scene_hash": "sha256:c2599f038bcd26c44457e41d9613fd4f73543e45400d4c82a5c70ecc93476364",
+   "seed": 2026102017,
+   "supports": [
+    "nonempty_witness",
+    "alternative_repairs",
+    "order_contrast",
+    "omission",
+    "scene_effect",
+    "cost",
+    "multi_move_cost",
+    "destination_dependency"
+   ]
+  },
+  "g4c_r14": {
+   "bc_mini_pool": {
+    "catalogue_hash": "sha256:693f7dc2153ed9fa4f044522870ad57e58655a9af1a1aac9e64909a0367c3b6c",
+    "full_decision_rule": "every active slot of every pool sequence decided (z0, catalogue zS, zR, zO)",
+    "required_units": [
+     "scene:g4c_r14:o00>38",
+     "scene:g4c_r14:o00>38.o01>7",
+     "scene:g4c_r14:o01>7",
+     "scene:g4c_r14:o02>39",
+     "scene:g4c_r14:o04>8",
+     "seq:g4c_r14:empty",
+     "seq:g4c_r14:o00>38",
+     "seq:g4c_r14:o00>38.o01>7",
+     "seq:g4c_r14:o00>38.o01>7.o02>39",
+     "seq:g4c_r14:o00>38.o02>39",
+     "seq:g4c_r14:o00>6",
+     "seq:g4c_r14:o01>7",
+     "seq:g4c_r14:o01>7.o00>38",
+     "seq:g4c_r14:o01>7.o02>39",
+     "seq:g4c_r14:o01>7.o02>39.o00>38",
+     "seq:g4c_r14:o02>39",
+     "seq:g4c_r14:o02>39.o00>38",
+     "seq:g4c_r14:o02>39.o01>7",
+     "seq:g4c_r14:o02>39.o01>7.o00>38"
+    ],
+    "sequences": [
+     [],
+     [
+      [
+       "o00",
+       38
+      ]
+     ],
+     [
+      [
+       "o00",
+       6
+      ]
+     ],
+     [
+      [
+       "o01",
+       7
+      ],
+      [
+       "o02",
+       39
+      ],
+      [
+       "o00",
+       38
+      ]
+     ],
+     [
+      [
+       "o02",
+       39
+      ],
+      [
+       "o01",
+       7
+      ],
+      [
+       "o00",
+       38
+      ]
+     ],
+     [
+      [
+       "o00",
+       38
+      ],
+      [
+       "o01",
+       7
+      ],
+      [
+       "o02",
+       39
+      ]
+     ],
+     [
+      [
+       "o01",
+       7
+      ],
+      [
+       "o00",
+       38
+      ]
+     ],
+     [
+      [
+       "o02",
+       39
+      ],
+      [
+       "o00",
+       38
+      ]
+     ],
+     [
+      [
+       "o01",
+       7
+      ],
+      [
+       "o02",
+       39
+      ]
+     ],
+     [
+      [
+       "o02",
+       39
+      ]
+     ],
+     [
+      [
+       "o01",
+       7
+      ]
+     ],
+     [
+      [
+       "o02",
+       39
+      ],
+      [
+       "o01",
+       7
+      ]
+     ],
+     [
+      [
+       "o00",
+       38
+      ],
+      [
+       "o02",
+       39
+      ]
+     ],
+     [
+      [
+       "o00",
+       38
+      ],
+      [
+       "o01",
+       7
+      ]
+     ]
+    ]
+   },
+   "ceilings": {
+    "omission_remainders": 8,
+    "robot_starts": 1,
+    "scene_edits": 5,
+    "sequences": 14
+   },
+   "family": "J4",
+   "goal_cell": 22,
+   "hashes": {
+    "action_context": "sha256:16d991131f26e5f8ecd52cf264804177c18b684ebf0022f29dc0b2ff4fccf7ab",
+    "observation": "sha256:3ab180dc8cfca343c46d4ec3adc424758bc7f4b55059e1b6a4f14b1ad4999a49"
+   },
+   "lineage": {
+    "family_id": "g4c_r14",
+    "split": "DEVELOPMENT"
+   },
+   "queries": {
+    "catalogue": {
+     "hash": "sha256:693f7dc2153ed9fa4f044522870ad57e58655a9af1a1aac9e64909a0367c3b6c",
+     "queries": [
+      "singleton:A",
+      "singleton:B",
+      "singleton:C"
+     ],
+     "rule": "first <=3 geometrically eligible scene edits in declared rule order",
+     "version": "2D-ABC-v1"
+    },
+    "pool": [
+     {
+      "bc_layout": {
+       "active": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false
+       ],
+       "active_count": 4,
+       "inactive_value": 0,
+       "slots": [
+        "z0",
+        "zS[singleton:A]",
+        "zS[singleton:B]",
+        "zS[singleton:C]",
+        "zR",
+        "zO[0]",
+        "zO[1]",
+        "zO[2]"
+       ]
+      },
+      "endpoint_distance": 0.0,
+      "moved": 0,
+      "origin": "declared",
+      "sequence": [],
+      "static_status": "VALID"
+     },
+     {
+      "bc_layout": {
+       "active": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        false
+       ],
+       "active_count": 5,
+       "inactive_value": 0,
+       "slots": [
+        "z0",
+        "zS[singleton:A]",
+        "zS[singleton:B]",
+        "zS[singleton:C]",
+        "zR",
+        "zO[0]",
+        "zO[1]",
+        "zO[2]"
+       ]
+      },
+      "endpoint_distance": 0.176776695,
+      "moved": 1,
+      "origin": "declared",
+      "sequence": [
+       [
+        "o00",
+        38
+       ]
+      ],
+      "static_status": "VALID"
+     },
+     {
+      "bc_layout": {
+       "active": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        false
+       ],
+       "active_count": 5,
+       "inactive_value": 0,
+       "slots": [
+        "z0",
+        "zS[singleton:A]",
+        "zS[singleton:B]",
+        "zS[singleton:C]",
+        "zR",
+        "zO[0]",
+        "zO[1]",
+        "zO[2]"
+       ]
+      },
+      "endpoint_distance": 0.176776695,
+      "moved": 1,
+      "origin": "declared",
+      "sequence": [
+       [
+        "o00",
+        6
+       ]
+      ],
+      "static_status": "VALID"
+     },
+     {
+      "bc_layout": {
+       "active": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+       ],
+       "active_count": 8,
+       "inactive_value": 0,
+       "slots": [
+        "z0",
+        "zS[singleton:A]",
+        "zS[singleton:B]",
+        "zS[singleton:C]",
+        "zR",
+        "zO[0]",
+        "zO[1]",
+        "zO[2]"
+       ]
+      },
+      "endpoint_distance": 0.478553391,
+      "moved": 3,
+      "origin": "declared",
+      "sequence": [
+       [
+        "o01",
+        7
+       ],
+       [
+        "o02",
+        39
+       ],
+       [
+        "o00",
+        38
+       ]
+      ],
+      "static_status": "VALID"
+     },
+     {
+      "bc_layout": {
+       "active": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+       ],
+       "active_count": 8,
+       "inactive_value": 0,
+       "slots": [
+        "z0",
+        "zS[singleton:A]",
+        "zS[singleton:B]",
+        "zS[singleton:C]",
+        "zR",
+        "zO[0]",
+        "zO[1]",
+        "zO[2]"
+       ]
+      },
+      "endpoint_distance": 0.478553391,
+      "moved": 3,
+      "origin": "declared",
+      "sequence": [
+       [
+        "o02",
+        39
+       ],
+       [
+        "o01",
+        7
+       ],
+       [
+        "o00",
+        38
+       ]
+      ],
+      "static_status": "VALID"
+     },
+     {
+      "bc_layout": {
+       "active": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+       ],
+       "active_count": 8,
+       "inactive_value": 0,
+       "slots": [
+        "z0",
+        "zS[singleton:A]",
+        "zS[singleton:B]",
+        "zS[singleton:C]",
+        "zR",
+        "zO[0]",
+        "zO[1]",
+        "zO[2]"
+       ]
+      },
+      "endpoint_distance": 0.478553391,
+      "moved": 3,
+      "origin": "declared",
+      "sequence": [
+       [
+        "o00",
+        38
+       ],
+       [
+        "o01",
+        7
+       ],
+       [
+        "o02",
+        39
+       ]
+      ],
+      "static_status": "VALID"
+     },
+     {
+      "bc_layout": {
+       "active": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+       ],
+       "active_count": 8,
+       "inactive_value": 0,
+       "slots": [
+        "z0",
+        "zS[singleton:A]",
+        "zS[singleton:B]",
+        "zS[singleton:C]",
+        "zR",
+        "zO[0]",
+        "zO[1]",
+        "zO[2]"
+       ]
+      },
+      "endpoint_distance": 0.301776695,
+      "moved": 2,
+      "origin": "declared",
+      "sequence": [
+       [
+        "o01",
+        7
+       ],
+       [
+        "o00",
+        38
+       ]
+      ],
+      "static_status": "VALID"
+     },
+     {
+      "bc_layout": {
+       "active": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+       ],
+       "active_count": 8,
+       "inactive_value": 0,
+       "slots": [
+        "z0",
+        "zS[singleton:A]",
+        "zS[singleton:B]",
+        "zS[singleton:C]",
+        "zR",
+        "zO[0]",
+        "zO[1]",
+        "zO[2]"
+       ]
+      },
+      "endpoint_distance": 0.353553391,
+      "moved": 2,
+      "origin": "declared",
+      "sequence": [
+       [
+        "o02",
+        39
+       ],
+       [
+        "o00",
+        38
+       ]
+      ],
+      "static_status": "VALID"
+     },
+     {
+      "bc_layout": {
+       "active": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+       ],
+       "active_count": 8,
+       "inactive_value": 0,
+       "slots": [
+        "z0",
+        "zS[singleton:A]",
+        "zS[singleton:B]",
+        "zS[singleton:C]",
+        "zR",
+        "zO[0]",
+        "zO[1]",
+        "zO[2]"
+       ]
+      },
+      "endpoint_distance": 0.301776695,
+      "moved": 2,
+      "origin": "omission_of:o01>7.o02>39.o00>38",
+      "sequence": [
+       [
+        "o01",
+        7
+       ],
+       [
+        "o02",
+        39
+       ]
+      ],
+      "static_status": "VALID"
+     },
+     {
+      "bc_layout": {
+       "active": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        false
+       ],
+       "active_count": 5,
+       "inactive_value": 0,
+       "slots": [
+        "z0",
+        "zS[singleton:A]",
+        "zS[singleton:B]",
+        "zS[singleton:C]",
+        "zR",
+        "zO[0]",
+        "zO[1]",
+        "zO[2]"
+       ]
+      },
+      "endpoint_distance": 0.176776695,
+      "moved": 1,
+      "origin": "omission_of:o01>7.o02>39.o00>38",
+      "sequence": [
+       [
+        "o02",
+        39
+       ]
+      ],
+      "static_status": "VALID"
+     },
+     {
+      "bc_layout": {
+       "active": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        false
+       ],
+       "active_count": 5,
+       "inactive_value": 0,
+       "slots": [
+        "z0",
+        "zS[singleton:A]",
+        "zS[singleton:B]",
+        "zS[singleton:C]",
+        "zR",
+        "zO[0]",
+        "zO[1]",
+        "zO[2]"
+       ]
+      },
+      "endpoint_distance": 0.125,
+      "moved": 1,
+      "origin": "omission_of:o01>7.o02>39.o00>38",
+      "sequence": [
+       [
+        "o01",
+        7
+       ]
+      ],
+      "static_status": "VALID"
+     },
+     {
+      "bc_layout": {
+       "active": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+       ],
+       "active_count": 8,
+       "inactive_value": 0,
+       "slots": [
+        "z0",
+        "zS[singleton:A]",
+        "zS[singleton:B]",
+        "zS[singleton:C]",
+        "zR",
+        "zO[0]",
+        "zO[1]",
+        "zO[2]"
+       ]
+      },
+      "endpoint_distance": 0.301776695,
+      "moved": 2,
+      "origin": "omission_of:o02>39.o01>7.o00>38",
+      "sequence": [
+       [
+        "o02",
+        39
+       ],
+       [
+        "o01",
+        7
+       ]
+      ],
+      "static_status": "VALID"
+     },
+     {
+      "bc_layout": {
+       "active": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+       ],
+       "active_count": 8,
+       "inactive_value": 0,
+       "slots": [
+        "z0",
+        "zS[singleton:A]",
+        "zS[singleton:B]",
+        "zS[singleton:C]",
+        "zR",
+        "zO[0]",
+        "zO[1]",
+        "zO[2]"
+       ]
+      },
+      "endpoint_distance": 0.353553391,
+      "moved": 2,
+      "origin": "omission_of:o00>38.o01>7.o02>39",
+      "sequence": [
+       [
+        "o00",
+        38
+       ],
+       [
+        "o02",
+        39
+       ]
+      ],
+      "static_status": "VALID"
+     },
+     {
+      "bc_layout": {
+       "active": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+       ],
+       "active_count": 8,
+       "inactive_value": 0,
+       "slots": [
+        "z0",
+        "zS[singleton:A]",
+        "zS[singleton:B]",
+        "zS[singleton:C]",
+        "zR",
+        "zO[0]",
+        "zO[1]",
+        "zO[2]"
+       ]
+      },
+      "endpoint_distance": 0.301776695,
+      "moved": 2,
+      "origin": "omission_of:o00>38.o01>7.o02>39",
+      "sequence": [
+       [
+        "o00",
+        38
+       ],
+       [
+        "o01",
+        7
+       ]
+      ],
+      "static_status": "VALID"
+     }
+    ],
+    "robot_starts": [],
+    "scene_queries": [
+     {
+      "changed_fields": {
+       "added": [],
+       "changed_objects": {
+        "o00": [
+         "cell",
+         "xy_m"
+        ]
+       },
+       "other_fields_changed": [],
+       "removed": [],
+       "robot_unchanged": true
+      },
+      "edit": {
+       "o00": 38
+      },
+      "eligible": true,
+      "intervened_scene_hash": "sha256:318f72bf4d6ebbce48cd73a1a91ea5300b0a669a53274bc3fc0ad72b4a9afab5",
+      "kind": "singleton:A",
+      "reasons": []
+     },
+     {
+      "changed_fields": {
+       "added": [],
+       "changed_objects": {
+        "o01": [
+         "cell",
+         "xy_m"
+        ]
+       },
+       "other_fields_changed": [],
+       "removed": [],
+       "robot_unchanged": true
+      },
+      "edit": {
+       "o01": 7
+      },
+      "eligible": true,
+      "intervened_scene_hash": "sha256:aba77876639c37e3e0e6bf9a696cfe57258b731cfcecd0b93f4dfb528bd8b016",
+      "kind": "singleton:B",
+      "reasons": []
+     },
+     {
+      "changed_fields": {
+       "added": [],
+       "changed_objects": {
+        "o02": [
+         "cell",
+         "xy_m"
+        ]
+       },
+       "other_fields_changed": [],
+       "removed": [],
+       "robot_unchanged": true
+      },
+      "edit": {
+       "o02": 39
+      },
+      "eligible": true,
+      "intervened_scene_hash": "sha256:4dc1c058d125c23dc101f69a623f3a5933990d5b5291bbfdd8b15cd3ab293773",
+      "kind": "singleton:C",
+      "reasons": []
+     },
+     {
+      "changed_fields": {
+       "added": [],
+       "changed_objects": {
+        "o00": [
+         "cell",
+         "xy_m"
+        ],
+        "o01": [
+         "cell",
+         "xy_m"
+        ]
+       },
+       "other_fields_changed": [],
+       "removed": [],
+       "robot_unchanged": true
+      },
+      "edit": {
+       "o00": 38,
+       "o01": 7
+      },
+      "eligible": true,
+      "intervened_scene_hash": "sha256:e4e32bd165338a764787293171a25b89e47df92d0ff4919107b2d8ac89173728",
+      "kind": "joint:A+B",
+      "reasons": []
+     },
+     {
+      "changed_fields": {
+       "added": [],
+       "changed_objects": {
+        "o04": [
+         "cell",
+         "xy_m"
+        ]
+       },
+       "other_fields_changed": [],
+       "removed": [],
+       "robot_unchanged": true
+      },
+      "edit": {
+       "o04": 8
+      },
+      "eligible": true,
+      "intervened_scene_hash": "sha256:b56e391d39961b761a2b65c3fc52331e1d145b39fffeebc491846339b9ab234b",
+      "kind": "nuisance",
+      "reasons": []
+     }
+    ]
+   },
+   "roles": {
+    "A": "o00",
+    "B": "o01",
+    "C": "o02"
+   },
+   "scene": {
+    "action_hash": null,
+    "domain_policy": "ALL_SUPPORTED",
+    "lattice": {
+     "cols": 8,
+     "pitch_m": 0.08,
+     "rows": 8
+    },
+    "legal_cells": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     25,
+     26,
+     27,
+     28,
+     29,
+     30,
+     31,
+     32,
+     33,
+     34,
+     35,
+     36,
+     37,
+     38,
+     39,
+     40,
+     41,
+     42,
+     43,
+     44,
+     45,
+     46,
+     47,
+     48,
+     49,
+     50,
+     51,
+     52,
+     53,
+     54,
+     55,
+     56,
+     57,
+     58,
+     59,
+     60,
+     61,
+     62,
+     63
+    ],
+    "objects": [
+     {
+      "cell": 22,
+      "id": "o00",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.52,
+       0.2
+      ]
+     },
+     {
+      "cell": 14,
+      "id": "o01",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.52,
+       0.12
+      ]
+     },
+     {
+      "cell": 23,
+      "id": "o02",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.6,
+       0.2
+      ]
+     },
+     {
+      "cell": 16,
+      "id": "o03",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.04,
+       0.2
+      ]
+     },
+     {
+      "cell": 9,
+      "id": "o04",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.12,
+       0.12
+      ]
+     },
+     {
+      "cell": 59,
+      "id": "o05",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.28,
+       0.6
+      ]
+     },
+     {
+      "cell": 12,
+      "id": "o06",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.36,
+       0.12
+      ]
+     },
+     {
+      "cell": 49,
+      "id": "t0",
+      "kind": "target",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.12,
+       0.52
+      ]
+     }
+    ],
+    "robot": {
+     "attached_id": null,
+     "attachment": "free",
+     "gripper_gap_m": 0.07,
+     "q_rad": [
+      1.5707963267948966,
+      1.5707963267948966,
+      1.5707963267948966
+     ]
+    },
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "root_id": "g4c_2026102024",
+    "variant_id": "initial"
+   },
+   "scene_hash": "sha256:ad48a53ab6a112d579e1bd7ea3d672bd9982b968fe6bed127cd02e2da1558888",
+   "seed": 2026102024,
+   "supports": [
+    "nonempty_witness",
+    "order_contrast",
+    "omission",
+    "nonadditive",
+    "scene_effect",
+    "cost",
+    "multi_move_cost",
+    "three_move"
+   ]
+  },
+  "g4c_r19": {
+   "bc_mini_pool": {
+    "catalogue_hash": "sha256:c18a6aa2c0bf971c3eda8c1436033a65d2c9953ee16a1a197a037764c2f0c069",
+    "full_decision_rule": "every active slot of every pool sequence decided (z0, catalogue zS, zR, zO)",
+    "required_units": [
+     "scene:g4c_r19:o00>9",
+     "scene:g4c_r19:o00>9.o01>27",
+     "scene:g4c_r19:o01>27",
+     "scene:g4c_r19:o02>26",
+     "seq:g4c_r19:empty",
+     "seq:g4c_r19:o00>27",
+     "seq:g4c_r19:o00>27.o01>27",
+     "seq:g4c_r19:o00>27.o01>28",
+     "seq:g4c_r19:o00>9",
+     "seq:g4c_r19:o00>9.o01>27",
+     "seq:g4c_r19:o00>9.o01>28",
+     "seq:g4c_r19:o01>27",
+     "seq:g4c_r19:o01>27.o00>27",
+     "seq:g4c_r19:o01>27.o00>9",
+     "seq:g4c_r19:o01>28",
+     "seq:g4c_r19:o01>28.o00>27",
+     "seq:g4c_r19:o01>28.o00>9"
+    ],
+    "sequences": [
+     [],
+     [
+      [
+       "o00",
+       9
+      ]
+     ],
+     [
+      [
+       "o00",
+       27
+      ]
+     ],
+     [
+      [
+       "o01",
+       27
+      ]
+     ],
+     [
+      [
+       "o01",
+       28
+      ]
+     ],
+     [
+      [
+       "o00",
+       9
+      ],
+      [
+       "o01",
+       27
+      ]
+     ],
+     [
+      [
+       "o00",
+       9
+      ],
+      [
+       "o01",
+       28
+      ]
+     ],
+     [
+      [
+       "o00",
+       27
+      ],
+      [
+       "o01",
+       27
+      ]
+     ],
+     [
+      [
+       "o00",
+       27
+      ],
+      [
+       "o01",
+       28
+      ]
+     ],
+     [
+      [
+       "o01",
+       27
+      ],
+      [
+       "o00",
+       9
+      ]
+     ],
+     [
+      [
+       "o01",
+       27
+      ],
+      [
+       "o00",
+       27
+      ]
+     ],
+     [
+      [
+       "o01",
+       28
+      ],
+      [
+       "o00",
+       9
+      ]
+     ],
+     [
+      [
+       "o01",
+       28
+      ],
+      [
+       "o00",
+       27
+      ]
+     ]
+    ]
+   },
+   "ceilings": {
+    "omission_remainders": 8,
+    "robot_starts": 1,
+    "scene_edits": 5,
+    "sequences": 14
+   },
+   "family": "J9",
+   "goal_cell": 11,
+   "hashes": {
+    "action_context": "sha256:f64886f86d5f19329d2cec41e94eef43139f1a82da9d15f9022a539caea98821",
+    "observation": "sha256:ba5bc3a0705bbaf07ab2fee8aa75b2a99fe828f5192f3b40b69f08baff8eda08"
+   },
+   "lineage": {
+    "family_id": "g4c_r19",
+    "split": "DEVELOPMENT"
+   },
+   "queries": {
+    "catalogue": {
+     "hash": "sha256:c18a6aa2c0bf971c3eda8c1436033a65d2c9953ee16a1a197a037764c2f0c069",
+     "queries": [
+      "singleton:A",
+      "singleton:B",
+      "joint:A+B"
+     ],
+     "rule": "first <=3 geometrically eligible scene edits in declared rule order",
+     "version": "2D-ABC-v1"
+    },
+    "pool": [
+     {
+      "bc_layout": {
+       "active": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false
+       ],
+       "active_count": 4,
+       "inactive_value": 0,
+       "slots": [
+        "z0",
+        "zS[singleton:A]",
+        "zS[singleton:B]",
+        "zS[joint:A+B]",
+        "zR",
+        "zO[0]",
+        "zO[1]",
+        "zO[2]"
+       ]
+      },
+      "endpoint_distance": 0.0,
+      "moved": 0,
+      "origin": "declared",
+      "sequence": [],
+      "static_status": "VALID"
+     },
+     {
+      "bc_layout": {
+       "active": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        false
+       ],
+       "active_count": 5,
+       "inactive_value": 0,
+       "slots": [
+        "z0",
+        "zS[singleton:A]",
+        "zS[singleton:B]",
+        "zS[joint:A+B]",
+        "zR",
+        "zO[0]",
+        "zO[1]",
+        "zO[2]"
+       ]
+      },
+      "endpoint_distance": 0.176776695,
+      "moved": 1,
+      "origin": "declared",
+      "sequence": [
+       [
+        "o00",
+        9
+       ]
+      ],
+      "static_status": "VALID"
+     },
+     {
+      "bc_layout": {
+       "active": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        false
+       ],
+       "active_count": 5,
+       "inactive_value": 0,
+       "slots": [
+        "z0",
+        "zS[singleton:A]",
+        "zS[singleton:B]",
+        "zS[joint:A+B]",
+        "zR",
+        "zO[0]",
+        "zO[1]",
+        "zO[2]"
+       ]
+      },
+      "endpoint_distance": 0.176776695,
+      "moved": 1,
+      "origin": "declared",
+      "sequence": [
+       [
+        "o00",
+        27
+       ]
+      ],
+      "static_status": "VALID"
+     },
+     {
+      "bc_layout": {
+       "active": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        false
+       ],
+       "active_count": 5,
+       "inactive_value": 0,
+       "slots": [
+        "z0",
+        "zS[singleton:A]",
+        "zS[singleton:B]",
+        "zS[joint:A+B]",
+        "zR",
+        "zO[0]",
+        "zO[1]",
+        "zO[2]"
+       ]
+      },
+      "endpoint_distance": 0.088388348,
+      "moved": 1,
+      "origin": "declared",
+      "sequence": [
+       [
+        "o01",
+        27
+       ]
+      ],
+      "static_status": "VALID"
+     },
+     {
+      "bc_layout": {
+       "active": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        false
+       ],
+       "active_count": 5,
+       "inactive_value": 0,
+       "slots": [
+        "z0",
+        "zS[singleton:A]",
+        "zS[singleton:B]",
+        "zS[joint:A+B]",
+        "zR",
+        "zO[0]",
+        "zO[1]",
+        "zO[2]"
+       ]
+      },
+      "endpoint_distance": 0.125,
+      "moved": 1,
+      "origin": "declared",
+      "sequence": [
+       [
+        "o01",
+        28
+       ]
+      ],
+      "static_status": "VALID"
+     },
+     {
+      "bc_layout": {
+       "active": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+       ],
+       "active_count": 8,
+       "inactive_value": 0,
+       "slots": [
+        "z0",
+        "zS[singleton:A]",
+        "zS[singleton:B]",
+        "zS[joint:A+B]",
+        "zR",
+        "zO[0]",
+        "zO[1]",
+        "zO[2]"
+       ]
+      },
+      "endpoint_distance": 0.265165043,
+      "moved": 2,
+      "origin": "declared",
+      "sequence": [
+       [
+        "o00",
+        9
+       ],
+       [
+        "o01",
+        27
+       ]
+      ],
+      "static_status": "VALID"
+     },
+     {
+      "bc_layout": {
+       "active": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+       ],
+       "active_count": 8,
+       "inactive_value": 0,
+       "slots": [
+        "z0",
+        "zS[singleton:A]",
+        "zS[singleton:B]",
+        "zS[joint:A+B]",
+        "zR",
+        "zO[0]",
+        "zO[1]",
+        "zO[2]"
+       ]
+      },
+      "endpoint_distance": 0.301776695,
+      "moved": 2,
+      "origin": "declared",
+      "sequence": [
+       [
+        "o00",
+        9
+       ],
+       [
+        "o01",
+        28
+       ]
+      ],
+      "static_status": "VALID"
+     },
+     {
+      "bc_layout": {
+       "active": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+       ],
+       "active_count": 8,
+       "inactive_value": 0,
+       "slots": [
+        "z0",
+        "zS[singleton:A]",
+        "zS[singleton:B]",
+        "zS[joint:A+B]",
+        "zR",
+        "zO[0]",
+        "zO[1]",
+        "zO[2]"
+       ]
+      },
+      "endpoint_distance": 0.265165043,
+      "moved": 2,
+      "origin": "declared",
+      "sequence": [
+       [
+        "o00",
+        27
+       ],
+       [
+        "o01",
+        27
+       ]
+      ],
+      "static_status": "INVALID"
+     },
+     {
+      "bc_layout": {
+       "active": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+       ],
+       "active_count": 8,
+       "inactive_value": 0,
+       "slots": [
+        "z0",
+        "zS[singleton:A]",
+        "zS[singleton:B]",
+        "zS[joint:A+B]",
+        "zR",
+        "zO[0]",
+        "zO[1]",
+        "zO[2]"
+       ]
+      },
+      "endpoint_distance": 0.301776695,
+      "moved": 2,
+      "origin": "declared",
+      "sequence": [
+       [
+        "o00",
+        27
+       ],
+       [
+        "o01",
+        28
+       ]
+      ],
+      "static_status": "VALID"
+     },
+     {
+      "bc_layout": {
+       "active": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+       ],
+       "active_count": 8,
+       "inactive_value": 0,
+       "slots": [
+        "z0",
+        "zS[singleton:A]",
+        "zS[singleton:B]",
+        "zS[joint:A+B]",
+        "zR",
+        "zO[0]",
+        "zO[1]",
+        "zO[2]"
+       ]
+      },
+      "endpoint_distance": 0.265165043,
+      "moved": 2,
+      "origin": "declared",
+      "sequence": [
+       [
+        "o01",
+        27
+       ],
+       [
+        "o00",
+        9
+       ]
+      ],
+      "static_status": "VALID"
+     },
+     {
+      "bc_layout": {
+       "active": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+       ],
+       "active_count": 8,
+       "inactive_value": 0,
+       "slots": [
+        "z0",
+        "zS[singleton:A]",
+        "zS[singleton:B]",
+        "zS[joint:A+B]",
+        "zR",
+        "zO[0]",
+        "zO[1]",
+        "zO[2]"
+       ]
+      },
+      "endpoint_distance": 0.265165043,
+      "moved": 2,
+      "origin": "declared",
+      "sequence": [
+       [
+        "o01",
+        27
+       ],
+       [
+        "o00",
+        27
+       ]
+      ],
+      "static_status": "INVALID"
+     },
+     {
+      "bc_layout": {
+       "active": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+       ],
+       "active_count": 8,
+       "inactive_value": 0,
+       "slots": [
+        "z0",
+        "zS[singleton:A]",
+        "zS[singleton:B]",
+        "zS[joint:A+B]",
+        "zR",
+        "zO[0]",
+        "zO[1]",
+        "zO[2]"
+       ]
+      },
+      "endpoint_distance": 0.301776695,
+      "moved": 2,
+      "origin": "declared",
+      "sequence": [
+       [
+        "o01",
+        28
+       ],
+       [
+        "o00",
+        9
+       ]
+      ],
+      "static_status": "VALID"
+     },
+     {
+      "bc_layout": {
+       "active": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+       ],
+       "active_count": 8,
+       "inactive_value": 0,
+       "slots": [
+        "z0",
+        "zS[singleton:A]",
+        "zS[singleton:B]",
+        "zS[joint:A+B]",
+        "zR",
+        "zO[0]",
+        "zO[1]",
+        "zO[2]"
+       ]
+      },
+      "endpoint_distance": 0.301776695,
+      "moved": 2,
+      "origin": "declared",
+      "sequence": [
+       [
+        "o01",
+        28
+       ],
+       [
+        "o00",
+        27
+       ]
+      ],
+      "static_status": "VALID"
+     }
+    ],
+    "robot_starts": [],
+    "scene_queries": [
+     {
+      "changed_fields": {
+       "added": [],
+       "changed_objects": {
+        "o00": [
+         "cell",
+         "xy_m"
+        ]
+       },
+       "other_fields_changed": [],
+       "removed": [],
+       "robot_unchanged": true
+      },
+      "edit": {
+       "o00": 9
+      },
+      "eligible": true,
+      "intervened_scene_hash": "sha256:9da86eb350bca414ba014ccc8a86d7ed4edcf7031232726443d557f242c739b2",
+      "kind": "singleton:A",
+      "reasons": []
+     },
+     {
+      "changed_fields": {
+       "added": [],
+       "changed_objects": {
+        "o01": [
+         "cell",
+         "xy_m"
+        ]
+       },
+       "other_fields_changed": [],
+       "removed": [],
+       "robot_unchanged": true
+      },
+      "edit": {
+       "o01": 27
+      },
+      "eligible": true,
+      "intervened_scene_hash": "sha256:94e203d871300b0590e0327a0af6885fc82c72a58745e171fb21d459bfc9cab1",
+      "kind": "singleton:B",
+      "reasons": []
+     },
+     {
+      "changed_fields": {
+       "added": [],
+       "changed_objects": {
+        "o00": [
+         "cell",
+         "xy_m"
+        ],
+        "o01": [
+         "cell",
+         "xy_m"
+        ]
+       },
+       "other_fields_changed": [],
+       "removed": [],
+       "robot_unchanged": true
+      },
+      "edit": {
+       "o00": 9,
+       "o01": 27
+      },
+      "eligible": true,
+      "intervened_scene_hash": "sha256:e6ab44bd29c17628897a92cf805abc6640d7ef2400fd184d87b0b440bbef8bbc",
+      "kind": "joint:A+B",
+      "reasons": []
+     },
+     {
+      "changed_fields": {
+       "added": [],
+       "changed_objects": {
+        "o02": [
+         "cell",
+         "xy_m"
+        ]
+       },
+       "other_fields_changed": [],
+       "removed": [],
+       "robot_unchanged": true
+      },
+      "edit": {
+       "o02": 26
+      },
+      "eligible": true,
+      "intervened_scene_hash": "sha256:11b522931f6ac700f75dfd4ba0e5d8d162e85edc931525165bbedd6f88742635",
+      "kind": "nuisance",
+      "reasons": []
+     }
+    ]
+   },
+   "roles": {
+    "A": "o00",
+    "B": "o01"
+   },
+   "scene": {
+    "action_hash": null,
+    "domain_policy": "ALL_SUPPORTED",
+    "lattice": {
+     "cols": 8,
+     "pitch_m": 0.08,
+     "rows": 8
+    },
+    "legal_cells": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     25,
+     26,
+     27,
+     28,
+     29,
+     30,
+     31,
+     32,
+     33,
+     34,
+     35,
+     36,
+     37,
+     38,
+     39,
+     40,
+     41,
+     42,
+     43,
+     44,
+     45,
+     46,
+     47,
+     48,
+     49,
+     50,
+     51,
+     52,
+     53,
+     54,
+     55,
+     56,
+     57,
+     58,
+     59,
+     60,
+     61,
+     62,
+     63
+    ],
+    "objects": [
+     {
+      "cell": 11,
+      "id": "o00",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.28,
+       0.12
+      ]
+     },
+     {
+      "cell": 19,
+      "id": "o01",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.28,
+       0.2
+      ]
+     },
+     {
+      "cell": 34,
+      "id": "o02",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.2,
+       0.36
+      ]
+     },
+     {
+      "cell": 22,
+      "id": "t0",
+      "kind": "target",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.52,
+       0.2
+      ]
+     }
+    ],
+    "robot": {
+     "attached_id": null,
+     "attachment": "free",
+     "gripper_gap_m": 0.07,
+     "q_rad": [
+      1.5707963267948966,
+      1.5707963267948966,
+      1.5707963267948966
+     ]
+    },
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "root_id": "g4c_2026102032",
+    "variant_id": "initial"
+   },
+   "scene_hash": "sha256:663c6e430b24c68a07a773c82a18d144b26273a016639d977a518c56eb4d8735",
+   "seed": 2026102032,
+   "supports": [
+    "nonempty_witness",
+    "bc_full_mini_pool",
+    "order_contrast",
+    "omission",
+    "scene_effect",
+    "alternative_repairs",
+    "cost",
+    "multi_move_cost",
+    "nonadditive"
+   ]
+  }
+ },
+ "source": {
+  "files": {
+   "cases.py": "sha256:9e83c8f5c50058a959b2657ec5b42b28f983589cd2f74d35d4281b47a5734720",
+   "certificates.py": "sha256:fc1fa225303efb1c7aef6d77da02f722d2ed0b704aea66c401519fb02831c577",
+   "config.py": "sha256:450ad85b4774aa33581aed6d7bb6b84ac153175ae7787fba94e252b765f8e456",
+   "config.toml": "sha256:56ede7f0ea1bd7b0e76e9b1bfd7d04f237e96f65276b79e498edce0b51b28d79",
+   "config_v2.toml": "sha256:5a0ccf825cb9fa749f0367477ca706889b1bdcbdf1b898d7abe02aaa99c6bdb7",
+   "data.py": "sha256:e0eec7c3c3669a4b804474f68ed3bd3d13f661145cd25d7dbb43502c68d981ea",
+   "effects.py": "sha256:244ea78a2dec6de110764158c04d29d1c436a770012069b5e8ccfa40b11136ed",
+   "evaluate.py": "sha256:4ad6d4b00cf6fd1a45ac81e4726070a4455220e0e1a539787701d655b4ed90aa",
+   "fixtures.json": "sha256:b1cbe186eb5bba535193151570c2afcf2af1368182778d7f3f97728eb0140aa8",
+   "g4c.py": "sha256:56e90d55a9ed29d96144c2da006113df343918bd56e54d1be51c064e824f9961",
+   "g4c_pilot.py": "sha256:b4f8b73e1106980287f9b33bf0349bb85266e0573077ae3022c272ec28bc0dfc",
+   "g4d.py": "sha256:738971656bcc6690eb2df13446cf438c463eeb184080a91262fa7ccca2719393",
+   "g4d_run.py": "sha256:479852f3d784734102d20376db43f9b999bba163af960d35e1da1cb2770b2912",
+   "geometry.py": "sha256:3db5ad2cee5dc506c6d3315c6a099c755897b2b07a4a432c7d309e642eab3917",
+   "interventions.py": "sha256:b8751099a3015ff60202c3856ebd79532996cb26ee53cfd9a2da1756f79d372b",
+   "legacy.py": "sha256:5d033d2e1b18d45a24de68ad6ad773866b2234e1bd88059c7b170505bd46f9be",
+   "motion.py": "sha256:f2052d6049e288036122f0a31bc70791d9da6824b59036866ad411b215dd9678",
+   "ordered.py": "sha256:05ddac72d7268ccf05b57f27cdfbfa7e9c6bf9952be1f43c81194ff204da124e",
+   "planner.py": "sha256:d48cc2f43a18c5b35456397fbf8fb5fa4fedd9f83ebe2371331f49696fc831d2",
+   "proposals.py": "sha256:75e8afc185f4b1a5a2a102288d78ad4a45d7bb0217a2eadb2cf090ac2ba27da0",
+   "runs/g2_interventions/arrays.npz": "sha256:7322cff010a2583f6083ad0e09d52df05ffa7c413f02612a017cf70573c7a53b",
+   "runs/g2_interventions/result.json": "sha256:d6e07043aa41fff5ebad66c883cb309ce7fbf8cfe05be4253fa58d4c2765a0e0",
+   "runs/g2_interventions/scenes.json": "sha256:755f92924a49a3a02fef7fb79804412269c9e1f9e62915801248f66d0e93d72a",
+   "runs/g4c_preflight/plan.json": "sha256:c6c8a0169a8274a031ecb42e00d666e260db458f800efcacd6af27a8469d5b95",
+   "scene.py": "sha256:befae9f1d724120bc070a74b5145443af17b0a6ba592e460b1ce02a5872c807c",
+   "sequences.py": "sha256:9e9d3570ed7ad1d13bf7edff943d266a703654a6034f99bccb9ed3d60c0bfc6c",
+   "skill.py": "sha256:c45ba175171f80e7e62591df7c9822a986e608fd50a77378cc79ce31d64ea51a",
+   "teacher.py": "sha256:693faf5812a4a78f9aab97bc7e1ec68906e5ac88cbff0260208d97646d0d5741",
+   "verify.py": "sha256:fd735fcaa33be67e657addb26fc7ef20de51e0545836236521ce04d539f64e87",
+   "viz.py": "sha256:69083460c3477d9a5793fb84c071dbfc4555056ba66f56fa7f6507041ee23f3b"
+  },
+  "head": "9e7242117a72429ea13f949d68e1d94b5a0f9510"
+ },
+ "stage": "G4C_P1_PILOT",
+ "status": "FINAL_AUTHORIZED_PILOT",
+ "threads": {
+  "MKL_NUM_THREADS": "1",
+  "NUMEXPR_NUM_THREADS": "1",
+  "OMP_NUM_THREADS": "1",
+  "OPENBLAS_NUM_THREADS": "1"
+ },
+ "unit_order": "parent plan order, filtered to the pilot roots (frozen before outcomes)",
+ "units": [
+  {
+   "kind": "ORDERED_TEACHER",
+   "relocation_key": "g4c/g4c_r00/empty/reloc",
+   "relocation_skills_max": 0,
+   "root": "g4c_r00",
+   "sequence": [],
+   "target_evaluations_max": 1,
+   "target_key": "g4c/g4c_r00/empty/target",
+   "unit": "seq:g4c_r00:empty"
+  },
+  {
+   "edit": {
+    "o03": 51
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:5b6185496b5aeb1f139a9506cb0dc96b9174dd742b3f0e28fc3043c08b9e2cde",
+   "kind": "SCENE_TARGET_ONLY",
+   "reference_unit": "seq:g4c_r00:empty",
+   "relocation_skills_max": 0,
+   "root": "g4c_r00",
+   "target_evaluations_max": 1,
+   "target_key": "g4c/g4c_r00/scene/o03>51/target",
+   "unit": "scene:g4c_r00:o03>51"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "relocation_key": "g4c/g4c_r08/empty/reloc",
+   "relocation_skills_max": 0,
+   "root": "g4c_r08",
+   "sequence": [],
+   "target_evaluations_max": 1,
+   "target_key": "g4c/g4c_r08/empty/target",
+   "unit": "seq:g4c_r08:empty"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "relocation_key": "g4c/g4c_r08/o00>47/reloc",
+   "relocation_skills_max": 1,
+   "root": "g4c_r08",
+   "sequence": [
+    [
+     "o00",
+     47
+    ]
+   ],
+   "target_evaluations_max": 1,
+   "target_key": "g4c/g4c_r08/o00>47/target",
+   "unit": "seq:g4c_r08:o00>47"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "relocation_key": "g4c/g4c_r08/o00>15/reloc",
+   "relocation_skills_max": 1,
+   "root": "g4c_r08",
+   "sequence": [
+    [
+     "o00",
+     15
+    ]
+   ],
+   "target_evaluations_max": 1,
+   "target_key": "g4c/g4c_r08/o00>15/target",
+   "unit": "seq:g4c_r08:o00>15"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "relocation_key": "g4c/g4c_r08/o01>46.o00>47/reloc",
+   "relocation_skills_max": 2,
+   "root": "g4c_r08",
+   "sequence": [
+    [
+     "o01",
+     46
+    ],
+    [
+     "o00",
+     47
+    ]
+   ],
+   "target_evaluations_max": 1,
+   "target_key": "g4c/g4c_r08/o01>46.o00>47/target",
+   "unit": "seq:g4c_r08:o01>46.o00>47"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "relocation_key": "g4c/g4c_r08/o00>47.o01>46/reloc",
+   "relocation_skills_max": 2,
+   "root": "g4c_r08",
+   "sequence": [
+    [
+     "o00",
+     47
+    ],
+    [
+     "o01",
+     46
+    ]
+   ],
+   "target_evaluations_max": 1,
+   "target_key": "g4c/g4c_r08/o00>47.o01>46/target",
+   "unit": "seq:g4c_r08:o00>47.o01>46"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "relocation_key": "g4c/g4c_r08/o01>46/reloc",
+   "relocation_skills_max": 1,
+   "root": "g4c_r08",
+   "sequence": [
+    [
+     "o01",
+     46
+    ]
+   ],
+   "target_evaluations_max": 1,
+   "target_key": "g4c/g4c_r08/o01>46/target",
+   "unit": "seq:g4c_r08:o01>46"
+  },
+  {
+   "edit": {
+    "o00": 47
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:6fb0b63e66f835fe1db58694277e58e39a54957e105e6e6e59b58041d5ec6dcb",
+   "kind": "SCENE_TARGET_ONLY",
+   "reference_unit": "seq:g4c_r08:empty",
+   "relocation_skills_max": 0,
+   "root": "g4c_r08",
+   "target_evaluations_max": 1,
+   "target_key": "g4c/g4c_r08/scene/o00>47/target",
+   "unit": "scene:g4c_r08:o00>47"
+  },
+  {
+   "edit": {
+    "o01": 46
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:1fba0d5be27921c5a450bfc0fb5789479e2f539e92c07abaf848cf0f9dd041e5",
+   "kind": "SCENE_TARGET_ONLY",
+   "reference_unit": "seq:g4c_r08:empty",
+   "relocation_skills_max": 0,
+   "root": "g4c_r08",
+   "target_evaluations_max": 1,
+   "target_key": "g4c/g4c_r08/scene/o01>46/target",
+   "unit": "scene:g4c_r08:o01>46"
+  },
+  {
+   "edit": {
+    "o00": 47,
+    "o01": 46
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:79a5c47e2894ec259ca2036f57fb3f68f1389edca44a68b0d757f9f77b4c1b67",
+   "kind": "SCENE_TARGET_ONLY",
+   "reference_unit": "seq:g4c_r08:empty",
+   "relocation_skills_max": 0,
+   "root": "g4c_r08",
+   "target_evaluations_max": 1,
+   "target_key": "g4c/g4c_r08/scene/o00>47.o01>46/target",
+   "unit": "scene:g4c_r08:o00>47.o01>46"
+  },
+  {
+   "edit": {
+    "o03": 49
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:08f03d2a10b4db2084247b443b5438735c1c6198311a5e26099b13eb6f7d254f",
+   "kind": "SCENE_TARGET_ONLY",
+   "reference_unit": "seq:g4c_r08:empty",
+   "relocation_skills_max": 0,
+   "root": "g4c_r08",
+   "target_evaluations_max": 1,
+   "target_key": "g4c/g4c_r08/scene/o03>49/target",
+   "unit": "scene:g4c_r08:o03>49"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "relocation_key": "g4c/g4c_r10/empty/reloc",
+   "relocation_skills_max": 0,
+   "root": "g4c_r10",
+   "sequence": [],
+   "target_evaluations_max": 1,
+   "target_key": "g4c/g4c_r10/empty/target",
+   "unit": "seq:g4c_r10:empty"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "relocation_key": "g4c/g4c_r10/o00>20/reloc",
+   "relocation_skills_max": 1,
+   "root": "g4c_r10",
+   "sequence": [
+    [
+     "o00",
+     20
+    ]
+   ],
+   "target_evaluations_max": 1,
+   "target_key": "g4c/g4c_r10/o00>20/target",
+   "unit": "seq:g4c_r10:o00>20"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "relocation_key": "g4c/g4c_r10/o00>6/reloc",
+   "relocation_skills_max": 1,
+   "root": "g4c_r10",
+   "sequence": [
+    [
+     "o00",
+     6
+    ]
+   ],
+   "target_evaluations_max": 1,
+   "target_key": "g4c/g4c_r10/o00>6/target",
+   "unit": "seq:g4c_r10:o00>6"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "relocation_key": "g4c/g4c_r10/o00>5/reloc",
+   "relocation_skills_max": 1,
+   "root": "g4c_r10",
+   "sequence": [
+    [
+     "o00",
+     5
+    ]
+   ],
+   "target_evaluations_max": 1,
+   "target_key": "g4c/g4c_r10/o00>5/target",
+   "unit": "seq:g4c_r10:o00>5"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "relocation_key": "g4c/g4c_r10/o01>14.o00>5/reloc",
+   "relocation_skills_max": 2,
+   "root": "g4c_r10",
+   "sequence": [
+    [
+     "o01",
+     14
+    ],
+    [
+     "o00",
+     5
+    ]
+   ],
+   "target_evaluations_max": 1,
+   "target_key": "g4c/g4c_r10/o01>14.o00>5/target",
+   "unit": "seq:g4c_r10:o01>14.o00>5"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "relocation_key": "g4c/g4c_r10/o00>5.o01>14/reloc",
+   "relocation_skills_max": 2,
+   "root": "g4c_r10",
+   "sequence": [
+    [
+     "o00",
+     5
+    ],
+    [
+     "o01",
+     14
+    ]
+   ],
+   "target_evaluations_max": 1,
+   "target_key": "g4c/g4c_r10/o00>5.o01>14/target",
+   "unit": "seq:g4c_r10:o00>5.o01>14"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "relocation_key": "g4c/g4c_r10/o01>14/reloc",
+   "relocation_skills_max": 1,
+   "root": "g4c_r10",
+   "sequence": [
+    [
+     "o01",
+     14
+    ]
+   ],
+   "target_evaluations_max": 1,
+   "target_key": "g4c/g4c_r10/o01>14/target",
+   "unit": "seq:g4c_r10:o01>14"
+  },
+  {
+   "edit": {
+    "o00": 20
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:bf43a5c01d9372678202cdcd7649aa8ef059e6811b4f1a0e63fa44f07db505cf",
+   "kind": "SCENE_TARGET_ONLY",
+   "reference_unit": "seq:g4c_r10:empty",
+   "relocation_skills_max": 0,
+   "root": "g4c_r10",
+   "target_evaluations_max": 1,
+   "target_key": "g4c/g4c_r10/scene/o00>20/target",
+   "unit": "scene:g4c_r10:o00>20"
+  },
+  {
+   "edit": {
+    "o01": 14
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:d62c536749055f9dbfffa536640b4002987741df604fca8de784735b980ad380",
+   "kind": "SCENE_TARGET_ONLY",
+   "reference_unit": "seq:g4c_r10:empty",
+   "relocation_skills_max": 0,
+   "root": "g4c_r10",
+   "target_evaluations_max": 1,
+   "target_key": "g4c/g4c_r10/scene/o01>14/target",
+   "unit": "scene:g4c_r10:o01>14"
+  },
+  {
+   "edit": {
+    "o00": 20,
+    "o01": 14
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:91c775f01fe24959692565e4e68f0e8a921fc8f7ab3a023f93734730d22fa998",
+   "kind": "SCENE_TARGET_ONLY",
+   "reference_unit": "seq:g4c_r10:empty",
+   "relocation_skills_max": 0,
+   "root": "g4c_r10",
+   "target_evaluations_max": 1,
+   "target_key": "g4c/g4c_r10/scene/o00>20.o01>14/target",
+   "unit": "scene:g4c_r10:o00>20.o01>14"
+  },
+  {
+   "edit": {
+    "o03": 62
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:34f1b137ca646ea2d0ecc1e1defc6ea1debc399b2c9e9203ac75a038495b58a6",
+   "kind": "SCENE_TARGET_ONLY",
+   "reference_unit": "seq:g4c_r10:empty",
+   "relocation_skills_max": 0,
+   "root": "g4c_r10",
+   "target_evaluations_max": 1,
+   "target_key": "g4c/g4c_r10/scene/o03>62/target",
+   "unit": "scene:g4c_r10:o03>62"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "relocation_key": "g4c/g4c_r14/empty/reloc",
+   "relocation_skills_max": 0,
+   "root": "g4c_r14",
+   "sequence": [],
+   "target_evaluations_max": 1,
+   "target_key": "g4c/g4c_r14/empty/target",
+   "unit": "seq:g4c_r14:empty"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "relocation_key": "g4c/g4c_r14/o00>38/reloc",
+   "relocation_skills_max": 1,
+   "root": "g4c_r14",
+   "sequence": [
+    [
+     "o00",
+     38
+    ]
+   ],
+   "target_evaluations_max": 1,
+   "target_key": "g4c/g4c_r14/o00>38/target",
+   "unit": "seq:g4c_r14:o00>38"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "relocation_key": "g4c/g4c_r14/o00>6/reloc",
+   "relocation_skills_max": 1,
+   "root": "g4c_r14",
+   "sequence": [
+    [
+     "o00",
+     6
+    ]
+   ],
+   "target_evaluations_max": 1,
+   "target_key": "g4c/g4c_r14/o00>6/target",
+   "unit": "seq:g4c_r14:o00>6"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "relocation_key": "g4c/g4c_r14/o01>7.o02>39.o00>38/reloc",
+   "relocation_skills_max": 3,
+   "root": "g4c_r14",
+   "sequence": [
+    [
+     "o01",
+     7
+    ],
+    [
+     "o02",
+     39
+    ],
+    [
+     "o00",
+     38
+    ]
+   ],
+   "target_evaluations_max": 1,
+   "target_key": "g4c/g4c_r14/o01>7.o02>39.o00>38/target",
+   "unit": "seq:g4c_r14:o01>7.o02>39.o00>38"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "relocation_key": "g4c/g4c_r14/o02>39.o01>7.o00>38/reloc",
+   "relocation_skills_max": 3,
+   "root": "g4c_r14",
+   "sequence": [
+    [
+     "o02",
+     39
+    ],
+    [
+     "o01",
+     7
+    ],
+    [
+     "o00",
+     38
+    ]
+   ],
+   "target_evaluations_max": 1,
+   "target_key": "g4c/g4c_r14/o02>39.o01>7.o00>38/target",
+   "unit": "seq:g4c_r14:o02>39.o01>7.o00>38"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "relocation_key": "g4c/g4c_r14/o00>38.o01>7.o02>39/reloc",
+   "relocation_skills_max": 3,
+   "root": "g4c_r14",
+   "sequence": [
+    [
+     "o00",
+     38
+    ],
+    [
+     "o01",
+     7
+    ],
+    [
+     "o02",
+     39
+    ]
+   ],
+   "target_evaluations_max": 1,
+   "target_key": "g4c/g4c_r14/o00>38.o01>7.o02>39/target",
+   "unit": "seq:g4c_r14:o00>38.o01>7.o02>39"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "relocation_key": "g4c/g4c_r14/o01>7.o00>38/reloc",
+   "relocation_skills_max": 2,
+   "root": "g4c_r14",
+   "sequence": [
+    [
+     "o01",
+     7
+    ],
+    [
+     "o00",
+     38
+    ]
+   ],
+   "target_evaluations_max": 1,
+   "target_key": "g4c/g4c_r14/o01>7.o00>38/target",
+   "unit": "seq:g4c_r14:o01>7.o00>38"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "relocation_key": "g4c/g4c_r14/o02>39.o00>38/reloc",
+   "relocation_skills_max": 2,
+   "root": "g4c_r14",
+   "sequence": [
+    [
+     "o02",
+     39
+    ],
+    [
+     "o00",
+     38
+    ]
+   ],
+   "target_evaluations_max": 1,
+   "target_key": "g4c/g4c_r14/o02>39.o00>38/target",
+   "unit": "seq:g4c_r14:o02>39.o00>38"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "relocation_key": "g4c/g4c_r14/o01>7.o02>39/reloc",
+   "relocation_skills_max": 2,
+   "root": "g4c_r14",
+   "sequence": [
+    [
+     "o01",
+     7
+    ],
+    [
+     "o02",
+     39
+    ]
+   ],
+   "target_evaluations_max": 1,
+   "target_key": "g4c/g4c_r14/o01>7.o02>39/target",
+   "unit": "seq:g4c_r14:o01>7.o02>39"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "relocation_key": "g4c/g4c_r14/o02>39/reloc",
+   "relocation_skills_max": 1,
+   "root": "g4c_r14",
+   "sequence": [
+    [
+     "o02",
+     39
+    ]
+   ],
+   "target_evaluations_max": 1,
+   "target_key": "g4c/g4c_r14/o02>39/target",
+   "unit": "seq:g4c_r14:o02>39"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "relocation_key": "g4c/g4c_r14/o01>7/reloc",
+   "relocation_skills_max": 1,
+   "root": "g4c_r14",
+   "sequence": [
+    [
+     "o01",
+     7
+    ]
+   ],
+   "target_evaluations_max": 1,
+   "target_key": "g4c/g4c_r14/o01>7/target",
+   "unit": "seq:g4c_r14:o01>7"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "relocation_key": "g4c/g4c_r14/o02>39.o01>7/reloc",
+   "relocation_skills_max": 2,
+   "root": "g4c_r14",
+   "sequence": [
+    [
+     "o02",
+     39
+    ],
+    [
+     "o01",
+     7
+    ]
+   ],
+   "target_evaluations_max": 1,
+   "target_key": "g4c/g4c_r14/o02>39.o01>7/target",
+   "unit": "seq:g4c_r14:o02>39.o01>7"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "relocation_key": "g4c/g4c_r14/o00>38.o02>39/reloc",
+   "relocation_skills_max": 2,
+   "root": "g4c_r14",
+   "sequence": [
+    [
+     "o00",
+     38
+    ],
+    [
+     "o02",
+     39
+    ]
+   ],
+   "target_evaluations_max": 1,
+   "target_key": "g4c/g4c_r14/o00>38.o02>39/target",
+   "unit": "seq:g4c_r14:o00>38.o02>39"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "relocation_key": "g4c/g4c_r14/o00>38.o01>7/reloc",
+   "relocation_skills_max": 2,
+   "root": "g4c_r14",
+   "sequence": [
+    [
+     "o00",
+     38
+    ],
+    [
+     "o01",
+     7
+    ]
+   ],
+   "target_evaluations_max": 1,
+   "target_key": "g4c/g4c_r14/o00>38.o01>7/target",
+   "unit": "seq:g4c_r14:o00>38.o01>7"
+  },
+  {
+   "edit": {
+    "o00": 38
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:318f72bf4d6ebbce48cd73a1a91ea5300b0a669a53274bc3fc0ad72b4a9afab5",
+   "kind": "SCENE_TARGET_ONLY",
+   "reference_unit": "seq:g4c_r14:empty",
+   "relocation_skills_max": 0,
+   "root": "g4c_r14",
+   "target_evaluations_max": 1,
+   "target_key": "g4c/g4c_r14/scene/o00>38/target",
+   "unit": "scene:g4c_r14:o00>38"
+  },
+  {
+   "edit": {
+    "o01": 7
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:aba77876639c37e3e0e6bf9a696cfe57258b731cfcecd0b93f4dfb528bd8b016",
+   "kind": "SCENE_TARGET_ONLY",
+   "reference_unit": "seq:g4c_r14:empty",
+   "relocation_skills_max": 0,
+   "root": "g4c_r14",
+   "target_evaluations_max": 1,
+   "target_key": "g4c/g4c_r14/scene/o01>7/target",
+   "unit": "scene:g4c_r14:o01>7"
+  },
+  {
+   "edit": {
+    "o02": 39
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:4dc1c058d125c23dc101f69a623f3a5933990d5b5291bbfdd8b15cd3ab293773",
+   "kind": "SCENE_TARGET_ONLY",
+   "reference_unit": "seq:g4c_r14:empty",
+   "relocation_skills_max": 0,
+   "root": "g4c_r14",
+   "target_evaluations_max": 1,
+   "target_key": "g4c/g4c_r14/scene/o02>39/target",
+   "unit": "scene:g4c_r14:o02>39"
+  },
+  {
+   "edit": {
+    "o00": 38,
+    "o01": 7
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:e4e32bd165338a764787293171a25b89e47df92d0ff4919107b2d8ac89173728",
+   "kind": "SCENE_TARGET_ONLY",
+   "reference_unit": "seq:g4c_r14:empty",
+   "relocation_skills_max": 0,
+   "root": "g4c_r14",
+   "target_evaluations_max": 1,
+   "target_key": "g4c/g4c_r14/scene/o00>38.o01>7/target",
+   "unit": "scene:g4c_r14:o00>38.o01>7"
+  },
+  {
+   "edit": {
+    "o04": 8
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:b56e391d39961b761a2b65c3fc52331e1d145b39fffeebc491846339b9ab234b",
+   "kind": "SCENE_TARGET_ONLY",
+   "reference_unit": "seq:g4c_r14:empty",
+   "relocation_skills_max": 0,
+   "root": "g4c_r14",
+   "target_evaluations_max": 1,
+   "target_key": "g4c/g4c_r14/scene/o04>8/target",
+   "unit": "scene:g4c_r14:o04>8"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "relocation_key": "g4c/g4c_r19/empty/reloc",
+   "relocation_skills_max": 0,
+   "root": "g4c_r19",
+   "sequence": [],
+   "target_evaluations_max": 1,
+   "target_key": "g4c/g4c_r19/empty/target",
+   "unit": "seq:g4c_r19:empty"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "relocation_key": "g4c/g4c_r19/o00>9/reloc",
+   "relocation_skills_max": 1,
+   "root": "g4c_r19",
+   "sequence": [
+    [
+     "o00",
+     9
+    ]
+   ],
+   "target_evaluations_max": 1,
+   "target_key": "g4c/g4c_r19/o00>9/target",
+   "unit": "seq:g4c_r19:o00>9"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "relocation_key": "g4c/g4c_r19/o00>27/reloc",
+   "relocation_skills_max": 1,
+   "root": "g4c_r19",
+   "sequence": [
+    [
+     "o00",
+     27
+    ]
+   ],
+   "target_evaluations_max": 1,
+   "target_key": "g4c/g4c_r19/o00>27/target",
+   "unit": "seq:g4c_r19:o00>27"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "relocation_key": "g4c/g4c_r19/o01>27/reloc",
+   "relocation_skills_max": 1,
+   "root": "g4c_r19",
+   "sequence": [
+    [
+     "o01",
+     27
+    ]
+   ],
+   "target_evaluations_max": 1,
+   "target_key": "g4c/g4c_r19/o01>27/target",
+   "unit": "seq:g4c_r19:o01>27"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "relocation_key": "g4c/g4c_r19/o01>28/reloc",
+   "relocation_skills_max": 1,
+   "root": "g4c_r19",
+   "sequence": [
+    [
+     "o01",
+     28
+    ]
+   ],
+   "target_evaluations_max": 1,
+   "target_key": "g4c/g4c_r19/o01>28/target",
+   "unit": "seq:g4c_r19:o01>28"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "relocation_key": "g4c/g4c_r19/o00>9.o01>27/reloc",
+   "relocation_skills_max": 2,
+   "root": "g4c_r19",
+   "sequence": [
+    [
+     "o00",
+     9
+    ],
+    [
+     "o01",
+     27
+    ]
+   ],
+   "target_evaluations_max": 1,
+   "target_key": "g4c/g4c_r19/o00>9.o01>27/target",
+   "unit": "seq:g4c_r19:o00>9.o01>27"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "relocation_key": "g4c/g4c_r19/o00>9.o01>28/reloc",
+   "relocation_skills_max": 2,
+   "root": "g4c_r19",
+   "sequence": [
+    [
+     "o00",
+     9
+    ],
+    [
+     "o01",
+     28
+    ]
+   ],
+   "target_evaluations_max": 1,
+   "target_key": "g4c/g4c_r19/o00>9.o01>28/target",
+   "unit": "seq:g4c_r19:o00>9.o01>28"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "relocation_key": "g4c/g4c_r19/o00>27.o01>27/reloc",
+   "relocation_skills_max": 2,
+   "root": "g4c_r19",
+   "sequence": [
+    [
+     "o00",
+     27
+    ],
+    [
+     "o01",
+     27
+    ]
+   ],
+   "target_evaluations_max": 1,
+   "target_key": "g4c/g4c_r19/o00>27.o01>27/target",
+   "unit": "seq:g4c_r19:o00>27.o01>27"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "relocation_key": "g4c/g4c_r19/o00>27.o01>28/reloc",
+   "relocation_skills_max": 2,
+   "root": "g4c_r19",
+   "sequence": [
+    [
+     "o00",
+     27
+    ],
+    [
+     "o01",
+     28
+    ]
+   ],
+   "target_evaluations_max": 1,
+   "target_key": "g4c/g4c_r19/o00>27.o01>28/target",
+   "unit": "seq:g4c_r19:o00>27.o01>28"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "relocation_key": "g4c/g4c_r19/o01>27.o00>9/reloc",
+   "relocation_skills_max": 2,
+   "root": "g4c_r19",
+   "sequence": [
+    [
+     "o01",
+     27
+    ],
+    [
+     "o00",
+     9
+    ]
+   ],
+   "target_evaluations_max": 1,
+   "target_key": "g4c/g4c_r19/o01>27.o00>9/target",
+   "unit": "seq:g4c_r19:o01>27.o00>9"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "relocation_key": "g4c/g4c_r19/o01>27.o00>27/reloc",
+   "relocation_skills_max": 2,
+   "root": "g4c_r19",
+   "sequence": [
+    [
+     "o01",
+     27
+    ],
+    [
+     "o00",
+     27
+    ]
+   ],
+   "target_evaluations_max": 1,
+   "target_key": "g4c/g4c_r19/o01>27.o00>27/target",
+   "unit": "seq:g4c_r19:o01>27.o00>27"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "relocation_key": "g4c/g4c_r19/o01>28.o00>9/reloc",
+   "relocation_skills_max": 2,
+   "root": "g4c_r19",
+   "sequence": [
+    [
+     "o01",
+     28
+    ],
+    [
+     "o00",
+     9
+    ]
+   ],
+   "target_evaluations_max": 1,
+   "target_key": "g4c/g4c_r19/o01>28.o00>9/target",
+   "unit": "seq:g4c_r19:o01>28.o00>9"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "relocation_key": "g4c/g4c_r19/o01>28.o00>27/reloc",
+   "relocation_skills_max": 2,
+   "root": "g4c_r19",
+   "sequence": [
+    [
+     "o01",
+     28
+    ],
+    [
+     "o00",
+     27
+    ]
+   ],
+   "target_evaluations_max": 1,
+   "target_key": "g4c/g4c_r19/o01>28.o00>27/target",
+   "unit": "seq:g4c_r19:o01>28.o00>27"
+  },
+  {
+   "edit": {
+    "o00": 9
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:9da86eb350bca414ba014ccc8a86d7ed4edcf7031232726443d557f242c739b2",
+   "kind": "SCENE_TARGET_ONLY",
+   "reference_unit": "seq:g4c_r19:empty",
+   "relocation_skills_max": 0,
+   "root": "g4c_r19",
+   "target_evaluations_max": 1,
+   "target_key": "g4c/g4c_r19/scene/o00>9/target",
+   "unit": "scene:g4c_r19:o00>9"
+  },
+  {
+   "edit": {
+    "o01": 27
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:94e203d871300b0590e0327a0af6885fc82c72a58745e171fb21d459bfc9cab1",
+   "kind": "SCENE_TARGET_ONLY",
+   "reference_unit": "seq:g4c_r19:empty",
+   "relocation_skills_max": 0,
+   "root": "g4c_r19",
+   "target_evaluations_max": 1,
+   "target_key": "g4c/g4c_r19/scene/o01>27/target",
+   "unit": "scene:g4c_r19:o01>27"
+  },
+  {
+   "edit": {
+    "o00": 9,
+    "o01": 27
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:e6ab44bd29c17628897a92cf805abc6640d7ef2400fd184d87b0b440bbef8bbc",
+   "kind": "SCENE_TARGET_ONLY",
+   "reference_unit": "seq:g4c_r19:empty",
+   "relocation_skills_max": 0,
+   "root": "g4c_r19",
+   "target_evaluations_max": 1,
+   "target_key": "g4c/g4c_r19/scene/o00>9.o01>27/target",
+   "unit": "scene:g4c_r19:o00>9.o01>27"
+  },
+  {
+   "edit": {
+    "o02": 26
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:11b522931f6ac700f75dfd4ba0e5d8d162e85edc931525165bbedd6f88742635",
+   "kind": "SCENE_TARGET_ONLY",
+   "reference_unit": "seq:g4c_r19:empty",
+   "relocation_skills_max": 0,
+   "root": "g4c_r19",
+   "target_evaluations_max": 1,
+   "target_key": "g4c/g4c_r19/scene/o02>26/target",
+   "unit": "scene:g4c_r19:o02>26"
+  }
+ ]
+}

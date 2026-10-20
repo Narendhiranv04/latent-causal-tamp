@@ -13,6 +13,7 @@ with the module that owns that stage (moved here-from at G4A, behaviour unchange
     g4d-legacy/-finalize/-run/-judge g4d_gate.*   runs/g4d_evidence (corrections, bounded collection, gate)
     g4b                 g4b.cmd_g4b                   runs/g4b_sampler_exact (exact sampler proof; no planner)
     g4c-plan            g4c.cmd_g4c_plan              runs/g4c_preflight (frozen 20-root plan; no collection)
+    g4c-pilot-*         g4c_pilot.*                   runs/g4c_pilot (authorized 5-root pilot: finalize, run, judge)
     replay              run.cmd_replay                any run directory
 
     python run.py scene --config config.toml --case G0_ILLUSTRATIVE --out runs/g0_scene
@@ -36,6 +37,7 @@ import g4d
 import g4d_gate
 import g4b
 import g4c
+import g4c_pilot
 import geometry as ge
 import intervention_figures as ifig
 import motion as mo
@@ -142,6 +144,15 @@ def main(argv=None) -> int:
     q.add_argument("--config-v2", default="config_v2.toml")
     q.add_argument("--out", required=True)
     q.set_defaults(func=g4c.cmd_g4c_plan)
+    for name, fn, hlp in (("g4c-pilot-finalize", g4c_pilot.cmd_g4c_pilot_finalize, "G4C-P1: authorization record + derived pilot plan"),
+                          ("g4c-pilot-run", g4c_pilot.cmd_g4c_pilot_run, "G4C-P1: guarded collection of the 59 pilot units"),
+                          ("g4c-pilot-judge", g4c_pilot.cmd_g4c_pilot_judge, "G4C-P1: revalidated evidence, judge, figures")):
+        q = sub.add_parser(name, help=hlp)
+        q.add_argument("--config", default="config.toml")
+        q.add_argument("--config-v2", default="config_v2.toml")
+        q.add_argument("--instruction", default="instruction-phase-md/G4C_P1_5Root_Pilot_Collection_Instructions.md")
+        q.add_argument("--out", required=True)
+        q.set_defaults(func=fn)
     q = sub.add_parser("replay", help="G1-G3.5: independently re-certify a run's stored trajectories")
     q.add_argument("--run", required=True)
     q.add_argument("--report", help="where to write the replay record (default: <run>/replay.json)")

@@ -1,0 +1,115 @@
+{
+ "authorization_hash": "sha256:464b6345c0c72bead727dde29333a42395096052bb98f63ebe81188337a24895",
+ "budget": {
+  "aggregate_cap_s": 10800,
+  "aggregate_cpu_s": 340.24,
+  "calls": {
+   "caps": {
+    "relocation_skills": 60,
+    "target_evaluations": 59
+   },
+   "home_diagnostics": 13,
+   "relocation_planner": 38,
+   "target_evaluations": 16
+  },
+  "cancellations": 0,
+  "coordinator_cpu_s": 1.376,
+  "enforcement_failure": null,
+  "finished_utc": "2026-10-20T08:31:52Z",
+  "max_overshoot_s": 0,
+  "max_unit_cpu_s": 105.61,
+  "resumes": 0,
+  "started_utc": "2026-10-20T08:26:06Z",
+  "unit_cpu_s": 338.86
+ },
+ "decision": "G4C_PILOT_COMPLETE",
+ "entitlement": {
+  "A_LOCAL_SEQUENCE": {
+   "cost_labels": 14,
+   "decided_omission_pairs": 22,
+   "decided_ordered": 24,
+   "decided_scene_pairs": 15,
+   "decided_units": 39,
+   "joint_pool_loss": "A finite-pool loss over decided ordered candidates",
+   "source_units": 59
+  },
+  "B_JOINT_CAUSAL": {
+   "cost_labels": 14,
+   "decided_omission_pairs": 22,
+   "decided_ordered": 24,
+   "decided_scene_pairs": 15,
+   "decided_units": 39,
+   "exact_joint_pool_roots": [
+    "g4c_r00",
+    "g4c_r10"
+   ],
+   "source_units": 59,
+   "z_fields_active": 261,
+   "z_fields_decided": 194
+  },
+  "C_HYBRID_JOINT": "identical to B (same units, same z views); the GRU is a future component",
+  "equal_source_information": true,
+  "learner_inputs": "data.learner_tensors_v2 allowlist; no labels/witnesses/root ids"
+ },
+ "full_g4c_readiness_claim": "NO (pilot only; 15 roots not run)",
+ "integrity": {
+  "authorization_unchanged": true,
+  "excluded_roots_never_run": true,
+  "no_contradiction": true,
+  "parent_plan_file_unchanged": true,
+  "parent_plan_hash": true,
+  "sources_unchanged": true,
+  "units_run_subset_of_pilot": true
+ },
+ "judge_cpu_s": 4.64,
+ "judge_wall_s": 4.64,
+ "label_counts": {
+  "CERTIFIED_INFEASIBLE": 26,
+  "UNRESOLVED": 20,
+  "VERIFIED_FEASIBLE": 13
+ },
+ "learned_components": "NONE",
+ "parent_plan_hash": "sha256:c761c68497309f6b631f6740237e75f08c2376ade179b7f644731dc775f193a3",
+ "pilot_plan_hash": "sha256:a10ef74dcf6040e1467f4e37358c490756fa2dae9e75bc0fa712147816eda3c1",
+ "stage": "G4C_P1_PILOT",
+ "tags": {
+  "g4c_r00": [
+   "bc_full_mini_pool",
+   "cost",
+   "nuisance_zero_effect",
+   "zero_move"
+  ],
+  "g4c_r08": [
+   "cost",
+   "nuisance_zero_effect"
+  ],
+  "g4c_r10": [
+   "alternative_repairs",
+   "bc_full_mini_pool",
+   "cost",
+   "multi_move_cost",
+   "nonadditive",
+   "nonempty_witness",
+   "nuisance_zero_effect",
+   "omission",
+   "order_contrast",
+   "scene_effect"
+  ],
+  "g4c_r14": [
+   "cost",
+   "nonempty_witness",
+   "nuisance_zero_effect",
+   "omission",
+   "scene_effect"
+  ],
+  "g4c_r19": [
+   "alternative_repairs",
+   "cost",
+   "multi_move_cost",
+   "nonempty_witness",
+   "nuisance_zero_effect",
+   "omission",
+   "scene_effect"
+  ]
+ }
+}
