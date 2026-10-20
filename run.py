@@ -12,6 +12,7 @@ with the module that owns that stage (moved here-from at G4A, behaviour unchange
     g4d-plan, g4d-migrate g4d.cmd_g4d_plan / cmd_g4d_migrate runs/g4d_migration (V2 migration; no collection)
     g4d-legacy/-finalize/-run/-judge g4d_gate.*   runs/g4d_evidence (corrections, bounded collection, gate)
     g4b                 g4b.cmd_g4b                   runs/g4b_sampler_exact (exact sampler proof; no planner)
+    g4c-plan            g4c.cmd_g4c_plan              runs/g4c_preflight (frozen 20-root plan; no collection)
     replay              run.cmd_replay                any run directory
 
     python run.py scene --config config.toml --case G0_ILLUSTRATIVE --out runs/g0_scene
@@ -34,6 +35,7 @@ import figures as fig
 import g4d
 import g4d_gate
 import g4b
+import g4c
 import geometry as ge
 import intervention_figures as ifig
 import motion as mo
@@ -135,6 +137,11 @@ def main(argv=None) -> int:
     q = sub.add_parser("g4b", help="G4B: exact Boltzmann sampler certification on finite spaces (no planner calls)")
     q.add_argument("--out", required=True)
     q.set_defaults(func=g4b.cmd_g4b)
+    q = sub.add_parser("g4c-plan", help="G4C-P0: freeze the 20-root A/B/C development plan (no teacher/planner calls)")
+    q.add_argument("--config", default="config.toml")
+    q.add_argument("--config-v2", default="config_v2.toml")
+    q.add_argument("--out", required=True)
+    q.set_defaults(func=g4c.cmd_g4c_plan)
     q = sub.add_parser("replay", help="G1-G3.5: independently re-certify a run's stored trajectories")
     q.add_argument("--run", required=True)
     q.add_argument("--report", help="where to write the replay record (default: <run>/replay.json)")

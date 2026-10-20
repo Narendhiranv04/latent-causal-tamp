@@ -1,0 +1,80 @@
+{
+ "comparative_model_version": "2D-ABC-v1",
+ "dataset_version": "2D-ABC-v1",
+ "example_ordered_record": {
+  "J_first_label_mask": "NOT_RUN",
+  "bc_layout": {
+   "active": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "active_count": 8,
+   "inactive_value": 0,
+   "slots": [
+    "z0",
+    "zS[singleton:A]",
+    "zS[singleton:B]",
+    "zS[singleton:C]",
+    "zR",
+    "zO[0]",
+    "zO[1]",
+    "zO[2]"
+   ]
+  },
+  "ordered_feasibility_status": "NOT_RUN",
+  "ordered_signature": [
+   [
+    "o01",
+    7
+   ],
+   [
+    "o02",
+    39
+   ],
+   [
+    "o00",
+    38
+   ]
+  ],
+  "query_id": "seq:g4c_r14:...",
+  "root_id": "g4c_r14",
+  "static_status": "VALID"
+ },
+ "execution_protocol": "INITIAL_SCENE_ORDERED_ONE_SHOT_V2",
+ "full_bc_pool_rule": "a root's pool counts for the exact B/C joint loss only if every active slot of every pool sequence is decided; a partly masked pool trains single-outcome terms only",
+ "learner_allowlist": "data.learner_tensors_v2 fields (scene, robot q/g/attachment, profile, FK, masks, anchor)",
+ "privileged_namespace": [
+  "labels",
+  "outcomes",
+  "witnesses",
+  "certificates",
+  "trajectories",
+  "seeds",
+  "root_id"
+ ],
+ "record_fields": {
+  "J_first_label_mask": "first complete relocation witness exists (independent of target result); empty repair J=0",
+  "candidate_id": "per-object physical cell",
+  "certificate_scope": "ORDER|ASSIGNMENT",
+  "effect_decided_mask": "both sides decided and eligible",
+  "failure_provenance": "stop status, normalized reason (addendum A2), budget",
+  "omission_id": "omission_of:<sequence signature> (remaining order preserved)",
+  "ordered_feasibility_status": "VERIFIED_FEASIBLE|CERTIFIED_INFEASIBLE|UNRESOLVED",
+  "ordered_signature": "canonical [[object_id, cell], ...]",
+  "outcome_active_mask": "deterministic layout (z0, zS[catalogue], zR m>=1, zO[t] m>=2)",
+  "outcome_decided_mask": "active slot whose unit is POSITIVE or NEGATIVE",
+  "query_id": "unit id",
+  "root_id": "split metadata only (never a learner input)",
+  "scene_edit_id": "scene:<root>:<edit>",
+  "scene_pair_eligible_mask": "geometric fixed-robot eligibility (frozen in plan)",
+  "static_status": "VALID|INVALID|UNRESOLVED",
+  "target_status": "per target evaluation",
+  "witness_exists": "complete relocation + target + safe retreat"
+ }
+}
