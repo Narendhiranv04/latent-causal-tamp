@@ -15,6 +15,7 @@ with the module that owns that stage (moved here-from at G4A, behaviour unchange
     g4c-plan            g4c.cmd_g4c_plan              runs/g4c_preflight (frozen 20-root plan; no collection)
     g4c-pilot-*         g4c_pilot.*                   runs/g4c_pilot (authorized 5-root pilot: finalize, run, judge)
     g4c-d2-precheck     d2_precheck.run               runs/g4c_d2_precheck (witness-first static precheck; no teacher)
+    g4c-d2-poc-*        d2_poc.*                      runs/g4c_d2_poc_s (authorized POC_S: finalize, run, judge)
     replay              run.cmd_replay                any run directory
 
     python run.py scene --config config.toml --case G0_ILLUSTRATIVE --out runs/g0_scene
@@ -39,6 +40,7 @@ import g4d_gate
 import g4b
 import g4c
 import g4c_pilot
+import d2_poc
 import d2_precheck
 import geometry as ge
 import intervention_figures as ifig
@@ -159,6 +161,15 @@ def main(argv=None) -> int:
     q.add_argument("--config", default="config.toml")
     q.add_argument("--out", required=True)
     q.set_defaults(func=d2_precheck.run)
+    for name, fn, hlp in (("g4c-d2-poc-finalize", d2_poc.cmd_finalize, "G4C-D2-P1: authorization record + frozen POC_S plan"),
+                          ("g4c-d2-poc-run", d2_poc.cmd_run, "G4C-D2-P1: guarded collection (2 fresh bases + 68 units)"),
+                          ("g4c-d2-poc-judge", d2_poc.cmd_judge, "G4C-D2-P1: revalidated evidence, Q1-Q6, figures")):
+        q = sub.add_parser(name, help=hlp)
+        q.add_argument("--config", default="config.toml")
+        q.add_argument("--config-v2", default="config_v2.toml")
+        q.add_argument("--instruction", default="instruction-phase-md/G4C_D2_P1_Witness_First_POC_S_Instructions.md")
+        q.add_argument("--out", required=True)
+        q.set_defaults(func=fn)
     q = sub.add_parser("replay", help="G1-G3.5: independently re-certify a run's stored trajectories")
     q.add_argument("--run", required=True)
     q.add_argument("--report", help="where to write the replay record (default: <run>/replay.json)")

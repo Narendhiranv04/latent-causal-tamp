@@ -1,0 +1,200 @@
+{
+ "authorization_hash": "sha256:677e00891fc702f486bac895fae7ff7db6f667e3e5e9075578de3ca1356fbb8f",
+ "compute": {
+  "aggregate_cap_s": 18000,
+  "aggregate_cpu_s": 12666.05,
+  "calls": {
+   "caps": {
+    "relocation_skills": 46,
+    "target_evaluations": 70
+   },
+   "fresh_base_target_evaluations": 2,
+   "home_diagnostics": 32,
+   "ordered_relocation_skills": 39,
+   "ordered_target_evaluations": 42,
+   "relocation_skills": 39,
+   "robot_start_target_evaluations": 2,
+   "scene_target_evaluations": 15,
+   "target_evaluations": 61
+  },
+  "cancellations": 2,
+  "coordinator_cpu_s": 43.981,
+  "enforcement_failure": null,
+  "finished_utc": "2026-10-20T14:36:39Z",
+  "frozen_stops": {
+   "COMPLETED": 66,
+   "CPU_CENSORED": 2
+  },
+  "max_overshoot_s": 0,
+  "max_unit_cpu_s": 870.17,
+  "resumes": 0,
+  "started_utc": "2026-10-20T11:06:04Z",
+  "unit_cpu_quantiles_s": [
+   10.5,
+   727.86,
+   870.17
+  ],
+  "unit_cpu_s": 12622.07
+ },
+ "dataset_ready_claim": "NO (two-family development POC)",
+ "decision": "G4C_D2_P1_COLLECT_PARTIAL",
+ "integrity": {
+  "archived_witnesses_unchanged": true,
+  "authorization_unchanged": true,
+  "every_unit_has_evidence": true,
+  "historic_frozen_inputs_unchanged": true,
+  "no_contradiction": true,
+  "no_enforcement_failure": true,
+  "p0_artifacts_byte_identical": true,
+  "p0_manifest_unchanged": true,
+  "relocation_cap_respected": true,
+  "sources_unchanged": true,
+  "target_cap_respected": true,
+  "units_run_subset_of_plan": true
+ },
+ "judge_cpu_s": 8.18,
+ "judge_wall_s": 8.18,
+ "label_counts": {
+  "CERTIFIED_INFEASIBLE": 6,
+  "UNRESOLVED": 32,
+  "VERIFIED_FEASIBLE": 32
+ },
+ "labels_by_kind": {
+  "FRESH_BASE": {
+   "VERIFIED_FEASIBLE": 2
+  },
+  "ORDERED_TEACHER": {
+   "CERTIFIED_INFEASIBLE": 6,
+   "UNRESOLVED": 24,
+   "VERIFIED_FEASIBLE": 20
+  },
+  "ROBOT_START_TARGET_ONLY": {
+   "VERIFIED_FEASIBLE": 2
+  },
+  "SCENE_TARGET_ONLY": {
+   "UNRESOLVED": 8,
+   "VERIFIED_FEASIBLE": 8
+  }
+ },
+ "learned_components": "NONE",
+ "no_repair": {
+  "d2_fresh_2026102101": "POSITIVE",
+  "d2_fresh_2026102102": "POSITIVE",
+  "d2_g4c_r00_A": "UNKNOWN",
+  "d2_g4c_r00_AB": "UNKNOWN",
+  "d2_g4c_r00_AS": "UNKNOWN",
+  "d2_g4c_r00_G": "NEGATIVE",
+  "d2_g4c_r00_N": "POSITIVE",
+  "d2_g4c_r00_base": "POSITIVE",
+  "d2_g4d_R1_A": "UNKNOWN",
+  "d2_g4d_R1_AB": "UNKNOWN",
+  "d2_g4d_R1_AS": "UNKNOWN",
+  "d2_g4d_R1_G": "NEGATIVE",
+  "d2_g4d_R1_N": "POSITIVE",
+  "d2_g4d_R1_base": "POSITIVE"
+ },
+ "plan_hash": "sha256:6dcdd2669065ef5ba26f9e91cb5f81ce534a523c6ad417e3bec160adc2d819b2",
+ "questions": {
+  "Q1": "MET",
+  "Q1_evidence": {
+   "archived_replay": {
+    "g4c_r00": "BASE_WITNESS_REPLAYED",
+    "g4d_R1": "BASE_WITNESS_REPLAYED"
+   },
+   "base_variant_new_target_runs": {
+    "d2_g4c_r00_base": "POSITIVE",
+    "d2_g4d_R1_base": "POSITIVE"
+   },
+   "fresh_bases": {
+    "seq:d2_fresh_2026102101:empty": "VERIFIED_FEASIBLE",
+    "seq:d2_fresh_2026102102:empty": "VERIFIED_FEASIBLE"
+   },
+   "fresh_construction_ledger": [
+    {
+     "accepted": true,
+     "goal_cell": 52,
+     "seed": 2026102101,
+     "target_cell": 23
+    },
+    {
+     "accepted": true,
+     "goal_cell": 29,
+     "seed": 2026102102,
+     "target_cell": 57
+    }
+   ],
+   "independent_lineages": 2
+  },
+  "Q2": "TRIVIAL_ONLY",
+  "Q2_evidence": {
+   "seq:d2_g4c_r00_G:empty": "GOAL_OVERLAP",
+   "seq:d2_g4d_R1_G:empty": "GOAL_OVERLAP"
+  },
+  "Q3": "MET",
+  "Q3_evidence": {
+   "on_nontrivial_blocked_root": false,
+   "recovery_witnesses": {
+    "d2_g4c_r00_G": [
+     "o04>4"
+    ],
+    "d2_g4d_R1_G": [
+     "o04>61",
+     "o04>47"
+    ]
+   }
+  },
+  "Q4": "MET",
+  "Q4_evidence": {
+   "d2_g4c_r00_AS": {
+    "contrasts": [
+     {
+      "certificate": "ORDER_FIRST_ACTION",
+      "negative": "o04>49.o05>48",
+      "positive": "o05>48.o04>49"
+     }
+    ],
+    "variant": "+A+S"
+   },
+   "d2_g4d_R1_AS": {
+    "contrasts": [
+     {
+      "certificate": "ORDER_FIRST_ACTION",
+      "negative": "o04>41.o05>40",
+      "positive": "o05>40.o04>41"
+     }
+    ],
+    "variant": "+A+S"
+   }
+  },
+  "Q5": "MET",
+  "Q5_evidence": {
+   "substantive": [
+    "d2_g4c_r00_N",
+    "d2_g4d_R1_G",
+    "d2_g4d_R1_N"
+   ],
+   "trivial_complete": [
+    "d2_fresh_2026102101",
+    "d2_fresh_2026102102",
+    "d2_g4c_r00_base",
+    "d2_g4d_R1_base"
+   ]
+  },
+  "Q6": "MET",
+  "Q6_evidence": {
+   "archived_witnesses_unchanged": true,
+   "authorization_unchanged": true,
+   "every_unit_has_evidence": true,
+   "historic_frozen_inputs_unchanged": true,
+   "no_contradiction": true,
+   "no_enforcement_failure": true,
+   "p0_artifacts_byte_identical": true,
+   "p0_manifest_unchanged": true,
+   "relocation_cap_respected": true,
+   "sources_unchanged": true,
+   "target_cap_respected": true,
+   "units_run_subset_of_plan": true
+  }
+ },
+ "stage": "G4C_D2_P1_POC_S"
+}
