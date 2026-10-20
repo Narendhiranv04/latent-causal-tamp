@@ -1,0 +1,111 @@
+{
+ "bases": [
+  {
+   "archived_unit": "G4C-P1 seq:g4c_r00:empty",
+   "family": "g4c_r00",
+   "family_id": "sha256:f49a3c4dfa784ad864ad81fe17ac3873273a8365761ac6402d394cd3cd60d956",
+   "plan_file": "runs/g4c_pilot/pilot_plan.json",
+   "plan_file_sha256": "sha256:0f97f8de0af027f44157bf412dfd5f2b052c562ef9e266456f282bea4cc5d7f4",
+   "root_key": "g4c_r00",
+   "status": "ARCHIVED_EVIDENCE",
+   "witness_file": "runs/g4c_pilot/units/seq__g4c_r00__empty/target_witness.npz",
+   "witness_file_sha256": "sha256:c48506c71efe489df1e2da0a62d84785b14829226991d8465afc876174690139",
+   "witness_hash": "sha256:dfbe7c44ebb3e132d2d1a4829518bb53d027aca9f893f8e6c0eaecd1a1674b2d"
+  },
+  {
+   "archived_unit": "G4D seq:R0:empty",
+   "family": "g4d_R0",
+   "family_id": "sha256:ebfe7ec8d041a30d6f83ccc16edd60be8fbf36ae6aa5ea48a375283e8b89cdf0",
+   "plan_file": "runs/g4d_evidence/final_plan.json",
+   "plan_file_sha256": "sha256:8ae7ef7e1150fe1fad6c6ee77e6d40cb23a459c8e0ed72c66971819c24252d5e",
+   "root_key": "R0",
+   "status": "ARCHIVED_EVIDENCE",
+   "witness_file": "runs/g4d_evidence/units/seq__R0__empty/target_witness.npz",
+   "witness_file_sha256": "sha256:6ac632289330386501f01fd7deb936e0c713dfc5b4b68b39e9ec1e95894c4a6e",
+   "witness_hash": "sha256:50b9bed1d9f0b2a8096489c44b20f20289faa8dd705c237c1053d67b6a612184"
+  },
+  {
+   "archived_unit": "G4D seq:R1:empty",
+   "family": "g4d_R1",
+   "family_id": "sha256:ebfe7ec8d041a30d6f83ccc16edd60be8fbf36ae6aa5ea48a375283e8b89cdf0",
+   "plan_file": "runs/g4d_evidence/final_plan.json",
+   "plan_file_sha256": "sha256:8ae7ef7e1150fe1fad6c6ee77e6d40cb23a459c8e0ed72c66971819c24252d5e",
+   "root_key": "R1",
+   "status": "ARCHIVED_EVIDENCE",
+   "witness_file": "runs/g4d_evidence/units/seq__R1__empty/target_witness.npz",
+   "witness_file_sha256": "sha256:af7f6990a4ecabf7e3c24c2e5b7ab2c8dd42c04d7e93daf5c6e47038a7b1d6d1",
+   "witness_hash": "sha256:f13969d65af5df415af823d6b586f66a02677b2f65abb54704b78b2096605938"
+  }
+ ],
+ "frozen_inputs": {
+  "runs/g4c_pilot/authorization.json": "sha256:fce8a313c30927ad1fb49c6b5b33f17c8ad19fa1ddb26e31d19486d313a44954",
+  "runs/g4c_pilot/pilot_plan.json": "sha256:0f97f8de0af027f44157bf412dfd5f2b052c562ef9e266456f282bea4cc5d7f4",
+  "runs/g4c_pilot/pilot_result.json": "sha256:87a2c140270477a85510b0df85ab81783d356289d79aced0ef24ef7a53118820",
+  "runs/g4c_preflight/plan.json": "sha256:c6c8a0169a8274a031ecb42e00d666e260db458f800efcacd6af27a8469d5b95",
+  "runs/g4d_evidence/final_plan.json": "sha256:8ae7ef7e1150fe1fad6c6ee77e6d40cb23a459c8e0ed72c66971819c24252d5e",
+  "runs/g4d_evidence/result.json": "sha256:28e41532eb90b87d2ac5f9314e9f1ac00775fd76e9143d7b3892252214652529"
+ },
+ "git": {
+  "branch": "main",
+  "head": "68161515534000f0211c578e72911f78aa4b6fe0",
+  "untracked": [
+   "M run.py",
+   "?? d2.py",
+   "?? d2_precheck.py",
+   "?? instruction-phase-md/G4B_Exact_Boltzmann_Sampler_ABC_Instructions.md",
+   "?? instruction-phase-md/G4C_2D_ABC_Data_Readiness_PLAN_ONLY.md",
+   "?? instruction-phase-md/G4C_D2_P0_Witness_First_Precheck_Instructions.md",
+   "?? instruction-phase-md/G4C_P1_5Root_Pilot_Collection_Instructions.md",
+   "?? instruction-phase-md/G4D_corrections_and_bounded_collection_prompt.md",
+   "?? instruction-phase-md/latent_causal_tamp_implementation_guide_v1_8.pdf",
+   "?? instruction-phase-md/latent_causal_tamp_specification_v1_6.pdf",
+   "?? latent_causal_tamp_2D_ABC_guides_v1_7_v1_9.zip",
+   "?? latent_causal_tamp_2D_ABC_guides_v1_7_v1_9/",
+   "?? runs/g4c_d2_precheck/",
+   "?? tests/test_d2.py"
+  ]
+ },
+ "interface_map": {
+  "later_D2_P1_only": {
+   "base witness for a fresh scene": "evaluate.evaluate_target (SAFE_RETREAT) under teacher.guard",
+   "finalize/judge": "a D2 adapter analogous to g4c_pilot (not written)",
+   "labels": "g4d_run.run_collection/unit_evidence + g4c_pilot.adjudicate (reused, unchanged)"
+  },
+  "new_here": {
+   "d2.py": "static D2 construction + release semantics",
+   "d2_precheck.py": "artifacts"
+  },
+  "reused_unchanged": {
+   "data.learner_tensors_v2": "learner allowlist (leakage tests)",
+   "effects.pose_substitution": "fixed-robot eligibility + changed-field audit",
+   "effects.robot_start_substitution": "robot-start variants",
+   "g4c._dests / g4c.layout": "geometric destination rule; bounded B/C mask",
+   "geometry.Checker.status_at": "initial-robot clearance",
+   "motion.certify_trajectory": "conservative continuous replay of a recorded record (full body)",
+   "proposals.static_endpoints": "static endpoint screen",
+   "scene.Obj/replace": "clone + new obstacle",
+   "sequences.parse_sequence/omit/endpoint_distance": "canonical grammar, omission, C_d"
+  }
+ },
+ "missing_or_limited": [
+  "certify_trajectory reports the FIRST violating pair per segment, not every body pair (diagnostic lists first pairs)",
+  "no checker-accepted certificate kind for full-domain target/connector impossibility (e.g. q0 all-pairs-blocked)",
+  "no D2 finalize/judge adapter yet (would mirror g4c_pilot)"
+ ],
+ "sources": {
+  "config.py": "sha256:450ad85b4774aa33581aed6d7bb6b84ac153175ae7787fba94e252b765f8e456",
+  "config.toml": "sha256:56ede7f0ea1bd7b0e76e9b1bfd7d04f237e96f65276b79e498edce0b51b28d79",
+  "config_v2.toml": "sha256:5a0ccf825cb9fa749f0367477ca706889b1bdcbdf1b898d7abe02aaa99c6bdb7",
+  "d2.py": "sha256:7b8b617200b5b9161a316602481b423a9360e0ddfeae218edcde0a2ecdf21b20",
+  "d2_precheck.py": "sha256:907d8adc25d349a6ed53c831f421b0349c9202e10628bb89ef5bfa890e4a6cde",
+  "data.py": "sha256:e0eec7c3c3669a4b804474f68ed3bd3d13f661145cd25d7dbb43502c68d981ea",
+  "effects.py": "sha256:244ea78a2dec6de110764158c04d29d1c436a770012069b5e8ccfa40b11136ed",
+  "g4c.py": "sha256:56e90d55a9ed29d96144c2da006113df343918bd56e54d1be51c064e824f9961",
+  "geometry.py": "sha256:3db5ad2cee5dc506c6d3315c6a099c755897b2b07a4a432c7d309e642eab3917",
+  "motion.py": "sha256:f2052d6049e288036122f0a31bc70791d9da6824b59036866ad411b215dd9678",
+  "proposals.py": "sha256:75e8afc185f4b1a5a2a102288d78ad4a45d7bb0217a2eadb2cf090ac2ba27da0",
+  "scene.py": "sha256:befae9f1d724120bc070a74b5145443af17b0a6ba592e460b1ce02a5872c807c",
+  "sequences.py": "sha256:9e9d3570ed7ad1d13bf7edff943d266a703654a6034f99bccb9ed3d60c0bfc6c",
+  "tests/test_d2.py": "sha256:727a7053224404b5eb6a566768a41f70fe42ac073cf8c074b1a67713f7f38428"
+ }
+}

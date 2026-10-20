@@ -1,0 +1,96 @@
+{
+ "POC_F": {
+  "estimate_cpu_s": {
+   "central": 1114,
+   "high": 40911,
+   "low": 262
+  },
+  "families": [
+   "g4c_r00",
+   "g4d_R0",
+   "g4d_R1"
+  ],
+  "fresh_base_attempts": 4,
+  "planned_units": {
+   "ordered_teacher": 147,
+   "relocation_skills_max": 168,
+   "robot_start": 2,
+   "scene_target_only": 45,
+   "total_units": 194
+  },
+  "requested": {
+   "aggregate_cpu_s": 50400,
+   "aggregate_wall_guard_s": 61200,
+   "cancellation_margin_s": 30,
+   "max_motion_nodes": 4000,
+   "max_root_construction_attempts": 4,
+   "per_teacher_unit_cpu_s": 900,
+   "relocation_skill_attempt_cap": 168,
+   "target_eval_attempt_cap": 198,
+   "unit_wall_guard_s": 1800,
+   "workers": 1
+  },
+  "variants": [
+   "+A",
+   "+A+B",
+   "+A+B+C",
+   "+A+N",
+   "+A+S",
+   "+B",
+   "+G",
+   "+N",
+   "base"
+  ]
+ },
+ "POC_S": {
+  "estimate_cpu_s": {
+   "central": 391,
+   "high": 14340,
+   "low": 92
+  },
+  "families": [
+   "g4c_r00",
+   "g4d_R1"
+  ],
+  "fresh_base_attempts": 2,
+  "planned_units": {
+   "ordered_teacher": 50,
+   "relocation_skills_max": 46,
+   "robot_start": 2,
+   "scene_target_only": 16,
+   "total_units": 68
+  },
+  "requested": {
+   "aggregate_cpu_s": 18000,
+   "aggregate_wall_guard_s": 23400,
+   "cancellation_margin_s": 30,
+   "max_motion_nodes": 4000,
+   "max_root_construction_attempts": 2,
+   "per_teacher_unit_cpu_s": 900,
+   "relocation_skill_attempt_cap": 46,
+   "target_eval_attempt_cap": 70,
+   "unit_wall_guard_s": 1800,
+   "workers": 1
+  },
+  "variants": [
+   "+A",
+   "+A+B",
+   "+A+S",
+   "+G",
+   "+N",
+   "base"
+  ]
+ },
+ "basis": {
+  "g4c_p1_unit_cpu_s": {
+   "max": 105.61,
+   "mean": 5.74,
+   "median": 1.35,
+   "n": 59
+  },
+  "slow_target_share_proxy": 0.121
+ },
+ "fresh_bases": "optional new S_base scenes (G4C geometric construction rule) whose target witness is planned fresh: one target evaluation each; a failed base is recorded, never replaced beyond the attempt cap",
+ "rule": "high = 12.1% of units at the 870 s cancel + every other unit at the pilot maximum; aggregate = 1.1 x high + fresh-base attempts at 900 s, rounded up to 30 CPU-min; wall = 1.25 x aggregate; STOP after the POC",
+ "status": "REQUESTED_NOT_AUTHORIZED"
+}

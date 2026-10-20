@@ -1,0 +1,218 @@
+{
+ "families": {
+  "D2-F0": {
+   "claim_requires": "both original/edit target successes, delta 0",
+   "label_outcomes": "NOT_RUN",
+   "statically_eligible": {
+    "g4c_r00": [
+     "base",
+     "+N"
+    ],
+    "g4d_R0": [
+     "base",
+     "+N"
+    ],
+    "g4d_R1": [
+     "base",
+     "+N"
+    ]
+   }
+  },
+  "D2-F1": {
+   "claim_requires": "whether ANY alternative target trajectory succeeds",
+   "label_outcomes": "NOT_RUN",
+   "statically_eligible": {
+    "g4c_r00": [
+     "+A",
+     "+B"
+    ],
+    "g4d_R0": [
+     "+A",
+     "+B"
+    ],
+    "g4d_R1": [
+     "+A",
+     "+B"
+    ]
+   }
+  },
+  "D2-F2": {
+   "claim_requires": "certified no-repair NEG + alternative successful destinations",
+   "label_outcomes": "NOT_RUN",
+   "statically_eligible": {
+    "g4c_r00": [
+     "+G"
+    ],
+    "g4d_R0": [
+     "+G"
+    ],
+    "g4d_R1": [
+     "+G"
+    ]
+   }
+  },
+  "D2-F3": {
+   "claim_requires": "same endpoints, opposite orders decided",
+   "label_outcomes": "NOT_RUN",
+   "statically_eligible": {
+    "g4c_r00": [
+     "+A+B"
+    ],
+    "g4d_R0": [
+     "+A+B"
+    ],
+    "g4d_R1": [
+     "+A+B"
+    ]
+   }
+  },
+  "D2-F4": {
+   "claim_requires": "PLACE-scope order NEG vs witnessed reversed order",
+   "label_outcomes": "NOT_RUN",
+   "statically_eligible": {
+    "g4c_r00": [
+     "+A+S"
+    ],
+    "g4d_R0": [
+     "+A+S"
+    ],
+    "g4d_R1": [
+     "+A+S"
+    ]
+   }
+  },
+  "D2-F5": {
+   "claim_requires": "four decided S/A/B/A+B target-only outcomes",
+   "label_outcomes": "NOT_RUN",
+   "statically_eligible": {
+    "g4c_r00": [
+     "+A+B"
+    ],
+    "g4d_R0": [
+     "+A+B"
+    ],
+    "g4d_R1": [
+     "+A+B"
+    ]
+   }
+  },
+  "D2-F6": {
+   "claim_requires": "POS<->NEG when sound, POS<->POS nuisance",
+   "label_outcomes": "NOT_RUN",
+   "statically_eligible": {
+    "g4c_r00": [
+     "+N",
+     "+A+N"
+    ],
+    "g4d_R0": [
+     "+N",
+     "+A+N"
+    ],
+    "g4d_R1": [
+     "+N",
+     "+A+N"
+    ]
+   }
+  },
+  "D2-F7": {
+   "claim_requires": "multiple complete successful repairs; J vs C_d",
+   "label_outcomes": "NOT_RUN",
+   "statically_eligible": {
+    "g4c_r00": [
+     "+A",
+     "+G"
+    ],
+    "g4d_R0": [
+     "+A",
+     "+G"
+    ],
+    "g4d_R1": [
+     "+A",
+     "+G"
+    ]
+   }
+  },
+  "D2-F8": {
+   "claim_requires": "q-continuity across 3 moves, omissions, safe retreat",
+   "label_outcomes": "NOT_RUN",
+   "statically_eligible": {
+    "g4c_r00": [
+     "+A+B+C"
+    ],
+    "g4d_R0": [
+     "+A+B+C"
+    ],
+    "g4d_R1": [
+     "+A+B+C"
+    ]
+   }
+  },
+  "D2-F9": {
+   "claim_requires": "decided outcomes at each valid start",
+   "label_outcomes": "NOT_RUN",
+   "statically_eligible": {
+    "g4c_r00": [
+     "base"
+    ],
+    "g4d_R0": [
+     "base"
+    ],
+    "g4d_R1": [
+     "base"
+    ]
+   }
+  }
+ },
+ "pilot_unknowns": {
+  "class": {
+   "scene:g4c_r08:o00>47": "SEARCH_INCOMPLETENESS (cannot be avoided without hindsight; D2 release policy excludes the whole pool)",
+   "scene:g4c_r08:o00>47.o01>46": "SEARCH_INCOMPLETENESS (cannot be avoided without hindsight; D2 release policy excludes the whole pool)",
+   "scene:g4c_r19:o00>9": "NEEDS_NEW_SOUND_CERTIFICATE_KIND (q0 all-pairs-blocked connector verdict has no checker)",
+   "seq:g4c_r08:o00>15": "NEEDS_NEW_SOUND_CERTIFICATE_KIND (q0 all-pairs-blocked connector verdict has no checker)",
+   "seq:g4c_r08:o00>47": "NEEDS_NEW_SOUND_CERTIFICATE_KIND (q0 all-pairs-blocked connector verdict has no checker)",
+   "seq:g4c_r08:o00>47.o01>46": "NEEDS_NEW_SOUND_CERTIFICATE_KIND (q0 all-pairs-blocked connector verdict has no checker)",
+   "seq:g4c_r08:o01>46.o00>47": "SEARCH_INCOMPLETENESS (cannot be avoided without hindsight; D2 release policy excludes the whole pool)",
+   "seq:g4c_r14:o00>38.o01>7": "SEARCH_INCOMPLETENESS (cannot be avoided without hindsight; D2 release policy excludes the whole pool)",
+   "seq:g4c_r14:o00>38.o01>7.o02>39": "SEARCH_INCOMPLETENESS (cannot be avoided without hindsight; D2 release policy excludes the whole pool)",
+   "seq:g4c_r14:o00>38.o02>39": "SEARCH_INCOMPLETENESS (cannot be avoided without hindsight; D2 release policy excludes the whole pool)",
+   "seq:g4c_r14:o00>6": "SEARCH_INCOMPLETENESS (cannot be avoided without hindsight; D2 release policy excludes the whole pool)",
+   "seq:g4c_r14:o01>7.o00>38": "SEARCH_INCOMPLETENESS (cannot be avoided without hindsight; D2 release policy excludes the whole pool)",
+   "seq:g4c_r14:o01>7.o02>39.o00>38": "SEARCH_INCOMPLETENESS (cannot be avoided without hindsight; D2 release policy excludes the whole pool)",
+   "seq:g4c_r14:o02>39.o00>38": "NEEDS_NEW_SOUND_CERTIFICATE_KIND (q0 all-pairs-blocked connector verdict has no checker)",
+   "seq:g4c_r14:o02>39.o01>7.o00>38": "NEEDS_NEW_SOUND_CERTIFICATE_KIND (q0 all-pairs-blocked connector verdict has no checker)",
+   "seq:g4c_r19:o00>27": "NEEDS_NEW_SOUND_CERTIFICATE_KIND (q0 all-pairs-blocked connector verdict has no checker)",
+   "seq:g4c_r19:o00>27.o01>28": "NEEDS_NEW_SOUND_CERTIFICATE_KIND (q0 all-pairs-blocked connector verdict has no checker)",
+   "seq:g4c_r19:o00>9": "SEARCH_INCOMPLETENESS (cannot be avoided without hindsight; D2 release policy excludes the whole pool)",
+   "seq:g4c_r19:o00>9.o01>27": "SEARCH_INCOMPLETENESS (cannot be avoided without hindsight; D2 release policy excludes the whole pool)",
+   "seq:g4c_r19:o00>9.o01>28": "SEARCH_INCOMPLETENESS (cannot be avoided without hindsight; D2 release policy excludes the whole pool)"
+  },
+  "counts": {
+   "NEEDS_NEW_SOUND_CERTIFICATE_KIND (q0 all-pairs-blocked connector verdict has no checker)": 8,
+   "SEARCH_INCOMPLETENESS (cannot be avoided without hindsight; D2 release policy excludes the whole pool)": 12
+  },
+  "relabelled": 0,
+  "rerun": 0,
+  "units": {
+   "scene:g4c_r08:o00>47": "target UNRESOLVED: SCHEDULE_COMPLETED_NO_WITNESS_UNCERTIFIED_REJECTIONS",
+   "scene:g4c_r08:o00>47.o01>46": "target UNRESOLVED: SCHEDULE_COMPLETED_NO_WITNESS_UNCERTIFIED_REJECTIONS",
+   "scene:g4c_r19:o00>9": "target CERTIFIED_INFEASIBLE: SCHEDULE_COMPLETED_ALL_PAIRS_CERTIFIED_BLOCKED",
+   "seq:g4c_r08:o00>15": "relocation ACTION_0_UNRESOLVED: SCHEDULE_COMPLETED_ALL_PAIRS_CERTIFIED_BLOCKED",
+   "seq:g4c_r08:o00>47": "relocation ACTION_0_UNRESOLVED: SCHEDULE_COMPLETED_ALL_PAIRS_CERTIFIED_BLOCKED",
+   "seq:g4c_r08:o00>47.o01>46": "relocation ACTION_0_UNRESOLVED: SCHEDULE_COMPLETED_ALL_PAIRS_CERTIFIED_BLOCKED",
+   "seq:g4c_r08:o01>46.o00>47": "relocation ACTION_0_UNRESOLVED: SCHEDULE_COMPLETED_NO_WITNESS_UNCERTIFIED_REJECTIONS",
+   "seq:g4c_r14:o00>38.o01>7": "relocation ACTION_1_UNRESOLVED: WITNESS,SCHEDULE_COMPLETED_NO_WITNESS_UNCERTIFIED_REJECTIONS",
+   "seq:g4c_r14:o00>38.o01>7.o02>39": "relocation ACTION_1_UNRESOLVED: WITNESS,SCHEDULE_COMPLETED_NO_WITNESS_UNCERTIFIED_REJECTIONS",
+   "seq:g4c_r14:o00>38.o02>39": "relocation ACTION_1_UNRESOLVED: WITNESS,SCHEDULE_COMPLETED_NO_WITNESS_UNCERTIFIED_REJECTIONS",
+   "seq:g4c_r14:o00>6": "relocation ACTION_0_UNRESOLVED: SCHEDULE_COMPLETED_NO_WITNESS_UNCERTIFIED_REJECTIONS",
+   "seq:g4c_r14:o01>7.o00>38": "relocation ACTION_0_UNRESOLVED: SCHEDULE_COMPLETED_NO_WITNESS_UNCERTIFIED_REJECTIONS",
+   "seq:g4c_r14:o01>7.o02>39.o00>38": "relocation ACTION_0_UNRESOLVED: SCHEDULE_COMPLETED_NO_WITNESS_UNCERTIFIED_REJECTIONS",
+   "seq:g4c_r14:o02>39.o00>38": "relocation ACTION_0_UNRESOLVED: SCHEDULE_COMPLETED_ALL_PAIRS_CERTIFIED_BLOCKED",
+   "seq:g4c_r14:o02>39.o01>7.o00>38": "relocation ACTION_0_UNRESOLVED: SCHEDULE_COMPLETED_ALL_PAIRS_CERTIFIED_BLOCKED",
+   "seq:g4c_r19:o00>27": "relocation ACTION_0_UNRESOLVED: SCHEDULE_COMPLETED_ALL_PAIRS_CERTIFIED_BLOCKED",
+   "seq:g4c_r19:o00>27.o01>28": "relocation ACTION_0_UNRESOLVED: SCHEDULE_COMPLETED_ALL_PAIRS_CERTIFIED_BLOCKED",
+   "seq:g4c_r19:o00>9": "relocation ACTION_0_UNRESOLVED: SCHEDULE_COMPLETED_NO_WITNESS_UNCERTIFIED_REJECTIONS",
+   "seq:g4c_r19:o00>9.o01>27": "relocation ACTION_0_UNRESOLVED: SCHEDULE_COMPLETED_NO_WITNESS_UNCERTIFIED_REJECTIONS",
+   "seq:g4c_r19:o00>9.o01>28": "relocation ACTION_0_UNRESOLVED: SCHEDULE_COMPLETED_NO_WITNESS_UNCERTIFIED_REJECTIONS"
+  }
+ }
+}

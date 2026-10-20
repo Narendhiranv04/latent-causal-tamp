@@ -1,0 +1,9995 @@
+{
+ "replays": {
+  "g4c_r00": {
+   "checks": {
+    "all_segments_clear": true,
+    "attached_only_in_carry": true,
+    "ends_in_safe_retreat": true,
+    "goal_within_tolerance": true,
+    "starts_at_q0": true
+   },
+   "segments": 97,
+   "status": "BASE_WITNESS_REPLAYED"
+  },
+  "g4d_R0": {
+   "checks": {
+    "all_segments_clear": true,
+    "attached_only_in_carry": true,
+    "ends_in_safe_retreat": true,
+    "goal_within_tolerance": true,
+    "starts_at_q0": true
+   },
+   "segments": 208,
+   "status": "BASE_WITNESS_REPLAYED"
+  },
+  "g4d_R1": {
+   "checks": {
+    "all_segments_clear": true,
+    "attached_only_in_carry": true,
+    "ends_in_safe_retreat": true,
+    "goal_within_tolerance": true,
+    "starts_at_q0": true
+   },
+   "segments": 29,
+   "status": "BASE_WITNESS_REPLAYED"
+  }
+ },
+ "splits": {
+  "g4c_r00": "validation",
+  "g4d_R0": "train",
+  "g4d_R1": "train"
+ },
+ "variants": {
+  "g4c_r00": [
+   {
+    "added": {},
+    "family_id": "sha256:f49a3c4dfa784ad864ad81fe17ac3873273a8365761ac6402d394cd3cd60d956",
+    "goal_cell": 20,
+    "nominal": {
+     "blocks_nominal_witness": "NO",
+     "collision_segments": [],
+     "first_interruption": null,
+     "scope": "the single recorded witness path only; not a task-feasibility label",
+     "segments": 97,
+     "target_task_status": "NOT_RUN",
+     "unresolved_segments": []
+    },
+    "q0_clear": true,
+    "scene": {
+     "action_hash": null,
+     "domain_policy": "ALL_SUPPORTED",
+     "lattice": {
+      "cols": 8,
+      "pitch_m": 0.08,
+      "rows": 8
+     },
+     "legal_cells": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+     ],
+     "objects": [
+      {
+       "cell": 47,
+       "id": "o00",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.6,
+        0.44
+       ]
+      },
+      {
+       "cell": 60,
+       "id": "o01",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.36,
+        0.6
+       ]
+      },
+      {
+       "cell": 3,
+       "id": "o02",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.28,
+        0.04
+       ]
+      },
+      {
+       "cell": 59,
+       "id": "o03",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.28,
+        0.6
+       ]
+      },
+      {
+       "cell": 45,
+       "id": "t0",
+       "kind": "target",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.44,
+        0.44
+       ]
+      }
+     ],
+     "robot": {
+      "attached_id": null,
+      "attachment": "free",
+      "gripper_gap_m": 0.07,
+      "q_rad": [
+       1.5707963267948966,
+       1.5707963267948966,
+       1.5707963267948966
+      ]
+     },
+     "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+     "root_id": "g4c_2026102001",
+     "variant_id": "initial"
+    },
+    "scene_hash": "sha256:7293486192f61a4d89baccead6336a52a40e9dfebedfdc6f1d60b1fece7ae3d9",
+    "status": "PRECHECK_STATIC",
+    "target_task_status": "NOT_RUN",
+    "variant": "base"
+   },
+   {
+    "added": {
+     "A": {
+      "cell": 57,
+      "id": "o04",
+      "role": "grasp_access_blocker"
+     }
+    },
+    "family_id": "sha256:f49a3c4dfa784ad864ad81fe17ac3873273a8365761ac6402d394cd3cd60d956",
+    "goal_cell": 20,
+    "nominal": {
+     "blocks_nominal_witness": "YES",
+     "collision_segments": [
+      {
+       "pair": "palm|o04",
+       "phase": "pregrasp",
+       "s": 1.0,
+       "segment": 0
+      },
+      {
+       "pair": "palm|o04",
+       "phase": "pregrasp",
+       "s": 0.0,
+       "segment": 1
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "pregrasp",
+       "s": 0.0,
+       "segment": 2
+      },
+      {
+       "pair": "link0|o04",
+       "phase": "pregrasp",
+       "s": 0.0,
+       "segment": 3
+      }
+     ],
+     "first_interruption": {
+      "pair": "palm|o04",
+      "phase": "pregrasp",
+      "s": 1.0,
+      "segment": 0
+     },
+     "scope": "the single recorded witness path only; not a task-feasibility label",
+     "segments": 97,
+     "target_task_status": "NOT_RUN",
+     "unresolved_segments": []
+    },
+    "q0_clear": true,
+    "scene": {
+     "action_hash": null,
+     "domain_policy": "ALL_SUPPORTED",
+     "lattice": {
+      "cols": 8,
+      "pitch_m": 0.08,
+      "rows": 8
+     },
+     "legal_cells": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+     ],
+     "objects": [
+      {
+       "cell": 47,
+       "id": "o00",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.6,
+        0.44
+       ]
+      },
+      {
+       "cell": 60,
+       "id": "o01",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.36,
+        0.6
+       ]
+      },
+      {
+       "cell": 3,
+       "id": "o02",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.28,
+        0.04
+       ]
+      },
+      {
+       "cell": 59,
+       "id": "o03",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.28,
+        0.6
+       ]
+      },
+      {
+       "cell": 57,
+       "id": "o04",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.12,
+        0.6
+       ]
+      },
+      {
+       "cell": 45,
+       "id": "t0",
+       "kind": "target",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.44,
+        0.44
+       ]
+      }
+     ],
+     "robot": {
+      "attached_id": null,
+      "attachment": "free",
+      "gripper_gap_m": 0.07,
+      "q_rad": [
+       1.5707963267948966,
+       1.5707963267948966,
+       1.5707963267948966
+      ]
+     },
+     "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+     "root_id": "g4c_2026102001",
+     "variant_id": "initial"
+    },
+    "scene_hash": "sha256:693e5d731679c0fa79b040a0bf97f3ca113f85433cee64beae871b951a8292aa",
+    "status": "PRECHECK_STATIC",
+    "target_task_status": "NOT_RUN",
+    "variant": "+A"
+   },
+   {
+    "added": {
+     "B": {
+      "cell": 42,
+      "id": "o04",
+      "role": "arm_link_sweep_blocker"
+     }
+    },
+    "family_id": "sha256:f49a3c4dfa784ad864ad81fe17ac3873273a8365761ac6402d394cd3cd60d956",
+    "goal_cell": 20,
+    "nominal": {
+     "blocks_nominal_witness": "YES",
+     "collision_segments": [
+      {
+       "pair": "link2|o04",
+       "phase": "pregrasp",
+       "s": 1.0,
+       "segment": 1
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "pregrasp",
+       "s": 0.0,
+       "segment": 2
+      },
+      {
+       "pair": "link0|o04",
+       "phase": "pregrasp",
+       "s": 0.25,
+       "segment": 4
+      }
+     ],
+     "first_interruption": {
+      "pair": "link2|o04",
+      "phase": "pregrasp",
+      "s": 1.0,
+      "segment": 1
+     },
+     "scope": "the single recorded witness path only; not a task-feasibility label",
+     "segments": 97,
+     "target_task_status": "NOT_RUN",
+     "unresolved_segments": []
+    },
+    "q0_clear": true,
+    "scene": {
+     "action_hash": null,
+     "domain_policy": "ALL_SUPPORTED",
+     "lattice": {
+      "cols": 8,
+      "pitch_m": 0.08,
+      "rows": 8
+     },
+     "legal_cells": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+     ],
+     "objects": [
+      {
+       "cell": 47,
+       "id": "o00",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.6,
+        0.44
+       ]
+      },
+      {
+       "cell": 60,
+       "id": "o01",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.36,
+        0.6
+       ]
+      },
+      {
+       "cell": 3,
+       "id": "o02",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.28,
+        0.04
+       ]
+      },
+      {
+       "cell": 59,
+       "id": "o03",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.28,
+        0.6
+       ]
+      },
+      {
+       "cell": 42,
+       "id": "o04",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.2,
+        0.44
+       ]
+      },
+      {
+       "cell": 45,
+       "id": "t0",
+       "kind": "target",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.44,
+        0.44
+       ]
+      }
+     ],
+     "robot": {
+      "attached_id": null,
+      "attachment": "free",
+      "gripper_gap_m": 0.07,
+      "q_rad": [
+       1.5707963267948966,
+       1.5707963267948966,
+       1.5707963267948966
+      ]
+     },
+     "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+     "root_id": "g4c_2026102001",
+     "variant_id": "initial"
+    },
+    "scene_hash": "sha256:fddcb26dc0edd238bed8d1847604c12ef1a324ca621315bbf3c3da380b612bc6",
+    "status": "PRECHECK_STATIC",
+    "target_task_status": "NOT_RUN",
+    "variant": "+B"
+   },
+   {
+    "added": {
+     "A": {
+      "cell": 57,
+      "id": "o04",
+      "role": "grasp_access_blocker"
+     },
+     "B": {
+      "cell": 42,
+      "id": "o05",
+      "role": "arm_link_sweep_blocker"
+     }
+    },
+    "family_id": "sha256:f49a3c4dfa784ad864ad81fe17ac3873273a8365761ac6402d394cd3cd60d956",
+    "goal_cell": 20,
+    "nominal": {
+     "blocks_nominal_witness": "YES",
+     "collision_segments": [
+      {
+       "pair": "palm|o04",
+       "phase": "pregrasp",
+       "s": 1.0,
+       "segment": 0
+      },
+      {
+       "pair": "palm|o04",
+       "phase": "pregrasp",
+       "s": 0.0,
+       "segment": 1
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "pregrasp",
+       "s": 0.0,
+       "segment": 2
+      },
+      {
+       "pair": "link0|o04",
+       "phase": "pregrasp",
+       "s": 0.0,
+       "segment": 3
+      },
+      {
+       "pair": "link0|o05",
+       "phase": "pregrasp",
+       "s": 0.25,
+       "segment": 4
+      }
+     ],
+     "first_interruption": {
+      "pair": "palm|o04",
+      "phase": "pregrasp",
+      "s": 1.0,
+      "segment": 0
+     },
+     "scope": "the single recorded witness path only; not a task-feasibility label",
+     "segments": 97,
+     "target_task_status": "NOT_RUN",
+     "unresolved_segments": []
+    },
+    "q0_clear": true,
+    "scene": {
+     "action_hash": null,
+     "domain_policy": "ALL_SUPPORTED",
+     "lattice": {
+      "cols": 8,
+      "pitch_m": 0.08,
+      "rows": 8
+     },
+     "legal_cells": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+     ],
+     "objects": [
+      {
+       "cell": 47,
+       "id": "o00",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.6,
+        0.44
+       ]
+      },
+      {
+       "cell": 60,
+       "id": "o01",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.36,
+        0.6
+       ]
+      },
+      {
+       "cell": 3,
+       "id": "o02",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.28,
+        0.04
+       ]
+      },
+      {
+       "cell": 59,
+       "id": "o03",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.28,
+        0.6
+       ]
+      },
+      {
+       "cell": 57,
+       "id": "o04",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.12,
+        0.6
+       ]
+      },
+      {
+       "cell": 42,
+       "id": "o05",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.2,
+        0.44
+       ]
+      },
+      {
+       "cell": 45,
+       "id": "t0",
+       "kind": "target",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.44,
+        0.44
+       ]
+      }
+     ],
+     "robot": {
+      "attached_id": null,
+      "attachment": "free",
+      "gripper_gap_m": 0.07,
+      "q_rad": [
+       1.5707963267948966,
+       1.5707963267948966,
+       1.5707963267948966
+      ]
+     },
+     "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+     "root_id": "g4c_2026102001",
+     "variant_id": "initial"
+    },
+    "scene_hash": "sha256:e682777756c76643cde07985cc6c743934264fed5d97a9f12d8de938ae7a5238",
+    "status": "PRECHECK_STATIC",
+    "target_task_status": "NOT_RUN",
+    "variant": "+A+B"
+   },
+   {
+    "added": {
+     "A": {
+      "cell": 57,
+      "id": "o04",
+      "role": "grasp_access_blocker"
+     },
+     "B": {
+      "cell": 42,
+      "id": "o05",
+      "role": "arm_link_sweep_blocker"
+     },
+     "C": {
+      "cell": 21,
+      "id": "o06",
+      "role": "grasp_access_blocker"
+     }
+    },
+    "family_id": "sha256:f49a3c4dfa784ad864ad81fe17ac3873273a8365761ac6402d394cd3cd60d956",
+    "goal_cell": 20,
+    "nominal": {
+     "blocks_nominal_witness": "YES",
+     "collision_segments": [
+      {
+       "pair": "palm|o04",
+       "phase": "pregrasp",
+       "s": 1.0,
+       "segment": 0
+      },
+      {
+       "pair": "palm|o04",
+       "phase": "pregrasp",
+       "s": 0.0,
+       "segment": 1
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "pregrasp",
+       "s": 0.0,
+       "segment": 2
+      },
+      {
+       "pair": "link0|o04",
+       "phase": "pregrasp",
+       "s": 0.0,
+       "segment": 3
+      },
+      {
+       "pair": "link0|o05",
+       "phase": "pregrasp",
+       "s": 0.25,
+       "segment": 4
+      },
+      {
+       "pair": "link1|o06",
+       "phase": "pregrasp",
+       "s": 1.0,
+       "segment": 5
+      },
+      {
+       "pair": "link1|o06",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 6
+      },
+      {
+       "pair": "link1|o06",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 7
+      },
+      {
+       "pair": "link1|o06",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 8
+      },
+      {
+       "pair": "link1|o06",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 9
+      },
+      {
+       "pair": "link1|o06",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 10
+      },
+      {
+       "pair": "link1|o06",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 11
+      },
+      {
+       "pair": "link1|o06",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 12
+      },
+      {
+       "pair": "link1|o06",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 13
+      },
+      {
+       "pair": "link1|o06",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 14
+      },
+      {
+       "pair": "link1|o06",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 15
+      },
+      {
+       "pair": "link1|o06",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 16
+      },
+      {
+       "pair": "link1|o06",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 17
+      },
+      {
+       "pair": "link1|o06",
+       "phase": "close_attach",
+       "s": 0.0,
+       "segment": 18
+      },
+      {
+       "pair": "link1|o06",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 19
+      },
+      {
+       "pair": "link1|o06",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 20
+      },
+      {
+       "pair": "link1|o06",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 21
+      },
+      {
+       "pair": "link1|o06",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 22
+      },
+      {
+       "pair": "link1|o06",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 23
+      },
+      {
+       "pair": "link1|o06",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 24
+      },
+      {
+       "pair": "link1|o06",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 25
+      },
+      {
+       "pair": "link1|o06",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 26
+      },
+      {
+       "pair": "link1|o06",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 27
+      },
+      {
+       "pair": "link1|o06",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 28
+      },
+      {
+       "pair": "link1|o06",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 29
+      },
+      {
+       "pair": "link1|o06",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 30
+      },
+      {
+       "pair": "link2|o06",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 31
+      },
+      {
+       "pair": "link2|o06",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 32
+      },
+      {
+       "pair": "link2|o06",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 33
+      },
+      {
+       "pair": "link2|o06",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 34
+      },
+      {
+       "pair": "link2|o06",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 35
+      },
+      {
+       "pair": "link2|o06",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 36
+      },
+      {
+       "pair": "link2|o06",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 37
+      }
+     ],
+     "first_interruption": {
+      "pair": "palm|o04",
+      "phase": "pregrasp",
+      "s": 1.0,
+      "segment": 0
+     },
+     "scope": "the single recorded witness path only; not a task-feasibility label",
+     "segments": 97,
+     "target_task_status": "NOT_RUN",
+     "unresolved_segments": []
+    },
+    "q0_clear": true,
+    "scene": {
+     "action_hash": null,
+     "domain_policy": "ALL_SUPPORTED",
+     "lattice": {
+      "cols": 8,
+      "pitch_m": 0.08,
+      "rows": 8
+     },
+     "legal_cells": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+     ],
+     "objects": [
+      {
+       "cell": 47,
+       "id": "o00",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.6,
+        0.44
+       ]
+      },
+      {
+       "cell": 60,
+       "id": "o01",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.36,
+        0.6
+       ]
+      },
+      {
+       "cell": 3,
+       "id": "o02",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.28,
+        0.04
+       ]
+      },
+      {
+       "cell": 59,
+       "id": "o03",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.28,
+        0.6
+       ]
+      },
+      {
+       "cell": 57,
+       "id": "o04",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.12,
+        0.6
+       ]
+      },
+      {
+       "cell": 42,
+       "id": "o05",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.2,
+        0.44
+       ]
+      },
+      {
+       "cell": 21,
+       "id": "o06",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.44,
+        0.2
+       ]
+      },
+      {
+       "cell": 45,
+       "id": "t0",
+       "kind": "target",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.44,
+        0.44
+       ]
+      }
+     ],
+     "robot": {
+      "attached_id": null,
+      "attachment": "free",
+      "gripper_gap_m": 0.07,
+      "q_rad": [
+       1.5707963267948966,
+       1.5707963267948966,
+       1.5707963267948966
+      ]
+     },
+     "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+     "root_id": "g4c_2026102001",
+     "variant_id": "initial"
+    },
+    "scene_hash": "sha256:190c8f86e9793605d8b45415279c46950c3fc7bfe2fe73b3618e63c41e2caee8",
+    "status": "PRECHECK_STATIC",
+    "target_task_status": "NOT_RUN",
+    "variant": "+A+B+C"
+   },
+   {
+    "added": {
+     "N": {
+      "cell": 55,
+      "id": "o04",
+      "role": "harmless_nearby"
+     }
+    },
+    "family_id": "sha256:f49a3c4dfa784ad864ad81fe17ac3873273a8365761ac6402d394cd3cd60d956",
+    "goal_cell": 20,
+    "nominal": {
+     "blocks_nominal_witness": "NO",
+     "collision_segments": [],
+     "first_interruption": null,
+     "scope": "the single recorded witness path only; not a task-feasibility label",
+     "segments": 97,
+     "target_task_status": "NOT_RUN",
+     "unresolved_segments": []
+    },
+    "q0_clear": true,
+    "scene": {
+     "action_hash": null,
+     "domain_policy": "ALL_SUPPORTED",
+     "lattice": {
+      "cols": 8,
+      "pitch_m": 0.08,
+      "rows": 8
+     },
+     "legal_cells": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+     ],
+     "objects": [
+      {
+       "cell": 47,
+       "id": "o00",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.6,
+        0.44
+       ]
+      },
+      {
+       "cell": 60,
+       "id": "o01",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.36,
+        0.6
+       ]
+      },
+      {
+       "cell": 3,
+       "id": "o02",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.28,
+        0.04
+       ]
+      },
+      {
+       "cell": 59,
+       "id": "o03",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.28,
+        0.6
+       ]
+      },
+      {
+       "cell": 55,
+       "id": "o04",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.6,
+        0.52
+       ]
+      },
+      {
+       "cell": 45,
+       "id": "t0",
+       "kind": "target",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.44,
+        0.44
+       ]
+      }
+     ],
+     "robot": {
+      "attached_id": null,
+      "attachment": "free",
+      "gripper_gap_m": 0.07,
+      "q_rad": [
+       1.5707963267948966,
+       1.5707963267948966,
+       1.5707963267948966
+      ]
+     },
+     "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+     "root_id": "g4c_2026102001",
+     "variant_id": "initial"
+    },
+    "scene_hash": "sha256:942e463eb532adb3dcba0001d3fddf7ef75adebed1c5e20745a495a654e48985",
+    "status": "PRECHECK_STATIC",
+    "target_task_status": "NOT_RUN",
+    "variant": "+N"
+   },
+   {
+    "added": {
+     "A": {
+      "cell": 57,
+      "id": "o04",
+      "role": "grasp_access_blocker"
+     },
+     "N": {
+      "cell": 55,
+      "id": "o05",
+      "role": "harmless_nearby"
+     }
+    },
+    "family_id": "sha256:f49a3c4dfa784ad864ad81fe17ac3873273a8365761ac6402d394cd3cd60d956",
+    "goal_cell": 20,
+    "nominal": {
+     "blocks_nominal_witness": "YES",
+     "collision_segments": [
+      {
+       "pair": "palm|o04",
+       "phase": "pregrasp",
+       "s": 1.0,
+       "segment": 0
+      },
+      {
+       "pair": "palm|o04",
+       "phase": "pregrasp",
+       "s": 0.0,
+       "segment": 1
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "pregrasp",
+       "s": 0.0,
+       "segment": 2
+      },
+      {
+       "pair": "link0|o04",
+       "phase": "pregrasp",
+       "s": 0.0,
+       "segment": 3
+      }
+     ],
+     "first_interruption": {
+      "pair": "palm|o04",
+      "phase": "pregrasp",
+      "s": 1.0,
+      "segment": 0
+     },
+     "scope": "the single recorded witness path only; not a task-feasibility label",
+     "segments": 97,
+     "target_task_status": "NOT_RUN",
+     "unresolved_segments": []
+    },
+    "q0_clear": true,
+    "scene": {
+     "action_hash": null,
+     "domain_policy": "ALL_SUPPORTED",
+     "lattice": {
+      "cols": 8,
+      "pitch_m": 0.08,
+      "rows": 8
+     },
+     "legal_cells": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+     ],
+     "objects": [
+      {
+       "cell": 47,
+       "id": "o00",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.6,
+        0.44
+       ]
+      },
+      {
+       "cell": 60,
+       "id": "o01",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.36,
+        0.6
+       ]
+      },
+      {
+       "cell": 3,
+       "id": "o02",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.28,
+        0.04
+       ]
+      },
+      {
+       "cell": 59,
+       "id": "o03",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.28,
+        0.6
+       ]
+      },
+      {
+       "cell": 57,
+       "id": "o04",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.12,
+        0.6
+       ]
+      },
+      {
+       "cell": 55,
+       "id": "o05",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.6,
+        0.52
+       ]
+      },
+      {
+       "cell": 45,
+       "id": "t0",
+       "kind": "target",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.44,
+        0.44
+       ]
+      }
+     ],
+     "robot": {
+      "attached_id": null,
+      "attachment": "free",
+      "gripper_gap_m": 0.07,
+      "q_rad": [
+       1.5707963267948966,
+       1.5707963267948966,
+       1.5707963267948966
+      ]
+     },
+     "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+     "root_id": "g4c_2026102001",
+     "variant_id": "initial"
+    },
+    "scene_hash": "sha256:83e0f6b6a100f6c06ba562269da196327884d1679933f089f0faa0ca12d76f29",
+    "status": "PRECHECK_STATIC",
+    "target_task_status": "NOT_RUN",
+    "variant": "+A+N"
+   },
+   {
+    "added": {
+     "G": {
+      "cell": 20,
+      "id": "o04",
+      "role": "target_goal_occupant"
+     }
+    },
+    "family_id": "sha256:f49a3c4dfa784ad864ad81fe17ac3873273a8365761ac6402d394cd3cd60d956",
+    "goal_cell": 20,
+    "nominal": {
+     "blocks_nominal_witness": "YES",
+     "collision_segments": [
+      {
+       "pair": "link1|o04",
+       "phase": "pregrasp",
+       "s": 0.75,
+       "segment": 4
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "pregrasp",
+       "s": 1.0,
+       "segment": 5
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 6
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 7
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 8
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 9
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 10
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 11
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 12
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 13
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 14
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 15
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 16
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 17
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "close_attach",
+       "s": 0.0,
+       "segment": 18
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 19
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 20
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "carry",
+       "s": 1.0,
+       "segment": 38
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 39
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 40
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 41
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 42
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 43
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 44
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 45
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 46
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 47
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 48
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 49
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 50
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 51
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 52
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 1.0,
+       "segment": 66
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 67
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 68
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 69
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 70
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 71
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 72
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 73
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 74
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 75
+      },
+      {
+       "pair": "finger_r|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 76
+      },
+      {
+       "pair": "finger_r|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 77
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 78
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 79
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 80
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 81
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 82
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 83
+      },
+      {
+       "pair": "finger_r|o04",
+       "phase": "release",
+       "s": 0.0,
+       "segment": 84
+      }
+     ],
+     "first_interruption": {
+      "pair": "link1|o04",
+      "phase": "pregrasp",
+      "s": 0.75,
+      "segment": 4
+     },
+     "scope": "the single recorded witness path only; not a task-feasibility label",
+     "segments": 97,
+     "target_task_status": "NOT_RUN",
+     "unresolved_segments": [
+      21
+     ]
+    },
+    "q0_clear": true,
+    "scene": {
+     "action_hash": null,
+     "domain_policy": "ALL_SUPPORTED",
+     "lattice": {
+      "cols": 8,
+      "pitch_m": 0.08,
+      "rows": 8
+     },
+     "legal_cells": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+     ],
+     "objects": [
+      {
+       "cell": 47,
+       "id": "o00",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.6,
+        0.44
+       ]
+      },
+      {
+       "cell": 60,
+       "id": "o01",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.36,
+        0.6
+       ]
+      },
+      {
+       "cell": 3,
+       "id": "o02",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.28,
+        0.04
+       ]
+      },
+      {
+       "cell": 59,
+       "id": "o03",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.28,
+        0.6
+       ]
+      },
+      {
+       "cell": 20,
+       "id": "o04",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.36,
+        0.2
+       ]
+      },
+      {
+       "cell": 45,
+       "id": "t0",
+       "kind": "target",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.44,
+        0.44
+       ]
+      }
+     ],
+     "robot": {
+      "attached_id": null,
+      "attachment": "free",
+      "gripper_gap_m": 0.07,
+      "q_rad": [
+       1.5707963267948966,
+       1.5707963267948966,
+       1.5707963267948966
+      ]
+     },
+     "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+     "root_id": "g4c_2026102001",
+     "variant_id": "initial"
+    },
+    "scene_hash": "sha256:ed74ab0747bd59cfc6cc89b14d95113e1c1260c46d80b02b0982187dfb28d265",
+    "status": "PRECHECK_STATIC",
+    "target_task_status": "NOT_RUN",
+    "variant": "+G"
+   },
+   {
+    "added": {
+     "A": {
+      "cell": 57,
+      "id": "o04",
+      "role": "grasp_access_blocker"
+     },
+     "S": {
+      "cell": 49,
+      "id": "o05",
+      "role": "staging_slot_occupant"
+     }
+    },
+    "family_id": "sha256:f49a3c4dfa784ad864ad81fe17ac3873273a8365761ac6402d394cd3cd60d956",
+    "goal_cell": 20,
+    "nominal": {
+     "blocks_nominal_witness": "YES",
+     "collision_segments": [
+      {
+       "pair": "palm|o04",
+       "phase": "pregrasp",
+       "s": 1.0,
+       "segment": 0
+      },
+      {
+       "pair": "palm|o04",
+       "phase": "pregrasp",
+       "s": 0.0,
+       "segment": 1
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "pregrasp",
+       "s": 0.0,
+       "segment": 2
+      },
+      {
+       "pair": "link0|o04",
+       "phase": "pregrasp",
+       "s": 0.0,
+       "segment": 3
+      },
+      {
+       "pair": "link0|o05",
+       "phase": "pregrasp",
+       "s": 0.0,
+       "segment": 4
+      }
+     ],
+     "first_interruption": {
+      "pair": "palm|o04",
+      "phase": "pregrasp",
+      "s": 1.0,
+      "segment": 0
+     },
+     "scope": "the single recorded witness path only; not a task-feasibility label",
+     "segments": 97,
+     "target_task_status": "NOT_RUN",
+     "unresolved_segments": []
+    },
+    "q0_clear": true,
+    "scene": {
+     "action_hash": null,
+     "domain_policy": "ALL_SUPPORTED",
+     "lattice": {
+      "cols": 8,
+      "pitch_m": 0.08,
+      "rows": 8
+     },
+     "legal_cells": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+     ],
+     "objects": [
+      {
+       "cell": 47,
+       "id": "o00",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.6,
+        0.44
+       ]
+      },
+      {
+       "cell": 60,
+       "id": "o01",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.36,
+        0.6
+       ]
+      },
+      {
+       "cell": 3,
+       "id": "o02",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.28,
+        0.04
+       ]
+      },
+      {
+       "cell": 59,
+       "id": "o03",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.28,
+        0.6
+       ]
+      },
+      {
+       "cell": 57,
+       "id": "o04",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.12,
+        0.6
+       ]
+      },
+      {
+       "cell": 49,
+       "id": "o05",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.12,
+        0.52
+       ]
+      },
+      {
+       "cell": 45,
+       "id": "t0",
+       "kind": "target",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.44,
+        0.44
+       ]
+      }
+     ],
+     "robot": {
+      "attached_id": null,
+      "attachment": "free",
+      "gripper_gap_m": 0.07,
+      "q_rad": [
+       1.5707963267948966,
+       1.5707963267948966,
+       1.5707963267948966
+      ]
+     },
+     "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+     "root_id": "g4c_2026102001",
+     "variant_id": "initial"
+    },
+    "scene_hash": "sha256:59c0e88beb2cdbbb57c6ffa1c133ab270abf02a4313486e603030fa224216e38",
+    "status": "PRECHECK_STATIC",
+    "target_task_status": "NOT_RUN",
+    "variant": "+A+S"
+   }
+  ],
+  "g4d_R0": [
+   {
+    "added": {},
+    "family_id": "sha256:ebfe7ec8d041a30d6f83ccc16edd60be8fbf36ae6aa5ea48a375283e8b89cdf0",
+    "goal_cell": 45,
+    "nominal": {
+     "blocks_nominal_witness": "NO",
+     "collision_segments": [],
+     "first_interruption": null,
+     "scope": "the single recorded witness path only; not a task-feasibility label",
+     "segments": 208,
+     "target_task_status": "NOT_RUN",
+     "unresolved_segments": []
+    },
+    "q0_clear": true,
+    "scene": {
+     "action_hash": null,
+     "domain_policy": "ALL_SUPPORTED",
+     "lattice": {
+      "cols": 8,
+      "pitch_m": 0.08,
+      "rows": 8
+     },
+     "legal_cells": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+     ],
+     "objects": [
+      {
+       "cell": 3,
+       "id": "o00",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.28,
+        0.04
+       ]
+      },
+      {
+       "cell": 13,
+       "id": "o01",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.44,
+        0.12
+       ]
+      },
+      {
+       "cell": 50,
+       "id": "o02",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.2,
+        0.52
+       ]
+      },
+      {
+       "cell": 60,
+       "id": "o03",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.36,
+        0.6
+       ]
+      },
+      {
+       "cell": 18,
+       "id": "t0",
+       "kind": "target",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.2,
+        0.2
+       ]
+      }
+     ],
+     "robot": {
+      "attached_id": null,
+      "attachment": "free",
+      "gripper_gap_m": 0.07,
+      "q_rad": [
+       1.5707963267948966,
+       1.5707963267948966,
+       1.5707963267948966
+      ]
+     },
+     "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+     "root_id": "root_d1",
+     "variant_id": "ref"
+    },
+    "scene_hash": "sha256:f635e6aa76d6e6bd40d535df97eda3669323917a19c128f48f84802289b2a977",
+    "status": "PRECHECK_STATIC",
+    "target_task_status": "NOT_RUN",
+    "variant": "base"
+   },
+   {
+    "added": {
+     "A": {
+      "cell": 49,
+      "id": "o04",
+      "role": "grasp_access_blocker"
+     }
+    },
+    "family_id": "sha256:ebfe7ec8d041a30d6f83ccc16edd60be8fbf36ae6aa5ea48a375283e8b89cdf0",
+    "goal_cell": 45,
+    "nominal": {
+     "blocks_nominal_witness": "YES",
+     "collision_segments": [
+      {
+       "pair": "finger_r|o04",
+       "phase": "pregrasp",
+       "s": 1.0,
+       "segment": 0
+      },
+      {
+       "pair": "finger_r|o04",
+       "phase": "pregrasp",
+       "s": 0.0,
+       "segment": 1
+      },
+      {
+       "pair": "palm|o04",
+       "phase": "pregrasp",
+       "s": 0.0,
+       "segment": 2
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 3
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 4
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 5
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 6
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 7
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 8
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 9
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 10
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 11
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 12
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 13
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 14
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "close_attach",
+       "s": 0.0,
+       "segment": 15
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 16
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 17
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 18
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 19
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 1.0,
+       "segment": 67
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 68
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 69
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 70
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 71
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 72
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 73
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 74
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 75
+      },
+      {
+       "pair": "finger_l|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 76
+      },
+      {
+       "pair": "finger_l|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 77
+      },
+      {
+       "pair": "finger_l|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 78
+      },
+      {
+       "pair": "finger_l|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 79
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 80
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 81
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 82
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 83
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 84
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 85
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 86
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 87
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 88
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 89
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 90
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 91
+      },
+      {
+       "pair": "finger_r|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 92
+      },
+      {
+       "pair": "finger_r|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 93
+      },
+      {
+       "pair": "finger_r|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 94
+      },
+      {
+       "pair": "finger_r|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 95
+      },
+      {
+       "pair": "finger_r|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 96
+      },
+      {
+       "pair": "finger_r|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 97
+      }
+     ],
+     "first_interruption": {
+      "pair": "finger_r|o04",
+      "phase": "pregrasp",
+      "s": 1.0,
+      "segment": 0
+     },
+     "scope": "the single recorded witness path only; not a task-feasibility label",
+     "segments": 208,
+     "target_task_status": "NOT_RUN",
+     "unresolved_segments": [
+      66
+     ]
+    },
+    "q0_clear": true,
+    "scene": {
+     "action_hash": null,
+     "domain_policy": "ALL_SUPPORTED",
+     "lattice": {
+      "cols": 8,
+      "pitch_m": 0.08,
+      "rows": 8
+     },
+     "legal_cells": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+     ],
+     "objects": [
+      {
+       "cell": 3,
+       "id": "o00",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.28,
+        0.04
+       ]
+      },
+      {
+       "cell": 13,
+       "id": "o01",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.44,
+        0.12
+       ]
+      },
+      {
+       "cell": 50,
+       "id": "o02",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.2,
+        0.52
+       ]
+      },
+      {
+       "cell": 60,
+       "id": "o03",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.36,
+        0.6
+       ]
+      },
+      {
+       "cell": 49,
+       "id": "o04",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.12,
+        0.52
+       ]
+      },
+      {
+       "cell": 18,
+       "id": "t0",
+       "kind": "target",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.2,
+        0.2
+       ]
+      }
+     ],
+     "robot": {
+      "attached_id": null,
+      "attachment": "free",
+      "gripper_gap_m": 0.07,
+      "q_rad": [
+       1.5707963267948966,
+       1.5707963267948966,
+       1.5707963267948966
+      ]
+     },
+     "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+     "root_id": "root_d1",
+     "variant_id": "ref"
+    },
+    "scene_hash": "sha256:60f3ef5372a89bffe2f72da8e43de0e047acbe888ffec846e0413a2f7d37ccba",
+    "status": "PRECHECK_STATIC",
+    "target_task_status": "NOT_RUN",
+    "variant": "+A"
+   },
+   {
+    "added": {
+     "B": {
+      "cell": 59,
+      "id": "o04",
+      "role": "arm_link_sweep_blocker"
+     }
+    },
+    "family_id": "sha256:ebfe7ec8d041a30d6f83ccc16edd60be8fbf36ae6aa5ea48a375283e8b89cdf0",
+    "goal_cell": 45,
+    "nominal": {
+     "blocks_nominal_witness": "YES",
+     "collision_segments": [
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 1.0,
+       "segment": 133
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 134
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 135
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 136
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 137
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 138
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 139
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 140
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 141
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 142
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 143
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 144
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 145
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 146
+      },
+      {
+       "pair": "palm|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 147
+      },
+      {
+       "pair": "palm|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 148
+      },
+      {
+       "pair": "palm|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 149
+      },
+      {
+       "pair": "palm|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 150
+      },
+      {
+       "pair": "palm|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 151
+      },
+      {
+       "pair": "palm|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 152
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 153
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 154
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 155
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 156
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 157
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 158
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 159
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 160
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 161
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 162
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 163
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 164
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 165
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 166
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 167
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 168
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 169
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 170
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 171
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 172
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 173
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 174
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 175
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 176
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 177
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 178
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 179
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 180
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 181
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 182
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 183
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 184
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 185
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 186
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 187
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 188
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 189
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 190
+      }
+     ],
+     "first_interruption": {
+      "pair": "rail|o04",
+      "phase": "carry",
+      "s": 1.0,
+      "segment": 133
+     },
+     "scope": "the single recorded witness path only; not a task-feasibility label",
+     "segments": 208,
+     "target_task_status": "NOT_RUN",
+     "unresolved_segments": []
+    },
+    "q0_clear": true,
+    "scene": {
+     "action_hash": null,
+     "domain_policy": "ALL_SUPPORTED",
+     "lattice": {
+      "cols": 8,
+      "pitch_m": 0.08,
+      "rows": 8
+     },
+     "legal_cells": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+     ],
+     "objects": [
+      {
+       "cell": 3,
+       "id": "o00",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.28,
+        0.04
+       ]
+      },
+      {
+       "cell": 13,
+       "id": "o01",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.44,
+        0.12
+       ]
+      },
+      {
+       "cell": 50,
+       "id": "o02",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.2,
+        0.52
+       ]
+      },
+      {
+       "cell": 60,
+       "id": "o03",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.36,
+        0.6
+       ]
+      },
+      {
+       "cell": 59,
+       "id": "o04",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.28,
+        0.6
+       ]
+      },
+      {
+       "cell": 18,
+       "id": "t0",
+       "kind": "target",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.2,
+        0.2
+       ]
+      }
+     ],
+     "robot": {
+      "attached_id": null,
+      "attachment": "free",
+      "gripper_gap_m": 0.07,
+      "q_rad": [
+       1.5707963267948966,
+       1.5707963267948966,
+       1.5707963267948966
+      ]
+     },
+     "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+     "root_id": "root_d1",
+     "variant_id": "ref"
+    },
+    "scene_hash": "sha256:5c816f1936b63462f101620eafffaff97112989f5320a7f39b03d7ca6819975f",
+    "status": "PRECHECK_STATIC",
+    "target_task_status": "NOT_RUN",
+    "variant": "+B"
+   },
+   {
+    "added": {
+     "A": {
+      "cell": 49,
+      "id": "o04",
+      "role": "grasp_access_blocker"
+     },
+     "B": {
+      "cell": 59,
+      "id": "o05",
+      "role": "arm_link_sweep_blocker"
+     }
+    },
+    "family_id": "sha256:ebfe7ec8d041a30d6f83ccc16edd60be8fbf36ae6aa5ea48a375283e8b89cdf0",
+    "goal_cell": 45,
+    "nominal": {
+     "blocks_nominal_witness": "YES",
+     "collision_segments": [
+      {
+       "pair": "finger_r|o04",
+       "phase": "pregrasp",
+       "s": 1.0,
+       "segment": 0
+      },
+      {
+       "pair": "finger_r|o04",
+       "phase": "pregrasp",
+       "s": 0.0,
+       "segment": 1
+      },
+      {
+       "pair": "palm|o04",
+       "phase": "pregrasp",
+       "s": 0.0,
+       "segment": 2
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 3
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 4
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 5
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 6
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 7
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 8
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 9
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 10
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 11
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 12
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 13
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 14
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "close_attach",
+       "s": 0.0,
+       "segment": 15
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 16
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 17
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 18
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 19
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 1.0,
+       "segment": 67
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 68
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 69
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 70
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 71
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 72
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 73
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 74
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 75
+      },
+      {
+       "pair": "finger_l|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 76
+      },
+      {
+       "pair": "finger_l|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 77
+      },
+      {
+       "pair": "finger_l|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 78
+      },
+      {
+       "pair": "finger_l|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 79
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 80
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 81
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 82
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 83
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 84
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 85
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 86
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 87
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 88
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 89
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 90
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 91
+      },
+      {
+       "pair": "finger_r|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 92
+      },
+      {
+       "pair": "finger_r|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 93
+      },
+      {
+       "pair": "finger_r|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 94
+      },
+      {
+       "pair": "finger_r|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 95
+      },
+      {
+       "pair": "finger_r|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 96
+      },
+      {
+       "pair": "finger_r|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 97
+      },
+      {
+       "pair": "rail|o05",
+       "phase": "carry",
+       "s": 1.0,
+       "segment": 133
+      },
+      {
+       "pair": "rail|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 134
+      },
+      {
+       "pair": "rail|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 135
+      },
+      {
+       "pair": "rail|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 136
+      },
+      {
+       "pair": "rail|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 137
+      },
+      {
+       "pair": "rail|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 138
+      },
+      {
+       "pair": "rail|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 139
+      },
+      {
+       "pair": "rail|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 140
+      },
+      {
+       "pair": "rail|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 141
+      },
+      {
+       "pair": "rail|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 142
+      },
+      {
+       "pair": "rail|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 143
+      },
+      {
+       "pair": "rail|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 144
+      },
+      {
+       "pair": "rail|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 145
+      },
+      {
+       "pair": "rail|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 146
+      },
+      {
+       "pair": "palm|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 147
+      },
+      {
+       "pair": "palm|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 148
+      },
+      {
+       "pair": "palm|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 149
+      },
+      {
+       "pair": "palm|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 150
+      },
+      {
+       "pair": "palm|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 151
+      },
+      {
+       "pair": "palm|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 152
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 153
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 154
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 155
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 156
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 157
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 158
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 159
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 160
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 161
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 162
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 163
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 164
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 165
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 166
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 167
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 168
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 169
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 170
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 171
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 172
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 173
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 174
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 175
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 176
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 177
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 178
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 179
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 180
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 181
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 182
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 183
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 184
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 185
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 186
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 187
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 188
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 189
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 190
+      }
+     ],
+     "first_interruption": {
+      "pair": "finger_r|o04",
+      "phase": "pregrasp",
+      "s": 1.0,
+      "segment": 0
+     },
+     "scope": "the single recorded witness path only; not a task-feasibility label",
+     "segments": 208,
+     "target_task_status": "NOT_RUN",
+     "unresolved_segments": [
+      66
+     ]
+    },
+    "q0_clear": true,
+    "scene": {
+     "action_hash": null,
+     "domain_policy": "ALL_SUPPORTED",
+     "lattice": {
+      "cols": 8,
+      "pitch_m": 0.08,
+      "rows": 8
+     },
+     "legal_cells": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+     ],
+     "objects": [
+      {
+       "cell": 3,
+       "id": "o00",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.28,
+        0.04
+       ]
+      },
+      {
+       "cell": 13,
+       "id": "o01",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.44,
+        0.12
+       ]
+      },
+      {
+       "cell": 50,
+       "id": "o02",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.2,
+        0.52
+       ]
+      },
+      {
+       "cell": 60,
+       "id": "o03",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.36,
+        0.6
+       ]
+      },
+      {
+       "cell": 49,
+       "id": "o04",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.12,
+        0.52
+       ]
+      },
+      {
+       "cell": 59,
+       "id": "o05",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.28,
+        0.6
+       ]
+      },
+      {
+       "cell": 18,
+       "id": "t0",
+       "kind": "target",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.2,
+        0.2
+       ]
+      }
+     ],
+     "robot": {
+      "attached_id": null,
+      "attachment": "free",
+      "gripper_gap_m": 0.07,
+      "q_rad": [
+       1.5707963267948966,
+       1.5707963267948966,
+       1.5707963267948966
+      ]
+     },
+     "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+     "root_id": "root_d1",
+     "variant_id": "ref"
+    },
+    "scene_hash": "sha256:638376f56b688813b48174c06ed17114803a98101da588586e83c56d7a0ee06e",
+    "status": "PRECHECK_STATIC",
+    "target_task_status": "NOT_RUN",
+    "variant": "+A+B"
+   },
+   {
+    "added": {
+     "A": {
+      "cell": 49,
+      "id": "o04",
+      "role": "grasp_access_blocker"
+     },
+     "B": {
+      "cell": 59,
+      "id": "o05",
+      "role": "arm_link_sweep_blocker"
+     },
+     "C": {
+      "cell": 44,
+      "id": "o06",
+      "role": "arm_link_sweep_blocker"
+     }
+    },
+    "family_id": "sha256:ebfe7ec8d041a30d6f83ccc16edd60be8fbf36ae6aa5ea48a375283e8b89cdf0",
+    "goal_cell": 45,
+    "nominal": {
+     "blocks_nominal_witness": "YES",
+     "collision_segments": [
+      {
+       "pair": "finger_r|o04",
+       "phase": "pregrasp",
+       "s": 1.0,
+       "segment": 0
+      },
+      {
+       "pair": "finger_r|o04",
+       "phase": "pregrasp",
+       "s": 0.0,
+       "segment": 1
+      },
+      {
+       "pair": "palm|o04",
+       "phase": "pregrasp",
+       "s": 0.0,
+       "segment": 2
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 3
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 4
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 5
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 6
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 7
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 8
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 9
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 10
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 11
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 12
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 13
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 14
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "close_attach",
+       "s": 0.0,
+       "segment": 15
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 16
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 17
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 18
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 19
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 1.0,
+       "segment": 67
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 68
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 69
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 70
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 71
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 72
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 73
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 74
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 75
+      },
+      {
+       "pair": "finger_l|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 76
+      },
+      {
+       "pair": "finger_l|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 77
+      },
+      {
+       "pair": "finger_l|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 78
+      },
+      {
+       "pair": "finger_l|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 79
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 80
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 81
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 82
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 83
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 84
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 85
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 86
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 87
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 88
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 89
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 90
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 91
+      },
+      {
+       "pair": "finger_r|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 92
+      },
+      {
+       "pair": "finger_r|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 93
+      },
+      {
+       "pair": "finger_r|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 94
+      },
+      {
+       "pair": "finger_r|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 95
+      },
+      {
+       "pair": "finger_r|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 96
+      },
+      {
+       "pair": "finger_r|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 97
+      },
+      {
+       "pair": "rail|o05",
+       "phase": "carry",
+       "s": 1.0,
+       "segment": 133
+      },
+      {
+       "pair": "rail|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 134
+      },
+      {
+       "pair": "rail|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 135
+      },
+      {
+       "pair": "rail|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 136
+      },
+      {
+       "pair": "rail|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 137
+      },
+      {
+       "pair": "rail|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 138
+      },
+      {
+       "pair": "rail|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 139
+      },
+      {
+       "pair": "rail|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 140
+      },
+      {
+       "pair": "rail|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 141
+      },
+      {
+       "pair": "rail|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 142
+      },
+      {
+       "pair": "rail|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 143
+      },
+      {
+       "pair": "rail|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 144
+      },
+      {
+       "pair": "rail|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 145
+      },
+      {
+       "pair": "rail|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 146
+      },
+      {
+       "pair": "palm|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 147
+      },
+      {
+       "pair": "palm|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 148
+      },
+      {
+       "pair": "palm|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 149
+      },
+      {
+       "pair": "palm|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 150
+      },
+      {
+       "pair": "palm|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 151
+      },
+      {
+       "pair": "palm|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 152
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 153
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 154
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 155
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 156
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 157
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 158
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 159
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 160
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 161
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 162
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 163
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 164
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 165
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 166
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 167
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 168
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 169
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 170
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 171
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 172
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 173
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 174
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 175
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 176
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 177
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 178
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 179
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 180
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 181
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 182
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 183
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 184
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 185
+      },
+      {
+       "pair": "rail|o06",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 186
+      },
+      {
+       "pair": "rail|o06",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 187
+      },
+      {
+       "pair": "rail|o06",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 188
+      },
+      {
+       "pair": "rail|o06",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 189
+      },
+      {
+       "pair": "rail|o06",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 190
+      },
+      {
+       "pair": "rail|o06",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 191
+      },
+      {
+       "pair": "rail|o06",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 192
+      },
+      {
+       "pair": "rail|o06",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 193
+      },
+      {
+       "pair": "rail|o06",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 194
+      },
+      {
+       "pair": "palm|o06",
+       "phase": "release",
+       "s": 0.0,
+       "segment": 195
+      },
+      {
+       "pair": "palm|o06",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 196
+      },
+      {
+       "pair": "palm|o06",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 197
+      },
+      {
+       "pair": "rail|o06",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 198
+      },
+      {
+       "pair": "rail|o06",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 199
+      },
+      {
+       "pair": "rail|o06",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 200
+      },
+      {
+       "pair": "rail|o06",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 201
+      },
+      {
+       "pair": "rail|o06",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 202
+      },
+      {
+       "pair": "rail|o06",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 203
+      },
+      {
+       "pair": "finger_r|o06",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 204
+      },
+      {
+       "pair": "finger_r|o06",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 205
+      },
+      {
+       "pair": "finger_r|o06",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 206
+      },
+      {
+       "pair": "finger_r|o06",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 207
+      }
+     ],
+     "first_interruption": {
+      "pair": "finger_r|o04",
+      "phase": "pregrasp",
+      "s": 1.0,
+      "segment": 0
+     },
+     "scope": "the single recorded witness path only; not a task-feasibility label",
+     "segments": 208,
+     "target_task_status": "NOT_RUN",
+     "unresolved_segments": [
+      66
+     ]
+    },
+    "q0_clear": true,
+    "scene": {
+     "action_hash": null,
+     "domain_policy": "ALL_SUPPORTED",
+     "lattice": {
+      "cols": 8,
+      "pitch_m": 0.08,
+      "rows": 8
+     },
+     "legal_cells": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+     ],
+     "objects": [
+      {
+       "cell": 3,
+       "id": "o00",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.28,
+        0.04
+       ]
+      },
+      {
+       "cell": 13,
+       "id": "o01",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.44,
+        0.12
+       ]
+      },
+      {
+       "cell": 50,
+       "id": "o02",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.2,
+        0.52
+       ]
+      },
+      {
+       "cell": 60,
+       "id": "o03",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.36,
+        0.6
+       ]
+      },
+      {
+       "cell": 49,
+       "id": "o04",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.12,
+        0.52
+       ]
+      },
+      {
+       "cell": 59,
+       "id": "o05",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.28,
+        0.6
+       ]
+      },
+      {
+       "cell": 44,
+       "id": "o06",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.36,
+        0.44
+       ]
+      },
+      {
+       "cell": 18,
+       "id": "t0",
+       "kind": "target",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.2,
+        0.2
+       ]
+      }
+     ],
+     "robot": {
+      "attached_id": null,
+      "attachment": "free",
+      "gripper_gap_m": 0.07,
+      "q_rad": [
+       1.5707963267948966,
+       1.5707963267948966,
+       1.5707963267948966
+      ]
+     },
+     "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+     "root_id": "root_d1",
+     "variant_id": "ref"
+    },
+    "scene_hash": "sha256:1069d52ef28e1ff266a7454cc3befe40996d99ae2297598945203824b94e344a",
+    "status": "PRECHECK_STATIC",
+    "target_task_status": "NOT_RUN",
+    "variant": "+A+B+C"
+   },
+   {
+    "added": {
+     "N": {
+      "cell": 7,
+      "id": "o04",
+      "role": "harmless_nearby"
+     }
+    },
+    "family_id": "sha256:ebfe7ec8d041a30d6f83ccc16edd60be8fbf36ae6aa5ea48a375283e8b89cdf0",
+    "goal_cell": 45,
+    "nominal": {
+     "blocks_nominal_witness": "NO",
+     "collision_segments": [],
+     "first_interruption": null,
+     "scope": "the single recorded witness path only; not a task-feasibility label",
+     "segments": 208,
+     "target_task_status": "NOT_RUN",
+     "unresolved_segments": []
+    },
+    "q0_clear": true,
+    "scene": {
+     "action_hash": null,
+     "domain_policy": "ALL_SUPPORTED",
+     "lattice": {
+      "cols": 8,
+      "pitch_m": 0.08,
+      "rows": 8
+     },
+     "legal_cells": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+     ],
+     "objects": [
+      {
+       "cell": 3,
+       "id": "o00",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.28,
+        0.04
+       ]
+      },
+      {
+       "cell": 13,
+       "id": "o01",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.44,
+        0.12
+       ]
+      },
+      {
+       "cell": 50,
+       "id": "o02",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.2,
+        0.52
+       ]
+      },
+      {
+       "cell": 60,
+       "id": "o03",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.36,
+        0.6
+       ]
+      },
+      {
+       "cell": 7,
+       "id": "o04",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.6,
+        0.04
+       ]
+      },
+      {
+       "cell": 18,
+       "id": "t0",
+       "kind": "target",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.2,
+        0.2
+       ]
+      }
+     ],
+     "robot": {
+      "attached_id": null,
+      "attachment": "free",
+      "gripper_gap_m": 0.07,
+      "q_rad": [
+       1.5707963267948966,
+       1.5707963267948966,
+       1.5707963267948966
+      ]
+     },
+     "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+     "root_id": "root_d1",
+     "variant_id": "ref"
+    },
+    "scene_hash": "sha256:bb4873ca98b821205c2585e3f554fa4b132116373af891c1b09311c3be0c9f87",
+    "status": "PRECHECK_STATIC",
+    "target_task_status": "NOT_RUN",
+    "variant": "+N"
+   },
+   {
+    "added": {
+     "A": {
+      "cell": 49,
+      "id": "o04",
+      "role": "grasp_access_blocker"
+     },
+     "N": {
+      "cell": 7,
+      "id": "o05",
+      "role": "harmless_nearby"
+     }
+    },
+    "family_id": "sha256:ebfe7ec8d041a30d6f83ccc16edd60be8fbf36ae6aa5ea48a375283e8b89cdf0",
+    "goal_cell": 45,
+    "nominal": {
+     "blocks_nominal_witness": "YES",
+     "collision_segments": [
+      {
+       "pair": "finger_r|o04",
+       "phase": "pregrasp",
+       "s": 1.0,
+       "segment": 0
+      },
+      {
+       "pair": "finger_r|o04",
+       "phase": "pregrasp",
+       "s": 0.0,
+       "segment": 1
+      },
+      {
+       "pair": "palm|o04",
+       "phase": "pregrasp",
+       "s": 0.0,
+       "segment": 2
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 3
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 4
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 5
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 6
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 7
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 8
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 9
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 10
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 11
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 12
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 13
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 14
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "close_attach",
+       "s": 0.0,
+       "segment": 15
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 16
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 17
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 18
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 19
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 1.0,
+       "segment": 67
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 68
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 69
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 70
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 71
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 72
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 73
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 74
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 75
+      },
+      {
+       "pair": "finger_l|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 76
+      },
+      {
+       "pair": "finger_l|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 77
+      },
+      {
+       "pair": "finger_l|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 78
+      },
+      {
+       "pair": "finger_l|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 79
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 80
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 81
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 82
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 83
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 84
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 85
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 86
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 87
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 88
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 89
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 90
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 91
+      },
+      {
+       "pair": "finger_r|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 92
+      },
+      {
+       "pair": "finger_r|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 93
+      },
+      {
+       "pair": "finger_r|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 94
+      },
+      {
+       "pair": "finger_r|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 95
+      },
+      {
+       "pair": "finger_r|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 96
+      },
+      {
+       "pair": "finger_r|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 97
+      }
+     ],
+     "first_interruption": {
+      "pair": "finger_r|o04",
+      "phase": "pregrasp",
+      "s": 1.0,
+      "segment": 0
+     },
+     "scope": "the single recorded witness path only; not a task-feasibility label",
+     "segments": 208,
+     "target_task_status": "NOT_RUN",
+     "unresolved_segments": [
+      66
+     ]
+    },
+    "q0_clear": true,
+    "scene": {
+     "action_hash": null,
+     "domain_policy": "ALL_SUPPORTED",
+     "lattice": {
+      "cols": 8,
+      "pitch_m": 0.08,
+      "rows": 8
+     },
+     "legal_cells": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+     ],
+     "objects": [
+      {
+       "cell": 3,
+       "id": "o00",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.28,
+        0.04
+       ]
+      },
+      {
+       "cell": 13,
+       "id": "o01",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.44,
+        0.12
+       ]
+      },
+      {
+       "cell": 50,
+       "id": "o02",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.2,
+        0.52
+       ]
+      },
+      {
+       "cell": 60,
+       "id": "o03",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.36,
+        0.6
+       ]
+      },
+      {
+       "cell": 49,
+       "id": "o04",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.12,
+        0.52
+       ]
+      },
+      {
+       "cell": 7,
+       "id": "o05",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.6,
+        0.04
+       ]
+      },
+      {
+       "cell": 18,
+       "id": "t0",
+       "kind": "target",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.2,
+        0.2
+       ]
+      }
+     ],
+     "robot": {
+      "attached_id": null,
+      "attachment": "free",
+      "gripper_gap_m": 0.07,
+      "q_rad": [
+       1.5707963267948966,
+       1.5707963267948966,
+       1.5707963267948966
+      ]
+     },
+     "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+     "root_id": "root_d1",
+     "variant_id": "ref"
+    },
+    "scene_hash": "sha256:d4e29dc540e84b9f387e17ae0189d0cbf0fdcc97b96d9b4ee87ce92c384eca39",
+    "status": "PRECHECK_STATIC",
+    "target_task_status": "NOT_RUN",
+    "variant": "+A+N"
+   },
+   {
+    "added": {
+     "G": {
+      "cell": 45,
+      "id": "o04",
+      "role": "target_goal_occupant"
+     }
+    },
+    "family_id": "sha256:ebfe7ec8d041a30d6f83ccc16edd60be8fbf36ae6aa5ea48a375283e8b89cdf0",
+    "goal_cell": 45,
+    "nominal": {
+     "blocks_nominal_witness": "YES",
+     "collision_segments": [
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 1.0,
+       "segment": 183
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 184
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 185
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 186
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 187
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 188
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 189
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 190
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 191
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 192
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 193
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 194
+      },
+      {
+       "pair": "finger_r|o04",
+       "phase": "release",
+       "s": 0.0,
+       "segment": 195
+      }
+     ],
+     "first_interruption": {
+      "pair": "held|o04",
+      "phase": "carry",
+      "s": 1.0,
+      "segment": 183
+     },
+     "scope": "the single recorded witness path only; not a task-feasibility label",
+     "segments": 208,
+     "target_task_status": "NOT_RUN",
+     "unresolved_segments": [
+      182
+     ]
+    },
+    "q0_clear": true,
+    "scene": {
+     "action_hash": null,
+     "domain_policy": "ALL_SUPPORTED",
+     "lattice": {
+      "cols": 8,
+      "pitch_m": 0.08,
+      "rows": 8
+     },
+     "legal_cells": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+     ],
+     "objects": [
+      {
+       "cell": 3,
+       "id": "o00",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.28,
+        0.04
+       ]
+      },
+      {
+       "cell": 13,
+       "id": "o01",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.44,
+        0.12
+       ]
+      },
+      {
+       "cell": 50,
+       "id": "o02",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.2,
+        0.52
+       ]
+      },
+      {
+       "cell": 60,
+       "id": "o03",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.36,
+        0.6
+       ]
+      },
+      {
+       "cell": 45,
+       "id": "o04",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.44,
+        0.44
+       ]
+      },
+      {
+       "cell": 18,
+       "id": "t0",
+       "kind": "target",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.2,
+        0.2
+       ]
+      }
+     ],
+     "robot": {
+      "attached_id": null,
+      "attachment": "free",
+      "gripper_gap_m": 0.07,
+      "q_rad": [
+       1.5707963267948966,
+       1.5707963267948966,
+       1.5707963267948966
+      ]
+     },
+     "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+     "root_id": "root_d1",
+     "variant_id": "ref"
+    },
+    "scene_hash": "sha256:a5e92f38bdefdbe15872bbe0aee4a9764d00d36183d128f37a9b68716a4df35e",
+    "status": "PRECHECK_STATIC",
+    "target_task_status": "NOT_RUN",
+    "variant": "+G"
+   },
+   {
+    "added": {
+     "A": {
+      "cell": 49,
+      "id": "o04",
+      "role": "grasp_access_blocker"
+     },
+     "S": {
+      "cell": 57,
+      "id": "o05",
+      "role": "staging_slot_occupant"
+     }
+    },
+    "family_id": "sha256:ebfe7ec8d041a30d6f83ccc16edd60be8fbf36ae6aa5ea48a375283e8b89cdf0",
+    "goal_cell": 45,
+    "nominal": {
+     "blocks_nominal_witness": "YES",
+     "collision_segments": [
+      {
+       "pair": "palm|o05",
+       "phase": "pregrasp",
+       "s": 1.0,
+       "segment": 0
+      },
+      {
+       "pair": "palm|o05",
+       "phase": "pregrasp",
+       "s": 0.0,
+       "segment": 1
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "pregrasp",
+       "s": 0.0,
+       "segment": 2
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 3
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 4
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 5
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 6
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 7
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 8
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 9
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 10
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 11
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 12
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 13
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 14
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "close_attach",
+       "s": 0.0,
+       "segment": 15
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 16
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 17
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 18
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 19
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 1.0,
+       "segment": 67
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 68
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 69
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 70
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 71
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 72
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 73
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 74
+      },
+      {
+       "pair": "rail|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 75
+      },
+      {
+       "pair": "finger_l|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 76
+      },
+      {
+       "pair": "finger_l|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 77
+      },
+      {
+       "pair": "finger_l|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 78
+      },
+      {
+       "pair": "finger_l|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 79
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 80
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 81
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 82
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 83
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 84
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 85
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 86
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 87
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 88
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 89
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 90
+      },
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 91
+      },
+      {
+       "pair": "finger_r|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 92
+      },
+      {
+       "pair": "finger_r|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 93
+      },
+      {
+       "pair": "finger_l|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 94
+      },
+      {
+       "pair": "finger_l|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 95
+      },
+      {
+       "pair": "finger_l|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 96
+      },
+      {
+       "pair": "finger_l|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 97
+      },
+      {
+       "pair": "finger_l|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 98
+      },
+      {
+       "pair": "finger_l|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 99
+      },
+      {
+       "pair": "held|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 100
+      },
+      {
+       "pair": "held|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 101
+      },
+      {
+       "pair": "held|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 102
+      },
+      {
+       "pair": "held|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 103
+      },
+      {
+       "pair": "held|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 104
+      },
+      {
+       "pair": "held|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 105
+      },
+      {
+       "pair": "held|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 106
+      },
+      {
+       "pair": "held|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 107
+      },
+      {
+       "pair": "held|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 108
+      },
+      {
+       "pair": "held|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 109
+      },
+      {
+       "pair": "held|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 110
+      },
+      {
+       "pair": "held|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 111
+      },
+      {
+       "pair": "held|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 112
+      },
+      {
+       "pair": "held|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 113
+      },
+      {
+       "pair": "palm|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 114
+      },
+      {
+       "pair": "palm|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 115
+      },
+      {
+       "pair": "palm|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 116
+      },
+      {
+       "pair": "palm|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 117
+      },
+      {
+       "pair": "rail|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 118
+      },
+      {
+       "pair": "rail|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 119
+      },
+      {
+       "pair": "rail|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 120
+      },
+      {
+       "pair": "rail|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 121
+      },
+      {
+       "pair": "rail|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 122
+      },
+      {
+       "pair": "rail|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 123
+      },
+      {
+       "pair": "rail|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 124
+      },
+      {
+       "pair": "rail|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 125
+      },
+      {
+       "pair": "rail|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 126
+      },
+      {
+       "pair": "rail|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 127
+      },
+      {
+       "pair": "rail|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 128
+      },
+      {
+       "pair": "rail|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 129
+      },
+      {
+       "pair": "link1|o05",
+       "phase": "carry",
+       "s": 1.0,
+       "segment": 190
+      },
+      {
+       "pair": "link1|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 191
+      },
+      {
+       "pair": "link1|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 192
+      },
+      {
+       "pair": "link1|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 193
+      },
+      {
+       "pair": "link1|o05",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 194
+      },
+      {
+       "pair": "link1|o05",
+       "phase": "release",
+       "s": 0.0,
+       "segment": 195
+      },
+      {
+       "pair": "link1|o05",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 196
+      },
+      {
+       "pair": "link1|o05",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 197
+      },
+      {
+       "pair": "link1|o05",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 198
+      },
+      {
+       "pair": "link1|o05",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 199
+      },
+      {
+       "pair": "link1|o05",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 200
+      },
+      {
+       "pair": "link1|o05",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 201
+      },
+      {
+       "pair": "link1|o05",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 202
+      },
+      {
+       "pair": "link1|o05",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 203
+      },
+      {
+       "pair": "link1|o05",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 204
+      },
+      {
+       "pair": "link1|o05",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 205
+      },
+      {
+       "pair": "link1|o05",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 206
+      },
+      {
+       "pair": "link1|o05",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 207
+      }
+     ],
+     "first_interruption": {
+      "pair": "palm|o05",
+      "phase": "pregrasp",
+      "s": 1.0,
+      "segment": 0
+     },
+     "scope": "the single recorded witness path only; not a task-feasibility label",
+     "segments": 208,
+     "target_task_status": "NOT_RUN",
+     "unresolved_segments": [
+      66
+     ]
+    },
+    "q0_clear": true,
+    "scene": {
+     "action_hash": null,
+     "domain_policy": "ALL_SUPPORTED",
+     "lattice": {
+      "cols": 8,
+      "pitch_m": 0.08,
+      "rows": 8
+     },
+     "legal_cells": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+     ],
+     "objects": [
+      {
+       "cell": 3,
+       "id": "o00",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.28,
+        0.04
+       ]
+      },
+      {
+       "cell": 13,
+       "id": "o01",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.44,
+        0.12
+       ]
+      },
+      {
+       "cell": 50,
+       "id": "o02",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.2,
+        0.52
+       ]
+      },
+      {
+       "cell": 60,
+       "id": "o03",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.36,
+        0.6
+       ]
+      },
+      {
+       "cell": 49,
+       "id": "o04",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.12,
+        0.52
+       ]
+      },
+      {
+       "cell": 57,
+       "id": "o05",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.12,
+        0.6
+       ]
+      },
+      {
+       "cell": 18,
+       "id": "t0",
+       "kind": "target",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.2,
+        0.2
+       ]
+      }
+     ],
+     "robot": {
+      "attached_id": null,
+      "attachment": "free",
+      "gripper_gap_m": 0.07,
+      "q_rad": [
+       1.5707963267948966,
+       1.5707963267948966,
+       1.5707963267948966
+      ]
+     },
+     "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+     "root_id": "root_d1",
+     "variant_id": "ref"
+    },
+    "scene_hash": "sha256:bf40b5854dc235f1f80b91b94cad383cf75bd635c365e1a2ab2cc0a9e7859bd1",
+    "status": "PRECHECK_STATIC",
+    "target_task_status": "NOT_RUN",
+    "variant": "+A+S"
+   }
+  ],
+  "g4d_R1": [
+   {
+    "added": {},
+    "family_id": "sha256:ebfe7ec8d041a30d6f83ccc16edd60be8fbf36ae6aa5ea48a375283e8b89cdf0",
+    "goal_cell": 45,
+    "nominal": {
+     "blocks_nominal_witness": "NO",
+     "collision_segments": [],
+     "first_interruption": null,
+     "scope": "the single recorded witness path only; not a task-feasibility label",
+     "segments": 29,
+     "target_task_status": "NOT_RUN",
+     "unresolved_segments": []
+    },
+    "q0_clear": true,
+    "scene": {
+     "action_hash": null,
+     "domain_policy": "ALL_SUPPORTED",
+     "lattice": {
+      "cols": 8,
+      "pitch_m": 0.08,
+      "rows": 8
+     },
+     "legal_cells": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+     ],
+     "objects": [
+      {
+       "cell": 3,
+       "id": "o00",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.28,
+        0.04
+       ]
+      },
+      {
+       "cell": 13,
+       "id": "o01",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.44,
+        0.12
+       ]
+      },
+      {
+       "cell": 51,
+       "id": "o02",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.28,
+        0.52
+       ]
+      },
+      {
+       "cell": 60,
+       "id": "o03",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.36,
+        0.6
+       ]
+      },
+      {
+       "cell": 18,
+       "id": "t0",
+       "kind": "target",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.2,
+        0.2
+       ]
+      }
+     ],
+     "robot": {
+      "attached_id": null,
+      "attachment": "free",
+      "gripper_gap_m": 0.07,
+      "q_rad": [
+       1.5707963267948966,
+       1.5707963267948966,
+       1.5707963267948966
+      ]
+     },
+     "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+     "root_id": "root_d1",
+     "variant_id": "block_a"
+    },
+    "scene_hash": "sha256:561d871f195e2f3e91375cd781a55a8d6094eb5cdc34571f53ed36a84279494c",
+    "status": "PRECHECK_STATIC",
+    "target_task_status": "NOT_RUN",
+    "variant": "base"
+   },
+   {
+    "added": {
+     "A": {
+      "cell": 42,
+      "id": "o04",
+      "role": "grasp_access_blocker"
+     }
+    },
+    "family_id": "sha256:ebfe7ec8d041a30d6f83ccc16edd60be8fbf36ae6aa5ea48a375283e8b89cdf0",
+    "goal_cell": 45,
+    "nominal": {
+     "blocks_nominal_witness": "YES",
+     "collision_segments": [
+      {
+       "pair": "finger_r|o04",
+       "phase": "pregrasp",
+       "s": 1.0,
+       "segment": 0
+      },
+      {
+       "pair": "finger_r|o04",
+       "phase": "pregrasp",
+       "s": 0.0,
+       "segment": 1
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 2
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 3
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 4
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 5
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 6
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 7
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 8
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 9
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 10
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 11
+      },
+      {
+       "pair": "housing2|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 12
+      },
+      {
+       "pair": "housing2|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 13
+      },
+      {
+       "pair": "housing2|o04",
+       "phase": "close_attach",
+       "s": 0.0,
+       "segment": 14
+      },
+      {
+       "pair": "housing2|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 15
+      },
+      {
+       "pair": "housing2|o04",
+       "phase": "release",
+       "s": 0.0,
+       "segment": 16
+      },
+      {
+       "pair": "housing2|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 17
+      },
+      {
+       "pair": "housing2|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 18
+      },
+      {
+       "pair": "housing2|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 19
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 20
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 21
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 22
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 23
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 24
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 25
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 26
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 27
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 28
+      }
+     ],
+     "first_interruption": {
+      "pair": "finger_r|o04",
+      "phase": "pregrasp",
+      "s": 1.0,
+      "segment": 0
+     },
+     "scope": "the single recorded witness path only; not a task-feasibility label",
+     "segments": 29,
+     "target_task_status": "NOT_RUN",
+     "unresolved_segments": []
+    },
+    "q0_clear": true,
+    "scene": {
+     "action_hash": null,
+     "domain_policy": "ALL_SUPPORTED",
+     "lattice": {
+      "cols": 8,
+      "pitch_m": 0.08,
+      "rows": 8
+     },
+     "legal_cells": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+     ],
+     "objects": [
+      {
+       "cell": 3,
+       "id": "o00",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.28,
+        0.04
+       ]
+      },
+      {
+       "cell": 13,
+       "id": "o01",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.44,
+        0.12
+       ]
+      },
+      {
+       "cell": 51,
+       "id": "o02",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.28,
+        0.52
+       ]
+      },
+      {
+       "cell": 60,
+       "id": "o03",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.36,
+        0.6
+       ]
+      },
+      {
+       "cell": 42,
+       "id": "o04",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.2,
+        0.44
+       ]
+      },
+      {
+       "cell": 18,
+       "id": "t0",
+       "kind": "target",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.2,
+        0.2
+       ]
+      }
+     ],
+     "robot": {
+      "attached_id": null,
+      "attachment": "free",
+      "gripper_gap_m": 0.07,
+      "q_rad": [
+       1.5707963267948966,
+       1.5707963267948966,
+       1.5707963267948966
+      ]
+     },
+     "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+     "root_id": "root_d1",
+     "variant_id": "block_a"
+    },
+    "scene_hash": "sha256:8df59861213137bd18fc1220b116f67df7011b5c61bc6a2ffb03a15595cd07c5",
+    "status": "PRECHECK_STATIC",
+    "target_task_status": "NOT_RUN",
+    "variant": "+A"
+   },
+   {
+    "added": {
+     "B": {
+      "cell": 57,
+      "id": "o04",
+      "role": "arm_link_sweep_blocker"
+     }
+    },
+    "family_id": "sha256:ebfe7ec8d041a30d6f83ccc16edd60be8fbf36ae6aa5ea48a375283e8b89cdf0",
+    "goal_cell": 45,
+    "nominal": {
+     "blocks_nominal_witness": "YES",
+     "collision_segments": [
+      {
+       "pair": "link2|o04",
+       "phase": "pregrasp",
+       "s": 1.0,
+       "segment": 0
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "pregrasp",
+       "s": 0.0,
+       "segment": 1
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 2
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 3
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 4
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 5
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 6
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 7
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 8
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 9
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 10
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 11
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 12
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 13
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "close_attach",
+       "s": 0.0,
+       "segment": 14
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 15
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "release",
+       "s": 0.0,
+       "segment": 16
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 17
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 18
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 19
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 20
+      },
+      {
+       "pair": "link1|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 21
+      }
+     ],
+     "first_interruption": {
+      "pair": "link2|o04",
+      "phase": "pregrasp",
+      "s": 1.0,
+      "segment": 0
+     },
+     "scope": "the single recorded witness path only; not a task-feasibility label",
+     "segments": 29,
+     "target_task_status": "NOT_RUN",
+     "unresolved_segments": []
+    },
+    "q0_clear": true,
+    "scene": {
+     "action_hash": null,
+     "domain_policy": "ALL_SUPPORTED",
+     "lattice": {
+      "cols": 8,
+      "pitch_m": 0.08,
+      "rows": 8
+     },
+     "legal_cells": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+     ],
+     "objects": [
+      {
+       "cell": 3,
+       "id": "o00",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.28,
+        0.04
+       ]
+      },
+      {
+       "cell": 13,
+       "id": "o01",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.44,
+        0.12
+       ]
+      },
+      {
+       "cell": 51,
+       "id": "o02",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.28,
+        0.52
+       ]
+      },
+      {
+       "cell": 60,
+       "id": "o03",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.36,
+        0.6
+       ]
+      },
+      {
+       "cell": 57,
+       "id": "o04",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.12,
+        0.6
+       ]
+      },
+      {
+       "cell": 18,
+       "id": "t0",
+       "kind": "target",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.2,
+        0.2
+       ]
+      }
+     ],
+     "robot": {
+      "attached_id": null,
+      "attachment": "free",
+      "gripper_gap_m": 0.07,
+      "q_rad": [
+       1.5707963267948966,
+       1.5707963267948966,
+       1.5707963267948966
+      ]
+     },
+     "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+     "root_id": "root_d1",
+     "variant_id": "block_a"
+    },
+    "scene_hash": "sha256:fb92905e8e8300efc6caa2293f29b55573d28f0baeae766f19d2c2f90b8fbc02",
+    "status": "PRECHECK_STATIC",
+    "target_task_status": "NOT_RUN",
+    "variant": "+B"
+   },
+   {
+    "added": {
+     "A": {
+      "cell": 42,
+      "id": "o04",
+      "role": "grasp_access_blocker"
+     },
+     "B": {
+      "cell": 57,
+      "id": "o05",
+      "role": "arm_link_sweep_blocker"
+     }
+    },
+    "family_id": "sha256:ebfe7ec8d041a30d6f83ccc16edd60be8fbf36ae6aa5ea48a375283e8b89cdf0",
+    "goal_cell": 45,
+    "nominal": {
+     "blocks_nominal_witness": "YES",
+     "collision_segments": [
+      {
+       "pair": "link2|o05",
+       "phase": "pregrasp",
+       "s": 1.0,
+       "segment": 0
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "pregrasp",
+       "s": 0.0,
+       "segment": 1
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 2
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 3
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 4
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 5
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 6
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 7
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 8
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 9
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 10
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 11
+      },
+      {
+       "pair": "housing2|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 12
+      },
+      {
+       "pair": "housing2|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 13
+      },
+      {
+       "pair": "housing2|o04",
+       "phase": "close_attach",
+       "s": 0.0,
+       "segment": 14
+      },
+      {
+       "pair": "housing2|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 15
+      },
+      {
+       "pair": "housing2|o04",
+       "phase": "release",
+       "s": 0.0,
+       "segment": 16
+      },
+      {
+       "pair": "housing2|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 17
+      },
+      {
+       "pair": "housing2|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 18
+      },
+      {
+       "pair": "housing2|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 19
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 20
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 21
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 22
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 23
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 24
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 25
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 26
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 27
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 28
+      }
+     ],
+     "first_interruption": {
+      "pair": "link2|o05",
+      "phase": "pregrasp",
+      "s": 1.0,
+      "segment": 0
+     },
+     "scope": "the single recorded witness path only; not a task-feasibility label",
+     "segments": 29,
+     "target_task_status": "NOT_RUN",
+     "unresolved_segments": []
+    },
+    "q0_clear": true,
+    "scene": {
+     "action_hash": null,
+     "domain_policy": "ALL_SUPPORTED",
+     "lattice": {
+      "cols": 8,
+      "pitch_m": 0.08,
+      "rows": 8
+     },
+     "legal_cells": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+     ],
+     "objects": [
+      {
+       "cell": 3,
+       "id": "o00",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.28,
+        0.04
+       ]
+      },
+      {
+       "cell": 13,
+       "id": "o01",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.44,
+        0.12
+       ]
+      },
+      {
+       "cell": 51,
+       "id": "o02",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.28,
+        0.52
+       ]
+      },
+      {
+       "cell": 60,
+       "id": "o03",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.36,
+        0.6
+       ]
+      },
+      {
+       "cell": 42,
+       "id": "o04",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.2,
+        0.44
+       ]
+      },
+      {
+       "cell": 57,
+       "id": "o05",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.12,
+        0.6
+       ]
+      },
+      {
+       "cell": 18,
+       "id": "t0",
+       "kind": "target",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.2,
+        0.2
+       ]
+      }
+     ],
+     "robot": {
+      "attached_id": null,
+      "attachment": "free",
+      "gripper_gap_m": 0.07,
+      "q_rad": [
+       1.5707963267948966,
+       1.5707963267948966,
+       1.5707963267948966
+      ]
+     },
+     "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+     "root_id": "root_d1",
+     "variant_id": "block_a"
+    },
+    "scene_hash": "sha256:e8611962b1c2fe0863ba7234a7792ece8b3d19ee67856259569663c683acbc2a",
+    "status": "PRECHECK_STATIC",
+    "target_task_status": "NOT_RUN",
+    "variant": "+A+B"
+   },
+   {
+    "added": {
+     "A": {
+      "cell": 42,
+      "id": "o04",
+      "role": "grasp_access_blocker"
+     },
+     "B": {
+      "cell": 57,
+      "id": "o05",
+      "role": "arm_link_sweep_blocker"
+     },
+     "C": {
+      "cell": 19,
+      "id": "o06",
+      "role": "transport_path"
+     }
+    },
+    "family_id": "sha256:ebfe7ec8d041a30d6f83ccc16edd60be8fbf36ae6aa5ea48a375283e8b89cdf0",
+    "goal_cell": 45,
+    "nominal": {
+     "blocks_nominal_witness": "YES",
+     "collision_segments": [
+      {
+       "pair": "link2|o05",
+       "phase": "pregrasp",
+       "s": 1.0,
+       "segment": 0
+      },
+      {
+       "pair": "link2|o05",
+       "phase": "pregrasp",
+       "s": 0.0,
+       "segment": 1
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 2
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 3
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 4
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 5
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 6
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 7
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 8
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 9
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 10
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 11
+      },
+      {
+       "pair": "housing2|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 12
+      },
+      {
+       "pair": "housing2|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 13
+      },
+      {
+       "pair": "housing2|o04",
+       "phase": "close_attach",
+       "s": 0.0,
+       "segment": 14
+      },
+      {
+       "pair": "housing2|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 15
+      },
+      {
+       "pair": "housing2|o04",
+       "phase": "release",
+       "s": 0.0,
+       "segment": 16
+      },
+      {
+       "pair": "housing2|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 17
+      },
+      {
+       "pair": "housing2|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 18
+      },
+      {
+       "pair": "housing2|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 19
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 20
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 21
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 22
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 23
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 24
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 25
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 26
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 27
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 28
+      }
+     ],
+     "first_interruption": {
+      "pair": "link2|o05",
+      "phase": "pregrasp",
+      "s": 1.0,
+      "segment": 0
+     },
+     "scope": "the single recorded witness path only; not a task-feasibility label",
+     "segments": 29,
+     "target_task_status": "NOT_RUN",
+     "unresolved_segments": []
+    },
+    "q0_clear": true,
+    "scene": {
+     "action_hash": null,
+     "domain_policy": "ALL_SUPPORTED",
+     "lattice": {
+      "cols": 8,
+      "pitch_m": 0.08,
+      "rows": 8
+     },
+     "legal_cells": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+     ],
+     "objects": [
+      {
+       "cell": 3,
+       "id": "o00",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.28,
+        0.04
+       ]
+      },
+      {
+       "cell": 13,
+       "id": "o01",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.44,
+        0.12
+       ]
+      },
+      {
+       "cell": 51,
+       "id": "o02",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.28,
+        0.52
+       ]
+      },
+      {
+       "cell": 60,
+       "id": "o03",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.36,
+        0.6
+       ]
+      },
+      {
+       "cell": 42,
+       "id": "o04",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.2,
+        0.44
+       ]
+      },
+      {
+       "cell": 57,
+       "id": "o05",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.12,
+        0.6
+       ]
+      },
+      {
+       "cell": 19,
+       "id": "o06",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.28,
+        0.2
+       ]
+      },
+      {
+       "cell": 18,
+       "id": "t0",
+       "kind": "target",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.2,
+        0.2
+       ]
+      }
+     ],
+     "robot": {
+      "attached_id": null,
+      "attachment": "free",
+      "gripper_gap_m": 0.07,
+      "q_rad": [
+       1.5707963267948966,
+       1.5707963267948966,
+       1.5707963267948966
+      ]
+     },
+     "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+     "root_id": "root_d1",
+     "variant_id": "block_a"
+    },
+    "scene_hash": "sha256:e5d8999a227c4421bffa5079d4ab48f5f7b80ac640d4ddaec37e7f72590d112d",
+    "status": "PRECHECK_STATIC",
+    "target_task_status": "NOT_RUN",
+    "variant": "+A+B+C"
+   },
+   {
+    "added": {
+     "N": {
+      "cell": 7,
+      "id": "o04",
+      "role": "harmless_nearby"
+     }
+    },
+    "family_id": "sha256:ebfe7ec8d041a30d6f83ccc16edd60be8fbf36ae6aa5ea48a375283e8b89cdf0",
+    "goal_cell": 45,
+    "nominal": {
+     "blocks_nominal_witness": "NO",
+     "collision_segments": [],
+     "first_interruption": null,
+     "scope": "the single recorded witness path only; not a task-feasibility label",
+     "segments": 29,
+     "target_task_status": "NOT_RUN",
+     "unresolved_segments": []
+    },
+    "q0_clear": true,
+    "scene": {
+     "action_hash": null,
+     "domain_policy": "ALL_SUPPORTED",
+     "lattice": {
+      "cols": 8,
+      "pitch_m": 0.08,
+      "rows": 8
+     },
+     "legal_cells": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+     ],
+     "objects": [
+      {
+       "cell": 3,
+       "id": "o00",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.28,
+        0.04
+       ]
+      },
+      {
+       "cell": 13,
+       "id": "o01",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.44,
+        0.12
+       ]
+      },
+      {
+       "cell": 51,
+       "id": "o02",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.28,
+        0.52
+       ]
+      },
+      {
+       "cell": 60,
+       "id": "o03",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.36,
+        0.6
+       ]
+      },
+      {
+       "cell": 7,
+       "id": "o04",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.6,
+        0.04
+       ]
+      },
+      {
+       "cell": 18,
+       "id": "t0",
+       "kind": "target",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.2,
+        0.2
+       ]
+      }
+     ],
+     "robot": {
+      "attached_id": null,
+      "attachment": "free",
+      "gripper_gap_m": 0.07,
+      "q_rad": [
+       1.5707963267948966,
+       1.5707963267948966,
+       1.5707963267948966
+      ]
+     },
+     "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+     "root_id": "root_d1",
+     "variant_id": "block_a"
+    },
+    "scene_hash": "sha256:2ad02743af9ef2151284d5ce1746f18bb72c1365a9f5b3df2516ae694b515855",
+    "status": "PRECHECK_STATIC",
+    "target_task_status": "NOT_RUN",
+    "variant": "+N"
+   },
+   {
+    "added": {
+     "A": {
+      "cell": 42,
+      "id": "o04",
+      "role": "grasp_access_blocker"
+     },
+     "N": {
+      "cell": 7,
+      "id": "o05",
+      "role": "harmless_nearby"
+     }
+    },
+    "family_id": "sha256:ebfe7ec8d041a30d6f83ccc16edd60be8fbf36ae6aa5ea48a375283e8b89cdf0",
+    "goal_cell": 45,
+    "nominal": {
+     "blocks_nominal_witness": "YES",
+     "collision_segments": [
+      {
+       "pair": "finger_r|o04",
+       "phase": "pregrasp",
+       "s": 1.0,
+       "segment": 0
+      },
+      {
+       "pair": "finger_r|o04",
+       "phase": "pregrasp",
+       "s": 0.0,
+       "segment": 1
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 2
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 3
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 4
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 5
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 6
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 7
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 8
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 9
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 10
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 11
+      },
+      {
+       "pair": "housing2|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 12
+      },
+      {
+       "pair": "housing2|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 13
+      },
+      {
+       "pair": "housing2|o04",
+       "phase": "close_attach",
+       "s": 0.0,
+       "segment": 14
+      },
+      {
+       "pair": "housing2|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 15
+      },
+      {
+       "pair": "housing2|o04",
+       "phase": "release",
+       "s": 0.0,
+       "segment": 16
+      },
+      {
+       "pair": "housing2|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 17
+      },
+      {
+       "pair": "housing2|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 18
+      },
+      {
+       "pair": "housing2|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 19
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 20
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 21
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 22
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 23
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 24
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 25
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 26
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 27
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 28
+      }
+     ],
+     "first_interruption": {
+      "pair": "finger_r|o04",
+      "phase": "pregrasp",
+      "s": 1.0,
+      "segment": 0
+     },
+     "scope": "the single recorded witness path only; not a task-feasibility label",
+     "segments": 29,
+     "target_task_status": "NOT_RUN",
+     "unresolved_segments": []
+    },
+    "q0_clear": true,
+    "scene": {
+     "action_hash": null,
+     "domain_policy": "ALL_SUPPORTED",
+     "lattice": {
+      "cols": 8,
+      "pitch_m": 0.08,
+      "rows": 8
+     },
+     "legal_cells": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+     ],
+     "objects": [
+      {
+       "cell": 3,
+       "id": "o00",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.28,
+        0.04
+       ]
+      },
+      {
+       "cell": 13,
+       "id": "o01",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.44,
+        0.12
+       ]
+      },
+      {
+       "cell": 51,
+       "id": "o02",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.28,
+        0.52
+       ]
+      },
+      {
+       "cell": 60,
+       "id": "o03",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.36,
+        0.6
+       ]
+      },
+      {
+       "cell": 42,
+       "id": "o04",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.2,
+        0.44
+       ]
+      },
+      {
+       "cell": 7,
+       "id": "o05",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.6,
+        0.04
+       ]
+      },
+      {
+       "cell": 18,
+       "id": "t0",
+       "kind": "target",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.2,
+        0.2
+       ]
+      }
+     ],
+     "robot": {
+      "attached_id": null,
+      "attachment": "free",
+      "gripper_gap_m": 0.07,
+      "q_rad": [
+       1.5707963267948966,
+       1.5707963267948966,
+       1.5707963267948966
+      ]
+     },
+     "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+     "root_id": "root_d1",
+     "variant_id": "block_a"
+    },
+    "scene_hash": "sha256:f1729a858bca1da6185689ae35e74858cc396af45735e85898c82c597444fe79",
+    "status": "PRECHECK_STATIC",
+    "target_task_status": "NOT_RUN",
+    "variant": "+A+N"
+   },
+   {
+    "added": {
+     "G": {
+      "cell": 45,
+      "id": "o04",
+      "role": "target_goal_occupant"
+     }
+    },
+    "family_id": "sha256:ebfe7ec8d041a30d6f83ccc16edd60be8fbf36ae6aa5ea48a375283e8b89cdf0",
+    "goal_cell": 45,
+    "nominal": {
+     "blocks_nominal_witness": "YES",
+     "collision_segments": [
+      {
+       "pair": "held|o04",
+       "phase": "carry",
+       "s": 1.0,
+       "segment": 15
+      },
+      {
+       "pair": "finger_l|o04",
+       "phase": "release",
+       "s": 0.0,
+       "segment": 16
+      }
+     ],
+     "first_interruption": {
+      "pair": "held|o04",
+      "phase": "carry",
+      "s": 1.0,
+      "segment": 15
+     },
+     "scope": "the single recorded witness path only; not a task-feasibility label",
+     "segments": 29,
+     "target_task_status": "NOT_RUN",
+     "unresolved_segments": []
+    },
+    "q0_clear": true,
+    "scene": {
+     "action_hash": null,
+     "domain_policy": "ALL_SUPPORTED",
+     "lattice": {
+      "cols": 8,
+      "pitch_m": 0.08,
+      "rows": 8
+     },
+     "legal_cells": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+     ],
+     "objects": [
+      {
+       "cell": 3,
+       "id": "o00",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.28,
+        0.04
+       ]
+      },
+      {
+       "cell": 13,
+       "id": "o01",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.44,
+        0.12
+       ]
+      },
+      {
+       "cell": 51,
+       "id": "o02",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.28,
+        0.52
+       ]
+      },
+      {
+       "cell": 60,
+       "id": "o03",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.36,
+        0.6
+       ]
+      },
+      {
+       "cell": 45,
+       "id": "o04",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.44,
+        0.44
+       ]
+      },
+      {
+       "cell": 18,
+       "id": "t0",
+       "kind": "target",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.2,
+        0.2
+       ]
+      }
+     ],
+     "robot": {
+      "attached_id": null,
+      "attachment": "free",
+      "gripper_gap_m": 0.07,
+      "q_rad": [
+       1.5707963267948966,
+       1.5707963267948966,
+       1.5707963267948966
+      ]
+     },
+     "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+     "root_id": "root_d1",
+     "variant_id": "block_a"
+    },
+    "scene_hash": "sha256:27d301d43caba91f3820f75c7283b17f4eee4a4b8a57738b8d9f5e3b22ba5d7b",
+    "status": "PRECHECK_STATIC",
+    "target_task_status": "NOT_RUN",
+    "variant": "+G"
+   },
+   {
+    "added": {
+     "A": {
+      "cell": 42,
+      "id": "o04",
+      "role": "grasp_access_blocker"
+     },
+     "S": {
+      "cell": 41,
+      "id": "o05",
+      "role": "staging_slot_occupant"
+     }
+    },
+    "family_id": "sha256:ebfe7ec8d041a30d6f83ccc16edd60be8fbf36ae6aa5ea48a375283e8b89cdf0",
+    "goal_cell": 45,
+    "nominal": {
+     "blocks_nominal_witness": "YES",
+     "collision_segments": [
+      {
+       "pair": "finger_r|o04",
+       "phase": "pregrasp",
+       "s": 1.0,
+       "segment": 0
+      },
+      {
+       "pair": "finger_r|o04",
+       "phase": "pregrasp",
+       "s": 0.0,
+       "segment": 1
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 2
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 3
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 4
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 5
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 6
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 7
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 8
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 9
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 10
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 11
+      },
+      {
+       "pair": "housing2|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 12
+      },
+      {
+       "pair": "housing2|o04",
+       "phase": "approach",
+       "s": 0.0,
+       "segment": 13
+      },
+      {
+       "pair": "housing2|o04",
+       "phase": "close_attach",
+       "s": 0.0,
+       "segment": 14
+      },
+      {
+       "pair": "housing2|o04",
+       "phase": "carry",
+       "s": 0.0,
+       "segment": 15
+      },
+      {
+       "pair": "housing2|o04",
+       "phase": "release",
+       "s": 0.0,
+       "segment": 16
+      },
+      {
+       "pair": "housing2|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 17
+      },
+      {
+       "pair": "housing2|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 18
+      },
+      {
+       "pair": "housing2|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 19
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 20
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 21
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 22
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 23
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 24
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 25
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 26
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 27
+      },
+      {
+       "pair": "link2|o04",
+       "phase": "retreat",
+       "s": 0.0,
+       "segment": 28
+      }
+     ],
+     "first_interruption": {
+      "pair": "finger_r|o04",
+      "phase": "pregrasp",
+      "s": 1.0,
+      "segment": 0
+     },
+     "scope": "the single recorded witness path only; not a task-feasibility label",
+     "segments": 29,
+     "target_task_status": "NOT_RUN",
+     "unresolved_segments": []
+    },
+    "q0_clear": true,
+    "scene": {
+     "action_hash": null,
+     "domain_policy": "ALL_SUPPORTED",
+     "lattice": {
+      "cols": 8,
+      "pitch_m": 0.08,
+      "rows": 8
+     },
+     "legal_cells": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+     ],
+     "objects": [
+      {
+       "cell": 3,
+       "id": "o00",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.28,
+        0.04
+       ]
+      },
+      {
+       "cell": 13,
+       "id": "o01",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.44,
+        0.12
+       ]
+      },
+      {
+       "cell": 51,
+       "id": "o02",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.28,
+        0.52
+       ]
+      },
+      {
+       "cell": 60,
+       "id": "o03",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.36,
+        0.6
+       ]
+      },
+      {
+       "cell": 42,
+       "id": "o04",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.2,
+        0.44
+       ]
+      },
+      {
+       "cell": 41,
+       "id": "o05",
+       "kind": "obstacle",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.12,
+        0.44
+       ]
+      },
+      {
+       "cell": 18,
+       "id": "t0",
+       "kind": "target",
+       "radius_m": 0.024,
+       "support": "table",
+       "xy_m": [
+        0.2,
+        0.2
+       ]
+      }
+     ],
+     "robot": {
+      "attached_id": null,
+      "attachment": "free",
+      "gripper_gap_m": 0.07,
+      "q_rad": [
+       1.5707963267948966,
+       1.5707963267948966,
+       1.5707963267948966
+      ]
+     },
+     "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+     "root_id": "root_d1",
+     "variant_id": "block_a"
+    },
+    "scene_hash": "sha256:58e20c1994fbb2f2640715821225388e5ca723fc2cf1a82b7a3d1959991540a9",
+    "status": "PRECHECK_STATIC",
+    "target_task_status": "NOT_RUN",
+    "variant": "+A+S"
+   }
+  ]
+ },
+ "version": "G4C-D2-v0"
+}
