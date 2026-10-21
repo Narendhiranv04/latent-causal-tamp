@@ -179,6 +179,8 @@ def worker(out, collect, train, oneshot_dir) -> None:
     plan = json.loads((collect / "plan.json").read_text())
     records = json.loads((collect / "decisions.json").read_text()) | json.loads((collect / "sealed_test.json").read_text())
     pv.INDEX.clear()
+    full = pv.trace_frames                                # coarser sampling of the SAME recorded arrays (48 roots in 1,800 CPU-s)
+    pv.trace_frames = lambda robot, s, seq, rel, tw: full(robot, s, seq, rel, tw, n_move=8, n_target=10)
     for k, r in plan["roots"].items():
         if r["variant"] == "obstructed" and any(x["query"]["lineage"] == k and x["teacher_status"] != "NOT_RUN" for x in records.values()):
             dst = out / "roots" / f"{k}_{r['family']}_{r['split']}"

@@ -1,0 +1,13 @@
+........................................................................ [ 22%]
+........................................................................ [ 45%]
+........................................................................ [ 68%]
+........................................................................ [ 91%]
+............................                                             [100%]
+=============================== warnings summary ===============================
+tests/test_abc_models.py::test_exact_joint_partition_marginals_and_states[B]
+  /home/naren/Desktop/boltzmann_lfd/tests/test_abc_models.py:69: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+  Consider using tensor.detach() first. (Triggered internally at /pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:836.)
+    assert float(o["W"].diagonal().abs().sum()) == 0.0 and torch.allclose(o["W"], o["W"].T)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+316 passed, 1 warning in 520.69s (0:08:40)
