@@ -1,0 +1,4 @@
+Attempt 1 (21 Oct 2026): full static computation completed (process CPU 41.92+0.08 s, wall 35.08 s),
+then crashed writing candidates.jsonl: TypeError numpy bool not JSON serializable
+(sector_check.check stored ex[i] as numpy.bool_). No decisions/labels were written.
+Fix: ex[i] = bool(...). Guarded calls were 0 by construction (guards raise).

@@ -1,0 +1,38 @@
+{
+ "assumptions": {
+  "A1": "ACCEPTED (user, 21 Oct 2026): declared six-phase skill, 48 grasps, fixed start; never physical impossibility",
+  "A2": "exact IK, independently re-derived (sector_check._ik) and cross-checked per candidate",
+  "A3": "joint 1 cannot wrap: limits inside (-pi, pi), checked per query",
+  "A4": "geometry.bodies: link0 w0/2, housing1 r_h",
+  "A5": "geometry.Checker COLLISION is sound (as for TARGET_PICK / FIRST_MOVER)",
+  "A6": "state_pose_uncertainty_m = 0",
+  "A7": "OPEN: 2 mm goal tolerance vs exact-centre placement; place side disabled",
+  "A8": "fixed start only"
+ },
+ "constants": {
+  "L1": 0.42,
+  "delta": 0.005,
+  "dirs": 24,
+  "eps": 0.0002,
+  "grasp_x": 0.032,
+  "housing_r": 0.012,
+  "joint0_limits": [
+   -3.14159265,
+   3.14159265
+  ],
+  "w0_half": 0.009
+ },
+ "enabled": {
+  "pick_side_definite_screen": true,
+  "pick_side_sector": true,
+  "place_screen": false,
+  "place_sector": "DIAGNOSTIC_ONLY"
+ },
+ "joint1_limits": [
+  -3.14159265,
+  3.14159265
+ ],
+ "tau": 1e-09,
+ "theorem": "Independent checker for LINK0_SECTOR_PICK_V1 proof records (G4C-D2-P3a).\n\nKept apart from the producer (sector_cert.py) on purpose: it re-derives the annulus\nradius, barriers, free sector and the closed-form IK with its own code, rebuilds the\nworld from the source records itself, re-runs the trusted pose-only pick screen\n(skill.screen_pick, the primitive certificates.py also trusts) and never reads the\nproducer's verdict except to refuse a record whose claim disagrees with the proof.\n\nTheorem (report 0017 \u00a76, pick side only). Start q_s (open, free gripper), resting world\nW. Every declared-skill execution reaches the exact pick configuration of some declared\n(phi, branch) through configurations that are not COLLISION in W; link 0 cannot point at\nany disc with rho < R0 = L1 + max(w0/2, r_h) + r + delta - eps, and joint 1 cannot wrap,\nso q[0] stays in the open sector I(W, q_s). If each of the 48 candidates has no IK, a\ndefinite screen rejection, or q[0] certifiably outside I, the moved object cannot be\npicked from q_s under the declared skill. Place-side exclusions are not used (A7).\n",
+ "version": "LINK0_SECTOR_PICK_V1"
+}

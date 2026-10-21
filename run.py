@@ -16,6 +16,7 @@ with the module that owns that stage (moved here-from at G4A, behaviour unchange
     g4c-pilot-*         g4c_pilot.*                   runs/g4c_pilot (authorized 5-root pilot: finalize, run, judge)
     g4c-d2-precheck     d2_precheck.run               runs/g4c_d2_precheck (witness-first static precheck; no teacher)
     g4c-d2-poc-*        d2_poc.*                      runs/g4c_d2_poc_s (authorized POC_S: finalize, run, judge)
+    g4c-d2-p3a-static   sector_cert.run               runs/g4c_d2_p3a_static (link-0 sector certificate; zero oracle calls)
     replay              run.cmd_replay                any run directory
 
     python run.py scene --config config.toml --case G0_ILLUSTRATIVE --out runs/g0_scene
@@ -42,6 +43,7 @@ import g4c
 import g4c_pilot
 import d2_poc
 import d2_precheck
+import sector_cert
 import geometry as ge
 import intervention_figures as ifig
 import motion as mo
@@ -170,6 +172,10 @@ def main(argv=None) -> int:
         q.add_argument("--instruction", default="instruction-phase-md/G4C_D2_P1_Witness_First_POC_S_Instructions.md")
         q.add_argument("--out", required=True)
         q.set_defaults(func=fn)
+    q = sub.add_parser("g4c-d2-p3a-static", help="G4C-D2-P3a: static link-0 sector certificate adjudication (no planner)")
+    q.add_argument("--config", default="config.toml")
+    q.add_argument("--out", required=True)
+    q.set_defaults(func=sector_cert.run)
     q = sub.add_parser("replay", help="G1-G3.5: independently re-certify a run's stored trajectories")
     q.add_argument("--run", required=True)
     q.add_argument("--report", help="where to write the replay record (default: <run>/replay.json)")
