@@ -1,0 +1,121 @@
+{
+ "d2_g4c_r00_AB:o04>49.o05>41": {
+  "active": 8,
+  "complete": true,
+  "decided": 8,
+  "missing": [],
+  "operational": true,
+  "slots": [
+   {
+    "query": "seq:d2_g4c_r00_AB:empty",
+    "slot": "z0",
+    "source": "PLANNER_BUDGET",
+    "y": 0
+   },
+   {
+    "query": "scene:d2_g4c_r00_AB:o04>49",
+    "slot": "zS[singleton:o04]",
+    "source": "WITNESS",
+    "y": 1
+   },
+   {
+    "query": "scene:d2_g4c_r00_AB:o05>41",
+    "slot": "zS[singleton:o05]",
+    "source": "PLANNER_BUDGET",
+    "y": 0
+   },
+   {
+    "query": "scene:d2_g4c_r00_AB:o04>49.o05>41",
+    "slot": "zS[joint:o04+o05]",
+    "source": "WITNESS",
+    "y": 1
+   },
+   {
+    "query": "seq:d2_g4c_r00_AB:o04>49.o05>41",
+    "slot": "zR",
+    "source": "WITNESS",
+    "y": 1
+   },
+   {
+    "query": "seq:d2_g4c_r00_AB:o05>41",
+    "slot": "zO[0]",
+    "source": "PLANNER_BUDGET",
+    "y": 0
+   },
+   {
+    "query": "seq:d2_g4c_r00_AB:o04>49",
+    "slot": "zO[1]",
+    "source": "WITNESS",
+    "y": 1
+   },
+   {
+    "query": "seq:d2_g4c_r00_AB:o04>49.o05>41",
+    "slot": "zO[2]",
+    "source": "WITNESS",
+    "y": 1
+   }
+  ]
+ },
+ "g4c_r19:o01>28.o00>27": {
+  "active": 8,
+  "complete": false,
+  "decided": 4,
+  "missing": [
+   "zS[singleton:A]",
+   "zS[singleton:B]",
+   "zS[joint:A+B]",
+   "zO[1]"
+  ],
+  "operational": false,
+  "slots": [
+   {
+    "query": "seq:g4c_r19:empty",
+    "slot": "z0",
+    "source": "CERTIFICATE",
+    "y": 0
+   },
+   {
+    "query": "scene:g4c_r19:o00>9",
+    "slot": "zS[singleton:A]",
+    "source": null,
+    "y": null
+   },
+   {
+    "query": "scene:g4c_r19:o01>27",
+    "slot": "zS[singleton:B]",
+    "source": null,
+    "y": null
+   },
+   {
+    "query": "scene:g4c_r19:o00>9.o01>27",
+    "slot": "zS[joint:A+B]",
+    "source": null,
+    "y": null
+   },
+   {
+    "query": "seq:g4c_r19:o01>28.o00>27",
+    "slot": "zR",
+    "source": "WITNESS",
+    "y": 1
+   },
+   {
+    "query": "seq:g4c_r19:o00>27",
+    "slot": "zO[0]",
+    "source": "CERTIFICATE",
+    "y": 0
+   },
+   {
+    "query": "seq:g4c_r19:o01>28",
+    "slot": "zO[1]",
+    "source": null,
+    "y": null
+   },
+   {
+    "query": "seq:g4c_r19:o01>28.o00>27",
+    "slot": "zO[2]",
+    "source": "WITNESS",
+    "y": 1
+   }
+  ]
+ }
+}

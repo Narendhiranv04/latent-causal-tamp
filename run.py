@@ -17,6 +17,7 @@ with the module that owns that stage (moved here-from at G4A, behaviour unchange
     g4c-d2-precheck     d2_precheck.run               runs/g4c_d2_precheck (witness-first static precheck; no teacher)
     g4c-d2-poc-*        d2_poc.*                      runs/g4c_d2_poc_s (authorized POC_S: finalize, run, judge)
     g4c-d2-p3a-static   sector_cert.run               runs/g4c_d2_p3a_static (link-0 sector certificate; zero oracle calls)
+    g4c-lf-p4-*         teacher_pilot.*               runs/g4c_lf_p4 (guarded regression gate; OPNEG-v1 calibration pilot)
     replay              run.cmd_replay                any run directory
 
     python run.py scene --config config.toml --case G0_ILLUSTRATIVE --out runs/g0_scene
@@ -44,6 +45,7 @@ import g4c_pilot
 import d2_poc
 import d2_precheck
 import sector_cert
+import teacher_pilot
 import geometry as ge
 import intervention_figures as ifig
 import motion as mo
@@ -176,6 +178,17 @@ def main(argv=None) -> int:
     q.add_argument("--config", default="config.toml")
     q.add_argument("--out", required=True)
     q.set_defaults(func=sector_cert.run)
+    q = sub.add_parser("g4c-lf-p4-regression", help="G4C-LF-P4: full suite + six replays under one process-tree guard")
+    q.add_argument("--out", required=True)
+    q.add_argument("--cpu", type=float, default=650.0)
+    q.add_argument("--wall", type=float, default=1500.0)
+    q.set_defaults(func=teacher_pilot.regression)
+    q = sub.add_parser("g4c-lf-p4-pilot", help="G4C-LF-P4: bounded OPNEG-v1 calibration pilot (12 queries x 3 seeds)")
+    for a, d in (("--config", "config.toml"), ("--config-v2", "config_v2.toml"), ("--policy", "teacher_opneg.toml"),
+                 ("--regression", "runs/g4c_lf_p4/regression")):
+        q.add_argument(a, default=d)
+    q.add_argument("--out", required=True)
+    q.set_defaults(func=teacher_pilot.pilot)
     q = sub.add_parser("replay", help="G1-G3.5: independently re-certify a run's stored trajectories")
     q.add_argument("--run", required=True)
     q.add_argument("--report", help="where to write the replay record (default: <run>/replay.json)")

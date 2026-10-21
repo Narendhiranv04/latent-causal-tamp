@@ -1,0 +1,206 @@
+{
+ "kappa": [
+  {
+   "deltas": [
+    1,
+    1,
+    0
+   ],
+   "joint": "scene:d2_g4c_r00_AB:o04>49.o05>41",
+   "kappa": 0,
+   "kind": "scene",
+   "operational": true
+  },
+  {
+   "deltas": [
+    1,
+    1,
+    0
+   ],
+   "kappa": 0,
+   "kind": "omission",
+   "operational": true,
+   "sequence": "seq:d2_g4c_r00_AB:o04>49.o05>41"
+  }
+ ],
+ "omission": [
+  {
+   "alternative": "seq:d2_g4c_r00_AB:o04>49.o05>41",
+   "decided": true,
+   "delta": 1,
+   "kind": "omission",
+   "omitted": [
+    0
+   ],
+   "operational": true,
+   "reference": "seq:d2_g4c_r00_AB:o05>41"
+  },
+  {
+   "alternative": "seq:d2_g4c_r00_AB:o04>49.o05>41",
+   "decided": true,
+   "delta": 0,
+   "kind": "omission",
+   "omitted": [
+    1
+   ],
+   "operational": false,
+   "reference": "seq:d2_g4c_r00_AB:o04>49"
+  },
+  {
+   "alternative": "seq:d2_g4c_r00_AB:o04>49.o05>41",
+   "decided": true,
+   "delta": 1,
+   "kind": "omission",
+   "omitted": [
+    0,
+    1
+   ],
+   "operational": true,
+   "reference": "seq:d2_g4c_r00_AB:empty"
+  },
+  {
+   "alternative": "seq:d2_g4c_r00_AB:o04>49",
+   "decided": true,
+   "delta": 1,
+   "kind": "omission",
+   "omitted": [
+    0
+   ],
+   "operational": true,
+   "reference": "seq:d2_g4c_r00_AB:empty"
+  },
+  {
+   "alternative": "seq:d2_g4c_r00_AB:o05>41",
+   "decided": true,
+   "delta": 0,
+   "kind": "omission",
+   "omitted": [
+    0
+   ],
+   "operational": true,
+   "reference": "seq:d2_g4c_r00_AB:empty"
+  },
+  {
+   "alternative": "seq:g4c_r19:o01>28.o00>27",
+   "decided": true,
+   "delta": 1,
+   "kind": "omission",
+   "omitted": [
+    0
+   ],
+   "operational": false,
+   "reference": "seq:g4c_r19:o00>27"
+  },
+  {
+   "alternative": "seq:g4c_r19:o01>28.o00>27",
+   "decided": true,
+   "delta": 1,
+   "kind": "omission",
+   "omitted": [
+    0,
+    1
+   ],
+   "operational": false,
+   "reference": "seq:g4c_r19:empty"
+  },
+  {
+   "alternative": "seq:g4c_r19:o00>27.o01>28",
+   "decided": true,
+   "delta": 0,
+   "kind": "omission",
+   "omitted": [
+    1
+   ],
+   "operational": false,
+   "reference": "seq:g4c_r19:o00>27"
+  },
+  {
+   "alternative": "seq:g4c_r19:o00>27.o01>28",
+   "decided": true,
+   "delta": 0,
+   "kind": "omission",
+   "omitted": [
+    0,
+    1
+   ],
+   "operational": false,
+   "reference": "seq:g4c_r19:empty"
+  },
+  {
+   "alternative": "seq:g4c_r19:o00>27",
+   "decided": true,
+   "delta": 0,
+   "kind": "omission",
+   "omitted": [
+    0
+   ],
+   "operational": false,
+   "reference": "seq:g4c_r19:empty"
+  }
+ ],
+ "scene": [
+  {
+   "alternative": "scene:d2_g4c_r00_AB:o04>49",
+   "decided": true,
+   "delta": 1,
+   "edit": {
+    "o04": 49
+   },
+   "kind": "scene",
+   "operational": true,
+   "reference": "seq:d2_g4c_r00_AB:empty"
+  },
+  {
+   "alternative": "scene:d2_g4c_r00_AB:o05>41",
+   "decided": true,
+   "delta": 0,
+   "edit": {
+    "o05": 41
+   },
+   "kind": "scene",
+   "operational": true,
+   "reference": "seq:d2_g4c_r00_AB:empty"
+  },
+  {
+   "alternative": "scene:d2_g4c_r00_AB:o04>49.o05>41",
+   "decided": true,
+   "delta": 1,
+   "edit": {
+    "o04": 49,
+    "o05": 41
+   },
+   "kind": "scene",
+   "operational": true,
+   "reference": "seq:d2_g4c_r00_AB:empty"
+  },
+  {
+   "alternative": "scene:g4c_r19:o02>26",
+   "decided": true,
+   "delta": 0,
+   "edit": {
+    "o02": 26
+   },
+   "kind": "scene",
+   "operational": false,
+   "reference": "seq:g4c_r19:empty"
+  }
+ ],
+ "swap": [
+  {
+   "decided_contrast": true,
+   "labels": [
+    0,
+    1
+   ],
+   "operational": false,
+   "orders": [
+    "seq:g4c_r19:o00>27.o01>28",
+    "seq:g4c_r19:o01>28.o00>27"
+   ],
+   "sources": [
+    "CERTIFICATE",
+    "WITNESS"
+   ]
+  }
+ ]
+}
