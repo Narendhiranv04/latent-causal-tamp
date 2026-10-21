@@ -18,6 +18,8 @@ with the module that owns that stage (moved here-from at G4A, behaviour unchange
     g4c-d2-poc-*        d2_poc.*                      runs/g4c_d2_poc_s (authorized POC_S: finalize, run, judge)
     g4c-d2-p3a-static   sector_cert.run               runs/g4c_d2_p3a_static (link-0 sector certificate; zero oracle calls)
     g4c-lf-p4-*         teacher_pilot.*               runs/g4c_lf_p4 (guarded regression gate; OPNEG-v1 calibration pilot)
+    p5-d3lite           d3lite_run.run                runs/p5/d3lite (8 fresh roots, 4+4 gated, OPNEG-v1)
+    p5-g4e              abc_run.run                   runs/p5/g4e (A/B/C proof of concept; guarded, CPU only)
     replay              run.cmd_replay                any run directory
 
     python run.py scene --config config.toml --case G0_ILLUSTRATIVE --out runs/g0_scene
@@ -43,7 +45,9 @@ import g4b
 import g4c
 import g4c_pilot
 import d2_poc
+import abc_run
 import d2_precheck
+import d3lite_run
 import sector_cert
 import teacher_pilot
 import geometry as ge
@@ -189,6 +193,16 @@ def main(argv=None) -> int:
         q.add_argument(a, default=d)
     q.add_argument("--out", required=True)
     q.set_defaults(func=teacher_pilot.pilot)
+    q = sub.add_parser("p5-d3lite", help="P5: D3-lite collection (8 fresh roots, 4+4 with checkpoint gate)")
+    for a, d in (("--config", "config.toml"), ("--config-v2", "config_v2.toml"), ("--policy", "teacher_opneg.toml"),
+                 ("--regression", "runs/p5/regression")):
+        q.add_argument(a, default=d)
+    q.add_argument("--out", required=True)
+    q.set_defaults(func=d3lite_run.run)
+    q = sub.add_parser("p5-g4e", help="P5: G4E-ABC proof-of-concept training (no teacher calls)")
+    q.add_argument("--config", default="config.toml")
+    q.add_argument("--out", required=True)
+    q.set_defaults(func=abc_run.run)
     q = sub.add_parser("replay", help="G1-G3.5: independently re-certify a run's stored trajectories")
     q.add_argument("--run", required=True)
     q.add_argument("--report", help="where to write the replay record (default: <run>/replay.json)")

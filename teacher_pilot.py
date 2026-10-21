@@ -136,17 +136,36 @@ def pilot(args) -> int:
     cf.write_json(out / "static_admission.json", {"certificates": static, "cpu_s": round(static_cpu, 2), "ops": dict(ops)})
     if static_cpu > pol["pilot"]["static_admission_cpu_s"]:
         raise SystemExit("static admission exceeded its CPU cap")
-    P, seeds, unit_cpu = pol["policy"], {q["query"]: [] for q in plan["queries"]}, 0.0
     paths = {"plan": out / "pilot_plan.json", "config": Path(args.config), "config_v2": Path(args.config_v2)}
+    seeds, unit_cpu = run_rounds(plan, pol, out, paths, cfg, v2, robot, static, [q["query"] for q in plan["queries"]],
+                                 pol["pilot"]["aggregate_cpu_s"] - (time.process_time() - t0), pol["pilot"]["aggregate_wall_s"])
+    records, fatal = {}, []
+    for q in plan["queries"]:
+        try:
+            d = ot.adjudicate_query(static[q["query"]], seeds[q["query"]], pol)
+        except ot.Fatal as e:
+            fatal.append(str(e))
+            d = {**ot.adjudicate_query(None, [], pol), "teacher_status": "FATAL_CONTRADICTION", "reason": str(e)}
+        records[q["query"]] = {**d, "query": q, "static_certificate": static[q["query"]], "attempts": seeds[q["query"]],
+                               "J_first": next((x["J_first"] for x in seeds[q["query"]] if x["J_first"] is not None), None)}
+    report(out, cfg, robot, plan, pol, records, seeds, static, fatal, frozen, calls, ops, t0, w0, unit_cpu)
+    return 1 if fatal else 0
+
+
+def run_rounds(plan, pol, out, paths, cfg, v2, robot, static, queries, cpu_cap, wall_cap, seeds=None) -> tuple:
+    """Seed-major rounds over `queries` through the unchanged guarded runner. A query stops at a
+    revalidated witness or an accepted (static or worker) certificate. Each round's admission uses
+    the remaining CPU / wall of THIS call (process time of the caller + guarded unit CPU)."""
+    P, seeds, unit_cpu = pol["policy"], seeds or {q: [] for q in queries}, 0.0
+    c0, w0 = time.process_time(), time.time()
     for s in P["seeds"]:
-        todo = [q["query"] for q in plan["queries"] if static[q["query"]] is None and
-                not any(x["terminal"] in ("WITNESS", "CERTIFICATE") for x in seeds[q["query"]])]
+        todo = [q for q in queries if static.get(q) is None and
+                not any(x["terminal"] in ("WITNESS", "CERTIFICATE") for x in seeds[q])]
         if not todo:
             break
-        spent = time.process_time() - t0 + unit_cpu
         rp = {"units": [u for u in plan["units"] if u["seed"] == s and u["query"] in todo], "limits": {
             "cpu_per_unit_s": P["per_seed_cpu_s"], "guard_margin_s": P["per_seed_guard_margin_s"], "wall_per_unit_s": P["per_seed_wall_s"],
-            "cpu_aggregate_s": pol["pilot"]["aggregate_cpu_s"] - spent, "wall_total_s": pol["pilot"]["aggregate_wall_s"] - (time.time() - w0),
+            "cpu_aggregate_s": cpu_cap - (time.process_time() - c0 + unit_cpu), "wall_total_s": wall_cap - (time.time() - w0),
             "poll_s": 0.25, "orchestration_reserve_s": pol["pilot"]["orchestration_reserve_s"], "workers": 1}}
         rp["plan_hash"] = cf.stable_hash(rp)
         led = gr.run_collection(rp, out / f"seed{s}", paths, Path("."))
@@ -161,17 +180,7 @@ def pilot(args) -> int:
                                       "in_flight_calls_unrecorded": st["stop"] != "COMPLETED"})
         if led.get("enforcement_failure"):
             break
-    records, fatal = {}, []
-    for q in plan["queries"]:
-        try:
-            d = ot.adjudicate_query(static[q["query"]], seeds[q["query"]], pol)
-        except ot.Fatal as e:
-            fatal.append(str(e))
-            d = {**ot.adjudicate_query(None, [], pol), "teacher_status": "FATAL_CONTRADICTION", "reason": str(e)}
-        records[q["query"]] = {**d, "query": q, "static_certificate": static[q["query"]], "attempts": seeds[q["query"]],
-                               "J_first": next((x["J_first"] for x in seeds[q["query"]] if x["J_first"] is not None), None)}
-    report(out, cfg, robot, plan, pol, records, seeds, static, fatal, frozen, calls, ops, t0, w0, unit_cpu)
-    return 1 if fatal else 0
+    return seeds, unit_cpu
 
 
 def report(out, cfg, robot, plan, pol, records, seeds, static, fatal, frozen, calls, ops, t0, w0, unit_cpu):

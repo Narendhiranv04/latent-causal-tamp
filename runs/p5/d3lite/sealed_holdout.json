@@ -1,0 +1,937 @@
+{
+ "scene:d3_2026102204:o00>17": {
+  "J_first": 0.0,
+  "attempts": [
+   {
+    "J_first": 0.0,
+    "calls": null,
+    "clean": false,
+    "cpu_s": 240.08,
+    "in_flight_calls_unrecorded": true,
+    "label": "UNRESOLVED",
+    "reason": "no decisive evidence",
+    "seed": 20261021,
+    "stop": "CPU_CENSORED",
+    "terminal": "NOT_CLEAN:CPU_CENSORED",
+    "unit": "scene:d3_2026102204:o00>17#s20261021",
+    "wall_s": 240.15,
+    "witness_hash": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+   }
+  ],
+  "binary_training_label": null,
+  "decided_mask": false,
+  "is_budget_relative": false,
+  "label_source": "UNRESOLVED",
+  "policy_hash": "sha256:df54878deb69bac823339ce9832b7454d8bbca2ef77b3aea3c939016caef075c",
+  "policy_id": "2D-ABC-OPNEG-v1",
+  "proof_scope": null,
+  "query": {
+   "batch": 1,
+   "edit": {
+    "o00": 17
+   },
+   "kind": "SCENE_TARGET_ONLY",
+   "lineage": "d3_2026102204",
+   "query": "scene:d3_2026102204:o00>17",
+   "role": "singleton:A",
+   "root": "d3_2026102204",
+   "sequence": [],
+   "split": "holdout"
+  },
+  "reason": "2 declared seed(s) not run",
+  "seeds_declared": 3,
+  "seeds_run": 1,
+  "static_certificate": null,
+  "teacher_status": "UNKNOWN",
+  "training_weight": 0.0
+ },
+ "scene:d3_2026102204:o00>17.o01>44": {
+  "J_first": 0.0,
+  "attempts": [
+   {
+    "J_first": 0.0,
+    "calls": {
+     "relocation_planner": 0,
+     "target_evaluations": 1
+    },
+    "clean": true,
+    "cpu_s": 1.03,
+    "in_flight_calls_unrecorded": false,
+    "label": "VERIFIED_FEASIBLE",
+    "reason": "complete witness, all checks true",
+    "seed": 20261021,
+    "stop": "COMPLETED",
+    "terminal": "WITNESS",
+    "unit": "scene:d3_2026102204:o00>17.o01>44#s20261021",
+    "wall_s": 1.26,
+    "witness_hash": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+   }
+  ],
+  "binary_training_label": 1,
+  "decided_mask": true,
+  "is_budget_relative": false,
+  "label_source": "WITNESS",
+  "policy_hash": "sha256:df54878deb69bac823339ce9832b7454d8bbca2ef77b3aea3c939016caef075c",
+  "policy_id": "2D-ABC-OPNEG-v1",
+  "proof_scope": "EXISTENTIAL_WITNESS",
+  "query": {
+   "batch": 1,
+   "edit": {
+    "o00": 17,
+    "o01": 44
+   },
+   "kind": "SCENE_TARGET_ONLY",
+   "lineage": "d3_2026102204",
+   "query": "scene:d3_2026102204:o00>17.o01>44",
+   "role": "joint:A+B",
+   "root": "d3_2026102204",
+   "sequence": [],
+   "split": "holdout"
+  },
+  "reason": "complete witness on seed 20261021",
+  "seeds_declared": 3,
+  "seeds_run": 1,
+  "static_certificate": null,
+  "teacher_status": "VERIFIED_FEASIBLE",
+  "training_weight": 1.0
+ },
+ "scene:d3_2026102204:o01>44": {
+  "J_first": null,
+  "attempts": [],
+  "binary_training_label": 0,
+  "decided_mask": true,
+  "is_budget_relative": false,
+  "label_source": "CERTIFICATE",
+  "policy_hash": "sha256:df54878deb69bac823339ce9832b7454d8bbca2ef77b3aea3c939016caef075c",
+  "policy_id": "2D-ABC-OPNEG-v1",
+  "proof_scope": "ASSIGNMENT",
+  "query": {
+   "batch": 1,
+   "edit": {
+    "o01": 44
+   },
+   "kind": "SCENE_TARGET_ONLY",
+   "lineage": "d3_2026102204",
+   "query": "scene:d3_2026102204:o01>44",
+   "role": "singleton:B",
+   "root": "d3_2026102204",
+   "sequence": [],
+   "split": "holdout"
+  },
+  "reason": "certificate GOAL_OVERLAP",
+  "seeds_declared": 3,
+  "seeds_run": 0,
+  "static_certificate": {
+   "kind": "GOAL_OVERLAP",
+   "scope": "ASSIGNMENT"
+  },
+  "teacher_status": "CERTIFIED_INFEASIBLE",
+  "training_weight": 1.0
+ },
+ "scene:d3_2026102204:o05>14": {
+  "J_first": null,
+  "attempts": [],
+  "binary_training_label": 0,
+  "decided_mask": true,
+  "is_budget_relative": false,
+  "label_source": "CERTIFICATE",
+  "policy_hash": "sha256:df54878deb69bac823339ce9832b7454d8bbca2ef77b3aea3c939016caef075c",
+  "policy_id": "2D-ABC-OPNEG-v1",
+  "proof_scope": "ASSIGNMENT",
+  "query": {
+   "batch": 1,
+   "edit": {
+    "o05": 14
+   },
+   "kind": "SCENE_TARGET_ONLY",
+   "lineage": "d3_2026102204",
+   "query": "scene:d3_2026102204:o05>14",
+   "role": "nuisance",
+   "root": "d3_2026102204",
+   "sequence": [],
+   "split": "holdout"
+  },
+  "reason": "certificate GOAL_OVERLAP",
+  "seeds_declared": 3,
+  "seeds_run": 0,
+  "static_certificate": {
+   "kind": "GOAL_OVERLAP",
+   "scope": "ASSIGNMENT"
+  },
+  "teacher_status": "CERTIFIED_INFEASIBLE",
+  "training_weight": 1.0
+ },
+ "scene:d3_2026102208:o00>61": {
+  "J_first": null,
+  "attempts": [],
+  "binary_training_label": null,
+  "decided_mask": false,
+  "is_budget_relative": false,
+  "label_source": "UNRESOLVED",
+  "policy_hash": "sha256:df54878deb69bac823339ce9832b7454d8bbca2ef77b3aea3c939016caef075c",
+  "policy_id": "2D-ABC-OPNEG-v1",
+  "proof_scope": null,
+  "query": {
+   "batch": 2,
+   "edit": {
+    "o00": 61
+   },
+   "kind": "SCENE_TARGET_ONLY",
+   "lineage": "d3_2026102208",
+   "query": "scene:d3_2026102208:o00>61",
+   "role": "singleton:A",
+   "root": "d3_2026102208",
+   "sequence": [],
+   "split": "holdout"
+  },
+  "reason": "batch 2 not run: batch-1 checkpoint gate failed",
+  "seeds_declared": 3,
+  "seeds_run": 0,
+  "static_certificate": null,
+  "teacher_status": "NOT_RUN",
+  "training_weight": 0.0
+ },
+ "scene:d3_2026102208:o00>61.o01>60": {
+  "J_first": null,
+  "attempts": [],
+  "binary_training_label": null,
+  "decided_mask": false,
+  "is_budget_relative": false,
+  "label_source": "UNRESOLVED",
+  "policy_hash": "sha256:df54878deb69bac823339ce9832b7454d8bbca2ef77b3aea3c939016caef075c",
+  "policy_id": "2D-ABC-OPNEG-v1",
+  "proof_scope": null,
+  "query": {
+   "batch": 2,
+   "edit": {
+    "o00": 61,
+    "o01": 60
+   },
+   "kind": "SCENE_TARGET_ONLY",
+   "lineage": "d3_2026102208",
+   "query": "scene:d3_2026102208:o00>61.o01>60",
+   "role": "joint:A+B",
+   "root": "d3_2026102208",
+   "sequence": [],
+   "split": "holdout"
+  },
+  "reason": "batch 2 not run: batch-1 checkpoint gate failed",
+  "seeds_declared": 3,
+  "seeds_run": 0,
+  "static_certificate": null,
+  "teacher_status": "NOT_RUN",
+  "training_weight": 0.0
+ },
+ "scene:d3_2026102208:o01>60": {
+  "J_first": null,
+  "attempts": [],
+  "binary_training_label": null,
+  "decided_mask": false,
+  "is_budget_relative": false,
+  "label_source": "UNRESOLVED",
+  "policy_hash": "sha256:df54878deb69bac823339ce9832b7454d8bbca2ef77b3aea3c939016caef075c",
+  "policy_id": "2D-ABC-OPNEG-v1",
+  "proof_scope": null,
+  "query": {
+   "batch": 2,
+   "edit": {
+    "o01": 60
+   },
+   "kind": "SCENE_TARGET_ONLY",
+   "lineage": "d3_2026102208",
+   "query": "scene:d3_2026102208:o01>60",
+   "role": "singleton:B",
+   "root": "d3_2026102208",
+   "sequence": [],
+   "split": "holdout"
+  },
+  "reason": "batch 2 not run: batch-1 checkpoint gate failed",
+  "seeds_declared": 3,
+  "seeds_run": 0,
+  "static_certificate": null,
+  "teacher_status": "NOT_RUN",
+  "training_weight": 0.0
+ },
+ "scene:d3_2026102208:o05>34": {
+  "J_first": null,
+  "attempts": [],
+  "binary_training_label": null,
+  "decided_mask": false,
+  "is_budget_relative": false,
+  "label_source": "UNRESOLVED",
+  "policy_hash": "sha256:df54878deb69bac823339ce9832b7454d8bbca2ef77b3aea3c939016caef075c",
+  "policy_id": "2D-ABC-OPNEG-v1",
+  "proof_scope": null,
+  "query": {
+   "batch": 2,
+   "edit": {
+    "o05": 34
+   },
+   "kind": "SCENE_TARGET_ONLY",
+   "lineage": "d3_2026102208",
+   "query": "scene:d3_2026102208:o05>34",
+   "role": "nuisance",
+   "root": "d3_2026102208",
+   "sequence": [],
+   "split": "holdout"
+  },
+  "reason": "batch 2 not run: batch-1 checkpoint gate failed",
+  "seeds_declared": 3,
+  "seeds_run": 0,
+  "static_certificate": null,
+  "teacher_status": "NOT_RUN",
+  "training_weight": 0.0
+ },
+ "seq:d3_2026102204:empty": {
+  "J_first": null,
+  "attempts": [],
+  "binary_training_label": 0,
+  "decided_mask": true,
+  "is_budget_relative": false,
+  "label_source": "CERTIFICATE",
+  "policy_hash": "sha256:df54878deb69bac823339ce9832b7454d8bbca2ef77b3aea3c939016caef075c",
+  "policy_id": "2D-ABC-OPNEG-v1",
+  "proof_scope": "ASSIGNMENT",
+  "query": {
+   "batch": 1,
+   "edit": null,
+   "kind": "ORDERED_TEACHER",
+   "lineage": "d3_2026102204",
+   "query": "seq:d3_2026102204:empty",
+   "role": "original",
+   "root": "d3_2026102204",
+   "sequence": [],
+   "split": "holdout"
+  },
+  "reason": "certificate GOAL_OVERLAP",
+  "seeds_declared": 3,
+  "seeds_run": 0,
+  "static_certificate": {
+   "kind": "GOAL_OVERLAP",
+   "scope": "ASSIGNMENT"
+  },
+  "teacher_status": "CERTIFIED_INFEASIBLE",
+  "training_weight": 1.0
+ },
+ "seq:d3_2026102204:o00>17": {
+  "J_first": 1.853984464897704,
+  "attempts": [
+   {
+    "J_first": 1.853984464897704,
+    "calls": null,
+    "clean": false,
+    "cpu_s": 240.11,
+    "in_flight_calls_unrecorded": true,
+    "label": "UNRESOLVED",
+    "reason": "no decisive evidence",
+    "seed": 20261021,
+    "stop": "CPU_CENSORED",
+    "terminal": "NOT_CLEAN:CPU_CENSORED",
+    "unit": "seq:d3_2026102204:o00>17#s20261021",
+    "wall_s": 240.19,
+    "witness_hash": "sha256:ea605b0ab511b3672d2512c17bc49e947c92709ea7dd205cfb3a4ee6e675b338"
+   },
+   {
+    "J_first": 1.8664945024338775,
+    "calls": null,
+    "clean": false,
+    "cpu_s": 240.15,
+    "in_flight_calls_unrecorded": true,
+    "label": "UNRESOLVED",
+    "reason": "no decisive evidence",
+    "seed": 20261022,
+    "stop": "CPU_CENSORED",
+    "terminal": "NOT_CLEAN:CPU_CENSORED",
+    "unit": "seq:d3_2026102204:o00>17#s20261022",
+    "wall_s": 240.21,
+    "witness_hash": "sha256:aeeb32630d769d501469627c4cbff376f7ae9143e8068dd6d1a62c1ad4ce7fbf"
+   }
+  ],
+  "binary_training_label": null,
+  "decided_mask": false,
+  "is_budget_relative": false,
+  "label_source": "UNRESOLVED",
+  "policy_hash": "sha256:df54878deb69bac823339ce9832b7454d8bbca2ef77b3aea3c939016caef075c",
+  "policy_id": "2D-ABC-OPNEG-v1",
+  "proof_scope": null,
+  "query": {
+   "batch": 1,
+   "edit": null,
+   "kind": "ORDERED_TEACHER",
+   "lineage": "d3_2026102204",
+   "query": "seq:d3_2026102204:o00>17",
+   "role": "single",
+   "root": "d3_2026102204",
+   "sequence": [
+    [
+     "o00",
+     17
+    ]
+   ],
+   "split": "holdout"
+  },
+  "reason": "1 declared seed(s) not run",
+  "seeds_declared": 3,
+  "seeds_run": 2,
+  "static_certificate": null,
+  "teacher_status": "UNKNOWN",
+  "training_weight": 0.0
+ },
+ "seq:d3_2026102204:o00>17.o01>44": {
+  "J_first": null,
+  "attempts": [
+   {
+    "J_first": null,
+    "calls": null,
+    "clean": false,
+    "cpu_s": 240.11,
+    "in_flight_calls_unrecorded": true,
+    "label": "UNRESOLVED",
+    "reason": "no decisive evidence",
+    "seed": 20261021,
+    "stop": "CPU_CENSORED",
+    "terminal": "NOT_CLEAN:CPU_CENSORED",
+    "unit": "seq:d3_2026102204:o00>17.o01>44#s20261021",
+    "wall_s": 240.2,
+    "witness_hash": null
+   },
+   {
+    "J_first": null,
+    "calls": null,
+    "clean": false,
+    "cpu_s": 240.15,
+    "in_flight_calls_unrecorded": true,
+    "label": "UNRESOLVED",
+    "reason": "no decisive evidence",
+    "seed": 20261022,
+    "stop": "CPU_CENSORED",
+    "terminal": "NOT_CLEAN:CPU_CENSORED",
+    "unit": "seq:d3_2026102204:o00>17.o01>44#s20261022",
+    "wall_s": 240.23,
+    "witness_hash": null
+   }
+  ],
+  "binary_training_label": null,
+  "decided_mask": false,
+  "is_budget_relative": false,
+  "label_source": "UNRESOLVED",
+  "policy_hash": "sha256:df54878deb69bac823339ce9832b7454d8bbca2ef77b3aea3c939016caef075c",
+  "policy_id": "2D-ABC-OPNEG-v1",
+  "proof_scope": null,
+  "query": {
+   "batch": 1,
+   "edit": null,
+   "kind": "ORDERED_TEACHER",
+   "lineage": "d3_2026102204",
+   "query": "seq:d3_2026102204:o00>17.o01>44",
+   "role": "order_AB",
+   "root": "d3_2026102204",
+   "sequence": [
+    [
+     "o00",
+     17
+    ],
+    [
+     "o01",
+     44
+    ]
+   ],
+   "split": "holdout"
+  },
+  "reason": "1 declared seed(s) not run",
+  "seeds_declared": 3,
+  "seeds_run": 2,
+  "static_certificate": null,
+  "teacher_status": "UNKNOWN",
+  "training_weight": 0.0
+ },
+ "seq:d3_2026102204:o00>35": {
+  "J_first": null,
+  "attempts": [
+   {
+    "J_first": null,
+    "calls": {
+     "relocation_planner": 1,
+     "target_evaluations": 0
+    },
+    "clean": true,
+    "cpu_s": 8.55,
+    "in_flight_calls_unrecorded": false,
+    "label": "UNRESOLVED",
+    "reason": "relocation ACTION_0_UNRESOLVED: SCHEDULE_COMPLETED_NO_WITNESS_UNCERTIFIED_REJECTIONS",
+    "seed": 20261021,
+    "stop": "COMPLETED",
+    "terminal": "SCHEDULE_COMPLETED_NO_WITNESS_UNCERTIFIED_REJECTIONS",
+    "unit": "seq:d3_2026102204:o00>35#s20261021",
+    "wall_s": 8.79,
+    "witness_hash": null
+   }
+  ],
+  "binary_training_label": null,
+  "decided_mask": false,
+  "is_budget_relative": false,
+  "label_source": "UNRESOLVED",
+  "policy_hash": "sha256:df54878deb69bac823339ce9832b7454d8bbca2ef77b3aea3c939016caef075c",
+  "policy_id": "2D-ABC-OPNEG-v1",
+  "proof_scope": null,
+  "query": {
+   "batch": 1,
+   "edit": null,
+   "kind": "ORDERED_TEACHER",
+   "lineage": "d3_2026102204",
+   "query": "seq:d3_2026102204:o00>35",
+   "role": "alternative",
+   "root": "d3_2026102204",
+   "sequence": [
+    [
+     "o00",
+     35
+    ]
+   ],
+   "split": "holdout"
+  },
+  "reason": "2 declared seed(s) not run",
+  "seeds_declared": 3,
+  "seeds_run": 1,
+  "static_certificate": null,
+  "teacher_status": "UNKNOWN",
+  "training_weight": 0.0
+ },
+ "seq:d3_2026102204:o01>44": {
+  "J_first": null,
+  "attempts": [],
+  "binary_training_label": 0,
+  "decided_mask": true,
+  "is_budget_relative": false,
+  "label_source": "CERTIFICATE",
+  "policy_hash": "sha256:df54878deb69bac823339ce9832b7454d8bbca2ef77b3aea3c939016caef075c",
+  "policy_id": "2D-ABC-OPNEG-v1",
+  "proof_scope": "ASSIGNMENT",
+  "query": {
+   "batch": 1,
+   "edit": null,
+   "kind": "ORDERED_TEACHER",
+   "lineage": "d3_2026102204",
+   "query": "seq:d3_2026102204:o01>44",
+   "role": "single",
+   "root": "d3_2026102204",
+   "sequence": [
+    [
+     "o01",
+     44
+    ]
+   ],
+   "split": "holdout"
+  },
+  "reason": "certificate GOAL_OVERLAP",
+  "seeds_declared": 3,
+  "seeds_run": 0,
+  "static_certificate": {
+   "kind": "GOAL_OVERLAP",
+   "scope": "ASSIGNMENT"
+  },
+  "teacher_status": "CERTIFIED_INFEASIBLE",
+  "training_weight": 1.0
+ },
+ "seq:d3_2026102204:o01>44.o00>17": {
+  "J_first": 2.8237966881306154,
+  "attempts": [
+   {
+    "J_first": 2.8237966881306154,
+    "calls": {
+     "relocation_planner": 2,
+     "target_evaluations": 1
+    },
+    "clean": true,
+    "cpu_s": 8.42,
+    "in_flight_calls_unrecorded": false,
+    "label": "VERIFIED_FEASIBLE",
+    "reason": "complete witness, all checks true",
+    "seed": 20261021,
+    "stop": "COMPLETED",
+    "terminal": "WITNESS",
+    "unit": "seq:d3_2026102204:o01>44.o00>17#s20261021",
+    "wall_s": 8.53,
+    "witness_hash": "sha256:d70d665c74cee20cb945244b666f63b2f3753e358761428fc878b67c4091841b"
+   }
+  ],
+  "binary_training_label": 1,
+  "decided_mask": true,
+  "is_budget_relative": false,
+  "label_source": "WITNESS",
+  "policy_hash": "sha256:df54878deb69bac823339ce9832b7454d8bbca2ef77b3aea3c939016caef075c",
+  "policy_id": "2D-ABC-OPNEG-v1",
+  "proof_scope": "EXISTENTIAL_WITNESS",
+  "query": {
+   "batch": 1,
+   "edit": null,
+   "kind": "ORDERED_TEACHER",
+   "lineage": "d3_2026102204",
+   "query": "seq:d3_2026102204:o01>44.o00>17",
+   "role": "order_BA",
+   "root": "d3_2026102204",
+   "sequence": [
+    [
+     "o01",
+     44
+    ],
+    [
+     "o00",
+     17
+    ]
+   ],
+   "split": "holdout"
+  },
+  "reason": "complete witness on seed 20261021",
+  "seeds_declared": 3,
+  "seeds_run": 1,
+  "static_certificate": null,
+  "teacher_status": "VERIFIED_FEASIBLE",
+  "training_weight": 1.0
+ },
+ "seq:d3_2026102204:o01>57": {
+  "J_first": null,
+  "attempts": [],
+  "binary_training_label": 0,
+  "decided_mask": true,
+  "is_budget_relative": false,
+  "label_source": "CERTIFICATE",
+  "policy_hash": "sha256:df54878deb69bac823339ce9832b7454d8bbca2ef77b3aea3c939016caef075c",
+  "policy_id": "2D-ABC-OPNEG-v1",
+  "proof_scope": "ASSIGNMENT",
+  "query": {
+   "batch": 1,
+   "edit": null,
+   "kind": "ORDERED_TEACHER",
+   "lineage": "d3_2026102204",
+   "query": "seq:d3_2026102204:o01>57",
+   "role": "alternative",
+   "root": "d3_2026102204",
+   "sequence": [
+    [
+     "o01",
+     57
+    ]
+   ],
+   "split": "holdout"
+  },
+  "reason": "certificate GOAL_OVERLAP",
+  "seeds_declared": 3,
+  "seeds_run": 0,
+  "static_certificate": {
+   "kind": "GOAL_OVERLAP",
+   "scope": "ASSIGNMENT"
+  },
+  "teacher_status": "CERTIFIED_INFEASIBLE",
+  "training_weight": 1.0
+ },
+ "seq:d3_2026102204_ref:empty": {
+  "J_first": 0.0,
+  "attempts": [
+   {
+    "J_first": 0.0,
+    "calls": {
+     "relocation_planner": 0,
+     "target_evaluations": 1
+    },
+    "clean": true,
+    "cpu_s": 1.07,
+    "in_flight_calls_unrecorded": false,
+    "label": "VERIFIED_FEASIBLE",
+    "reason": "complete witness, all checks true",
+    "seed": 20261021,
+    "stop": "COMPLETED",
+    "terminal": "WITNESS",
+    "unit": "seq:d3_2026102204_ref:empty#s20261021",
+    "wall_s": 1.26,
+    "witness_hash": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+   }
+  ],
+  "binary_training_label": 1,
+  "decided_mask": true,
+  "is_budget_relative": false,
+  "label_source": "WITNESS",
+  "policy_hash": "sha256:df54878deb69bac823339ce9832b7454d8bbca2ef77b3aea3c939016caef075c",
+  "policy_id": "2D-ABC-OPNEG-v1",
+  "proof_scope": "EXISTENTIAL_WITNESS",
+  "query": {
+   "batch": 1,
+   "edit": null,
+   "kind": "ORDERED_TEACHER",
+   "lineage": "d3_2026102204",
+   "query": "seq:d3_2026102204_ref:empty",
+   "role": "reference",
+   "root": "d3_2026102204_ref",
+   "sequence": [],
+   "split": "holdout"
+  },
+  "reason": "complete witness on seed 20261021",
+  "seeds_declared": 3,
+  "seeds_run": 1,
+  "static_certificate": null,
+  "teacher_status": "VERIFIED_FEASIBLE",
+  "training_weight": 1.0
+ },
+ "seq:d3_2026102208:empty": {
+  "J_first": null,
+  "attempts": [],
+  "binary_training_label": null,
+  "decided_mask": false,
+  "is_budget_relative": false,
+  "label_source": "UNRESOLVED",
+  "policy_hash": "sha256:df54878deb69bac823339ce9832b7454d8bbca2ef77b3aea3c939016caef075c",
+  "policy_id": "2D-ABC-OPNEG-v1",
+  "proof_scope": null,
+  "query": {
+   "batch": 2,
+   "edit": null,
+   "kind": "ORDERED_TEACHER",
+   "lineage": "d3_2026102208",
+   "query": "seq:d3_2026102208:empty",
+   "role": "original",
+   "root": "d3_2026102208",
+   "sequence": [],
+   "split": "holdout"
+  },
+  "reason": "batch 2 not run: batch-1 checkpoint gate failed",
+  "seeds_declared": 3,
+  "seeds_run": 0,
+  "static_certificate": null,
+  "teacher_status": "NOT_RUN",
+  "training_weight": 0.0
+ },
+ "seq:d3_2026102208:o00>53": {
+  "J_first": null,
+  "attempts": [],
+  "binary_training_label": null,
+  "decided_mask": false,
+  "is_budget_relative": false,
+  "label_source": "UNRESOLVED",
+  "policy_hash": "sha256:df54878deb69bac823339ce9832b7454d8bbca2ef77b3aea3c939016caef075c",
+  "policy_id": "2D-ABC-OPNEG-v1",
+  "proof_scope": null,
+  "query": {
+   "batch": 2,
+   "edit": null,
+   "kind": "ORDERED_TEACHER",
+   "lineage": "d3_2026102208",
+   "query": "seq:d3_2026102208:o00>53",
+   "role": "alternative",
+   "root": "d3_2026102208",
+   "sequence": [
+    [
+     "o00",
+     53
+    ]
+   ],
+   "split": "holdout"
+  },
+  "reason": "batch 2 not run: batch-1 checkpoint gate failed",
+  "seeds_declared": 3,
+  "seeds_run": 0,
+  "static_certificate": null,
+  "teacher_status": "NOT_RUN",
+  "training_weight": 0.0
+ },
+ "seq:d3_2026102208:o00>61": {
+  "J_first": null,
+  "attempts": [],
+  "binary_training_label": null,
+  "decided_mask": false,
+  "is_budget_relative": false,
+  "label_source": "UNRESOLVED",
+  "policy_hash": "sha256:df54878deb69bac823339ce9832b7454d8bbca2ef77b3aea3c939016caef075c",
+  "policy_id": "2D-ABC-OPNEG-v1",
+  "proof_scope": null,
+  "query": {
+   "batch": 2,
+   "edit": null,
+   "kind": "ORDERED_TEACHER",
+   "lineage": "d3_2026102208",
+   "query": "seq:d3_2026102208:o00>61",
+   "role": "single",
+   "root": "d3_2026102208",
+   "sequence": [
+    [
+     "o00",
+     61
+    ]
+   ],
+   "split": "holdout"
+  },
+  "reason": "batch 2 not run: batch-1 checkpoint gate failed",
+  "seeds_declared": 3,
+  "seeds_run": 0,
+  "static_certificate": null,
+  "teacher_status": "NOT_RUN",
+  "training_weight": 0.0
+ },
+ "seq:d3_2026102208:o00>61.o01>60": {
+  "J_first": null,
+  "attempts": [],
+  "binary_training_label": null,
+  "decided_mask": false,
+  "is_budget_relative": false,
+  "label_source": "UNRESOLVED",
+  "policy_hash": "sha256:df54878deb69bac823339ce9832b7454d8bbca2ef77b3aea3c939016caef075c",
+  "policy_id": "2D-ABC-OPNEG-v1",
+  "proof_scope": null,
+  "query": {
+   "batch": 2,
+   "edit": null,
+   "kind": "ORDERED_TEACHER",
+   "lineage": "d3_2026102208",
+   "query": "seq:d3_2026102208:o00>61.o01>60",
+   "role": "order_AB",
+   "root": "d3_2026102208",
+   "sequence": [
+    [
+     "o00",
+     61
+    ],
+    [
+     "o01",
+     60
+    ]
+   ],
+   "split": "holdout"
+  },
+  "reason": "batch 2 not run: batch-1 checkpoint gate failed",
+  "seeds_declared": 3,
+  "seeds_run": 0,
+  "static_certificate": null,
+  "teacher_status": "NOT_RUN",
+  "training_weight": 0.0
+ },
+ "seq:d3_2026102208:o01>45": {
+  "J_first": null,
+  "attempts": [],
+  "binary_training_label": null,
+  "decided_mask": false,
+  "is_budget_relative": false,
+  "label_source": "UNRESOLVED",
+  "policy_hash": "sha256:df54878deb69bac823339ce9832b7454d8bbca2ef77b3aea3c939016caef075c",
+  "policy_id": "2D-ABC-OPNEG-v1",
+  "proof_scope": null,
+  "query": {
+   "batch": 2,
+   "edit": null,
+   "kind": "ORDERED_TEACHER",
+   "lineage": "d3_2026102208",
+   "query": "seq:d3_2026102208:o01>45",
+   "role": "alternative",
+   "root": "d3_2026102208",
+   "sequence": [
+    [
+     "o01",
+     45
+    ]
+   ],
+   "split": "holdout"
+  },
+  "reason": "batch 2 not run: batch-1 checkpoint gate failed",
+  "seeds_declared": 3,
+  "seeds_run": 0,
+  "static_certificate": null,
+  "teacher_status": "NOT_RUN",
+  "training_weight": 0.0
+ },
+ "seq:d3_2026102208:o01>60": {
+  "J_first": null,
+  "attempts": [],
+  "binary_training_label": null,
+  "decided_mask": false,
+  "is_budget_relative": false,
+  "label_source": "UNRESOLVED",
+  "policy_hash": "sha256:df54878deb69bac823339ce9832b7454d8bbca2ef77b3aea3c939016caef075c",
+  "policy_id": "2D-ABC-OPNEG-v1",
+  "proof_scope": null,
+  "query": {
+   "batch": 2,
+   "edit": null,
+   "kind": "ORDERED_TEACHER",
+   "lineage": "d3_2026102208",
+   "query": "seq:d3_2026102208:o01>60",
+   "role": "single",
+   "root": "d3_2026102208",
+   "sequence": [
+    [
+     "o01",
+     60
+    ]
+   ],
+   "split": "holdout"
+  },
+  "reason": "batch 2 not run: batch-1 checkpoint gate failed",
+  "seeds_declared": 3,
+  "seeds_run": 0,
+  "static_certificate": null,
+  "teacher_status": "NOT_RUN",
+  "training_weight": 0.0
+ },
+ "seq:d3_2026102208:o01>60.o00>61": {
+  "J_first": null,
+  "attempts": [],
+  "binary_training_label": null,
+  "decided_mask": false,
+  "is_budget_relative": false,
+  "label_source": "UNRESOLVED",
+  "policy_hash": "sha256:df54878deb69bac823339ce9832b7454d8bbca2ef77b3aea3c939016caef075c",
+  "policy_id": "2D-ABC-OPNEG-v1",
+  "proof_scope": null,
+  "query": {
+   "batch": 2,
+   "edit": null,
+   "kind": "ORDERED_TEACHER",
+   "lineage": "d3_2026102208",
+   "query": "seq:d3_2026102208:o01>60.o00>61",
+   "role": "order_BA",
+   "root": "d3_2026102208",
+   "sequence": [
+    [
+     "o01",
+     60
+    ],
+    [
+     "o00",
+     61
+    ]
+   ],
+   "split": "holdout"
+  },
+  "reason": "batch 2 not run: batch-1 checkpoint gate failed",
+  "seeds_declared": 3,
+  "seeds_run": 0,
+  "static_certificate": null,
+  "teacher_status": "NOT_RUN",
+  "training_weight": 0.0
+ },
+ "seq:d3_2026102208_ref:empty": {
+  "J_first": null,
+  "attempts": [],
+  "binary_training_label": null,
+  "decided_mask": false,
+  "is_budget_relative": false,
+  "label_source": "UNRESOLVED",
+  "policy_hash": "sha256:df54878deb69bac823339ce9832b7454d8bbca2ef77b3aea3c939016caef075c",
+  "policy_id": "2D-ABC-OPNEG-v1",
+  "proof_scope": null,
+  "query": {
+   "batch": 2,
+   "edit": null,
+   "kind": "ORDERED_TEACHER",
+   "lineage": "d3_2026102208",
+   "query": "seq:d3_2026102208_ref:empty",
+   "role": "reference",
+   "root": "d3_2026102208_ref",
+   "sequence": [],
+   "split": "holdout"
+  },
+  "reason": "batch 2 not run: batch-1 checkpoint gate failed",
+  "seeds_declared": 3,
+  "seeds_run": 0,
+  "static_certificate": null,
+  "teacher_status": "NOT_RUN",
+  "training_weight": 0.0
+ }
+}

@@ -1,0 +1,83 @@
+{
+ "compute": {
+  "aggregate_cpu_s": 2307.53,
+  "caps": {
+   "batch1_cpu_s": 2400.0,
+   "collection_cpu_s": 4800.0,
+   "max_queries": 96,
+   "max_seed_attempts": 288,
+   "static_cpu_s": 300.0,
+   "unknown_fraction_halt": 0.25,
+   "wall_s": 7200.0
+  },
+  "censored_in_flight_unrecorded": 9,
+  "coordinator_cpu_s": 63.64,
+  "coordinator_guarded_calls": {
+   "evaluate.evaluate_safe_retreat": 0,
+   "evaluate.evaluate_target": 0,
+   "evaluate.home_diagnostic": 0,
+   "ordered.teach_sequence": 0,
+   "planner.plan": 0,
+   "skill.plan_skill": 0,
+   "verify.plan_fixed_order": 0,
+   "verify.relocate": 0
+  },
+  "coordinator_static_ops": {
+   "certify": 53919,
+   "distance_evals": 143429,
+   "ik": 78844,
+   "screen_pick": 271
+  },
+  "inner_calls": {
+   "relocation_planner": 19,
+   "target_evaluations": 22
+  },
+  "seed_attempts": 32,
+  "seed_stops": {
+   "COMPLETED": 23,
+   "CPU_CENSORED": 9
+  },
+  "static_cpu_s": 51.86,
+  "unit_cpu_s": 2243.89,
+  "wall_s": 2303.5
+ },
+ "frozen_manifests_unchanged": true,
+ "gates": {
+  "1": {
+   "cpu_used_after_batch": 2307.53,
+   "decided_order_contrasts": 0,
+   "fatal": false,
+   "pass": false,
+   "planned": 48,
+   "roots_with_multi_repair_pool": 3,
+   "rule": "batch-1 gate: STOP on FATAL / integrity; HALT if (UNKNOWN + NOT_RUN) / planned > 0.25; HALT if no root has >= 2 fully decided nonempty repairs (V2 layout) or no same-endpoint swap pair is decided with differing labels",
+   "undecided": 6,
+   "undecided_fraction": 0.125,
+   "wall_after_batch": 2303.4
+  }
+ },
+ "raw_all": {
+  "BUDGET_INFEASIBLE": 0,
+  "CERTIFIED_INFEASIBLE": 20,
+  "FATAL_CONTRADICTION": 0,
+  "NOT_RUN": 48,
+  "UNKNOWN": 6,
+  "VERIFIED_FEASIBLE": 22
+ },
+ "raw_dev": {
+  "BUDGET_INFEASIBLE": 0,
+  "CERTIFIED_INFEASIBLE": 15,
+  "FATAL_CONTRADICTION": 0,
+  "NOT_RUN": 36,
+  "UNKNOWN": 2,
+  "VERIFIED_FEASIBLE": 19
+ },
+ "raw_sealed_holdout_counts_only": {
+  "BUDGET_INFEASIBLE": 0,
+  "CERTIFIED_INFEASIBLE": 5,
+  "FATAL_CONTRADICTION": 0,
+  "NOT_RUN": 12,
+  "UNKNOWN": 4,
+  "VERIFIED_FEASIBLE": 3
+ }
+}
