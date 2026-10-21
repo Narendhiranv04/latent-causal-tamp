@@ -35,7 +35,9 @@ def prepare(ds, certified_only=False) -> list:
         ylab = {c["query"]: c["y"] for c in cands} | {e["privileged"]["query"]: drop(e["privileged"]["y"], e["privileged"]["source"])
                                                       for e in rec["edits"]}
         roots.append({"R": R, "edits": edits, "cands": cands, "y": ylab, "split": rec["audit"]["split"], "key": rec["audit"]["root"],
-                      "edit_q": {e["kind"]: e["privileged"]["query"] for e in rec["edits"]}})
+                      "edit_q": {e["kind"]: e["privileged"]["query"] for e in rec["edits"]},
+                      "static_checks": [{"seq": [(i, tuple(d)) for i, d in c["actions"]], "su": c["unary"],
+                                         "sp": [c["pair"][f"{ids[i]}|{ids[j]}"] for i, j in R.pairs]} for c in rec.get("static_checks", [])]})
     return roots
 
 
@@ -57,7 +59,11 @@ def _static(o, c):
 def forward(model, r) -> list:
     if model.kind == "A":
         return [model.seq(r["R"], c["seq"]) for c in r["cands"]]
-    return [model.joint(r["R"], c["seq"], c["slots"], r["edits"]) for c in r["cands"]]
+    model._memo = {}                                       # per-root, per-pass memo of order / scene slots (exact)
+    try:
+        return [model.joint(r["R"], c["seq"], c["slots"], r["edits"]) for c in r["cands"]]
+    finally:
+        model._memo = None
 
 
 def losses(model, r, outs=None, rec=None) -> dict:
@@ -124,28 +130,67 @@ def losses(model, r, outs=None, rec=None) -> dict:
             lse = torch.logsumexp(torch.cat([-o["E_states"] / am.T for _, o in full]), 0)
             num = [-o["E_states"][int("".join(str(int(z)) for z in c["z"]), 2)] / am.T for c, o in full if c["y"] == 1]
             L["pool"].append(-(torch.stack(num) - lse).mean())
+    for c in r.get("static_checks", []):                                  # analytic static checks incl. invalid endpoints
+        xy = r["R"].xy0.clone()
+        for i, d in c["seq"]:
+            xy[i] = torch.as_tensor(d, dtype=torch.float64)
+        _, lu, lp = model.static(r["R"], xy)
+        if (st := _static({"lu": lu, "lp": lp}, c)) is not None:
+            L["static"].append(st)
     return {k: (torch.stack(v).mean() if v else None) for k, v in L.items()}
 
 
-def train(model, roots, epochs, cpu_budget_s, log, lr=1e-3, wd=1e-4) -> list:
+def total(model, roots) -> tuple:
+    terms = [losses(model, r) for r in roots]
+    tot, rec = 0.0, {}
+    for k in ("static", "task", "outcome", "effect", "cost", "pool"):
+        v = [t[k] for t in terms if t[k] is not None]
+        if v:
+            m = torch.stack(v).mean()
+            tot, rec[k] = tot + m, float(m.detach())
+    return tot, rec
+
+
+def train(model, roots, epochs, cpu_budget_s, log, lr=1e-3, wd=1e-4, clip=None, val=None, every=10, patience=None, snap=None) -> list:
+    """P5 defaults (no clipping, no validation). P6: clip = max global grad norm (norms before/after
+    recorded), NaN/Inf guard (stop, keep last finite state), validation-only early stopping on
+    `val` roots every `every` epochs with the best state restored at the end; `snap(epoch, model)` is
+    called at the same checkpoints (visualization snapshots only, never selection)."""
+    import copy
     import time
     opt = torch.optim.AdamW(model.parameters(), lr=lr, weight_decay=wd)
-    hist, c0 = [], time.process_time()
+    hist, c0, best, wait = [], time.process_time(), (math.inf, None, -1), 0
     for ep in range(epochs):
         opt.zero_grad()
-        terms = [losses(model, r) for r in roots]
-        tot, rec = 0.0, {}
-        for k in ("static", "task", "outcome", "effect", "cost", "pool"):
-            v = [t[k] for t in terms if t[k] is not None]
-            if v:
-                m = torch.stack(v).mean()
-                tot, rec[k] = tot + m, float(m.detach())
+        tot, rec = total(model, roots)
+        if not torch.isfinite(tot):
+            log(f"{model.kind}: non-finite loss at epoch {ep}; stopped")
+            hist.append({"epoch": ep, "nonfinite": True})
+            break
         tot.backward()
+        if clip is not None:
+            pre = float(torch.nn.utils.clip_grad_norm_(model.parameters(), clip))
+            post = math.sqrt(sum(float(p.grad.norm()) ** 2 for p in model.parameters() if p.grad is not None))
+            rec |= {"grad_pre": pre, "grad_post": post}
         opt.step()
-        hist.append({"epoch": ep, "total": float(tot), **rec})
+        hist.append({"epoch": ep, "total": float(tot.detach()), **rec})
+        if snap is not None and ep % every == 0:
+            snap(ep, model)
+        if val and ep % every == 0:
+            with torch.no_grad():
+                vl = float(total(model, val)[0])
+            hist[-1]["val"] = vl
+            if vl < best[0]:
+                best, wait = (vl, copy.deepcopy(model.state_dict()), ep), 0
+            elif patience is not None and (wait := wait + 1) >= patience:
+                log(f"{model.kind}: early stop at epoch {ep} (best val epoch {best[2]})")
+                break
         if time.process_time() - c0 > cpu_budget_s:
             log(f"{model.kind}: CPU budget reached at epoch {ep}")
             break
+    if val and best[1] is not None:
+        model.load_state_dict(best[1])
+        hist.append({"best_val_epoch": best[2], "best_val": best[0]})
     return hist
 
 

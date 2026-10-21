@@ -48,6 +48,9 @@ import d2_poc
 import abc_run
 import d2_precheck
 import d3lite_run
+import p6_run
+import p6_train
+import p6_viz
 import sector_cert
 import teacher_pilot
 import geometry as ge
@@ -203,6 +206,22 @@ def main(argv=None) -> int:
     q.add_argument("--config", default="config.toml")
     q.add_argument("--out", required=True)
     q.set_defaults(func=abc_run.run)
+    q = sub.add_parser("p6-collect", help="P6: four-batch collection of 16 fresh roots (<= 4 moves, OPNEG-v1, gated)")
+    for a, d in (("--config", "config.toml"), ("--config-v2", "config_v2_r4.toml"), ("--policy", "teacher_opneg.toml"),
+                 ("--regression", "runs/p6/regression"), ("--g4b", "runs/p6/g4b")):
+        q.add_argument(a, default=d)
+    q.add_argument("--out", required=True)
+    q.set_defaults(func=p6_run.run)
+    q = sub.add_parser("p6-train", help="P6: A/B/C retraining, ablations, baselines, sampler, sealed holdout (guarded)")
+    for a, d in (("--config", "config.toml"), ("--collect", "runs/p6/collect")):
+        q.add_argument(a, default=d)
+    q.add_argument("--out", required=True)
+    q.set_defaults(func=p6_train.run)
+    q = sub.add_parser("p6-viz", help="P6: scene-based PNG/GIF visualizations from recorded data (guarded)")
+    for a, d in (("--config", "config.toml"), ("--collect", "runs/p6/collect"), ("--train", "runs/p6/train")):
+        q.add_argument(a, default=d)
+    q.add_argument("--out", required=True)
+    q.set_defaults(func=p6_viz.run)
     q = sub.add_parser("replay", help="G1-G3.5: independently re-certify a run's stored trajectories")
     q.add_argument("--run", required=True)
     q.add_argument("--report", help="where to write the replay record (default: <run>/replay.json)")

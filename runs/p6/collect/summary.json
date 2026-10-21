@@ -1,0 +1,821 @@
+{
+ "compute": {
+  "by_root": {
+   "p6_2026102301": {
+    "censored_twice": 0,
+    "cpu_s": 48.49,
+    "teacher_queries": 7
+   },
+   "p6_2026102302": {
+    "censored_twice": 0,
+    "cpu_s": 63.39,
+    "teacher_queries": 10
+   },
+   "p6_2026102303": {
+    "censored_twice": 0,
+    "cpu_s": 109.97,
+    "teacher_queries": 9
+   },
+   "p6_2026102304": {
+    "censored_twice": 0,
+    "cpu_s": 81.29,
+    "teacher_queries": 8
+   },
+   "p6_2026102305": {
+    "censored_twice": 0,
+    "cpu_s": 35.66,
+    "teacher_queries": 7
+   },
+   "p6_2026102306": {
+    "censored_twice": 0,
+    "cpu_s": 119.8,
+    "teacher_queries": 10
+   },
+   "p6_2026102307": {
+    "censored_twice": 0,
+    "cpu_s": 87.37,
+    "teacher_queries": 9
+   },
+   "p6_2026102308": {
+    "censored_twice": 0,
+    "cpu_s": 67.4,
+    "teacher_queries": 8
+   },
+   "p6_2026102309": {
+    "censored_twice": 0,
+    "cpu_s": 104.91,
+    "teacher_queries": 7
+   },
+   "p6_2026102310": {
+    "censored_twice": 0,
+    "cpu_s": 125.67,
+    "teacher_queries": 10
+   },
+   "p6_2026102311": {
+    "censored_twice": 0,
+    "cpu_s": 132.41,
+    "teacher_queries": 9
+   },
+   "p6_2026102312": {
+    "censored_twice": 0,
+    "cpu_s": 55.11,
+    "teacher_queries": 8
+   },
+   "p6_2026102313": {
+    "censored_twice": 0,
+    "cpu_s": 41.43,
+    "teacher_queries": 7
+   },
+   "p6_2026102314": {
+    "censored_twice": 0,
+    "cpu_s": 84.79,
+    "teacher_queries": 10
+   },
+   "p6_2026102315": {
+    "censored_twice": 0,
+    "cpu_s": 112.36,
+    "teacher_queries": 10
+   },
+   "p6_2026102316": {
+    "censored_twice": 0,
+    "cpu_s": 67.35,
+    "teacher_queries": 8
+   }
+  },
+  "caps": {
+   "batch_cpu_s": 5000.0,
+   "max_queries": 384,
+   "max_queries_per_root": 24,
+   "max_seed_attempts": 1152,
+   "min_complete_per_kcpu": 1.0,
+   "query_cpu_s": 870.0,
+   "query_wall_s": 1800.0,
+   "root_cpu_s": 1500.0,
+   "static_cpu_s": 700.0,
+   "teacher_cpu_s": 20000.0,
+   "unknown_fraction_halt": 0.25,
+   "wall_s": 36000.0,
+   "workers": 1
+  },
+  "censored_in_flight_unrecorded": 0,
+  "coordinator_cpu_s_this_process": 278.88,
+  "coordinator_guarded_calls": {
+   "evaluate.evaluate_safe_retreat": 0,
+   "evaluate.evaluate_target": 0,
+   "evaluate.home_diagnostic": 0,
+   "ordered.teach_sequence": 0,
+   "planner.plan": 0,
+   "skill.plan_skill": 0,
+   "verify.plan_fixed_order": 0,
+   "verify.relocate": 0
+  },
+  "coordinator_static_ops": {
+   "certify": 288362,
+   "distance_evals": 672415,
+   "ik": 367435,
+   "screen_pick": 1368
+  },
+  "seed_attempts": 221,
+  "seed_stops": {
+   "COMPLETED": 221
+  },
+  "static_cpu_s": 223.32,
+  "teacher_aggregate_cpu_s": 1337.41,
+  "unit_cpu_s": 1282.19,
+  "wall_s": 1585.2
+ },
+ "frozen_manifests_unchanged": {
+  "runs/g4c_d2_poc_s": true,
+  "runs/g4c_lf_p4/pilot": true,
+  "runs/g4c_pilot": true,
+  "runs/g4d_evidence": true,
+  "runs/p5/d3lite": true,
+  "runs/p5/g4e": true
+ },
+ "gates": {
+  "1": {
+   "attempted": 79,
+   "batch": 1,
+   "budget_held": true,
+   "complete_candidates_dev": 37,
+   "complete_per_kcpu": 128.099,
+   "cpu_used_after_batch": 303.18,
+   "decided_negatives": 43,
+   "decided_order_contrasts": 3,
+   "fatal": false,
+   "four_move_witnesses": [
+    "seq:p6_2026102303:o02>52.o01>36.o00>30.o03>3",
+    "seq:p6_2026102303:o03>3.o02>52.o01>36.o00>30",
+    "seq:p6_2026102303:o02>52.o01>36.o00>30.o03>28"
+   ],
+   "goal_overlap_negatives": 0,
+   "multi_repair_roots": 3,
+   "nonzero_kappa": 3,
+   "pass": true,
+   "rule": "batch 1: no FATAL/integrity violation; (a VERIFIED 4-move repair OR a decided 3-move dependency = VERIFIED |r|>=3 with >=2 decided negative omissions); (>=1 decided same-endpoint order contrast OR >=1 decided nonzero kappa); UNKNOWN <= 25% of attempted queries; budgets held; >=1 development root with >=2 fully decided nonempty V3 repairs. Batches 2-3 additionally: cumulative F1 order contrast and F3 3/4-step evidence, GOAL_OVERLAP < 1/3 of decided negatives, >= 1 complete repair per 1000 teacher CPU-s, and >= 1500 CPU-s aggregate remaining.",
+   "three_move_dependencies": [
+    {
+     "moves": 3,
+     "necessary_steps": 2,
+     "omissions": [
+      0,
+      0,
+      1
+     ],
+     "query": "seq:p6_2026102301:o01>3.o00>4.o06>60"
+    },
+    {
+     "moves": 3,
+     "necessary_steps": 2,
+     "omissions": [
+      1,
+      0,
+      0
+     ],
+     "query": "seq:p6_2026102301:o06>60.o01>3.o00>4"
+    },
+    {
+     "moves": 3,
+     "necessary_steps": 2,
+     "omissions": [
+      0,
+      0,
+      1
+     ],
+     "query": "seq:p6_2026102302:o00>36.o01>45.o06>15"
+    },
+    {
+     "moves": 3,
+     "necessary_steps": 2,
+     "omissions": [
+      0,
+      1,
+      0
+     ],
+     "query": "seq:p6_2026102302:o00>36.o06>15.o01>45"
+    },
+    {
+     "moves": 4,
+     "necessary_steps": 4,
+     "omissions": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "query": "seq:p6_2026102303:o02>52.o01>36.o00>30.o03>3"
+    },
+    {
+     "moves": 4,
+     "necessary_steps": 2,
+     "omissions": [
+      0,
+      0,
+      null,
+      null
+     ],
+     "query": "seq:p6_2026102303:o03>3.o02>52.o01>36.o00>30"
+    }
+   ],
+   "unknown": 0,
+   "unknown_fraction": 0.0,
+   "wall_after_batch": 533.0
+  },
+  "2": {
+   "attempted": 79,
+   "batch": 2,
+   "budget_held": true,
+   "complete_candidates_dev": 72,
+   "complete_per_kcpu": 122.758,
+   "cpu_used_after_batch": 613.4,
+   "decided_negatives": 88,
+   "decided_order_contrasts": 6,
+   "f1_order_evidence": true,
+   "f3_multistep_evidence": true,
+   "families_seen": [
+    "F1",
+    "F2",
+    "F3",
+    "F4"
+   ],
+   "fatal": false,
+   "four_move_witnesses": [
+    "seq:p6_2026102303:o02>52.o01>36.o00>30.o03>3",
+    "seq:p6_2026102303:o03>3.o02>52.o01>36.o00>30",
+    "seq:p6_2026102303:o02>52.o01>36.o00>30.o03>28",
+    "seq:p6_2026102307:o02>44.o01>60.o00>38.o03>36",
+    "seq:p6_2026102307:o02>44.o01>60.o00>38.o03>4"
+   ],
+   "goal_overlap_negatives": 6,
+   "multi_repair_roots": 3,
+   "nonzero_kappa": 6,
+   "pass": true,
+   "rule": "batch 1: no FATAL/integrity violation; (a VERIFIED 4-move repair OR a decided 3-move dependency = VERIFIED |r|>=3 with >=2 decided negative omissions); (>=1 decided same-endpoint order contrast OR >=1 decided nonzero kappa); UNKNOWN <= 25% of attempted queries; budgets held; >=1 development root with >=2 fully decided nonempty V3 repairs. Batches 2-3 additionally: cumulative F1 order contrast and F3 3/4-step evidence, GOAL_OVERLAP < 1/3 of decided negatives, >= 1 complete repair per 1000 teacher CPU-s, and >= 1500 CPU-s aggregate remaining.",
+   "three_move_dependencies": [
+    {
+     "moves": 3,
+     "necessary_steps": 2,
+     "omissions": [
+      0,
+      0,
+      1
+     ],
+     "query": "seq:p6_2026102301:o01>3.o00>4.o06>60"
+    },
+    {
+     "moves": 3,
+     "necessary_steps": 2,
+     "omissions": [
+      1,
+      0,
+      0
+     ],
+     "query": "seq:p6_2026102301:o06>60.o01>3.o00>4"
+    },
+    {
+     "moves": 3,
+     "necessary_steps": 2,
+     "omissions": [
+      0,
+      0,
+      1
+     ],
+     "query": "seq:p6_2026102302:o00>36.o01>45.o06>15"
+    },
+    {
+     "moves": 3,
+     "necessary_steps": 2,
+     "omissions": [
+      0,
+      1,
+      0
+     ],
+     "query": "seq:p6_2026102302:o00>36.o06>15.o01>45"
+    },
+    {
+     "moves": 4,
+     "necessary_steps": 4,
+     "omissions": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "query": "seq:p6_2026102303:o02>52.o01>36.o00>30.o03>3"
+    },
+    {
+     "moves": 4,
+     "necessary_steps": 2,
+     "omissions": [
+      0,
+      0,
+      null,
+      null
+     ],
+     "query": "seq:p6_2026102303:o03>3.o02>52.o01>36.o00>30"
+    },
+    {
+     "moves": 3,
+     "necessary_steps": 2,
+     "omissions": [
+      0,
+      0,
+      1
+     ],
+     "query": "seq:p6_2026102305:o01>59.o00>60.o06>5"
+    },
+    {
+     "moves": 3,
+     "necessary_steps": 2,
+     "omissions": [
+      1,
+      0,
+      0
+     ],
+     "query": "seq:p6_2026102305:o06>5.o01>59.o00>60"
+    },
+    {
+     "moves": 4,
+     "necessary_steps": 4,
+     "omissions": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "query": "seq:p6_2026102307:o02>44.o01>60.o00>38.o03>36"
+    },
+    {
+     "moves": 3,
+     "necessary_steps": 2,
+     "omissions": [
+      0,
+      0,
+      1
+     ],
+     "query": "seq:p6_2026102308:o01>30.o00>12.o06>59"
+    }
+   ],
+   "unknown": 0,
+   "unknown_fraction": 0.0,
+   "wall_after_batch": 848.4
+  },
+  "3": {
+   "attempted": 79,
+   "batch": 3,
+   "budget_held": true,
+   "complete_candidates_dev": 110,
+   "complete_per_kcpu": 111.002,
+   "cpu_used_after_batch": 1031.47,
+   "decided_negatives": 124,
+   "decided_order_contrasts": 7,
+   "f1_order_evidence": true,
+   "f3_multistep_evidence": true,
+   "families_seen": [
+    "F1",
+    "F2",
+    "F3",
+    "F4"
+   ],
+   "fatal": false,
+   "four_move_witnesses": [
+    "seq:p6_2026102303:o02>52.o01>36.o00>30.o03>3",
+    "seq:p6_2026102303:o03>3.o02>52.o01>36.o00>30",
+    "seq:p6_2026102303:o02>52.o01>36.o00>30.o03>28",
+    "seq:p6_2026102307:o02>44.o01>60.o00>38.o03>36",
+    "seq:p6_2026102307:o02>44.o01>60.o00>38.o03>4"
+   ],
+   "goal_overlap_negatives": 12,
+   "multi_repair_roots": 3,
+   "nonzero_kappa": 9,
+   "pass": true,
+   "rule": "batch 1: no FATAL/integrity violation; (a VERIFIED 4-move repair OR a decided 3-move dependency = VERIFIED |r|>=3 with >=2 decided negative omissions); (>=1 decided same-endpoint order contrast OR >=1 decided nonzero kappa); UNKNOWN <= 25% of attempted queries; budgets held; >=1 development root with >=2 fully decided nonempty V3 repairs. Batches 2-3 additionally: cumulative F1 order contrast and F3 3/4-step evidence, GOAL_OVERLAP < 1/3 of decided negatives, >= 1 complete repair per 1000 teacher CPU-s, and >= 1500 CPU-s aggregate remaining.",
+   "three_move_dependencies": [
+    {
+     "moves": 3,
+     "necessary_steps": 2,
+     "omissions": [
+      0,
+      0,
+      1
+     ],
+     "query": "seq:p6_2026102301:o01>3.o00>4.o06>60"
+    },
+    {
+     "moves": 3,
+     "necessary_steps": 2,
+     "omissions": [
+      1,
+      0,
+      0
+     ],
+     "query": "seq:p6_2026102301:o06>60.o01>3.o00>4"
+    },
+    {
+     "moves": 3,
+     "necessary_steps": 2,
+     "omissions": [
+      0,
+      0,
+      1
+     ],
+     "query": "seq:p6_2026102302:o00>36.o01>45.o06>15"
+    },
+    {
+     "moves": 3,
+     "necessary_steps": 2,
+     "omissions": [
+      0,
+      1,
+      0
+     ],
+     "query": "seq:p6_2026102302:o00>36.o06>15.o01>45"
+    },
+    {
+     "moves": 4,
+     "necessary_steps": 4,
+     "omissions": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "query": "seq:p6_2026102303:o02>52.o01>36.o00>30.o03>3"
+    },
+    {
+     "moves": 4,
+     "necessary_steps": 2,
+     "omissions": [
+      0,
+      0,
+      null,
+      null
+     ],
+     "query": "seq:p6_2026102303:o03>3.o02>52.o01>36.o00>30"
+    },
+    {
+     "moves": 3,
+     "necessary_steps": 2,
+     "omissions": [
+      0,
+      0,
+      1
+     ],
+     "query": "seq:p6_2026102305:o01>59.o00>60.o06>5"
+    },
+    {
+     "moves": 3,
+     "necessary_steps": 2,
+     "omissions": [
+      1,
+      0,
+      0
+     ],
+     "query": "seq:p6_2026102305:o06>5.o01>59.o00>60"
+    },
+    {
+     "moves": 4,
+     "necessary_steps": 4,
+     "omissions": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "query": "seq:p6_2026102307:o02>44.o01>60.o00>38.o03>36"
+    },
+    {
+     "moves": 3,
+     "necessary_steps": 2,
+     "omissions": [
+      0,
+      0,
+      1
+     ],
+     "query": "seq:p6_2026102308:o01>30.o00>12.o06>59"
+    },
+    {
+     "moves": 3,
+     "necessary_steps": 2,
+     "omissions": [
+      0,
+      0,
+      1
+     ],
+     "query": "seq:p6_2026102309:o01>20.o00>28.o06>60"
+    },
+    {
+     "moves": 3,
+     "necessary_steps": 2,
+     "omissions": [
+      1,
+      0,
+      0
+     ],
+     "query": "seq:p6_2026102309:o06>60.o01>20.o00>28"
+    },
+    {
+     "moves": 3,
+     "necessary_steps": 2,
+     "omissions": [
+      0,
+      0,
+      1
+     ],
+     "query": "seq:p6_2026102310:o00>28.o01>13.o06>39"
+    },
+    {
+     "moves": 3,
+     "necessary_steps": 2,
+     "omissions": [
+      0,
+      1,
+      0
+     ],
+     "query": "seq:p6_2026102310:o00>28.o06>39.o01>13"
+    },
+    {
+     "moves": 3,
+     "necessary_steps": 2,
+     "omissions": [
+      0,
+      0,
+      1
+     ],
+     "query": "seq:p6_2026102312:o01>38.o00>59.o06>55"
+    }
+   ],
+   "unknown": 0,
+   "unknown_fraction": 0.0,
+   "wall_after_batch": 1272.2
+  },
+  "4": {
+   "attempted": 79,
+   "batch": 4,
+   "budget_held": true,
+   "complete_candidates_dev": 144,
+   "complete_per_kcpu": 112.308,
+   "cpu_used_after_batch": 1337.41,
+   "decided_negatives": 166,
+   "decided_order_contrasts": 9,
+   "f1_order_evidence": true,
+   "f3_multistep_evidence": true,
+   "families_seen": [
+    "F1",
+    "F2",
+    "F3",
+    "F4"
+   ],
+   "fatal": false,
+   "four_move_witnesses": [
+    "seq:p6_2026102303:o02>52.o01>36.o00>30.o03>3",
+    "seq:p6_2026102303:o03>3.o02>52.o01>36.o00>30",
+    "seq:p6_2026102303:o02>52.o01>36.o00>30.o03>28",
+    "seq:p6_2026102307:o02>44.o01>60.o00>38.o03>36",
+    "seq:p6_2026102307:o02>44.o01>60.o00>38.o03>4",
+    "seq:p6_2026102315:o02>28.o01>12.o00>38.o03>52",
+    "seq:p6_2026102315:o03>52.o02>28.o01>12.o00>38",
+    "seq:p6_2026102315:o02>28.o01>12.o00>38.o03>60"
+   ],
+   "goal_overlap_negatives": 18,
+   "multi_repair_roots": 3,
+   "nonzero_kappa": 12,
+   "pass": true,
+   "rule": "batch 1: no FATAL/integrity violation; (a VERIFIED 4-move repair OR a decided 3-move dependency = VERIFIED |r|>=3 with >=2 decided negative omissions); (>=1 decided same-endpoint order contrast OR >=1 decided nonzero kappa); UNKNOWN <= 25% of attempted queries; budgets held; >=1 development root with >=2 fully decided nonempty V3 repairs. Batches 2-3 additionally: cumulative F1 order contrast and F3 3/4-step evidence, GOAL_OVERLAP < 1/3 of decided negatives, >= 1 complete repair per 1000 teacher CPU-s, and >= 1500 CPU-s aggregate remaining.",
+   "three_move_dependencies": [
+    {
+     "moves": 3,
+     "necessary_steps": 2,
+     "omissions": [
+      0,
+      0,
+      1
+     ],
+     "query": "seq:p6_2026102301:o01>3.o00>4.o06>60"
+    },
+    {
+     "moves": 3,
+     "necessary_steps": 2,
+     "omissions": [
+      1,
+      0,
+      0
+     ],
+     "query": "seq:p6_2026102301:o06>60.o01>3.o00>4"
+    },
+    {
+     "moves": 3,
+     "necessary_steps": 2,
+     "omissions": [
+      0,
+      0,
+      1
+     ],
+     "query": "seq:p6_2026102302:o00>36.o01>45.o06>15"
+    },
+    {
+     "moves": 3,
+     "necessary_steps": 2,
+     "omissions": [
+      0,
+      1,
+      0
+     ],
+     "query": "seq:p6_2026102302:o00>36.o06>15.o01>45"
+    },
+    {
+     "moves": 4,
+     "necessary_steps": 4,
+     "omissions": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "query": "seq:p6_2026102303:o02>52.o01>36.o00>30.o03>3"
+    },
+    {
+     "moves": 4,
+     "necessary_steps": 2,
+     "omissions": [
+      0,
+      0,
+      null,
+      null
+     ],
+     "query": "seq:p6_2026102303:o03>3.o02>52.o01>36.o00>30"
+    },
+    {
+     "moves": 3,
+     "necessary_steps": 2,
+     "omissions": [
+      0,
+      0,
+      1
+     ],
+     "query": "seq:p6_2026102305:o01>59.o00>60.o06>5"
+    },
+    {
+     "moves": 3,
+     "necessary_steps": 2,
+     "omissions": [
+      1,
+      0,
+      0
+     ],
+     "query": "seq:p6_2026102305:o06>5.o01>59.o00>60"
+    },
+    {
+     "moves": 4,
+     "necessary_steps": 4,
+     "omissions": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "query": "seq:p6_2026102307:o02>44.o01>60.o00>38.o03>36"
+    },
+    {
+     "moves": 3,
+     "necessary_steps": 2,
+     "omissions": [
+      0,
+      0,
+      1
+     ],
+     "query": "seq:p6_2026102308:o01>30.o00>12.o06>59"
+    },
+    {
+     "moves": 3,
+     "necessary_steps": 2,
+     "omissions": [
+      0,
+      0,
+      1
+     ],
+     "query": "seq:p6_2026102309:o01>20.o00>28.o06>60"
+    },
+    {
+     "moves": 3,
+     "necessary_steps": 2,
+     "omissions": [
+      1,
+      0,
+      0
+     ],
+     "query": "seq:p6_2026102309:o06>60.o01>20.o00>28"
+    },
+    {
+     "moves": 3,
+     "necessary_steps": 2,
+     "omissions": [
+      0,
+      0,
+      1
+     ],
+     "query": "seq:p6_2026102310:o00>28.o01>13.o06>39"
+    },
+    {
+     "moves": 3,
+     "necessary_steps": 2,
+     "omissions": [
+      0,
+      1,
+      0
+     ],
+     "query": "seq:p6_2026102310:o00>28.o06>39.o01>13"
+    },
+    {
+     "moves": 3,
+     "necessary_steps": 2,
+     "omissions": [
+      0,
+      0,
+      1
+     ],
+     "query": "seq:p6_2026102312:o01>38.o00>59.o06>55"
+    },
+    {
+     "moves": 3,
+     "necessary_steps": 2,
+     "omissions": [
+      0,
+      0,
+      1
+     ],
+     "query": "seq:p6_2026102314:o00>52.o01>20.o06>28"
+    },
+    {
+     "moves": 3,
+     "necessary_steps": 2,
+     "omissions": [
+      0,
+      1,
+      0
+     ],
+     "query": "seq:p6_2026102314:o00>52.o06>28.o01>20"
+    },
+    {
+     "moves": 4,
+     "necessary_steps": 4,
+     "omissions": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "query": "seq:p6_2026102315:o02>28.o01>12.o00>38.o03>52"
+    },
+    {
+     "moves": 4,
+     "necessary_steps": 3,
+     "omissions": [
+      0,
+      0,
+      0,
+      null
+     ],
+     "query": "seq:p6_2026102315:o03>52.o02>28.o01>12.o00>38"
+    },
+    {
+     "moves": 3,
+     "necessary_steps": 2,
+     "omissions": [
+      0,
+      0,
+      1
+     ],
+     "query": "seq:p6_2026102316:o01>15.o00>44.o06>28"
+    }
+   ],
+   "unknown": 0,
+   "unknown_fraction": 0.0,
+   "wall_after_batch": 1585.2
+  }
+ },
+ "raw_all": {
+  "BUDGET_INFEASIBLE": 42,
+  "CERTIFIED_INFEASIBLE": 179,
+  "FATAL_CONTRADICTION": 0,
+  "NOT_RUN": 0,
+  "UNKNOWN": 0,
+  "VERIFIED_FEASIBLE": 95
+ },
+ "raw_dev": {
+  "BUDGET_INFEASIBLE": 32,
+  "CERTIFIED_INFEASIBLE": 134,
+  "FATAL_CONTRADICTION": 0,
+  "NOT_RUN": 0,
+  "UNKNOWN": 0,
+  "VERIFIED_FEASIBLE": 71
+ },
+ "raw_sealed_holdout_counts_only": {
+  "BUDGET_INFEASIBLE": 10,
+  "CERTIFIED_INFEASIBLE": 45,
+  "FATAL_CONTRADICTION": 0,
+  "NOT_RUN": 0,
+  "UNKNOWN": 0,
+  "VERIFIED_FEASIBLE": 24
+ }
+}

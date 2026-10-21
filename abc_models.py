@@ -15,6 +15,7 @@ endpoint energies (e = softplus(-logit)), ideal-prefix action tokens.
 from __future__ import annotations
 
 import itertools
+import math
 
 import torch
 from torch import nn
@@ -51,14 +52,15 @@ class Root:
 
 
 class Shared(nn.Module):
-    def __init__(self):
+    def __init__(self, vision=True):
         super().__init__()
-        self.vproj, self.enc = nn.Linear(384, VIS), mlp(14 + VIS, W)
+        self.vproj, self.enc = (nn.Linear(384, VIS) if vision else None), mlp(14 + VIS, W)   # vision=False: geometry-only arm
         self.ctxn, self.pooln = mlp(16, W), nn.Linear(2 * W, W)
         self.act, self.unary, self.pairh = mlp(3 * W + 1, W), mlp(2 * W, 1), mlp(2 * W + 1, 1)
 
     def encode(self, R, xy):
-        return self.enc(torch.cat([R.numeric(xy), self.vproj(R.vis)], 1))
+        vis = self.vproj(R.vis) if self.vproj is not None else R.vis.new_zeros(R.n, VIS)
+        return self.enc(torch.cat([R.numeric(xy), vis], 1))
 
     def pooled(self, tok):
         return self.pooln(torch.cat([tok.mean(0), tok.max(0).values]))
@@ -90,16 +92,22 @@ class Shared(nn.Module):
 class ModelA(Shared):
     kind = "A"
 
-    def __init__(self, ordered=True):
-        super().__init__()
+    def __init__(self, ordered=True, vision=True, extra=0):
+        super().__init__(vision)
         self.ordered = ordered
         self.h0, self.gru, self.task, self.cost = nn.Linear(W, W), nn.GRUCell(W, W), mlp(2 * W, 1), mlp(W, 1)
+        if extra:                                        # capacity-matched A: residual MLP on the GRU state (same factor types)
+            self.extra = mlp(W, W, h=extra)
+
+    def _hx(self, h):
+        return h + self.extra(h) if hasattr(self, "extra") else h
 
     def seq(self, R, seq):
         toks, xy, pool = self.actions(R, seq, self.ordered)
         h = torch.tanh(self.h0(self.ctxn(R.ctx)))
         for a in toks:
             h = self.gru(a[None], h[None])[0]
+        h = self._hx(h)
         u = self.task(torch.cat([h, pool]))[0]
         e_st, lu, lp = self.static(R, xy)
         j = F.softplus(self.cost(h)[0]) * (len(seq) > 0)
@@ -107,14 +115,16 @@ class ModelA(Shared):
 
     def scene_p(self, R, xy):
         """A's explanation by re-scoring: task probability of the empty repair under edited poses."""
-        h = torch.tanh(self.h0(self.ctxn(R.ctx)))
+        h = self._hx(torch.tanh(self.h0(self.ctxn(R.ctx))))
         return torch.sigmoid(self.task(torch.cat([h, self.pooled(self.encode(R, xy))]))[0])
 
 
 class ModelBC(Shared):
-    def __init__(self, kind="B", coupling=True):
-        super().__init__()
-        self.kind, self.coupling = kind, coupling
+    def __init__(self, kind="B", coupling=True, vision=True, measure="raw", higher_order=False):
+        super().__init__(vision)
+        self.kind, self.coupling, self.measure = kind, coupling, measure
+        if coupling and higher_order:                    # P6: smallest higher-order coupling residual phi_HO(r, z)
+            self.ho_u, self.ho = nn.Linear(W, W), mlp(2 * W, 1)
         self.scene, self.typ, self.cpl = mlp(2 * W, 1), nn.Embedding(4, W), mlp(3 * W, 1)
         self.order_s, self.cost = mlp(2 * W, 1), mlp(W, 1)
         if kind == "B":
@@ -123,7 +133,17 @@ class ModelBC(Shared):
             self.h0, self.gru = nn.Linear(W, W), nn.GRUCell(W, W)
 
     def order(self, R, seq):
-        """(s, repair summary g): B = prefix-pair interactions, C = GRU (replaces, never adds)."""
+        """(s, repair summary g): B = prefix-pair interactions, C = GRU (replaces, never adds).
+        Memoized within one forward pass (abc_train.forward sets / clears `_memo`): exact reuse."""
+        memo, key = self.__dict__.get("_memo"), ("order", tuple((i, tuple(map(float, d))) for i, d in seq))
+        if memo is not None and key in memo:
+            return memo[key]
+        out = self._order(R, seq)
+        if memo is not None:
+            memo[key] = out
+        return out
+
+    def _order(self, R, seq):
         toks, xy, pool = self.actions(R, seq)
         if self.kind == "B":
             rows = [self.mix(torch.cat([a, torch.stack([self.pairo(torch.cat([toks[u], a])) for u in range(t)]).mean(0) if t
@@ -143,11 +163,18 @@ class ModelBC(Shared):
         for name in z_slots:
             typ = name.split("[")[0]
             if typ in ("z0", "zS"):
-                pxy = R.xy0.clone()
-                for i, p in (edits[name[3:-1]] if typ == "zS" else {}).items():
-                    pxy[i] = torch.as_tensor(p, dtype=torch.float64)
-                pv = self.pooled(self.encode(R, pxy))
-                s.append(self.scene(torch.cat([pv, c]))[0])
+                memo = self.__dict__.get("_memo")
+                if memo is None or ("scene", name) not in memo:
+                    pxy = R.xy0.clone()
+                    for i, p in (edits[name[3:-1]] if typ == "zS" else {}).items():
+                        pxy[i] = torch.as_tensor(p, dtype=torch.float64)
+                    pv = self.pooled(self.encode(R, pxy))
+                    sv = (self.scene(torch.cat([pv, c]))[0], pv)
+                    if memo is not None:
+                        memo[("scene", name)] = sv
+                sv = sv if memo is None else memo[("scene", name)]
+                s.append(sv[0])
+                pv = sv[1]
             elif typ == "zR":
                 s.append(s_r)
                 pv = g
@@ -164,12 +191,17 @@ class ModelBC(Shared):
         e_st, lu, lp = self.static(R, xy)
         K = len(z_slots)
         Wm = torch.zeros(K, K, dtype=torch.float64)
-        if self.coupling and K > 1:
-            for k, l in itertools.combinations(range(K), 2):
-                w = 0.5 * (self.cpl(torch.cat([v[k], v[l], g])) + self.cpl(torch.cat([v[l], v[k], g])))[0]
-                Wm = Wm.index_put((torch.tensor([k, l]), torch.tensor([l, k])), w.expand(2))
+        if self.coupling and K > 1:                      # all pairs in one batched call (same symmetric W(r))
+            ia, ib = torch.tensor(list(itertools.combinations(range(K), 2))).T
+            gg = g.expand(len(ia), -1)
+            w = 0.5 * (self.cpl(torch.cat([v[ia], v[ib], gg], 1)) + self.cpl(torch.cat([v[ib], v[ia], gg], 1)))[:, 0]
+            Wm = Wm.index_put((torch.cat([ia, ib]), torch.cat([ib, ia])), torch.cat([w, w]))
         Z = torch.tensor(list(itertools.product((0.0, 1.0), repeat=K)), dtype=torch.float64)
         E = e_st - Z @ s - 0.5 * ((Z @ Wm) * Z).sum(1)
+        if hasattr(self, "ho"):                          # nonlinear in z: can represent interactions of order > 2
+            E = E - self.ho(torch.cat([Z @ self.ho_u(v), g.expand(len(Z), -1)], 1))[:, 0]
+        if self.measure == "uniform":                    # Z_LAYOUT_V3_R4 reference measure: E + T K ln 2
+            E = E + T * K * math.log(2.0)
         lse = torch.logsumexp(-E / T, 0)
         p = torch.exp(-E / T - lse)
         marg = p @ Z
@@ -177,7 +209,9 @@ class ModelBC(Shared):
                 "lu": lu, "lp": lp, "J": j, "slots": list(z_slots)}
 
 
-def build(name: str):
-    return {"A": lambda: ModelA(), "A-no-order": lambda: ModelA(ordered=False), "B": lambda: ModelBC("B"),
-            "B-no-coupling": lambda: ModelBC("B", False), "C": lambda: ModelBC("C"),
-            "C-no-coupling": lambda: ModelBC("C", False)}[name]().double()
+def build(name: str, vision=True, measure="raw", higher_order=False, extra=0):
+    """Defaults reproduce the P5 architectures exactly (P5 checkpoints load unchanged)."""
+    bc = dict(vision=vision, measure=measure, higher_order=higher_order)
+    return {"A": lambda: ModelA(vision=vision, extra=extra), "A-no-order": lambda: ModelA(ordered=False, vision=vision),
+            "B": lambda: ModelBC("B", **bc), "B-no-coupling": lambda: ModelBC("B", False, **bc), "C": lambda: ModelBC("C", **bc),
+            "C-no-coupling": lambda: ModelBC("C", False, **bc)}[name]().double()
