@@ -1,0 +1,106 @@
+{
+ "static": {
+  "inputs": "final endpoint object tokens (geometry+DINO), c0",
+  "slots": [],
+  "params": [
+   "unary",
+   "pairh",
+   "enc",
+   "vproj"
+  ],
+  "losses": [
+   "static"
+  ],
+  "ablation": "none (all arms)",
+  "p6": "same",
+  "abc7": "same"
+ },
+ "phi_seq": {
+  "inputs": "ideal-prefix action tokens; B prefix-pair (pairo, mix); C GRU (h0, gru)",
+  "slots": [
+   "zR"
+  ],
+  "params": [
+   "order_s",
+   "pairo|gru",
+   "act"
+  ],
+  "losses": [
+   "task",
+   "pool"
+  ],
+  "ablation": "A-no-order (A only)",
+  "p6": "unary s_zR",
+  "abc7": "same"
+ },
+ "phi_scene": {
+  "inputs": "edit-specific tokens [moved,dx,dy,|d|,x0,y0], c0",
+  "slots": [
+   "z0",
+   "zS[I]"
+  ],
+  "params": [
+   "scene",
+   "edit_proj",
+   "edit_head",
+   "pair_scene"
+  ],
+  "losses": [
+   "scene",
+   "task(z0)",
+   "effect",
+   "pool"
+  ],
+  "ablation": "couple=none removes pair_scene",
+  "p6": "unary pooled-scene only (SPEC: missing z0-zS pair; edits indistinct)",
+  "abc7": "unary + named z0-zS[I] pair, root-scoped"
+ },
+ "phi_omit": {
+  "inputs": "recomputed omitted ideal prefixes; g(r), g(r minus t)",
+  "slots": [
+   "zR",
+   "zO[t]"
+  ],
+  "params": [
+   "order_s",
+   "pair_omit"
+  ],
+  "losses": [
+   "omit",
+   "effect",
+   "pool"
+  ],
+  "ablation": "couple=none removes pair_omit",
+  "p6": "unary only (SPEC_MISMATCH)",
+  "abc7": "unary + named zR-zO[t] pair"
+ },
+ "phi_couple": {
+  "inputs": "slot vectors; c0 (scene block) / g(r) (repair block)",
+  "slots": "all other pairs + HO",
+  "params": [
+   "cpl",
+   "ho_u",
+   "ho_s",
+   "ho_q"
+  ],
+  "losses": [
+   "pool"
+  ],
+  "ablation": "quadratic: no HO; structured: no cpl/HO; none: nothing",
+  "p6": "all pairs W(r) + HO(r), r-dependent scene beliefs",
+  "abc7": "scene block c0-conditioned, chain-normalized"
+ },
+ "travel_J": {
+  "inputs": "repair summary g(r) (B/C), GRU state (A), token mean (S)",
+  "slots": [],
+  "params": [
+   "cost"
+  ],
+  "losses": [
+   "cost"
+  ],
+  "ablation": "not a feasibility factor",
+  "p6": "same",
+  "abc7": "same (scalar, z-independent)"
+ }
+}

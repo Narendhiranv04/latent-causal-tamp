@@ -51,6 +51,13 @@ import d3lite_run
 import p6_run
 import p6_train
 import p6_viz
+import p7a_run
+import p7a_gate
+import p7a_viz
+import p7_collect
+import p7b_run
+import p7b_oneshot
+import p7b_viz
 import sector_cert
 import teacher_pilot
 import geometry as ge
@@ -222,6 +229,38 @@ def main(argv=None) -> int:
         q.add_argument(a, default=d)
     q.add_argument("--out", required=True)
     q.set_defaults(func=p6_viz.run)
+    q = sub.add_parser("p7a-train", help="P7a: controlled ABC7 training on the frozen P6 corpus (0 teacher calls, guarded)")
+    q.add_argument("--out", required=True)
+    q.set_defaults(func=p7a_run.run)
+    q = sub.add_parser("p7a-gate", help="P7a: machine-readable gate before any P7b teacher call")
+    for a, d in (("--regression", "runs/p7/audit/regression"), ("--train", "runs/p7/a_training"), ("--out", "runs/p7/a_gate.json")):
+        q.add_argument(a, default=d)
+    q.set_defaults(func=p7a_gate.decide)
+    q = sub.add_parser("p7a-viz", help="P7a: diagnostic GIFs (guarded)")
+    for a, d in (("--train", "runs/p7/a_training"), ("--out", "visualizations/p7/a")):
+        q.add_argument(a, default=d)
+    q.set_defaults(func=p7a_viz.run)
+    q = sub.add_parser("p7b-collect", help="P7b: two-wave collection (48 roots max, OPNEG-v1, wave-1 gate)")
+    for a, d in (("--config", "config.toml"), ("--config-v2", "config_v2_r4.toml"), ("--policy", "teacher_opneg.toml"),
+                 ("--regression", "runs/p7/audit/regression"), ("--p7a-gate", "runs/p7/a_gate.json")):
+        q.add_argument(a, default=d)
+    q.add_argument("--out", required=True)
+    q.set_defaults(func=p7_collect.run)
+    q = sub.add_parser("p7b-train", help="P7b: ABC7 retraining with frozen P7a configs, sealed test, one-shot rankings (guarded)")
+    for a, d in (("--collect", "runs/p7/collection"), ("--p7a-gate", "runs/p7/a_gate.json")):
+        q.add_argument(a, default=d)
+    q.add_argument("--out", required=True)
+    q.set_defaults(func=p7b_run.run)
+    q = sub.add_parser("p7b-oneshot", help="P7b: independent one-shot 2D simulator episodes of the frozen rankings")
+    for a, d in (("--collect", "runs/p7/collection"), ("--train", "runs/p7/training")):
+        q.add_argument(a, default=d)
+    q.add_argument("--out", required=True)
+    q.set_defaults(func=p7b_oneshot.run)
+    q = sub.add_parser("p7b-viz", help="P7b: GIFs from recorded data only (guarded)")
+    for a, d in (("--collect", "runs/p7/collection"), ("--train", "runs/p7/training"), ("--oneshot", "runs/p7/execution")):
+        q.add_argument(a, default=d)
+    q.add_argument("--out", required=True)
+    q.set_defaults(func=p7b_viz.run)
     q = sub.add_parser("replay", help="G1-G3.5: independently re-certify a run's stored trajectories")
     q.add_argument("--run", required=True)
     q.add_argument("--report", help="where to write the replay record (default: <run>/replay.json)")

@@ -253,12 +253,15 @@ def catalogue(cfg, robot, r) -> dict:
     return {"scene_queries": scene_q, "pool": pool}
 
 
-def plan(cfg, robot, pol, roots) -> dict:
+def plan(cfg, robot, pol, roots, cat_fn=None, meta=None) -> dict:
+    """Frozen plan. `cat_fn` / `meta` (stage, version, root_schedule, strata) let P7 reuse this builder; the defaults
+    reproduce the P6 plan (and its hash) exactly."""
     out = {"stage": "P6", "version": VERSION, "policy_id": pol["policy"]["policy_id"], "policy_hash": pol["policy_hash"],
            "seeds_policy": pol["policy"]["seeds"], "root_schedule": ROOTS, "strata": STRATA, "roots": {}, "queries": [], "units": [],
            "ineligible": [], "z_layout_version": z4.VERSION, "config_hash": cf.config_hash(cfg), "robot_profile_hash": cf.robot_profile_hash(cfg)}
+    out.update(meta or {})
     for r in roots:
-        cat = catalogue(cfg, robot, r)
+        cat = (cat_fn or catalogue)(cfg, robot, r)
         meta = {k: r[k] for k in ("family", "split", "batch", "seed", "attempt", "stratum", "target_cell", "goal_cell", "ids", "dest",
                                   "role_cells", "fixed", "predicates")}
         for key, s, variant in ((r["root"] + "_ref", r["ref_scene"], "reference"), (r["root"], r["scene"], "obstructed")):
