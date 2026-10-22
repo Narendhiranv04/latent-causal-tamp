@@ -268,7 +268,8 @@ def oneshot(dst, cfg, robot, plan, os_dir: Path):
     ax.imshow(m, cmap="RdYlGn", vmin=0, vmax=1, aspect="auto")
     ax.set_xticks(range(len(arms_)), arms_)
     ax.set_yticks(range(len(roots)), [f"{k} ({plan['roots'][k]['intent']})" for k in roots], fontsize=7)
-    ax.set_title(f"P8d paired success per root (green = GOAL_AND_SAFE_RETREAT); totals {dict(zip(arms_, m.sum(0).astype(int).tolist()))}", fontsize=8)
+    ax.set_title("P8d paired success per root (green = GOAL_AND_SAFE_RETREAT)\ntotals " +
+                 ", ".join(f"{a} {int(v)}" for a, v in zip(arms_, m.sum(0))), fontsize=8)
     f.tight_layout()
     f.savefig(dst / "P8_paired_success.png", dpi=80)
     plt.close(f)
