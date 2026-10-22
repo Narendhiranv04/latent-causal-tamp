@@ -1,0 +1,193 @@
+{
+ "chain_normalization": "P(z|r) = P_S(z_s|c0) P_Q(z_q|z_s,r): E_Q is normalized per z_s, so NO repair-side or scene<->repair parameter (pair_omit, ho_q, cross-block cpl pairs, order_s) can change P_S; only scene logits, pair_scene, scene-block cpl pairs and ho_s can.",
+ "model_version": "ABC7_V1",
+ "scope_tests": {
+  "full": {
+   "cpl": {
+    "repair_conditional_change": 0.9988754028159137,
+    "scene_block_P_S_change": 0.4526457672590801,
+    "zR_marginal_change": 0.5401537415459159
+   },
+   "ho_q": {
+    "repair_conditional_change": 0.962735813413621,
+    "scene_block_P_S_change": 0.0,
+    "zR_marginal_change": 0.32376826759970845
+   },
+   "ho_s": {
+    "repair_conditional_change": 0.0,
+    "scene_block_P_S_change": 0.9315376141213503,
+    "zR_marginal_change": 0.02719592273551158
+   },
+   "modules": [
+    "act",
+    "cost",
+    "cpl",
+    "ctxn",
+    "edit_head",
+    "edit_proj",
+    "enc",
+    "ho_q",
+    "ho_s",
+    "ho_u",
+    "mix",
+    "order_s",
+    "pair_omit",
+    "pair_scene",
+    "pairh",
+    "pairo",
+    "pooln",
+    "scene",
+    "typ",
+    "unary",
+    "vproj"
+   ],
+   "order_s": {
+    "repair_conditional_change": 0.09416928205690764,
+    "scene_block_P_S_change": 0.0,
+    "zR_marginal_change": 0.1415892626068896
+   },
+   "pair_omit": {
+    "repair_conditional_change": 0.06311514391663822,
+    "scene_block_P_S_change": 0.0,
+    "zR_marginal_change": 0.3543255741022199
+   },
+   "pair_scene": {
+    "repair_conditional_change": 0.0,
+    "scene_block_P_S_change": 0.9432244726582871,
+    "zR_marginal_change": 0.02896805028999705
+   },
+   "scene": {
+    "repair_conditional_change": 0.0,
+    "scene_block_P_S_change": 0.9243208249860725,
+    "zR_marginal_change": 0.028695263223826706
+   }
+  },
+  "none": {
+   "cpl": "ABSENT",
+   "ho_q": "ABSENT",
+   "ho_s": "ABSENT",
+   "modules": [
+    "act",
+    "cost",
+    "ctxn",
+    "edit_head",
+    "edit_proj",
+    "enc",
+    "mix",
+    "order_s",
+    "pairh",
+    "pairo",
+    "pooln",
+    "scene",
+    "typ",
+    "unary",
+    "vproj"
+   ],
+   "order_s": {
+    "repair_conditional_change": 0.6732516630488975,
+    "scene_block_P_S_change": 0.0,
+    "zR_marginal_change": 0.4471518852124412
+   },
+   "pair_omit": "ABSENT",
+   "pair_scene": "ABSENT",
+   "scene": {
+    "repair_conditional_change": 0.0,
+    "scene_block_P_S_change": 0.2194797507459984,
+    "zR_marginal_change": 2.220446049250313e-16
+   }
+  },
+  "quadratic": {
+   "cpl": {
+    "repair_conditional_change": 0.8966371540751124,
+    "scene_block_P_S_change": 0.4309370558545005,
+    "zR_marginal_change": 0.47793250874588955
+   },
+   "ho_q": "ABSENT",
+   "ho_s": "ABSENT",
+   "modules": [
+    "act",
+    "cost",
+    "cpl",
+    "ctxn",
+    "edit_head",
+    "edit_proj",
+    "enc",
+    "mix",
+    "order_s",
+    "pair_omit",
+    "pair_scene",
+    "pairh",
+    "pairo",
+    "pooln",
+    "scene",
+    "typ",
+    "unary",
+    "vproj"
+   ],
+   "order_s": {
+    "repair_conditional_change": 0.6968104956838272,
+    "scene_block_P_S_change": 0.0,
+    "zR_marginal_change": 0.41422451813399314
+   },
+   "pair_omit": {
+    "repair_conditional_change": 0.06624234546849847,
+    "scene_block_P_S_change": 0.0,
+    "zR_marginal_change": 0.35915996364447234
+   },
+   "pair_scene": {
+    "repair_conditional_change": 0.0,
+    "scene_block_P_S_change": 0.06958078735538945,
+    "zR_marginal_change": 0.006913068800772693
+   },
+   "scene": {
+    "repair_conditional_change": 0.0,
+    "scene_block_P_S_change": 0.9215416878448233,
+    "zR_marginal_change": 0.022131710426097184
+   }
+  },
+  "structured": {
+   "cpl": "ABSENT",
+   "ho_q": "ABSENT",
+   "ho_s": "ABSENT",
+   "modules": [
+    "act",
+    "cost",
+    "ctxn",
+    "edit_head",
+    "edit_proj",
+    "enc",
+    "mix",
+    "order_s",
+    "pair_omit",
+    "pair_scene",
+    "pairh",
+    "pairo",
+    "pooln",
+    "scene",
+    "typ",
+    "unary",
+    "vproj"
+   ],
+   "order_s": {
+    "repair_conditional_change": 0.5748136416692529,
+    "scene_block_P_S_change": 0.0,
+    "zR_marginal_change": 0.39287952953420413
+   },
+   "pair_omit": {
+    "repair_conditional_change": 0.9697873201510169,
+    "scene_block_P_S_change": 0.0,
+    "zR_marginal_change": 0.5138270937121341
+   },
+   "pair_scene": {
+    "repair_conditional_change": 0.0,
+    "scene_block_P_S_change": 0.06526450205966458,
+    "zR_marginal_change": 4.440892098500626e-16
+   },
+   "scene": {
+    "repair_conditional_change": 0.0,
+    "scene_block_P_S_change": 0.841388791482052,
+    "zR_marginal_change": 2.7755575615628914e-16
+   }
+  }
+ }
+}

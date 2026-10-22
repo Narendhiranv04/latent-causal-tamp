@@ -1,0 +1,9 @@
+................................                                         [100%]
+=============================== warnings summary ===============================
+tests/test_p8.py::test_identical_direct_logits_cross_terms_move_exactly_what_they_can
+  /home/naren/Desktop/boltzmann_lfd/tests/test_p8.py:39: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+  Consider using tensor.detach() first. (Triggered internally at /pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:836.)
+    assert float((pf - pn).abs().max()) > 1e-4 and float((ps - pn).abs().max()) > 1e-4      # cross terms change scene beliefs
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+32 passed, 1 warning in 257.09s (0:04:17)

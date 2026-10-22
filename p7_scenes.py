@@ -39,6 +39,7 @@ VERSION = "P7_FAMILIES_V1"
 FAMS = ["KP", "KM", "K0", "ORD", "MOT", "ALT"]
 SEED0, MAX_ATTEMPTS, CONSTRUCTION_CPU_S, QUERY_CAP = 2026102401, 600, 900.0, 32
 SIDES = {"N": 8, "S": -8, "W": -1}
+PREFIX = "p7_"                        # root-key prefix (P8 reuses this constructor with "p8_")
 MOT_STRATA = ["S0", "S1", "S3"]       # static preview: S2 (link 0 at 45 deg) admits no annulus barrier (0 / 200 attempts)
 ROOTS = [{"index": i, "wave": w, "batch": 2 * (w - 1) + 1 + j // 2, "family": f, "split": sp, "seed": SEED0 + i,
           "stratum": MOT_STRATA[(j + 2 * w) % 3] if f == "MOT" else f"S{(fi + j + 2 * w) % 4}"}
@@ -174,7 +175,7 @@ def _try(cfg, robot, scr, spec, attempt, known):
     far = [x for x in sorted(scr.valid) if all(_cheb(x, u) >= 2 for u in used)]
     ncl = min(int(rng.integers(0, 3)), max(0, len(far) - 1))
     clutter = [int(x) for x in rng.choice(far, ncl, replace=False)] if ncl else []
-    key = f"p7_{spec['seed']}"
+    key = f"{PREFIX}{spec['seed']}"
     s = place_scene(cfg, key, "obstructed", [role["T"]], [role[k] for k in movers] + fixed + clutter)
     s = replace(s, robot=replace(s.robot, q_rad=tuple(STRATA[spec["stratum"]])))
     ids = {k: f"o{i:02d}" for i, k in enumerate(movers)}

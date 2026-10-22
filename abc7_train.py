@@ -47,10 +47,19 @@ def _bce_p(p, y):
     return -(torch.log(p) if y else torch.log1p(-p))
 
 
+def _static(o, c):
+    """Vectorized form of abc_train._static (same mean of the same per-label BCE terms; one autograd node)."""
+    lg = [o["lu"][i] for i, y in enumerate(c["su"]) if y is not None] + [o["lp"][k] for k, y in enumerate(c["sp"]) if y is not None]
+    if not lg:
+        return None
+    ys = [y for y in c["su"] if y is not None] + [y for y in c["sp"] if y is not None]
+    return F.binary_cross_entropy_with_logits(torch.stack(lg), torch.tensor(ys, dtype=torch.float64))
+
+
 def forward(model, r) -> list:
     model._memo = {}
     try:
-        if model.kind in ("A", "S"):
+        if model.kind in ("A", "S", "SF"):
             return [model.seq(r["R"], c["seq"]) for c in r["cands"]]
         return [model.joint(r["R"], c["seq"], c["slots"], r["edits"]) for c in r["cands"]]
     finally:
@@ -62,7 +71,7 @@ def scene_probs(model, r, outs) -> dict:
     empty = next((i for i, c in enumerate(r["cands"]) if not c["seq"]), None)
     if empty is None:
         return {}
-    if model.kind in ("A", "S"):                          # same edit set as the B / C layout (nuisance excluded)
+    if model.kind in ("A", "S", "SF"):                    # same edit set as the B / C layout (nuisance excluded)
         out = {"z0": outs[empty]["p"]}
         model._memo = {}
         try:
@@ -80,7 +89,7 @@ def losses(model, r, outs=None, rec=None) -> dict:
     sp = scene_probs(model, r, outs)
     y0 = next((c["y"] for c in r["cands"] if not c["seq"]), None)
     for c, o in zip(r["cands"], outs):
-        st = at._static(o, c)
+        st = _static(o, c)
         if st is not None:
             L["static"].append(st)
         if c["y"] is not None:
@@ -103,8 +112,12 @@ def losses(model, r, outs=None, rec=None) -> dict:
             yo = c["z"][c["slots"].index(n)] if n in c["slots"] else None
             if yo is None:
                 continue
-            if model.kind not in ("A", "S"):
+            if model.kind not in ("A", "S", "SF"):
                 po = o["marg"][c["slots"].index(n)]
+                L["omit"].append(_bce_p(po, yo))
+                pred = o["p"] - po
+            elif model.kind == "SF":                      # P8 factorized control: its own independent omission prediction
+                po = model.omit_p(r["R"], [a for k, a in enumerate(c["seq"]) if k != t])
                 L["omit"].append(_bce_p(po, yo))
                 pred = o["p"] - po
             else:
@@ -119,7 +132,7 @@ def losses(model, r, outs=None, rec=None) -> dict:
         for i, d in c["seq"]:
             xy[i] = torch.as_tensor(d, dtype=torch.float64)
         _, lu, lp = model.static(r["R"], xy)
-        if (st := at._static({"lu": lu, "lp": lp}, c)) is not None:
+        if (st := _static({"lu": lu, "lp": lp}, c)) is not None:
             L["static"].append(st)
     if model.kind == "A":
         dec = [(c, o) for c, o in zip(r["cands"], outs) if c["y"] is not None]

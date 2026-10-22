@@ -58,6 +58,14 @@ import p7_collect
 import p7b_run
 import p7b_oneshot
 import p7b_viz
+import p8_audit
+import p8_train
+import p8_gates
+import p8b_run
+import p8_collect
+import p8c_train
+import p8d_run
+import p8_viz
 import sector_cert
 import teacher_pilot
 import geometry as ge
@@ -261,6 +269,39 @@ def main(argv=None) -> int:
         q.add_argument(a, default=d)
     q.add_argument("--out", required=True)
     q.set_defaults(func=p7b_viz.run)
+    q = sub.add_parser("p8-audit", help="P8: read-only evidence recount, manifests and factor-scope audit")
+    q.set_defaults(func=p8_audit.run)
+    q = sub.add_parser("p8a-train", help="P8a: matched coupling comparison on saved evidence (0 teacher calls, guarded)")
+    q.add_argument("--out", required=True)
+    q.set_defaults(func=p8_train.run)
+    q = sub.add_parser("p8a-gate", help="P8a machine-readable gate")
+    q.add_argument("--out", default="runs/p8/P8A_GATE.json")
+    q.set_defaults(func=p8_gates.gate_a)
+    q = sub.add_parser("p8b-run", help="P8b: selection funnel, thresholds, sampler mixing, G+M baseline (0 teacher calls, guarded)")
+    q.add_argument("--out", required=True)
+    q.set_defaults(func=p8b_run.run)
+    q = sub.add_parser("p8b-gate", help="P8b machine-readable gate")
+    q.add_argument("--out", default="runs/p8/P8B_GATE.json")
+    q.set_defaults(func=p8_gates.gate_b)
+    q = sub.add_parser("p8c-collect", help="P8c: two-wave kappa-balanced collection (36 roots max, OPNEG-v1, wave-1 gate)")
+    for a, d in (("--config", "config.toml"), ("--config-v2", "config_v2_r4.toml"), ("--policy", "teacher_opneg.toml"),
+                 ("--p8a-gate", "runs/p8/P8A_GATE.json"), ("--p8b-gate", "runs/p8/P8B_GATE.json")):
+        q.add_argument(a, default=d)
+    q.add_argument("--out", required=True)
+    q.set_defaults(func=p8_collect.run)
+    q = sub.add_parser("p8c-train", help="P8c: six arms x 3 seeds on fresh + historical data; frozen P8d rankings (guarded)")
+    q.add_argument("--out", required=True)
+    q.set_defaults(func=p8c_train.run)
+    q = sub.add_parser("p8d-run", help="P8d: independent one-shot episodes of the frozen P8c rankings")
+    for a, d in (("--collect", "runs/p8/collection"), ("--rankings", "runs/p8/c_training/rankings.json")):
+        q.add_argument(a, default=d)
+    q.add_argument("--out", required=True)
+    q.set_defaults(func=p8d_run.run)
+    q = sub.add_parser("p8-viz", help="P8 diagnostics from saved records (guarded)")
+    q.add_argument("--stage", default="all", choices=["a", "b", "cd", "all"])
+    q.add_argument("--cpu", default="600")
+    q.add_argument("--out", default="visualizations/p8")
+    q.set_defaults(func=p8_viz.run)
     q = sub.add_parser("replay", help="G1-G3.5: independently re-certify a run's stored trajectories")
     q.add_argument("--run", required=True)
     q.add_argument("--report", help="where to write the replay record (default: <run>/replay.json)")
