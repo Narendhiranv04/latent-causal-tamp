@@ -1,0 +1,70 @@
+{
+ "audit_cpu_s": 19.1,
+ "checks": {
+  "baseline_tests_pass": true,
+  "dino_features_used": true,
+  "docs_imported_unchanged": true,
+  "factor_diagram_hashed": true,
+  "head_equals_origin_main": true,
+  "label_identity_sound": true,
+  "nothing_staged": true,
+  "p8_checkpoint_hashes_match": true,
+  "p8c_results_reproduced": true,
+  "six_replays_pass": true,
+  "teacher_calls_zero": true
+ },
+ "findings_not_failures": [
+  "P8 multi-loss reuses each distinct label ~4-6 times (p8_label_use.json)",
+  "per-candidate ABC7 blocks treat copies of one physical sequence query as separate variables; legacy marginals of copies differ by up to 0.35 (legacy_alias_disagreement.json)",
+  "P8 report 0027 / P8_DECISION H-vision row wrongly said no image input: DINOv2 features are used"
+ ],
+ "head": "f9a6de0695d83699a2115d4898e5c78063852073",
+ "regression": {
+  "calls": {
+   "test_arm2d.py": {
+    "planner.plan": 75,
+    "skill.plan_skill": 3
+   },
+   "test_g4a.py": {
+    "planner.plan": 198,
+    "skill.plan_skill": 22
+   },
+   "test_g4d.py": {
+    "planner.plan": 24,
+    "skill.plan_skill": 4
+   },
+   "test_g4d_corrections.py": {
+    "planner.plan": 40,
+    "skill.plan_skill": 4
+   },
+   "test_interventions.py": {
+    "planner.plan": 37,
+    "skill.plan_skill": 1
+   },
+   "test_protocol.py": {
+    "planner.plan": 104,
+    "skill.plan_skill": 14
+   },
+   "test_verify.py": {
+    "planner.plan": 143,
+    "skill.plan_skill": 12
+   }
+  },
+  "cpu_s": 628.38,
+  "replays": {
+   "g1_hardening": true,
+   "g1_robot": true,
+   "g2_interventions": true,
+   "g3_5_initial_scene": true,
+   "g3_repairs": true,
+   "g4a_evidence_audit": true
+  },
+  "tests": {
+   "failed": 0,
+   "passed": 323,
+   "skipped": 0
+  }
+ },
+ "stage": "P9-L0",
+ "verdict": "PASS"
+}

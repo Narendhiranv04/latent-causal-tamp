@@ -1,0 +1,563 @@
+{
+ "arms": {
+  "A": {
+   "cost": {
+    "by_family": {
+     "act [shared action token]": 0.02019,
+     "cost [travel J head]": 0.03896,
+     "ctxn [shared context]": 0.01368,
+     "enc [shared object encoder]": 0.02261,
+     "gru [F2 C / A GRU]": 0.02244,
+     "h0 [F2 C / A GRU]": 0.00927,
+     "pooln [shared pooling]": 0.00508,
+     "vproj [shared DINOv2 projection]": 0.04701
+    },
+    "total": 0.07381992677140263
+   },
+   "effect": {
+    "by_family": {
+     "act [shared action token]": 0.10355,
+     "ctxn [shared context]": 0.05136,
+     "edit_head [shared edit encoder]": 0.23058,
+     "edit_proj [shared edit encoder]": 0.01831,
+     "enc [shared object encoder]": 0.38264,
+     "gru [F2 C / A GRU]": 0.13867,
+     "h0 [F2 C / A GRU]": 0.04584,
+     "pooln [shared pooling]": 0.06809,
+     "task [A / factorized outcome head]": 0.21178,
+     "vproj [shared DINOv2 projection]": 0.5917
+    },
+    "total": 0.7963673962400301
+   },
+   "pool": {
+    "by_family": {
+     "act [shared action token]": 0.09854,
+     "ctxn [shared context]": 0.0869,
+     "edit_head [shared edit encoder]": 0.20022,
+     "edit_proj [shared edit encoder]": 0.01971,
+     "enc [shared object encoder]": 0.31064,
+     "gru [F2 C / A GRU]": 0.14143,
+     "h0 [F2 C / A GRU]": 0.0632,
+     "pairh [F1 static pair]": 0.00359,
+     "pooln [shared pooling]": 0.09128,
+     "task [A / factorized outcome head]": 0.12691,
+     "unary [F1 static unary]": 9e-05,
+     "vproj [shared DINOv2 projection]": 0.58123
+    },
+    "total": 0.735197340595148
+   },
+   "scene": {
+    "by_family": {
+     "ctxn [shared context]": 0.06649,
+     "edit_head [shared edit encoder]": 1.21186,
+     "edit_proj [shared edit encoder]": 0.10857,
+     "enc [shared object encoder]": 1.63009,
+     "h0 [F2 C / A GRU]": 0.12502,
+     "pooln [shared pooling]": 0.34521,
+     "task [A / factorized outcome head]": 0.47901,
+     "vproj [shared DINOv2 projection]": 3.36655
+    },
+    "total": 3.9799398678775013
+   },
+   "static": {
+    "by_family": {
+     "ctxn [shared context]": 0.00081,
+     "enc [shared object encoder]": 0.08721,
+     "pairh [F1 static pair]": 0.05685,
+     "unary [F1 static unary]": 0.00222,
+     "vproj [shared DINOv2 projection]": 0.10356
+    },
+    "total": 0.14686374133230795
+   },
+   "task": {
+    "by_family": {
+     "act [shared action token]": 0.09009,
+     "ctxn [shared context]": 0.04653,
+     "edit_head [shared edit encoder]": 0.39609,
+     "edit_proj [shared edit encoder]": 0.03536,
+     "enc [shared object encoder]": 0.51284,
+     "gru [F2 C / A GRU]": 0.12598,
+     "h0 [F2 C / A GRU]": 0.04373,
+     "pooln [shared pooling]": 0.14858,
+     "task [A / factorized outcome head]": 0.14783,
+     "vproj [shared DINOv2 projection]": 0.76572
+    },
+    "total": 1.0389737297478208
+   }
+  },
+  "B-full": {
+   "cost": {
+    "by_family": {
+     "act [shared action token]": 0.0423,
+     "cost [travel J head]": 0.07721,
+     "enc [shared object encoder]": 0.03978,
+     "mix [F2 B prefix-pair]": 0.09251,
+     "pairo [F2 B prefix-pair]": 0.01566,
+     "pooln [shared pooling]": 0.0126,
+     "vproj [shared DINOv2 projection]": 0.08111
+    },
+    "total": 0.15772049879139594
+   },
+   "effect": {
+    "by_family": {
+     "act [shared action token]": 0.16147,
+     "cpl [F5 generic pairs]": 0.07726,
+     "ctxn [shared context]": 0.00336,
+     "edit_head [shared edit encoder]": 0.12952,
+     "edit_proj [shared edit encoder]": 0.0173,
+     "enc [shared object encoder]": 0.45469,
+     "ho_q [F5 higher-order (repair)]": 0.0244,
+     "ho_s [F5 higher-order (scene)]": 0.00978,
+     "ho_u [F5 higher-order]": 0.01979,
+     "mix [F2 B prefix-pair]": 0.04746,
+     "order_s [F2 sequence unary (also F4 omission unary on r minus t)]": 0.04382,
+     "pair_omit [F4 structured zR-zO pair]": 0.02493,
+     "pair_scene [F3 structured z0-zS pair]": 0.0002,
+     "pairo [F2 B prefix-pair]": 0.08442,
+     "pooln [shared pooling]": 0.09883,
+     "scene [F3 scene unary]": 0.01719,
+     "typ [slot-type embedding (pair inputs)]": 0.00383,
+     "vproj [shared DINOv2 projection]": 1.43672
+    },
+    "total": 1.5307241725678429
+   },
+   "omit": {
+    "by_family": {
+     "act [shared action token]": 0.94923,
+     "cpl [F5 generic pairs]": 0.39025,
+     "ctxn [shared context]": 0.00427,
+     "edit_head [shared edit encoder]": 0.76826,
+     "edit_proj [shared edit encoder]": 0.14395,
+     "enc [shared object encoder]": 2.89162,
+     "ho_q [F5 higher-order (repair)]": 0.30373,
+     "ho_s [F5 higher-order (scene)]": 0.01947,
+     "ho_u [F5 higher-order]": 0.22438,
+     "mix [F2 B prefix-pair]": 0.25442,
+     "order_s [F2 sequence unary (also F4 omission unary on r minus t)]": 0.6566,
+     "pair_omit [F4 structured zR-zO pair]": 0.09825,
+     "pair_scene [F3 structured z0-zS pair]": 4e-05,
+     "pairo [F2 B prefix-pair]": 0.16333,
+     "pooln [shared pooling]": 0.7236,
+     "scene [F3 scene unary]": 0.03566,
+     "typ [slot-type embedding (pair inputs)]": 0.02145,
+     "vproj [shared DINOv2 projection]": 10.6208
+    },
+    "total": 11.136766854753686
+   },
+   "pool": {
+    "by_family": {
+     "act [shared action token]": 0.99523,
+     "cpl [F5 generic pairs]": 1.3469,
+     "ctxn [shared context]": 0.03551,
+     "edit_head [shared edit encoder]": 0.98571,
+     "edit_proj [shared edit encoder]": 0.06075,
+     "enc [shared object encoder]": 1.48982,
+     "ho_q [F5 higher-order (repair)]": 0.18144,
+     "ho_s [F5 higher-order (scene)]": 0.15844,
+     "ho_u [F5 higher-order]": 0.1306,
+     "mix [F2 B prefix-pair]": 0.37404,
+     "order_s [F2 sequence unary (also F4 omission unary on r minus t)]": 0.50831,
+     "pair_omit [F4 structured zR-zO pair]": 0.06551,
+     "pair_scene [F3 structured z0-zS pair]": 0.00012,
+     "pairh [F1 static pair]": 8e-05,
+     "pairo [F2 B prefix-pair]": 0.07079,
+     "pooln [shared pooling]": 0.46992,
+     "scene [F3 scene unary]": 0.31038,
+     "typ [slot-type embedding (pair inputs)]": 0.04285,
+     "unary [F1 static unary]": 0.0,
+     "vproj [shared DINOv2 projection]": 3.2661
+    },
+    "total": 4.179692607060787
+   },
+   "scene": {
+    "by_family": {
+     "cpl [F5 generic pairs]": 1.19805,
+     "ctxn [shared context]": 0.23213,
+     "edit_head [shared edit encoder]": 2.14046,
+     "edit_proj [shared edit encoder]": 0.7056,
+     "enc [shared object encoder]": 5.69714,
+     "ho_s [F5 higher-order (scene)]": 0.99928,
+     "ho_u [F5 higher-order]": 0.63271,
+     "pair_scene [F3 structured z0-zS pair]": 0.00687,
+     "pooln [shared pooling]": 1.93081,
+     "scene [F3 scene unary]": 1.96482,
+     "typ [slot-type embedding (pair inputs)]": 0.07597,
+     "vproj [shared DINOv2 projection]": 18.81113
+    },
+    "total": 20.046894624784798
+   },
+   "static": {
+    "by_family": {
+     "ctxn [shared context]": 6e-05,
+     "enc [shared object encoder]": 0.01417,
+     "pairh [F1 static pair]": 0.01253,
+     "unary [F1 static unary]": 0.00016,
+     "vproj [shared DINOv2 projection]": 0.0231
+    },
+    "total": 0.02986114699868593
+   },
+   "task": {
+    "by_family": {
+     "act [shared action token]": 0.36615,
+     "cpl [F5 generic pairs]": 0.19242,
+     "ctxn [shared context]": 0.01126,
+     "edit_head [shared edit encoder]": 0.29593,
+     "edit_proj [shared edit encoder]": 0.04934,
+     "enc [shared object encoder]": 1.2159,
+     "ho_q [F5 higher-order (repair)]": 0.04997,
+     "ho_s [F5 higher-order (scene)]": 0.05487,
+     "ho_u [F5 higher-order]": 0.04504,
+     "mix [F2 B prefix-pair]": 0.13239,
+     "order_s [F2 sequence unary (also F4 omission unary on r minus t)]": 0.21902,
+     "pair_omit [F4 structured zR-zO pair]": 0.03466,
+     "pair_scene [F3 structured z0-zS pair]": 7e-05,
+     "pairo [F2 B prefix-pair]": 0.09882,
+     "pooln [shared pooling]": 0.26242,
+     "scene [F3 scene unary]": 0.01695,
+     "typ [slot-type embedding (pair inputs)]": 0.00835,
+     "vproj [shared DINOv2 projection]": 4.50719
+    },
+    "total": 4.712498237236069
+   }
+  },
+  "B-structured": {
+   "cost": {
+    "by_family": {
+     "act [shared action token]": 0.04384,
+     "cost [travel J head]": 0.10485,
+     "enc [shared object encoder]": 0.02828,
+     "mix [F2 B prefix-pair]": 0.09169,
+     "pairo [F2 B prefix-pair]": 0.02895,
+     "pooln [shared pooling]": 0.01183,
+     "vproj [shared DINOv2 projection]": 0.05262
+    },
+    "total": 0.1608367266020374
+   },
+   "effect": {
+    "by_family": {
+     "act [shared action token]": 0.29995,
+     "ctxn [shared context]": 0.03473,
+     "edit_head [shared edit encoder]": 0.67438,
+     "edit_proj [shared edit encoder]": 0.05462,
+     "enc [shared object encoder]": 0.65405,
+     "mix [F2 B prefix-pair]": 0.24175,
+     "order_s [F2 sequence unary (also F4 omission unary on r minus t)]": 0.08242,
+     "pair_omit [F4 structured zR-zO pair]": 0.01064,
+     "pair_scene [F3 structured z0-zS pair]": 0.00296,
+     "pairo [F2 B prefix-pair]": 0.27004,
+     "pooln [shared pooling]": 0.37108,
+     "scene [F3 scene unary]": 0.36117,
+     "typ [slot-type embedding (pair inputs)]": 0.00021,
+     "vproj [shared DINOv2 projection]": 1.36691
+    },
+    "total": 1.80321594902106
+   },
+   "omit": {
+    "by_family": {
+     "act [shared action token]": 0.60366,
+     "ctxn [shared context]": 0.0,
+     "edit_head [shared edit encoder]": 0.23215,
+     "edit_proj [shared edit encoder]": 0.02096,
+     "enc [shared object encoder]": 0.86485,
+     "mix [F2 B prefix-pair]": 0.48528,
+     "order_s [F2 sequence unary (also F4 omission unary on r minus t)]": 0.65523,
+     "pair_omit [F4 structured zR-zO pair]": 0.17918,
+     "pair_scene [F3 structured z0-zS pair]": 0.0,
+     "pairo [F2 B prefix-pair]": 0.11205,
+     "pooln [shared pooling]": 0.17652,
+     "scene [F3 scene unary]": 0.0,
+     "typ [slot-type embedding (pair inputs)]": 0.0049,
+     "vproj [shared DINOv2 projection]": 2.15805
+    },
+    "total": 2.562137826165603
+   },
+   "pool": {
+    "by_family": {
+     "act [shared action token]": 2.11714,
+     "ctxn [shared context]": 0.02903,
+     "edit_head [shared edit encoder]": 1.61381,
+     "edit_proj [shared edit encoder]": 0.11897,
+     "enc [shared object encoder]": 3.22669,
+     "mix [F2 B prefix-pair]": 1.76229,
+     "order_s [F2 sequence unary (also F4 omission unary on r minus t)]": 1.50974,
+     "pair_omit [F4 structured zR-zO pair]": 0.20485,
+     "pair_scene [F3 structured z0-zS pair]": 0.00644,
+     "pairh [F1 static pair]": 0.00114,
+     "pairo [F2 B prefix-pair]": 1.21975,
+     "pooln [shared pooling]": 1.20142,
+     "scene [F3 scene unary]": 0.5316,
+     "typ [slot-type embedding (pair inputs)]": 0.00505,
+     "unary [F1 static unary]": 1e-05,
+     "vproj [shared DINOv2 projection]": 7.60948
+    },
+    "total": 9.168325215093105
+   },
+   "scene": {
+    "by_family": {
+     "ctxn [shared context]": 0.04169,
+     "edit_head [shared edit encoder]": 0.99589,
+     "edit_proj [shared edit encoder]": 0.22085,
+     "enc [shared object encoder]": 3.13273,
+     "pair_scene [F3 structured z0-zS pair]": 0.0011,
+     "pooln [shared pooling]": 0.3003,
+     "scene [F3 scene unary]": 0.29452,
+     "typ [slot-type embedding (pair inputs)]": 4e-05,
+     "vproj [shared DINOv2 projection]": 10.50918
+    },
+    "total": 11.02162000993179
+   },
+   "static": {
+    "by_family": {
+     "ctxn [shared context]": 0.00134,
+     "enc [shared object encoder]": 0.04976,
+     "pairh [F1 static pair]": 0.04087,
+     "unary [F1 static unary]": 0.00435,
+     "vproj [shared DINOv2 projection]": 0.06195
+    },
+    "total": 0.08947433774250992
+   },
+   "task": {
+    "by_family": {
+     "act [shared action token]": 0.42826,
+     "ctxn [shared context]": 0.0289,
+     "edit_head [shared edit encoder]": 0.3246,
+     "edit_proj [shared edit encoder]": 0.02848,
+     "enc [shared object encoder]": 0.65658,
+     "mix [F2 B prefix-pair]": 0.37668,
+     "order_s [F2 sequence unary (also F4 omission unary on r minus t)]": 0.26032,
+     "pair_omit [F4 structured zR-zO pair]": 0.02977,
+     "pair_scene [F3 structured z0-zS pair]": 0.00115,
+     "pairo [F2 B prefix-pair]": 0.29219,
+     "pooln [shared pooling]": 0.25613,
+     "scene [F3 scene unary]": 0.09689,
+     "typ [slot-type embedding (pair inputs)]": 0.00079,
+     "vproj [shared DINOv2 projection]": 1.52009
+    },
+    "total": 1.8447445762534893
+   }
+  },
+  "C-full": {
+   "cost": {
+    "by_family": {
+     "act [shared action token]": 0.02255,
+     "cost [travel J head]": 0.05488,
+     "ctxn [shared context]": 0.02588,
+     "enc [shared object encoder]": 0.01102,
+     "gru [F2 C / A GRU]": 0.03529,
+     "h0 [F2 C / A GRU]": 0.03164,
+     "pooln [shared pooling]": 0.00445,
+     "vproj [shared DINOv2 projection]": 0.02417
+    },
+    "total": 0.08462610953749784
+   },
+   "effect": {
+    "by_family": {
+     "act [shared action token]": 0.24956,
+     "cpl [F5 generic pairs]": 0.06845,
+     "ctxn [shared context]": 0.03518,
+     "edit_head [shared edit encoder]": 0.13303,
+     "edit_proj [shared edit encoder]": 0.01112,
+     "enc [shared object encoder]": 0.20968,
+     "gru [F2 C / A GRU]": 0.17636,
+     "h0 [F2 C / A GRU]": 0.04231,
+     "ho_q [F5 higher-order (repair)]": 0.04791,
+     "ho_s [F5 higher-order (scene)]": 0.02738,
+     "ho_u [F5 higher-order]": 0.04706,
+     "order_s [F2 sequence unary (also F4 omission unary on r minus t)]": 0.06438,
+     "pair_omit [F4 structured zR-zO pair]": 0.00889,
+     "pair_scene [F3 structured z0-zS pair]": 0.00015,
+     "pooln [shared pooling]": 0.0928,
+     "scene [F3 scene unary]": 0.02326,
+     "typ [slot-type embedding (pair inputs)]": 0.00628,
+     "vproj [shared DINOv2 projection]": 0.31178
+    },
+    "total": 0.5279792620015725
+   },
+   "omit": {
+    "by_family": {
+     "act [shared action token]": 0.27052,
+     "cpl [F5 generic pairs]": 0.45543,
+     "ctxn [shared context]": 0.16253,
+     "edit_head [shared edit encoder]": 0.51659,
+     "edit_proj [shared edit encoder]": 0.03158,
+     "enc [shared object encoder]": 0.56622,
+     "gru [F2 C / A GRU]": 0.25422,
+     "h0 [F2 C / A GRU]": 0.1672,
+     "ho_q [F5 higher-order (repair)]": 0.23698,
+     "ho_s [F5 higher-order (scene)]": 0.03704,
+     "ho_u [F5 higher-order]": 0.15269,
+     "order_s [F2 sequence unary (also F4 omission unary on r minus t)]": 0.51913,
+     "pair_omit [F4 structured zR-zO pair]": 0.14267,
+     "pair_scene [F3 structured z0-zS pair]": 0.00011,
+     "pooln [shared pooling]": 0.18642,
+     "scene [F3 scene unary]": 0.02008,
+     "typ [slot-type embedding (pair inputs)]": 0.02279,
+     "vproj [shared DINOv2 projection]": 0.99295
+    },
+    "total": 1.5428534972681502
+   },
+   "pool": {
+    "by_family": {
+     "act [shared action token]": 0.52555,
+     "cpl [F5 generic pairs]": 1.01939,
+     "ctxn [shared context]": 0.16879,
+     "edit_head [shared edit encoder]": 0.99114,
+     "edit_proj [shared edit encoder]": 0.06394,
+     "enc [shared object encoder]": 1.14436,
+     "gru [F2 C / A GRU]": 0.4263,
+     "h0 [F2 C / A GRU]": 0.25248,
+     "ho_q [F5 higher-order (repair)]": 0.17347,
+     "ho_s [F5 higher-order (scene)]": 0.30332,
+     "ho_u [F5 higher-order]": 0.27377,
+     "order_s [F2 sequence unary (also F4 omission unary on r minus t)]": 0.62946,
+     "pair_omit [F4 structured zR-zO pair]": 0.07652,
+     "pair_scene [F3 structured z0-zS pair]": 0.00301,
+     "pairh [F1 static pair]": 0.0001,
+     "pooln [shared pooling]": 0.38879,
+     "scene [F3 scene unary]": 0.0987,
+     "typ [slot-type embedding (pair inputs)]": 0.04537,
+     "unary [F1 static unary]": 0.0,
+     "vproj [shared DINOv2 projection]": 2.0815
+    },
+    "total": 2.9966734583084094
+   },
+   "scene": {
+    "by_family": {
+     "cpl [F5 generic pairs]": 0.22623,
+     "ctxn [shared context]": 0.07213,
+     "edit_head [shared edit encoder]": 0.32514,
+     "edit_proj [shared edit encoder]": 0.06924,
+     "enc [shared object encoder]": 0.80306,
+     "ho_s [F5 higher-order (scene)]": 0.13971,
+     "ho_u [F5 higher-order]": 0.10614,
+     "pair_scene [F3 structured z0-zS pair]": 2e-05,
+     "pooln [shared pooling]": 0.16466,
+     "scene [F3 scene unary]": 0.14035,
+     "typ [slot-type embedding (pair inputs)]": 0.01269,
+     "vproj [shared DINOv2 projection]": 2.81301
+    },
+    "total": 2.9669166928435464
+   },
+   "static": {
+    "by_family": {
+     "ctxn [shared context]": 9e-05,
+     "enc [shared object encoder]": 0.01445,
+     "pairh [F1 static pair]": 0.01439,
+     "unary [F1 static unary]": 0.00031,
+     "vproj [shared DINOv2 projection]": 0.02526
+    },
+    "total": 0.03246682166219505
+   },
+   "task": {
+    "by_family": {
+     "act [shared action token]": 0.45098,
+     "cpl [F5 generic pairs]": 0.25494,
+     "ctxn [shared context]": 0.08074,
+     "edit_head [shared edit encoder]": 0.28906,
+     "edit_proj [shared edit encoder]": 0.01985,
+     "enc [shared object encoder]": 0.50734,
+     "gru [F2 C / A GRU]": 0.33931,
+     "h0 [F2 C / A GRU]": 0.11709,
+     "ho_q [F5 higher-order (repair)]": 0.12343,
+     "ho_s [F5 higher-order (scene)]": 0.08359,
+     "ho_u [F5 higher-order]": 0.11308,
+     "order_s [F2 sequence unary (also F4 omission unary on r minus t)]": 0.23925,
+     "pair_omit [F4 structured zR-zO pair]": 0.01382,
+     "pair_scene [F3 structured z0-zS pair]": 0.00025,
+     "pooln [shared pooling]": 0.17397,
+     "scene [F3 scene unary]": 0.02243,
+     "typ [slot-type embedding (pair inputs)]": 0.01742,
+     "vproj [shared DINOv2 projection]": 1.01888
+    },
+    "total": 1.3808369803870715
+   }
+  },
+  "SF": {
+   "cost": {
+    "by_family": {
+     "act [shared action token]": 0.05432,
+     "cost [travel J head]": 0.05634,
+     "enc [shared object encoder]": 0.05409,
+     "pooln [shared pooling]": 0.0158,
+     "vproj [shared DINOv2 projection]": 0.08068
+    },
+    "total": 0.1257353781174439
+   },
+   "effect": {
+    "by_family": {
+     "act [shared action token]": 0.02954,
+     "ctxn [shared context]": 0.01704,
+     "edit_head [shared edit encoder]": 0.24944,
+     "edit_proj [shared edit encoder]": 0.06233,
+     "enc [shared object encoder]": 0.59707,
+     "head [S / SF outcome head]": 0.08738,
+     "pooln [shared pooling]": 0.12714,
+     "vproj [shared DINOv2 projection]": 1.20791
+    },
+    "total": 1.3808005491974027
+   },
+   "omit": {
+    "by_family": {
+     "act [shared action token]": 0.14587,
+     "ctxn [shared context]": 0.00999,
+     "edit_head [shared edit encoder]": 0.33126,
+     "edit_proj [shared edit encoder]": 0.04563,
+     "enc [shared object encoder]": 0.58956,
+     "head [S / SF outcome head]": 0.09034,
+     "pooln [shared pooling]": 0.24809,
+     "vproj [shared DINOv2 projection]": 0.96067
+    },
+    "total": 1.2138321407219452
+   },
+   "scene": {
+    "by_family": {
+     "ctxn [shared context]": 0.02991,
+     "edit_head [shared edit encoder]": 0.31261,
+     "edit_proj [shared edit encoder]": 0.09607,
+     "enc [shared object encoder]": 0.88176,
+     "head [S / SF outcome head]": 0.12835,
+     "pooln [shared pooling]": 0.24675,
+     "vproj [shared DINOv2 projection]": 1.3025
+    },
+    "total": 1.63071133249349
+   },
+   "static": {
+    "by_family": {
+     "ctxn [shared context]": 0.00291,
+     "enc [shared object encoder]": 0.09639,
+     "pairh [F1 static pair]": 0.03215,
+     "unary [F1 static unary]": 0.00865,
+     "vproj [shared DINOv2 projection]": 0.15079
+    },
+    "total": 0.18206239564886958
+   },
+   "task": {
+    "by_family": {
+     "act [shared action token]": 0.09094,
+     "ctxn [shared context]": 0.05224,
+     "edit_head [shared edit encoder]": 0.53862,
+     "edit_proj [shared edit encoder]": 0.09239,
+     "enc [shared object encoder]": 1.53584,
+     "head [S / SF outcome head]": 0.22276,
+     "pooln [shared pooling]": 0.47822,
+     "vproj [shared DINOv2 projection]": 1.64332
+    },
+    "total": 2.3763990701798448
+   }
+  }
+ },
+ "roots": [
+  "d2_g4c_r00_AB",
+  "d3_2026102202_ref",
+  "p6_2026102301",
+  "p7_2026102409",
+  "p7_2026102443_ref",
+  "p7_2026102408",
+  "p7_2026102420",
+  "p7_2026102448_ref",
+  "p8_2026102513_ref",
+  "p8_2026102514",
+  "p8_2026102526_ref",
+  "p8_2026102527_ref"
+ ]
+}

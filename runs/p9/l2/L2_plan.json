@@ -1,0 +1,161 @@
+{
+ "batch": 12,
+ "calibration": "temperature (p7_eval.fit_temperature) and threshold (p8_select.choose_threshold) on P8c validation only",
+ "caps": {
+  "aggregate_cpu_s": 8000.0,
+  "aggregate_wall_s": 18000.0,
+  "job_cpu_s": 1800.0,
+  "job_wall_s": 3600.0,
+  "sanity_cpu_s": 600.0
+ },
+ "clip_rule": "clip = max(5.0, ceil(median unclipped pre-clip gradient norm of the sanity trial)); one value for every arm",
+ "data": "runs/p8/c_training/dataset.pt (178 train roots: P8c train + all P4-P7 history; 12 P8c validation roots); disclosed P8c test (dataset_sealed.pt) is a LEGACY DIAGNOSTIC only, never used for any choice",
+ "eval_every": 20,
+ "hash": "sha256:65a5f238226f7417a316129d61ad66626342f51cddfa853130a074ba700baa3d",
+ "jobs": [
+  {
+   "arm": "B-full",
+   "seed": 0
+  },
+  {
+   "arm": "B-structured",
+   "seed": 0
+  },
+  {
+   "arm": "B-quadratic",
+   "seed": 0
+  },
+  {
+   "arm": "C-full",
+   "seed": 0
+  },
+  {
+   "arm": "A",
+   "seed": 0
+  },
+  {
+   "arm": "SF",
+   "seed": 0
+  },
+  {
+   "arm": "B-full",
+   "seed": 1
+  },
+  {
+   "arm": "B-structured",
+   "seed": 1
+  },
+  {
+   "arm": "B-quadratic",
+   "seed": 1
+  },
+  {
+   "arm": "C-full",
+   "seed": 1
+  },
+  {
+   "arm": "A",
+   "seed": 1
+  },
+  {
+   "arm": "SF",
+   "seed": 1
+  },
+  {
+   "arm": "B-full",
+   "seed": 2
+  },
+  {
+   "arm": "B-structured",
+   "seed": 2
+  },
+  {
+   "arm": "B-quadratic",
+   "seed": 2
+  },
+  {
+   "arm": "C-full",
+   "seed": 2
+  },
+  {
+   "arm": "A",
+   "seed": 2
+  },
+  {
+   "arm": "SF",
+   "seed": 2
+  },
+  {
+   "arm": "B-none",
+   "optional": true,
+   "seed": 0
+  },
+  {
+   "arm": "B-none",
+   "optional": true,
+   "seed": 1
+  },
+  {
+   "arm": "B-none",
+   "optional": true,
+   "seed": 2
+  },
+  {
+   "arm": "B-full",
+   "certified_only": true,
+   "optional": true,
+   "seed": 0
+  },
+  {
+   "arm": "SF",
+   "certified_only": true,
+   "optional": true,
+   "seed": 0
+  },
+  {
+   "arm": "B-full",
+   "certified_only": true,
+   "optional": true,
+   "seed": 1
+  },
+  {
+   "arm": "SF",
+   "certified_only": true,
+   "optional": true,
+   "seed": 1
+  },
+  {
+   "arm": "B-full",
+   "certified_only": true,
+   "optional": true,
+   "seed": 2
+  },
+  {
+   "arm": "SF",
+   "certified_only": true,
+   "optional": true,
+   "seed": 2
+  }
+ ],
+ "lam_static": 1.0,
+ "lam_travel": 1.0,
+ "legacy_comparator": "the 21 P8c multi-loss checkpoints (unchanged), evaluated by the same code; reserve 600 CPU-s",
+ "lr": 0.001,
+ "matching": "torch.manual_seed(seed) before abc8.build(arm) and abc8.RootSampler(train, 12, seed): identical initialization and root batches as the P8c multi-loss run of the same arm and seed",
+ "model_version": "ABC7_V1 factors (abc8 arm builder), trained from scratch",
+ "objective": "mean_roots(-log P(D_c), exact equality-aware) + 1.0 * static BCE (deduplicated endpoints) + 1.0 * log-Huber witnessed J; A / SF: the same with the factorized root likelihood (sum of Bernoulli log-losses over the same distinct observed queries)",
+ "optional_rule": "optional jobs run in listed order only while remaining aggregate CPU after the legacy evaluation reserve exceeds 600 s",
+ "sanity_trial": {
+  "arm": "B-full",
+  "clip": null,
+  "cpu_cap_s": 600.0,
+  "labels": "train + validation only",
+  "seed": 0,
+  "updates": 60
+ },
+ "selection": "best validation mean root NLL (the arm's own exact / factorized likelihood) at every 20 updates, restored",
+ "teacher_calls": 0,
+ "updates": 200,
+ "version": "ABC9_JOINTNLL_V1",
+ "wd": 0.0001
+}
