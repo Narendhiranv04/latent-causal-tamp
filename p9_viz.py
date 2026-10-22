@@ -300,6 +300,238 @@ def l2_predictions():
     return _save(fig, "P9_L2_predictions_selection.png", "L2: reliability, selection funnel and root-cluster NLL contrasts (disclosed legacy diagnostics)")
 
 
+def _save3(fig, name, what, sources):
+    """_save plus a <name>.manifest.json of SHA-256 for every input data / code file of the figure."""
+    h = _save(fig, name, what)
+    man = {"figure": f"visualizations/p9/{name}", "sha256": h,
+           "inputs": {s: hashlib.sha256(Path(s).read_bytes()).hexdigest() for s in sources}}
+    (OUT / f"{name}.manifest.json").write_text(json.dumps(man, indent=1) + "\n")
+    return h
+
+
+def l3a_factor_graph():
+    """L3a: a REAL saved validation root drawn twice - P9 PoE (every block re-applies its slots' unaries, one normalizer per
+    block) vs unique factor (one circle and one unary square per physical query, one relational square per distinct block)."""
+    import collections
+
+    import torch
+
+    import joint_likelihood as jl
+    import p9_l3
+    import unique_factor as uf
+    _, val, _ = p9_l3.data()
+    m = p9_l3.load("B-full", "runs/p9/l2/ckpt/ckpt_B-full#s0.pt")
+    best = None
+    for r in val:
+        mult = collections.Counter(q for c in r["cands"] if c["seq"] for s, q in zip(c["slots"], c["z_q"]) if s[:2] in ("zR", "zO"))
+        if mult and max(mult.values()) > 1 and (best is None or len(mult) < len(best[1])):
+            best = (r, mult)
+    r, mult = best
+    with torch.no_grad():
+        inst = uf.instances(m, r)
+        pu = uf.prior_marginals(inst)
+        S, blocks, _, _ = jl.tables(m, r)
+        pp = jl.marginals(S, blocks)
+    qs = sorted(mult, key=lambda q: (q.count("."), q))
+    xq = {q: 1.2 + i * 10.6 / max(len(qs) - 1, 1) for i, q in enumerate(qs)}
+    sc = inst["S"]["queries"]
+    xs = {q: 2.5 + i * 7.5 / max(len(sc) - 1, 1) for i, q in enumerate(sc)}
+    short = lambda q: q.split(":", 2)[2].replace(".", "\n")  # noqa: E731
+    sname = dict(zip(sc, inst["S"]["names"]))
+    blist = [c for c in r["cands"] if c["seq"]]
+    fig, axs = plt.subplots(1, 2, figsize=(19, 8.2))
+    for ax, kind in zip(axs, ("PoE", "unique")):
+        ax.set_xlim(-0.5, 12.8)
+        ax.set_ylim(-1.6, 8.6)
+        ax.axis("off")
+        ax.add_patch(FancyBboxPatch((1.6, 7.25), 9.4, 0.7, boxstyle="round,pad=0.05", fc=FAM["F3"], alpha=0.85, ec="none"))
+        ax.text(6.3, 7.6, "scene block P_S (F3 + F5 scene factors), ONCE per root", ha="center", va="center",
+                color="white", fontsize=8.5)
+        for q, x in xs.items():
+            ax.plot([x, x], [6.3, 7.25], color=FAM["F3"], lw=1)
+            ax.add_patch(plt.Circle((x, 6.0), 0.36, fc="#dbeafe", ec="#285a84", lw=1.3, zorder=3))
+            ax.text(x, 6.0, sname[q], ha="center", va="center", fontsize=7.5, zorder=4)
+        for i, c in enumerate(blist):
+            bx = 1.2 + i * 10.6 / max(len(blist) - 1, 1)
+            qc = [q for s, q in zip(c["slots"], c["z_q"]) if s[:2] in ("zR", "zO")]
+            lab = ("normalized\nP_Q,r (pairs+HO\n+ its unaries)" if kind == "PoE" else "pairs + HO\nof block r")
+            for q in qc:
+                ax.plot([bx, xq[q]], [3.9, 1.5], color=FAM["F4"], lw=0.9, alpha=0.7)
+            for x in xs.values():
+                ax.plot([bx, x], [4.3, 5.64], color=FAM["F5"], lw=0.4, alpha=0.35)
+            ax.text(bx, 4.1, f"r{i + 1}\n" + lab, ha="center", va="center", fontsize=6.3, color="white",
+                    bbox={"boxstyle": "square,pad=0.3", "fc": FAM["F5"] if kind == "unique" else "#7f7f7f", "ec": "none"})
+        for q, x in xq.items():
+            ax.add_patch(plt.Circle((x, 1.2), 0.42, fc="#dbeafe", ec="#285a84", lw=2.4 if mult[q] > 1 else 1.3, zorder=3))
+            ax.text(x, 1.2, short(q), ha="center", va="center", fontsize=5.6, zorder=4)
+            k = mult[q] if kind == "PoE" else 1
+            for j in range(k):
+                ux = x + (j - (k - 1) / 2) * 0.32
+                ax.plot([x, ux], [0.78, 0.25], color=FAM["F2"], lw=0.9)
+                ax.text(ux, 0.05, "u", ha="center", va="center", fontsize=6.5, color="white", bbox={"boxstyle": "square,pad=0.25", "fc": FAM["F2"], "ec": "none"})
+            p = pp[q] if kind == "PoE" else pu[q]
+            ax.text(x, -0.55, f"p={p:.3f}", ha="center", fontsize=6.8)
+        ttl = ("P9 PoE: one variable per query, but a query in k blocks gets k unary squares and k block normalizers"
+               if kind == "PoE" else "Unique factor: one circle, ONE unary (F2 phi_seq = F4 omission unary) per query; one normalizer per scene state")
+        ax.set_title(ttl, fontsize=9.5)
+    fig.suptitle(f"Real saved validation root {r['key']} (B-full, frozen P9-L2 seed-0 PoE-trained weights; prior marginals, no labels used). "
+                 "Thick circle = query reused by several candidates", fontsize=10)
+    fig.text(0.5, 0.02, "squares 'u': repair-outcome unaries; grey/green squares: per-candidate blocks (F4 zR-zO pairs, F5 scene-repair and zO-zO pairs, "
+             "F5 higher order) - edges to scene bits drawn faintly; F1 static and travel J are outside this conditional graph", ha="center", fontsize=8.5)
+    return _save3(fig, "P9_L3a_real_root_factor_graph.png", "L3a: literal factor graph of a saved root, PoE vs unique-factor (variable circles, factor squares)",
+                  ["runs/p8/c_training/dataset.pt", "runs/p9/l2/ckpt/ckpt_B-full#s0.pt", "unique_factor.py", "joint_likelihood.py", "p9_viz.py"])
+
+
+def l3a_invariance():
+    """L3a: invariance cases (max |change| of prior marginals of the original queries) for PoE / dedup-PoE / unique, the
+    duplicated 0.8 expert, and PoE vs unique prior marginals by unary multiplicity (frozen PoE-trained weights)."""
+    import collections
+
+    import numpy as np
+    a = json.loads(Path("runs/p9/l3/l3a1/artifacts.json").read_text())
+    rows = json.loads(Path("runs/p9/l3/l3a1/marginal_rows.json").read_text())
+    cases = ["permutation", "renamed_ids", "exact_duplicate", "disconnected_candidate", "alias_as_new_candidate", "related_candidate"]
+    forms = [("P9-PoE", "#7f7f7f"), ("dedup-PoE diagnostic", "#c26a1b"), ("unique-factor", "#2f6f9f")]
+    fig = plt.figure(figsize=(18, 9))
+    gs = fig.add_gridspec(2, 4)
+    for col, arm in enumerate(("B-full", "B-structured", "C-full")):
+        ax = fig.add_subplot(gs[0, col])
+        aggs = {}
+        for form, _ in forms:
+            aggs[form] = collections.defaultdict(list)
+            for x in a["sensitivity"][f"{arm}|{form}"]:
+                aggs[form][(x["case"], x["expected"])].append(x["max_abs_change_repair_marginals"])
+        keys = sorted({k for g in aggs.values() for k in g}, key=lambda k: (cases.index(k[0]), k[1]))
+        for i, (case, exp) in enumerate(keys):
+            if exp.startswith("EXPECTED"):
+                ax.axvspan(i - 0.45, i + 0.45, color="#e8f0fa", zorder=0)
+            for j, (form, colr) in enumerate(forms):
+                y = max(aggs[form][(case, exp)])
+                ax.bar(i + (j - 1) * 0.27, max(y, 1e-6), 0.25, color=colr, alpha=0.95 if exp.startswith("EXPECTED") else 0.45,
+                       label=form if i == 0 else None)
+        ax.set_yscale("log")
+        ax.set_ylim(5e-7, 1.5)
+        lab = lambda c, e: c.replace("_", "\n") + ("\n(invariant)" if c.startswith("alias") and e.startswith("EXP") else "\n(new factor)" if c.startswith("alias") else "")  # noqa: E731
+        ax.set_xticks(range(len(keys)), [lab(c, e) for c, e in keys], fontsize=6.5)
+        ax.set_title(f"{arm}: max |change| of prior marginals", fontsize=9.5)
+        if col == 0:
+            ax.set_ylabel("max |change| (bar at 1e-6 = exactly 0)")
+            ax.legend(fontsize=7.5)
+    ax = fig.add_subplot(gs[0, 3])
+    ax.bar([0, 1, 2], [0.8, 0.64 / 0.68, 0.8], color=["#bbbbbb", "#7f7f7f", "#2f6f9f"])
+    for i, v in enumerate([0.8, 0.64 / 0.68, 0.8]):
+        ax.text(i, v + 0.01, f"{v:.4f}", ha="center", fontsize=8)
+    ax.set_xticks([0, 1, 2], ["one expert", "PoE, expert\nduplicated", "unique factor,\nduplicated"], fontsize=8)
+    ax.set_ylim(0.5, 1.02)
+    ax.set_title("toy: one Bernoulli expert P(x=1)=0.8", fontsize=9.5)
+    ax = fig.add_subplot(gs[1, :2])
+    k = np.array([x["multiplicity"] for x in rows])
+    pp, pu = np.array([x["poe_prior"] for x in rows]), np.array([x["unique_prior"] for x in rows])
+    sc = ax.scatter(pu, pp, c=k, cmap="viridis", s=14)
+    ax.plot([0, 1], [0, 1], color="#bbbbbb", lw=1)
+    fig.colorbar(sc, ax=ax, label="blocks containing the query (PoE unary multiplicity)")
+    ax.set(xlabel="unique-factor prior marginal", ylabel="P9 PoE prior marginal", title="same frozen weights: PoE sharpens reused queries")
+    ax = fig.add_subplot(gs[1, 2:])
+    mm = a["poe_vs_unique_prior_abs_diff_by_multiplicity"]
+    ks = sorted(mm, key=int)
+    ax.bar(range(len(ks)), [mm[x]["mean"] for x in ks], color="#7f7f7f")
+    ax.plot(range(len(ks)), [mm[x]["max"] for x in ks], "o", color="#c0392b", label="max")
+    ax.set_xticks(range(len(ks)), [f"k={x}\nn={mm[x]['queries']}" for x in ks], fontsize=8)
+    ax.set(ylabel="|PoE - unique| prior marginal", title="mean (bars) and max (dots) by multiplicity")
+    ax.legend(fontsize=8)
+    fig.suptitle("P9-L3a: catalogue invariance (shaded = EXPECTED_INVARIANT; faded bars = ALLOWED_CHANGE). Saved roots, frozen P9-L2 seed-0 weights, no labels",
+                 fontsize=10)
+    fig.tight_layout()
+    return _save3(fig, "P9_L3a_invariance.png", "L3a: invariance cases PoE / dedup-PoE / unique-factor; duplicated-expert toy; PoE vs unique by multiplicity",
+                  ["runs/p9/l3/l3a1/artifacts.json", "runs/p9/l3/l3a1/marginal_rows.json", "p9_viz.py"])
+
+
+L3B_ARMS = ["PoE-B-full", "U-B-full", "PoE-B-structured", "U-B-structured", "U-B-full-geo", "PoE-C-full", "U-C-full", "SF", "A"]
+L3B_COL = {"PoE": "#7f7f7f", "U": "#2f6f9f", "SF": "#d45087", "A": "#c26a1b"}
+
+
+def _l3b():
+    return json.loads(Path("runs/p9/l3/l3b/summary.json").read_text())
+
+
+def l3b_comparison():
+    """L3b: own-likelihood root NLL (validation / disclosed test), calibrated repair NLL and accuracy, per seed; root-cluster contrasts."""
+    import numpy as np
+    s = _l3b()
+    rows = list(s["rows"].values())
+    keys = [("val_root_nll", "validation: exact root NLL (own joint)"), ("test_root_nll", "disclosed test: exact root NLL (own joint)"),
+            ("root.val.nll", "validation: calibrated repair NLL (root prior)"), ("root.test.accuracy", "disclosed test: repair accuracy (root prior)")]
+    fig = plt.figure(figsize=(18, 10))
+    gs = fig.add_gridspec(2, 4)
+    for i, (k, title) in enumerate(keys):
+        ax = fig.add_subplot(gs[0, i])
+        for j, arm in enumerate(L3B_ARMS):
+            v = [r[k] for r in rows if r["arm"] == arm and r.get(k) is not None and r.get("updates", 200) == 200]
+            if v:
+                ax.bar(j, np.mean(v), 0.7, color=L3B_COL[arm.split("-")[0]], alpha=0.8)
+                ax.scatter([j] * len(v), v, s=10, color="black", zorder=3)
+        ax.set_xticks(range(len(L3B_ARMS)), L3B_ARMS, rotation=60, fontsize=7)
+        ax.set_title(title, fontsize=9)
+    ax = fig.add_subplot(gs[1, :])
+    con = s["contrasts"]
+    names = sorted({k.split("|", 1)[1] for k in con}, key=lambda n: list(dict.fromkeys(k.split("|", 1)[1] for k in con)).index(n))
+    for i, n in enumerate(names):
+        for j, split in enumerate(("validation", "test_disclosed")):
+            c = con.get(f"{split}|{n}")
+            if c:
+                y = i + (j - 0.5) * 0.3
+                ax.plot(c["ci95"], [y, y], color=["#2f6f9f", "#c26a1b"][j], lw=2)
+                ax.scatter([c["mean"]], [y], color=["#2f6f9f", "#c26a1b"][j], s=18, label=("validation (predeclared)" if j == 0 else "disclosed test (diagnostic)") if i == 0 else None)
+    ax.axvline(0, color="#888888", lw=1)
+    ax.set_yticks(range(len(names)), names, fontsize=8)
+    ax.set(xlabel="per-root difference in own exact root NLL (seed-averaged; root-cluster bootstrap 95 % CI); negative favours the first")
+    ax.legend(fontsize=8)
+    fig.suptitle("P9-L3b: PoE vs unique-factor, matched 200 updates, seeds 0-2 (saved data only; prediction metrics, no execution)", fontsize=10)
+    fig.tight_layout()
+    return _save3(fig, "P9_L3b_comparison.png", "L3b: PoE vs unique-factor vs SF / A / geometry-only / C-full, root NLL, calibrated metrics, contrasts",
+                  ["runs/p9/l3/l3b/summary.json", "runs/p9/l3/l3b/L3B_plan.json", "p9_viz.py"])
+
+
+def l3b_health():
+    """L3b: per-factor gradient norms (seed 0), clip fraction, trained-model catalogue sensitivity; optional 400-update curves."""
+    import numpy as np
+    s = _l3b()
+    fams = {"F2 sequence": ["order_s", "pairo", "mix", "gru", "h0"], "F3 scene unary": ["scene"], "F3 z0-zS pair": ["pair_scene"],
+            "F4 zR-zO pair": ["pair_omit"], "F5 generic pairs": ["cpl"], "F5 higher-order": ["ho_u", "ho_s", "ho_q"], "F1 static": ["unary", "pairh"],
+            "travel J": ["cost"]}
+    cols = dict(zip(fams, ["#7a5195", "#2f6f9f", "#5fa8d3", "#c26a1b", "#3b8a52", "#7fbf7b", "#8f99a3", "#593b13"]))
+    curves = s.get("curves", {})
+    fig, axs = plt.subplots(1, 4 if curves else 3, figsize=(22 if curves else 16, 4.8))
+    for ax, (name, path) in zip(axs[:2], (("PoE-B-full (P9-L2)", "runs/p9/l2/runs/B-full#s0.json"), ("U-B-full", "runs/p9/l3/l3b/runs/U-B-full#s0.json"))):
+        h = [x for x in json.loads(Path(path).read_text())["history"] if "grad_by_module" in x]
+        for f, mods in fams.items():
+            if any(m in h[0]["grad_by_module"] for m in mods):
+                v = np.array([sum(x["grad_by_module"].get(m, 0) ** 2 for m in mods) ** 0.5 for x in h])
+                ax.plot(np.convolve(v, np.ones(10) / 10, mode="valid"), color=cols[f], lw=1.2, label=f)
+        ax.set_yscale("log")
+        ax.set(title=f"{name} s0: gradient by family", xlabel="update (10-update mean)")
+    axs[0].legend(fontsize=6.5)
+    ax = axs[2]
+    cases = ["exact_duplicate|EXPECTED_INVARIANT", "permutation|EXPECTED_INVARIANT", "disconnected_candidate|EXPECTED_INVARIANT", "related_candidate|ALLOWED_CHANGE"]
+    arms = [a for a in L3B_ARMS if a not in ("SF", "A")]
+    for j, c in enumerate(cases):
+        v = [np.mean([r["sensitivity"].get(c, np.nan) for r in s["rows"].values() if r["arm"] == a and r.get("sensitivity")]) for a in arms]
+        ax.bar(np.arange(len(arms)) + (j - 1.5) * 0.2, np.maximum(np.nan_to_num(v), 1e-6), 0.2, label=c.split("|")[0])
+    ax.set_yscale("log")
+    ax.set_xticks(range(len(arms)), arms, rotation=45, fontsize=7)
+    ax.set(title="trained: max |change| (1e-6 = exactly 0)")
+    ax.legend(fontsize=6.5)
+    if curves:
+        ax = axs[3]
+        for name, v in curves.items():
+            ax.plot([u for u, _ in v], [x for _, x in v], label=name, color=L3B_COL[name.split("-")[0]], alpha=0.6, lw=1)
+        ax.set(title="400-update runs: validation root NLL", xlabel="update")
+        ax.legend(fontsize=6)
+    fig.tight_layout()
+    return _save3(fig, "P9_L3b_health.png", "L3b: per-factor gradients, trained-model invariance, optional 400-update curves",
+                  ["runs/p9/l3/l3b/summary.json", "runs/p9/l2/runs/B-full#s0.json", "runs/p9/l3/l3b/runs/U-B-full#s0.json", "p9_viz.py"])
+
+
 if __name__ == "__main__":
     import sys
     print(globals()[sys.argv[1]]())

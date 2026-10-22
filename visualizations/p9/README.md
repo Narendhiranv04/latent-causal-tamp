@@ -10,3 +10,14 @@
 
 SHA-256 of each file: `index.json` and `<file>.sha256`. All test-split panels show the **disclosed** P8c test (a legacy diagnostic, not a fresh holdout).
 Regenerate: `python p9_viz.py <factor_instances | l1_math | l2_nll | l2_gradients | l2_predictions>`.
+
+## P9-L3 (unique-factor root model; saved data only)
+
+| file | stage | what it shows |
+|---|---|---|
+| `P9_L3a_real_root_factor_graph.png` | L3a | Literal factor graph of saved root `p8_2026102510`: P9 PoE (a reused query gets one unary square per block) vs unique factor (one circle, one unary per physical query) |
+| `P9_L3a_invariance.png` | L3a | Invariance cases for PoE / dedup-PoE / unique (B-full, B-structured, C-full), the duplicated 0.8 expert, PoE vs unique prior marginals by multiplicity |
+| `P9_L3b_comparison.png` | L3b | Own exact root NLL, calibrated metrics and root-cluster contrasts for PoE vs unique B-full / B-structured / C-full, geometry-only, SF, A |
+| `P9_L3b_health.png` | L3b | Per-factor gradients (PoE vs unique, seed 0), trained-model invariance, matched 400-update validation curves |
+
+Each L3 figure also has `<file>.manifest.json` with SHA-256 of its input data and code. Regenerate with `python p9_l3.py job <name> "figures_l3a()"` / `"figures_l3b()"`.

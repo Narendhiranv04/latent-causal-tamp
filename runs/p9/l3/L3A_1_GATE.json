@@ -1,0 +1,73 @@
+{
+ "arms": {
+  "B-full": "PASS (unary, z0-zS, zR-zO, generic pairs and BOTH higher-order terms retained)",
+  "B-quadratic": "NOT_RUN (not required)",
+  "B-structured": "PASS",
+  "C-full": "PASS (one-repair equivalence to ABC7 joint and invariances)"
+ },
+ "checks": {
+  "bfull_higher_order_and_generic_pairs_retained": true,
+  "brute_force_on_saved_roots": true,
+  "complexity_within_cap": true,
+  "figures_hashed_with_manifests": true,
+  "historical_suite_and_six_replays_pass": true,
+  "l3a0_pass": true,
+  "learned_inference_loads_no_physical_module": true,
+  "scene_prior_root_consistent": true,
+  "unique_factor_tests_pass": true,
+  "unique_invariant_in_every_expected_case": true
+ },
+ "planner_fixture_calls_in_suite": {
+  "test_arm2d.py": {
+   "planner.plan": 75,
+   "skill.plan_skill": 3
+  },
+  "test_g4a.py": {
+   "planner.plan": 198,
+   "skill.plan_skill": 22
+  },
+  "test_g4d.py": {
+   "planner.plan": 24,
+   "skill.plan_skill": 4
+  },
+  "test_g4d_corrections.py": {
+   "planner.plan": 40,
+   "skill.plan_skill": 4
+  },
+  "test_interventions.py": {
+   "planner.plan": 37,
+   "skill.plan_skill": 1
+  },
+  "test_protocol.py": {
+   "planner.plan": 104,
+   "skill.plan_skill": 14
+  },
+  "test_verify.py": {
+   "planner.plan": 143,
+   "skill.plan_skill": 12
+  }
+ },
+ "regression_cpu_s": 598.58,
+ "stage": "P9-L3a-1",
+ "suite": {
+  "failed": 0,
+  "passed": 375,
+  "skipped": 0
+ },
+ "unique_invariance_max_change": {
+  "B-full|unique-factor|disconnected_candidate": 3.552713678800501e-15,
+  "B-full|unique-factor|exact_duplicate": 0.0,
+  "B-full|unique-factor|permutation": 3.219646771412954e-15,
+  "B-full|unique-factor|renamed_ids": 1.4432899320127035e-15,
+  "B-structured|unique-factor|alias_as_new_candidate": 0.0,
+  "B-structured|unique-factor|disconnected_candidate": 2.3314683517128287e-15,
+  "B-structured|unique-factor|exact_duplicate": 0.0,
+  "B-structured|unique-factor|permutation": 0.0,
+  "B-structured|unique-factor|renamed_ids": 1.4432899320127035e-15,
+  "C-full|unique-factor|disconnected_candidate": 3.552713678800501e-15,
+  "C-full|unique-factor|exact_duplicate": 0.0,
+  "C-full|unique-factor|permutation": 6.772360450213455e-15,
+  "C-full|unique-factor|renamed_ids": 3.774758283725532e-15
+ },
+ "verdict": "PASS"
+}

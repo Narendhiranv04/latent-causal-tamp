@@ -1,0 +1,11 @@
+..........................                                               [100%]
+=============================== warnings summary ===============================
+tests/test_p9_l3_unique.py::test_one_repair_catalogue_equals_abc7_joint_and_poe[B-full]
+  /home/naren/Desktop/boltzmann_lfd/tests/test_p9_l3_unique.py:122: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+  Consider using tensor.detach() first. (Triggered internally at /pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:836.)
+    assert abs(float(uf.log_evidence(uf.instances(m, rr), lab)[0]) - float(jl.log_evidence(S, blocks, lab)[0])) < 1e-10
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+26 passed, 1 warning in 4.92s
+
+EXIT 0
