@@ -1,0 +1,12 @@
+{
+ "call": "p10_eval.evaluate()",
+ "category": "prediction",
+ "cpu_cap_s": 300.0,
+ "cpu_s": 1.46,
+ "overshoot_s": 0.0,
+ "returncode": 1,
+ "stderr_tail": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n    import torch; torch.set_num_threads(1); import p10_eval; p10_eval.evaluate()\n                                                             ~~~~~~~~~~~~~~~~~^^\n  File \"/home/naren/Desktop/boltzmann_lfd/p10_eval.py\", line 284, in evaluate\n    cf.write_json(OUT / \"P10A_RESULTS.json\", res)\n    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/naren/Desktop/boltzmann_lfd/config.py\", line 317, in write_json\n    path.write_text(json.dumps(obj, indent=1, sort_keys=True))\n                    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/naren/miniconda3/lib/python3.13/json/__init__.py\", line 242, in dumps\n    **kw).encode(obj)\n          ~~~~~~^^^^^\n  File \"/home/naren/miniconda3/lib/python3.13/json/encoder.py\", line 202, in encode\n    chunks = self.iterencode(o, _one_shot=True)\n  File \"/home/naren/miniconda3/lib/python3.13/json/encoder.py\", line 263, in iterencode\n    return _iterencode(o, 0)\n  File \"/home/naren/miniconda3/lib/python3.13/json/encoder.py\", line 182, in default\n    raise TypeError(f'Object of type {o.__class__.__name__} '\n                    f'is not JSON serializable')\nTypeError: Object of type bool is not JSON serializable\n",
+ "stop": "ERROR",
+ "utc": "2026-10-23T08:28:45Z",
+ "wall_s": 1.51
+}

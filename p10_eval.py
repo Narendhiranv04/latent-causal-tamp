@@ -221,7 +221,7 @@ def mechanism_rows(plan, rec, pred) -> dict:
             obs = y(tok["edit:A"]) - y(tok["M"])
             out["H7_edit_vs_exec"].append({"root": k, "observed": obs, "stratum": "proof_grounded" if proof(tok["edit:A"], tok["M"]) else "operational",
                                            "pred": {x: pe_[x] - px[x] for x in pe_ if x in px},
-                                           "sign_match": {x: np.sign(round(pe_[x] - px[x], 1)) == np.sign(obs) for x in pe_ if x in px}})
+                                           "sign_match": {x: bool(np.sign(round(pe_[x] - px[x], 1)) == np.sign(obs)) for x in pe_ if x in px}})
         if m == "H8":
             a = next(q["query"] for q in plan["queries"] if q["root"] == k and q["anchor"])
             out["H8_anchor"].append({"root": k, "status": rec[a]["teacher_status"], "p": _seedmean(pred, k, a)})
@@ -281,6 +281,36 @@ def evaluate() -> dict:
            "seed_stops": {s: sum(a["stop"] == s for a in att) for s in {a["stop"] for a in att}}, "query_cpu_max": max(qcpu) if qcpu else 0.0,
            "static_admission_cpu_s": adm["cpu_s"], "teacher_cpu_s": round(pp.spent("teacher")[0], 1), "wall_s": round(prog["wall_s"], 1)},
            "checks": checks, "engineering": "PASS" if all(checks.values()) else "FAIL"}
+    res["paired_root_nll"] = paired(rows, arms)
+    res["top1_by_arm"] = {a: {s: sum(x["status"] == s for x in t1 if x["arm"] == a) for s in sorted({x["status"] for x in t1})} for a in arms}
     cf.write_json(OUT / "P10A_RESULTS.json", res)
     cf.write_json(Path("runs/p10/P10A_GATE.json"), {k: res[k] for k in ("stage", "plan_hash", "predictions_hash", "checks", "engineering", "status_counts", "gates")})
     return res
+
+
+def paired(rows, arms) -> dict:
+    """Exploratory: per independent root, mean NLL over its decided queries of the SEED-MEAN root-prior p; paired arm contrasts with
+    root-cluster bootstrap CI and leave-one-root-out range (proof-grounded only = BUDGET labels excluded)."""
+    out = {}
+    for stratum in ("all", "proof_grounded"):
+        per = {}
+        for a in arms:
+            byq = {}
+            for x in rows:
+                if _arm(x["ck"]) == a and (stratum == "all" or x["source"] != "PLANNER_BUDGET"):
+                    byq.setdefault((x["root"], x["query"]), [x["y"], []])[1].append(x["p"])
+            roots = {}
+            for (k, _), (y, ps) in byq.items():
+                p = min(max(float(np.mean(ps)), 1e-9), 1 - 1e-9)
+                roots.setdefault(k, []).append(-math.log(p if y else 1 - p))
+            per[a] = {k: float(np.mean(v)) for k, v in roots.items()}
+        con = {}
+        for a, b in (("K-B-full", "A"), ("K-C-full", "K-B-full"), ("K-B-full", "SF"), ("K-C-full", "A"), ("SF", "A")):
+            if a in per and b in per:
+                ks = sorted(set(per[a]) & set(per[b]))
+                d = [per[a][k] - per[b][k] for k in ks]
+                loro = [float(np.mean(d[:i] + d[i + 1:])) for i in range(len(d))]
+                con[f"{a} - {b}"] = {"roots": len(d), "mean": float(np.mean(d)), "ci95": boot(d), "loro": [min(loro), max(loro)],
+                                     "better_roots": sum(x < 0 for x in d), "worse_roots": sum(x > 0 for x in d)}
+        out[stratum] = {"per_root_mean_nll": per, "contrasts": con}
+    return out

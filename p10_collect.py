@@ -202,7 +202,7 @@ def collect(chunk_cpu=1700.0) -> None:
                 if qid in prog["done"]:
                     continue
                 left = CAPS["teacher_cpu_s"] - before - mine_cpu()
-                if static.get(qid) is None and (mine_cpu() > chunk_cpu or wall0 + time.time() - w0 > CAPS["aggregate_wall_s"] - CAPS["query_wall_s"]):
+                if static.get(qid) is None and (mine_cpu() > chunk_cpu or time.time() - w0 > 3600 - 2 * CAPS["query_wall_s"] or wall0 + time.time() - w0 > CAPS["aggregate_wall_s"] - CAPS["query_wall_s"]):
                     prog["wall_s"] = wall0 + time.time() - w0
                     cf.write_json(OUT / "progress.json", prog)
                     return

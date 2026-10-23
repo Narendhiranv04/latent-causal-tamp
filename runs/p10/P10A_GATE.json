@@ -1,0 +1,116 @@
+{
+ "checks": {
+  "aggregate_wall": true,
+  "no_budget_from_censored": true,
+  "no_fatal": true,
+  "per_query_cpu_le_120_plus_coord": true,
+  "per_seed_le_100": true,
+  "plan_frozen_before_predictions_and_teacher": true,
+  "predictions_bound_to_plan": true,
+  "queries_le_224": true,
+  "roots_le_14": true,
+  "statuses_preserved": true,
+  "teacher_cpu_le_5000": true,
+  "teacher_queries_le_224": true,
+  "wave1_gate_recorded": true,
+  "zero_physical_calls_in_prediction": true
+ },
+ "engineering": "PASS",
+ "gates": {
+  "H1": {
+   "checks": {
+    "anchor_decided": true,
+    "missing_le_50pct": true,
+    "no_fatal": true,
+    "primary_contrast": true,
+    "sound_negative": true
+   },
+   "missing": 0,
+   "pass": true,
+   "queries": 8,
+   "root": "p10a_2026102801"
+  },
+  "H2": {
+   "checks": {
+    "anchor_decided": true,
+    "missing_le_50pct": true,
+    "no_fatal": true,
+    "primary_contrast": true
+   },
+   "missing": 0,
+   "pass": true,
+   "queries": 7,
+   "root": "p10a_2026102802"
+  },
+  "H3": {
+   "checks": {
+    "anchor_decided": true,
+    "missing_le_50pct": true,
+    "no_fatal": true,
+    "primary_contrast": true,
+    "sound_negative": true
+   },
+   "missing": 0,
+   "pass": true,
+   "queries": 8,
+   "root": "p10a_2026102803"
+  },
+  "H4": {
+   "checks": {
+    "anchor_decided": true,
+    "missing_le_50pct": true,
+    "no_fatal": true,
+    "primary_contrast": true
+   },
+   "missing": 0,
+   "pass": true,
+   "queries": 9,
+   "root": "p10a_2026102804"
+  },
+  "H5": {
+   "checks": {
+    "anchor_decided": true,
+    "missing_le_50pct": true,
+    "no_fatal": true,
+    "primary_contrast": true
+   },
+   "missing": 1,
+   "pass": true,
+   "queries": 7,
+   "root": "p10a_2026102805"
+  },
+  "H7": {
+   "checks": {
+    "anchor_decided": true,
+    "missing_le_50pct": true,
+    "no_fatal": true,
+    "primary_contrast": true
+   },
+   "missing": 0,
+   "pass": true,
+   "queries": 8,
+   "root": "p10a_2026102806"
+  },
+  "H8": {
+   "checks": {
+    "anchor_decided": true,
+    "missing_le_50pct": true,
+    "no_fatal": true,
+    "primary_contrast": true
+   },
+   "missing": 0,
+   "pass": true,
+   "queries": 8,
+   "root": "p10a_2026102807"
+  }
+ },
+ "plan_hash": "sha256:44bc199be0cade672e9b2ae36dd5856d263d381b55db264affb8e00ee7f395a4",
+ "predictions_hash": "sha256:949bb3515619d31ef99bdbbe580447b5423a6560fb7842bcc29e015126f9fa90",
+ "stage": "P10a",
+ "status_counts": {
+  "BUDGET_INFEASIBLE": 3,
+  "CERTIFIED_INFEASIBLE": 40,
+  "UNKNOWN": 3,
+  "VERIFIED_FEASIBLE": 64
+ }
+}

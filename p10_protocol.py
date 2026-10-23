@@ -29,7 +29,7 @@ import unique_factor_keyed as ufk
 
 OUT = Path("runs/p10")
 P0 = OUT / "p10_0"
-CAPS = {"learner": 4000.0, "regression": 1500.0, "construction": 1500.0, "teacher": 5000.0, "prediction": 600.0}
+CAPS = {"learner": 4000.0, "regression": 1500.0, "construction": 1500.0, "teacher": 5000.0, "prediction": 600.0, "figures": 1500.0}
 JOB = {"cpu_s": 1800.0, "wall_s": 3600.0, "aggregate_wall_s": 10000.0}
 FROZEN = Path("runs/p9/2d_freeze_manifest.json")
 ARMS = {"K-B-full": ("B-full", "keyed"), "K-C-full": ("C-full", "keyed"), "A": ("A", "factorized"), "SF": ("SF", "factorized")}
