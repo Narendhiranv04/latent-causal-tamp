@@ -155,3 +155,271 @@ def p10b1_gate(batch="runs/p10b/batch1") -> dict:
                                             for k, v in dl.items()}}
     cf.write_json(Path("runs/p10b/P10B1_GATE.json"), out)
     return out
+
+
+# ------------------------------------------------------------------ blind evaluation (after runs/p10b/UNSEALED; frozen predictions read-only)
+ORDER_PAIRS = {"H3": [("B A", "A B")], "H10_3": [("C B A", x) for x in ("B C A", "C A B", "A B C")],
+               "H10_4": [(a, "B C A E") for a in ("C B A E", "E C B A", "C B E A")]}
+
+
+def _sign_p(d):
+    """Exact two-sided sign test on nonzero paired differences."""
+    from scipy.stats import binomtest
+    n, k = sum(x != 0 for x in d), sum(x > 0 for x in d)
+    return float(binomtest(k, n).pvalue) if n else 1.0
+
+
+def _contrast(per, a, b, better="higher"):
+    import p10_eval as pe
+    ks = sorted(set(per.get(a, {})) & set(per.get(b, {})))
+    d = [per[a][k] - per[b][k] for k in ks]
+    if not d:
+        return {"roots": 0, "status": "NO_DECIDED_ROOTS"}
+    return {"roots": len(d), "mean": float(sum(d) / len(d)), "ci95": pe.boot(d), "sign_p": _sign_p(d), "better": better,
+            "a_better_roots": sum((x > 0) if better == "higher" else (x < 0) for x in d), "b_better_roots": sum((x < 0) if better == "higher" else (x > 0) for x in d),
+            "status": "UNDERPOWERED (< 5 roots)" if len(d) < 5 else "OK"}
+
+
+def _arm_mean(snap, split, regime, fn):
+    """{arm: {root: seed-mean of fn(arm-run-entry, root)}} over runs of one regime (None values skipped)."""
+    out = {}
+    for n, a in snap["arms"].items():
+        if a["regime"] != regime:
+            continue
+        for k, x in a["roots"].get(split, {}).items():
+            v = fn(x, k)
+            if v is not None:
+                out.setdefault(a["arm"], {}).setdefault(k, []).append(v)
+    return {arm: {k: sum(v) / len(v) for k, v in d.items()} for arm, d in out.items()}
+
+
+def blind_eval(split="blind", out="runs/p10d/BLIND_EVAL.json") -> dict:
+    import numpy as np
+    import p10_eval as pe
+    import p10b_dataset as d
+    import p10c_train_eval as pc
+    import d_blockers as db
+    snap = _rd("runs/p10d/predictions.json")
+    P, rec, dl = {}, {}, {}
+    for b in pc.batches():
+        plan = _rd(b / "plan.json")
+        P |= plan["roots"]
+        r = d.records(b, ("train", "validation") + (("blind",) if split == "blind" else ()))
+        rec |= r
+        dl |= d.d_labels(plan, r)
+    blind = [k for k, r in P.items() if r["split"] == split]
+    tok = {k: {c["token"]: c["query"] for c in P[k]["items"]} for k in blind}
+    y = lambda q: rec[q]["binary_training_label"] if q in rec else None  # noqa: E731
+    pg = lambda *qs: all(rec[q]["teacher_status"] in (V, C) for q in qs)  # noqa: E731
+    res = {"blind_roots": len(blind), "status_counts": {s: sum(rec[q["query"]]["teacher_status"] == s for k in blind for q in P[k]["items"] if q["query"] in rec)
+                                                        for s in (V, C, B, "UNKNOWN", "NOT_RUN")}}
+    # P2 H1 kappa
+    def kap(x, k):
+        if P[k]["family"] != "H1":
+            return None
+        t = tok[k]
+        qs = [t["edit:A+B"], t["edit:A"], t["edit:B"], t[""]]
+        if any(y(q) is None for q in qs) or not pg(*qs):
+            return None
+        m = x["marginals"]
+        if any(q not in m for q in qs):
+            return None
+        return -abs((m[qs[0]] - m[qs[1]] - m[qs[2]] + m[qs[3]]) - (y(qs[0]) - y(qs[1]) - y(qs[2]) + y(qs[3])))
+    # P3 order
+    def order(x, k):
+        sc = []
+        for a, b_ in ORDER_PAIRS.get(P[k]["family"], []):
+            qa, qb = tok[k].get(a), tok[k].get(b_)
+            if qa and qb and {y(qa), y(qb)} == {0, 1} and pg(qa, qb) and qa in x["marginals"] and qb in x["marginals"]:
+                good, bad = (qa, qb) if y(qa) else (qb, qa)
+                sc.append(float(x["marginals"][good] > x["marginals"][bad]))
+        return sum(sc) / len(sc) if sc else None
+    # P4 omission necessity
+    def omis(x, k):
+        sc = []
+        for c in P[k]["items"]:
+            if c["kind"] != "ORDERED_TEACHER" or len(c["sequence"]) < 2 or y(c["query"]) != 1:
+                continue
+            for t in range(len(c["sequence"])):
+                o = f"seq:{k}:" + (".".join(f"{a}>{b_}" for i, (a, b_) in enumerate(c["sequence"]) if i != t) or "empty")
+                if y(o) is not None and o in x["marginals"]:
+                    sc.append(float((x["marginals"][o] < 0.5) == (y(o) == 0)))
+        return sum(sc) / len(sc) if sc else None
+    ep = {"P2_H1": _arm_mean(snap, split, "full", kap), "P3_ORDER": _arm_mean(snap, split, "full", order),
+          "P4_OMISSION": _arm_mean(snap, split, "full", omis)}
+    res["P2_H1"] = {"primary_K-B_vs_A": _contrast(ep["P2_H1"], "K-B", "A"), "K-C_vs_A": _contrast(ep["P2_H1"], "K-C", "A"),
+                    "K-B_vs_SF": _contrast(ep["P2_H1"], "K-B", "SF"), "per_arm_mean_neg_abs_err": {a: float(np.mean(list(v.values()))) for a, v in ep["P2_H1"].items()}}
+    res["P3_ORDER"] = {"primary_K-C_vs_K-B": _contrast(ep["P3_ORDER"], "K-C", "K-B"), "K-B_vs_A": _contrast(ep["P3_ORDER"], "K-B", "A"),
+                       "K-B_vs_SF": _contrast(ep["P3_ORDER"], "K-B", "SF"), "per_arm_accuracy": {a: float(np.mean(list(v.values()))) for a, v in ep["P3_ORDER"].items()}}
+    res["P4_OMISSION"] = {"primary_K-B_vs_SF": _contrast(ep["P4_OMISSION"], "K-B", "SF"), "K-B_vs_A": _contrast(ep["P4_OMISSION"], "K-B", "A"),
+                          "per_arm_accuracy": {a: float(np.mean(list(v.values()))) for a, v in ep["P4_OMISSION"].items()}}
+    # common per-event metrics and paired per-root NLL (full regime), by provenance
+    def nll_root(x, k, src=None):
+        v = [(x["marginals"][q], y(q)) for q in (c["query"] for c in P[k]["items"]) if y(q) is not None and q in x["marginals"]
+             and (src is None or (rec[q]["label_source"] == "PLANNER_BUDGET") == (src == "operational"))]
+        return float(np.mean([-np.log(min(max(p if t else 1 - p, 1e-9), 1)) for p, t in v])) if v else None
+    for regime in ("full", "short"):
+        per = _arm_mean(snap, split, regime, nll_root)
+        res[f"root_nll_{regime}"] = {"per_arm": {a: float(np.mean(list(v.values()))) for a, v in per.items()},
+                                     "contrasts": {f"{a}-{b_}": _contrast(per, a, b_, "lower") for a, b_ in (("K-B", "A"), ("K-B", "SF"), ("K-C", "K-B"), ("A", "SF"))}}
+    rows = []
+    for n, a in snap["arms"].items():
+        for k in blind:
+            for q, p in a["roots"][split].get(k, {}).get("marginals", {}).items():
+                if y(q) is not None:
+                    rows.append({"arm": a["arm"], "regime": a["regime"], "p": p, "y": y(q), "root": k, "source": rec[q]["label_source"]})
+    res["common_metrics"] = {f"{arm}|{rg}": {s: pe.metrics([x for x in rows if x["arm"] == arm and x["regime"] == rg and
+                                                            (s == "all" or (x["source"] == "PLANNER_BUDGET") == (s == "operational"))])
+                                             for s in ("all", "proof_grounded", "operational")} for arm, rg in sorted({(x["arm"], x["regime"]) for x in rows})}
+    # length: per-root NLL on 3-/4-move H10 roots, full vs short, and the order / omission endpoints of the short regime
+    h10 = lambda fn: (lambda x, k: fn(x, k) if P[k]["family"].startswith("H10") else None)  # noqa: E731
+    res["length_extrapolation"] = {rg: {"nll": {a: float(np.mean(list(v.values()))) for a, v in _arm_mean(snap, split, rg, h10(nll_root)).items()},
+                                        "order": {a: float(np.mean(list(v.values()))) for a, v in _arm_mean(snap, split, rg, h10(order)).items()},
+                                        "omission": {a: float(np.mean(list(v.values()))) for a, v in _arm_mean(snap, split, rg, h10(omis)).items()}}
+                                   for rg in ("full", "short")}
+    # H9 appearance invariance (blind originals vs recoloured variants; same query ids)
+    inv = {}
+    for n, a in snap["arms"].items():
+        if a["regime"] != "full":
+            continue
+        dv = [abs(p - a["roots"][split][k]["marginals"].get(q, p)) for k, x in a["roots"].get("h9", {}).items() if k in a["roots"][split]
+              for q, p in x["marginals"].items()]
+        inv.setdefault(a["arm"], []).extend(dv)
+    res["H9_mean_abs_change"] = {a: float(np.mean(v)) for a, v in inv.items() if v}
+    # ablation matrix (full regime): endpoints per arm
+    res["ablation_matrix"] = {a: {"root_nll": res["root_nll_full"]["per_arm"].get(a), "H1": res["P2_H1"]["per_arm_mean_neg_abs_err"].get(a),
+                                  "order": res["P3_ORDER"]["per_arm_accuracy"].get(a), "omission": res["P4_OMISSION"]["per_arm_accuracy"].get(a)}
+                              for a in sorted({x["arm"] for x in snap["arms"].values()})}
+    res["D"] = d_eval(snap, P, dl, rec, blind, tok, split)
+    res["split"] = split
+    cf.write_json(Path(out), res)
+    return res
+
+
+def d_eval(snap, P, dl, rec, blind, tok, split="blind") -> dict:
+    import numpy as np
+    import p10_eval as pe
+    import p10d_execute as px
+    out, per = {}, {}
+    gt = {k: dl[k] for k in blind if dl[k]["mask"] is not None and dl[k]["n"] > 0}
+    out["masks"] = {"blind_roots_with_pool": sum(dl[k]["n"] > 0 for k in blind), "complete": len(gt),
+                    "types": {t: sum(dl[k]["type"] == t for k in blind) for t in sorted({dl[k]["type"] for k in blind})},
+                    "proof_grounded": sum(x["provenance"] == "proof_grounded" for x in gt.values()),
+                    "by_true_blockers": {n: sum(sum(x["mask"]) == n for x in gt.values()) for n in range(5)}}
+    for arm in ("D", "D-pairless"):
+        lam, thr = snap["baselines"][f"{arm}_lambda_B"], snap["baselines"][f"{arm}_threshold"]
+        runs = [x for x in snap["d"].values() if x["arm"] == arm and x["lambda_B"] == lam]
+        for k, g in gt.items():
+            f1s, ex, jac, card = [], [], [], []
+            for x in runs:
+                p = x["roots"][split][k]
+                pred = [int(p["p_feasible"] < 0.5 and v >= thr) for v in p["marg"]]
+                f1s.append(px.f1_score(g["mask"], pred))
+                ex.append(float(pred == g["mask"]))
+                u = sum(a or b for a, b in zip(pred, g["mask"]))
+                jac.append(sum(a and b for a, b in zip(pred, g["mask"])) / u if u else 1.0)
+                card.append(abs(sum(pred) - sum(g["mask"])))
+            per.setdefault(arm, {})[k] = {"f1": float(np.mean(f1s)), "exact": float(np.mean(ex)), "jaccard": float(np.mean(jac)), "card_err": float(np.mean(card))}
+        fz = [(np.mean([x["roots"][split][k]["p_feasible"] for x in runs]), dl[k]["y0"]) for k in blind if dl[k]["y0"] is not None and k in runs[0]["roots"][split]] if runs else []
+        out[f"{arm}_feasibility"] = pe.metrics([{"p": p, "y": t, "root": i} for i, (p, t) in enumerate(fz)])
+    heur = snap["baselines"]["heuristic"][split]
+    per["heuristic"] = {k: {"f1": px.f1_score(g["mask"], heur[k]), "exact": float(heur[k] == g["mask"])} for k, g in gt.items()}
+    for name in per:
+        out[name] = {m: float(np.mean([v[m] for v in per[name].values()])) for m in ("f1", "exact")} | {"roots": len(per[name])}
+        out[name] |= {"by_true_blockers": {n: float(np.mean([per[name][k]["f1"] for k in gt if sum(gt[k]["mask"]) == n]))
+                                           for n in range(5) if any(sum(gt[k]["mask"]) == n for k in gt)}}
+    f1 = {a: {k: v["f1"] for k, v in d_.items()} for a, d_ in per.items()}
+    out["primary_D_vs_pairless_F1"] = _contrast(f1, "D", "D-pairless")
+    out["D_vs_heuristic_F1"] = _contrast(f1, "D", "heuristic")
+    # feasibility: D vs A/B/C/SF z0 (empty-repair marginal) on the same blind roots (seed mean, full regime)
+    z0 = {}
+    for x in snap["arms"].values():
+        if x["regime"] == "full" and x["arm"] in ("A", "SF", "K-B", "K-C"):
+            for k in blind:
+                p = x["roots"][split].get(k, {}).get("marginals", {}).get(f"seq:{k}:empty")
+                if p is not None and dl[k]["y0"] is not None:
+                    z0.setdefault(x["arm"], {}).setdefault(k, []).append(p)
+    out["z0_feasibility"] = {a: pe.metrics([{"p": float(np.mean(v)), "y": dl[k]["y0"], "root": k} for k, v in d_.items()]) for a, d_ in z0.items()}
+    # faithful B / C counterfactual attribution: pool = the two edit roles and parking subsets == zS[A], zS[B], zS[A+B]
+    sup = [k for k, g in gt.items() if dl[k]["n"] == 2 and all(tok[k].get(t) and any(c["query"] == tok[k][t] and c.get("d_subset") for c in P[k]["items"])
+                                                               for t in ("edit:A", "edit:B", "edit:A+B"))]
+    att = {}
+    for x in snap["arms"].values():
+        if x["regime"] != "full" or x["arm"] not in ("K-B", "K-C", "A", "SF"):
+            continue
+        for k in sup:
+            m = x["roots"][split][k]["marginals"]
+            roles = dl[k]["roles"]
+            st = {frozenset(): m.get(f"seq:{k}:empty")}
+            for t in ("edit:A", "edit:B", "edit:A+B"):
+                it = next(c for c in P[k]["items"] if c["query"] == tok[k][t])
+                st[frozenset(roles.index(r) for r in it["d_subset"])] = m.get(tok[k][t])
+            if None in st.values():
+                continue
+            g = __import__("d_blockers").minimal_sets(2, {s: (V if p >= 0.5 else C) for s, p in st.items()})
+            pred = g["mask"] if g["mask"] is not None else [0, 0]
+            att.setdefault(x["arm"], []).append(__import__("p10d_execute").f1_score(gt[k]["mask"], pred))
+    out["BC_counterfactual_attribution"] = {"supported_roots": len(sup), "unsupported_roots": len(gt) - len(sup),
+                                            "f1_seed_pooled": {a: float(np.mean(v)) for a, v in att.items()}}
+    return out
+
+
+def batch_figures(batch="runs/p10b/batch1", tag="P10b1") -> None:
+    """Atlas (anchor status), recorded 3- / 4-move witness GIFs (H10), D parking-subset panels (non-blind roots only)."""
+    import p10b_dataset as d
+    import effects as ef
+    DST.mkdir(parents=True, exist_ok=True)
+    cfg = cf.load_config("config.toml")
+    robot = ge.make_robot(cfg)
+    plan, rec = _rd(f"{batch}/plan.json"), d.records(batch)
+    ks = [k for k, r in plan["roots"].items() if r["split"] != "blind"]
+    n = (len(ks) + 7) // 8
+    f, ax = plt.subplots(n, 8, figsize=(32, 4.2 * n), squeeze=False)
+    for a, k in zip(ax.flat, ks):
+        r = plan["roots"][k]
+        s = scene_from_dict(r["scene"])
+        anc = next(q for q in plan["queries"] if q["root"] == k and q["anchor"])
+        st = rec[anc["query"]]["teacher_status"]
+        pv._panel(a, cfg, robot, s, r["goal_cell"], f"{k[-3:]} {r['family']} {r['split'][:5]} {r['stratum']}")
+        _roles(a, s, r["ids"])
+        if anc["sequence"]:
+            pv._arrows(a, s, [tuple(x) for x in anc["sequence"]], pv.COL.get(st, "#999"))
+        _status_tag(a, st, (rec[anc["query"]].get("static_certificate") or {}).get("kind"))
+    for a in ax.flat[len(ks):]:
+        a.axis("off")
+    pv.png(f, DST / f"{tag}_atlas.png", f"{tag}: every non-blind root at q0 with its anchor query and adjudicated status")
+    frames = []
+    for k in ks:
+        r = plan["roots"][k]
+        if not r["family"].startswith("H10"):
+            continue
+        s = scene_from_dict(r["scene"])
+        for q in [q for q in plan["queries"] if q["root"] == k and len(q["sequence"]) >= 3 and rec[q["query"]]["teacher_status"] == V][:1]:
+            w = pv.witness(Path(batch), rec[q["query"]])
+            for qq, g, pos, mv in pv.trace_frames(robot, s, [tuple(a) for a in q["sequence"]], w[1], w[2], n_move=10, n_target=12):
+                fg, a = plt.subplots(figsize=(5, 5))
+                pv._panel(a, cfg, robot, s, r["goal_cell"], f"{k[-3:]} {r['family']}: '{q['token']}' ({len(q['sequence'])} moves)\nRECORDED witness", q=qq, gap=g, pos=pos, held=mv)
+                pv._tag(a, "VERIFIED - recorded trajectory", COLORS["valid"])
+                frames.append(pv._rgb(fg))
+    if frames:
+        pv.gif(DST / f"{tag}_long_repairs.gif", frames, f"{tag}: recorded 3- / 4-relocation witnesses (H10)")
+    dl = d.d_labels(plan, rec)
+    show = [k for k in ks if dl[k]["n"] >= 2 and dl[k]["type"] == "MINIMAL_SETS"][:4]
+    if show:
+        f, ax = plt.subplots(len(show), 1, figsize=(16, 3.2 * len(show)), squeeze=False)
+        for a, k in zip(ax[:, 0], show):
+            x, r = dl[k], plan["roots"][k]
+            s = scene_from_dict(r["scene"])
+            subs = sorted(x["status"], key=lambda t: (t != "(original)", len(t), t))
+            a.axis("off")
+            for i, t in enumerate(subs):
+                ia = a.inset_axes([i / len(subs), 0, 0.95 / len(subs), 0.85])
+                ed = {} if t == "(original)" else {o: r["parking"][o] for o in r["parking"] if {v: kk for kk, v in r["ids"].items()}[o] in t.split("+")}
+                se = ef.pose_substitution(robot, cfg, s, {"target_id": "t0"}, ed)["scene"] if ed else s
+                pv._panel(ia, cfg, robot, se, r["goal_cell"], f"park {t}", )
+                ia.set_xticks([]); ia.set_yticks([]); ia.set_xlabel(""); ia.set_ylabel("")
+                pv._tag(ia, x["status"][t][:9], pv.COL.get(x["status"][t], "#999"), size=5)
+            a.set_title(f"{k} {r['family']}: D pool {x['roles']} -> minimal sets {[[x['roles'][i] for i in m] for m in x['sets']]}, mask {x['mask']} "
+                        f"({x['provenance']}); HYPOTHETICAL parking edits (labels only, never executed)", fontsize=9)
+        pv.png(f, DST / f"{tag}_D_masks.png", f"{tag}: D blocker ground truth from all parking subsets (target-only edits)")
+    cf.write_json(DST / f"INDEX_{tag}.json", pv.INDEX)

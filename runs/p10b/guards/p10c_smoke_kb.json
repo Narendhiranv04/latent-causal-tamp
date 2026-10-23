@@ -1,0 +1,12 @@
+{
+ "call": "p10c_train_eval.train_job('smokeKB', 'K-B', 0, 'full', 20)",
+ "category": "training",
+ "cpu_cap_s": 900.0,
+ "cpu_s": 4.19,
+ "overshoot_s": 0.0,
+ "returncode": 1,
+ "stderr_tail": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n    import torch; torch.set_num_threads(1); import p10c_train_eval; p10c_train_eval.train_job('smokeKB', 'K-B', 0, 'full', 20)\n                                                                    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/naren/Desktop/boltzmann_lfd/p10c_train_eval.py\", line 184, in train_job\n    m, rec = l3.fit(arm, seed, updates, tr, va, objective)\n             ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/naren/Desktop/boltzmann_lfd/p9_l3.py\", line 483, in fit\n    tot, rec = tot_fn(m, batch)\n               ~~~~~~^^^^^^^^^^\n  File \"/home/naren/Desktop/boltzmann_lfd/unique_factor.py\", line 186, in total\n    per = [losses(m, r) for r in roots]\n           ~~~~~~^^^^^^\n  File \"/home/naren/Desktop/boltzmann_lfd/unique_factor.py\", line 160, in losses\n    inst = instances(m, r)\n  File \"/home/naren/Desktop/boltzmann_lfd/unique_factor_keyed.py\", line 51, in instances\n    S = m.scene_block(r[\"R\"], sn, r[\"edits\"])\n  File \"/home/naren/Desktop/boltzmann_lfd/abc7_models.py\", line 168, in scene_block\n    return self.memo((\"scene\", tuple(names)), build)\n           ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/naren/Desktop/boltzmann_lfd/abc7_models.py\", line 61, in memo\n    m[key] = fn()\n             ~~^^\n  File \"/home/naren/Desktop/boltzmann_lfd/abc7_models.py\", line 158, in build\n    vs = [self.scene_vec(R, self.edited(R, edits[n[3:-1]] if n != \"z0\" else {})) for n in names]\n                                           ~~~~~^^^^^^^^^\nKeyError: 'A+B'\n",
+ "stop": "ERROR",
+ "utc": "2026-10-23T10:29:39Z",
+ "wall_s": 4.27
+}

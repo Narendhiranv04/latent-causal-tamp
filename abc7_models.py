@@ -113,10 +113,10 @@ class ModelS7(Shared7):
 
 
 class ModelBC7(Shared7):
-    def __init__(self, kind="B", couple="full", vision=True):
+    def __init__(self, kind="B", couple="full", vision=True, order="pred", drop=()):
         super().__init__(vision)
-        assert couple in COUPLE
-        self.kind, self.couple = kind, couple
+        assert couple in COUPLE and order in ("pred", "none") and set(drop) <= {"pair_scene", "pair_omit"}
+        self.kind, self.couple, self.order_mode = kind, couple, order
         self.scene, self.typ, self.order_s, self.cost = mlp(2 * W, 1), nn.Embedding(4, W), mlp(2 * W, 1), mlp(W, 1)
         if couple != "none":
             self.pair_scene, self.pair_omit = mlp(3 * W, 1), mlp(3 * W, 1)
@@ -124,7 +124,11 @@ class ModelBC7(Shared7):
             self.cpl = mlp(3 * W, 1)
         if couple == "full":
             self.ho_u, self.ho_s, self.ho_q = nn.Linear(W, W), mlp(2 * W, 1), mlp(2 * W, 1)
-        if kind == "B":
+        for name in drop:                                 # P10c retrained factor ablation (F3 scene pair / F4 omission pair)
+            delattr(self, name)
+        if kind == "B" and order == "none":              # P10c F2 ablation: order-invariant repair summary (no predecessor term)
+            pass
+        elif kind == "B":
             self.pairo, self.mix = mlp(2 * W, W), mlp(2 * W, W)
         else:
             self.h0, self.gru = nn.Linear(W, W), nn.GRUCell(W, W)
@@ -134,8 +138,10 @@ class ModelBC7(Shared7):
         return self.memo(("order", tuple((i, tuple(map(float, d))) for i, d in seq)), lambda: self._order(R, seq))
 
     def _order(self, R, seq):
-        toks, xy, _ = self.actions(R, seq)
-        if self.kind == "B":                             # prefix-conditioned predecessor interactions, no GRU
+        toks, xy, _ = self.actions(R, seq, getattr(self, "order_mode", "pred") == "pred")
+        if getattr(self, "order_mode", "pred") == "none":  # sorted, prefix-free tokens and their mean: invariant to action order
+            g = toks.mean(0) if len(toks) else torch.zeros(W, dtype=torch.float64)
+        elif self.kind == "B":                           # prefix-conditioned predecessor interactions, no GRU
             rows = [self.mix(torch.cat([a, torch.stack([self.pairo(torch.cat([toks[u], a])) for u in range(t)]).mean(0) if t
                                         else torch.zeros(W, dtype=torch.float64)])) for t, a in enumerate(toks)]
             g = torch.stack(rows).mean(0) if rows else torch.zeros(W, dtype=torch.float64)

@@ -30,7 +30,7 @@ import zlayout_r4 as z4
 from p6_scenes import STRATA, _cell, _cheb, _xy
 from scene import place_scene
 
-VERSION = "P10B_FAMILIES_V1"
+VERSION = "P10B_FAMILIES_V1_1"   # V1.1 (after P10b-1, development evidence only): H3 placement intent
 REUSE = {"H1": ("H1", ""), "H2a": ("H2", "kappa-1"), "H2b": ("H2", "kappa0"), "H3": ("H3", ""), "H4": ("H4", ""), "H5": ("H5", "")}
 FAMILIES = list(REUSE) + ["H7", "H8", "H10_3", "H10_4"]
 MOVERS = {"H7": "MD", "H8": "MD", "H10_3": "ABC", "H10_4": "ABCE"}
@@ -136,6 +136,15 @@ def try_root(cx, spec, attempt, known):
         if rec is None:
             return None, why
         rec["construction"] = rec["construction"] + " [reused P10A_MECHANISMS_V1 template]"
+        if fam == "H3" and spec.get("h3_version", "v1.1") == "v1.1":   # V1.1: the intended order must also PLACE (pose-screen intent)
+            s, ids, dest = rec["scene"], rec["ids"], rec["dest"]
+            pb_ = cx.scr.place(s, ids["B"], dest["B"][0])
+            pa_ = cx.scr.place(p6.moved(s, {ids["B"]: dest["B"][0]}), ids["A"], dest["A"][0]) if pb_ else 0
+            rec["predicates"] += [{"check": "B place at dB (intent, V1.1)", "value": pb_, "want": True, "ok": pb_ > 0},
+                                  {"check": "A place at dA after B (intent, V1.1)", "value": pa_, "want": True, "ok": pa_ > 0}]
+            if not (pb_ and pa_):
+                return None, "predicate: H3 V1.1 placement intent"
+            rec["construction"] += " + H3 V1.1 placement intent"
     else:
         rng = np.random.default_rng([spec["seed"], attempt])
         stratum = str(rng.choice(["S0", "S1", "S3"])) if fam in ("H8", "H10_3", "H10_4") else f"S{int(rng.integers(0, 4))}"

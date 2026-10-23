@@ -17,7 +17,7 @@ import p10_scenes as ps
 import p10b_scenes as pb
 
 OUT = Path("runs/p10b")
-CAPS = {"constructor_dev": 3000.0, "teacher": 24000.0, "training": 24000.0, "execution": 15000.0, "evaluation": 5000.0}
+CAPS = {"constructor_dev": 3000.0, "teacher": 24000.0, "training": 200000.0, "execution": 15000.0, "evaluation": 5000.0}
 JOB = {"cpu_s": 3000.0, "wall_s": 7200.0}
 
 
