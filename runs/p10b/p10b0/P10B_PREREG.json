@@ -1,0 +1,1646 @@
+{
+ "D": {
+  "controls": [
+   "D-pairless (w = 0, retrained)",
+   "geometry heuristic (d_blockers.heuristic)",
+   "A/B/C/SF counterfactual attribution only where the pool is the two edit roles AND the parking subsets equal zS[A], zS[B], zS[A+B] (else UNSUPPORTED)",
+   "single-edit score (weaker, labelled)"
+  ],
+  "grid": {
+   "lambda_B": [
+    0.5,
+    1.0,
+    2.0
+   ],
+   "lr": 0.001,
+   "threshold": [
+    0.3,
+    0.4,
+    0.5,
+    0.6,
+    0.7
+   ],
+   "updates": 600
+  },
+  "labels": "all 2^n parking subsets as SCENE_TARGET_ONLY queries (empty subset = the original task); d_blockers.minimal_sets; union-participation mask, necessary = intersection; INCOMPLETE / NON_MONOTONE / INELIGIBLE -> mask UNKNOWN",
+  "parking": "p10b_scenes.parking (frozen rule)",
+  "pool": "movable mechanism roles (<= 4); fixed bodies are context only",
+  "thresholded": "conditional marginal P(b_i = 1 | y0 = 0, S) on roots predicted infeasible (p_feasible < 0.5); empty set otherwise",
+  "train_mask": "blocker loss only on COMPLETE PROOF-GROUNDED masks; operational masks evaluated separately"
+ },
+ "allocation": {
+  "H1": [
+   8,
+   4,
+   9
+  ],
+  "H10_3": [
+   10,
+   5,
+   9
+  ],
+  "H10_4": [
+   10,
+   4,
+   9
+  ],
+  "H2a": [
+   7,
+   3,
+   5
+  ],
+  "H2b": [
+   7,
+   3,
+   4
+  ],
+  "H3": [
+   8,
+   4,
+   9
+  ],
+  "H4": [
+   8,
+   3,
+   7
+  ],
+  "H5": [
+   7,
+   3,
+   5
+  ],
+  "H7": [
+   7,
+   3,
+   4
+  ],
+  "H8": [
+   8,
+   3,
+   4
+  ]
+ },
+ "calibration": "per checkpoint, temperature and admission threshold chosen on P10b validation roots (p7_eval.fit_temperature, p8_select rule over {0.5, 0.7, 0.85, 0.95}); frozen with the predictions before unsealing",
+ "caps": {
+  "constructor_dev": 3000,
+  "evaluation": 5000,
+  "execution": 15000,
+  "teacher": 24000,
+  "training": 24000
+ },
+ "contract_sha256": "sha256:1a24b29cde0732eaa80b14d23b6aca8294309095716369e307078e2cf29f0f32",
+ "endpoints": {
+  "D_primary": "blind complete masks: per-object blocker F1 (macro by root), D vs D-pairless; secondary: vs heuristic; D feasibility AUROC / NLL vs A/B/C/SF z0 on matched roots",
+  "P1_TOP1": "blind obstructed roots: strict TOP1_COMMIT executed success (target + SAFE_RETREAT), paired by root; contrasts B vs SF, C vs SF, A vs SF, B vs geometry-only; G+M = planner-assisted reference (not in the Holm family)",
+  "P2_H1": "blind proof-grounded H1 four-tuples: |kappa_hat - kappa| per root, B vs A",
+  "P3_ORDER": "blind proof-grounded same-endpoint order pairs (H3 + H10 permutations): order choice correct, C vs B",
+  "P4_OMISSION": "blind decided leave-one-out omissions of witnessed repairs (H4, H10): necessity accuracy, B vs SF",
+  "secondary": "common per-event NLL / accuracy / AUROC / Brier / ECE (root-prior marginals), kappa signs, H5 false-empty, H6 J, H7 edit-vs-executable sign, H9 appearance invariance, length extrapolation (short vs full on 3-/4-move), TOP5 (planner-assisted, never mixed with TOP1), complexity / coverage"
+ },
+ "execution": {
+  "TOP1_COMMIT": "one learned choice from the frozen catalogue (identity check, analytic static veto, calibrated admission, fewest moves, J, C_d, energy); one seeded episode of that repair + target + SAFE_RETREAT; no fallback; abstain = failure",
+  "TOP5_PRECOMMIT": "secondary, planner-assisted, separate table",
+  "baselines": [
+   "geometry-only TOP1 (analytic proposer, no planner ranking)",
+   "G+M (planner-assisted)",
+   "uniform"
+  ],
+  "cache": "identical (root, committed repair, episode seed) = one physical episode"
+ },
+ "families": "P10B_FAMILIES_V1 (p10b_scenes.py): H1, H2a (kappa-1), H2b (kappa0), H3, H4, H5 reused from P10A_MECHANISMS_V1; new H7 (enclosed destination), H8 (sweep barrier only, sector checker), H10_3 (grasp chain), H10_4 (chain + sweep barrier). Certificate-targeted construction is ADAPTIVE (sound static checkers, never teacher labels); H8 is accepted by the sector checker only (no pose screens). H9 = appearance variants (palette change, identical geometry) of validation and blind roots; labels reused by exact physical identity (not new observations).",
+ "frozen_models": {
+  "A": "LOCAL-SEQUENCE GRU (abc8 'A'), factorized objective",
+  "B": "ABC9K_KEYED_V1 B-full (prefix / predecessor)",
+  "C": "ABC9K_KEYED_V1 C-full (GRU order, replaces B's predecessor factor)",
+  "D": "D_BLOCKERS_V1 (d_blockers.py)",
+  "SF": "factorized supervised control (abc8 'SF')",
+  "inputs": "frozen mask-pooled DINOv2-small + object geometry + robot q0 + goal"
+ },
+ "gates": {
+  "P10b-0": "audit PASS; D synthetic tests PASS; prereg hashed + pushed before roster labels; 0 physical calls in learned inference; split / seed roster frozen",
+  "P10b-1": "GO iff >= 70 % of required-contrast queries decided; >= 1 proof-grounded H1 and H3 root; >= 2 witnessed 3-move and >= 2 witnessed 4-move roots (else H10 BLOCKED, others continue); >= 50 % complete D masks among roots with a D pool; caps held",
+  "P10b-2": "per 35-root batch: caps held, no FATAL; yield / power recomputed on non-blind only",
+  "P10c": "all priority-1 runs finite; predictions + calibration frozen and committed before unsealing"
+ },
+ "hash": "sha256:5cf3040ef7c01fb537783c8bd0900cd5585d47d4f2631725cfc85f8e241f1cbb",
+ "minimality": "verified_witness_length from the returned execution; minimum_required = k only relative to the frozen catalogue when every shorter catalogue candidate is decided 0 (SOUND if all CERTIFIED, OPERATIONAL otherwise); else UNKNOWN",
+ "roster": [
+  {
+   "batch": 1,
+   "family": "H1",
+   "index": 0,
+   "seed": 2026111001,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 1,
+   "family": "H1",
+   "index": 1,
+   "seed": 2026111002,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 1,
+   "family": "H1",
+   "index": 2,
+   "seed": 2026111003,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 1,
+   "family": "H1",
+   "index": 3,
+   "seed": 2026111004,
+   "split": "validation",
+   "wave": 0
+  },
+  {
+   "batch": 1,
+   "family": "H2a",
+   "index": 4,
+   "seed": 2026111005,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 1,
+   "family": "H2a",
+   "index": 5,
+   "seed": 2026111006,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 1,
+   "family": "H2a",
+   "index": 6,
+   "seed": 2026111007,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 1,
+   "family": "H2a",
+   "index": 7,
+   "seed": 2026111008,
+   "split": "validation",
+   "wave": 0
+  },
+  {
+   "batch": 1,
+   "family": "H2b",
+   "index": 8,
+   "seed": 2026111009,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 1,
+   "family": "H2b",
+   "index": 9,
+   "seed": 2026111010,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 1,
+   "family": "H2b",
+   "index": 10,
+   "seed": 2026111011,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 1,
+   "family": "H2b",
+   "index": 11,
+   "seed": 2026111012,
+   "split": "validation",
+   "wave": 0
+  },
+  {
+   "batch": 1,
+   "family": "H3",
+   "index": 12,
+   "seed": 2026111013,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 1,
+   "family": "H3",
+   "index": 13,
+   "seed": 2026111014,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 1,
+   "family": "H3",
+   "index": 14,
+   "seed": 2026111015,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 1,
+   "family": "H3",
+   "index": 15,
+   "seed": 2026111016,
+   "split": "validation",
+   "wave": 0
+  },
+  {
+   "batch": 1,
+   "family": "H4",
+   "index": 16,
+   "seed": 2026111017,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 1,
+   "family": "H4",
+   "index": 17,
+   "seed": 2026111018,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 1,
+   "family": "H4",
+   "index": 18,
+   "seed": 2026111019,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 1,
+   "family": "H4",
+   "index": 19,
+   "seed": 2026111020,
+   "split": "validation",
+   "wave": 0
+  },
+  {
+   "batch": 1,
+   "family": "H5",
+   "index": 20,
+   "seed": 2026111021,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 1,
+   "family": "H5",
+   "index": 21,
+   "seed": 2026111022,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 1,
+   "family": "H5",
+   "index": 22,
+   "seed": 2026111023,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 1,
+   "family": "H5",
+   "index": 23,
+   "seed": 2026111024,
+   "split": "validation",
+   "wave": 0
+  },
+  {
+   "batch": 1,
+   "family": "H7",
+   "index": 24,
+   "seed": 2026111025,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 1,
+   "family": "H7",
+   "index": 25,
+   "seed": 2026111026,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 1,
+   "family": "H7",
+   "index": 26,
+   "seed": 2026111027,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 1,
+   "family": "H7",
+   "index": 27,
+   "seed": 2026111028,
+   "split": "validation",
+   "wave": 0
+  },
+  {
+   "batch": 1,
+   "family": "H8",
+   "index": 28,
+   "seed": 2026111029,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 1,
+   "family": "H8",
+   "index": 29,
+   "seed": 2026111030,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 1,
+   "family": "H8",
+   "index": 30,
+   "seed": 2026111031,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 1,
+   "family": "H8",
+   "index": 31,
+   "seed": 2026111032,
+   "split": "validation",
+   "wave": 0
+  },
+  {
+   "batch": 1,
+   "family": "H10_3",
+   "index": 32,
+   "seed": 2026111033,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 1,
+   "family": "H10_3",
+   "index": 33,
+   "seed": 2026111034,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 1,
+   "family": "H10_3",
+   "index": 34,
+   "seed": 2026111035,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 1,
+   "family": "H10_3",
+   "index": 35,
+   "seed": 2026111036,
+   "split": "validation",
+   "wave": 0
+  },
+  {
+   "batch": 1,
+   "family": "H10_4",
+   "index": 36,
+   "seed": 2026111037,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 1,
+   "family": "H10_4",
+   "index": 37,
+   "seed": 2026111038,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 1,
+   "family": "H10_4",
+   "index": 38,
+   "seed": 2026111039,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 1,
+   "family": "H10_4",
+   "index": 39,
+   "seed": 2026111040,
+   "split": "validation",
+   "wave": 0
+  },
+  {
+   "batch": 2,
+   "family": "H1",
+   "index": 40,
+   "seed": 2026111041,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 2,
+   "family": "H2a",
+   "index": 41,
+   "seed": 2026111042,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 2,
+   "family": "H2b",
+   "index": 42,
+   "seed": 2026111043,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 2,
+   "family": "H3",
+   "index": 43,
+   "seed": 2026111044,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 2,
+   "family": "H4",
+   "index": 44,
+   "seed": 2026111045,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 2,
+   "family": "H5",
+   "index": 45,
+   "seed": 2026111046,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 2,
+   "family": "H7",
+   "index": 46,
+   "seed": 2026111047,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 2,
+   "family": "H8",
+   "index": 47,
+   "seed": 2026111048,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 2,
+   "family": "H10_3",
+   "index": 48,
+   "seed": 2026111049,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 2,
+   "family": "H10_4",
+   "index": 49,
+   "seed": 2026111050,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 2,
+   "family": "H1",
+   "index": 50,
+   "seed": 2026111051,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 2,
+   "family": "H2a",
+   "index": 51,
+   "seed": 2026111052,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 2,
+   "family": "H2b",
+   "index": 52,
+   "seed": 2026111053,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 2,
+   "family": "H3",
+   "index": 53,
+   "seed": 2026111054,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 2,
+   "family": "H4",
+   "index": 54,
+   "seed": 2026111055,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 2,
+   "family": "H5",
+   "index": 55,
+   "seed": 2026111056,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 2,
+   "family": "H7",
+   "index": 56,
+   "seed": 2026111057,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 2,
+   "family": "H8",
+   "index": 57,
+   "seed": 2026111058,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 2,
+   "family": "H10_3",
+   "index": 58,
+   "seed": 2026111059,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 2,
+   "family": "H10_4",
+   "index": 59,
+   "seed": 2026111060,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 2,
+   "family": "H1",
+   "index": 60,
+   "seed": 2026111061,
+   "split": "validation",
+   "wave": 0
+  },
+  {
+   "batch": 2,
+   "family": "H2a",
+   "index": 61,
+   "seed": 2026111062,
+   "split": "validation",
+   "wave": 0
+  },
+  {
+   "batch": 2,
+   "family": "H2b",
+   "index": 62,
+   "seed": 2026111063,
+   "split": "validation",
+   "wave": 0
+  },
+  {
+   "batch": 2,
+   "family": "H3",
+   "index": 63,
+   "seed": 2026111064,
+   "split": "validation",
+   "wave": 0
+  },
+  {
+   "batch": 2,
+   "family": "H4",
+   "index": 64,
+   "seed": 2026111065,
+   "split": "validation",
+   "wave": 0
+  },
+  {
+   "batch": 2,
+   "family": "H5",
+   "index": 65,
+   "seed": 2026111066,
+   "split": "validation",
+   "wave": 0
+  },
+  {
+   "batch": 2,
+   "family": "H7",
+   "index": 66,
+   "seed": 2026111067,
+   "split": "validation",
+   "wave": 0
+  },
+  {
+   "batch": 2,
+   "family": "H8",
+   "index": 67,
+   "seed": 2026111068,
+   "split": "validation",
+   "wave": 0
+  },
+  {
+   "batch": 2,
+   "family": "H10_3",
+   "index": 68,
+   "seed": 2026111069,
+   "split": "validation",
+   "wave": 0
+  },
+  {
+   "batch": 2,
+   "family": "H10_4",
+   "index": 69,
+   "seed": 2026111070,
+   "split": "validation",
+   "wave": 0
+  },
+  {
+   "batch": 2,
+   "family": "H1",
+   "index": 70,
+   "seed": 2026111071,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 2,
+   "family": "H2a",
+   "index": 71,
+   "seed": 2026111072,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 2,
+   "family": "H2b",
+   "index": 72,
+   "seed": 2026111073,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 2,
+   "family": "H3",
+   "index": 73,
+   "seed": 2026111074,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 2,
+   "family": "H4",
+   "index": 74,
+   "seed": 2026111075,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 3,
+   "family": "H5",
+   "index": 75,
+   "seed": 2026111076,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 3,
+   "family": "H7",
+   "index": 76,
+   "seed": 2026111077,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 3,
+   "family": "H8",
+   "index": 77,
+   "seed": 2026111078,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 3,
+   "family": "H10_3",
+   "index": 78,
+   "seed": 2026111079,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 3,
+   "family": "H10_4",
+   "index": 79,
+   "seed": 2026111080,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 3,
+   "family": "H1",
+   "index": 80,
+   "seed": 2026111081,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 3,
+   "family": "H2a",
+   "index": 81,
+   "seed": 2026111082,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 3,
+   "family": "H2b",
+   "index": 82,
+   "seed": 2026111083,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 3,
+   "family": "H3",
+   "index": 83,
+   "seed": 2026111084,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 3,
+   "family": "H4",
+   "index": 84,
+   "seed": 2026111085,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 3,
+   "family": "H5",
+   "index": 85,
+   "seed": 2026111086,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 3,
+   "family": "H7",
+   "index": 86,
+   "seed": 2026111087,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 3,
+   "family": "H8",
+   "index": 87,
+   "seed": 2026111088,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 3,
+   "family": "H10_3",
+   "index": 88,
+   "seed": 2026111089,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 3,
+   "family": "H10_4",
+   "index": 89,
+   "seed": 2026111090,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 3,
+   "family": "H1",
+   "index": 90,
+   "seed": 2026111091,
+   "split": "validation",
+   "wave": 0
+  },
+  {
+   "batch": 3,
+   "family": "H2a",
+   "index": 91,
+   "seed": 2026111092,
+   "split": "validation",
+   "wave": 0
+  },
+  {
+   "batch": 3,
+   "family": "H2b",
+   "index": 92,
+   "seed": 2026111093,
+   "split": "validation",
+   "wave": 0
+  },
+  {
+   "batch": 3,
+   "family": "H3",
+   "index": 93,
+   "seed": 2026111094,
+   "split": "validation",
+   "wave": 0
+  },
+  {
+   "batch": 3,
+   "family": "H4",
+   "index": 94,
+   "seed": 2026111095,
+   "split": "validation",
+   "wave": 0
+  },
+  {
+   "batch": 3,
+   "family": "H5",
+   "index": 95,
+   "seed": 2026111096,
+   "split": "validation",
+   "wave": 0
+  },
+  {
+   "batch": 3,
+   "family": "H7",
+   "index": 96,
+   "seed": 2026111097,
+   "split": "validation",
+   "wave": 0
+  },
+  {
+   "batch": 3,
+   "family": "H8",
+   "index": 97,
+   "seed": 2026111098,
+   "split": "validation",
+   "wave": 0
+  },
+  {
+   "batch": 3,
+   "family": "H10_3",
+   "index": 98,
+   "seed": 2026111099,
+   "split": "validation",
+   "wave": 0
+  },
+  {
+   "batch": 3,
+   "family": "H10_4",
+   "index": 99,
+   "seed": 2026111100,
+   "split": "validation",
+   "wave": 0
+  },
+  {
+   "batch": 3,
+   "family": "H1",
+   "index": 100,
+   "seed": 2026111101,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 3,
+   "family": "H2a",
+   "index": 101,
+   "seed": 2026111102,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 3,
+   "family": "H2b",
+   "index": 102,
+   "seed": 2026111103,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 3,
+   "family": "H3",
+   "index": 103,
+   "seed": 2026111104,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 3,
+   "family": "H4",
+   "index": 104,
+   "seed": 2026111105,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 3,
+   "family": "H5",
+   "index": 105,
+   "seed": 2026111106,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 3,
+   "family": "H7",
+   "index": 106,
+   "seed": 2026111107,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 3,
+   "family": "H8",
+   "index": 107,
+   "seed": 2026111108,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 3,
+   "family": "H10_3",
+   "index": 108,
+   "seed": 2026111109,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 3,
+   "family": "H10_4",
+   "index": 109,
+   "seed": 2026111110,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 4,
+   "family": "H1",
+   "index": 110,
+   "seed": 2026111111,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 4,
+   "family": "H2a",
+   "index": 111,
+   "seed": 2026111112,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 4,
+   "family": "H2b",
+   "index": 112,
+   "seed": 2026111113,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 4,
+   "family": "H3",
+   "index": 113,
+   "seed": 2026111114,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 4,
+   "family": "H4",
+   "index": 114,
+   "seed": 2026111115,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 4,
+   "family": "H5",
+   "index": 115,
+   "seed": 2026111116,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 4,
+   "family": "H7",
+   "index": 116,
+   "seed": 2026111117,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 4,
+   "family": "H8",
+   "index": 117,
+   "seed": 2026111118,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 4,
+   "family": "H10_3",
+   "index": 118,
+   "seed": 2026111119,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 4,
+   "family": "H10_4",
+   "index": 119,
+   "seed": 2026111120,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 4,
+   "family": "H1",
+   "index": 120,
+   "seed": 2026111121,
+   "split": "validation",
+   "wave": 0
+  },
+  {
+   "batch": 4,
+   "family": "H2a",
+   "index": 121,
+   "seed": 2026111122,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 4,
+   "family": "H2b",
+   "index": 122,
+   "seed": 2026111123,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 4,
+   "family": "H3",
+   "index": 123,
+   "seed": 2026111124,
+   "split": "validation",
+   "wave": 0
+  },
+  {
+   "batch": 4,
+   "family": "H4",
+   "index": 124,
+   "seed": 2026111125,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 4,
+   "family": "H5",
+   "index": 125,
+   "seed": 2026111126,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 4,
+   "family": "H7",
+   "index": 126,
+   "seed": 2026111127,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 4,
+   "family": "H8",
+   "index": 127,
+   "seed": 2026111128,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 4,
+   "family": "H10_3",
+   "index": 128,
+   "seed": 2026111129,
+   "split": "validation",
+   "wave": 0
+  },
+  {
+   "batch": 4,
+   "family": "H10_4",
+   "index": 129,
+   "seed": 2026111130,
+   "split": "validation",
+   "wave": 0
+  },
+  {
+   "batch": 4,
+   "family": "H1",
+   "index": 130,
+   "seed": 2026111131,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 4,
+   "family": "H2a",
+   "index": 131,
+   "seed": 2026111132,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 4,
+   "family": "H2b",
+   "index": 132,
+   "seed": 2026111133,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 4,
+   "family": "H3",
+   "index": 133,
+   "seed": 2026111134,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 4,
+   "family": "H4",
+   "index": 134,
+   "seed": 2026111135,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 4,
+   "family": "H5",
+   "index": 135,
+   "seed": 2026111136,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 4,
+   "family": "H7",
+   "index": 136,
+   "seed": 2026111137,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 4,
+   "family": "H8",
+   "index": 137,
+   "seed": 2026111138,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 4,
+   "family": "H10_3",
+   "index": 138,
+   "seed": 2026111139,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 4,
+   "family": "H10_4",
+   "index": 139,
+   "seed": 2026111140,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 4,
+   "family": "H1",
+   "index": 140,
+   "seed": 2026111141,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 4,
+   "family": "H2a",
+   "index": 141,
+   "seed": 2026111142,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 4,
+   "family": "H3",
+   "index": 142,
+   "seed": 2026111143,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 4,
+   "family": "H4",
+   "index": 143,
+   "seed": 2026111144,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 4,
+   "family": "H5",
+   "index": 144,
+   "seed": 2026111145,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 5,
+   "family": "H8",
+   "index": 145,
+   "seed": 2026111146,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 5,
+   "family": "H10_3",
+   "index": 146,
+   "seed": 2026111147,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 5,
+   "family": "H10_4",
+   "index": 147,
+   "seed": 2026111148,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 5,
+   "family": "H1",
+   "index": 148,
+   "seed": 2026111149,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 5,
+   "family": "H3",
+   "index": 149,
+   "seed": 2026111150,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 5,
+   "family": "H4",
+   "index": 150,
+   "seed": 2026111151,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 5,
+   "family": "H10_3",
+   "index": 151,
+   "seed": 2026111152,
+   "split": "validation",
+   "wave": 0
+  },
+  {
+   "batch": 5,
+   "family": "H10_4",
+   "index": 152,
+   "seed": 2026111153,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 5,
+   "family": "H1",
+   "index": 153,
+   "seed": 2026111154,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 5,
+   "family": "H3",
+   "index": 154,
+   "seed": 2026111155,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 5,
+   "family": "H4",
+   "index": 155,
+   "seed": 2026111156,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 5,
+   "family": "H10_3",
+   "index": 156,
+   "seed": 2026111157,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 5,
+   "family": "H10_4",
+   "index": 157,
+   "seed": 2026111158,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 5,
+   "family": "H1",
+   "index": 158,
+   "seed": 2026111159,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 5,
+   "family": "H3",
+   "index": 159,
+   "seed": 2026111160,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 5,
+   "family": "H4",
+   "index": 160,
+   "seed": 2026111161,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 5,
+   "family": "H10_3",
+   "index": 161,
+   "seed": 2026111162,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 5,
+   "family": "H10_4",
+   "index": 162,
+   "seed": 2026111163,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 5,
+   "family": "H1",
+   "index": 163,
+   "seed": 2026111164,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 5,
+   "family": "H3",
+   "index": 164,
+   "seed": 2026111165,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 5,
+   "family": "H10_3",
+   "index": 165,
+   "seed": 2026111166,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 5,
+   "family": "H10_4",
+   "index": 166,
+   "seed": 2026111167,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 5,
+   "family": "H1",
+   "index": 167,
+   "seed": 2026111168,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 5,
+   "family": "H3",
+   "index": 168,
+   "seed": 2026111169,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 5,
+   "family": "H10_3",
+   "index": 169,
+   "seed": 2026111170,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 5,
+   "family": "H10_4",
+   "index": 170,
+   "seed": 2026111171,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 5,
+   "family": "H1",
+   "index": 171,
+   "seed": 2026111172,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 5,
+   "family": "H3",
+   "index": 172,
+   "seed": 2026111173,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 5,
+   "family": "H10_3",
+   "index": 173,
+   "seed": 2026111174,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 5,
+   "family": "H10_4",
+   "index": 174,
+   "seed": 2026111175,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 5,
+   "family": "H10_3",
+   "index": 175,
+   "seed": 2026111176,
+   "split": "train",
+   "wave": 0
+  },
+  {
+   "batch": 5,
+   "family": "H10_4",
+   "index": 176,
+   "seed": 2026111177,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 5,
+   "family": "H10_3",
+   "index": 177,
+   "seed": 2026111178,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 5,
+   "family": "H10_4",
+   "index": 178,
+   "seed": 2026111179,
+   "split": "blind",
+   "wave": 0
+  },
+  {
+   "batch": 5,
+   "family": "H10_3",
+   "index": 179,
+   "seed": 2026111180,
+   "split": "blind",
+   "wave": 0
+  }
+ ],
+ "selection_rule": "winner = arm with the highest blind TOP1 success that beats SF after Holm; else 'no demonstrated superiority'; then H1, ORDER, OMISSION endpoints; then efficiency / coverage. Never P8c in-distribution NLL.",
+ "sources": {
+  "config.toml": "sha256:56ede7f0ea1bd7b0e76e9b1bfd7d04f237e96f65276b79e498edce0b51b28d79",
+  "config_v2_r4.toml": "sha256:13d88ab423564bec38267320c95dbc5a738b48bce7c632fb90f5e22a311988a7",
+  "d_blockers.py": "sha256:7eea73ce6b7c969bd699ecddaddd43958b0b3639493f4a63874ea739628bf2a6",
+  "p10_scenes.py": "sha256:42cd234bea2d6862408737079b981514d90722922b21a42a5cd864ff5380b5a9",
+  "p10b_dataset.py": "sha256:0e63ec845782453d2ab520670ece52eda17c14be6374c29051bc2d4d6fab0ef0",
+  "p10b_prereg.py": "sha256:5f4a95c5fb0119aa88f49306338dae07639a07f83754a79014408dcebf739e17",
+  "p10b_scenes.py": "sha256:e638303658eb02d3a40a154faa26e8fbf2a0374cf99bdb255fba384464a1c9d0",
+  "teacher_opneg.toml": "sha256:358fdc7ad9f4cf99611cbbe08ba2e5f1950cd8cd4b8edf2bc38ab3507f554e5b",
+  "tests/test_d_blockers.py": "sha256:5fa86ca784fcec87c6e77781e1d419786c297904c56a647b3fbb7b1584f6aeed"
+ },
+ "splits": {
+  "blind": 65,
+  "train": 80,
+  "validation": 35
+ },
+ "statistics": {
+  "binary": "exact two-sided binomial on discordant roots",
+  "ci": "paired root-cluster bootstrap 95 % (2,000 resamples, seed 0); seeds reported individually; arm value per root = seed mean",
+  "equivalence": "never claimed from a CI crossing 0",
+  "multiplicity": "Holm over P1-P4 primary contrasts at alpha 0.05 (each P has one primary contrast; P1 uses B vs SF as its primary)",
+  "power_note": "P10a per-root NLL SD ~ 0.96 -> ~29 roots for 0.5 nat at 80 %; per-mechanism blind counts 4-9 here will remain UNDERPOWERED for small effects",
+  "power_rule": "< 5 decided independent roots = UNDERPOWERED (descriptive only); >= 10 recommended"
+ },
+ "statuses": "VERIFIED (1) / CERTIFIED (0, independently checked, scoped) / BUDGET (operational 0) / UNKNOWN, NOT_RUN, INELIGIBLE (missing). proof_grounded = all components VERIFIED or CERTIFIED; operational = >= 1 BUDGET.",
+ "teacher_execution_policy": {
+  "adjudication": "unchanged 2D-ABC-OPNEG-v1 (teacher_opneg.toml); BUDGET only if all 3 declared seeds ran to a clean allowed terminal",
+  "chosen": "B_FULL_SEEDS",
+  "options_predeclared": {
+   "A_P10A": "120 CPU-s per query (later seed only while spent + 110 <= 120)",
+   "B_FULL_SEEDS": "330 CPU-s per query: all three 100 CPU-s seeds fit; a censored seed ends the query (UNKNOWN)"
+  },
+  "query_cpu_s": 330.0,
+  "query_wall_s": 900.0,
+  "reserve_s": 10.0,
+  "root_cpu_s": 900.0,
+  "seed_cpu_s": 100.0,
+  "seed_kill_margin_s": 5.0,
+  "stop_after_censored_seed": true,
+  "version": "P10B_S100_V1",
+  "workers": 1
+ },
+ "teacher_policy": "P10B_S100_V1 (p10b_dataset.POLICY): OPNEG-v1 adjudication; seeds 100 CPU-s (kill 95), query 330 CPU-s / 900 s, root 900 CPU-s, a censored seed ends the query (UNKNOWN), one worker; option B_FULL_SEEDS chosen before labels",
+ "total_roots": 180,
+ "training": {
+  "batch": 12,
+  "optimizer": "AdamW 1e-3 / 1e-4, clip 10",
+  "priority": [
+   "full A/B/C/SF x3",
+   "short A/B/C/SF x3",
+   "D, D-pairless x3",
+   "B-F2 order-invariant",
+   "B-F4 no omission pair",
+   "B-F5 structured (no generic + HO)",
+   "B-F5 quadratic (no HO)",
+   "B-F3 no scene pair",
+   "B visual-zero",
+   "B unique ontology",
+   "J head / analytic static (selection-only, no retraining)"
+  ],
+  "rule": "ablations run in priority order while the training cap allows; the rest NOT_RUN",
+  "seeds": [
+   0,
+   1,
+   2
+  ],
+  "selection": "validation own-likelihood NLL every 20 updates (P10b validation roots)",
+  "updates": 400
+ },
+ "training_data": {
+  "full": "historical P8c learner view (178 train + 12 validation relabelled train; P8c test excluded) + P10a 14 (disclosed development) + P10b train roots",
+  "selection": "P10b validation roots only",
+  "short": "length-extrapolation copies: same sources minus every candidate with > 2 moves and every H10 root"
+ },
+ "unit_of_analysis": "independent reference root (constructor seed). All its orders, omissions, edits, D subsets and appearance variants stay in one split; never resampled as independent replicates.",
+ "version": "P10B_PREREG_V1"
+}

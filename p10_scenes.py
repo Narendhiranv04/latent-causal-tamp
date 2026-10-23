@@ -227,7 +227,7 @@ def _try(cx, spec, attempt, known):
     role, fixed, goal = lay
     mech = spec["mechanism"]
     movers = list(MOVERS[mech])
-    key = f"p10a_{spec['seed']}"
+    key = f"{spec.get('prefix', 'p10a')}_{spec['seed']}"
     s = place_scene(cx.cfg, key, "obstructed", [role["T"]], [role[k] for k in movers] + fixed)
     s = replace(s, robot=replace(s.robot, q_rad=tuple(STRATA[stratum])))
     ids = {k: f"o{i:02d}" for i, k in enumerate(movers)}

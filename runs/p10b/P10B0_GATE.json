@@ -1,0 +1,77 @@
+{
+ "checks": {
+  "ancestry": true,
+  "audit_head_is_p10a_result": true,
+  "budgets_held": true,
+  "checkpoints": true,
+  "d_synthetic_tests": true,
+  "manifest_drift_only_declared_hook": true,
+  "p10a_hashes_and_replays": true,
+  "prereg_frozen": true,
+  "zero_physical_calls_learned": true
+ },
+ "dev_pilot_h7_h8": {
+  "p10b_2026124000": {
+   "M*": "VERIFIED_FEASIBLE",
+   "edit_A": "VERIFIED_FEASIBLE",
+   "family": "H7",
+   "physical_M": "CERTIFIED_INFEASIBLE",
+   "realized": true
+  },
+  "p10b_2026124001": {
+   "M*": "VERIFIED_FEASIBLE",
+   "edit_A": "VERIFIED_FEASIBLE",
+   "family": "H7",
+   "physical_M": "CERTIFIED_INFEASIBLE",
+   "realized": true
+  },
+  "p10b_2026124002": {
+   "edit_A": "UNKNOWN",
+   "family": "H8",
+   "original": "CERTIFIED_INFEASIBLE",
+   "physical_M": "UNKNOWN",
+   "realized": false
+  },
+  "p10b_2026124003": {
+   "edit_A": "VERIFIED_FEASIBLE",
+   "family": "H8",
+   "original": "CERTIFIED_INFEASIBLE",
+   "physical_M": "VERIFIED_FEASIBLE",
+   "realized": true
+  }
+ },
+ "engineering": "PASS",
+ "mechanism_status": {
+  "H7": "REALIZED on 2/2 dev roots (proof-grounded: physical relocation CERTIFIED by FIRST_MOVER / ORDER_FIRST_ACTION placement-screen scope)",
+  "H8": "REALIZED on 1/2 dev roots (original sector-CERTIFIED; barrier removal VERIFIED); 1/2 UNKNOWN (target planning censored)"
+ },
+ "p10a_corrected_yield_gate": {
+  "p10a_2026102806": {
+   "edit_feasible": true,
+   "realized": false,
+   "relocation_infeasible": false
+  },
+  "p10a_2026102807": {
+   "original_infeasible": false,
+   "realized": false
+  },
+  "p10a_2026102813": {
+   "edit_feasible": true,
+   "realized": false,
+   "relocation_infeasible": false
+  },
+  "p10a_2026102814": {
+   "original_infeasible": false,
+   "realized": false
+  }
+ },
+ "prereg_hash": "sha256:5cf3040ef7c01fb537783c8bd0900cd5585d47d4f2631725cfc85f8e241f1cbb",
+ "spend": {
+  "constructor_dev": 221.4,
+  "evaluation": 13.6,
+  "execution": 0,
+  "teacher": 625.3,
+  "training": 0
+ },
+ "stage": "P10b-0"
+}
