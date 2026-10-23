@@ -1,0 +1,12 @@
+{
+ "call": "p10_eval.records()",
+ "category": "prediction",
+ "cpu_cap_s": 300.0,
+ "cpu_s": 3.08,
+ "overshoot_s": 0.0,
+ "returncode": 1,
+ "stderr_tail": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n    import torch; torch.set_num_threads(1); import p10_eval; p10_eval.records()\n                                                             ~~~~~~~~~~~~~~~~^^\n  File \"/home/naren/Desktop/boltzmann_lfd/p10_eval.py\", line 40, in records\n    cands = [{\"sequence\": p[\"sequence\"], \"query\": p[\"z_layout\"][\"query\"][\"zR\"], \"z_layout\": p[\"z_layout\"]} for p in r[\"queries\"][\"pool\"]]\n                                                  ~~~~~~~~~~~~~~~~~~~~~~^^^^^^\nKeyError: 'zR'\n",
+ "stop": "ERROR",
+ "utc": "2026-10-23T07:54:06Z",
+ "wall_s": 3.26
+}
