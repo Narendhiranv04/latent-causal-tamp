@@ -81,3 +81,77 @@ def p10b0_designs() -> None:
                   "H8: original CERTIFIED by the sector checker;\nbarrier removal VERIFIED (edit and relocation).", fontsize=9, va="top")
     pv.png(f, DST / "P10b0_designs_and_dev_pilot.png", "P10b-0: H10 designs (PROPOSED), dev H7 / H8 pilot statuses, P10a H1 / H3 / H4 VERIFIED repairs")
     cf.write_json(DST / "INDEX_p10b0.json", pv.INDEX)
+
+
+# ------------------------------------------------------------------ P10b yield (non-blind roots only) and the P10b-1 gate
+REQUIRED = {"H1": ["edit:A", "edit:B", "edit:A+B", ""], "H2a": ["edit:A", "edit:B", "edit:A+B", ""], "H2b": ["edit:A", "edit:B", "edit:A+B", ""],
+            "H3": ["B A", "A B"], "H4": ["C A", "A", "C"], "H5": ["", "edit:A", "edit:B", "edit:A+B"], "H7": ["edit:A", "M"],
+            "H8": ["", "edit:A", "M"], "H10_3": ["C B A", "B C A", "C A B", "A B C", "C B", "B A", "C A"],
+            "H10_4": ["C B A E", "E C B A", "C B E A", "B C A E", "C B A", "C B E", "B A E", "C A E"]}
+V, C, B = "VERIFIED_FEASIBLE", "CERTIFIED_INFEASIBLE", "BUDGET_INFEASIBLE"
+
+
+def _y(st):
+    return 1 if st == V else 0 if st in (C, B) else None
+
+
+def root_yield(plan, rec, k) -> dict:
+    r = plan["roots"][k]
+    t = {q["token"]: rec[q["query"]] for q in plan["queries"] if q["root"] == k and q["query"] in rec}
+    s = {x: v["teacher_status"] for x, v in t.items()}
+    y = {x: _y(v) for x, v in s.items()}
+    fam, proof = r["family"], lambda *xs: all(s.get(x) in (V, C) for x in xs)  # noqa: E731
+    req = REQUIRED[fam]
+    k4 = lambda: y["edit:A+B"] - y["edit:A"] - y["edit:B"] + y[""] if all(y.get(x) is not None for x in req) else None  # noqa: E731
+    real = {"H1": lambda: k4() == 1, "H2a": lambda: k4() == -1, "H2b": lambda: k4() == 0,
+            "H3": lambda: {y.get("B A"), y.get("A B")} == {0, 1}, "H4": lambda: y.get("C A") == 1 and y.get("A") is not None and y.get("C") is not None,
+            "H5": lambda: y.get("") == 1 and 0 in (y.get("edit:A"), y.get("edit:B"), y.get("edit:A+B")),
+            "H7": lambda: y.get("edit:A") == 1 and y.get("M") == 0, "H8": lambda: y.get("") == 0 and 1 in (y.get("edit:A"), y.get("M")),
+            "H10_3": lambda: y.get("C B A") == 1, "H10_4": lambda: 1 in (y.get("C B A E"), y.get("E C B A"), y.get("C B E A"))}[fam]()
+    seqs = [q for q in plan["queries"] if q["root"] == k and q["kind"] == "ORDERED_TEACHER" and q["query"] in rec]
+    wl = sorted(len(q["sequence"]) for q in seqs if s.get(q["token"]) == V)
+    mini = "NO_WITNESS"
+    if wl:
+        short = [q for q in seqs if len(q["sequence"]) < wl[0]]
+        mini = "UNKNOWN" if any(_y(s[q["token"]]) is None for q in short) or any(s[q["token"]] == V for q in short) else \
+            "SOUND" if all(s[q["token"]] == C for q in short) else "OPERATIONAL"
+    return {"root": k, "family": fam, "split": r["split"], "realized": bool(real), "proof_grounded_required": proof(*req),
+            "required_decided": sum(y.get(x) is not None for x in req), "required": len(req), "witness_lengths": wl,
+            "min_verified_length": wl[0] if wl else None, "max_verified_length": wl[-1] if wl else None,
+            "minimality_relative_to_catalogue": mini, "status": s}
+
+
+def p10b1_gate(batch="runs/p10b/batch1") -> dict:
+    import numpy as np
+    import p10b_dataset as d
+    plan = _rd(f"{batch}/plan.json")
+    rec = d.records(batch)
+    ys = [root_yield(plan, rec, k) for k in plan["roots"] if plan["roots"][k]["split"] != "blind"]
+    dl = d.d_labels(plan, rec)
+    pools = [x for x in dl.values() if x["n"] > 0]
+    complete = [x for x in pools if x["mask"] is not None]
+    att = [a for l in open(f"{batch}/teacher_calls.jsonl") for a in [json.loads(l)] if a["seeds"]]
+    qc = [a["unit_cpu_s"] for a in att]
+    dec = sum(x["required_decided"] for x in ys) / max(1, sum(x["required"] for x in ys))
+    w3 = [x["root"] for x in ys if x["family"] == "H10_3" and x["realized"]]
+    w4 = [x["root"] for x in ys if x["family"] == "H10_4" and x["realized"]]
+    checks = {"required_contrasts_decided_ge_70pct": dec >= 0.70,
+              "proof_grounded_H1": any(x["realized"] and x["proof_grounded_required"] for x in ys if x["family"] == "H1"),
+              "proof_grounded_H3": any(x["realized"] and x["proof_grounded_required"] for x in ys if x["family"] == "H3"),
+              "witnessed_3move_ge_2": len(w3) >= 2, "witnessed_4move_ge_2": len(w4) >= 2,
+              "complete_D_masks_ge_50pct": len(complete) >= 0.5 * max(1, len(pools)),
+              "independent_mask_check": all(x.get("independent_check", True) for x in complete),
+              "caps": all(d.spent(c)[0] <= d.CAPS[c] for c in d.CAPS)}
+    h10_blocked = not (checks["witnessed_3move_ge_2"] and checks["witnessed_4move_ge_2"])
+    core = [c for c in checks if not c.startswith("witnessed")]
+    out = {"stage": "P10b-1", "plan_hash": plan["plan_hash"], "roots": len(plan["roots"]), "unavailable": plan["unavailable"],
+           "required_decided_fraction": dec, "realized_by_family": {f: [x["realized"] for x in ys if x["family"] == f] for f in REQUIRED},
+           "witnessed_3move": w3, "witnessed_4move": w4, "d_mask_types": {t: sum(x["type"] == t for x in pools) for t in sorted({x["type"] for x in pools})},
+           "d_complete": len(complete), "d_pools": len(pools), "d_proof_grounded": sum(x["provenance"] == "proof_grounded" for x in complete),
+           "query_cpu": {"teacher_queries": len(qc), "median": float(np.median(qc)) if qc else 0.0, "p95": float(np.percentile(qc, 95)) if qc else 0.0,
+                         "max": max(qc) if qc else 0.0}, "status_counts": {s: sum(r["teacher_status"] == s for r in rec.values()) for s in {r["teacher_status"] for r in rec.values()}},
+           "checks": checks, "H10": "BLOCKED" if h10_blocked else "GO", "decision": "GO" if all(checks[c] for c in core) else "STOP",
+           "roots_detail": ys, "d_labels": {k: {x: v[x] for x in ("type", "mask", "necessary", "sets", "provenance", "roles", "status") if x in v}
+                                            for k, v in dl.items()}}
+    cf.write_json(Path("runs/p10b/P10B1_GATE.json"), out)
+    return out
