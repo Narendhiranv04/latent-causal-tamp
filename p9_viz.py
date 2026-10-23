@@ -532,6 +532,157 @@ def l3b_health():
                   ["runs/p9/l3/l3b/summary.json", "runs/p9/l2/runs/B-full#s0.json", "runs/p9/l3/l3b/runs/U-B-full#s0.json", "p9_viz.py"])
 
 
+
+def l3c_factor_graph():
+    """L3c: a real saved validation root drawn as the unique model (relations per listed parent and role) and the keyed model
+    (one relation per physical scope). Squares show each relation's number of factor instances."""
+    import collections
+
+    import p9_l3 as l3
+    import unique_factor as uf
+    import unique_factor_keyed as ufk
+    _, val, _ = l3.data()
+    r = next(x for x in val if x["key"] == "p8_2026102510")
+    m = l3.load("B-full", "runs/p9/l3/l3b/ckpt/ckpt_U-B-full#s0.pt")
+    insts = {"unique ABC9U_UNIQUE_V1": uf.instances(m, r), "keyed ABC9K_KEYED_V1": ufk.instances(m, r)}
+    sc = insts["unique ABC9U_UNIQUE_V1"]["S"]["names"]
+    qs = sorted(insts["unique ABC9U_UNIQUE_V1"]["unary"], key=lambda q: (q.count("."), q))
+    roles = collections.defaultdict(set)
+    for c in r["cands"]:
+        for sl, q in zip(c["slots"], c["z_q"]):
+            if sl[:2] in ("zR", "zO"):
+                roles[q].add(sl[:2])
+    fig, axs = plt.subplots(1, 2, figsize=(19, 8.6))
+    for ax, (name, inst) in zip(axs, insts.items()):
+        ax.set_xlim(-0.6, 12.6)
+        ax.set_ylim(-1.4, 9.0)
+        ax.axis("off")
+        xs = {n: 2.5 + i * 7.5 / (len(sc) - 1) for i, n in enumerate(sc)}
+        xq = {q: 0.9 + i * 10.8 / (len(qs) - 1) for i, q in enumerate(qs)}
+        ax.text(6.3, 8.6, "P_S: F3 scene unaries + z0-zS pairs, F5 scene pairs + ho_s - ONCE", ha="center", fontsize=8.5, color="white",
+                bbox={"boxstyle": "square,pad=0.35", "fc": FAM["F3"], "ec": "none"})
+        for n, x in xs.items():
+            ax.plot([x, 6.3], [7.3, 8.45], color=FAM["F3"], lw=0.8)
+            ax.add_patch(plt.Circle((x, 7.0), 0.34, fc="#dbeafe", ec="#285a84", lw=1.3, zorder=3))
+            ax.text(x, 7.0, n, ha="center", va="center", fontsize=7, zorder=4)
+        sq = collections.Counter()
+        ho = []
+        for b, blk in inst["blocks"].items():
+            ho.append(blk["queries"])
+            for q in (blk["queries"] if name.startswith("unique") else blk["queries"][:1]):
+                sq[q] += 1
+        for q, x in xq.items():
+            ax.plot([x, x], [5.0, 6.65], color=FAM["F5"], lw=0.5, alpha=0.5)
+            for sx in xs.values():
+                ax.plot([x, sx], [5.0, 6.66], color=FAM["F5"], lw=0.25, alpha=0.35)
+            ax.text(x, 4.75, f"scene-query\npairs x{sq[q]}\n({len(sc)} bits each)", ha="center", va="center", fontsize=6.2, color="white",
+                    bbox={"boxstyle": "square,pad=0.25", "fc": FAM["F5"], "ec": "none"})
+            alias = len(roles[q]) > 1 or sq[q] > 1
+            ax.add_patch(plt.Circle((x, 1.4), 0.46, fc="#dbeafe", ec="#285a84", lw=2.6 if alias else 1.3, zorder=3))
+            ax.text(x, 1.4, q.split(":", 2)[2].replace(".", "\n"), ha="center", va="center", fontsize=6, zorder=4)
+            ax.text(x, 0.55, "unary x1", ha="center", fontsize=6.2, color="white", bbox={"boxstyle": "square,pad=0.2", "fc": FAM["F2"], "ec": "none"})
+            ax.text(x, -0.15, "listed as " + "+".join(sorted(roles[q])), ha="center", fontsize=6.2)
+            ax.plot([x, x], [1.85, 4.45], color=FAM["F5"], lw=0.6)
+        for j, scope in enumerate(ho):
+            hx = 0.9 + j * 10.8 / max(len(ho) - 1, 1)
+            for q in scope:
+                ax.plot([hx, xq[q]], [3.0, 1.86], color=FAM["F4"], lw=0.8, alpha=0.7)
+            ax.text(hx, 3.0, f"HO + zR-zO\nof {scope[0].split(':', 2)[2]}", ha="center", va="center", fontsize=5.8, color="white",
+                    bbox={"boxstyle": "square,pad=0.25", "fc": FAM["F4"], "ec": "none"})
+        ax.set_title(f"{name}: {len(inst['blocks'])} relational blocks; scene-query instances {sum(sq.values()) * len(sc)}", fontsize=10)
+    fig.suptitle(f"Saved validation root {r['key']} (frozen U-B-full seed-0 weights; structure only). Circles: binary outcomes; squares: factor instances. "
+                 "Thick circle: query listed in several roles or parents", fontsize=10)
+    return _save3(fig, "P9_L3c_factor_graph_unique_vs_keyed.png", "L3c: real-root factor instances, unique (per listed parent / role) vs keyed (per physical scope)",
+                  ["runs/p8/c_training/dataset.pt", "runs/p9/l3/l3b/ckpt/ckpt_U-B-full#s0.pt", "unique_factor.py", "unique_factor_keyed.py", "p9_viz.py"])
+
+
+def l3c_selection():
+    """L3c: prior change per catalogue transformation (unique vs keyed, frozen weights), deployed-selector outcomes, and the
+    validation calibration of the L3d models."""
+    import collections
+
+    import numpy as np
+    u = json.loads(Path("runs/p9/l3c/l3c0/transformations.json").read_text())
+    k = json.loads(Path("runs/p9/l3c/l3c1/transformations_keyed.json").read_text())
+    summ = json.loads(Path("runs/p9/l3d/summary.json").read_text())
+    fig, axs = plt.subplots(1, 4, figsize=(22, 5.2), gridspec_kw={"width_ratios": [1.3, 1.3, 1.3, 1]})
+    for ax, arm in zip(axs[:3], ("B-full", "B-structured", "C-full")):
+        cases = []
+        for rows in (u[arm], k[arm]):
+            for x in rows:
+                if (x["case"], x["expected"]) not in cases:
+                    cases.append((x["case"], x["expected"]))
+        for j, (rows, lab, col) in enumerate(((u[arm], "unique", "#7f7f7f"), (k[arm], "keyed", "#2f6f9f"))):
+            agg = collections.defaultdict(list)
+            for x in rows:
+                agg[(x["case"], x["expected"])].append(x)
+            for i, c in enumerate(cases):
+                if c in agg:
+                    v = max(x["max_abs_prior_change"] for x in agg[c])
+                    sw = sum(x["deployed_choice_changed"] and not x["chose_new_unlabelled_candidate"] for x in agg[c])
+                    ax.bar(i + (j - 0.5) * 0.38, max(v, 1e-6), 0.36, color=col, alpha=0.95 if c[1].startswith("EXP") else 0.5, label=lab if i == 0 else None)
+                    if sw:
+                        ax.text(i + (j - 0.5) * 0.38, max(v, 1e-6) * 1.3, f"{sw} sw", ha="center", fontsize=6)
+        ax.set_yscale("log")
+        ax.set_ylim(5e-7, 2)
+        ax.set_xticks(range(len(cases)), [c[0].replace("alias: ", "").replace("_", " ")[:24] + ("" if c[1].startswith("EXP") else " *") for c in cases],
+                      rotation=60, fontsize=6.3, ha="right")
+        ax.set_title(f"{arm}: max |prior change| (1e-6 = exactly 0; * = allowed / decomposition)", fontsize=8.5)
+        ax.legend(fontsize=7)
+    ax = axs[3]
+    ax.plot([0, 1], [0, 1], color="#cccccc", lw=1)
+    for name, col in (("full-vision U-B-full (400)", "#2f6f9f"), ("visual-zero U-B-full (400)", "#c26a1b"), ("keyed K-B-full (200)", "#3b8a52"),
+                      ("unique U-B-full (200)", "#7f7f7f")):
+        b = summ["calibration_validation"].get(name)
+        if b:
+            ax.plot([x[0] for x in b], [x[1] for x in b], "o-", color=col, ms=4, label=name)
+    ax.set(xlabel="calibrated root-prior p (validation)", ylabel="observed success rate", title="validation calibration (pooled seeds)")
+    ax.legend(fontsize=6.5)
+    fig.tight_layout()
+    return _save3(fig, "P9_L3c_selection_and_calibration.png", "L3c/L3d: prior and deployed-selection changes per transformation, unique vs keyed; validation calibration",
+                  ["runs/p9/l3c/l3c0/transformations.json", "runs/p9/l3c/l3c1/transformations_keyed.json", "runs/p9/l3d/summary.json", "p9_viz.py"])
+
+
+def l3d_visual():
+    """L3d: full-vision vs visual-zero (same architecture), validation curves, grouped NLLs and the dominant validation roots."""
+    import numpy as np
+    s = json.loads(Path("runs/p9/l3d/summary.json").read_text())
+    rows = s["rows"]
+    fig, axs = plt.subplots(1, 3, figsize=(19, 5.2))
+    ax = axs[0]
+    for n, r in rows.items():
+        if n.startswith(("U-B-full#s", "V0-")) and "u400" in n:
+            ax.plot([u for u, _ in r["curve"]], [v for _, v in r["curve"]], color="#2f6f9f" if n.startswith("U") else "#c26a1b", alpha=0.75,
+                    label=("DINOv2 + geometry" if n.startswith("U") else "visual-zero (same architecture)") if n.endswith("s0#u400") else None)
+    ax.set(xlabel="update", ylabel="validation root NLL (own joint)", title="validation curves, seeds 0-2 (400 updates)")
+    ax.legend(fontsize=8)
+    ax = axs[1]
+    keys = [("val_root_nll", "root NLL"), ("val_nll_per_query", "per query"), ("val_repair_nll", "repair NLL"), ("val_scene_nll", "scene NLL")]
+    for j, (pre, col, lab) in enumerate((("U-B-full#s", "#2f6f9f", "DINOv2"), ("V0-B-full#s", "#c26a1b", "visual-zero"))):
+        vals = [[r[k] for n, r in rows.items() if n.startswith(pre) and "u400" in n] for k, _ in keys]
+        ax.bar(np.arange(len(keys)) + (j - 0.5) * 0.38, [np.mean(v) for v in vals], 0.36, color=col, alpha=0.85, label=lab)
+        for i, v in enumerate(vals):
+            ax.scatter([i + (j - 0.5) * 0.38] * len(v), v, s=10, color="black", zorder=3)
+    ax.set_xticks(range(len(keys)), [b for _, b in keys])
+    ax.set_title("validation (12 roots), seed dots", fontsize=10)
+    ax.legend(fontsize=8)
+    ax = axs[2]
+    c = s["contrasts_validation"]["visual: DINOv2 - zero (400 upd)"]
+    ax.errorbar([0], [c["mean"]], yerr=[[c["mean"] - c["ci95"][0]], [c["ci95"][1] - c["mean"]]], fmt="o", color="#2f6f9f", capsize=5, label="root-cluster 95% CI")
+    ax.plot([0, 0], c["leave_one_root_out"], color="#c26a1b", lw=6, alpha=0.5, label="leave-one-root-out range")
+    for i, (kk, v) in enumerate(c["largest_root_differences"].items()):
+        ax.scatter([0.25 + 0.1 * i], [v], s=20, color="#7f7f7f")
+        ax.text(0.27 + 0.1 * i, v, kk.split("_", 1)[-1], fontsize=6.5)
+    ax.axhline(0, color="#999999", lw=1)
+    ax.set_xlim(-0.4, 0.8)
+    ax.set_xticks([])
+    ax.set(ylabel="per-root validation NLL difference (DINOv2 - zero)",
+           title=f"contrast; top-3 share DINOv2 {c['top3_share']['a']:.0%}, zero {c['top3_share']['b']:.0%}")
+    ax.legend(fontsize=7)
+    fig.tight_layout()
+    return _save3(fig, "P9_L3d_visual_control.png", "L3d: full-vision vs visual-zero B-full (same architecture), validation curves, grouped NLL, dominant roots",
+                  ["runs/p9/l3d/summary.json", "runs/p9/l3d/L3D_plan.json", "p9_viz.py"])
+
 if __name__ == "__main__":
     import sys
     print(globals()[sys.argv[1]]())

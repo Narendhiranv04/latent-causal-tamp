@@ -21,3 +21,13 @@ Regenerate: `python p9_viz.py <factor_instances | l1_math | l2_nll | l2_gradient
 | `P9_L3b_health.png` | L3b | Per-factor gradients (PoE vs unique, seed 0), trained-model invariance, matched 400-update validation curves |
 
 Each L3 figure also has `<file>.manifest.json` with SHA-256 of its input data and code. Regenerate with `python p9_l3.py job <name> "figures_l3a()"` / `"figures_l3b()"`.
+
+## P9-L3c / L3d (factor semantics, visual control, freeze; saved data only)
+
+| file | stage | what it shows |
+|---|---|---|
+| `P9_L3c_factor_graph_unique_vs_keyed.png` | L3c | Real root `p8_2026102510`: unique model (scene-query relations per listed parent / role, 36 instances) vs keyed model (one per physical scope, 20) |
+| `P9_L3c_selection_and_calibration.png` | L3c / L3d | Max prior change per catalogue transformation (unique vs keyed, frozen weights; "sw" = deployed-selector switch among existing candidates) and validation calibration |
+| `P9_L3d_visual_control.png` | L3d | Full-vision vs visual-zero B-full (same architecture), validation curves, grouped NLL, dominant roots and leave-one-root-out |
+
+Each has `<file>.manifest.json` (SHA-256 of inputs). Regenerate: `python p9_l3c.py job <name> "figures()" 300 p9_l3d`.

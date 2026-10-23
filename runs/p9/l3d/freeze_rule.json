@@ -1,0 +1,19 @@
+{
+ "version": "P9_L3D_FREEZE_RULE_V1",
+ "written_utc": "2026-10-23T05:46:01Z",
+ "written_before_reading": [
+  "K-B-full#s0..2 results",
+  "V0-B-full#s1..2 results"
+ ],
+ "already_read": [
+  "V0-B-full#s0#u400 (visual control only)"
+ ],
+ "rule": [
+  "FREEZE_BLOCKED if any L3c/L3d engineering gate FAILs (label leak, invalid likelihood, broken invariance, budget breach).",
+  "FREEZE_KEYED iff L3c-1 PASS AND all three matched keyed runs complete AND keyed is not materially degraded on VALIDATION: (a) seed-averaged per-root validation root-NLL contrast keyed - unique has root-cluster 95% CI lower bound <= 0 (i.e. not significantly worse) AND (b) mean calibrated validation repair accuracy drop <= 0.03 AND (c) mean validation scene NLL increase <= 0.05. Rationale: the alias invariance is substantive (listing-dependent relations moved beliefs by up to 0.30 in C-full), not cosmetic, so a verified, non-degraded keyed model is the semantically correct freeze.",
+  "otherwise FREEZE_UNIQUE (ABC9U_UNIQUE_V1), documenting the remaining role sensitivities.",
+  "The disclosed P8c test never enters the rule. Checkpoint choice within the frozen family: lowest validation root NLL among its 3 seeds at the family's longest matched schedule (unique: 400 updates; keyed: 200 updates).",
+  "Visual features: DINOv2 stays ENABLED in the frozen model unless visual-zero is better on validation root NLL with a root-cluster CI excluding 0 AND sign-stable under leave-one-root-out (extraordinary evidence); the result is reported either way."
+ ],
+ "hash": "sha256:efba5b4ee713840fb5c582f317bd570d355d079ee644594556439eeb926d5c3c"
+}

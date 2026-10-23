@@ -1,0 +1,42 @@
+{
+ "checks": {
+  "canonical_query_identity_all_roots": true,
+  "conflicting_id_fails_closed": true,
+  "datasets_and_checkpoints_verified": true,
+  "deployed_selector_matches_p8_funnel": true,
+  "ontology_written": true,
+  "p9_l3_gates_pass": true,
+  "plan_frozen_before_audit": true,
+  "prior_label_isolation": true,
+  "scene_prior_never_moves": true,
+  "sources_unchanged_since_plan": true,
+  "unique_invariances_exact_incl_selection": true,
+  "zero_physical_module_calls": true
+ },
+ "cpu_s_aggregate": 35.6,
+ "criterion_note": "first gate run counted ANY changed choice (FAIL); the invariant is: no switch among PRE-EXISTING candidates",
+ "invariance_max": {
+  "B-full|disconnected_candidate": 3.6637359812630166e-15,
+  "B-full|exact_duplicate": 0.0,
+  "B-full|permutation": 6.8833827526759706e-15,
+  "B-full|renamed_ids": 3.552713678800501e-15,
+  "B-structured|alias_as_new_candidate": 0.0,
+  "B-structured|disconnected_candidate": 3.552713678800501e-15,
+  "B-structured|exact_duplicate": 0.0,
+  "B-structured|permutation": 1.7763568394002505e-15,
+  "B-structured|renamed_ids": 2.55351295663786e-15,
+  "C-full|disconnected_candidate": 1.3322676295501878e-14,
+  "C-full|exact_duplicate": 0.0,
+  "C-full|permutation": 2.55351295663786e-15,
+  "C-full|renamed_ids": 2.220446049250313e-15
+ },
+ "plan_hash": "sha256:6e95ec1862508618b0e7a1e7a4d7dc1b0a3f11ac3583d242aad735818cbb8d42",
+ "selection_changes_to_new_option_in_invariant_cases": {
+  "B-full|disconnected_candidate|g4c_r19": "chose the newly added unlabelled candidate",
+  "B-full|disconnected_candidate|p8_2026102534": "chose the newly added unlabelled candidate",
+  "B-structured|alias_as_new_candidate|g4c_r19": "chose the newly added unlabelled candidate",
+  "B-structured|disconnected_candidate|p8_2026102534": "chose the newly added unlabelled candidate"
+ },
+ "stage": "P9-L3c-0",
+ "verdict": "PASS"
+}

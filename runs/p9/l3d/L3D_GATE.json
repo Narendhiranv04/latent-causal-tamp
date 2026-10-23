@@ -1,0 +1,80 @@
+{
+ "aggregate_cpu_s": 2325.2,
+ "aggregate_wall_s": 2332.5,
+ "checks": {
+  "aggregate_budget": true,
+  "checkpoint_replay_reproduces_val_nll": true,
+  "freeze_rule_written_before_keyed_results": true,
+  "historical_suite_and_replays": true,
+  "l3c0_pass": true,
+  "no_nonfinite": true,
+  "per_job_caps": true,
+  "plan_frozen_before_training": true,
+  "plan_hash_in_every_run": true,
+  "reference_checkpoints_verified": true,
+  "same_architecture_and_parameters": true,
+  "trained_models_invariant": true,
+  "visual_control_complete_3_seeds": true,
+  "zero_physical_calls_learned_paths": true
+ },
+ "regression": {
+  "cpu_s": 619.49,
+  "planner_fixture_calls": {
+   "test_arm2d.py": {
+    "planner.plan": 75,
+    "skill.plan_skill": 3
+   },
+   "test_g4a.py": {
+    "planner.plan": 198,
+    "skill.plan_skill": 22
+   },
+   "test_g4d.py": {
+    "planner.plan": 24,
+    "skill.plan_skill": 4
+   },
+   "test_g4d_corrections.py": {
+    "planner.plan": 40,
+    "skill.plan_skill": 4
+   },
+   "test_interventions.py": {
+    "planner.plan": 37,
+    "skill.plan_skill": 1
+   },
+   "test_protocol.py": {
+    "planner.plan": 104,
+    "skill.plan_skill": 14
+   },
+   "test_verify.py": {
+    "planner.plan": 143,
+    "skill.plan_skill": 12
+   }
+  },
+  "replays": {
+   "g1_hardening": true,
+   "g1_robot": true,
+   "g2_interventions": true,
+   "g3_5_initial_scene": true,
+   "g3_repairs": true,
+   "g4a_evidence_audit": true
+  },
+  "tests": {
+   "failed": 0,
+   "passed": 392,
+   "skipped": 0
+  }
+ },
+ "scientific_verdict": {
+  "keyed_vs_unique": "INCONCLUSIVE (no significant difference)",
+  "visual": "DINOv2 better on validation"
+ },
+ "stage": "P9-L3d",
+ "trained_max_invariance_change": {
+  "K-B-full#s0": 3.552713678800501e-15,
+  "K-B-full#s1": 4.551914400963142e-15,
+  "K-B-full#s2": 3.552713678800501e-15,
+  "V0-B-full#s0#u400": 1.4210854715202004e-14,
+  "V0-B-full#s1#u400": 6.661338147750939e-15,
+  "V0-B-full#s2#u400": 7.105427357601002e-15
+ },
+ "verdict": "PASS"
+}

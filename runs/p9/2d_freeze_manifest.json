@@ -1,0 +1,112 @@
+{
+ "checkpoint": {
+  "name": "K-B-full#s1",
+  "other_seeds": {
+   "K-B-full#s0": 0.34777909308080407,
+   "K-B-full#s1": 0.2552811945133491,
+   "K-B-full#s2": 0.26104373834143624
+  },
+  "path": "runs/p9/l3d/ckpt/ckpt_K-B-full#s1.pt",
+  "seed": 1,
+  "sha256": "d0cf4b6aad6115ec55792e79ffce56f4e0b36e7cd4ce6ec2d52f7fcebf79c041",
+  "tau": 0.25,
+  "threshold": 0.7,
+  "val_root_nll": 0.2552811945133491
+ },
+ "data": {
+  "dataset_sha256": "e4a56ce37a5ece02deed82d073b8a3e43a35c654af5bed1e84068527d936a568",
+  "splits": "178 train / 12 validation (P8c); 24 disclosed test (diagnostic only)",
+  "test_sha256": "7f58ba0f46f432f0a9c4cdb8513990d525db71823caf5b387ff5bfbf48882da7"
+ },
+ "decision": "FREEZE_KEYED",
+ "gates": {
+  "L3C_0": "PASS",
+  "L3C_1": "PASS",
+  "L3D": "PASS"
+ },
+ "hash": "sha256:72b9a06ec9f67a78276ede62db1daea28554508259bb4e3629584229839987a1",
+ "inference_limits": {
+  "active_slots_per_layout": 9,
+  "exact_elimination_MAX_SCOPE": 16,
+  "fail_closed": [
+   "CombinatoricsError",
+   "IdentityError"
+  ]
+ },
+ "keyed_eligibility": {
+  "repair_accuracy_drop_le_0.03": true,
+  "root_nll_not_significantly_worse": true,
+  "scene_nll_increase_le_0.05": true
+ },
+ "model": {
+  "allowed_sensitivity": "none for re-listing modelled queries; changes only when new physical outcomes or relations are modelled",
+  "factor_ontology": "see responses-phases/0034 (unique) / 0035 (keyed); five families F1-F5, F1 and J outside P(z|r); one variable per physical query",
+  "family": "ABC7_V1 B-full factor modules (abc8.build('B-full'), vision=True)",
+  "parameters": 698154,
+  "root_model": "ABC9K_KEYED_V1 (unique_factor_keyed.py)"
+ },
+ "not_established": [
+  "no proof-grounded kappa=+1",
+  "no decided same-endpoint order contrast in fresh data",
+  "no omission-only labels",
+  "structured z0-zS pair unidentifiable",
+  "12 validation roots, top-3 dominated",
+  "no physical execution of any P9 model",
+  "G+M remains the best executed method (P8d 9/12)"
+ ],
+ "objective": {
+  "T": 1.0,
+  "optimizer": "AdamW lr 1e-3 wd 1e-4, clip 10, RootSampler(train, 12, seed)",
+  "selection": "best validation own root NLL every 20 updates",
+  "terms": "mean_roots(-log P(D_c)) + 1.0 static BCE (endpoint-deduplicated) + 1.0 log-Huber witnessed J",
+  "updates": 200
+ },
+ "rule_hash": "sha256:efba5b4ee713840fb5c582f317bd570d355d079ee644594556439eeb926d5c3c",
+ "selector": "static-certificate precedence; root-prior admission sigmoid(logit p / tau) >= threshold; then (moves, J_pred, C_d, E_static + T softplus(-logit p), id); empty admitted set = ABSTAIN",
+ "sources": {
+  "abc7_models.py": "c61a25eed1ecd500ba68386df7c75569ec62a0651d7ad59c0b39076cc8caf581",
+  "abc7_train.py": "c17a22f4e6c8124a961135dad16f143302008b24b79d0854d5736e75a6390c5d",
+  "abc8.py": "242b6f4824418c8f13270bdb0ee230012fdf4c67b2a6c8fb08acef65c80035b9",
+  "abc_models.py": "7d8ca5de954d8fceeb8a9b1490e4e5fcf1c1182ee7a4611d7f0e2a2e9e672ea0",
+  "joint_likelihood.py": "df0d9c2ba840f81f9439d72947d4bcc3f4d9a0de5f15171fedd8b03cff0f3697",
+  "p7_eval.py": "a785897efd4b2f3dd500a4c6c6bb458c1bff2c4d120829e85b3f325f17dff618",
+  "p9_l3.py": "268ffe4d84680d779e0fbfdc332f338150660b360ed1567c1ed5c40c5dc02cfc",
+  "p9_l3c.py": "39e0aac8ae0c31b70fd60d4eb57b6b80bc21443e8e88743035e625e3b6a86e46",
+  "p9_l3d.py": "f417a64fc8dd5f33822dd59eaf87bca6a6d734187839fe615f3c0f18733dd808",
+  "unique_factor.py": "82902889b4803eabd39c552b4bb03075d765aa5490376c841d39137841656751",
+  "unique_factor_keyed.py": "ee7df3bf3f9ace66a3c7249f6ed900f227c6ac0a9c7441b2387b483875caae95"
+ },
+ "teacher_status": {
+  "BUDGET_INFEASIBLE": "0 under OPNEG-v1 (operational)",
+  "CERTIFIED": 0,
+  "NOT_RUN": "missing",
+  "UNKNOWN": "missing",
+  "VERIFIED": 1
+ },
+ "visual_features": {
+  "mode": "DINOv2-small ed25f3a3, mask-pooled, frozen; ENABLED",
+  "rule": "kept enabled unless visual-zero is better with CI excluding 0 and LOO-stable",
+  "visual_zero_contrast_validation": {
+   "ci95": [
+    -0.7370614889111656,
+    -0.05988810604320976
+   ],
+   "largest_root_differences": {
+    "p8_2026102504": -0.5455,
+    "p8_2026102516": -1.5471,
+    "p8_2026102534": -1.712
+   },
+   "leave_one_root_out": [
+    -0.399100381080486,
+    -0.240150511073284
+   ],
+   "mean": -0.3628066649360387,
+   "roots": 12,
+   "sign_stable_under_loo": true,
+   "top3_share": {
+    "a": 0.7068654708586233,
+    "b": 0.8281674577774473
+   }
+  }
+ }
+}

@@ -1,0 +1,86 @@
+{
+ "checkpoints": {
+  "B-full": {
+   "file": "ckpt_U-B-full#s0.pt",
+   "sha256": "d6a444fbe77003ccf0fd3afc52909392b21e72368057b4f4a78d52348191691b"
+  },
+  "B-structured": {
+   "file": "ckpt_U-B-structured#s0.pt",
+   "sha256": "86c093268d1307c00c70073ab6cbdc13f8ca64598b1bc02507a716bf95c57512"
+  },
+  "C-full": {
+   "file": "ckpt_U-C-full#s0.pt",
+   "sha256": "19639a46a03191ebd1e075acf7adb3e3c1b268bdd4ca200f6893be59f5724f3b"
+  }
+ },
+ "datasets": {
+  "dev": "e4a56ce37a5ece02deed82d073b8a3e43a35c654af5bed1e84068527d936a568",
+  "test": "7f58ba0f46f432f0a9c4cdb8513990d525db71823caf5b387ff5bfbf48882da7"
+ },
+ "hash": "sha256:6e95ec1862508618b0e7a1e7a4d7dc1b0a3f11ac3583d242aad735818cbb8d42",
+ "head": "6aa4ba55a267e6dfaded8ba3a8e91369b6795443",
+ "l3b_plan_sha256": "893ad58947967dae00a13418503552509ce467e8c053efabb9133f09a1609691",
+ "no_new_training": true,
+ "ontology_roots": [
+  "p8_2026102504",
+  "p8_2026102510",
+  "p8_2026102516",
+  "p8_2026102522",
+  "p8_2026102528",
+  "p8_2026102534",
+  "p8_2026102504_ref"
+ ],
+ "origin_main": "6aa4ba55a267e6dfaded8ba3a8e91369b6795443",
+ "p9_l3_gates": {
+  "L3A_0_GATE": "PASS",
+  "L3A_1_GATE": "PASS",
+  "L3B_GATE": "PASS"
+ },
+ "selector": "root-prior admission p_cal >= validation threshold, then (moves, J_pred, C_d, energy, id); tau / threshold from each checkpoint's L3b validation record",
+ "sources": {
+  "abc7_models.py": "c61a25eed1ecd500ba68386df7c75569ec62a0651d7ad59c0b39076cc8caf581",
+  "abc7_train.py": "c17a22f4e6c8124a961135dad16f143302008b24b79d0854d5736e75a6390c5d",
+  "abc8.py": "242b6f4824418c8f13270bdb0ee230012fdf4c67b2a6c8fb08acef65c80035b9",
+  "abc_models.py": "7d8ca5de954d8fceeb8a9b1490e4e5fcf1c1182ee7a4611d7f0e2a2e9e672ea0",
+  "joint_likelihood.py": "df0d9c2ba840f81f9439d72947d4bcc3f4d9a0de5f15171fedd8b03cff0f3697",
+  "p7_eval.py": "a785897efd4b2f3dd500a4c6c6bb458c1bff2c4d120829e85b3f325f17dff618",
+  "p8_eval.py": "9f257ca75e909f790196fbc691f38a2766b412e8b414d1d9a9b71f37a7621d00",
+  "p8_select.py": "f7118d7924825e6af20925b113c36f22c534e7666b8202573fba3f9a1a5831df",
+  "p9_l3.py": "268ffe4d84680d779e0fbfdc332f338150660b360ed1567c1ed5c40c5dc02cfc",
+  "p9_run.py": "613f0ec6692ab4dd82904d68617435ad50ba4e4f61b2b554b925638c018d601b",
+  "p9_viz.py": "a70f3ce0bc9a036954ff5417d92c606230f669f0394a577bbd18acfad42e4807",
+  "teacher_opneg.toml": "358fdc7ad9f4cf99611cbbe08ba2e5f1950cd8cd4b8edf2bc38ab3507f554e5b",
+  "tests/test_p9_joint.py": "3f62b0094114f3dba1122ceff65ca5b6dc73907de033c0213b33e503e2d45f4d",
+  "tests/test_p9_l3_unique.py": "ca279caf297b4957800bca00324ca203f65aa16afb0159e28e1416bb02c97669",
+  "unique_factor.py": "82902889b4803eabd39c552b4bb03075d765aa5490376c841d39137841656751"
+ },
+ "teacher_calls": 0,
+ "tracked_changes": [
+  " D latent_causal_tamp_implementation_guide_v1_8.pdf",
+  " D latent_causal_tamp_specification_v1_6.pdf"
+ ],
+ "transformation_roots": [
+  "p8_2026102504",
+  "p8_2026102510",
+  "p8_2026102516",
+  "p8_2026102522",
+  "p8_2026102528",
+  "p8_2026102534",
+  "g4c_r19",
+  "p6_2026102303",
+  "p6_2026102307",
+  "p6_2026102308",
+  "p6_2026102312",
+  "p6_2026102315"
+ ],
+ "transformations": [
+  "permutation",
+  "renamed_ids",
+  "exact_duplicate",
+  "disconnected_candidate",
+  "alias_as_new_candidate (+ per-family decomposition)",
+  "related_candidate",
+  "conflicting_id (must fail closed)"
+ ],
+ "version": "P9_L3C0_PLAN_V1"
+}
