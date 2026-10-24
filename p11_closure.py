@@ -172,3 +172,162 @@ def audit() -> None:
     A["inference_cost_unit"] = "process CPU seconds per root (time.process_time), single thread"
     (OUT / "audit").mkdir(parents=True, exist_ok=True)
     cf.write_json(OUT / "audit" / "P11_0_AUDIT.json", A)
+
+
+# ------------------------------------------------------------------ P11-1: H9 with collision-free (root, palette) keys (evaluation only)
+def h9_variants():
+    """[(compound key, base root, palette, prepared root)] for every H9 record; asserts 2 distinct palettes per base root."""
+    import p10c_train_eval as pc
+    rs = pc.prepared("h9")
+    out = [(f"{r['key']}#{r['audit']['palette']}", r["key"], r["audit"]["palette"], r) for r in rs]
+    keys = [k for k, *_ in out]
+    if len(set(keys)) != len(keys):
+        raise ValueError("H9 compound keys collide")
+    per = collections.Counter(b for _, b, _, _ in out)
+    if set(per.values()) != {2}:
+        raise ValueError(f"expected exactly two palettes per root, got {collections.Counter(per.values())}")
+    return out
+
+
+def h9_integrity() -> dict:
+    """Non-visual inputs bit-identical to the original record; visual features differ between original, P1 and P2."""
+    import torch
+    orig = {r["audit"]["root"]: r for n in ("trainval", "blind") for r in torch.load(f"runs/p10c/dataset_{n}.pt", weights_only=False)["roots"]}
+    h9 = torch.load("runs/p10c/dataset_h9.pt", weights_only=False)["roots"]
+    bad_geom, same_vis, qid = 0, 0, 0
+    vis = collections.defaultdict(dict)
+    for r in h9:
+        o = orig[r["audit"]["root"]]
+        bad_geom += any(not np.array_equal(np.asarray(r["inputs"][k]), np.asarray(o["inputs"][k])) for k in r["inputs"] if k != "visual")
+        qid += [c["privileged"]["query"] for c in r["candidates"]] != [c["privileged"]["query"] for c in o["candidates"]]
+        same_vis += np.allclose(r["inputs"]["visual"], o["inputs"]["visual"])
+        vis[r["audit"]["root"]][r["audit"]["palette"]] = np.asarray(r["inputs"]["visual"])
+    p12 = sum(np.allclose(v["P1"], v["P2"]) for v in vis.values())
+    return {"records": len(h9), "roots": len(vis), "nonvisual_input_mismatch": int(bad_geom), "query_id_mismatch": int(qid),
+            "visual_identical_to_original": int(same_vis), "P1_identical_to_P2": int(p12),
+            "mask_rule": "p10c_train_eval._recolor colours pixels by the SAME instance mask of the recorded observation (instance > 0 -> object RGB, "
+                         "== 0 -> support RGB); masks, ids and geometry are not modified; no label or certificate is read"}
+
+
+def h9_eval() -> None:
+    import contextlib
+    import p10_eval as pe
+    import p10_protocol as pp
+    import p10c_train_eval as pc
+    import unique_factor_keyed as ufk
+    snap = _rd("runs/p10d/predictions.json")
+    integ = h9_integrity()
+    if integ["nonvisual_input_mismatch"] or integ["query_id_mismatch"] or integ["P1_identical_to_P2"] or integ["visual_identical_to_original"]:
+        raise SystemExit(f"H9 integrity FAILED: {integ}")
+    V = h9_variants()
+    split = {b: ("blind" if b in snap["arms"][next(iter(snap["arms"]))]["roots"]["blind"] else "validation") for _, b, _, _ in V}
+    calls, out = pp.instrument(), {}
+    for n, a in snap["arms"].items():
+        if a["regime"] != "full":
+            continue
+        m, x = pc.load(n)
+        keyed = pc.ARMS[a["arm"]][2]
+        rows = {}
+        for ck, base, pal, r in V:
+            if a["arm"] == "B-V0":
+                import copy
+                r = pc._v0([copy.deepcopy(r)])[0]
+            with ufk.installed() if keyed else contextlib.nullcontext():
+                pm = pe.marginals(m, r, a["arm"] not in ("A", "SF"))
+            sel = pp.top1(m, r, a["tau"], a["threshold"], frozenset(), keyed)["choice"]
+            o = a["roots"][split[base]][base]
+            vetoed_o = o["top1"]
+            dp = [abs(pm[q] - p) for q, p in o["marginals"].items() if q in pm]
+            cross = [(pm[q] >= 0.5) != (p >= 0.5) for q, p in o["marginals"].items() if q in pm]
+            rows[ck] = {"base": base, "palette": pal, "split": split[base], "mean_abs_dp": float(np.mean(dp)), "max_abs_dp": float(np.max(dp)),
+                        "crossing_frac": float(np.mean(cross)), "top1": sel, "top1_original": vetoed_o, "top1_changed": sel != vetoed_o, "marginals": pm}
+        out[n] = {"arm": a["arm"], "seed": a["seed"], "rows": rows}
+    if sum(calls.values()):
+        raise RuntimeError(f"physical calls in H9 evaluation: {dict(calls)}")
+    (OUT / "h9").mkdir(parents=True, exist_ok=True)
+    cf.write_json(OUT / "h9" / "h9_predictions.json", {"integrity": integ, "runs": out, "snapshot": snap["hash"], "physical_calls": dict(calls)})
+
+
+def h9_report() -> None:
+    """Per-root appearance robustness (seed mean per root; palettes separately and averaged); before / after the overwrite fix."""
+    import p10d_execute as px
+    import p10e_report as rr
+    d, snap, P = _rd(OUT / "h9" / "h9_predictions.json"), _rd("runs/p10d/predictions.json"), px.plans()
+    tok = {k: {c["token"]: c["query"] for c in P[k]["items"]} for k in P}
+    res = {"integrity": d["integrity"], "static_veto": "no H9 base root has a vetoed candidate, so TOP1 recomputation without the veto set equals "
+                                                         "the deployed rule", "by_arm": {}}
+    for arm in ("K-B", "K-C", "A", "SF", "B-V0", "B-F2", "B-F3", "B-F4", "B-F5s", "B-F5q", "B-U"):
+        runs = [r for r in d["runs"].values() if r["arm"] == arm]
+        if not runs:
+            continue
+        acc = collections.defaultdict(lambda: collections.defaultdict(list))
+        for r in runs:
+            orig = next(a for a in snap["arms"].values() if a["arm"] == arm and a["seed"] == r["seed"] and a["regime"] == "full")
+            for ck, x in r["rows"].items():
+                b, pal = x["base"], x["palette"]
+                for m in ("mean_abs_dp", "crossing_frac", "top1_changed"):
+                    acc[(m, pal)][b].append(float(x[m]))
+                    acc[(m, "both")][b].append(float(x[m]))
+                fam = P[b]["family"]
+                om = orig["roots"][x["split"]][b]["marginals"]
+                if fam == "H1":
+                    t = tok[b]
+                    k_ = lambda mm: mm[t["edit:A+B"]] - mm[t["edit:A"]] - mm[t["edit:B"]] + mm[t[""]]  # noqa: E731
+                    acc[("kappa_abs_change", "both")][b].append(abs(k_(x["marginals"]) - k_(om)))
+                for a_, b_ in rr.ORDER_PAIRS.get(fam, []):
+                    qa, qb = tok[b].get(a_), tok[b].get(b_)
+                    if qa in om and qb in om:
+                        acc[("order_flip", "both")][b].append(float((x["marginals"][qa] > x["marginals"][qb]) != (om[qa] > om[qb])))
+        out = {}
+        for (m, pal), per in acc.items():
+            v = {b: float(np.mean(s)) for b, s in per.items()}
+            bl = [x for b, x in v.items() if P[b]["split"] == "blind"]
+            out[f"{m}|{pal}"] = {"roots": len(v), "mean": float(np.mean(list(v.values()))), "ci95": boot(list(v.values())),
+                                 "blind_mean": float(np.mean(bl)) if bl else None, "blind_roots": len(bl)}
+        res["by_arm"][arm] = out
+    old = _rd("runs/p10d/BLIND_EVAL.json")["H9_mean_abs_change"]
+    res["before_after"] = {a: {"P10e_reported (blind, P2 only, query-pooled)": old.get(a), "corrected blind both palettes (per-root)": res["by_arm"][a]["mean_abs_dp|both"]["blind_mean"],
+                               "corrected blind P1": res["by_arm"][a]["mean_abs_dp|P1"]["blind_mean"], "corrected blind P2": res["by_arm"][a]["mean_abs_dp|P2"]["blind_mean"]}
+                           for a in res["by_arm"] if a in old}
+    cf.write_json(OUT / "h9" / "H9_RESULTS.json", res)
+
+
+def h9_figure() -> None:
+    import p10_eval as pe  # noqa: F401
+    import p6_viz as pv
+    import geometry as ge
+    from scene import scene_from_dict
+    import data
+    import learn_data as ld
+    import p10c_train_eval as pc
+    import p10d_execute as px
+    from viz import plt
+    dst = Path("visualizations/p11")
+    dst.mkdir(parents=True, exist_ok=True)
+    res, d, P = _rd(OUT / "h9" / "H9_RESULTS.json"), _rd(OUT / "h9" / "h9_predictions.json"), px.plans()
+    cfg = cf.load_config("config.toml")
+    b = next(k for k in P if P[k]["split"] == "blind" and P[k]["family"] == "H1")
+    s = scene_from_dict(P[b]["scene"])
+    q = data.make_query(cfg, b, s, "t0", P[b]["goal_cell"], {}, "SAFE_RETREAT", data.PROTOCOL_V2)
+    a = data.appearance_anchor(q, ld.IMAGE_PX)
+    run = next(r for r in d["runs"].values() if r["arm"] == "K-B" and r["seed"] == 0)
+    f, ax = plt.subplots(1, 4, figsize=(20, 5))
+    ax[0].imshow(a["rgb"])
+    ax[0].set_title(f"{b}\noriginal observation (same geometry in all panels)", fontsize=9)
+    for i, (name, pal) in enumerate(pc.PALETTES.items(), 1):
+        rgb = a["rgb"].copy()
+        rgb[a["instance"] > 0], rgb[a["instance"] == 0] = pal
+        x = run["rows"][f"{b}#{name}"]
+        ax[i].imshow(rgb)
+        ax[i].set_title(f"palette {name}\nK-B s0: mean |dp| {x['mean_abs_dp']:.3f}; TOP1 changed: {x['top1_changed']}", fontsize=9)
+    for x in ax[:3]:
+        x.axis("off")
+    arms = [k for k in ("K-B", "K-C", "A", "SF", "B-V0") if k in res["by_arm"]]
+    for j, pal in enumerate(("P1", "P2")):
+        v = [res["by_arm"][k][f"mean_abs_dp|{pal}"] for k in arms]
+        ax[3].errorbar([i + (j - 0.5) * 0.25 for i in range(len(arms))], [x["mean"] for x in v],
+                       yerr=[[x["mean"] - (x["ci95"][0] or x["mean"]) for x in v], [(x["ci95"][1] or x["mean"]) - x["mean"] for x in v]],
+                       fmt="o", capsize=3, label=f"palette {pal}", color=["#2a6fdb", "#e07b00"][j])
+    ax[3].set(xticks=range(len(arms)), xticklabels=arms, ylabel="per-root mean |p_variant - p_original|", title="H9 (100 roots, both palettes; root CI)")
+    ax[3].legend(fontsize=8)
+    pv.png(f, dst / "P11_H9_two_palettes.png", "P11-1: same geometry, two palettes (instance masks unchanged); per-root prediction shift per arm and palette")
