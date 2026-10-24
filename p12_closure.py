@@ -322,3 +322,431 @@ def factor_tests() -> None:
            "four_bit_scene_nll": nll, "per_root_kappa": {k: v["kappa"] for k, v in four.items()}}
     (OUT / "p12_4").mkdir(parents=True, exist_ok=True)
     cf.write_json(OUT / "p12_4" / "FACTOR_TESTS.json", res)
+
+
+# ------------------------------------------------------------------ P12-6: realistic photometric controls (POST-HOC on P10 roots; masks / geometry fixed)
+PHOTO = {"G1_brightness_contrast": {"gain": 1.12, "contrast": 0.88, "wb": (1.0, 1.0, 1.0), "desat": 0.0},
+         "G2_whitebalance_desat": {"gain": 1.0, "contrast": 1.0, "wb": (1.06, 1.0, 0.92), "desat": 0.30},
+         "G3_mild_combined": {"gain": 0.92, "contrast": 1.08, "wb": (0.96, 1.0, 1.05), "desat": 0.15}}
+
+
+def photometric(rgb, p):
+    """Fixed per-variant recipe on the WHOLE image (texture-preserving): gain, contrast about mid-grey, white balance, desaturation."""
+    x = rgb.astype(np.float32) / 255.0
+    x = (x * p["gain"] - 0.5) * p["contrast"] + 0.5
+    x = x * np.asarray(p["wb"], np.float32)
+    g = x.mean(axis=2, keepdims=True)
+    x = x * (1 - p["desat"]) + g * p["desat"]
+    return (np.clip(x, 0, 1) * 255).round().astype(np.uint8)
+
+
+def photometric_records() -> None:
+    import copy
+    import torch
+    import data
+    import learn_data as ld
+    import p10d_execute as px
+    from scene import scene_from_dict
+    cfg, dino, P, out = cf.load_config("config.toml"), ld.dino(), px.plans(), []
+    for n in ("trainval", "blind"):
+        for rec in torch.load(f"runs/p10c/dataset_{n}.pt", weights_only=False)["roots"]:
+            if rec["audit"]["split"] not in ("validation", "blind"):
+                continue
+            k = rec["audit"]["root"]
+            q = data.make_query(cfg, k, scene_from_dict(P[k]["scene"]), "t0", P[k]["goal_cell"], {}, "SAFE_RETREAT", data.PROTOCOL_V2)
+            a = data.appearance_anchor(q, ld.IMAGE_PX)
+            for name, pr in PHOTO.items():
+                v = copy.deepcopy(rec)
+                for c in v["candidates"]:
+                    c["privileged"] |= {"y": None, "source": None, "z": [None] * len(c["privileged"]["z"]), "cost": None}
+                for e in v["edits"]:
+                    e["privileged"] |= {"y": None, "source": None}
+                v["inputs"]["visual"] = ld.visual_features(dino[0], dino[1], dino[2], {**a, "rgb": photometric(a["rgb"], pr)})
+                v["audit"] |= {"photometric": name, "variant_of": k, "split": rec["audit"]["split"]}
+                out.append(v)
+    (OUT / "p12_6").mkdir(parents=True, exist_ok=True)
+    torch.save({"version": "P12_PHOTOMETRIC_V1", "recipes": PHOTO, "roots": out}, OUT / "p12_6" / "photometric_records.pt")
+
+
+def photometric_eval() -> None:
+    """Same metrics as P11 H9 (per-root |dp|, crossings, TOP1 change, kappa shift) for every full-regime frozen checkpoint; 0 physical calls."""
+    import contextlib
+    import copy
+    import torch
+    import abc7_train as t7
+    import p10_eval as pe
+    import p10_protocol as pp
+    import p10c_train_eval as pc
+    import p10d_execute as px
+    import unique_factor_keyed as ufk
+    snap, P = _rd("runs/p10d/predictions.json"), px.plans()
+    ds = torch.load(OUT / "p12_6" / "photometric_records.pt", weights_only=False)
+    rs = t7.prepare(ds)
+    for r, rec in zip(rs, ds["roots"]):
+        r["ids"], r["audit"] = rec["audit"]["ids"], rec["audit"]
+    tok = {k: {c["token"]: c["query"] for c in P[k]["items"]} for k in P}
+    calls, res = pp.instrument(), collections.defaultdict(lambda: collections.defaultdict(lambda: collections.defaultdict(list)))
+    for n, a in snap["arms"].items():
+        if a["regime"] != "full":
+            continue
+        m, keyed = pc.load(n)[0], pc.ARMS[a["arm"]][2]
+        for r in rs:
+            rr = pc._v0([copy.deepcopy(r)])[0] if a["arm"] == "B-V0" else r
+            with ufk.installed() if keyed else contextlib.nullcontext():
+                pm = pe.marginals(m, rr, a["arm"] not in ("A", "SF"))
+            ch = pp.top1(m, rr, a["tau"], a["threshold"], frozenset(), keyed)["choice"]
+            b, v, o = r["audit"]["variant_of"], r["audit"]["photometric"], a["roots"][r["audit"]["split"]][r["audit"]["variant_of"]]
+            om = o["marginals"]
+            d = [abs(pm[q] - p) for q, p in om.items() if q in pm]
+            cell = res[a["arm"]][v]
+            cell["dp"].append((b, float(np.mean(d))))
+            cell["cross"].append((b, float(np.mean([(pm[q] >= 0.5) != (p >= 0.5) for q, p in om.items() if q in pm]))))
+            cell["top1"].append((b, float(ch != o["top1"])))
+            t = tok[b]
+            if P[b]["family"] == "H1":
+                kk = lambda mm: mm[t["edit:A+B"]] - mm[t["edit:A"]] - mm[t["edit:B"]] + mm[t[""]]  # noqa: E731
+                cell["kappa"].append((b, abs(kk(pm) - kk(om))))
+    if sum(calls.values()):
+        raise RuntimeError(f"physical calls: {dict(calls)}")
+    out = {}
+    for arm, vv in res.items():
+        for v, cell in vv.items():
+            for metric, lst in cell.items():
+                per = collections.defaultdict(list)
+                for b, x in lst:
+                    per[b].append(x)
+                vals = [float(np.mean(x)) for x in per.values()]
+                out[f"{arm}|{v}|{metric}"] = {"roots": len(vals), "mean": float(np.mean(vals)), "ci95": _boot(vals)}
+    severe = _rd("runs/p11/h9/H9_RESULTS.json")["by_arm"]
+    out["_severe_P11_H9"] = {a: {m: severe[a][f"{m}|both"]["mean"] for m in ("mean_abs_dp", "top1_changed", "kappa_abs_change")} for a in severe}
+    out["_note"] = "robustness CONDITIONAL on the recorded instance masks (segmentation / detection not tested); POST-HOC on disclosed P10 roots"
+    cf.write_json(OUT / "p12_6" / "PHOTOMETRIC.json", out)
+
+
+# ------------------------------------------------------------------ P12-6: D semantics (feasibility, infeasible-only blockers, no-clearing-set, matched A/B/C/SF)
+def _cohort(cohort):
+    import p10b_dataset as pd
+    import p10c_train_eval as pc
+    P, rec, dl = {}, {}, {}
+    if cohort == "p10b":
+        snap = _rd("runs/p10d/predictions.json")
+        for b in pc.batches():
+            plan = _rd(b / "plan.json")
+            r = pd.records(b, ("train", "validation", "blind"))
+            P |= plan["roots"]
+            rec |= r
+            dl |= pd.d_labels(plan, r)
+        roots = [k for k in P if P[k]["split"] == "blind"]
+        get = lambda part, n, k: snap[part][n]["roots"]["blind"].get(k)  # noqa: E731
+        heur = snap["baselines"]["heuristic"]["blind"]
+    else:
+        snap = _rd(HOLD / "PREDICTIONS_FROZEN.json")
+        for b in sorted(HOLD.glob("batch*/plan.json")):
+            plan = _rd(b)
+            r = sealed_records(b.parent.name)
+            P |= plan["roots"]
+            rec |= r
+            dl |= pd.d_labels(plan, r)
+        roots = list(P)
+        get = lambda part, n, k: snap[part][n]["roots"].get(k)  # noqa: E731
+        heur = snap["baselines"]["heuristic"]
+    return snap, P, rec, dl, roots, get, heur
+
+
+def d_semantics(cohort="p10b") -> None:
+    import p11_closure as q
+    snap, P, rec, dl, roots, get, heur = _cohort(cohort)
+    res = {"cohort": cohort, "roots": len(roots), "categories": dict(collections.Counter(dl[k]["type"] for k in roots))}
+    y0 = {k: dl[k]["y0"] for k in roots if dl[k]["y0"] is not None}
+    arms = collections.defaultdict(lambda: collections.defaultdict(dict))
+    for n, a in snap["arms"].items():
+        if a["arm"] in ("A", "SF", "K-B", "K-C") and a.get("regime", "full") == "full":
+            for k in y0:
+                x = get("arms", n, k) or {}
+                p = (x.get("marginals") or {}).get(f"seq:{k}:empty")
+                if p is not None:
+                    arms[a["arm"]][k][a["seed"]] = p
+    for n, x in snap["d"].items():
+        arm = x["arm"]
+        if x["lambda_B"] != snap["baselines"][f"{arm}_lambda_B"]:
+            continue
+        for k in y0:
+            v = get("d", n, k)
+            if v is not None:
+                arms[arm][k][x["seed"]] = v["p_feasible"]
+    common = sorted(set.intersection(*[set(v) for v in arms.values()])) if arms else []
+    res["feasibility"] = {"cohort_N": len(common), "prevalence_feasible": float(np.mean([y0[k] for k in common])) if common else None,
+                          "arms": {a: q._feas_metrics([(float(np.mean(list(d[k].values()))), y0[k]) for k in common]) for a, d in arms.items()}}
+    inf = {k: dl[k] for k in roots if dl[k]["mask"] is not None and dl[k]["y0"] == 0 and dl[k]["n"] > 0}
+    preds = collections.defaultdict(lambda: collections.defaultdict(list))
+    for n, x in snap["d"].items():
+        arm = x["arm"]
+        if x["lambda_B"] != snap["baselines"][f"{arm}_lambda_B"]:
+            continue
+        thr = snap["baselines"][f"{arm}_threshold"]
+        for k in inf:
+            v = get("d", n, k)
+            preds[arm][k].append([int(v["p_feasible"] < 0.5 and m >= thr) for m in v["marg"]])
+    for k in inf:
+        preds["geometry_heuristic"][k].append(heur[k])
+    def score(arm, ks):
+        return {k: {m: float(np.mean([q._set_metrics(inf[k]["mask"], pm)[m] for pm in preds[arm][k]]))
+                    for m in ("precision", "recall", "f1", "exact", "jaccard", "card_err", "tp", "fp", "fn")} | {"fp_rate_irrelevant": None} for k in ks}
+    strata = {"infeasible_all": list(inf), "proof_grounded": [k for k in inf if inf[k]["provenance"] == "proof_grounded"],
+              "operational": [k for k in inf if inf[k]["provenance"] != "proof_grounded"],
+              "no_clearing_set_in_pool": [k for k in inf if inf[k]["type"] == "NO_CLEARING_SET_WITHIN_POOL"]}
+    strata |= {f"blockers={c}": [k for k in inf if inf[k]["type"] == "MINIMAL_SETS" and sum(inf[k]["mask"]) == c] for c in range(1, 5)}
+    res["blockers_infeasible_only"] = {s: {a: q._agg(score(a, ks)) for a in ("D", "D-pairless", "geometry_heuristic")} for s, ks in strata.items() if ks}
+    f1 = {a: {k: v["f1"] for k, v in score(a, list(inf)).items()} for a in ("D", "D-pairless", "geometry_heuristic")}
+    res["paired_infeasible_only"] = {"D-D-pairless": q.paired(f1, "D", "D-pairless"), "D-heuristic": q.paired(f1, "D", "geometry_heuristic")}
+    res["union_vs_necessary"] = {"alternative_set_roots": sum(len(inf[k]["sets"]) > 1 for k in inf),
+                                 "union_members_not_necessary": int(sum(sum(a and not b for a, b in zip(inf[k]["mask"], inf[k]["necessary"])) for k in inf))}
+    sup, nopred = [], collections.Counter()
+    for k in inf:
+        r = P[k]
+        it = {x["token"]: x for x in r["items"]}
+        e = [it.get(t) for t in ("edit:A", "edit:B", "edit:A+B")]
+        if dl[k]["n"] == 2 and all(e) and all(x.get("d_subset") for x in e):
+            sup.append(k)
+    der = collections.defaultdict(lambda: collections.defaultdict(list))
+    for n, a in snap["arms"].items():
+        if a["arm"] not in ("A", "SF", "K-B", "K-C") or a.get("regime", "full") != "full":
+            continue
+        for k in sup:
+            m, roles, it = (get("arms", n, k) or {}).get("marginals", {}), dl[k]["roles"], {x["token"]: x for x in P[k]["items"]}
+            st = {frozenset(): m[f"seq:{k}:empty"]} | {frozenset(roles.index(x) for x in it[t]["d_subset"]): m[it[t]["query"]] for t in ("edit:A", "edit:B", "edit:A+B")}
+            if not any(p >= 0.5 for p in st.values()):
+                nopred[a["arm"]] += 1
+                continue
+            der[a["arm"]][k].append(q._derived_mask(st, 2))
+    res["matched"] = {"matched_infeasible_N": len(sup), "unsupported_N": len(inf) - len(sup), "NO_PREDICTED_CLEARING_SET_choices": dict(nopred), "arms": {}}
+    for arm in ("D", "D-pairless", "geometry_heuristic"):
+        res["matched"]["arms"][arm] = q._agg({k: v for k, v in score(arm, sup).items()}) if sup else None
+    for arm, d in der.items():
+        res["matched"]["arms"][arm] = q._agg({k: {m: float(np.mean([q._set_metrics(inf[k]["mask"], pm)[m] for pm in d[k]]))
+                                                  for m in ("precision", "recall", "f1", "exact", "jaccard", "card_err", "tp", "fp", "fn")} | {"fp_rate_irrelevant": None}
+                                              for k in d}) | {"scored_roots": len(d)}
+    (OUT / "p12_6").mkdir(parents=True, exist_ok=True)
+    cf.write_json(OUT / "p12_6" / f"D_SEMANTICS_{cohort}.json", res)
+
+
+# ------------------------------------------------------------------ P12-5: strict TOP1 execution on the new holdout (frozen choices) + separate G+M
+def exec_jobs() -> None:
+    import geometry as ge
+    import p10d_execute as px
+    snap, P = _rd(HOLD / "PREDICTIONS_FROZEN.json"), plans()
+    cfg = cf.load_config("config.toml")
+    robot = ge.make_robot(cfg)
+    seqs = {c["query"]: c["sequence"] for r in P.values() for c in r["items"] if c["kind"] == "ORDERED_TEACHER"}
+    jobs, arms = {}, collections.defaultdict(list)
+    for k in sorted(P):
+        ch = {n: a["roots"][k]["top1"] for n, a in snap["arms"].items() if a["arm"] in ("A", "SF", "K-B", "K-C")}
+        ch["geometry"] = snap["baselines"]["geometry_top1"][k]
+        for arm, c in ch.items():
+            key = f"{k}::{c}"
+            arms[key].append(arm)
+            if c not in ("ABSTAIN", "NOT_RUN"):
+                jobs.setdefault(key, {"arm": "c" + cf.stable_hash(key)[7:19], "root": k, "ranked": [seqs[c]], "choice": c})
+        jobs[f"{k}::GM"] = {"arm": "gm" + cf.stable_hash(k)[7:17], "root": k, "ranked": px.gm_rank(cfg, robot, P[k]), "choice": "GM"}
+        arms[f"{k}::GM"].append("G+M")
+    man = {"jobs": list(jobs.values()), "arms": arms, "predictions": snap["hash"], "protocol": "strict TOP1_COMMIT (one episode per (root, repair), "
+           "180 CPU-s / 600 s cap, no fallback, SAFE_RETREAT); G+M = planner-assisted, <= 5 ranked candidates"}
+    man["hash"] = cf.stable_hash(man)
+    (OUT / "p12_5").mkdir(parents=True, exist_ok=True)
+    cf.write_json(OUT / "p12_5" / "EXEC_JOBS.json", man)
+
+
+def exec_batch(name) -> None:
+    import p7_oneshot as po
+    man = _rd(OUT / "p12_5" / "EXEC_JOBS.json")
+    b = HOLD / name
+    po.CAPS.update({"cpu_s": 2250.0, "wall_s": 60000.0, "episode_cpu_s": 180.0, "episode_wall_s": 600.0, "max_episodes": 10 ** 6, "max_rank": 5})
+    js = [j for j in man["jobs"] if j["root"] in _rd(b / "plan.json")["roots"]]     # 4 parallel batches x 2,250 <= remaining execution cap
+    po.run_episodes(OUT / "p12_5" / "episodes" / name, b / "plan.json", js, lambda m: open(OUT / "p12_5" / f"episodes_{name}.log", "a").write(m + "\n"))
+    (OUT / "p12_5" / f"DONE_{name}").write_text("done\n")
+
+
+def exec_continue(cap=1550.0) -> None:
+    """Continue NOT_RUN_BUDGET episodes (never physically attempted) in the frozen root order with the remaining execution budget, one
+    sequential process; removed placeholder keys are logged. Root coverage stays outcome-independent (fixed order)."""
+    import p7_oneshot as po
+    man = _rd(OUT / "p12_5" / "EXEC_JOBS.json")
+    removed = []
+    for b in sorted(HOLD.glob("batch*/plan.json")):
+        name = b.parent.name
+        lp = OUT / "p12_5" / "episodes" / name / "ledger.json"
+        led = _rd(lp)
+        keep = {k: v for k, v in led["episodes"].items() if v.get("outcome") != "NOT_RUN_BUDGET"}
+        removed += [k for k in led["episodes"] if k not in keep]
+        led["episodes"] = keep
+        lp.write_text(json.dumps(led, indent=1, default=float))
+    cf.write_json(OUT / "p12_5" / "continuation_removed_placeholders.json", {"removed": removed})
+    done_roots = collections.defaultdict(list)
+    for j in man["jobs"]:
+        done_roots[j["root"]].append(f"{j['arm']}__{j['root']}" not in removed)
+    partial = {k for k, v in done_roots.items() if any(v) and not all(v)}
+    for only in (partial, None):                                       # pass 1: complete partial roots; pass 2: frozen root order
+      for b in sorted(HOLD.glob("batch*/plan.json")):
+        name = b.parent.name
+        led = _rd(OUT / "p12_5" / "episodes" / name / "ledger.json")
+        po.CAPS.update({"cpu_s": led["cpu_s"] + max(0.0, cap - _cont_used()), "wall_s": 60000.0, "episode_cpu_s": 180.0, "episode_wall_s": 600.0,
+                        "max_episodes": 10 ** 6, "max_rank": 5})
+        js = sorted([j for j in man["jobs"] if j["root"] in _rd(b)["roots"] and (only is None or j["root"] in only)], key=lambda j: (j["root"], j["arm"]))
+        if only is None:                                               # unfinished roots only after pass 1 (no new partial roots beyond budget)
+            js = [j for j in js if f"{j['arm']}__{j['root']}" not in _rd(OUT / "p12_5" / "episodes" / name / "ledger.json")["episodes"]]
+        po.run_episodes(OUT / "p12_5" / "episodes" / name, b, js, lambda m: open(OUT / "p12_5" / "episodes_continue.log", "a").write(m + "\n"))
+    (OUT / "p12_5" / "CONTINUE_DONE").write_text("done\n")
+
+
+def _cont_used():
+    """CPU of continuation episodes so far (episodes logged in episodes_continue.log)."""
+    f = OUT / "p12_5" / "episodes_continue.log"
+    if not f.exists():
+        return 0.0
+    return sum(float(l.rsplit("(", 1)[1].split()[0]) for l in f.read_text().splitlines() if "CPU-s)" in l)
+
+
+def exec_eval() -> None:
+    """Strict TOP1 executed success on roots whose every frozen choice was executed (coverage set fixed by job order, outcome-independent)."""
+    man, P = _rd(OUT / "p12_5" / "EXEC_JOBS.json"), plans()
+    led = {}
+    for f in (OUT / "p12_5" / "episodes").glob("*/ledger.json"):
+        led |= {k: (v, f.parent / k) for k, v in _rd(f)["episodes"].items()}
+    jm = {f"{j['root']}::{j['choice']}": j for j in man["jobs"]}
+    rec = {}
+    for b in sorted(HOLD.glob("batch*/plan.json")):
+        rec |= sealed_records(b.parent.name)
+    ok_root = {}
+    for k in P:
+        keys = [key for key in man["arms"] if key.startswith(k + "::") and key in jm]
+        ok_root[k] = all((led.get(f"{jm[key]['arm']}__{k}") or ({},))[0].get("outcome") not in (None, "NOT_RUN_BUDGET") for key in keys)
+    cov = [k for k, v in ok_root.items() if v]
+    wit = [k for k in cov if any(rec.get(c["query"], {}).get("teacher_status") == "VERIFIED_FEASIBLE" for c in P[k]["items"] if c["kind"] == "ORDERED_TEACHER" and c["sequence"])]
+    per, cls, cost, moves, plans_ = (collections.defaultdict(lambda: collections.defaultdict(list)) for _ in range(5))
+    for key, arms in man["arms"].items():
+        k, ch = key.split("::", 1)
+        if k not in cov:
+            continue
+        e, d = (led.get(f"{jm[key]['arm']}__{k}") if key in jm else None) or (None, None)
+        res = _rd(d / "result.json") if d is not None and (d / "result.json").exists() else {}
+        for a in arms:
+            arm = a if a in ("geometry", "G+M") else a.split("-s")[0].removeprefix("F-")
+            succ = float(bool(e) and e.get("outcome") == "SUCCESS")
+            per[arm][k].append(succ)
+            cls[arm]["ABSTAIN" if ch in ("ABSTAIN", "NOT_RUN") else (e or {}).get("outcome")].append(1)
+            cost[arm][k].append((e or {}).get("cpu_s", 0.0))
+            plans_[arm][k].append(res.get("relocation_plans", 0) or 0)
+            if succ:
+                moves[arm][k].append(res.get("moves") or 0)
+    succ = {a: {k: float(np.mean(v)) for k, v in d.items()} for a, d in per.items()}
+    def contrast(a, b, ks):
+        d = [succ[a][k] - succ[b][k] for k in ks if k in succ[a] and k in succ[b]]
+        p, pos, neg, ties = _sign(d)
+        return {"roots": len(d), "mean": float(np.mean(d)) if d else None, "ci95": _boot(d), "sign_p": p, "a_better": pos, "b_better": neg}
+    out = {"coverage": {"roots_total": len(P), "roots_fully_executed": len(cov), "witness_exists_among_covered": len(wit),
+                        "episodes_executed": sum(1 for v in led.values() if v[0].get("outcome") not in (None, "NOT_RUN_BUDGET")), "episodes_planned": len(man["jobs"])},
+           "success_all_covered": {a: float(np.mean(list(d.values()))) for a, d in succ.items()},
+           "success_witness_exists": {a: float(np.mean([d[k] for k in wit if k in d])) for a, d in succ.items()},
+           "by_family": {f: {a: float(np.mean([d[k] for k in cov if P[k]["family"] == f and k in d])) for a, d in succ.items()} for f in sorted({P[k]["family"] for k in cov})},
+           "contrasts_all_covered": {f"{a}-{b}": contrast(a, b, cov) for a, b in (("K-B", "A"), ("K-B", "SF"), ("K-C", "K-B"), ("K-B", "geometry"), ("K-B", "G+M"))},
+           "contrasts_witness_exists": {f"{a}-{b}": contrast(a, b, wit) for a, b in (("K-B", "A"), ("K-B", "SF"), ("K-C", "K-B"), ("K-B", "geometry"))},
+           "outcome_classes": {a: {o: len(v) for o, v in d.items()} for a, d in cls.items()},
+           "cpu_per_root_incl_abstain": {a: float(np.mean([np.mean(v) for v in d.values()])) for a, d in cost.items()},
+           "relocation_plans_per_root": {a: float(np.mean([np.mean(v) for v in d.values()])) for a, d in plans_.items()},
+           "moves_on_success": {a: float(np.mean([x for v in d.values() for x in v])) if d else None for a, d in moves.items()},
+           "note": "coverage set = roots whose every frozen choice was executed before the execution cap; determined by the frozen root order, not by outcomes"}
+    cf.write_json(OUT / "p12_5" / "EXEC_RESULTS.json", out)
+
+
+def regression() -> None:
+    import subprocess
+    d = OUT / "regression"
+    d.mkdir(parents=True, exist_ok=True)
+    (d / "countcalls.py").write_text(Path("runs/p8/audit/regression/countcalls.py").read_text())
+    subprocess.run([sys.executable, "run.py", "g4c-lf-p4-regression", "--out", str(d), "--cpu", "1900", "--wall", "3400"], capture_output=True, text=True)
+
+
+def yield_summary() -> None:
+    P, rec = plans(), {}
+    for b in sorted(HOLD.glob("batch*/plan.json")):
+        rec |= sealed_records(b.parent.name)
+    st = collections.Counter(r["teacher_status"] for r in rec.values())
+    fam = {f: dict(collections.Counter(rec[q]["teacher_status"] for k, r in P.items() if r["family"] == f for q in (it["query"] for it in r["items"]) if q in rec))
+           for f in sorted({r["family"] for r in P.values()})}
+    cert = collections.Counter((r.get("static_certificate") or {}).get("kind") for r in rec.values() if r["teacher_status"] == "CERTIFIED_INFEASIBLE")
+    wl = collections.Counter(min((len(it["sequence"]) for it in r["items"] if it["kind"] == "ORDERED_TEACHER" and it["sequence"] and
+                                  rec.get(it["query"], {}).get("teacher_status") == "VERIFIED_FEASIBLE"), default=None) for r in P.values())
+    cost = []
+    for b in sorted(HOLD.glob("batch*/sealed/*.json")):
+        cost.append(sum(d["unit_cpu_s"] + d["coord_cpu_s"] for d in _rd(b)["done"].values()))
+    out = {"roots": len(P), "queries": len(rec), "status_counts": dict(st), "by_family": fam, "certificate_kinds": {str(k): v for k, v in cert.items()},
+           "min_verified_repair_length_per_root": {str(k): v for k, v in wl.items()}, "teacher_cpu_per_root": {"mean": float(np.mean(cost)), "median": float(np.median(cost)),
+           "p90": float(np.percentile(cost, 90)), "n": len(cost)}, "attempts_ledger": _rd(HOLD / "SCENE_MANIFEST.json")["attempts"]}
+    cf.write_json(OUT / "p12_3" / "YIELD.json", out) if (OUT / "p12_3").mkdir(parents=True, exist_ok=True) is None else None
+
+
+def order_omission() -> None:
+    """Secondary: proof-grounded same-endpoint order choice + margin; omission necessity (decided omissions of VERIFIED >=2-move repairs)."""
+    snap, P, rec = _rd(HOLD / "PREDICTIONS_FROZEN.json"), plans(), {}
+    for b in sorted(HOLD.glob("batch*/plan.json")):
+        rec |= sealed_records(b.parent.name)
+    y = lambda q: rec.get(q, {}).get("binary_training_label")  # noqa: E731
+    pg = lambda q: rec.get(q, {}).get("teacher_status") in ("VERIFIED_FEASIBLE", "CERTIFIED_INFEASIBLE")  # noqa: E731
+    acc, mar, om = (collections.defaultdict(lambda: collections.defaultdict(list)) for _ in range(3))
+    for k, r in P.items():
+        seq = {tuple(map(tuple, it["sequence"])): it["query"] for it in r["items"] if it["kind"] == "ORDERED_TEACHER"}
+        pairs = [(q, q2) for s, q in seq.items() for s2, q2 in seq.items() if s < s2 and sorted(s) == sorted(s2) and len(s) >= 2
+                 and {y(q), y(q2)} == {0, 1} and pg(q) and pg(q2)]
+        omis = [(qo, y(qo)) for s, q in seq.items() if len(s) >= 2 and y(q) == 1 for t in range(len(s))
+                for qo in [seq.get(tuple(a for i, a in enumerate(s) if i != t))] if qo and y(qo) is not None]
+        for n, a in snap["arms"].items():
+            m = a["roots"][k].get("marginals") or {}
+            for q, q2 in pairs:
+                g, bd = (q, q2) if y(q) else (q2, q)
+                if g in m and bd in m:
+                    acc[a["arm"]][k].append(float(m[g] > m[bd]))
+                    mar[a["arm"]][k].append(m[g] - m[bd])
+            for qo, yo in omis:
+                if qo in m:
+                    om[a["arm"]][k].append(float((m[qo] < 0.5) == (yo == 0)))
+    red = lambda d: {arm: {k: float(np.mean(v)) for k, v in dd.items()} for arm, dd in d.items()}  # noqa: E731
+    A, M, O = red(acc), red(mar), red(om)
+    def con(D, a, b):
+        ks = sorted(set(D.get(a, {})) & set(D.get(b, {})))
+        d = [D[a][k] - D[b][k] for k in ks]
+        p, pos, neg, ties = _sign(d)
+        return {"roots": len(d), "mean": float(np.mean(d)) if d else None, "ci95": _boot(d), "sign_p": p, "a_better": pos, "b_better": neg}
+    out = {"order": {"roots": len(A.get("K-B", {})), "accuracy": {a: float(np.mean(list(v.values()))) for a, v in A.items()},
+                     "margin": {a: float(np.mean(list(v.values()))) for a, v in M.items()},
+                     "C_vs_B_accuracy": con(A, "K-C", "K-B"), "C_vs_B_margin": con(M, "K-C", "K-B"), "B_vs_F2_accuracy": con(A, "K-B", "B-F2"),
+                     "B_vs_A_accuracy": con(A, "K-B", "A")},
+           "omission": {"roots": len(O.get("K-B", {})), "accuracy": {a: float(np.mean(list(v.values()))) for a, v in O.items()},
+                        "B_vs_SF": con(O, "K-B", "SF"), "B_vs_A": con(O, "K-B", "A"), "B_vs_F4": con(O, "K-B", "B-F4")}}
+    cf.write_json(OUT / "p12_4" / "ORDER_OMISSION.json", out)
+
+
+def manifest() -> None:
+    """P12-7: final manifest (sources, frozen evidence, figures, regression, ledger) with a self-hash."""
+    import hashlib
+    import subprocess
+    reg = _rd(OUT / "regression" / "regression_result.json")
+    gates = {g.stem: _rd(g).get("engineering") for g in sorted(OUT.glob("P12_*_GATE.json"))}
+    src = ["p12_closure.py", "p12_families.py", "p12_viz.py", "tests/test_p12.py", "p10b_scenes.py", "p10b_dataset.py", "p10c_train_eval.py",
+           "p10d_execute.py", "d_blockers.py", "p7_oneshot.py"]
+    files = ["runs/p12/PREREG.json", "runs/p12/holdout/PREDICTIONS_FROZEN.json", "runs/p12/holdout/SCENE_MANIFEST.json",
+             "runs/p12/holdout/LABELS_MANIFEST.json", "runs/p12/holdout/UNSEALED", "runs/p12/p12_3/YIELD.json", "runs/p12/p12_4/FACTOR_TESTS.json",
+             "runs/p12/p12_4/ORDER_OMISSION.json", "runs/p12/p12_5/EXEC_JOBS.json", "runs/p12/p12_5/EXEC_RESULTS.json",
+             "runs/p12/p12_6/PHOTOMETRIC.json", "runs/p12/p12_6/D_SEMANTICS_p10b.json", "runs/p12/p12_6/D_SEMANTICS_holdout.json",
+             "runs/p12/regression/regression_result.json"] + sorted(map(str, OUT.glob("P12_*_GATE.json")))
+    figs = sorted(map(str, Path("visualizations/p12").glob("*")))
+    ck = [f"runs/p10c/ckpt/{k}.pt" for k in sorted(_rd(OUT / "p12_0" / "AUDIT.json")["checkpoints"])]
+    out = {"stage": "P12", "start": "b5d3f8504876585b758d6d9b02b785e9c7e1d990",
+           "lock_commits": {"prereg_predictions": "caa49df6afba5497b670d3417ce4172ddcf38cb1", "labels_hash": "a2d78339"},
+           "status": "PARTIAL (engineering PASS; execution 49/80 roots under cap)", "gates": gates,
+           "regression": {"tests": reg.get("tests"), "replays": reg.get("replays"), "p12_tests": "6/6 (tests/test_p12.py)"},
+           "spend_cpu_s": {c: round(spent(c)[0], 1) for c in CAPS}, "caps": CAPS,
+           "checkpoints": {p: sha(p) for p in ck}, "sources": {p: sha(p) for p in src if Path(p).exists()},
+           "files": {p: sha(p) for p in files if Path(p).exists()}, "figures": {p: sha(p) for p in figs},
+           "head_at_manifest": subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True).stdout.strip()}
+    out["hash"] = "sha256:" + hashlib.sha256(json.dumps(out, sort_keys=True).encode()).hexdigest()
+    cf.write_json(OUT / "P12_FINAL_MANIFEST.json", out)

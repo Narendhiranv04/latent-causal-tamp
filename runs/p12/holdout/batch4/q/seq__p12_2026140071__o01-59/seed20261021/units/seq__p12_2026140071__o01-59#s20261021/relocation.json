@@ -1,0 +1,152 @@
+{
+ "cost": {
+  "J": 0.41961399889397444,
+  "backend": "FIXED_ORDER_GREEDY_SKILL2D_V1",
+  "end_gap": 0.07,
+  "end_q": [
+   1.484388360438186,
+   -1.0482926516241644,
+   -1.745092647809769
+  ],
+  "joint_ranges_rad": [
+   6.2831853,
+   6.2831853,
+   6.2831853
+  ],
+  "label_available": "True",
+  "per_phase": {
+   "approach": 0.06748459178893357,
+   "carry": 0.18289450082585504,
+   "close_attach": 0.0,
+   "pregrasp": 0.10693240962057278,
+   "release": 0.0,
+   "retreat": 0.06230249665861301
+  },
+  "per_record": [
+   0.41961399889397444
+  ],
+  "policy": "FIRST_RELOCATION_WITNESS_NORMALIZED_JOINT_TRAVEL_V1",
+  "reason": "OK",
+  "start_gap": 0.07,
+  "start_q": [
+   1.5707963267948966,
+   -1.5707963267948966,
+   -1.5707963267948966
+  ],
+  "waypoints": 29,
+  "witness_hash": "sha256:a6cf4d8d5d0616baad02c4d25e1b9d574fc8dfe4424b1abd0e6988a5a135520a"
+ },
+ "relocation": {
+  "achieved_states": [
+   {
+    "attachment": "free",
+    "gap": 0.07,
+    "moved": [],
+    "objects": {
+     "o00": [
+      "obstacle",
+      0.024,
+      [
+       0.28,
+       0.36
+      ],
+      35
+     ],
+     "o01": [
+      "obstacle",
+      0.024,
+      [
+       0.04,
+       0.52
+      ],
+      48
+     ],
+     "o02": [
+      "obstacle",
+      0.024,
+      [
+       0.28,
+       0.04
+      ],
+      3
+     ],
+     "t0": [
+      "target",
+      0.024,
+      [
+       0.36,
+       0.12
+      ],
+      12
+     ]
+    },
+    "q": [
+     1.5707963267948966,
+     -1.5707963267948966,
+     -1.5707963267948966
+    ]
+   },
+   {
+    "attachment": "free",
+    "gap": 0.07,
+    "moved": [
+     "o01"
+    ],
+    "objects": {
+     "o00": [
+      "obstacle",
+      0.024,
+      [
+       0.28,
+       0.36
+      ],
+      35
+     ],
+     "o01": [
+      "obstacle",
+      0.024,
+      [
+       0.27999999999999947,
+       0.6000000000000002
+      ],
+      59
+     ],
+     "o02": [
+      "obstacle",
+      0.024,
+      [
+       0.28,
+       0.04
+      ],
+      3
+     ],
+     "t0": [
+      "target",
+      0.024,
+      [
+       0.36,
+       0.12
+      ],
+      12
+     ]
+    },
+    "q": [
+     1.484388360438186,
+     -1.0482926516241644,
+     -1.745092647809769
+    ]
+   }
+  ],
+  "complete_witness": true,
+  "failed_action": null,
+  "normalized_reasons": [
+   "WITNESS"
+  ],
+  "policy": "FIXED_ORDER_GREEDY_SKILL2D_V1",
+  "reason": "ALL_RELOCATIONS_CERTIFIED",
+  "relocation_plans": 1,
+  "stop": "WITNESS_FOUND"
+ },
+ "stage": "relocation",
+ "unit": "seq:p12_2026140071:o01>59#s20261021"
+}
