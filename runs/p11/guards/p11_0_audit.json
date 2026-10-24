@@ -1,0 +1,12 @@
+{
+ "call": "p11_closure.audit()",
+ "category": "audit_eval",
+ "cpu_cap_s": 900.0,
+ "cpu_s": 2.12,
+ "overshoot_s": 0.0,
+ "returncode": 1,
+ "stderr_tail": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n    import torch; torch.set_num_threads(1); import p11_closure; p11_closure.audit()\n                                                                ~~~~~~~~~~~~~~~~~^^\n  File \"/home/naren/Desktop/boltzmann_lfd/p11_closure.py\", line 143, in audit\n    res = _rd(d / \"result.json\")\n  File \"/home/naren/Desktop/boltzmann_lfd/p11_closure.py\", line 25, in _rd\n    return json.loads(Path(p).read_text())\n                      ~~~~~~~~~~~~~~~~~^^\n  File \"/home/naren/miniconda3/lib/python3.13/pathlib/_local.py\", line 546, in read_text\n    return PathBase.read_text(self, encoding, errors, newline)\n           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/naren/miniconda3/lib/python3.13/pathlib/_abc.py\", line 632, in read_text\n    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:\n         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/naren/miniconda3/lib/python3.13/pathlib/_local.py\", line 537, in open\n    return io.open(self, mode, buffering, encoding, errors, newline)\n           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nFileNotFoundError: [Errno 2] No such file or directory: 'runs/p10d/episodes/batch2/c0c768393b150__p10b_2026111044/result.json'\n",
+ "stop": "ERROR",
+ "utc": "2026-10-24T04:57:55Z",
+ "wall_s": 3.01
+}

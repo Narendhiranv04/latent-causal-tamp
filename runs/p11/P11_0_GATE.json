@@ -1,0 +1,31 @@
+{
+ "checks": {
+  "blind_eval_recompute_identical": true,
+  "blind_records_unlabelled_disjoint": true,
+  "checkpoints_69_hash_ok": true,
+  "episodes_255_map_975_choices_no_errors": true,
+  "head_equals_origin_0a5aa4d": true,
+  "p1_and_holm_recompute_exact": true,
+  "snapshot_hash_and_precedes_unseal": true,
+  "split_80_35_65": true,
+  "split_manifest_and_sealed_hashes": true
+ },
+ "discrepancies": {
+  "H9_overwrite": "CONFIRMED: 200 recoloured records share 100 root keys; snapshot keeps 100 per run (last palette P2 overwrote P1). Affects only the H9 claim (0043 \u00a73, 0044); fixed in P11-1 (evaluation-only).",
+  "checkpoint_hash_format": "run records store bare hex; content matches for 69/69",
+  "episode_44": "one TOP1 episode (root p10b_2026111044) censored with no result.json; ledger outcome UNRESOLVED_CENSORED = failure (consistent)",
+  "training_ledger": "ledger 52,503 CPU-s vs true 21,858 (threaded preliminary runner double count); disclosed in 0041/0043; no effect on results"
+ },
+ "downstream_quantitative_claims": "UNBLOCKED (all discrepancies explained; only H9 requires correction)",
+ "engineering": "PASS",
+ "spend": {
+  "audit_eval": 110.2,
+  "f1_training": 0,
+  "newcon_dev": 0,
+  "newholdout_exec": 0,
+  "newholdout_teacher": 0,
+  "regression": 0,
+  "short_episodes": 0
+ },
+ "stage": "P11-0"
+}

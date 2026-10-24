@@ -1,0 +1,12 @@
+{
+ "call": "p11_closure.audit()",
+ "category": "audit_eval",
+ "cpu_cap_s": 900.0,
+ "cpu_s": 27.48,
+ "overshoot_s": 0.0,
+ "returncode": 1,
+ "stderr_tail": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n    import torch; torch.set_num_threads(1); import p11_closure; p11_closure.audit()\n                                                                ~~~~~~~~~~~~~~~~~^^\n  File \"/home/naren/Desktop/boltzmann_lfd/p11_closure.py\", line 164, in audit\n    rr.blind_eval(\"blind\", str(OUT / \"audit\" / \"BLIND_EVAL_recomputed.json\"))\n    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/naren/Desktop/boltzmann_lfd/p10e_report.py\", line 299, in blind_eval\n    cf.write_json(Path(out), res)\n    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^\n  File \"/home/naren/Desktop/boltzmann_lfd/config.py\", line 317, in write_json\n    path.write_text(json.dumps(obj, indent=1, sort_keys=True))\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/naren/miniconda3/lib/python3.13/pathlib/_local.py\", line 555, in write_text\n    return PathBase.write_text(self, data, encoding, errors, newline)\n           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/naren/miniconda3/lib/python3.13/pathlib/_abc.py\", line 651, in write_text\n    with self.open(mode='w', encoding=encoding, errors=errors, newline=newline) as f:\n         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/naren/miniconda3/lib/python3.13/pathlib/_local.py\", line 537, in open\n    return io.open(self, mode, buffering, encoding, errors, newline)\n           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nFileNotFoundError: [Errno 2] No such file or directory: 'runs/p11/audit/BLIND_EVAL_recomputed.json'\n",
+ "stop": "ERROR",
+ "utc": "2026-10-24T04:58:33Z",
+ "wall_s": 27.64
+}
