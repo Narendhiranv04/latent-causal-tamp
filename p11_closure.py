@@ -331,3 +331,294 @@ def h9_figure() -> None:
     ax[3].set(xticks=range(len(arms)), xticklabels=arms, ylabel="per-root mean |p_variant - p_original|", title="H9 (100 roots, both palettes; root CI)")
     ax[3].legend(fontsize=8)
     pv.png(f, dst / "P11_H9_two_palettes.png", "P11-1: same geometry, two palettes (instance masks unchanged); per-root prediction shift per arm and palette")
+
+
+# ------------------------------------------------------------------ P11-2: F1 static-supervision control, J selector audit, ablation verification
+COMP = OUT / "components"
+
+
+def train_f1off(seed, updates=400) -> None:
+    """Keyed B with the F1 static BCE weight set to 0 (same architecture / parameter count / data / sampler / schedule / seed as
+    p10c F-K-B, whose only difference is lam_static = 1). Checkpoint selection on P10b validation only."""
+    import functools
+    import torch
+    import abc8
+    import p10c_train_eval as pc
+    import p9_l3 as l3
+    import unique_factor as uf
+    import unique_factor_keyed as ufk
+    tr, va = pc.data("full")
+    uf.total = functools.partial(uf.total, lam_static=0.0)
+    l3.build = lambda a: abc8.build("B-full")
+    c0 = time.process_time()
+    with ufk.installed():
+        m, rec = l3.fit("B-full", seed, updates, tr, va, "unique")
+    name = f"F1OFF-K-B-s{seed}"
+    (COMP / "ckpt").mkdir(parents=True, exist_ok=True)
+    torch.save(m.state_dict(), COMP / "ckpt" / f"{name}.pt")
+    rec["history"] = [{k: h.get(k) for k in ("update", "total", "nll", "static", "val")} for h in rec["history"]]
+    rec |= {"name": name, "arm": "K-B", "seed": seed, "lam_static": 0.0, "train_cpu_s": round(time.process_time() - c0, 1),
+            "checkpoint_sha256": sha(COMP / "ckpt" / f"{name}.pt"), "train_roots": len(tr), "val_roots": len(va)}
+    (COMP / "runs").mkdir(parents=True, exist_ok=True)
+    cf.write_json(COMP / "runs" / f"{name}.json", rec)
+
+
+def _blind_labels():
+    """query -> (teacher status, binary label, witnessed J) on the (unsealed) blind roots; read-only."""
+    import p10b_dataset as pd
+    import p10c_train_eval as pc
+    out = {}
+    for b in pc.batches():
+        for q, r in pd.records(b, ("blind",)).items():
+            out[q] = (r["teacher_status"], r["binary_training_label"], r.get("J_first"))
+    return out
+
+
+def _episode_outcomes():
+    jobs, led = _rd("runs/p10d/episode_jobs.json"), {}
+    for f in Path("runs/p10d/episodes").glob("*/ledger.json"):
+        led |= _rd(f)["episodes"]
+    return {f"{j['root']}::{j['choice']}": (led.get(f"{j['arm']}__{j['root']}") or {}).get("outcome") for j in jobs["jobs"]}
+
+
+def _calibrate(m, keyed, val):
+    import contextlib
+    import p7_eval as ev
+    import p9_l3 as l3
+    import p10d_execute as px
+    import unique_factor_keyed as ufk
+    with ufk.installed() if keyed else contextlib.nullcontext():
+        vev = [l3.root_eval9(m, r, "unique" if keyed else "factorized")["root"] for r in val]
+    tau = ev.fit_temperature(vev)
+    return tau, px.choose_threshold(vev, tau)
+
+
+def _static_metrics(m, rs):
+    import torch
+    import p10_eval as pe
+    rows = []
+    with torch.no_grad():
+        for r in rs:
+            for c in r["cands"] + r.get("static_checks", []):
+                xy = m.actions(r["R"], c["seq"])[1] if c["seq"] else r["R"].xy0
+                _, lu, lp = m.static(r["R"], xy)
+                for lg, ys in ((lu, c["su"]), (lp, c["sp"])):
+                    for i, y in enumerate(ys):
+                        if y is not None:
+                            rows.append({"p": float(torch.sigmoid(lg[i])), "y": int(y), "root": r["key"]})
+    return pe.metrics(rows) | {"positives": sum(x["y"] for x in rows), "negatives": sum(1 - x["y"] for x in rows)}
+
+
+def components_eval() -> None:
+    import contextlib
+    import copy
+    import p10_eval as pe
+    import p10_protocol as pp
+    import p10c_train_eval as pc
+    import p10e_report as rr
+    import p9_l3 as l3
+    import p9_l3c as l3c
+    import unique_factor as uf
+    import unique_factor_keyed as ufk
+    import abc8
+    import torch
+    lab, epo, snap = _blind_labels(), _episode_outcomes(), _rd("runs/p10d/predictions.json")
+    val = [r for r in pc.prepared("trainval") if r["split"] == "validation"]
+    blind = pc.prepared("blind")
+    calls, res = pp.instrument(), {"F1": {}, "J": {}}
+    # ---- F1: enabled (p10c F-K-B) vs disabled (P11 F1OFF), calibrated on validation only
+    mini = {"arms": {}}
+    for s in (0, 1, 2):
+        for tag, name in (("enabled", f"F-K-B-s{s}"), ("disabled", f"F1OFF-K-B-s{s}")):
+            if tag == "enabled":
+                m = pc.load(name)[0]
+                tau, thr = snap["arms"][name]["tau"], snap["arms"][name]["threshold"]
+            else:
+                m = abc8.build("B-full")
+                m.load_state_dict(torch.load(COMP / "ckpt" / f"{name}.pt", weights_only=True))
+                m.eval()
+                tau, thr = _calibrate(m, True, val)
+            res["F1"][name] = {"tau": tau, "threshold": thr, "static_blind": _static_metrics(m, blind)}
+            per = {}
+            for r in blind:
+                with ufk.installed():
+                    pm = pe.marginals(m, r, True)
+                ch = pp.top1(m, r, tau, thr, frozenset(), True)["choice"]
+                per[r["key"]] = {"marginals": pm, "top1": ch}
+                res["F1"][name].setdefault("top1", {})[r["key"]] = {"choice": ch, "label": (lab.get(ch) or ("ABSTAIN",))[0], "executed": epo.get(f"{r['key']}::{ch}")}
+            mini["arms"][name] = {"arm": "K-B" if tag == "enabled" else "B-F1off", "seed": s, "regime": "full", "roots": {"blind": per}}
+    orig, orig_d = rr._rd, rr.d_eval
+    rr._rd = lambda p: mini if str(p) == "runs/p10d/predictions.json" else orig(p)
+    rr.d_eval = lambda *a, **k: {"note": "D not evaluated in the F1 control"}
+    try:
+        ev = rr.blind_eval("blind", str(COMP / "F1_BLIND_EVAL.json"))
+    finally:
+        rr._rd, rr.d_eval = orig, orig_d
+    res["F1"]["contrasts_disabled_minus_enabled"] = {e: paired(ev["per_root"][e] if e != "nll_full" else ev["per_root"]["nll_full"], "B-F1off", "K-B")
+                                                     for e in ("nll_full", "H1", "order", "omission")}
+    # ---- J: selector variants on frozen K-B / K-C, identical admitted pools
+    for arm in ("K-B", "K-C"):
+        for s in (0, 1, 2):
+            name = f"F-{arm}-s{s}"
+            m, a = pc.load(name)[0], snap["arms"][name]
+            rng, st = np.random.default_rng(1000 + s), collections.Counter()
+            jerr = []
+            for r in blind:
+                with ufk.installed():
+                    _, rows = l3c.deployed(m, r, uf.instances(m, r), a["tau"], a["threshold"])
+                adm = [x for x in rows if 1 / (1 + math.exp(-x["u"] / a["tau"])) >= a["threshold"]]
+                for x in rows:
+                    j = (lab.get(x["query"]) or (None, None, None))[2]
+                    if j is not None and x["m"] > 0 and (lab.get(x["query"]) or ("",))[0] == "VERIFIED_FEASIBLE":
+                        jerr.append((x["J_pred"], j))
+                if not adm:
+                    st["abstain"] += 1
+                    continue
+                mm = min(x["m"] for x in adm)
+                st["tie_reached"] += sum(x["m"] == mm for x in adm) >= 2
+                shuf = dict(zip([x["query"] for x in adm], rng.permutation([x["J_pred"] for x in adm])))
+                keys = {"default": lambda x: (x["m"], x["J_pred"], x["C_d"], x["energy"], x["query"]),
+                        "no_J": lambda x: (x["m"], x["C_d"], x["energy"], x["query"]),
+                        "shuffled_J": lambda x: (x["m"], shuf[x["query"]], x["C_d"], x["energy"], x["query"]),
+                        "oracle_J_offline": lambda x: (x["m"], (lab.get(x["query"]) or (0, 0, None))[2] if (lab.get(x["query"]) or (0, 0, None))[2] is not None else 9e9, x["C_d"], x["energy"], x["query"])}
+                ch = {k: min(adm, key=f)["query"] for k, f in keys.items()}
+                for k, q in ch.items():
+                    st[f"changed_{k}"] += q != ch["default"]
+                    st[f"label_success_{k}"] += (lab.get(q) or ("",))[0] == "VERIFIED_FEASIBLE"
+                    ex = epo.get(f"{r['key']}::{q}")
+                    st[f"executed_known_{k}"] += ex is not None
+                    st[f"executed_success_{k}"] += ex == "SUCCESS"
+            pj, oj = np.array([x for x, _ in jerr]), np.array([y for _, y in jerr])
+            from scipy.stats import spearmanr
+            res["J"][name] = dict(st) | {"roots": len(blind), "J_regression": {"n_witnessed": len(jerr), "mae": float(np.mean(np.abs(pj - oj))) if jerr else None,
+                                                                              "mean_witnessed": float(np.mean(oj)) if jerr else None,
+                                                                              "spearman": float(spearmanr(pj, oj)[0]) if len(jerr) > 2 else None}}
+    # ---- ablation verification (definitions, parameter counts) and exploratory Holm across the ablation family
+    ver = {}
+    for arm in ("B-F2", "B-F3", "B-F4", "B-F5s", "B-F5q", "B-V0", "B-U"):
+        mm = pc.build(arm)
+        ver[arm] = {"params": sum(p.numel() for p in mm.parameters()), "has_pairo": hasattr(mm, "pairo"), "order_mode": getattr(mm, "order_mode", None),
+                    "has_pair_scene": hasattr(mm, "pair_scene"), "has_pair_omit": hasattr(mm, "pair_omit"), "has_cpl": hasattr(mm, "cpl"),
+                    "has_ho": hasattr(mm, "ho_q"), "keyed": pc.ARMS[arm][2], "visual_input_zeroed": arm == "B-V0"}
+    ver["K-B"] = {"params": sum(p.numel() for p in pc.build("K-B").parameters())}
+    be = _rd("runs/p10d/BLIND_EVAL.json")
+    abl = {f"{a}|{e}": paired(be["per_root"][e], a, "K-B") for a in ("B-F2", "B-F3", "B-F4", "B-F5s", "B-F5q", "B-V0", "B-U", "K-C")
+           for e in ("nll_full", "H1", "order", "omission")}
+    hh = holm({k: v["sign_p"] for k, v in abl.items()})
+    res["ablations"] = {"definitions": ver, "contrasts_vs_K-B": {k: v | {"holm_p_family32": hh[k]["holm_p"]} for k, v in abl.items()},
+                        "note": "exploratory family (8 arms x 4 endpoints = 32 tests), Holm within the family; nll_full: positive = ablation worse"}
+    phys = {k: v for k, v in calls.items() if not k.startswith("operational_teacher.")}   # label READING (pure logic) is not a physical call
+    res["physical_calls"] = phys
+    res["label_reading_calls"] = {k: v for k, v in calls.items() if k.startswith("operational_teacher.")}
+    if sum(phys.values()):
+        raise RuntimeError(f"physical calls: {phys}")
+    cf.write_json(COMP / "COMPONENTS.json", res)
+
+
+# ------------------------------------------------------------------ P11-3: short-trained (<= 2 moves) strict TOP1 PHYSICAL execution (POST-HOC)
+LEN = OUT / "length"
+
+
+def length_manifest() -> None:
+    """Frozen supplementary manifest: (a) the UNCHANGED short-regime TOP1 choices of the P10d snapshot (calibrated on the full
+    validation set at freeze time), (b) a sensitivity set recalibrated on the <= 2-move validation subset only (deterministic rule, no
+    outcome use). Episodes keyed by (root, repair) with the P10d seed namespace, so P10d episodes of the same key are reused."""
+    import p10_protocol as pp
+    import p10c_train_eval as pc
+    import p10d_execute as px
+    snap, P = _rd("runs/p10d/predictions.json"), px.plans()
+    seqs = {c["query"]: c["sequence"] for r in P.values() for c in r["items"] if c["kind"] == "ORDERED_TEACHER"}
+    old = {f"{j['root']}::{j['choice']}": j for j in _rd("runs/p10d/episode_jobs.json")["jobs"]}
+    val_s = pc.short([r for r in pc.prepared("trainval") if r["split"] == "validation"])
+    blind = pc.prepared("blind")
+    choices, cal = {"frozen": {}, "shortval": {}}, {}
+    for n, a in snap["arms"].items():
+        if a["regime"] != "short":
+            continue
+        choices["frozen"][n] = {k: x["top1"] for k, x in a["roots"]["blind"].items()}
+        m, keyed = pc.load(n)[0], pc.ARMS[a["arm"]][2]
+        tau, thr = _calibrate(m, keyed, val_s)
+        cal[n] = {"frozen_tau": a["tau"], "frozen_threshold": a["threshold"], "shortval_tau": tau, "shortval_threshold": thr, "shortval_roots": len(val_s)}
+        choices["shortval"][n] = {r["key"]: pp.top1(m, r, tau, thr, frozenset(), keyed)["choice"] for r in blind}
+    jobs, arms = {}, collections.defaultdict(list)
+    for variant, d in choices.items():
+        for n, per in d.items():
+            for k, ch in per.items():
+                key = f"{k}::{ch}"
+                arms[key].append(f"{variant}|{n}")
+                if ch in ("ABSTAIN", "NOT_RUN"):
+                    continue
+                j = {"arm": "c" + cf.stable_hash(key)[7:19], "root": k, "ranked": [seqs[ch]], "choice": ch}
+                if key in old and (old[key]["arm"], old[key]["ranked"]) != (j["arm"], j["ranked"]):
+                    raise ValueError(f"episode identity differs from P10d for {key}")
+                jobs[key] = j | {"reuse_p10d": key in old}
+    LEN.mkdir(parents=True, exist_ok=True)
+    man = {"jobs": list(jobs.values()), "arms": arms, "calibration": cal, "snapshot": snap["hash"], "protocol": "TOP1_COMMIT, one episode per (root, repair), "
+           "180 CPU-s / 600 s episode cap, no fallback, SAFE_RETREAT", "post_hoc": True,
+           "checkpoints": {n: _rd(f"runs/p10c/runs/{n}.json")["checkpoint_sha256"] for n in choices["frozen"]}}
+    man["hash"] = cf.stable_hash(man)
+    if (LEN / "LENGTH_MANIFEST.json").exists():
+        raise SystemExit("length manifest already frozen")
+    cf.write_json(LEN / "LENGTH_MANIFEST.json", man)
+
+
+def length_episodes(name) -> None:
+    import p7_oneshot as po
+    import p10c_train_eval as pc
+    man = _rd(LEN / "LENGTH_MANIFEST.json")
+    b = Path("runs/p10b") / name
+    po.CAPS.update({"cpu_s": 4900.0, "wall_s": 60000.0, "episode_cpu_s": 180.0, "episode_wall_s": 600.0, "max_episodes": 10 ** 6, "max_rank": 5})
+    js = [j for j in man["jobs"] if not j["reuse_p10d"] and j["root"] in _rd(b / "plan.json")["roots"]]
+    po.run_episodes(LEN / "episodes" / name, b / "plan.json", js, lambda m: open(LEN / f"episodes_{name}.log", "a").write(m + "\n"))
+    (LEN / f"DONE_{name}").write_text("done\n")
+    del pc
+
+
+def length_eval() -> None:
+    import p10d_execute as px
+    man, P = _rd(LEN / "LENGTH_MANIFEST.json"), px.plans()
+    led = {}
+    for base in (Path("runs/p10d/episodes"), LEN / "episodes"):
+        for f in base.glob("*/ledger.json"):
+            led |= {k: (v, f.parent / k) for k, v in _rd(f)["episodes"].items()}
+    ep = {f"{j['root']}::{j['choice']}": j for j in man["jobs"]}
+    per = collections.defaultdict(lambda: collections.defaultdict(list))
+    fails = collections.Counter()
+    for key, arms in man["arms"].items():
+        root, ch = key.split("::", 1)
+        e = led.get(f"{ep[key]['arm']}__{root}", (None,))[0] if key in ep else None
+        ok = float(e is not None and e.get("outcome") == "SUCCESS")
+        for a in arms:
+            variant, n = a.split("|")
+            arm = n.split("-s")[0].removeprefix("S-")
+            per[f"short_{variant}|{arm}"][root].append(ok)
+            fails[(f"short_{variant}|{arm}", "ABSTAIN" if ch == "ABSTAIN" else (e or {}).get("outcome", "MISSING"))] += 1
+    full = _rd("runs/p10d/P1_TOP1.json")["per_root"]
+    for arm in ("K-B", "K-C", "A", "SF"):
+        per[f"full|{arm}"] = {k: [v] for k, v in full[arm].items()}
+    succ = {g: {k: float(np.mean(v)) for k, v in d.items()} for g, d in per.items()}
+    strata = {"H10_3": lambda k: P[k]["family"] == "H10_3", "H10_4": lambda k: P[k]["family"] == "H10_4",
+              "H10_4_SOUND": lambda k: P[k]["family"] == "H10_4" and k in _sound_roots(), "1-2 move families": lambda k: not P[k]["family"].startswith("H10")}
+    res = {"success": {g: {s: {"mean": float(np.mean([v for k, v in d.items() if f(k)])) if any(f(k) for k in d) else None, "roots": sum(f(k) for k in d)}
+                           for s, f in strata.items()} | {"all": {"mean": float(np.mean(list(d.values()))), "roots": len(d)}} for g, d in succ.items()},
+           "outcomes": {f"{g}|{o}": n for (g, o), n in fails.items()},
+           "short_vs_full_H10": {arm: paired({"s": {k: v for k, v in succ[f"short_frozen|{arm}"].items() if P[k]["family"].startswith("H10")},
+                                              "f": {k: v for k, v in succ[f"full|{arm}"].items() if P[k]["family"].startswith("H10")}}, "s", "f")
+                                 for arm in ("K-B", "K-C", "A", "SF")},
+           "short_B_vs_others_H10": {f"K-B-{b}": paired({"a": {k: v for k, v in succ["short_frozen|K-B"].items() if P[k]["family"].startswith("H10")},
+                                                         "b": {k: v for k, v in succ[f"short_frozen|{b}"].items() if P[k]["family"].startswith("H10")}}, "a", "b")
+                                     for b in ("A", "SF", "K-C")},
+           "episodes": {"total_distinct": len(man["jobs"]), "reused_p10d": sum(j["reuse_p10d"] for j in man["jobs"]),
+                        "new": sum(not j["reuse_p10d"] for j in man["jobs"])}, "post_hoc": True}
+    cf.write_json(LEN / "LENGTH_RESULTS.json", res)
+
+
+def _sound_roots():
+    import p10e_report as rr
+    import p10b_dataset as pd
+    import p10c_train_eval as pc
+    out = set()
+    for b in pc.batches():
+        plan, rec = _rd(b / "plan.json"), pd.records(b, ("train", "validation", "blind"))
+        out |= {k for k in plan["roots"] if plan["roots"][k]["family"] == "H10_4" and rr.root_yield(plan, rec, k)["minimality_relative_to_catalogue"] == "SOUND"}
+    return out

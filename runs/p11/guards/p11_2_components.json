@@ -1,0 +1,12 @@
+{
+ "call": "p11_closure.components_eval()",
+ "category": "audit_eval",
+ "cpu_cap_s": 2500.0,
+ "cpu_s": 73.11,
+ "overshoot_s": 0.0,
+ "returncode": 1,
+ "stderr_tail": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n    import torch; torch.set_num_threads(1); import p11_closure; p11_closure.components_eval()\n                                                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^\n  File \"/home/naren/Desktop/boltzmann_lfd/p11_closure.py\", line 453, in components_eval\n    ev = rr.blind_eval(\"blind\", str(COMP / \"F1_BLIND_EVAL.json\"))\n  File \"/home/naren/Desktop/boltzmann_lfd/p10e_report.py\", line 297, in blind_eval\n    res[\"D\"] = d_eval(snap, P, dl, rec, blind, tok, split)\n               ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/naren/Desktop/boltzmann_lfd/p10e_report.py\", line 314, in d_eval\n    lam, thr = snap[\"baselines\"][f\"{arm}_lambda_B\"], snap[\"baselines\"][f\"{arm}_threshold\"]\n               ~~~~^^^^^^^^^^^^^\nKeyError: 'baselines'\n",
+ "stop": "ERROR",
+ "utc": "2026-10-24T05:23:17Z",
+ "wall_s": 73.36
+}
