@@ -1,0 +1,88 @@
+{
+ "J_first": 1.0507086460089943,
+ "arm": "caeb6f141bbd3",
+ "audit": {
+  "checks": {
+   "achieved_state_matches_commitment": true,
+   "commits_at_most_one": true,
+   "committed_order_equals_proposed": true,
+   "joint_continuity": true,
+   "no_target_after_abort": true,
+   "no_target_before_commit": true,
+   "no_target_without_completed_repair": true,
+   "single_terminal_event_last": true,
+   "target_after_all_relocations_and_reobservations": true,
+   "target_calls_at_most_one": true,
+   "target_invocation_equals_achieved": true
+  },
+  "commits": 1,
+  "decision": "PASS",
+  "outcome": "TARGET_CERTIFIED_INFEASIBLE",
+  "protocol_compliant": true,
+  "reobserve": [
+   {
+    "achieved_xy": [
+     0.36000000000000015,
+     0.2800000000000007
+    ],
+    "attachment": "free",
+    "commanded_xy": [
+     0.36000000000000015,
+     0.2800000000000007
+    ],
+    "gap": 0.07,
+    "matches_commitment": true,
+    "moved": [
+     "o02"
+    ],
+    "object": "o02",
+    "q": [
+     1.1172516581377607,
+     -1.4954308840831665,
+     -1.1926171008494908
+    ]
+   },
+   {
+    "achieved_xy": [
+     0.3600000000000001,
+     0.35999999999999976
+    ],
+    "attachment": "free",
+    "commanded_xy": [
+     0.3600000000000001,
+     0.35999999999999976
+    ],
+    "gap": 0.07,
+    "matches_commitment": true,
+    "moved": [
+     "o02",
+     "o01"
+    ],
+    "object": "o01",
+    "q": [
+     1.56971398621174,
+     -2.3287667849302567,
+     0.23545402312021757
+    ]
+   }
+  ],
+  "target_calls": 1
+ },
+ "committed_rank": 0,
+ "committed_sequence": [
+  [
+   "o02",
+   28
+  ],
+  [
+   "o01",
+   36
+  ]
+ ],
+ "moves": 2,
+ "outcome": "TARGET_CERTIFIED_INFEASIBLE",
+ "relocation_plans": 2,
+ "root": "p10b_2026111180",
+ "target_calls": 1,
+ "tried": 1
+}

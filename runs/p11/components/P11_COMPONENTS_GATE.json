@@ -1,0 +1,48 @@
+{
+ "checks": {
+  "ablation_definitions_verified": true,
+  "f1_matched_control_3_seeds_same_params": true,
+  "f1_validation_only_calibration": true,
+  "historical_checkpoints_untouched": true,
+  "j_identical_frozen_pools": true,
+  "no_physical_calls_in_learned_paths": true
+ },
+ "engineering": "PASS",
+ "f1_top1": {
+  "disabled": 0.6974358974358974,
+  "disabled_minus_enabled": {
+   "a_better": 10,
+   "b_better": 11,
+   "ci95": [
+    -0.1026923076923077,
+    0.04115384615384547
+   ],
+   "mean": -0.030769230769230757,
+   "roots": 65,
+   "sign_p": 1.0
+  },
+  "enabled": 0.7282051282051282
+ },
+ "scorecard": {
+  "C GRU vs B predecessor": "NOT_BENEFICIAL (no endpoint better; NLL +0.035)",
+  "DINOv2": "SUPPORTED for fit (NLL +0.089 without, Holm-family 0.0016) but appearance-fragile (0046)",
+  "F1 learned static head": "static AUROC 0.77-0.80 (on) vs 0.50-0.61 (off) on 23,256 analytic static labels (130 negatives: highly imbalanced); repair: H1 -0.09 (9/9, exploratory p 0.004), TOP1 label success -0.031 [-0.103, 0.041], NLL/omission/order n.s. -> NOT_IDENTIFIED for repair selection; head works only when supervised",
+  "F2 order": "SUPPORTED (order -0.718, Holm-family p ~ 0)",
+  "F3 scene pair": "UNDERPOWERED (H1 -0.143, raw p 0.004, Holm-family 0.117; n=9)",
+  "F4 omission pair": "NOT_BENEFICIAL (no endpoint improved; NLL slightly better without)",
+  "F5 HO only": "UNDERPOWERED (H1 -0.040; Holm 0.117)",
+  "F5 generic+HO": "UNDERPOWERED (H1 -0.099, NLL +0.033; Holm-family 0.117/0.142)",
+  "J travel head": "Spearman 0.71-0.79 to witnessed J (n=100); tie-break reached on 6-20/65 roots; removing J changes 4-9 choices; success within +-2 roots -> NOT_PRACTICALLY_IDENTIFIED (predicts cost, does not change outcomes)",
+  "keyed vs unique": "NOT_IDENTIFIED (n.s.)"
+ },
+ "spend": {
+  "audit_eval": 714.5,
+  "f1_training": 1062.2,
+  "newcon_dev": 0,
+  "newholdout_exec": 0,
+  "newholdout_teacher": 0,
+  "regression": 0,
+  "short_episodes": 188.2
+ },
+ "stage": "P11-2"
+}

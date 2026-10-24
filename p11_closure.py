@@ -622,3 +622,57 @@ def _sound_roots():
         plan, rec = _rd(b / "plan.json"), pd.records(b, ("train", "validation", "blind"))
         out |= {k for k in plan["roots"] if plan["roots"][k]["family"] == "H10_4" and rr.root_yield(plan, rec, k)["minimality_relative_to_catalogue"] == "SOUND"}
     return out
+
+
+def length_figure() -> None:
+    """Recorded short-trained TOP1 episodes on H10 roots: one success GIF (real arrays) and static failure panels (no motion invented)."""
+    import g4d_run as gr
+    import geometry as ge
+    import p6_viz as pv
+    import p10d_execute as px
+    from scene import scene_from_dict
+    from viz import COLORS, plt
+    man, P, dst = _rd(LEN / "LENGTH_MANIFEST.json"), px.plans(), Path("visualizations/p11")
+    cfg = cf.load_config("config.toml")
+    robot = ge.make_robot(cfg)
+    led = {}
+    for base in (Path("runs/p10d/episodes"), LEN / "episodes"):
+        for f in base.glob("*/ledger.json"):
+            led |= {k: (v, f.parent / k) for k, v in _rd(f)["episodes"].items()}
+    ok, bad = None, []
+    for j in man["jobs"]:
+        arms = man["arms"].get(f"{j['root']}::{j['choice']}", [])
+        if not P[j["root"]]["family"].startswith("H10") or not any("frozen|S-K-B" in a for a in arms):
+            continue
+        e, d = led.get(f"{j['arm']}__{j['root']}", (None, None))
+        if e and e.get("outcome") == "SUCCESS" and ok is None and len(j["ranked"][0]) >= 3 and (d / "relocation.npz").exists():
+            ok = (j, d)
+        elif e and e.get("outcome") != "SUCCESS" and len(bad) < 3:
+            bad.append((j, e))
+    if ok:
+        j, d = ok
+        s, seq, frames = scene_from_dict(P[j["root"]]["scene"]), [tuple(a) for a in j["ranked"][0]], []
+        for qq, g, pos, mv in pv.trace_frames(robot, s, seq, gr._arrays(d / "relocation.npz"), gr._arrays(d / "target_witness.npz"), n_move=10, n_target=12):
+            f, a = plt.subplots(figsize=(5, 5))
+            pv._panel(a, cfg, robot, s, P[j["root"]]["goal_cell"], f"{j['root'][-3:]} {P[j['root']]['family']}: SHORT-trained (<=2) keyed B TOP1\n{len(seq)} moves, RECORDED episode", q=qq, gap=g, pos=pos, held=mv)
+            pv._tag(a, "TOP1_COMMIT SUCCESS - recorded trajectory", COLORS["valid"])
+            frames.append(pv._rgb(f))
+        pv.gif(dst / "P11_short_trained_long_success.gif", frames, "P11-3: recorded short-trained keyed-B TOP1 success on a blind H10 root")
+    if bad:
+        f, ax = plt.subplots(1, len(bad), figsize=(5 * len(bad), 5), squeeze=False)
+        for a, (j, e) in zip(ax[0], bad):
+            s = scene_from_dict(P[j["root"]]["scene"])
+            pv._panel(a, cfg, robot, s, P[j["root"]]["goal_cell"], f"{j['root'][-3:]} {P[j['root']]['family']}: short keyed-B TOP1 ({len(j['ranked'][0])} moves)")
+            pv._arrows(a, s, [tuple(x) for x in j["ranked"][0]], pv.COL["CERTIFIED_INFEASIBLE"])
+            pv._tag(a, f"{e['outcome']} - NO VERIFIED TRACE", pv.COL["UNKNOWN"], size=6)
+        pv.png(f, dst / "P11_short_trained_long_failures.png", "P11-3: short-trained keyed-B TOP1 failures on blind H10 roots (committed repair, recorded outcome)")
+    res = _rd(LEN / "LENGTH_RESULTS.json")
+    f, ax = plt.subplots(figsize=(9, 4.5))
+    arms = ["K-B", "K-C", "A", "SF"]
+    for i, st in enumerate(("H10_3", "H10_4")):
+        for j_, rg in enumerate(("full", "short_frozen")):
+            ax.bar([x + i * 0.42 + j_ * 0.2 for x in range(4)], [res["success"][f"{rg}|{a}"][st]["mean"] for a in arms], 0.18,
+                   color=[["#2a6fdb", "#9bbcf0"], ["#e07b00", "#f3c48a"]][i][j_], label=f"{st}: trained {'1-4 moves' if rg == 'full' else '<=2 moves'}")
+    ax.set(xticks=[x + 0.3 for x in range(4)], xticklabels=arms, ylabel="executed TOP1 success (9 roots each)", title="P11-3 (POST-HOC): physically executed 3- / 4-move repairs")
+    ax.legend(fontsize=7)
+    pv.png(f, dst / "P11_length_executed.png", "P11-3: executed TOP1 success on blind H10 roots, short-trained vs full-trained")
