@@ -1,0 +1,268 @@
+{
+ "A": {
+  "candidates_physically_tried": {
+   "mean": 0.6615384615384615,
+   "n": 195
+  },
+  "episode_cpu_executed": {
+   "mean": 20.634485294117646,
+   "n": 136
+  },
+  "precommit_ranking_cpu": {
+   "mean": 0.0,
+   "n": 195
+  },
+  "relocation_plans": {
+   "mean": 1.235897435897436,
+   "n": 195
+  },
+  "target_calls": {
+   "mean": 0.6615384615384615,
+   "n": 195
+  },
+  "total_cpu_per_root_incl_abstain": {
+   "mean": 14.402575756076924,
+   "n": 195
+  },
+  "wall_s": {
+   "mean": 20.757279411764706,
+   "n": 136
+  }
+ },
+ "G+M": {
+  "candidates_physically_tried": {
+   "mean": 1.2,
+   "n": 65
+  },
+  "episode_cpu_executed": {
+   "mean": 15.70923076923077,
+   "n": 65
+  },
+  "precommit_ranking_cpu": {
+   "mean": 4.420227830830769,
+   "n": 65
+  },
+  "relocation_plans": {
+   "mean": 2.1076923076923078,
+   "n": 65
+  },
+  "target_calls": {
+   "mean": 0.9692307692307692,
+   "n": 65
+  },
+  "total_cpu_per_root_incl_abstain": {
+   "mean": 20.129458600061536,
+   "n": 65
+  },
+  "wall_s": {
+   "mean": 15.839692307692307,
+   "n": 65
+  }
+ },
+ "K-B": {
+  "candidates_physically_tried": {
+   "mean": 0.8102564102564103,
+   "n": 195
+  },
+  "episode_cpu_executed": {
+   "mean": 19.95012121212121,
+   "n": 165
+  },
+  "precommit_ranking_cpu": {
+   "mean": 0.0,
+   "n": 195
+  },
+  "relocation_plans": {
+   "mean": 1.646153846153846,
+   "n": 195
+  },
+  "target_calls": {
+   "mean": 0.7897435897435897,
+   "n": 195
+  },
+  "total_cpu_per_root_incl_abstain": {
+   "mean": 16.901435665071794,
+   "n": 195
+  },
+  "wall_s": {
+   "mean": 20.068121212121213,
+   "n": 165
+  }
+ },
+ "K-C": {
+  "candidates_physically_tried": {
+   "mean": 0.8205128205128205,
+   "n": 195
+  },
+  "episode_cpu_executed": {
+   "mean": 21.64147928994083,
+   "n": 169
+  },
+  "precommit_ranking_cpu": {
+   "mean": 0.0,
+   "n": 195
+  },
+  "relocation_plans": {
+   "mean": 1.6615384615384616,
+   "n": 195
+  },
+  "target_calls": {
+   "mean": 0.7897435897435897,
+   "n": 195
+  },
+  "total_cpu_per_root_incl_abstain": {
+   "mean": 18.77625045731795,
+   "n": 195
+  },
+  "wall_s": {
+   "mean": 21.759526627218936,
+   "n": 169
+  }
+ },
+ "SF": {
+  "candidates_physically_tried": {
+   "mean": 0.5128205128205128,
+   "n": 195
+  },
+  "episode_cpu_executed": {
+   "mean": 20.02245283018868,
+   "n": 106
+  },
+  "precommit_ranking_cpu": {
+   "mean": 0.0,
+   "n": 195
+  },
+  "relocation_plans": {
+   "mean": 0.5846153846153846,
+   "n": 195
+  },
+  "target_calls": {
+   "mean": 0.4307692307692308,
+   "n": 195
+  },
+  "total_cpu_per_root_incl_abstain": {
+   "mean": 10.894323113476924,
+   "n": 195
+  },
+  "wall_s": {
+   "mean": 20.140283018867922,
+   "n": 106
+  }
+ },
+ "_notes": {
+  "G+M": "pose-screen ranking (pose screens + sector claim, measured now) + planning of up to 5 ranked candidates in the episode",
+  "TOP1": "one committed candidate; abstention = 0 episode CPU and counts as failure",
+  "inference": "learned arms add per-root network + exact inference CPU (INFERENCE_COST.json); D is not an execution arm"
+ },
+ "_outcome_classes": {
+  "A": {
+   "ABSTAIN": 59,
+   "SUCCESS": 114,
+   "TARGET_CERTIFIED_INFEASIBLE": 8,
+   "TARGET_UNRESOLVED": 7,
+   "UNRESOLVED_CENSORED": 7
+  },
+  "G+M": {
+   "SUCCESS": 54,
+   "TARGET_CERTIFIED_INFEASIBLE": 5,
+   "TARGET_UNRESOLVED": 4,
+   "UNRESOLVED_CENSORED": 2
+  },
+  "K-B": {
+   "ABSTAIN": 30,
+   "NO_REPAIR_WITNESS_WITHIN_BUDGET": 4,
+   "SUCCESS": 140,
+   "TARGET_CERTIFIED_INFEASIBLE": 5,
+   "TARGET_UNRESOLVED": 9,
+   "UNRESOLVED_CENSORED": 7
+  },
+  "K-C": {
+   "ABSTAIN": 26,
+   "NO_REPAIR_WITNESS_WITHIN_BUDGET": 6,
+   "SUCCESS": 140,
+   "TARGET_CERTIFIED_INFEASIBLE": 6,
+   "TARGET_UNRESOLVED": 8,
+   "UNRESOLVED_CENSORED": 9
+  },
+  "SF": {
+   "ABSTAIN": 89,
+   "NO_REPAIR_WITNESS_WITHIN_BUDGET": 16,
+   "SUCCESS": 75,
+   "TARGET_CERTIFIED_INFEASIBLE": 8,
+   "TARGET_UNRESOLVED": 1,
+   "UNRESOLVED_CENSORED": 6
+  },
+  "geometry": {
+   "NO_REPAIR_WITNESS_WITHIN_BUDGET": 31,
+   "SUCCESS": 29,
+   "TARGET_CERTIFIED_INFEASIBLE": 2,
+   "UNRESOLVED_CENSORED": 3
+  },
+  "uniform": {
+   "NO_REPAIR_WITNESS_WITHIN_BUDGET": 22,
+   "SUCCESS": 22,
+   "TARGET_CERTIFIED_INFEASIBLE": 19,
+   "UNRESOLVED_CENSORED": 2
+  }
+ },
+ "geometry": {
+  "candidates_physically_tried": {
+   "mean": 0.9538461538461539,
+   "n": 65
+  },
+  "episode_cpu_executed": {
+   "mean": 13.736923076923075,
+   "n": 65
+  },
+  "precommit_ranking_cpu": {
+   "mean": 0.0,
+   "n": 65
+  },
+  "relocation_plans": {
+   "mean": 1.1384615384615384,
+   "n": 65
+  },
+  "target_calls": {
+   "mean": 0.47692307692307695,
+   "n": 65
+  },
+  "total_cpu_per_root_incl_abstain": {
+   "mean": 13.736923076923075,
+   "n": 65
+  },
+  "wall_s": {
+   "mean": 13.846615384615385,
+   "n": 65
+  }
+ },
+ "uniform": {
+  "candidates_physically_tried": {
+   "mean": 0.9692307692307692,
+   "n": 65
+  },
+  "episode_cpu_executed": {
+   "mean": 9.029384615384615,
+   "n": 65
+  },
+  "precommit_ranking_cpu": {
+   "mean": 0.0,
+   "n": 65
+  },
+  "relocation_plans": {
+   "mean": 1.2153846153846153,
+   "n": 65
+  },
+  "target_calls": {
+   "mean": 0.6307692307692307,
+   "n": 65
+  },
+  "total_cpu_per_root_incl_abstain": {
+   "mean": 9.029384615384615,
+   "n": 65
+  },
+  "wall_s": {
+   "mean": 9.132769230769233,
+   "n": 65
+  }
+ }
+}

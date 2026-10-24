@@ -844,3 +844,141 @@ def d_compare(cohort="p10b", out=None) -> dict:
     Path(out).parent.mkdir(parents=True, exist_ok=True)
     cf.write_json(Path(out), res)
     return res
+
+
+def d_figures() -> None:
+    import geometry as ge
+    import p10b_dataset as pd
+    import p10c_train_eval as pc
+    import p10d_execute as px
+    import p6_viz as pv
+    from matplotlib.patches import Circle
+    from scene import scene_from_dict
+    from viz import plt
+    dst = Path("visualizations/p11")
+    r = _rd(OUT / "d_compare" / "D_VS_ABC_p10b.json")
+    f, ax = plt.subplots(1, 3, figsize=(21, 5.5))
+    fa = r["feasibility"]["arms"]
+    arms = ["D", "D-pairless", "SF", "K-B", "K-C", "A"]
+    ax[0].barh(arms, [fa[a]["nll"] for a in arms], color=["#2a6fdb", "#e07b00", "#8e5bd0", "#1f4e9e", "#c56a00", "#2e9e5b"])
+    for i, a in enumerate(arms):
+        ax[0].text(fa[a]["nll"], i, f"  bal.acc {fa[a]['balanced_accuracy']:.3f}  TP/TN/FP/FN {fa[a]['TP']}/{fa[a]['TN']}/{fa[a]['FP']}/{fa[a]['FN']}", va="center", fontsize=7)
+    ax[0].set(xlabel="NLL (lower better)", title=f"Initial feasibility, identical {r['feasibility']['cohort_N']} roots (4 feasible / 60 infeasible)")
+    st = r["blockers"]["by_stratum"]
+    for j, s in enumerate(("proof_grounded", "operational", "all")):
+        for i, a in enumerate(("D", "D-pairless", "geometry_heuristic")):
+            x = st[s][a]
+            ax[1].bar(j + (i - 1) * 0.27, x["f1"], 0.25, yerr=[[x["f1"] - x["f1_ci95"][0]], [x["f1_ci95"][1] - x["f1"]]], capsize=3,
+                      color=["#2a6fdb", "#e07b00", "#7f7f7f"][i], label=a if j == 0 else None)
+    ax[1].set(xticks=range(3), xticklabels=[f"{s}\n(N={st[s]['D']['roots']})" for s in ("proof_grounded", "operational", "all")], ylim=(0, 1.05),
+              ylabel="per-object F1 (macro by root)", title="Blocker identity, all complete masks (union-minimal-set GT)")
+    ax[1].legend(fontsize=8)
+    m = r["matched"]["arms"]
+    ma = ["D", "geometry_heuristic", "D-pairless", "K-C", "K-B", "SF", "A"]
+    for i, a in enumerate(ma):
+        ax[2].errorbar(m[a]["f1"], i, xerr=[[m[a]["f1"] - m[a]["f1_ci95"][0]], [m[a]["f1_ci95"][1] - m[a]["f1"]]], fmt="o", capsize=3, color="#333")
+    ax[2].set(yticks=range(len(ma)), yticklabels=ma, xlabel="per-object F1", title=f"Strictly matched cohort N={r['matched']['matched_N']} (A/B/C/SF via exact zS edits)")
+    pv.png(f, dst / "P11_D_vs_ABC.png", "P11-5: initial feasibility (identical cohort) and blocker identity (all complete masks; strictly matched cohort)")
+    cfg = cf.load_config("config.toml")
+    robot = ge.make_robot(cfg)
+    P, snap, dl = px.plans(), _rd("runs/p10d/predictions.json"), {}
+    for b in pc.batches():
+        plan = _rd(b / "plan.json")
+        dl |= pd.d_labels(plan, pd.records(b, ("train", "validation", "blind")))
+    lam, thr = snap["baselines"]["D_lambda_B"], snap["baselines"]["D_threshold"]
+    d0 = next(x for x in snap["d"].values() if x["arm"] == "D" and x["lambda_B"] == lam and x["seed"] == 0)
+    picks = []
+    for want in (("proof_grounded", 2), ("operational", 3), ("proof_grounded", 1)):
+        k = next((k for k in sorted(dl) if P[k]["split"] == "blind" and dl[k]["mask"] is not None and dl[k]["provenance"] == want[0] and sum(dl[k]["mask"]) == want[1]), None)
+        if k:
+            picks.append(k)
+    f, ax = plt.subplots(1, len(picks), figsize=(6 * len(picks), 6), squeeze=False)
+    for a, k in zip(ax[0], picks):
+        s, x = scene_from_dict(P[k]["scene"]), dl[k]
+        p = d0["roots"]["blind"][k]
+        pred = [int(p["p_feasible"] < 0.5 and v >= thr) for v in p["marg"]]
+        pv._panel(a, cfg, robot, s, P[k]["goal_cell"], f"{k[-3:]} {P[k]['family']} ({x['provenance']}): GT union {x['roles']} -> {x['mask']}\nD s0 pred {pred}  (p_feasible {p['p_feasible']:.3f})")
+        for i, o in enumerate(x["pool"]):
+            xy = s.get(o).xy_m
+            if x["mask"][i]:
+                a.add_patch(Circle(xy, 0.036, fc="none", ec="#2e9e5b", lw=2.5, zorder=20))
+            if pred[i]:
+                a.plot(*xy, marker="x", color="#2a6fdb", ms=12, mew=3, zorder=21)
+            tag = "TP" if x["mask"][i] and pred[i] else "FN" if x["mask"][i] else "FP" if pred[i] else "TN"
+            a.text(xy[0], xy[1] - 0.045, f"{x['roles'][i]}:{tag}", ha="center", fontsize=8, weight="bold", zorder=22)
+        pv._tag(a, "GT = union of minimal parking subsets (HYPOTHETICAL edits; not executed)", "#34495e", size=6)
+    pv.png(f, dst / "P11_D_attribution_scenes.png", "P11-5: blind roots with GT union-minimal blockers (green rings) and D predictions (blue x)")
+
+
+# ------------------------------------------------------------------ P11-6: end-to-end resource accounting and outcome classes
+def resources() -> None:
+    import geometry as ge
+    import p10d_execute as px
+    jobs, P = _rd("runs/p10d/episode_jobs.json"), px.plans()
+    cfg = cf.load_config("config.toml")
+    robot = ge.make_robot(cfg)
+    led = {}
+    for f in Path("runs/p10d/episodes").glob("*/ledger.json"):
+        led |= {k: (v, f.parent / k) for k, v in _rd(f)["episodes"].items()}
+    jmap = {f"{j['root']}::{j['choice']}": j for j in jobs["jobs"]}
+    gm_cpu = {}
+    for k in sorted({j["root"] for j in jobs["jobs"]}):
+        c0 = time.process_time()
+        px.gm_rank(cfg, robot, P[k])
+        gm_cpu[k] = time.process_time() - c0
+    inf = _rd("runs/p10d/INFERENCE_COST.json")
+    per = collections.defaultdict(lambda: collections.defaultdict(list))
+    cls = collections.defaultdict(collections.Counter)
+    for key, arms in jobs["arms"].items():
+        root, ch = key.split("::", 1)
+        e, d = (led.get(f"{jmap[key]['arm']}__{root}") if key in jmap else None) or (None, None)
+        res = _rd(d / "result.json") if d is not None and (d / "result.json").exists() else {}
+        for a in arms:
+            arm = a if a in ("geometry", "uniform", "G+M") else a.split("-s")[0].removeprefix("F-")
+            ep_cpu = (e or {}).get("cpu_s", 0.0)
+            pre = gm_cpu[root] if arm == "G+M" else 0.0
+            nn = (inf.get(arm) or {}).get("mean_s", 0.0) if arm in ("K-B", "K-C", "A", "SF") else 0.0
+            per[arm]["total_cpu_per_root_incl_abstain"].append(ep_cpu + pre + nn)
+            per[arm]["episode_cpu_executed"] += [ep_cpu] if e else []
+            per[arm]["relocation_plans"].append(res.get("relocation_plans", 0) or 0)
+            per[arm]["target_calls"].append(res.get("target_calls", 0) or 0)
+            per[arm]["candidates_physically_tried"].append(res.get("tried", 0) or 0)
+            per[arm]["precommit_ranking_cpu"].append(pre)
+            per[arm]["wall_s"] += [(e or {}).get("guard", {}).get("wall_s", 0.0)] if e else []
+            cls[arm]["ABSTAIN" if ch in ("ABSTAIN", "NOT_RUN") else (e or {}).get("outcome", "MISSING")] += 1
+    out = {a: {k: {"mean": float(np.mean(v)) if v else None, "n": len(v)} for k, v in d.items()} for a, d in per.items()}
+    out["_outcome_classes"] = {a: dict(c) for a, c in cls.items()}
+    out["_notes"] = {"inference": "learned arms add per-root network + exact inference CPU (INFERENCE_COST.json); D is not an execution arm",
+                     "G+M": "pose-screen ranking (pose screens + sector claim, measured now) + planning of up to 5 ranked candidates in the episode",
+                     "TOP1": "one committed candidate; abstention = 0 episode CPU and counts as failure"}
+    cf.write_json(OUT / "RESOURCES.json", out)
+
+
+def outcome_figure() -> None:
+    import p6_viz as pv
+    from viz import plt
+    r = _rd(OUT / "RESOURCES.json")["_outcome_classes"]
+    order = ["K-B", "K-C", "A", "SF", "geometry", "uniform", "G+M"]
+    classes = ["SUCCESS", "NO_REPAIR_WITNESS_WITHIN_BUDGET", "TARGET_CERTIFIED_INFEASIBLE", "TARGET_UNRESOLVED", "UNRESOLVED_CENSORED", "ABSTAIN"]
+    colors = ["#2e9e5b", "#e07b00", "#c0392b", "#8e5bd0", "#7f7f7f", "#d0d0d0"]
+    f, ax = plt.subplots(figsize=(11, 5))
+    for i, a in enumerate(order):
+        tot, left = sum(r[a].values()), 0.0
+        for c, col in zip(classes, colors):
+            v = r[a].get(c, 0) / tot
+            ax.barh(i, v, left=left, color=col, edgecolor="white", hatch="//" if a == "G+M" else None, label=c if i == 0 else None)
+            left += v
+        ax.text(1.01, i, f"n={tot} choices (65 roots)", va="center", fontsize=8)
+    ax.set(yticks=range(len(order)), yticklabels=[a + (" (planner-assisted)" if a == "G+M" else "") for a in order], xlim=(0, 1.25),
+           xlabel="fraction of arm x seed choices", title="P10d blind TOP1 outcome classes (strict TOP1; G+M hatched = planner-assisted, up to 5 candidates)")
+    ax.legend(fontsize=7, loc="lower right")
+    pv.png(f, Path("visualizations/p11") / "P11_TOP1_outcome_classes.png", "Outcome classes per arm; G+M differentiated")
+
+
+def regression() -> None:
+    """Historical suite + six replays + P10/P11 tests after the P11 code changes (fixture planner calls itemized by countcalls)."""
+    import subprocess
+    d = OUT / "regression"
+    d.mkdir(parents=True, exist_ok=True)
+    (d / "countcalls.py").write_text(Path("runs/p8/audit/regression/countcalls.py").read_text())
+    subprocess.run([sys.executable, "run.py", "g4c-lf-p4-regression", "--out", str(d), "--cpu", "1600", "--wall", "3400"], capture_output=True, text=True)

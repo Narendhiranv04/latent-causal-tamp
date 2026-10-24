@@ -1,0 +1,73 @@
+{
+ "stage": "P11",
+ "start": "0a5aa4d1cbe2cdd161de4e2e1bc873cfc9daddcb",
+ "status": "PARTIAL (engineering PASS)",
+ "gates": {
+  "P11-0": "PASS",
+  "P11-1": "PASS",
+  "P11-2": "PASS",
+  "P11-3": "PASS",
+  "P11-4": "BLOCKED (external generalization remains OPEN)",
+  "P11-6 regression": "407/407 tests, 6/6 replays"
+ },
+ "spend_cpu_s": {
+  "audit_eval": 1028.7,
+  "f1_training": 1062.2,
+  "short_episodes": 188.2,
+  "newcon_dev": 1122.8,
+  "newholdout_teacher": 0,
+  "newholdout_exec": 0,
+  "regression": 663.9
+ },
+ "caps": {
+  "audit_eval": 4000.0,
+  "f1_training": 6000.0,
+  "short_episodes": 5000.0,
+  "newcon_dev": 1200.0,
+  "newholdout_teacher": 8000.0,
+  "newholdout_exec": 5000.0,
+  "regression": 1700.0
+ },
+ "sources": {
+  "p11_closure.py": "sha256:0217a8dbbd4cb697b735ba6ee7419f29ee4c4138297950e96b8c48c00a3e2179",
+  "p11_holdout.py": "sha256:1e7a85355ff574362b3a2a0530c9b000ffa966815b6b6e805dd70531534f6fb3",
+  "tests/test_p11_h9.py": "sha256:3506daeb0196732f01413238d72e266ec6a5ad4fac4d150e7f454127d301bf6f",
+  "p10c_train_eval.py": "sha256:5c0f67084f7d979bb3b4138e04a679cc2031b044b7ddc449dfba83e9cae2f7b1",
+  "p10d_execute.py": "sha256:20f833fa17707b7b995b895e3ab11b36ea04a3ab89ece79e51804f1b63a8ee73",
+  "p10e_report.py": "sha256:53ac4e306e4c278c6e31cdf46b5dfaa848e85219409943bd4f2b99757533732d",
+  "d_blockers.py": "sha256:7eea73ce6b7c969bd699ecddaddd43958b0b3639493f4a63874ea739628bf2a6"
+ },
+ "files": {
+  "runs/p11/P11_0_GATE.json": "sha256:2960a0cf9b7e81072a32393a9a7010e68ea724c8ac3c4e72f39fa87ee572e201",
+  "runs/p11/RESOURCES.json": "sha256:2ebb841ad655b90b5b282491ddd24b08df1e4f59c40ad891daadd4a9029d4b2e",
+  "runs/p11/audit/BLIND_EVAL_recomputed.json": "sha256:7263cc2e2b8270c9b9552662345fb9e7bf9cb49e2243cd356eb43066f61876b2",
+  "runs/p11/audit/P11_0_AUDIT.json": "sha256:eb7668e3190758c9a801e195d0236cb6b07e06945da7f8b010e20177750a6e5e",
+  "runs/p11/components/COMPONENTS.json": "sha256:4a4eea4f4a8cec4ffe68d0f5d65081401258312e562c2b8317299c4164199dcb",
+  "runs/p11/components/F1_BLIND_EVAL.json": "sha256:9cdf3f54bb1f3d7f3025a5882eb6cf274e2c70ebc93569504db94fa172a10e40",
+  "runs/p11/components/F1_TOP1.json": "sha256:2d734231f2f598b6e21853f63c7113b23a1b55ba673c96224d317fd45cf4f4a8",
+  "runs/p11/components/P11_COMPONENTS_GATE.json": "sha256:9b44868928fb9ad5a06e6cfc7789477b5622815ba54eae8afbf2f6a68488321b",
+  "runs/p11/components/runs/F1OFF-K-B-s0.json": "sha256:0ec66b353bbb6734625de39eadbe0f66b27e9ce594e9581c96ad073753591e20",
+  "runs/p11/components/runs/F1OFF-K-B-s1.json": "sha256:9bbf33376ebb3ffa99bfe9f5a963417c850c91a59e573e8c1b86829782158a95",
+  "runs/p11/components/runs/F1OFF-K-B-s2.json": "sha256:2e786b5cf31fddf62e924bbee2542296278f52aad7a5241b897b7feef9bd8ccf",
+  "runs/p11/d_compare/D_VS_ABC_p10b.json": "sha256:abafe70b5376e4b42f9bfdd8d6ba881d889d3a96601a5839fbc6c1903f167745",
+  "runs/p11/h9/H9_RESULTS.json": "sha256:261431bea6805ee9bfe894a52638354f51f74cb0e39095bde4f9967305d22f5d",
+  "runs/p11/h9/P11_H9_GATE.json": "sha256:9fab84235fd91eb245403da361a720a5e7bb7f3d670beb4a9b4c6ea19cd30c77",
+  "runs/p11/h9/h9_predictions.json": "sha256:15b3e852a5c707fd46bdc34822712be67dc31ecbb7dab67c475b161c2c484b77",
+  "runs/p11/length/LENGTH_MANIFEST.json": "sha256:95db3e23766c459527df1a0d81dec19600ec5c4531ca1fb9c5f725a45f45d14c",
+  "runs/p11/length/LENGTH_RESULTS.json": "sha256:f264a4afa91df528abce9c96c2d48ff760f952e6e7b099179155ab518bf202da",
+  "runs/p11/length/P11_LENGTH_GATE.json": "sha256:73304da771775851249277984989f7ec4c6543f55338ca3f0a4101cef8a30532",
+  "runs/p11/new_holdout/P11_NEW_HOLDOUT_GATE.json": "sha256:438583505d2fc8fb0ad408e505cecb71c28d82574ca62cd1f75fcf448c09bbc5",
+  "runs/p11/new_holdout/dev/STATIC_OBSTRUCTION_RATE.json": "sha256:aefd72f33f47aaccbf889826a01aea78a8f6cc0c5ed3544fa5a1e05374c298bc",
+  "runs/p11/new_holdout/dev/plan.json": "sha256:75f5126af5df8e86972f833cce485faff7569cc21da1b3a7437669eb7cb8aaf3",
+  "runs/p11/new_holdout/dev/static_admission.json": "sha256:de826e56182507fe7bcaf351ebc11ea0c19a5c7a62a681674b59a71fa8342ec5",
+  "runs/p11/regression/calls.json": "sha256:c28089540a1bbe37c8881d0776ec43c024034ba3563757b4e6984b8f5bb31353",
+  "runs/p11/regression/regression_result.json": "sha256:4a6b70064338950fe6a8e024d365a87ce0be391b75c1013fc627022b055ab35c",
+  "runs/p11/regression/replay_g1_hardening.json": "sha256:2b285eb7cb298eca8e3d5901798843c6167d67e2a2f793f96687315b6d96a41c",
+  "runs/p11/regression/replay_g1_robot.json": "sha256:260ebe79c175fa27ffbb897d0b8ac21d482f18737bdf2ab6043d5a0263289f09",
+  "runs/p11/regression/replay_g2_interventions.json": "sha256:c1caee2689d20bb9305bf07ee92da6abc2bcc169504301fd181be11a11a60656",
+  "runs/p11/regression/replay_g3_5_initial_scene.json": "sha256:29154916886b9d71e03aab450864edefd99dc5ec56d9b2122e437586ccf620ac",
+  "runs/p11/regression/replay_g3_repairs.json": "sha256:4407aa4cfc88138cf5ae7863e4551efe5628f8fffee33c6adcf76df036122d7f",
+  "runs/p11/regression/replay_g4a_evidence_audit.json": "sha256:e4a7c214acbde81c2fa62c9187922ea6357ff85f05970d56d15e159a97b43155"
+ },
+ "hash": "sha256:736e0b6fd13c3f7b1a87bde84d974da1afa3d6ae57c039270a00e9f511b303ee"
+}
