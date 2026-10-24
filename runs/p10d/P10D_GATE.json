@@ -1,0 +1,25 @@
+{
+ "checks": {
+  "all_episodes_recorded": true,
+  "execution_cap": true,
+  "holm_computed": true,
+  "strict_top1_no_fallback": true,
+  "teacher_cap": true
+ },
+ "engineering": "PASS",
+ "note": "one serial-runner job (episodes_all) was killed and replaced by per-batch workers; its ~2 min CPU has no guard record; one in-flight episode repeated deterministically",
+ "scientific": {
+  "P1_TOP1 K-B vs SF": true,
+  "P2_H1 K-B vs A": true,
+  "P3_ORDER K-C vs K-B": false,
+  "P4_OMISSION K-B vs SF": false
+ },
+ "spend": {
+  "constructor_dev": 1017.7,
+  "evaluation": 1056.0,
+  "execution": 3346.5,
+  "teacher": 14769.0,
+  "training": 52503.5
+ },
+ "stage": "P10d"
+}

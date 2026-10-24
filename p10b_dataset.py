@@ -342,3 +342,12 @@ def pytest_d(path="runs/p10b/p10b0/test_d_blockers.log") -> None:
     import subprocess
     r = subprocess.run([sys.executable, "-m", "pytest", "-q", "tests/test_d_blockers.py"], capture_output=True, text=True)
     Path(path).write_text(r.stdout[-4000:] + f"\nEXIT {r.returncode}\n")
+
+
+def regression() -> None:
+    """Historical suite + six replays after the P10b-P10e code changes (fixture planner calls itemized by countcalls)."""
+    import subprocess
+    d = OUT / "regression"
+    d.mkdir(parents=True, exist_ok=True)
+    (d / "countcalls.py").write_text(Path("runs/p8/audit/regression/countcalls.py").read_text())
+    subprocess.run([sys.executable, "run.py", "g4c-lf-p4-regression", "--out", str(d), "--cpu", "1400", "--wall", "3400"], capture_output=True, text=True)

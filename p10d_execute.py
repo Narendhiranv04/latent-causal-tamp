@@ -223,3 +223,19 @@ def episodes(cap_cpu=14000.0) -> None:
     for b in pc.batches():
         bj = [j for j in js if j["root"] in _rd(b / "plan.json")["roots"]]
         po.run_episodes(OUT / "episodes" / b.name, b / "plan.json", bj, lambda m: open(OUT / "episodes.log", "a").write(m + "\n"))
+
+
+def episodes_all() -> None:
+    episodes()
+    (OUT / "EPISODES_DONE").write_text("done\n")
+
+
+def episodes_batch(name, cap_cpu=4000.0) -> None:
+    """One batch's episodes (separate ledger per batch dir, so batches can run in parallel without a shared file)."""
+    import p7_oneshot as po
+    js = _rd(OUT / "episode_jobs.json")["jobs"]
+    b = Path("runs/p10b") / name
+    po.CAPS.update({"cpu_s": cap_cpu, "wall_s": 60000.0, "episode_cpu_s": 180.0, "episode_wall_s": 600.0, "max_episodes": 10 ** 6, "max_rank": 5})
+    bj = [j for j in js if j["root"] in _rd(b / "plan.json")["roots"]]
+    po.run_episodes(OUT / "episodes" / name, b / "plan.json", bj, lambda m: open(OUT / f"episodes_{name}.log", "a").write(m + "\n"))
+    (OUT / f"EPISODES_DONE_{name}").write_text("done\n")

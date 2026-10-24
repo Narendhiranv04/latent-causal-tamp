@@ -1,0 +1,178 @@
+{
+ "cost": {
+  "J": 0.8286721392121017,
+  "backend": "FIXED_ORDER_GREEDY_SKILL2D_V1",
+  "end_gap": 0.07,
+  "end_q": [
+   1.177781295035734,
+   -1.1070712167865757,
+   -1.6415064050440549
+  ],
+  "joint_ranges_rad": [
+   6.2831853,
+   6.2831853,
+   6.2831853
+  ],
+  "label_available": "True",
+  "per_phase": {
+   "approach": 0.11225033648664663,
+   "carry": 0.2293605856269289,
+   "close_attach": 0.0,
+   "pregrasp": 0.37867813550961993,
+   "release": 0.0,
+   "retreat": 0.10838308158890624
+  },
+  "per_record": [
+   0.44839403393816435,
+   0.38027810527393735
+  ],
+  "policy": "FIRST_RELOCATION_WITNESS_NORMALIZED_JOINT_TRAVEL_V1",
+  "reason": "OK",
+  "start_gap": 0.07,
+  "start_q": [
+   1.5707963267948966,
+   -1.5707963267948966,
+   -1.5707963267948966
+  ],
+  "waypoints": 60,
+  "witness_hash": "sha256:144bf8271f08af620073f3ff2860c63acf32739b7f4cd3c461a4ac4c9fa08c00"
+ },
+ "relocation": {
+  "achieved_states": [
+   {
+    "attachment": "free",
+    "gap": 0.07,
+    "moved": [],
+    "objects": {
+     "o00": [
+      "obstacle",
+      0.024,
+      [
+       0.04,
+       0.6
+      ],
+      56
+     ],
+     "o01": [
+      "obstacle",
+      0.024,
+      [
+       0.44,
+       0.44
+      ],
+      45
+     ],
+     "t0": [
+      "target",
+      0.024,
+      [
+       0.6,
+       0.52
+      ],
+      55
+     ]
+    },
+    "q": [
+     1.5707963267948966,
+     -1.5707963267948966,
+     -1.5707963267948966
+    ]
+   },
+   {
+    "attachment": "free",
+    "gap": 0.07,
+    "moved": [
+     "o00"
+    ],
+    "objects": {
+     "o00": [
+      "obstacle",
+      0.024,
+      [
+       0.27999999999999997,
+       0.6
+      ],
+      59
+     ],
+     "o01": [
+      "obstacle",
+      0.024,
+      [
+       0.44,
+       0.44
+      ],
+      45
+     ],
+     "t0": [
+      "target",
+      0.024,
+      [
+       0.6,
+       0.52
+      ],
+      55
+     ]
+    },
+    "q": [
+     1.6801133727332243,
+     -1.3338642236950455,
+     -1.393446700234776
+    ]
+   },
+   {
+    "attachment": "free",
+    "gap": 0.07,
+    "moved": [
+     "o00",
+     "o01"
+    ],
+    "objects": {
+     "o00": [
+      "obstacle",
+      0.024,
+      [
+       0.27999999999999997,
+       0.6
+      ],
+      59
+     ],
+     "o01": [
+      "obstacle",
+      0.024,
+      [
+       0.36,
+       0.4400000000000004
+      ],
+      44
+     ],
+     "t0": [
+      "target",
+      0.024,
+      [
+       0.6,
+       0.52
+      ],
+      55
+     ]
+    },
+    "q": [
+     1.177781295035734,
+     -1.1070712167865757,
+     -1.6415064050440549
+    ]
+   }
+  ],
+  "complete_witness": true,
+  "failed_action": null,
+  "normalized_reasons": [
+   "WITNESS",
+   "WITNESS"
+  ],
+  "policy": "FIXED_ORDER_GREEDY_SKILL2D_V1",
+  "reason": "ALL_RELOCATIONS_CERTIFIED",
+  "relocation_plans": 2,
+  "stop": "WITNESS_FOUND"
+ },
+ "stage": "relocation",
+ "unit": "seq:p10b_2026111078:o00>59.o01>44#s20261021"
+}

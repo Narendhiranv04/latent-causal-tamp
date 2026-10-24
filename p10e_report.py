@@ -258,6 +258,10 @@ def blind_eval(split="blind", out="runs/p10d/BLIND_EVAL.json") -> dict:
         v = [(x["marginals"][q], y(q)) for q in (c["query"] for c in P[k]["items"]) if y(q) is not None and q in x["marginals"]
              and (src is None or (rec[q]["label_source"] == "PLANNER_BUDGET") == (src == "operational"))]
         return float(np.mean([-np.log(min(max(p if t else 1 - p, 1e-9), 1)) for p, t in v])) if v else None
+    res["per_root"] = {"nll_full": _arm_mean(snap, split, "full", nll_root), "H1": ep["P2_H1"], "order": ep["P3_ORDER"], "omission": ep["P4_OMISSION"]}
+    res["ablation_contrasts_vs_K-B"] = {f"{a}": {e: _contrast(res["per_root"][e], a, "K-B", "lower" if e == "nll_full" else "higher")
+                                                for e in ("nll_full", "H1", "order", "omission")}
+                                         for a in ("B-F2", "B-F3", "B-F4", "B-F5s", "B-F5q", "B-V0", "B-U", "K-C")}
     for regime in ("full", "short"):
         per = _arm_mean(snap, split, regime, nll_root)
         res[f"root_nll_{regime}"] = {"per_arm": {a: float(np.mean(list(v.values()))) for a, v in per.items()},
@@ -423,3 +427,159 @@ def batch_figures(batch="runs/p10b/batch1", tag="P10b1") -> None:
                         f"({x['provenance']}); HYPOTHETICAL parking edits (labels only, never executed)", fontsize=9)
         pv.png(f, DST / f"{tag}_D_masks.png", f"{tag}: D blocker ground truth from all parking subsets (target-only edits)")
     cf.write_json(DST / f"INDEX_{tag}.json", pv.INDEX)
+
+
+# ------------------------------------------------------------------ P1: strict TOP1 executed success (+ G+M reference) and Holm over P1-P4
+def p1_eval(out="runs/p10d/P1_TOP1.json") -> dict:
+    import numpy as np
+    jobs = _rd("runs/p10d/episode_jobs.json")
+    led = {}
+    for f in Path("runs/p10d/episodes").glob("*/ledger.json"):
+        led |= _rd(f)["episodes"]
+    ep = {f"{j['root']}::{j['choice']}": led.get(f"{j['arm']}__{j['root']}") for j in jobs["jobs"]}
+    per, cost, moves = {}, {}, {}
+    for key, arms in jobs["arms"].items():
+        root, ch = key.split("::", 1)
+        e = ep.get(key)
+        ok = 0.0 if ch in ("ABSTAIN", "NOT_RUN") or e is None else float(e.get("outcome") == "SUCCESS")
+        for a in arms:
+            arm = a if a in ("geometry", "uniform", "G+M") else a.split("-s")[0].removeprefix("F-")
+            per.setdefault(arm, {}).setdefault(root, []).append(ok)
+            if e:
+                cost.setdefault(arm, []).append(e.get("cpu_s", 0.0))
+                if e.get("outcome") == "SUCCESS":
+                    moves.setdefault(arm, []).append(e.get("moves") or 0)
+    succ = {a: {k: float(np.mean(v)) for k, v in d.items()} for a, d in per.items()}
+    res = {"episodes": len(jobs["jobs"]), "outcomes": dict(__import__("collections").Counter((e or {}).get("outcome", "MISSING") for e in ep.values())),
+           "success_rate": {a: float(np.mean(list(v.values()))) for a, v in succ.items()},
+           "mean_cpu_per_episode": {a: float(np.mean(v)) for a, v in cost.items()},
+           "mean_moves_on_success": {a: float(np.mean(v)) for a, v in moves.items()},
+           "contrasts": {f"{a}-{b}": _contrast(succ, a, b) for a, b in (("K-B", "SF"), ("K-C", "SF"), ("A", "SF"), ("K-B", "geometry"),
+                                                                         ("K-B", "A"), ("K-C", "K-B"), ("K-B", "G+M"), ("K-B", "uniform"))},
+           "per_root": succ}
+    be = _rd("runs/p10d/BLIND_EVAL.json")
+    ps = {"P1_TOP1 K-B vs SF": res["contrasts"]["K-B-SF"]["sign_p"], "P2_H1 K-B vs A": be["P2_H1"]["primary_K-B_vs_A"]["sign_p"],
+          "P3_ORDER K-C vs K-B": be["P3_ORDER"]["primary_K-C_vs_K-B"]["sign_p"], "P4_OMISSION K-B vs SF": be["P4_OMISSION"]["primary_K-B_vs_SF"]["sign_p"]}
+    order, holm, run = sorted(ps, key=ps.get), {}, 0.0
+    for i, k in enumerate(order):
+        run = max(run, min(1.0, (len(ps) - i) * ps[k]))
+        holm[k] = {"p": ps[k], "holm_p": run, "reject_0.05": run < 0.05}
+    res["holm"] = holm
+    cf.write_json(Path(out), res)
+    return res
+
+
+# ------------------------------------------------------------------ final figures (blind; recorded data only)
+ARMC = {"K-B": "#2a6fdb", "K-C": "#e07b00", "A": "#2e9e5b", "SF": "#8e5bd0", "geometry": "#7f7f7f", "uniform": "#bdbdbd", "G+M": "#c0392b",
+        "D": "#2a6fdb", "D-pairless": "#e07b00", "heuristic": "#7f7f7f"}
+
+
+def _ci_bars(ax, per, arms, title, xlabel, lo=None, hi=None):
+    import numpy as np
+    import p10_eval as pe
+    for i, a in enumerate(arms):
+        v = list(per.get(a, {}).values())
+        if not v:
+            continue
+        m = float(np.mean(v))
+        c = pe.boot([x - m for x in v])
+        ax.errorbar(m, i, xerr=[[-(c[0] or 0)], [c[1] or 0]], fmt="o", color=ARMC.get(a, "#2a6fdb" if a.startswith("B-") else "#555"), ms=7, lw=2, capsize=3)
+        ax.text(m, i + 0.25, f"{m:.3f}", ha="center", fontsize=7)
+    ax.set(yticks=range(len(arms)), yticklabels=arms, title=title, xlabel=xlabel)
+    if lo is not None:
+        ax.set_xlim(lo, hi)
+    ax.grid(axis="x", color="#eee")
+
+
+def final_figures() -> None:
+    import numpy as np
+    DST.mkdir(parents=True, exist_ok=True)
+    be = _rd("runs/p10d/BLIND_EVAL.json")
+    pr = be["per_root"]
+    arms = ["K-B", "K-C", "A", "SF", "B-F2", "B-F3", "B-F4", "B-F5s", "B-F5q", "B-V0", "B-U"]
+    f, ax = plt.subplots(1, 4, figsize=(22, 5.5))
+    _ci_bars(ax[0], pr["nll_full"], arms, "Per-root NLL of decided outcomes (65 blind roots)", "lower is better")
+    _ci_bars(ax[1], {a: {k: -v for k, v in d.items()} for a, d in pr["H1"].items()}, arms, "H1 |kappa_hat - kappa| (9 blind roots)", "lower is better")
+    _ci_bars(ax[2], pr["order"], arms, "Same-endpoint order choice (26 blind roots)", "accuracy", -0.05, 1.05)
+    _ci_bars(ax[3], pr["omission"], arms, "Omission necessity (52 blind roots)", "accuracy", 0.6, 1.02)
+    pv.png(f, DST / "P10_blind_endpoints.png", "Blind endpoints per arm (seed mean per root; root-bootstrap 95 % CI of the mean); B-* = retrained ablations of keyed B")
+    D = be["D"]
+    f, ax = plt.subplots(1, 2, figsize=(13, 4.5))
+    strata = sorted({n for k in ("D", "D-pairless", "heuristic") for n in D[k]["by_true_blockers"]}, key=int)
+    for j, k in enumerate(("D", "D-pairless", "heuristic")):
+        ax[0].bar([int(s) + (j - 1) * 0.27 for s in strata], [D[k]["by_true_blockers"].get(s, np.nan) for s in strata], 0.25, color=ARMC[k], label=f"{k} (F1 {D[k]['f1']:.2f})")
+    ax[0].set(xticks=[int(s) for s in strata], xlabel="true blockers in the mask (3-4 = operational H10 corridor masks)", ylabel="per-object F1 (macro by root)",
+              title=f"D blocker attribution, {D['D']['roots']} blind complete masks", ylim=(0, 1.05))
+    ax[0].legend(fontsize=8)
+    names = ["D", "D-pairless"] + list(D["z0_feasibility"])
+    vals = [D["D_feasibility"]["nll"], D["D-pairless_feasibility"]["nll"]] + [D["z0_feasibility"][a]["nll"] for a in D["z0_feasibility"]]
+    ax[1].barh(names, vals, color=[ARMC.get(n, "#555") for n in names])
+    ax[1].set(xlabel="NLL of the original-task feasibility label (64 blind roots)", title="Initial feasibility: D vs A / B / C / SF z0")
+    pv.png(f, DST / "P10_D_blind.png", "D blind: blocker F1 by number of true blockers; feasibility NLL vs A/B/C/SF z0")
+    le = be["length_extrapolation"]
+    f, ax = plt.subplots(1, 3, figsize=(16, 4.2))
+    for i, m in enumerate(("nll", "order", "omission")):
+        for j, rg in enumerate(("full", "short")):
+            a4 = ["K-B", "K-C", "A", "SF"]
+            ax[i].bar([x + (j - 0.5) * 0.38 for x in range(4)], [le[rg][m].get(a, np.nan) for a in a4], 0.36, label=f"trained {'1-4 moves' if rg == 'full' else '<= 2 moves'}",
+                      color=["#2a6fdb", "#9bbcf0"][j])
+        ax[i].set(xticks=range(4), xticklabels=a4, title=f"Blind H10 (3- / 4-move) roots: {m}")
+    ax[0].legend(fontsize=8)
+    pv.png(f, DST / "P10_length_extrapolation.png", "Length extrapolation: models trained on <= 2-move data vs 1-4-move data, scored on blind 3- / 4-move roots")
+    if Path("runs/p10d/P1_TOP1.json").exists():
+        p1 = _rd("runs/p10d/P1_TOP1.json")
+        a6 = ["K-B", "K-C", "A", "SF", "geometry", "uniform", "G+M"]
+        f, ax = plt.subplots(figsize=(8, 4.5))
+        _ci_bars(ax, p1["per_root"], a6, "Strict TOP1_COMMIT executed success, 65 blind roots (G+M = planner-assisted reference)", "success rate (abstain = failure)", -0.02, 1.02)
+        pv.png(f, DST / "P10_TOP1_executed.png", "P1: executed TOP1 success per arm (seed mean per root; root-bootstrap CI)")
+    cf.write_json(DST / "INDEX_final.json", pv.INDEX)
+
+
+def episode_gifs() -> None:
+    """Recorded TOP1 episodes (relocation.npz / target_witness.npz of the episode itself): keyed-B successes on a 4-move, a 3-move,
+    an H1 and an H3 root, plus static panels of keyed-B failures with their recorded outcome (no fabricated motion)."""
+    import g4d_run as gr
+    import p10d_execute as px
+    cfg = cf.load_config("config.toml")
+    robot = ge.make_robot(cfg)
+    P, jobs = px.plans(), _rd("runs/p10d/episode_jobs.json")
+    led = {}
+    for f in Path("runs/p10d/episodes").glob("*/ledger.json"):
+        led |= {k: (v, f.parent / k) for k, v in _rd(f)["episodes"].items()}
+    byroot = {}
+    for j in jobs["jobs"]:
+        key = f"{j['root']}::{j['choice']}"
+        if any(a.startswith("F-K-B") for a in jobs["arms"].get(key, [])):
+            byroot.setdefault(j["root"], (j, *led.get(f"{j['arm']}__{j['root']}", (None, None))))
+    picks, fails = {}, []
+    for k, (j, e, d) in sorted(byroot.items()):
+        fam = P[k]["family"]
+        if e and e.get("outcome") == "SUCCESS" and fam in ("H10_4", "H10_3", "H1", "H3") and fam not in picks and (d / "relocation.npz").exists():
+            picks[fam] = (k, j, e, d)
+        elif e and e.get("outcome") != "SUCCESS" and len(fails) < 4:
+            fails.append((k, j, e))
+    frames = []
+    for fam in ("H10_4", "H10_3", "H1", "H3"):
+        if fam not in picks:
+            continue
+        k, j, e, d = picks[fam]
+        s, seq = scene_from_dict(P[k]["scene"]), [tuple(a) for a in j["ranked"][0]]
+        rel, tw = gr._arrays(d / "relocation.npz"), gr._arrays(d / "target_witness.npz")
+        for qq, g, pos, mv in pv.trace_frames(robot, s, seq, rel, tw, n_move=10, n_target=12):
+            fg, a = plt.subplots(figsize=(5, 5))
+            pv._panel(a, cfg, robot, s, P[k]["goal_cell"], f"BLIND {k[-3:]} {fam}: keyed-B TOP1 '{'.'.join(f'{o}>{c}' for o, c in seq)}'\nEXECUTED (recorded episode), {len(seq)} moves",
+                      q=qq, gap=g, pos=pos, held=mv)
+            pv._tag(a, "TOP1_COMMIT SUCCESS - recorded trajectory", COLORS["valid"])
+            frames.append(pv._rgb(fg))
+    if frames:
+        pv.gif(DST / "P10_TOP1_executed_successes.gif", frames, "Blind keyed-B TOP1 executed episodes (recorded): 4-move, 3-move, H1, H3")
+    if fails:
+        f, ax = plt.subplots(1, len(fails), figsize=(5 * len(fails), 5), squeeze=False)
+        for a, (k, j, e) in zip(ax[0], fails):
+            s = scene_from_dict(P[k]["scene"])
+            pv._panel(a, cfg, robot, s, P[k]["goal_cell"], f"BLIND {k[-3:]} {P[k]['family']}: keyed-B TOP1 failed")
+            if j["ranked"][0]:
+                pv._arrows(a, s, [tuple(x) for x in j["ranked"][0]], pv.COL["CERTIFIED_INFEASIBLE"])
+            pv._tag(a, f"{e['outcome']} - NO VERIFIED TRACE", pv.COL["UNKNOWN"], size=6)
+        pv.png(f, DST / "P10_TOP1_failures.png", "Blind keyed-B TOP1 failures: committed repair (arrows) and recorded outcome")
+    cf.write_json(DST / "INDEX_episodes.json", pv.INDEX)
