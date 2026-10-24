@@ -676,3 +676,171 @@ def length_figure() -> None:
     ax.set(xticks=[x + 0.3 for x in range(4)], xticklabels=arms, ylabel="executed TOP1 success (9 roots each)", title="P11-3 (POST-HOC): physically executed 3- / 4-move repairs")
     ax.legend(fontsize=7)
     pv.png(f, dst / "P11_length_executed.png", "P11-3: executed TOP1 success on blind H10 roots, short-trained vs full-trained")
+
+
+# ------------------------------------------------------------------ P11-5: D versus A / B / C / SF (initial feasibility; blocker identity)
+def _feas_metrics(pairs, seeds_pairs=None):
+    """pairs: [(p, y)] one per root (seed mean). Threshold 0.5 on p(feasible)."""
+    import p10_eval as pe
+    p, y = np.array([a for a, _ in pairs]), np.array([b for _, b in pairs])
+    pred = p >= 0.5
+    tp, tn, fp, fn = int((pred & (y == 1)).sum()), int((~pred & (y == 0)).sum()), int((pred & (y == 0)).sum()), int((~pred & (y == 1)).sum())
+    rec1 = tp / max(1, tp + fn) if (y == 1).any() else None
+    rec0 = tn / max(1, tn + fp) if (y == 0).any() else None
+    m = pe.metrics([{"p": float(a), "y": int(b), "root": i} for i, (a, b) in enumerate(pairs)])
+    out = {"N": len(pairs), "feasible_GT": int(y.sum()), "infeasible_GT": int((1 - y).sum()), "TP": tp, "TN": tn, "FP": fp, "FN": fn,
+           "accuracy": float((pred == (y == 1)).mean()), "balanced_accuracy": (rec1 + rec0) / 2 if rec1 is not None and rec0 is not None else None,
+           "feasible_recall": rec1, "infeasible_recall": rec0, "auroc": m["auroc"], "nll": m["nll"], "brier": m["brier"], "ece_10bins": m["ece"]}
+    if seeds_pairs:
+        accs = [float(np.mean([(a >= 0.5) == (b == 1) for a, b in sp])) for sp in seeds_pairs]
+        nlls = [float(np.mean([-math.log(min(max(a if b else 1 - a, 1e-9), 1)) for a, b in sp])) for sp in seeds_pairs]
+        out["per_seed_accuracy"], out["per_seed_nll"] = accs, nlls
+    return out
+
+
+def _set_metrics(gt, pred):
+    tp = sum(a and b for a, b in zip(gt, pred))
+    fp = sum((not a) and b for a, b in zip(gt, pred))
+    prec = tp / (tp + fp) if (tp + fp) else 1.0           # no predicted blocker = no false attribution
+    rec = tp / sum(gt) if sum(gt) else 1.0
+    f1 = 1.0 if not any(gt) and not any(pred) else 2 * tp / max(1, sum(gt) + sum(pred))
+    u = sum(a or b for a, b in zip(gt, pred))
+    neg = sum(1 - a for a in gt)
+    return {"precision": prec, "recall": rec, "f1": f1, "exact": float(list(gt) == list(pred)), "jaccard": tp / u if u else 1.0,
+            "card_err": abs(sum(pred) - sum(gt)), "fp_rate_irrelevant": fp / neg if neg else None, "tp": tp, "fp": fp, "fn": sum(a and not b for a, b in zip(gt, pred))}
+
+
+def _agg(per_root):
+    keys = ("precision", "recall", "f1", "exact", "jaccard", "card_err", "fp_rate_irrelevant")
+    out = {"roots": len(per_root)}
+    for k in keys:
+        v = [x[k] for x in per_root.values() if x.get(k) is not None]
+        out[k] = float(np.mean(v)) if v else None
+        out[f"{k}_ci95"] = boot(v) if k in ("f1", "exact", "precision", "recall") else None
+    tp, fp, fn = (sum(x[k] for x in per_root.values()) for k in ("tp", "fp", "fn"))
+    out["micro_f1"] = 2 * tp / max(1, 2 * tp + fp + fn)
+    return out
+
+
+def _derived_mask(st_p, n):
+    """Blocker mask from predicted subset feasibilities: minimal predicted-feasible subsets (no predicted-feasible proper subset); union."""
+    feas = [s for s, p in st_p.items() if p >= 0.5]
+    if frozenset() in feas:
+        return [0] * n
+    mins = [s for s in feas if not any(t < s for t in feas)]
+    return [int(any(i in s for s in mins)) for i in range(n)]
+
+
+def d_compare(cohort="p10b", out=None) -> dict:
+    import p10b_dataset as pd
+    import p10c_train_eval as pc
+    import p10d_execute as px
+    snap = _rd("runs/p10d/predictions.json") if cohort == "p10b" else _rd(OUT / "new_holdout" / "predictions_newholdout.json")
+    P, rec, dl = {}, {}, {}
+    if cohort == "p10b":
+        for b in pc.batches():
+            plan = _rd(b / "plan.json")
+            r = pd.records(b, ("train", "validation", "blind"))
+            P |= plan["roots"]
+            rec |= r
+            dl |= pd.d_labels(plan, r)
+        roots = [k for k in P if P[k]["split"] == "blind"]
+    else:
+        import p11_holdout as ph
+        for b in ("batch1", "batch2"):
+            plan = _rd(ph.OUTD / b / "plan.json")
+            r = ph.sealed_records(b)
+            P |= plan["roots"]
+            rec |= r
+            dl |= pd.d_labels(plan, r)
+        roots = list(P)
+    split = "blind"
+    res = {"cohort": cohort, "roots": len(roots)}
+    # ---- 1) initial feasibility on the identical decided cohort
+    y0 = {k: dl[k]["y0"] for k in roots if dl[k]["y0"] is not None}
+    arms = {}
+    for n, a in snap["arms"].items():
+        if a["regime"] == "full" and a["arm"] in ("A", "SF", "K-B", "K-C"):
+            for k in y0:
+                p = a["roots"][split].get(k, {}).get("marginals", {}).get(f"seq:{k}:empty")
+                if p is not None:
+                    arms.setdefault(a["arm"], {}).setdefault(k, {})[a["seed"]] = p
+    for arm in ("D", "D-pairless"):
+        lam = snap["baselines"][f"{arm}_lambda_B"]
+        for n, x in snap["d"].items():
+            if x["arm"] == arm and x["lambda_B"] == lam:
+                for k in y0:
+                    if k in x["roots"][split]:
+                        arms.setdefault(arm, {}).setdefault(k, {})[x["seed"]] = x["roots"][split][k]["p_feasible"]
+    common = sorted(set.intersection(*[set(v) for v in arms.values()]))
+    prov = collections.Counter(rec[f"seq:{k}:empty"]["label_source"] for k in common)
+    res["feasibility"] = {"cohort_N": len(common), "excluded_undecided_y0": len(roots) - len(y0), "excluded_missing_prediction": len(y0) - len(common),
+                          "provenance": dict(prov), "arms": {}}
+    for arm, d in arms.items():
+        pairs = [(float(np.mean(list(d[k].values()))), y0[k]) for k in common]
+        seeds = sorted({s for k in common for s in d[k]})
+        res["feasibility"]["arms"][arm] = _feas_metrics(pairs, [[(d[k][s], y0[k]) for k in common if s in d[k]] for s in seeds])
+    # ---- 2) blocker identity on complete masks (union of inclusion-minimal sufficient parking subsets)
+    gt = {k: dl[k] for k in roots if dl[k]["mask"] is not None and dl[k]["n"] > 0}
+    preds = {}
+    for arm in ("D", "D-pairless"):
+        lam, thr = snap["baselines"][f"{arm}_lambda_B"], snap["baselines"][f"{arm}_threshold"]
+        for n, x in snap["d"].items():
+            if x["arm"] == arm and x["lambda_B"] == lam:
+                for k in gt:
+                    p = x["roots"][split][k]
+                    preds.setdefault(arm, {}).setdefault(k, []).append([int(p["p_feasible"] < 0.5 and v >= thr) for v in p["marg"]])
+    preds["geometry_heuristic"] = {k: [snap["baselines"]["heuristic"][split][k]] for k in gt}
+
+    def score(arm, ks):
+        per = {}
+        for k in ks:
+            ms = [_set_metrics(gt[k]["mask"], pm) for pm in preds[arm][k]]
+            per[k] = {m: (float(np.mean([x[m] for x in ms])) if ms[0][m] is not None else None) for m in ms[0]}
+        return per
+    strata = {"all": list(gt), "proof_grounded": [k for k in gt if gt[k]["provenance"] == "proof_grounded"],
+              "operational": [k for k in gt if gt[k]["provenance"] != "proof_grounded"]}
+    strata |= {f"blockers={c}": [k for k in gt if sum(gt[k]["mask"]) == c] for c in range(5)}
+    res["blockers"] = {"complete_masks": len(gt), "types": dict(collections.Counter(dl[k]["type"] for k in roots)),
+                       "alternative_minimal_sets": sum(len(gt[k]["sets"]) > 1 for k in gt),
+                       "union_differs_from_necessary": sum(gt[k]["mask"] != gt[k]["necessary"] for k in gt), "by_stratum": {}}
+    per_all = {arm: score(arm, list(gt)) for arm in preds}
+    for s, ks in strata.items():
+        if ks:
+            res["blockers"]["by_stratum"][s] = {arm: _agg({k: per_all[arm][k] for k in ks}) | {"provenance_counts": dict(collections.Counter(gt[k]["provenance"] for k in ks))}
+                                                for arm in preds}
+    f1 = {arm: {k: v["f1"] for k, v in per_all[arm].items()} for arm in preds}
+    ex = {arm: {k: v["exact"] for k, v in per_all[arm].items()} for arm in preds}
+    res["blockers"]["paired"] = {"D-D-pairless_F1": paired(f1, "D", "D-pairless"), "D-heuristic_F1": paired(f1, "D", "geometry_heuristic"),
+                                 "D-D-pairless_exact": paired(ex, "D", "D-pairless"),
+                                 "D-D-pairless_F1_proof_only": paired({a: {k: v for k, v in f1[a].items() if gt[k]["provenance"] == "proof_grounded"} for a in f1}, "D", "D-pairless"),
+                                 "D-D-pairless_F1_3_4_operational": paired({a: {k: v for k, v in f1[a].items() if sum(gt[k]["mask"]) >= 3} for a in f1}, "D", "D-pairless")}
+    # ---- 3) strictly matched A / B / C / SF counterfactual attribution (pool = 2 edit roles; parking subsets == zS edit queries)
+    sup, why = [], collections.Counter()
+    for k in gt:
+        r = P[k]
+        items = {it["token"]: it for it in r["items"]}
+        e = [items.get(t) for t in ("edit:A", "edit:B", "edit:A+B")]
+        ok = dl[k]["n"] == 2 and all(e) and all(x.get("d_subset") for x in e) and \
+            all(x["edit"] == {o: r["parking"][o] for o in r["parking"] if {v: kk for kk, v in r["ids"].items()}[o] in x["d_subset"]} for x in e)
+        (sup.append(k) if ok else why.update(["pool != 2 or parking subsets differ from the zS edits"]))
+    for n, a in snap["arms"].items():
+        if a["regime"] != "full" or a["arm"] not in ("A", "SF", "K-B", "K-C"):
+            continue
+        for k in sup:
+            m, roles = a["roots"][split][k]["marginals"], dl[k]["roles"]
+            items = {it["token"]: it for it in P[k]["items"]}
+            st = {frozenset(): m[f"seq:{k}:empty"]}
+            for t in ("edit:A", "edit:B", "edit:A+B"):
+                st[frozenset(roles.index(x) for x in items[t]["d_subset"])] = m[items[t]["query"]]
+            preds.setdefault(a["arm"], {}).setdefault(k, []).append(_derived_mask(st, 2))
+    res["matched"] = {"matched_N": len(sup), "unsupported_N": len(gt) - len(sup), "unsupported_reasons": dict(why),
+                      "proof_only_matched_N": sum(gt[k]["provenance"] == "proof_grounded" for k in sup),
+                      "arms": {arm: _agg(score(arm, sup)) for arm in ("D", "D-pairless", "geometry_heuristic", "A", "K-B", "K-C", "SF") if arm in preds and sup}}
+    mf1 = {arm: {k: v["f1"] for k, v in score(arm, sup).items()} for arm in preds if sup}
+    res["matched"]["paired_vs_D"] = {f"D-{a}": paired(mf1, "D", a) for a in ("K-B", "K-C", "A", "SF", "D-pairless", "geometry_heuristic") if a in mf1}
+    res["D_capacity"] = {"exact_enumeration_cap": 6, "benchmark_pool_max": max((dl[k]["n"] for k in roots), default=0)}
+    out = out or (OUT / "d_compare" / f"D_VS_ABC_{cohort}.json")
+    Path(out).parent.mkdir(parents=True, exist_ok=True)
+    cf.write_json(Path(out), res)
+    return res
