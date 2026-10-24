@@ -1,0 +1,312 @@
+{
+ "version": "P12_PREREG_V1",
+ "unit": "independent new root (one generator seed)",
+ "primary": {
+  "F3": "paired |kappa_hat_{B-F3}-kappa| - |kappa_hat_B-kappa| per root (seed-mean marginals; positive = full B better), exact two-sided sign test (ties removed)",
+  "F5": "same, full B vs B-F5s (generic coupling + higher-order removed together)",
+  "family": "Holm over exactly these two tests, alpha 0.05",
+  "ci": "paired root-cluster bootstrap 95% CI of the mean difference (2,000 resamples, seed 0)",
+  "cohort": "every new root whose four fixed-q0 edit outcomes (original, A, B, A+B) are all VERIFIED or CERTIFIED (any kappa class); kappa class reported, never used to include/exclude"
+ },
+ "secondary": [
+  "B-F5q (HO only), B-F2, B-F4, B-V0, B-U, A, C, SF on the same metric (exploratory, Holm across the secondary family)",
+  "scene binary NLL / calibration of original and edited scenes",
+  "same-endpoint order choice and margin (where decided)",
+  "omission necessity on verified full repairs",
+  "strict TOP1 executed success: A/B/C/SF/geometry vs G+M (separate planner-assisted protocol)",
+  "D feasibility and blocker identity on complete masks"
+ ],
+ "targets": {
+  "proof_grounded_four_tuples": ">=24 (aim >=32 given pessimistic power 0.87 @24 / 0.95 @32)",
+  "roots_max": 80,
+  "batches": "<=20 roots each"
+ },
+ "minimal_meaningful_effect": "mean paired kappa-error reduction >= 0.05 with positive majority of roots",
+ "stopping": "fixed roster and budget only; never on p-values",
+ "power_from_disclosed_P11": {
+  "B-F3|observed|N=16": 1.0,
+  "B-F3|observed|N=24": 1.0,
+  "B-F3|observed|N=32": 1.0,
+  "B-F3|observed|N=40": 1.0,
+  "B-F3|observed|N=48": 1.0,
+  "B-F3|shrunk_50pct_with_25pct_reversals|N=16": 0.678,
+  "B-F3|shrunk_50pct_with_25pct_reversals|N=24": 0.87,
+  "B-F3|shrunk_50pct_with_25pct_reversals|N=32": 0.9435,
+  "B-F3|shrunk_50pct_with_25pct_reversals|N=40": 0.9795,
+  "B-F3|shrunk_50pct_with_25pct_reversals|N=48": 0.992,
+  "B-F5s|observed|N=16": 1.0,
+  "B-F5s|observed|N=24": 1.0,
+  "B-F5s|observed|N=32": 1.0,
+  "B-F5s|observed|N=40": 1.0,
+  "B-F5s|observed|N=48": 1.0,
+  "B-F5s|shrunk_50pct_with_25pct_reversals|N=16": 0.678,
+  "B-F5s|shrunk_50pct_with_25pct_reversals|N=24": 0.879,
+  "B-F5s|shrunk_50pct_with_25pct_reversals|N=32": 0.953,
+  "B-F5s|shrunk_50pct_with_25pct_reversals|N=40": 0.9765,
+  "B-F5s|shrunk_50pct_with_25pct_reversals|N=48": 0.9905
+ },
+ "models": {
+  "checkpoints": {
+   "F-A-s0": true,
+   "F-A-s1": true,
+   "F-A-s2": true,
+   "F-B-F2-s0": true,
+   "F-B-F2-s1": true,
+   "F-B-F2-s2": true,
+   "F-B-F3-s0": true,
+   "F-B-F3-s1": true,
+   "F-B-F3-s2": true,
+   "F-B-F4-s0": true,
+   "F-B-F4-s1": true,
+   "F-B-F4-s2": true,
+   "F-B-F5q-s0": true,
+   "F-B-F5q-s1": true,
+   "F-B-F5q-s2": true,
+   "F-B-F5s-s0": true,
+   "F-B-F5s-s1": true,
+   "F-B-F5s-s2": true,
+   "F-B-U-s0": true,
+   "F-B-U-s1": true,
+   "F-B-U-s2": true,
+   "F-B-V0-s0": true,
+   "F-B-V0-s1": true,
+   "F-B-V0-s2": true,
+   "F-K-B-s0": true,
+   "F-K-B-s1": true,
+   "F-K-B-s2": true,
+   "F-K-C-s0": true,
+   "F-K-C-s1": true,
+   "F-K-C-s2": true,
+   "F-SF-s0": true,
+   "F-SF-s1": true,
+   "F-SF-s2": true
+  },
+  "calibration": "frozen P10d snapshot tau / threshold per checkpoint; no recalibration"
+ },
+ "constraints": "no retraining, no recalibration, no model-conditional filtering, zero planner/IK/teacher calls in inference",
+ "generators": {
+  "module": "p12_families.py",
+  "version": "P12_FAMILIES_V1_1",
+  "families": [
+   "X_SWEEP_GATE",
+   "Y_BOTTLENECK"
+  ],
+  "prescreens": {
+   "X_SWEEP_GATE": "original LINK0_SECTOR_PICK accepted (sound analytic)",
+   "Y_BOTTLENECK": "original TARGET_PICK accepted (sound analytic)"
+  },
+  "benchmark_conditional_on_prescreen": true,
+  "dedup": "stable geometry + fingerprint vs all P10a/P10b/P11/P12-dev plans"
+ },
+ "roster": {
+  "rule": "p12_closure.roster(80): seeds 2026140001..2026140080, families alternate X/Y, 4 batches of 20, all split 'blind'",
+  "n": 80
+ },
+ "catalogue": "generic 23-query catalogue (empty, singles, ordered pairs, ordered triples of A,B,C; edits A,B,A+B; D parking subsets of {A,B,C})",
+ "teacher_policy": {
+  "version": "P10B_S100_V1",
+  "adjudication": "unchanged 2D-ABC-OPNEG-v1 (teacher_opneg.toml); BUDGET only if all 3 declared seeds ran to a clean allowed terminal",
+  "seed_cpu_s": 100.0,
+  "seed_kill_margin_s": 5.0,
+  "reserve_s": 10.0,
+  "query_cpu_s": 330.0,
+  "query_wall_s": 900.0,
+  "root_cpu_s": 900.0,
+  "stop_after_censored_seed": true,
+  "options_predeclared": {
+   "A_P10A": "120 CPU-s per query (later seed only while spent + 110 <= 120)",
+   "B_FULL_SEEDS": "330 CPU-s per query: all three 100 CPU-s seeds fit; a censored seed ends the query (UNKNOWN)"
+  },
+  "chosen": "B_FULL_SEEDS",
+  "workers": 1
+ },
+ "label_semantics": "VERIFIED / CERTIFIED (scoped) / BUDGET (operational) / UNKNOWN / NOT_RUN / INELIGIBLE; edits = fixed-q0 hypothetical, sequences = executed relocation",
+ "dev_kappa_distribution_disclosed": {
+  "0": 8,
+  "note": "F3/F5 cohort expected to be dominated by kappa=0; complementarity-specific question unresolved unless kappa=+1 roots occur"
+ },
+ "frozen_models": {
+  "F-A-s0": {
+   "sha": true,
+   "tau": 1.1224620483093728,
+   "threshold": 0.5
+  },
+  "F-A-s1": {
+   "sha": true,
+   "tau": 1.2599210498948732,
+   "threshold": 0.5
+  },
+  "F-A-s2": {
+   "sha": true,
+   "tau": 1.189207115002721,
+   "threshold": 0.7
+  },
+  "F-B-F2-s0": {
+   "sha": true,
+   "tau": 1.189207115002721,
+   "threshold": 0.5
+  },
+  "F-B-F2-s1": {
+   "sha": true,
+   "tau": 1.3348398541700341,
+   "threshold": 0.5
+  },
+  "F-B-F2-s2": {
+   "sha": true,
+   "tau": 1.5874010519681994,
+   "threshold": 0.5
+  },
+  "F-B-F3-s0": {
+   "sha": true,
+   "tau": 0.8408964152537145,
+   "threshold": 0.5
+  },
+  "F-B-F3-s1": {
+   "sha": true,
+   "tau": 1.7817974362806785,
+   "threshold": 0.5
+  },
+  "F-B-F3-s2": {
+   "sha": true,
+   "tau": 1.6817928305074288,
+   "threshold": 0.7
+  },
+  "F-B-F4-s0": {
+   "sha": true,
+   "tau": 1.3348398541700341,
+   "threshold": 0.5
+  },
+  "F-B-F4-s1": {
+   "sha": true,
+   "tau": 1.2599210498948732,
+   "threshold": 0.5
+  },
+  "F-B-F4-s2": {
+   "sha": true,
+   "tau": 1.2599210498948732,
+   "threshold": 0.5
+  },
+  "F-B-F5q-s0": {
+   "sha": true,
+   "tau": 1.8877486253633864,
+   "threshold": 0.7
+  },
+  "F-B-F5q-s1": {
+   "sha": true,
+   "tau": 1.189207115002721,
+   "threshold": 0.5
+  },
+  "F-B-F5q-s2": {
+   "sha": true,
+   "tau": 1.4142135623730947,
+   "threshold": 0.5
+  },
+  "F-B-F5s-s0": {
+   "sha": true,
+   "tau": 1.189207115002721,
+   "threshold": 0.5
+  },
+  "F-B-F5s-s1": {
+   "sha": true,
+   "tau": 1.6817928305074288,
+   "threshold": 0.5
+  },
+  "F-B-F5s-s2": {
+   "sha": true,
+   "tau": 1.6817928305074288,
+   "threshold": 0.5
+  },
+  "F-B-U-s0": {
+   "sha": true,
+   "tau": 1.5874010519681994,
+   "threshold": 0.5
+  },
+  "F-B-U-s1": {
+   "sha": true,
+   "tau": 1.0,
+   "threshold": 0.5
+  },
+  "F-B-U-s2": {
+   "sha": true,
+   "tau": 1.4983070768766815,
+   "threshold": 0.7
+  },
+  "F-B-V0-s0": {
+   "sha": true,
+   "tau": 0.9438743126816933,
+   "threshold": 0.95
+  },
+  "F-B-V0-s1": {
+   "sha": true,
+   "tau": 1.2599210498948732,
+   "threshold": 0.85
+  },
+  "F-B-V0-s2": {
+   "sha": true,
+   "tau": 1.1224620483093728,
+   "threshold": 0.5
+  },
+  "F-K-B-s0": {
+   "sha": true,
+   "tau": 0.9438743126816933,
+   "threshold": 0.7
+  },
+  "F-K-B-s1": {
+   "sha": true,
+   "tau": 1.1224620483093728,
+   "threshold": 0.5
+  },
+  "F-K-B-s2": {
+   "sha": true,
+   "tau": 1.2599210498948732,
+   "threshold": 0.7
+  },
+  "F-K-C-s0": {
+   "sha": true,
+   "tau": 1.4142135623730947,
+   "threshold": 0.5
+  },
+  "F-K-C-s1": {
+   "sha": true,
+   "tau": 1.0,
+   "threshold": 0.7
+  },
+  "F-K-C-s2": {
+   "sha": true,
+   "tau": 1.5874010519681994,
+   "threshold": 0.5
+  },
+  "F-SF-s0": {
+   "sha": true,
+   "tau": 1.3348398541700341,
+   "threshold": 0.5
+  },
+  "F-SF-s1": {
+   "sha": true,
+   "tau": 1.4142135623730947,
+   "threshold": 0.5
+  },
+  "F-SF-s2": {
+   "sha": true,
+   "tau": 1.2599210498948732,
+   "threshold": 0.7
+  }
+ },
+ "execution": "strict TOP1_COMMIT for A/B/C/SF (3 seeds each) + geometry-only; G+M separate planner-assisted (<=5 candidates); dedup identical (root, repair, episode seed)",
+ "sources": {
+  "p12_families.py": "sha256:682e72e3c9d0606745ec5a37bad5699d4df75457aa1f4ad42fca1ea0599a4518",
+  "p12_closure.py": "sha256:2f894ddae2a61d48152568dbf814b17ebb543d83ec21f0df025081c5abd0b7e2",
+  "p10b_scenes.py": "sha256:33537dc10a8d9fc8d19d2fd38cdee94c54f45e228d29395f4b0972a75007dfa3",
+  "p10b_dataset.py": "sha256:5777cf325a44435f3efde9e0774f0944f626ce51ab9eade2fc625d663495c843",
+  "p10_scenes.py": "sha256:42cd234bea2d6862408737079b981514d90722922b21a42a5cd864ff5380b5a9",
+  "p10c_train_eval.py": "sha256:5c0f67084f7d979bb3b4138e04a679cc2031b044b7ddc449dfba83e9cae2f7b1",
+  "p10d_execute.py": "sha256:20f833fa17707b7b995b895e3ab11b36ea04a3ab89ece79e51804f1b63a8ee73",
+  "p10_protocol.py": "sha256:eb404e0f6c6f498e8c86a5db0cc795450ff5eea659a61688bae2459d665924e2",
+  "d_blockers.py": "sha256:7eea73ce6b7c969bd699ecddaddd43958b0b3639493f4a63874ea739628bf2a6",
+  "teacher_opneg.toml": "sha256:358fdc7ad9f4cf99611cbbe08ba2e5f1950cd8cd4b8edf2bc38ab3507f554e5b",
+  "config.toml": "sha256:56ede7f0ea1bd7b0e76e9b1bfd7d04f237e96f65276b79e498edce0b51b28d79",
+  "config_v2_r4.toml": "sha256:13d88ab423564bec38267320c95dbc5a738b48bce7c632fb90f5e22a311988a7"
+ },
+ "unseal_rule": "runs/p12/holdout/UNSEALED only after PREDICTIONS_FROZEN.json is on origin/main",
+ "hash": "sha256:29921369fdf3d52642944f7de05254c5ea72d9a3ebfdf3633736b6a953e6235a"
+}

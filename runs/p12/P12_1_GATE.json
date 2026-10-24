@@ -1,0 +1,41 @@
+{
+ "checks": {
+  "dev_budget_held": true,
+  "dev_only_revisions_recorded": true,
+  "forecast_within_teacher_cap": true,
+  "prescreen_sound_and_model_independent": true,
+  "two_new_grammars_constructible": true
+ },
+ "decision": "PROCEED to P12-2 with P12_FAMILIES_V1_1 unchanged; F3/F5 primaries preregistered on all proof-grounded four-tuples (any kappa) with the dev kappa distribution disclosed",
+ "dev": {
+  "cpu_per_root": {
+   "mean": 338,
+   "median": 252,
+   "p90": 719
+  },
+  "forecast_80_roots_cpu": "~27k + static admission (cap 40k)",
+  "kappa_classes": {
+   "0": 8
+  },
+  "min_verified_repair_length": "1 (some 2-3)",
+  "proof_grounded_four_tuples": 8,
+  "roots_planned": 16,
+  "roots_with_teacher_outcomes": 12
+ },
+ "engineering": "PASS (with scientific limitation)",
+ "limitation": "all 8 decided dev four-tuples have kappa = 0 (one edit suffices); kappa=+1 complementarity not observed; enrichment would need a further dev teacher pilot beyond the exhausted dev cap, and outcome-based enrichment is forbidden",
+ "spend": {
+  "audit": 10.4,
+  "dev": 4985.1,
+  "execution": 0,
+  "regression": 0,
+  "secondary": 0,
+  "teacher": 0
+ },
+ "stage": "P12-1",
+ "static_acceptance": {
+  "X_SWEEP_GATE": 0.183,
+  "Y_BOTTLENECK_V1": 0.0,
+  "Y_BOTTLENECK_V1_1": 0.033
+ }
+}
