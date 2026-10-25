@@ -218,6 +218,8 @@ def exec_eval() -> dict:
                          for s in ("blind", "natural") if any(P[k]["stream"] == s for k in cov)},
            "contrasts": {f"{a}-{b}": con(a, b, cov) for a, b in (("K-B", "A"), ("K-B", "SF"), ("K-C", "K-B"), ("K-B", "geometry"), ("K-B", "B-F2"),
                                                                    ("K-B", "B-F3pm"), ("K-B", "B-F4"), ("K-B", "B-F5spm"), ("K-B", "G+M"))},
+           "contrasts_by_stream": {s: {f"{a}-{b}": con(a, b, [k for k in cov if P[k]["stream"] == s]) for a, b in (("K-B", "A"), ("K-B", "SF"), ("K-B", "geometry"),
+                                   ("K-B", "B-F2"), ("K-B", "B-F3pm"), ("K-B", "B-F4"), ("K-B", "B-F5spm"), ("K-C", "K-B"), ("K-B", "G+M"))} for s in ("blind", "natural")},
            "contrasts_reversed_order_roots": {f"{a}-{b}": con(a, b, [k for k in cov if fam(k) in ("ORD_CHAIN", "OMIT_OPT")])
                                               for a, b in (("K-B", "B-F2"), ("K-B", "A"), ("K-C", "K-B"), ("K-B", "geometry"))},
            "moves_on_success": {a: float(np.mean([x for v in d.values() for x in v])) if d else None for a, d in mv.items()},

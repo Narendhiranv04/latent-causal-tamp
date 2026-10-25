@@ -555,3 +555,38 @@ def train_all(parallel=14) -> None:
                                      f"category='training', wall=40000)"]))
     for p in run:
         p.wait()
+
+
+def regression() -> None:
+    """Historical suite + P12 / P13 tests + six replays (fixture planner calls itemized by countcalls), outputs under runs/p13/regression."""
+    import subprocess
+    d = OUT / "regression"
+    d.mkdir(parents=True, exist_ok=True)
+    (d / "countcalls.py").write_text(Path("runs/p8/audit/regression/countcalls.py").read_text())
+    subprocess.run([sys.executable, "run.py", "g4c-lf-p4-regression", "--out", str(d), "--cpu", "2500", "--wall", "5000"], capture_output=True, text=True)
+
+
+def manifest() -> None:
+    """P13-7 final manifest: sources, prereg / addendum, frozen predictions, labels, execution plan, checkpoints, figures, regression, ledger."""
+    import hashlib
+    import subprocess
+    reg = rd(OUT / "regression" / "regression_result.json")
+    files = sorted(set([str(OUT / "PREREG.json"), str(OUT / "PREREG_ADDENDUM_1.json"), str(OUT / "DEDUP.json"), str(HOLD / "PREDICTIONS_FROZEN.json"),
+                        str(HOLD / "LABELS_MANIFEST.json"), str(HOLD / "UNSEALED"), str(HOLD / "FREEZE_PUSHED"), str(OUT / "p13_5" / "EXEC_JOBS.json"),
+                        str(OUT / "p13_5" / "EXEC_RESULTS.json"), str(OUT / "p13_5" / "P12_FINAL80.json"), str(OUT / "p13_4" / "TARGETED.json"),
+                        str(OUT / "p13_4" / "F1_J.json"), str(OUT / "p13_6" / "D13.json"), str(OUT / "regression" / "regression_result.json")]
+                       + [str(p) for p in sorted(OUT.glob("p13_[0-2]/*.json"))] + [str(p) for p in sorted(OUT.glob("P13_*_GATE.json"))]))
+    out = {"stage": "P13", "start": "021cd00461bfb346053c991303385a9e467769f5",
+           "commits": {"p13_0": "719493e", "p13_1": "efc6854", "p13_2_prereg": "a551db6", "plans_dedup": "ac6b4e3", "freeze": "c9756294beed243b16210fde29519de5eb7db395",
+                       "labels_hash": "4da8ca297072bda01a21a131d047c01f8472d8f9"},
+           "status": "PARTIAL (engineering PASS)", "gates": {g.stem: rd(g).get("engineering") for g in sorted(OUT.glob("P13_*_GATE.json"))},
+           "regression": {"tests": reg.get("tests"), "replays": reg.get("replays")},
+           "spend_cpu_s": {c: round(spent(c), 1) for c in CAPS}, "caps": CAPS,
+           "sources": {p: sha(p) for p in ("p13_scenes.py", "p13_pipeline.py", "p13_factors.py", "p13_execution.py", "tests/test_p13.py", "p10b_dataset.py")},
+           "files": {p: sha(p) for p in files if Path(p).exists()},
+           "checkpoints": {str(p): sha(p) for p in sorted((MODELS / "ckpt").glob("*.pt"))},
+           "datasets": {str(p): sha(p) for p in sorted(MODELS.glob("dataset_*.pt"))},
+           "figures": {str(p): sha(p) for p in sorted(Path("visualizations/p13").glob("*")) if p.suffix != ".sha256"},
+           "head_at_manifest": subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True).stdout.strip()}
+    out["hash"] = "sha256:" + hashlib.sha256(json.dumps(out, sort_keys=True).encode()).hexdigest()
+    cf.write_json(OUT / "P13_FINAL_MANIFEST.json", out)

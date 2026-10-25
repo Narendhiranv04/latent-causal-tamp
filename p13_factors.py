@@ -501,8 +501,7 @@ def _p13_blind():
         P |= {k: dict(r, stream=d.name.split("_")[0]) for k, r in plan["roots"].items() if k not in drop}
         for q, x in pp._sealed(d).items():
             st[q] = x["teacher_status"]
-            w = x.get("cost") if isinstance(x.get("cost"), (int, float)) else None
-            cost[q] = w
+            cost[q] = x.get("J_first") if x["teacher_status"] == V else None      # witnessed travel of the first witness
     y = {q: int(s == V) for q, s in st.items() if s in (V, C)}
     return snap, P, y, st, cost
 
@@ -707,3 +706,72 @@ def d13() -> dict:
         res[stream] = out
     cf.write_json(OUT / "p13_6" / "D13.json", res) if (OUT / "p13_6").mkdir(parents=True, exist_ok=True) is None else None
     return res
+
+
+def f1_and_j() -> dict:
+    """Secondary F1 (static validity on held-out analytic checks; deployment path) and J (travel regret among admitted, VERIFIED,
+    minimum-move alternatives with witnessed travel: J vs no-J vs shuffled-J vs oracle; choice success non-inferiority)."""
+    snap, P, y, st, cost = _p13_blind()
+    A = _by_arm(snap)
+
+    def auc(ps, ys):
+        pos, neg = [p for p, v in zip(ps, ys) if v], [p for p, v in zip(ps, ys) if not v]
+        return float(np.mean([(a > b) + 0.5 * (a == b) for a in pos for b in neg])) if pos and neg else None
+
+    def ap(ps, ys):                          # average precision for the INVALID class (the analytic veto's job)
+        o = sorted(zip(ps, ys), key=lambda z: z[0])
+        hits, out = 0, []
+        for i, (_, v) in enumerate(o, 1):
+            if not v:
+                hits += 1
+                out.append(hits / i)
+        return float(np.mean(out)) if out else None
+    f1, ll = {}, collections.defaultdict(dict)
+    for arm in ("K-B", "B-F1off", "K-C", "A", "SF", "B-F2", "B-F3pm", "B-F5spm"):
+        ps, ys = [], []
+        for k in P:
+            rows = [A[arm][s]["roots"][k]["static"] for s in A[arm]]
+            pk = [float(np.mean([r[i]["p_valid"] for r in rows])) for i in range(len(rows[0]))]
+            yk = [c["valid"] for c in rows[0]]
+            ps, ys = ps + pk, ys + yk
+            ll[arm][k] = float(np.mean([-math.log(min(max(p if v else 1 - p, 1e-12), 1.0)) for p, v in zip(pk, yk)]))
+        f1[arm] = {"auroc": auc(ps, ys), "auprc_invalid": ap(ps, ys), "checks": len(ys), "invalid": int(len(ys) - sum(ys)), "mean_logloss": float(np.mean(list(ll[arm].values())))}
+    out = {"F1": {"static": f1, "B_vs_F1off_logloss": _paired(ll, "B-F1off", "K-B"), "veto_fired": snap["veto_fired"],
+                  "note": "lattice static validity = destination cell free (no near-valid case exists on the cell lattice)"}}
+    rng = np.random.default_rng(0)
+    reg, succ, tie = collections.defaultdict(dict), collections.defaultdict(dict), collections.Counter()
+    for arm in ("K-B", "K-C", "B-F3pm", "B-F5spm"):
+        for k in P:
+            vals = collections.defaultdict(list)
+            for s, a in A[arm].items():
+                rows = [r for r in a["roots"][k]["rows"] if 1 / (1 + math.exp(-r["u"] / a["tau"])) >= a["threshold"]]
+                if not rows:
+                    continue
+                mm = min(r["m"] for r in rows)
+                tied = [r for r in rows if r["m"] == mm]
+                tie[arm] += len(tied) > 1
+                pick = lambda key: min(tied, key=key)["query"]  # noqa: E731
+                ch = {"J": pick(lambda r: (r["J_pred"], r["C_d"], r["energy"], r["query"])), "noJ": pick(lambda r: (r["C_d"], r["energy"], r["query"]))}
+                for nm, q in ch.items():
+                    vals[f"succ_{nm}"].append(float(y.get(q) == 1))
+                ver = [r for r in tied if y.get(r["query"]) == 1 and cost.get(r["query"]) is not None]
+                if len(ver) >= 2 and len({round(cost[r["query"]], 6) for r in ver}) > 1:
+                    best = min(cost[r["query"]] for r in ver)
+                    vk = lambda key: cost[min(ver, key=key)["query"]] / best - 1  # noqa: E731
+                    vals["J"].append(vk(lambda r: (r["J_pred"], r["C_d"], r["energy"], r["query"])))
+                    vals["noJ"].append(vk(lambda r: (r["C_d"], r["energy"], r["query"])))
+                    vals["shuffledJ"].append(float(np.mean([cost[ver[i]["query"]] / best - 1 for i in rng.integers(0, len(ver), 50)])))
+            for nm in ("J", "noJ", "shuffledJ"):
+                if vals[nm]:
+                    reg[f"{arm}|{nm}"][k] = float(np.mean(vals[nm]))
+            for nm in ("J", "noJ"):
+                if vals[f"succ_{nm}"]:
+                    succ[f"{arm}|{nm}"][k] = float(np.mean(vals[f"succ_{nm}"]))
+    out["J"] = {"tie_choices": dict(tie),
+                "relative_travel_regret_mean": {n: float(np.mean(list(v.values()))) for n, v in reg.items()},
+                "roots_with_travel_alternatives": {n: len(v) for n, v in reg.items()},
+                "B_noJ_minus_J": _paired(reg, "K-B|noJ", "K-B|J"), "B_shuffled_minus_J": _paired(reg, "K-B|shuffledJ", "K-B|J"),
+                "B_success_J_minus_noJ": _paired({"a": {k: -v for k, v in succ["K-B|J"].items()}, "b": {k: -v for k, v in succ["K-B|noJ"].items()}}, "a", "b"),
+                "success_rate": {n: float(np.mean(list(v.values()))) for n, v in succ.items()}}
+    cf.write_json(OUT / "p13_4" / "F1_J.json", out)
+    return out
