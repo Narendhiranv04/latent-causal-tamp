@@ -1,0 +1,43 @@
+{
+ "accounting_correction": "the first training launcher ran guards as threads of ONE parent process; teacher.guard takes max(psutil tree sample, parent RUSAGE_CHILDREN delta) and the delta absorbed other jobs' children. Training CPU is therefore counted as min(guard CPU, wall) (single-threaded child; validated: A s0 child process_time 734 s, wall 753 s, guard 2,025 s). Original guard records unchanged; all later launches are one OS process per job. Corrected training spend 33,683 / 35,000 CPU-s",
+ "execution_arms": [
+  "K-B",
+  "K-C",
+  "A",
+  "SF",
+  "B-F2",
+  "B-F3pm",
+  "B-F4",
+  "B-F5spm",
+  "geometry",
+  "G+M (separate)"
+ ],
+ "freeze_implementation": "per-checkpoint freeze processes (freeze_arm) + merge; TOP1 choice computed once from the scored rows with the identical p10_protocol.top1 rule",
+ "hash": "sha256:0be5c0d39c2b0e5fc10f8f24e7550d9585ab46e0a3a55208d57c28a1e1abf337",
+ "prereg": "sha256:fd9679cc9dd8d671c2480f893c0ec83e7520e09d3c049f1e53d77ad0e2ec1271",
+ "seeds": {
+  "1 seed": [
+   "B-F3",
+   "B-F5s",
+   "B-F5q"
+  ],
+  "3 seeds": [
+   "K-B",
+   "K-C",
+   "A",
+   "SF",
+   "B-F2",
+   "B-F3pm",
+   "B-F4",
+   "B-F5spm",
+   "B-F5qpm",
+   "B-F1off",
+   "B-V0",
+   "B-U"
+  ],
+  "reason": "35,000 CPU-s training cap: the first launch ran 28 single-threaded jobs on 16 physical cores (hyperthread contention ~doubled CPU per job), 13 jobs were terminated to protect the cap before the accounting error below was found; plain off arms (secondary capacity attribution) keep 1 seed"
+ },
+ "unchanged": "every primary hypothesis, endpoint, cohort, threshold and verdict rule of PREREG.json",
+ "version": "P13_PREREG_ADDENDUM_1",
+ "written_before_any_blind_label": true
+}

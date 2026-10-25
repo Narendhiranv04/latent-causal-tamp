@@ -149,3 +149,37 @@ def test_p10b_teacher_policy_unchanged_and_p13_variant_declared():
     import p13_pipeline as p13
     assert pd.POLICY["stop_after_censored_seed"] is True and pd.POLICY["version"] == "P10B_S100_V1"
     assert p13.TEACHER["stop_after_censored_seed"] is False and p13.TEACHER["version"] == "P13_S100_V2"
+
+
+def test_roster_splits_disjoint_and_dedup_excludes_leakage():
+    import json
+    from pathlib import Path
+    import p13_pipeline as p13
+    r = p13.roster()
+    seeds = [x["seed"] for x in r]
+    assert len(r) == 370 and len(set(seeds)) == 370
+    assert {x["split"] for x in r if x["stream"] == "natural"} == {"blind"}
+    fp = {}
+    dd = json.loads(Path("runs/p13/DEDUP.json").read_text())
+    drop = set(dd["train_validation_leakage_excluded"] + dd["blind_duplicate_excluded"])
+    for f in sorted(Path("runs/p13/data").glob("*/plan.json")) + sorted(Path("runs/p13/holdout").glob("*/plan.json")):
+        for k, x in json.loads(f.read_text())["roots"].items():
+            if k not in drop:
+                assert json.dumps(x["fingerprint"]) not in fp, (k, fp.get(json.dumps(x["fingerprint"])))
+                fp[json.dumps(x["fingerprint"])] = k
+
+
+def test_blind_labels_refused_before_freeze_and_unseal(tmp_path, monkeypatch):
+    import p13_pipeline as p13
+    monkeypatch.setattr(p13, "HOLD", tmp_path)
+    with pytest.raises(SystemExit):
+        p13.label("blind", 1)
+    monkeypatch.setattr(p13, "OUT", tmp_path)
+    with pytest.raises(SystemExit):
+        p13._sealed("runs/p13/holdout/blind_b1")
+
+
+def test_training_cpu_bounded_by_wall_for_single_threaded_children():
+    import p13_pipeline as p13
+    assert p13._cpu({"category": "training", "cpu_s": 7531.4, "wall_s": 2.6}) == 2.6
+    assert p13._cpu({"category": "teacher", "cpu_s": 900.0, "wall_s": 800.0}) == 900.0

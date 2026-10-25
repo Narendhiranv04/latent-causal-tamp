@@ -1,0 +1,12 @@
+{
+ "skip": [
+  "P13-B-F3-s1",
+  "P13-B-F3-s2",
+  "P13-B-F5s-s1",
+  "P13-B-F5s-s2",
+  "P13-B-F5q-s1",
+  "P13-B-F5q-s2"
+ ],
+ "reason": "35,000 CPU-s training cap; first wave ran 28 single-threaded jobs on 16 physical cores (hyperthread contention doubled CPU per job: ~1,000 vs ~400 CPU-s); plain off arms B-F3 / B-F5s / B-F5q keep 1 seed (secondary capacity attribution)",
+ "history": "wave-1 skip list (superseded) removed A/K-C/SF/B-F1off/B-F5qpm/B-V0/B-U seeds; restored after the accounting correction"
+}

@@ -487,3 +487,223 @@ def keyed_erratum() -> dict:
             out[c] = {"roots": len(rs), "roots_differing": diff, "scene_query_pairs_unkeyed": n_u, "scene_query_pairs_keyed": n_k}
     cf.write_json(OUT / "p13_1" / "KEYED_ERRATUM.json", out)
     return out
+
+
+# ------------------------------------------------------------------ P13-4: preregistered targeted / natural-mix endpoints (frozen predictions)
+def _p13_blind():
+    """(snapshot, plans, labels {query: y in {0, 1} (VERIFIED / CERTIFIED only)}, status, witnessed cost) for the P13 blind sets."""
+    import p13_pipeline as pp
+    snap = pp.rd(pp.HOLD / "PREDICTIONS_FROZEN.json")
+    drop = set(pp.rd(pp.OUT / "DEDUP.json")["blind_duplicate_excluded"])
+    P, st, cost = {}, {}, {}
+    for d in sorted(pp.HOLD.glob("*_b*")):
+        plan = pp.rd(d / "plan.json")
+        P |= {k: dict(r, stream=d.name.split("_")[0]) for k, r in plan["roots"].items() if k not in drop}
+        for q, x in pp._sealed(d).items():
+            st[q] = x["teacher_status"]
+            w = x.get("cost") if isinstance(x.get("cost"), (int, float)) else None
+            cost[q] = w
+    y = {q: int(s == V) for q, s in st.items() if s in (V, C)}
+    return snap, P, y, st, cost
+
+
+def _by_arm(snap):
+    out = collections.defaultdict(dict)
+    for n, a in snap["arms"].items():
+        out[a["arm"]][a["seed"]] = a
+    return out
+
+
+def _nll_joint(row, qs, ys):
+    """-log P(qs = ys) from the stored keyed P_S joint (B-family) or the product of marginals (A / SF)."""
+    if "joint_S" in row and all(q in row["joint_S"]["queries"] for q in qs):
+        J = row["joint_S"]
+        idx = [J["queries"].index(q) for q in qs]
+        n = len(J["queries"])
+        lp = [v for s, v in enumerate(J["logp"]) if all(((s >> (n - 1 - i)) & 1) == y for i, y in zip(idx, ys))]
+        return -float(np.logaddexp.reduce(lp))
+    m = row["marginals"]
+    return -sum(math.log(min(max(m[q] if y else 1 - m[q], 1e-12), 1.0)) for q, y in zip(qs, ys))
+
+
+def targeted() -> dict:
+    snap, P, y, st, cost = _p13_blind()
+    A = _by_arm(snap)
+    arms = sorted(A)
+    four, order, omit, tri = {}, collections.defaultdict(list), collections.defaultdict(list), {}
+    for k, r in P.items():
+        t = {it["token"]: it for it in r["items"]}
+        if all(x in t for x in ("", "edit:A", "edit:B", "edit:A+B")) and r["family"] not in ("TRI_SERIAL", "TRI_CTRL"):
+            qs = [t[x]["query"] for x in ("", "edit:A", "edit:B", "edit:A+B")]
+            if all(q in y for q in qs):
+                ys = [y[q] for q in qs]
+                four[k] = {"q": qs, "y": ys, "kappa": ys[3] - ys[1] - ys[2] + ys[0], "pattern": "".join(map(str, ys)), "stream": r["stream"], "family": r["family"]}
+        if r["family"] in ("TRI_SERIAL", "TRI_CTRL"):
+            sub = {frozenset(it["d_subset"] or []): it["query"] for it in r["items"] if it.get("d_subset") is not None}
+            if len(sub) == 8 and all(q in y for q in sub.values()):
+                f = {s: y[q] for s, q in sub.items()}
+                F = lambda *ks: f[frozenset(ks)]  # noqa: E731
+                tri[k] = {"sub": sub, "delta": F("A", "B", "C") - F("A", "B") - F("A", "C") - F("B", "C") + F("A") + F("B") + F("C") - F(), "family": r["family"]}
+        seqs = {tuple(map(tuple, it["sequence"])): it["query"] for it in r["items"] if it["kind"] == "ORDERED_TEACHER"}
+        for s1, q1 in seqs.items():
+            for s2, q2 in seqs.items():
+                if s1 < s2 and sorted(s1) == sorted(s2) and len(s1) >= 2 and q1 in y and q2 in y and y[q1] != y[q2]:
+                    order[k].append((q1, q2) if y[q1] else (q2, q1))
+            if len(s1) >= 2 and y.get(q1) == 1:
+                for i in range(len(s1)):
+                    qo = seqs.get(tuple(a for j, a in enumerate(s1) if j != i))
+                    if qo in y:
+                        omit[k].append((qo, y[qo]))
+    sm = lambda arm, k: {q: float(np.mean([A[arm][s]["roots"][k]["marginals"][q] for s in A[arm] if q in A[arm][s]["roots"][k]["marginals"]]))  # noqa: E731
+                         for q in A[arm][0]["roots"][k]["marginals"]}
+    E = collections.defaultdict(lambda: collections.defaultdict(dict))
+    for arm in arms:
+        for k, f in four.items():
+            E["joint4"][arm][k] = float(np.mean([_nll_joint(A[arm][s]["roots"][k], f["q"], f["y"]) for s in A[arm]]))
+            m = sm(arm, k)
+            kh = m[f["q"][3]] - m[f["q"][1]] - m[f["q"][2]] + m[f["q"][0]]
+            E["kappa_err"][arm][k] = abs(kh - f["kappa"])
+            E["khat"][arm][k] = kh
+        for k, prs in order.items():
+            m = sm(arm, k)
+            ok = [float(m[g] > m[b]) for g, b in prs if g in m and b in m]
+            if ok:
+                E["order_acc"][arm][k] = float(np.mean(ok))
+        for k, om in omit.items():
+            m = sm(arm, k)
+            ll = [-math.log(min(max(m[q] if v else 1 - m[q], 1e-12), 1.0)) for q, v in om if q in m]
+            if ll:
+                E["omit_ll"][arm][k] = float(np.mean(ll))
+        for k, tr in tri.items():
+            m = sm(arm, k)
+            g = lambda *ks: m[tr["sub"][frozenset(ks)]]  # noqa: E731
+            dh = g("A", "B", "C") - g("A", "B") - g("A", "C") - g("B", "C") + g("A") + g("B") + g("C") - g()
+            E["tri_err"][arm][k] = abs(dh - tr["delta"])
+            qs = list(tr["sub"].values())
+            E["tri_joint8"][arm][k] = float(np.mean([_nll_joint(A[arm][s]["roots"][k], qs, [y[q] for q in qs]) for s in A[arm]]))
+    E["kappa_err"]["ZERO"] = {k: float(abs(f["kappa"])) for k, f in four.items()}
+    chal = lambda ks: [k for k in ks if P[k]["stream"] == "blind"]  # noqa: E731
+    nat = lambda ks: [k for k in ks if P[k]["stream"] == "natural"]  # noqa: E731
+    lower_better = lambda e, a, b, ks: _paired(e, b, a, ks)   # Delta = e[off] - e[B]: positive = full B better  # noqa: E731
+    higher_better = lambda e, a, b, ks: lower_better({x: {k: -v for k, v in e[x].items()} for x in (a, b)}, a, b, ks)  # noqa: E731
+    prim = {"H_F3": lower_better(E["joint4"], "K-B", "B-F3pm", chal(four)), "H_F5": lower_better(E["joint4"], "K-B", "B-F5spm", chal(four)),
+            "H_F2": higher_better(E["order_acc"], "K-B", "B-F2", sorted(set(chal(order)) & set(E["order_acc"]["K-B"]) & set(E["order_acc"]["B-F2"]))),
+            "H_F4": lower_better(E["omit_ll"], "K-B", "B-F4", sorted(set(chal(omit)) & set(E["omit_ll"]["K-B"]) & set(E["omit_ll"]["B-F4"])))}
+    h = p12._holm({t: v["p_raw"] for t, v in prim.items()})
+    thr = {"H_F3": 0.05, "H_F5": 0.05, "H_F2": 0.10, "H_F4": 0.05}
+    for t in prim:
+        prim[t]["p_holm"], prim[t]["minimal_effect"] = h[t], thr[t]
+    k0 = [k for k in chal(four) if four[k]["kappa"] == 0]
+    kp = [k for k in chal(four) if four[k]["kappa"] == 1]
+    fi = {a: {k: float(abs(E["khat"][a][k]) >= 0.5) for k in four} for a in arms}
+    safety = {}
+    for t, off in (("H_F3", "B-F3pm"), ("H_F5", "B-F5spm")):
+        safety[t] = {"false_interaction_kappa0": lower_better(fi, "K-B", off, k0),       # every safety Delta: positive = full B better
+                     "kappa_err_kappa+1": lower_better(E["kappa_err"], "K-B", off, kp),
+                     "natural_joint4": lower_better(E["joint4"], "K-B", off, nat(four))}
+    safety["H_F2"] = {"natural_order_acc": higher_better(E["order_acc"], "K-B", "B-F2", nat(order))}
+    safety["H_F4"] = {"natural_omit_ll": lower_better(E["omit_ll"], "K-B", "B-F4", nat(omit))}
+    for t in prim:
+        v, harm = prim[t], []
+        for name, s in safety[t].items():
+            if s["roots"] and s["p_raw"] < 0.05 and s["mean_delta"] < 0:
+                harm.append(name)
+        v["safety_harm"] = harm
+        v["verdict"] = ("UNDERPOWERED" if v["roots"] < 12 else
+                        "SUPPORTED_CONDITIONAL" if v["p_holm"] < 0.05 and v["mean_delta"] >= thr[t] and v["ci95"][0] > 0 and not harm else
+                        "HARMFUL" if v["p_holm"] < 0.05 and v["mean_delta"] < 0 else "NO_DEMONSTRATED_BENEFIT")
+    sec = {}
+    pairs = {"F3_plain": ("B-F3", "joint4"), "F5s_plain": ("B-F5s", "joint4"), "F5q_joint4": ("B-F5q", "joint4"), "F5qpm_joint4": ("B-F5qpm", "joint4"),
+             "vision_joint4": ("B-V0", "joint4"), "keying_joint4": ("B-U", "joint4"), "C_joint4": ("K-C", "joint4"), "A_joint4": ("A", "joint4"),
+             "SF_joint4": ("SF", "joint4"), "F3pm_kappa": ("B-F3pm", "kappa_err"), "F5spm_kappa": ("B-F5spm", "kappa_err"), "ZERO_kappa": ("ZERO", "kappa_err"),
+             "F5q_tri_err": ("B-F5q", "tri_err"), "F5qpm_tri_err": ("B-F5qpm", "tri_err"), "F5q_tri_joint8": ("B-F5q", "tri_joint8"),
+             "F5qpm_tri_joint8": ("B-F5qpm", "tri_joint8"), "F5spm_tri_joint8": ("B-F5spm", "tri_joint8"), "F3pm_tri_joint8": ("B-F3pm", "tri_joint8"),
+             "C_order": ("K-C", "order_acc"), "A_order": ("A", "order_acc"), "SF_order": ("SF", "order_acc"), "C_omit": ("K-C", "omit_ll"), "SF_omit": ("SF", "omit_ll")}
+    for name, (off, ep) in pairs.items():
+        f_ = higher_better if ep == "order_acc" else lower_better
+        sec[name] = {"challenge": f_(E[ep], "K-B", off, sorted(set(chal(E[ep]["K-B"])) & set(E[ep][off]))),
+                     "natural": f_(E[ep], "K-B", off, sorted(set(nat(E[ep]["K-B"])) & set(E[ep][off])))}
+    hs = p12._holm({n: v["challenge"]["p_raw"] for n, v in sec.items() if v["challenge"]["roots"]})
+    for n in hs:
+        sec[n]["challenge"]["p_holm_secondary"] = hs[n]
+    mean = lambda ep, ks: {a: float(np.mean([E[ep][a][k] for k in ks if k in E[ep][a]])) for a in E[ep] if any(k in E[ep][a] for k in ks)}  # noqa: E731
+    res = {"cohorts": {"four_tuples": {"challenge": len(chal(four)), "natural": len(nat(four)),
+                                       "kappa": {s: dict(collections.Counter(four[k]["kappa"] for k in f(four))) for s, f in (("challenge", chal), ("natural", nat))},
+                                       "patterns": dict(collections.Counter(f["pattern"] for f in four.values())),
+                                       "by_family": dict(collections.Counter(f["family"] for f in four.values()))},
+                       "order_roots": {"challenge": len(chal(order)), "natural": len(nat(order)), "pairs": sum(len(v) for v in order.values())},
+                       "omission_roots": {"challenge": len(chal(omit)), "natural": len(nat(omit)), "omissions": sum(len(v) for v in omit.values()),
+                                          "necessary": sum(1 for v in omit.values() for _, x in v if x == 0), "optional": sum(1 for v in omit.values() for _, x in v if x == 1)},
+                       "triple_lattices": {"complete": len(tri), "delta": dict(collections.Counter(t["delta"] for t in tri.values()))}},
+           "primary": prim, "safety": safety, "secondary": sec,
+           "means": {ep: {"challenge": mean(ep, chal(list(P))), "natural": mean(ep, nat(list(P)))} for ep in E},
+           "means_by_kappa": {str(c): mean("kappa_err", [k for k in chal(four) if four[k]["kappa"] == c]) for c in (-1, 0, 1)},
+           "false_interaction_rate_kappa0": {a: float(np.mean([fi[a][k] for k in k0])) if k0 else None for a in arms},
+           "per_root": {"four": four, "tri": {k: {"delta": v["delta"], "family": v["family"]} for k, v in tri.items()}}}
+    (OUT / "p13_4").mkdir(parents=True, exist_ok=True)
+    cf.write_json(OUT / "p13_4" / "TARGETED.json", res)
+    return res
+
+
+# ------------------------------------------------------------------ P13-6: D feasibility / blockers vs matched A / B / C / SF (P13 blind sets)
+def d13() -> dict:
+    import p10b_dataset as pd
+    import p11_closure as q
+    import p13_pipeline as pp
+    snap, P, y, st, cost = _p13_blind()
+    A = _by_arm(snap)
+    rec = {}
+    for d in sorted(pp.HOLD.glob("*_b*")):
+        rec |= pp._sealed(d)
+    plans = {k: r for d in sorted(pp.HOLD.glob("*_b*")) for k, r in pp.rd(d / "plan.json")["roots"].items() if k in P}
+    dl = pd.d_labels({"roots": plans}, rec)
+    res = {}
+    for stream in ("blind", "natural", "all"):
+        ks = [k for k in P if stream == "all" or P[k]["stream"] == stream]
+        y0 = {k: dl[k]["y0"] for k in ks if dl[k]["y0"] is not None}
+        feas = {}
+        for arm in ("K-B", "K-C", "A", "SF"):
+            feas[arm] = q._feas_metrics([(float(np.mean([A[arm][s]["roots"][k]["marginals"][f"seq:{k}:empty"] for s in A[arm]])), y0[k]) for k in y0])
+        for arm in ("D", "D-pairless"):
+            lam = snap["baselines"][f"{arm}_lambda_B"]
+            ds = [x for x in snap["d"].values() if x["arm"] == arm and x["lambda_B"] == lam]
+            feas[arm] = q._feas_metrics([(float(np.mean([x["roots"][k]["p_feasible"] for x in ds])), y0[k]) for k in y0])
+        inf = {k: dl[k] for k in ks if dl[k]["mask"] is not None and dl[k]["y0"] == 0 and dl[k]["n"] > 0}
+        preds, nop = collections.defaultdict(dict), collections.Counter()
+        for arm in ("D", "D-pairless"):
+            lam, thr = snap["baselines"][f"{arm}_lambda_B"], snap["baselines"][f"{arm}_threshold"]
+            for x in snap["d"].values():
+                if x["arm"] == arm and x["lambda_B"] == lam:
+                    for k in inf:
+                        v = x["roots"][k]
+                        preds[arm].setdefault(k, []).append([int(v["p_feasible"] < 0.5 and mm >= thr) for mm in v["marg"]])
+        preds["geometry_heuristic"] = {k: [snap["baselines"]["heuristic"][k]] for k in inf}
+        lat = {k: _strict(plans[k], k)[0] for k in inf}
+        for arm in ("K-B", "K-C", "A", "SF"):
+            for s, a in A[arm].items():
+                for k in inf:
+                    m = a["roots"][k]["marginals"]
+                    if lat[k] is None or not all(x in m for x in lat[k].values()):
+                        continue
+                    stv = {u: m[x] for u, x in lat[k].items()}
+                    pm = None if not any(p_ >= 0.5 for p_ in stv.values()) else q._derived_mask(stv, inf[k]["n"])
+                    nop[arm] += pm is None
+                    preds[arm].setdefault(k, []).append(pm)
+        miss = {"precision": 0.0, "recall": 0.0, "f1": 0.0, "exact": 0.0, "jaccard": 0.0}
+        arms = ("D", "D-pairless", "geometry_heuristic", "K-B", "K-C", "A", "SF")
+        common = [k for k in inf if all(len(preds[a].get(k, [])) >= (1 if a.startswith(("D", "geo")) else 3) for a in arms)]
+        def score(arm, kk):
+            return {k: {mm: float(np.mean([(q._set_metrics(inf[k]["mask"], pm) if pm is not None else miss)[mm] for pm in preds[arm][k]])) for mm in miss} for k in kk}
+        out = {"feasibility": {"N": len(y0), "feasible_originals": int(sum(y0.values())), "arms": feas},
+               "infeasible_complete_masks": len(inf), "exact_lattice_roots": sum(v is not None for v in lat.values()), "common_N": len(common),
+               "NO_PREDICTED_CLEARING_SET_choices": dict(nop), "union_vs_necessary": {
+                   "alternative_set_roots": sum(len(inf[k]["sets"]) > 1 for k in inf),
+                   "union_members_not_necessary": int(sum(sum(a and not b for a, b in zip(inf[k]["mask"], inf[k]["necessary"])) for k in inf))}}
+        for name, kk in (("all_infeasible", common), ("proof_grounded", [k for k in common if inf[k]["provenance"] == "proof_grounded"]),
+                         ("operational", [k for k in common if inf[k]["provenance"] != "proof_grounded"])):
+            per = {a: score(a, kk) for a in arms}
+            out[name] = {"N": len(kk), "arms": {a: {mm: float(np.mean([v[mm] for v in per[a].values()])) if kk else None for mm in miss} for a in arms},
+                         "paired_f1_vs_D": {a: _paired({x: {k: v["f1"] for k, v in per[x].items()} for x in ("D", a)}, a, "D") for a in arms if a != "D"} if len(kk) > 1 else None}
+        res[stream] = out
+    cf.write_json(OUT / "p13_6" / "D13.json", res) if (OUT / "p13_6").mkdir(parents=True, exist_ok=True) is None else None
+    return res

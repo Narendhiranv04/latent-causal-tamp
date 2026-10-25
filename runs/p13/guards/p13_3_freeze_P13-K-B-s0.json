@@ -1,0 +1,12 @@
+{
+ "call": "p13_pipeline.freeze_arm(\"P13-K-B-s0\")",
+ "category": "analysis",
+ "cpu_cap_s": 1500,
+ "cpu_s": 1.65,
+ "overshoot_s": 0.0,
+ "returncode": 1,
+ "stderr_tail": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n    import torch; torch.set_num_threads(1); import p13_pipeline; p13_pipeline.freeze_arm(\"P13-K-B-s0\")\n                                                                 ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^\n  File \"/home/naren/Desktop/boltzmann_lfd/p13_pipeline.py\", line 295, in freeze_arm\n    m, keyed = pc.load(x[\"name\"])[0], pc.ARMS[x[\"arm\"]][2]\n               ~~~~~~~^^^^^^^^^^^\n  File \"/home/naren/Desktop/boltzmann_lfd/p10c_train_eval.py\", line 196, in load\n    x = _rd(OUT / \"runs\" / f\"{name}.json\")\n  File \"/home/naren/Desktop/boltzmann_lfd/p10c_train_eval.py\", line 42, in _rd\n    return json.loads(Path(p).read_text())\n                      ~~~~~~~~~~~~~~~~~^^\n  File \"/home/naren/miniconda3/lib/python3.13/pathlib/_local.py\", line 546, in read_text\n    return PathBase.read_text(self, encoding, errors, newline)\n           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/naren/miniconda3/lib/python3.13/pathlib/_abc.py\", line 632, in read_text\n    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:\n         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/naren/miniconda3/lib/python3.13/pathlib/_local.py\", line 537, in open\n    return io.open(self, mode, buffering, encoding, errors, newline)\n           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nFileNotFoundError: [Errno 2] No such file or directory: 'runs/p10c/runs/P13-K-B-s0.json'\n",
+ "stop": "ERROR",
+ "utc": "2026-10-25T19:22:28Z",
+ "wall_s": 1.76
+}

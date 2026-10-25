@@ -1,0 +1,117 @@
+{
+ "J_first": 3.5556097796217587,
+ "arm": "c6b4b0b2c595f",
+ "audit": {
+  "checks": {
+   "achieved_state_matches_commitment": true,
+   "commits_at_most_one": true,
+   "committed_order_equals_proposed": true,
+   "joint_continuity": true,
+   "no_target_after_abort": true,
+   "no_target_before_commit": true,
+   "no_target_without_completed_repair": true,
+   "single_terminal_event_last": true,
+   "target_after_all_relocations_and_reobservations": true,
+   "target_calls_at_most_one": true,
+   "target_invocation_equals_achieved": true,
+   "target_trajectory_starts_at_invocation": true
+  },
+  "commits": 1,
+  "decision": "PASS",
+  "outcome": "SUCCESS",
+  "protocol_compliant": true,
+  "reobserve": [
+   {
+    "achieved_xy": [
+     0.36000000000000004,
+     0.36000000000000004
+    ],
+    "attachment": "free",
+    "commanded_xy": [
+     0.36000000000000004,
+     0.36000000000000004
+    ],
+    "gap": 0.07,
+    "matches_commitment": true,
+    "moved": [
+     "o01"
+    ],
+    "object": "o01",
+    "q": [
+     1.5680852528540319,
+     -2.1036916122999427,
+     -0.24979180395153833
+    ]
+   },
+   {
+    "achieved_xy": [
+     0.36000000000000004,
+     0.2
+    ],
+    "attachment": "free",
+    "commanded_xy": [
+     0.36000000000000004,
+     0.2
+    ],
+    "gap": 0.07,
+    "matches_commitment": true,
+    "moved": [
+     "o01",
+     "o00"
+    ],
+    "object": "o00",
+    "q": [
+     1.2127689052897255,
+     -2.3385990404658865,
+     0.3404319717787132
+    ]
+   },
+   {
+    "achieved_xy": [
+     0.4399999999999999,
+     0.11999999999999954
+    ],
+    "attachment": "free",
+    "commanded_xy": [
+     0.4399999999999999,
+     0.11999999999999954
+    ],
+    "gap": 0.07,
+    "matches_commitment": true,
+    "moved": [
+     "o01",
+     "o00",
+     "o02"
+    ],
+    "object": "o02",
+    "q": [
+     0.2901493835486324,
+     -2.2042510811263445,
+     1.9141016975777116
+    ]
+   }
+  ],
+  "target_calls": 1
+ },
+ "committed_rank": 0,
+ "committed_sequence": [
+  [
+   "o01",
+   36
+  ],
+  [
+   "o00",
+   20
+  ],
+  [
+   "o02",
+   13
+  ]
+ ],
+ "moves": 3,
+ "outcome": "SUCCESS",
+ "relocation_plans": 3,
+ "root": "p12_2026140020",
+ "target_calls": 1,
+ "tried": 1
+}

@@ -26,9 +26,15 @@ def sha(p) -> str:
     return "sha256:" + hashlib.sha256(Path(p).read_bytes()).hexdigest()
 
 
+def _cpu(g) -> float:
+    """Guard CPU, except training jobs: the first launcher ran guards as threads of ONE parent, so teacher.guard's RUSAGE_CHILDREN delta
+    absorbed other children's CPU; a training child is single-threaded (torch.set_num_threads(1)), so its CPU is bounded by its wall."""
+    return min(g["cpu_s"], g["wall_s"]) if g["category"] == "training" else g["cpu_s"]
+
+
 def spent(cat=None) -> float:
     gs = [rd(p) for p in (OUT / "guards").glob("*.json")]
-    return sum(g["cpu_s"] for g in gs if cat is None or g["category"] == cat)
+    return sum(_cpu(g) for g in gs if cat is None or g["category"] == cat)
 
 
 def job(name, call, cpu, module="p13_factors", category="audit", wall=None) -> dict:
@@ -129,10 +135,10 @@ def _sealed(d):
     import p6_run as p6r
     import operational_teacher as ot
     d = Path(d)
-    plan, static, pol = rd(d / "plan.json"), rd(d / "static_admission.json")["certificates"], ot.load_policy("teacher_opneg.toml")
-    blind = any(r["split"] == "blind" for r in plan["roots"].values())
-    if blind and not (OUT / "holdout" / "UNSEALED").exists():
+    plan = rd(d / "plan.json")
+    if any(r["split"] == "blind" for r in plan["roots"].values()) and not (OUT / "holdout" / "UNSEALED").exists():
         raise SystemExit("P13 blind labels are sealed")
+    static, pol = rd(d / "static_admission.json")["certificates"], ot.load_policy("teacher_opneg.toml")
     res = {}
     for k, r in plan["roots"].items():
         f = d / ("sealed" if r["split"] == "blind" else "progress") / f"{k}.json"
@@ -202,9 +208,16 @@ def _arms():
 PM = {"B-F3pm": 320, "B-F5spm": 641, "B-F5qpm": 448}       # scene-head widths: (2W + 2) h + 1 restores the removed parameters
 
 
+def _skipped(name) -> bool:
+    f = MODELS / "SKIP.json"
+    return f.exists() and name in rd(f)["skip"]
+
+
 def train(arm, seed) -> None:
     import functools
     import os
+    if _skipped(f"P13-{arm}-s{seed}"):
+        return
     os.environ["P10C_OUT"] = str(MODELS)
     pc = _arms()
     import unique_factor as uf
@@ -244,19 +257,32 @@ def _plans():
     return P
 
 
-def freeze_predictions() -> None:
-    """Per P13 checkpoint: temperature + admission threshold on validation (P10b + P13 validation), then for every test root the
-    root-prior marginals, the keyed P_S joint (B-family), TOP1 rows / choice with the analytic veto; D: p_feasible, blocker marginals
-    (lambda_B, threshold by validation); geometry heuristic + geometry TOP1. Refuses after any test label exists."""
-    import contextlib
-    import copy
+def _freeze_ctx():
     import os
-    import torch
     os.environ["P10C_OUT"], os.environ["P10D_OUT"] = str(MODELS), str(HOLD)
     if (HOLD / "PREDICTIONS_FROZEN.json").exists() or any(HOLD.glob("*/static_admission.json")):
         raise SystemExit("test labels exist or predictions already frozen")
-    import d_blockers as db
-    import p10_eval as pe
+    import p10_protocol as pp
+    import p9_l3 as l3
+    from scene import scene_from_dict
+    cfg, P = cf.load_config("config.toml"), _plans()
+    sets = {"validation": [r for r in _prepared("trainval") if r["split"] == "validation"], "test": _prepared("test")}
+    veto = {(sp, r["key"]): frozenset(c["query"] for c in r["cands"] if c["seq"] and pp.static_veto(
+        scene_from_dict(P[r["key"]]["scene"]), [(r["ids"][i], l3.cell(d)) for i, d in c["seq"]], P[r["key"]]["goal_cell"], cfg))
+        for sp, rs in sets.items() for r in rs}
+    return cfg, P, sets, veto
+
+
+def freeze_arm(name) -> None:
+    """One checkpoint: temperature + threshold on validation; per test root the root-prior marginals, keyed P_S joint (B-family), F1
+    static P(valid) on analytic static checks, TOP1 rows and the choice (p10_protocol.top1 rule: admission, analytic veto, then
+    (moves, J_pred, C_d, energy, id)). Physical calls are counted and must be zero."""
+    import os
+    os.environ["P10C_OUT"], os.environ["P10D_OUT"] = str(MODELS), str(HOLD)
+    import contextlib
+    import copy
+    import math
+    import torch
     import p10_protocol as pp
     import p10d_execute as px
     import p7_eval
@@ -264,42 +290,68 @@ def freeze_predictions() -> None:
     import p9_l3c as l3c
     import unique_factor as uf
     import unique_factor_keyed as ufk
-    from scene import scene_from_dict
+    cfg, P, sets, veto = _freeze_ctx()
     pc = _arms()
-    cfg, P = cf.load_config("config.toml"), _plans()
-    sets = {"validation": [r for r in _prepared("trainval") if r["split"] == "validation"], "test": _prepared("test")}
-    veto = {(sp, r["key"]): frozenset(c["query"] for c in r["cands"] if c["seq"] and pp.static_veto(
-        scene_from_dict(P[r["key"]]["scene"]), [(r["ids"][i], l3.cell(d)) for i, d in c["seq"]], P[r["key"]]["goal_cell"], cfg))
-        for sp, rs in sets.items() for r in rs}
-    calls, snap = pp.instrument(), {"arms": {}, "d": {}, "baselines": {}}
-    for f in sorted((MODELS / "runs").glob("P13-*.json")):
-        x = rd(f)
-        if x["arm"] in ("D", "D-pairless"):
-            continue
-        m, keyed = pc.load(x["name"])[0], pc.ARMS[x["arm"]][2]
-        ctx = ufk.installed if keyed else contextlib.nullcontext
-        v0 = (lambda rs: pc._v0(copy.deepcopy(rs))) if x["arm"] == "B-V0" else (lambda rs: rs)
-        mode = "factorized" if x["arm"] in ("A", "SF") else "unique"
-        with ctx():
-            vev = [l3.root_eval9(m, r, mode)["root"] for r in v0(sets["validation"])]
-        tau = p7_eval.fit_temperature(vev)
-        thr = px.choose_threshold(vev, tau)
-        per = {}
-        for r in v0(sets["test"]):
-            with ctx(), torch.no_grad():
-                pm = pe.marginals(m, r, keyed)
-                row = {"marginals": pm}
-                if m.kind in ("B", "C"):
-                    inst = uf.instances(m, r)
-                    row["joint_S"] = {"queries": inst["S"]["queries"], "logp": [float(v) for v in inst["S"]["logp"]]}
-                    rows = l3c.deployed(m, r, inst, tau, thr)[1]
-                else:
-                    rows = l3.root_eval9(m, r, "factorized")["root"]["cands"]
-            sel = pp.top1(m, r, tau, thr, veto[("test", r["key"])], keyed)
-            row |= {"top1": sel["choice"], "admitted": sel["admitted"],
-                    "rows": [{k: y[k] for k in ("query", "u", "m", "J_pred", "C_d", "energy")} for y in rows]}
-            per[r["key"]] = row
-        snap["arms"][x["name"]] = {"arm": x["arm"], "seed": x["seed"], "tau": tau, "threshold": thr, "roots": per, "checkpoint_sha256": x["checkpoint_sha256"]}
+    calls = pp.instrument()
+    x = rd(MODELS / "runs" / f"{name}.json")
+    m, keyed = pc.load(x["name"])[0], pc.ARMS[x["arm"]][2]
+    ctx = ufk.installed if keyed else contextlib.nullcontext
+    v0 = (lambda rs: pc._v0(copy.deepcopy(rs))) if x["arm"] == "B-V0" else (lambda rs: rs)
+    mode = "factorized" if x["arm"] in ("A", "SF") else "unique"
+    with ctx():
+        vev = [l3.root_eval9(m, r, mode)["root"] for r in v0(sets["validation"])]
+    tau = p7_eval.fit_temperature(vev)
+    thr = px.choose_threshold(vev, tau)
+    per = {}
+    for r in v0(sets["test"]):
+        l3c.check_identity(r)
+        with ctx(), torch.no_grad():
+            if m.kind in ("B", "C"):
+                inst = uf.instances(m, r)
+                row = {"marginals": {q: float(v) for q, v in uf.prior_marginals(inst).items()},
+                       "joint_S": {"queries": inst["S"]["queries"], "logp": [float(v) for v in inst["S"]["logp"]]}}
+                rows = l3c.deployed(m, r, inst, tau, thr)[1]
+            else:
+                import p10_eval as pe
+                row = {"marginals": pe.marginals(m, r, False)}
+                rows = l3.root_eval9(m, r, "factorized")["root"]["cands"]
+            st = []
+            for c in r["static_checks"]:
+                xy = r["R"].xy0.clone()
+                for i, dd in c["seq"]:
+                    xy[i] = torch.as_tensor(dd, dtype=torch.float64)
+                st.append({"p_valid": float(np.exp(-float(m.static(r["R"], xy)[0]))),
+                           "valid": int(all(v != 0 for v in c["su"] + c["sp"] if v is not None))})
+        if not all(math.isfinite(y[k]) for y in rows for k in ("u", "J_pred", "C_d", "energy")):
+            raise FloatingPointError(f"{r['key']}: nonfinite score")
+        keep = [y for y in rows if y["query"] not in veto[("test", r["key"])] and 1 / (1 + math.exp(-y["u"] / tau)) >= thr]
+        best = min(keep, key=lambda y: (y["m"], y["J_pred"], y["C_d"], y["energy"], y["query"])) if keep else None
+        per[r["key"]] = row | {"static": st, "top1": best["query"] if best else "ABSTAIN", "admitted": len(keep),
+                               "rows": [{k: y[k] for k in ("query", "u", "m", "J_pred", "C_d", "energy")} for y in rows]}
+    if sum(calls.values()):
+        raise RuntimeError(f"physical call during learned prediction: {dict(calls)}")
+    (HOLD / "parts").mkdir(parents=True, exist_ok=True)
+    cf.write_json(HOLD / "parts" / f"{name}.json", {"arm": x["arm"], "seed": x["seed"], "tau": tau, "threshold": thr, "roots": per,
+                                                    "checkpoint_sha256": x["checkpoint_sha256"], "physical_calls": dict(calls)})
+
+
+def freeze_merge() -> None:
+    """D (lambda_B and threshold by validation), geometry heuristic and geometry TOP1, merge of the per-checkpoint parts, hash."""
+    import os
+    os.environ["P10C_OUT"], os.environ["P10D_OUT"] = str(MODELS), str(HOLD)
+    import torch
+    import d_blockers as db
+    import p10_protocol as pp
+    import p10d_execute as px
+    cfg, P, sets, veto = _freeze_ctx()
+    calls = pp.instrument()
+    snap = {"arms": {}, "d": {}, "baselines": {}}
+    names = sorted(f.stem for f in (MODELS / "runs").glob("P13-*.json") if rd(f)["arm"] not in ("D", "D-pairless"))
+    for n in names:
+        part = rd(HOLD / "parts" / f"{n}.json")
+        if sum(part["physical_calls"].values()):
+            raise RuntimeError(f"{n}: physical calls")
+        snap["arms"][n] = {k: v for k, v in part.items() if k != "physical_calls"}
     dsel = {}
     for f in sorted((MODELS / "runs").glob("P13-D*.json")):
         x = rd(f)
@@ -318,11 +370,11 @@ def freeze_predictions() -> None:
         snap["baselines"].setdefault("geometry_top1", {})[r["key"]] = px.geometry_choice(P[r["key"]], r, cfg)
     for d in snap["d"].values():
         d["roots"] = d["roots"]["test"]
-    phys = dict(calls)
-    if sum(phys.values()):
-        raise RuntimeError(f"physical call during learned prediction: {phys}")
-    snap |= {"version": "P13_PREDICTIONS_V1", "prereg": sha(OUT / "PREREG.json"), "physical_calls": phys,
-             "datasets": {n: sha(MODELS / f"dataset_{n}.pt") for n in ("trainval", "test")}, "veto_fired": sum(len(v) for v in veto.values())}
+    if sum(calls.values()):
+        raise RuntimeError(f"physical call during D / baselines: {dict(calls)}")
+    snap |= {"version": "P13_PREDICTIONS_V1", "prereg": sha(OUT / "PREREG.json"), "physical_calls": dict(calls),
+             "datasets": {n: sha(MODELS / f"dataset_{n}.pt") for n in ("trainval", "test")}, "veto_fired": sum(len(v) for v in veto.values()),
+             "checkpoints": {n: snap["arms"][n]["checkpoint_sha256"] for n in names}}
     snap["hash"] = cf.stable_hash(snap)
     cf.write_json(HOLD / "PREDICTIONS_FROZEN.json", snap)
 
@@ -485,3 +537,21 @@ def write_prereg() -> None:
         "caps": CAPS}
     pre["hash"] = cf.stable_hash(pre)
     cf.write_json(OUT / "PREREG.json", pre)
+
+
+def train_all(parallel=14) -> None:
+    """All matched jobs not skipped (SKIP.json) and not done, each launched as its OWN OS process running job() (one guard per parent
+    process, so RUSAGE_CHILDREN never mixes jobs), at most `parallel` at a time."""
+    import subprocess
+    todo = [(f"p13_3_train_{a}_s{s}", f"train('{a}', {s})", 2500) for s in (0, 1, 2) for a in ARMS
+            if not (MODELS / "runs" / f"P13-{a}-s{s}.json").exists() and not _skipped(f"P13-{a}-s{s}")]
+    todo += [(f"p13_3_train_D{int(pr)}_l{lam}_s{s}", f"train_d({pr}, {s}, {lam})", 300) for pr in (True, False) for lam in (0.5, 1.0, 2.0)
+             for s in (0, 1, 2) if not (MODELS / "runs" / f"P13-{'D' if pr else 'D-pairless'}-l{lam}-s{s}.json").exists()]
+    run = []
+    for name, call, cpu in todo:
+        while sum(p.poll() is None for p in run) >= parallel:
+            time.sleep(5)
+        run.append(subprocess.Popen([sys.executable, "-c", f"import p13_pipeline as p; p.job({name!r}, {call!r}, {cpu}, module='p13_pipeline', "
+                                     f"category='training', wall=40000)"]))
+    for p in run:
+        p.wait()
