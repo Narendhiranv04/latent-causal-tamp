@@ -461,3 +461,29 @@ def joint_scene_nll() -> dict:
         res[cohort] = out
     cf.write_json(OUT / "p13_1" / "JOINT_SCENE_NLL_EXPLORATORY.json", res)
     return res
+
+
+def keyed_erratum() -> dict:
+    """Erratum to 0060 section 3: keyed vs unkeyed instantiation compared by F5 scene-query pair INSTANCES (unkeyed: every listed slot of
+    every candidate block, with the parent's context and role; keyed: one per (scene bit, distinct query)), not by block counts."""
+    import os
+    import torch
+    os.environ.setdefault("P10C_OUT", "runs/p10c")
+    import abc7_train as t7
+    import p10c_train_eval as pc
+    import unique_factor as uf
+    import unique_factor_keyed as ufk
+    m, _ = pc.load("F-K-B-s0")
+    hold = t7.prepare(torch.load(p12.HOLD / "records.pt", weights_only=False))
+    out = {}
+    with torch.no_grad():
+        for c, rs in (("p10b_blind", pc.prepared("blind")), ("p12_holdout", hold)):
+            n_u = n_k = diff = 0
+            for r in rs:
+                ku, kk = uf.instances(m, r), ufk.instances(m, r)
+                ks = len(ku["S"]["names"])
+                a, b = sum(ks * len(x["queries"]) for x in ku["blocks"].values()), ks * len(kk["blocks"])
+                n_u, n_k, diff = n_u + a, n_k + b, diff + (a != b)
+            out[c] = {"roots": len(rs), "roots_differing": diff, "scene_query_pairs_unkeyed": n_u, "scene_query_pairs_keyed": n_k}
+    cf.write_json(OUT / "p13_1" / "KEYED_ERRATUM.json", out)
+    return out

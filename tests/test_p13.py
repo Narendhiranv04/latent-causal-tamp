@@ -142,3 +142,10 @@ def test_strict_lattice_identity_and_failure():
     it = next(i for i in bad["items"] if i.get("d_subset") == ["A"])
     it["edit"] = {list(it["edit"])[0]: -1}
     assert f._strict(bad, k)[0] is None
+
+
+def test_p10b_teacher_policy_unchanged_and_p13_variant_declared():
+    import p10b_dataset as pd
+    import p13_pipeline as p13
+    assert pd.POLICY["stop_after_censored_seed"] is True and pd.POLICY["version"] == "P10B_S100_V1"
+    assert p13.TEACHER["stop_after_censored_seed"] is False and p13.TEACHER["version"] == "P13_S100_V2"

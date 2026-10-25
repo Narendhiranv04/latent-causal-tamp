@@ -270,7 +270,7 @@ def collect(out, chunk_cpu=2500.0) -> None:
                                              min(POLICY["query_cpu_s"] - uc, POLICY["root_cpu_s"] - used - uc), POLICY["query_wall_s"], seeds)
                     uc += u
                     last = seeds[qid][-1] if seeds[qid] else None
-                    if last is None or last["terminal"] in ("WITNESS", "CERTIFICATE") or str(last["stop"]).endswith("CENSORED"):
+                    if last is None or last["terminal"] in ("WITNESS", "CERTIFICATE") or (POLICY["stop_after_censored_seed"] and str(last["stop"]).endswith("CENSORED")):
                         break
             unit[0] += uc
             d = {"stop": stop, "attempts": seeds[qid], "unit_cpu_s": uc, "coord_cpu_s": time.process_time() - c1}

@@ -1,0 +1,163 @@
+{
+ "calibration": "per checkpoint: temperature (p7_eval.fit_temperature) + admission threshold (P8 rule) on validation only; no test refit",
+ "caps": {
+  "analysis": 5000.0,
+  "audit": 4000.0,
+  "dev": 10000.0,
+  "execution": 22000.0,
+  "p12_continuation": 9000.0,
+  "teacher": 65000.0,
+  "training": 35000.0
+ },
+ "catalogue": "family tokens (p13_scenes.TOK); every scene edit = a D parking subset of the pool (pairs: A, B, A+B; triples: all 7)",
+ "dedup": "stable geometry + fingerprint against P10a / P10b / P11 / P12 / every earlier P13 plan; parent lineage = root (no derived roots)",
+ "execution": {
+  "cap_cpu_s": 22000.0,
+  "order": "jobs in one frozen random root permutation (seed 13) across all executable blind roots, interleaving families, so coverage under the cap is outcome-blind and not batch-prefix biased",
+  "protocol": "strict TOP1_COMMIT, one episode per distinct (root, repair), 180 CPU-s / 600 s, no fallback, SAFE_RETREAT; G+M planner-assisted <= 5 candidates reported separately"
+ },
+ "generator": {
+  "conditioning": "mechanism-conditioned case-control: sound-certificate / pose-screen INTENT predicates per family (recorded per root, never a learner input); NAT = unconditioned natural stream (no prescreen)",
+  "dev_revisions": [
+   "V1: near-start barrier rule after the first probe (DEV)",
+   "V1.1: PC_SERIAL prediction-only after DEV pilot 2"
+  ],
+  "families": {
+   "NAT": {
+    "natural": 48,
+    "train": 24,
+    "validation": 6
+   },
+   "OMIT_OPT": {
+    "blind": 14,
+    "train": 16,
+    "validation": 4
+   },
+   "ORD_CHAIN": {
+    "blind": 14,
+    "train": 16,
+    "validation": 4
+   },
+   "PC_SERIAL": {
+    "blind": 16,
+    "train": 16,
+    "validation": 4
+   },
+   "PC_SG": {
+    "blind": 16,
+    "train": 16,
+    "validation": 4
+   },
+   "PN_GIMP": {
+    "blind": 12,
+    "train": 16,
+    "validation": 4
+   },
+   "PN_SIMP": {
+    "blind": 12,
+    "train": 16,
+    "validation": 4
+   },
+   "PR_SIDES": {
+    "blind": 14,
+    "train": 16,
+    "validation": 4
+   },
+   "TRI_CTRL": {
+    "blind": 12,
+    "train": 12,
+    "validation": 3
+   },
+   "TRI_SERIAL": {
+    "blind": 12,
+    "train": 12,
+    "validation": 3
+   }
+  },
+  "module": "p13_scenes.py",
+  "not_run": {
+   "TRI_OR": "0 / 2 DEV lattices complete at the teacher budget (Delta_ABC = -1 NOT_EVALUATED)"
+  },
+  "sha256": "sha256:88b88d740c25e67229080d27f22c60b04f879cce071307e6f0c2e5c228ec31ad",
+  "version": "P13_MECH_V1_1"
+ },
+ "hash": "sha256:7dbcb3a928977743d395d5dce6b7fcc93133073bb664d29cfbd68021fc16d4c3",
+ "minimal_meaningful_effect": {
+  "joint_nll": 0.05,
+  "kappa_mae_kappa_plus1": 0.1,
+  "omission_logloss": 0.05,
+  "order_accuracy": 0.1,
+  "static_auprc": 0.05,
+  "travel_regret_fraction": 0.05
+ },
+ "p12_continuation": "frozen P12 jobs only, frozen order, cap 9,000 CPU-s; supplementary, never P13 confirmation",
+ "primary": {
+  "H_F2": "B vs B-F2: per-root mean accuracy P(good) > P(bad) over proof-grounded same-endpoint reversed-order pairs (seed-mean marginals)",
+  "H_F3": "B vs B-F3pm: per-root joint four-bit log-loss -log P_S(z0, zS[A], zS[B], zS[A+B] = observed), mean over 3 seeds; cohort = proof-grounded pair four-tuples of the BLIND CHALLENGE set (all kappa classes)",
+  "H_F4": "B vs B-F4: per-root mean omission log-loss over proof-grounded omissions of VERIFIED >= 2-move repairs (seed-mean marginals)",
+  "H_F5": "B vs B-F5spm: same endpoint and cohort",
+  "family": "Holm over exactly these 4 tests, alpha 0.05, two-sided exact sign test (ties removed), unit = independent root, paired root bootstrap 95 % CI (2,000 resamples, seed 0)"
+ },
+ "roster": {
+  "n": 370,
+  "rule": "p13_pipeline.roster(): seeds 2026160000+ (train), 2026170000+ (validation), 2026180000+ (blind challenge), 2026190000+ (natural blind); families interleaved; batches of <= 16"
+ },
+ "safety_and_secondary": [
+  "kappa MAE (seed-mean estimand) on kappa = +1 roots and false-interaction rate (|khat| >= 0.5) on kappa = 0 roots; constant-zero control",
+  "same comparisons with the plain off arms (B-F3, B-F5s, B-F5q) - capacity attribution",
+  "F5q: B vs B-F5q(pm) on |Delta_hat_ABC - Delta_ABC| and joint 8-bit log-loss over complete proof-grounded triple lattices (>= 12 required)",
+  "F1: static-validity AUROC / AUPRC on held-out analytic static checks, B vs B-F1off; deployment path reported (veto / tie counts)",
+  "J: travel regret among admitted, VERIFIED, equal-move alternatives with witnessed travel (B vs no-J vs shuffled-J); success non-inferiority",
+  "vision B vs B-V0; keying B vs B-U; A / C / SF on every endpoint; natural-mix replication of every primary",
+  "strict TOP1 executed success (frozen choices, no fallback) and G+M separately",
+  "D / D-pairless / geometry: initial feasibility (natural set has feasible originals) and blocker union F1 / exact on exact lattices; A / B / C / SF attribution on the same lattices with NO_PREDICTED_CLEARING_SET scored as a miss"
+ ],
+ "secondary_multiplicity": "Holm within each secondary family; never promoted to confirmed",
+ "start_commit": "021cd00461bfb346053c991303385a9e467769f5",
+ "stopping": "fixed roster and budget; no interim significance look; unavailable / censored roots are reported, never replaced",
+ "teacher": {
+  "adjudication": "unchanged OPNEG-v1; VERIFIED / CERTIFIED (scoped) / BUDGET (operational) / UNKNOWN / NOT_RUN",
+  "policy": {
+   "change_vs_P10B_S100_V1": "a censored seed no longer ends the query: the remaining declared seeds run (still 100 CPU-s each, 330 CPU-s per query, 900 CPU-s per root); adjudication unchanged (OPNEG-v1)",
+   "stop_after_censored_seed": false,
+   "version": "P13_S100_V2"
+  }
+ },
+ "training": {
+  "D": "D / D-pairless, lambda_B in {0.5, 1, 2} x 3 seeds, 600 updates; lambda_B by mean validation NLL",
+  "arms": [
+   "K-B",
+   "K-C",
+   "A",
+   "SF",
+   "B-F2",
+   "B-F3",
+   "B-F3pm",
+   "B-F4",
+   "B-F5s",
+   "B-F5spm",
+   "B-F5q",
+   "B-F5qpm",
+   "B-F1off",
+   "B-V0",
+   "B-U"
+  ],
+  "batch": 12,
+  "data": "P10c trainval records + P13 train / validation",
+  "lambda_static": "1 (0 for B-F1off)",
+  "parameter_matched": {
+   "B-F3pm": "scene head hidden width 320",
+   "B-F5qpm": "scene head hidden width 448",
+   "B-F5spm": "scene head hidden width 641"
+  },
+  "seeds": [
+   0,
+   1,
+   2
+  ],
+  "selection": "lowest validation root NLL every 20 updates (P10b + P13 validation)",
+  "updates": 400
+ },
+ "verdict_rule": "SUPPORTED_CONDITIONAL only if Holm p < 0.05, mean effect >= the minimal effect, 95 % CI excludes 0, AND no significant harm (raw p < 0.05 in the harmful direction) on (i) kappa = 0 false-interaction rate (F3 / F5), (ii) the natural-mix version of the same endpoint; else NO_DEMONSTRATED_BENEFIT / HARMFUL (significant reversal) / UNDERPOWERED (< 12 roots)",
+ "version": "P13_PREREG_V1"
+}

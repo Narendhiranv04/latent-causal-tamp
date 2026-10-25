@@ -1,0 +1,6126 @@
+{
+ "attempts": [
+  {
+   "accepted": false,
+   "attempt": 0,
+   "reason": "layout",
+   "seed": 2026151005
+  },
+  {
+   "accepted": true,
+   "attempt": 1,
+   "reason": null,
+   "seed": 2026151005
+  },
+  {
+   "accepted": false,
+   "attempt": 0,
+   "reason": "layout",
+   "seed": 2026151006
+  },
+  {
+   "accepted": true,
+   "attempt": 1,
+   "reason": null,
+   "seed": 2026151006
+  },
+  {
+   "accepted": false,
+   "attempt": 0,
+   "reason": "predicate: z0: sound certificate",
+   "seed": 2026151007
+  },
+  {
+   "accepted": false,
+   "attempt": 1,
+   "reason": "layout",
+   "seed": 2026151007
+  },
+  {
+   "accepted": false,
+   "attempt": 2,
+   "reason": "predicate: edit A+C: certified",
+   "seed": 2026151007
+  },
+  {
+   "accepted": false,
+   "attempt": 3,
+   "reason": "predicate: edit A+C: certified",
+   "seed": 2026151007
+  },
+  {
+   "accepted": false,
+   "attempt": 4,
+   "reason": "predicate: z0: sound certificate",
+   "seed": 2026151007
+  },
+  {
+   "accepted": true,
+   "attempt": 5,
+   "reason": null,
+   "seed": 2026151007
+  },
+  {
+   "accepted": false,
+   "attempt": 0,
+   "reason": "layout",
+   "seed": 2026151008
+  },
+  {
+   "accepted": false,
+   "attempt": 1,
+   "reason": "predicate: edit B: certified",
+   "seed": 2026151008
+  },
+  {
+   "accepted": false,
+   "attempt": 2,
+   "reason": "predicate: edit B: certified",
+   "seed": 2026151008
+  },
+  {
+   "accepted": false,
+   "attempt": 3,
+   "reason": "layout",
+   "seed": 2026151008
+  },
+  {
+   "accepted": true,
+   "attempt": 4,
+   "reason": null,
+   "seed": 2026151008
+  },
+  {
+   "accepted": true,
+   "attempt": 0,
+   "reason": null,
+   "seed": 2026151009
+  }
+ ],
+ "config_hash": "sha256:a9f3f2360e17d9827e24b4e9bb32727569afdf04aa4f87c72ba3cccf50953ae3",
+ "execution_policy": {
+  "adjudication": "unchanged 2D-ABC-OPNEG-v1 (teacher_opneg.toml); BUDGET only if all 3 declared seeds ran to a clean allowed terminal",
+  "chosen": "B_FULL_SEEDS",
+  "options_predeclared": {
+   "A_P10A": "120 CPU-s per query (later seed only while spent + 110 <= 120)",
+   "B_FULL_SEEDS": "330 CPU-s per query: all three 100 CPU-s seeds fit; a censored seed ends the query (UNKNOWN)"
+  },
+  "query_cpu_s": 330.0,
+  "query_wall_s": 900.0,
+  "reserve_s": 10.0,
+  "root_cpu_s": 900.0,
+  "seed_cpu_s": 100.0,
+  "seed_kill_margin_s": 5.0,
+  "stop_after_censored_seed": true,
+  "version": "P10B_S100_V1",
+  "workers": 1
+ },
+ "ineligible": [],
+ "plan_hash": "sha256:9492446a8ee43ef8efc4155dc58c7b01528734ac6ef9270d804b1558235c3d2d",
+ "policy_hash": "sha256:df54878deb69bac823339ce9832b7454d8bbca2ef77b3aea3c939016caef075c",
+ "policy_id": "2D-ABC-OPNEG-v1",
+ "queries": [
+  {
+   "anchor": true,
+   "batch": 0,
+   "d_subset": null,
+   "edit": null,
+   "edit_kind": null,
+   "family": "ORD_CHAIN",
+   "kind": "ORDERED_TEACHER",
+   "lineage": "p13_2026151005",
+   "mechanism": "ORD_CHAIN",
+   "priority": 0,
+   "query": "seq:p13_2026151005:o02>44.o01>28.o00>22",
+   "role": "anchor",
+   "root": "p13_2026151005",
+   "sequence": [
+    [
+     "o02",
+     44
+    ],
+    [
+     "o01",
+     28
+    ],
+    [
+     "o00",
+     22
+    ]
+   ],
+   "split": "dev",
+   "token": "C B A"
+  },
+  {
+   "anchor": false,
+   "batch": 0,
+   "d_subset": null,
+   "edit": null,
+   "edit_kind": null,
+   "family": "ORD_CHAIN",
+   "kind": "ORDERED_TEACHER",
+   "lineage": "p13_2026151005",
+   "mechanism": "ORD_CHAIN",
+   "priority": 1,
+   "query": "seq:p13_2026151005:o00>22.o01>28.o02>44",
+   "role": "catalogue",
+   "root": "p13_2026151005",
+   "sequence": [
+    [
+     "o00",
+     22
+    ],
+    [
+     "o01",
+     28
+    ],
+    [
+     "o02",
+     44
+    ]
+   ],
+   "split": "dev",
+   "token": "A B C"
+  },
+  {
+   "anchor": false,
+   "batch": 0,
+   "d_subset": null,
+   "edit": null,
+   "edit_kind": null,
+   "family": "ORD_CHAIN",
+   "kind": "ORDERED_TEACHER",
+   "lineage": "p13_2026151005",
+   "mechanism": "ORD_CHAIN",
+   "priority": 2,
+   "query": "seq:p13_2026151005:o01>28.o02>44.o00>22",
+   "role": "catalogue",
+   "root": "p13_2026151005",
+   "sequence": [
+    [
+     "o01",
+     28
+    ],
+    [
+     "o02",
+     44
+    ],
+    [
+     "o00",
+     22
+    ]
+   ],
+   "split": "dev",
+   "token": "B C A"
+  },
+  {
+   "anchor": false,
+   "batch": 0,
+   "d_subset": null,
+   "edit": null,
+   "edit_kind": null,
+   "family": "ORD_CHAIN",
+   "kind": "ORDERED_TEACHER",
+   "lineage": "p13_2026151005",
+   "mechanism": "ORD_CHAIN",
+   "priority": 3,
+   "query": "seq:p13_2026151005:o02>44.o01>28",
+   "role": "catalogue",
+   "root": "p13_2026151005",
+   "sequence": [
+    [
+     "o02",
+     44
+    ],
+    [
+     "o01",
+     28
+    ]
+   ],
+   "split": "dev",
+   "token": "C B"
+  },
+  {
+   "anchor": false,
+   "batch": 0,
+   "d_subset": null,
+   "edit": null,
+   "edit_kind": null,
+   "family": "ORD_CHAIN",
+   "kind": "ORDERED_TEACHER",
+   "lineage": "p13_2026151005",
+   "mechanism": "ORD_CHAIN",
+   "priority": 4,
+   "query": "seq:p13_2026151005:o01>28.o00>22",
+   "role": "catalogue",
+   "root": "p13_2026151005",
+   "sequence": [
+    [
+     "o01",
+     28
+    ],
+    [
+     "o00",
+     22
+    ]
+   ],
+   "split": "dev",
+   "token": "B A"
+  },
+  {
+   "anchor": false,
+   "batch": 0,
+   "d_subset": null,
+   "edit": null,
+   "edit_kind": null,
+   "family": "ORD_CHAIN",
+   "kind": "ORDERED_TEACHER",
+   "lineage": "p13_2026151005",
+   "mechanism": "ORD_CHAIN",
+   "priority": 5,
+   "query": "seq:p13_2026151005:o00>22",
+   "role": "catalogue",
+   "root": "p13_2026151005",
+   "sequence": [
+    [
+     "o00",
+     22
+    ]
+   ],
+   "split": "dev",
+   "token": "A"
+  },
+  {
+   "anchor": false,
+   "batch": 0,
+   "d_subset": [],
+   "edit": null,
+   "edit_kind": null,
+   "family": "ORD_CHAIN",
+   "kind": "ORDERED_TEACHER",
+   "lineage": "p13_2026151005",
+   "mechanism": "ORD_CHAIN",
+   "priority": 6,
+   "query": "seq:p13_2026151005:empty",
+   "role": "catalogue",
+   "root": "p13_2026151005",
+   "sequence": [],
+   "split": "dev",
+   "token": ""
+  },
+  {
+   "anchor": false,
+   "batch": 0,
+   "d_subset": [
+    "A"
+   ],
+   "edit": {
+    "o00": 22
+   },
+   "edit_kind": "A",
+   "family": "ORD_CHAIN",
+   "kind": "SCENE_TARGET_ONLY",
+   "lineage": "p13_2026151005",
+   "mechanism": "ORD_CHAIN",
+   "priority": 7,
+   "query": "scene:p13_2026151005:o00>22",
+   "role": "catalogue",
+   "root": "p13_2026151005",
+   "sequence": [],
+   "split": "dev",
+   "token": "edit:A"
+  },
+  {
+   "anchor": false,
+   "batch": 0,
+   "d_subset": [
+    "B"
+   ],
+   "edit": {
+    "o01": 28
+   },
+   "edit_kind": "B",
+   "family": "ORD_CHAIN",
+   "kind": "SCENE_TARGET_ONLY",
+   "lineage": "p13_2026151005",
+   "mechanism": "ORD_CHAIN",
+   "priority": 8,
+   "query": "scene:p13_2026151005:o01>28",
+   "role": "catalogue",
+   "root": "p13_2026151005",
+   "sequence": [],
+   "split": "dev",
+   "token": "edit:B"
+  },
+  {
+   "anchor": false,
+   "batch": 0,
+   "d_subset": [
+    "A",
+    "B"
+   ],
+   "edit": {
+    "o00": 22,
+    "o01": 28
+   },
+   "edit_kind": "A+B",
+   "family": "ORD_CHAIN",
+   "kind": "SCENE_TARGET_ONLY",
+   "lineage": "p13_2026151005",
+   "mechanism": "ORD_CHAIN",
+   "priority": 9,
+   "query": "scene:p13_2026151005:o00>22.o01>28",
+   "role": "catalogue",
+   "root": "p13_2026151005",
+   "sequence": [],
+   "split": "dev",
+   "token": "edit:A+B"
+  },
+  {
+   "anchor": true,
+   "batch": 0,
+   "d_subset": null,
+   "edit": null,
+   "edit_kind": null,
+   "family": "OMIT_OPT",
+   "kind": "ORDERED_TEACHER",
+   "lineage": "p13_2026151006",
+   "mechanism": "OMIT_OPT",
+   "priority": 0,
+   "query": "seq:p13_2026151006:o01>52.o00>36.o02>23",
+   "role": "anchor",
+   "root": "p13_2026151006",
+   "sequence": [
+    [
+     "o01",
+     52
+    ],
+    [
+     "o00",
+     36
+    ],
+    [
+     "o02",
+     23
+    ]
+   ],
+   "split": "dev",
+   "token": "B A D"
+  },
+  {
+   "anchor": false,
+   "batch": 0,
+   "d_subset": null,
+   "edit": null,
+   "edit_kind": null,
+   "family": "OMIT_OPT",
+   "kind": "ORDERED_TEACHER",
+   "lineage": "p13_2026151006",
+   "mechanism": "OMIT_OPT",
+   "priority": 1,
+   "query": "seq:p13_2026151006:o01>52.o00>36",
+   "role": "catalogue",
+   "root": "p13_2026151006",
+   "sequence": [
+    [
+     "o01",
+     52
+    ],
+    [
+     "o00",
+     36
+    ]
+   ],
+   "split": "dev",
+   "token": "B A"
+  },
+  {
+   "anchor": false,
+   "batch": 0,
+   "d_subset": null,
+   "edit": null,
+   "edit_kind": null,
+   "family": "OMIT_OPT",
+   "kind": "ORDERED_TEACHER",
+   "lineage": "p13_2026151006",
+   "mechanism": "OMIT_OPT",
+   "priority": 2,
+   "query": "seq:p13_2026151006:o00>36.o02>23",
+   "role": "catalogue",
+   "root": "p13_2026151006",
+   "sequence": [
+    [
+     "o00",
+     36
+    ],
+    [
+     "o02",
+     23
+    ]
+   ],
+   "split": "dev",
+   "token": "A D"
+  },
+  {
+   "anchor": false,
+   "batch": 0,
+   "d_subset": null,
+   "edit": null,
+   "edit_kind": null,
+   "family": "OMIT_OPT",
+   "kind": "ORDERED_TEACHER",
+   "lineage": "p13_2026151006",
+   "mechanism": "OMIT_OPT",
+   "priority": 3,
+   "query": "seq:p13_2026151006:o01>52.o02>23",
+   "role": "catalogue",
+   "root": "p13_2026151006",
+   "sequence": [
+    [
+     "o01",
+     52
+    ],
+    [
+     "o02",
+     23
+    ]
+   ],
+   "split": "dev",
+   "token": "B D"
+  },
+  {
+   "anchor": false,
+   "batch": 0,
+   "d_subset": null,
+   "edit": null,
+   "edit_kind": null,
+   "family": "OMIT_OPT",
+   "kind": "ORDERED_TEACHER",
+   "lineage": "p13_2026151006",
+   "mechanism": "OMIT_OPT",
+   "priority": 4,
+   "query": "seq:p13_2026151006:o00>36.o01>52.o02>23",
+   "role": "catalogue",
+   "root": "p13_2026151006",
+   "sequence": [
+    [
+     "o00",
+     36
+    ],
+    [
+     "o01",
+     52
+    ],
+    [
+     "o02",
+     23
+    ]
+   ],
+   "split": "dev",
+   "token": "A B D"
+  },
+  {
+   "anchor": false,
+   "batch": 0,
+   "d_subset": [],
+   "edit": null,
+   "edit_kind": null,
+   "family": "OMIT_OPT",
+   "kind": "ORDERED_TEACHER",
+   "lineage": "p13_2026151006",
+   "mechanism": "OMIT_OPT",
+   "priority": 5,
+   "query": "seq:p13_2026151006:empty",
+   "role": "catalogue",
+   "root": "p13_2026151006",
+   "sequence": [],
+   "split": "dev",
+   "token": ""
+  },
+  {
+   "anchor": false,
+   "batch": 0,
+   "d_subset": [
+    "A"
+   ],
+   "edit": {
+    "o00": 36
+   },
+   "edit_kind": "A",
+   "family": "OMIT_OPT",
+   "kind": "SCENE_TARGET_ONLY",
+   "lineage": "p13_2026151006",
+   "mechanism": "OMIT_OPT",
+   "priority": 6,
+   "query": "scene:p13_2026151006:o00>36",
+   "role": "catalogue",
+   "root": "p13_2026151006",
+   "sequence": [],
+   "split": "dev",
+   "token": "edit:A"
+  },
+  {
+   "anchor": false,
+   "batch": 0,
+   "d_subset": [
+    "B"
+   ],
+   "edit": {
+    "o01": 52
+   },
+   "edit_kind": "B",
+   "family": "OMIT_OPT",
+   "kind": "SCENE_TARGET_ONLY",
+   "lineage": "p13_2026151006",
+   "mechanism": "OMIT_OPT",
+   "priority": 7,
+   "query": "scene:p13_2026151006:o01>52",
+   "role": "catalogue",
+   "root": "p13_2026151006",
+   "sequence": [],
+   "split": "dev",
+   "token": "edit:B"
+  },
+  {
+   "anchor": false,
+   "batch": 0,
+   "d_subset": [
+    "A",
+    "B"
+   ],
+   "edit": {
+    "o00": 36,
+    "o01": 52
+   },
+   "edit_kind": "A+B",
+   "family": "OMIT_OPT",
+   "kind": "SCENE_TARGET_ONLY",
+   "lineage": "p13_2026151006",
+   "mechanism": "OMIT_OPT",
+   "priority": 8,
+   "query": "scene:p13_2026151006:o00>36.o01>52",
+   "role": "catalogue",
+   "root": "p13_2026151006",
+   "sequence": [],
+   "split": "dev",
+   "token": "edit:A+B"
+  },
+  {
+   "anchor": true,
+   "batch": 0,
+   "d_subset": [],
+   "edit": null,
+   "edit_kind": null,
+   "family": "TRI_SERIAL",
+   "kind": "ORDERED_TEACHER",
+   "lineage": "p13_2026151007",
+   "mechanism": "TRI_SERIAL",
+   "priority": 0,
+   "query": "seq:p13_2026151007:empty",
+   "role": "anchor",
+   "root": "p13_2026151007",
+   "sequence": [],
+   "split": "dev",
+   "token": ""
+  },
+  {
+   "anchor": false,
+   "batch": 0,
+   "d_subset": [
+    "A"
+   ],
+   "edit": {
+    "o00": 59
+   },
+   "edit_kind": "A",
+   "family": "TRI_SERIAL",
+   "kind": "SCENE_TARGET_ONLY",
+   "lineage": "p13_2026151007",
+   "mechanism": "TRI_SERIAL",
+   "priority": 1,
+   "query": "scene:p13_2026151007:o00>59",
+   "role": "catalogue",
+   "root": "p13_2026151007",
+   "sequence": [],
+   "split": "dev",
+   "token": "edit:A"
+  },
+  {
+   "anchor": false,
+   "batch": 0,
+   "d_subset": [
+    "B"
+   ],
+   "edit": {
+    "o01": 60
+   },
+   "edit_kind": "B",
+   "family": "TRI_SERIAL",
+   "kind": "SCENE_TARGET_ONLY",
+   "lineage": "p13_2026151007",
+   "mechanism": "TRI_SERIAL",
+   "priority": 2,
+   "query": "scene:p13_2026151007:o01>60",
+   "role": "catalogue",
+   "root": "p13_2026151007",
+   "sequence": [],
+   "split": "dev",
+   "token": "edit:B"
+  },
+  {
+   "anchor": false,
+   "batch": 0,
+   "d_subset": [
+    "C"
+   ],
+   "edit": {
+    "o02": 52
+   },
+   "edit_kind": "C",
+   "family": "TRI_SERIAL",
+   "kind": "SCENE_TARGET_ONLY",
+   "lineage": "p13_2026151007",
+   "mechanism": "TRI_SERIAL",
+   "priority": 3,
+   "query": "scene:p13_2026151007:o02>52",
+   "role": "catalogue",
+   "root": "p13_2026151007",
+   "sequence": [],
+   "split": "dev",
+   "token": "edit:C"
+  },
+  {
+   "anchor": false,
+   "batch": 0,
+   "d_subset": [
+    "A",
+    "B"
+   ],
+   "edit": {
+    "o00": 59,
+    "o01": 60
+   },
+   "edit_kind": "A+B",
+   "family": "TRI_SERIAL",
+   "kind": "SCENE_TARGET_ONLY",
+   "lineage": "p13_2026151007",
+   "mechanism": "TRI_SERIAL",
+   "priority": 4,
+   "query": "scene:p13_2026151007:o00>59.o01>60",
+   "role": "catalogue",
+   "root": "p13_2026151007",
+   "sequence": [],
+   "split": "dev",
+   "token": "edit:A+B"
+  },
+  {
+   "anchor": false,
+   "batch": 0,
+   "d_subset": [
+    "A",
+    "C"
+   ],
+   "edit": {
+    "o00": 59,
+    "o02": 52
+   },
+   "edit_kind": "A+C",
+   "family": "TRI_SERIAL",
+   "kind": "SCENE_TARGET_ONLY",
+   "lineage": "p13_2026151007",
+   "mechanism": "TRI_SERIAL",
+   "priority": 5,
+   "query": "scene:p13_2026151007:o00>59.o02>52",
+   "role": "catalogue",
+   "root": "p13_2026151007",
+   "sequence": [],
+   "split": "dev",
+   "token": "edit:A+C"
+  },
+  {
+   "anchor": false,
+   "batch": 0,
+   "d_subset": [
+    "B",
+    "C"
+   ],
+   "edit": {
+    "o01": 60,
+    "o02": 52
+   },
+   "edit_kind": "B+C",
+   "family": "TRI_SERIAL",
+   "kind": "SCENE_TARGET_ONLY",
+   "lineage": "p13_2026151007",
+   "mechanism": "TRI_SERIAL",
+   "priority": 6,
+   "query": "scene:p13_2026151007:o01>60.o02>52",
+   "role": "catalogue",
+   "root": "p13_2026151007",
+   "sequence": [],
+   "split": "dev",
+   "token": "edit:B+C"
+  },
+  {
+   "anchor": false,
+   "batch": 0,
+   "d_subset": [
+    "A",
+    "B",
+    "C"
+   ],
+   "edit": {
+    "o00": 59,
+    "o01": 60,
+    "o02": 52
+   },
+   "edit_kind": "A+B+C",
+   "family": "TRI_SERIAL",
+   "kind": "SCENE_TARGET_ONLY",
+   "lineage": "p13_2026151007",
+   "mechanism": "TRI_SERIAL",
+   "priority": 7,
+   "query": "scene:p13_2026151007:o00>59.o01>60.o02>52",
+   "role": "catalogue",
+   "root": "p13_2026151007",
+   "sequence": [],
+   "split": "dev",
+   "token": "edit:A+B+C"
+  },
+  {
+   "anchor": true,
+   "batch": 0,
+   "d_subset": [],
+   "edit": null,
+   "edit_kind": null,
+   "family": "TRI_OR",
+   "kind": "ORDERED_TEACHER",
+   "lineage": "p13_2026151008",
+   "mechanism": "TRI_OR",
+   "priority": 0,
+   "query": "seq:p13_2026151008:empty",
+   "role": "anchor",
+   "root": "p13_2026151008",
+   "sequence": [],
+   "split": "dev",
+   "token": ""
+  },
+  {
+   "anchor": false,
+   "batch": 0,
+   "d_subset": [
+    "A"
+   ],
+   "edit": {
+    "o00": 59
+   },
+   "edit_kind": "A",
+   "family": "TRI_OR",
+   "kind": "SCENE_TARGET_ONLY",
+   "lineage": "p13_2026151008",
+   "mechanism": "TRI_OR",
+   "priority": 1,
+   "query": "scene:p13_2026151008:o00>59",
+   "role": "catalogue",
+   "root": "p13_2026151008",
+   "sequence": [],
+   "split": "dev",
+   "token": "edit:A"
+  },
+  {
+   "anchor": false,
+   "batch": 0,
+   "d_subset": [
+    "B"
+   ],
+   "edit": {
+    "o01": 3
+   },
+   "edit_kind": "B",
+   "family": "TRI_OR",
+   "kind": "SCENE_TARGET_ONLY",
+   "lineage": "p13_2026151008",
+   "mechanism": "TRI_OR",
+   "priority": 2,
+   "query": "scene:p13_2026151008:o01>3",
+   "role": "catalogue",
+   "root": "p13_2026151008",
+   "sequence": [],
+   "split": "dev",
+   "token": "edit:B"
+  },
+  {
+   "anchor": false,
+   "batch": 0,
+   "d_subset": [
+    "C"
+   ],
+   "edit": {
+    "o02": 29
+   },
+   "edit_kind": "C",
+   "family": "TRI_OR",
+   "kind": "SCENE_TARGET_ONLY",
+   "lineage": "p13_2026151008",
+   "mechanism": "TRI_OR",
+   "priority": 3,
+   "query": "scene:p13_2026151008:o02>29",
+   "role": "catalogue",
+   "root": "p13_2026151008",
+   "sequence": [],
+   "split": "dev",
+   "token": "edit:C"
+  },
+  {
+   "anchor": false,
+   "batch": 0,
+   "d_subset": [
+    "A",
+    "B"
+   ],
+   "edit": {
+    "o00": 59,
+    "o01": 3
+   },
+   "edit_kind": "A+B",
+   "family": "TRI_OR",
+   "kind": "SCENE_TARGET_ONLY",
+   "lineage": "p13_2026151008",
+   "mechanism": "TRI_OR",
+   "priority": 4,
+   "query": "scene:p13_2026151008:o00>59.o01>3",
+   "role": "catalogue",
+   "root": "p13_2026151008",
+   "sequence": [],
+   "split": "dev",
+   "token": "edit:A+B"
+  },
+  {
+   "anchor": false,
+   "batch": 0,
+   "d_subset": [
+    "A",
+    "C"
+   ],
+   "edit": {
+    "o00": 59,
+    "o02": 29
+   },
+   "edit_kind": "A+C",
+   "family": "TRI_OR",
+   "kind": "SCENE_TARGET_ONLY",
+   "lineage": "p13_2026151008",
+   "mechanism": "TRI_OR",
+   "priority": 5,
+   "query": "scene:p13_2026151008:o00>59.o02>29",
+   "role": "catalogue",
+   "root": "p13_2026151008",
+   "sequence": [],
+   "split": "dev",
+   "token": "edit:A+C"
+  },
+  {
+   "anchor": false,
+   "batch": 0,
+   "d_subset": [
+    "B",
+    "C"
+   ],
+   "edit": {
+    "o01": 3,
+    "o02": 29
+   },
+   "edit_kind": "B+C",
+   "family": "TRI_OR",
+   "kind": "SCENE_TARGET_ONLY",
+   "lineage": "p13_2026151008",
+   "mechanism": "TRI_OR",
+   "priority": 6,
+   "query": "scene:p13_2026151008:o01>3.o02>29",
+   "role": "catalogue",
+   "root": "p13_2026151008",
+   "sequence": [],
+   "split": "dev",
+   "token": "edit:B+C"
+  },
+  {
+   "anchor": false,
+   "batch": 0,
+   "d_subset": [
+    "A",
+    "B",
+    "C"
+   ],
+   "edit": {
+    "o00": 59,
+    "o01": 3,
+    "o02": 29
+   },
+   "edit_kind": "A+B+C",
+   "family": "TRI_OR",
+   "kind": "SCENE_TARGET_ONLY",
+   "lineage": "p13_2026151008",
+   "mechanism": "TRI_OR",
+   "priority": 7,
+   "query": "scene:p13_2026151008:o00>59.o01>3.o02>29",
+   "role": "catalogue",
+   "root": "p13_2026151008",
+   "sequence": [],
+   "split": "dev",
+   "token": "edit:A+B+C"
+  },
+  {
+   "anchor": true,
+   "batch": 0,
+   "d_subset": null,
+   "edit": null,
+   "edit_kind": null,
+   "family": "NAT",
+   "kind": "ORDERED_TEACHER",
+   "lineage": "p13_2026151009",
+   "mechanism": "NAT",
+   "priority": 0,
+   "query": "seq:p13_2026151009:o00>59",
+   "role": "anchor",
+   "root": "p13_2026151009",
+   "sequence": [
+    [
+     "o00",
+     59
+    ]
+   ],
+   "split": "dev",
+   "token": "A"
+  },
+  {
+   "anchor": false,
+   "batch": 0,
+   "d_subset": null,
+   "edit": null,
+   "edit_kind": null,
+   "family": "NAT",
+   "kind": "ORDERED_TEACHER",
+   "lineage": "p13_2026151009",
+   "mechanism": "NAT",
+   "priority": 1,
+   "query": "seq:p13_2026151009:o01>5",
+   "role": "catalogue",
+   "root": "p13_2026151009",
+   "sequence": [
+    [
+     "o01",
+     5
+    ]
+   ],
+   "split": "dev",
+   "token": "B"
+  },
+  {
+   "anchor": false,
+   "batch": 0,
+   "d_subset": null,
+   "edit": null,
+   "edit_kind": null,
+   "family": "NAT",
+   "kind": "ORDERED_TEACHER",
+   "lineage": "p13_2026151009",
+   "mechanism": "NAT",
+   "priority": 2,
+   "query": "seq:p13_2026151009:o00>59.o01>5",
+   "role": "catalogue",
+   "root": "p13_2026151009",
+   "sequence": [
+    [
+     "o00",
+     59
+    ],
+    [
+     "o01",
+     5
+    ]
+   ],
+   "split": "dev",
+   "token": "A B"
+  },
+  {
+   "anchor": false,
+   "batch": 0,
+   "d_subset": null,
+   "edit": null,
+   "edit_kind": null,
+   "family": "NAT",
+   "kind": "ORDERED_TEACHER",
+   "lineage": "p13_2026151009",
+   "mechanism": "NAT",
+   "priority": 3,
+   "query": "seq:p13_2026151009:o01>5.o00>59",
+   "role": "catalogue",
+   "root": "p13_2026151009",
+   "sequence": [
+    [
+     "o01",
+     5
+    ],
+    [
+     "o00",
+     59
+    ]
+   ],
+   "split": "dev",
+   "token": "B A"
+  },
+  {
+   "anchor": false,
+   "batch": 0,
+   "d_subset": [],
+   "edit": null,
+   "edit_kind": null,
+   "family": "NAT",
+   "kind": "ORDERED_TEACHER",
+   "lineage": "p13_2026151009",
+   "mechanism": "NAT",
+   "priority": 4,
+   "query": "seq:p13_2026151009:empty",
+   "role": "catalogue",
+   "root": "p13_2026151009",
+   "sequence": [],
+   "split": "dev",
+   "token": ""
+  },
+  {
+   "anchor": false,
+   "batch": 0,
+   "d_subset": [
+    "A"
+   ],
+   "edit": {
+    "o00": 59
+   },
+   "edit_kind": "A",
+   "family": "NAT",
+   "kind": "SCENE_TARGET_ONLY",
+   "lineage": "p13_2026151009",
+   "mechanism": "NAT",
+   "priority": 5,
+   "query": "scene:p13_2026151009:o00>59",
+   "role": "catalogue",
+   "root": "p13_2026151009",
+   "sequence": [],
+   "split": "dev",
+   "token": "edit:A"
+  },
+  {
+   "anchor": false,
+   "batch": 0,
+   "d_subset": [
+    "B"
+   ],
+   "edit": {
+    "o01": 5
+   },
+   "edit_kind": "B",
+   "family": "NAT",
+   "kind": "SCENE_TARGET_ONLY",
+   "lineage": "p13_2026151009",
+   "mechanism": "NAT",
+   "priority": 6,
+   "query": "scene:p13_2026151009:o01>5",
+   "role": "catalogue",
+   "root": "p13_2026151009",
+   "sequence": [],
+   "split": "dev",
+   "token": "edit:B"
+  },
+  {
+   "anchor": false,
+   "batch": 0,
+   "d_subset": [
+    "A",
+    "B"
+   ],
+   "edit": {
+    "o00": 59,
+    "o01": 5
+   },
+   "edit_kind": "A+B",
+   "family": "NAT",
+   "kind": "SCENE_TARGET_ONLY",
+   "lineage": "p13_2026151009",
+   "mechanism": "NAT",
+   "priority": 7,
+   "query": "scene:p13_2026151009:o00>59.o01>5",
+   "role": "catalogue",
+   "root": "p13_2026151009",
+   "sequence": [],
+   "split": "dev",
+   "token": "edit:A+B"
+  }
+ ],
+ "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+ "roots": {
+  "p13_2026151005": {
+   "attempt": 1,
+   "batch": 0,
+   "construction": "P13 GRAMMAR + SOUND-CERTIFICATE / POSE-SCREEN INTENT (mechanism-conditioned case-control; no learned / teacher input)",
+   "dest": {
+    "A": [
+     22
+    ],
+    "B": [
+     28
+    ],
+    "C": [
+     44
+    ]
+   },
+   "family": "ORD_CHAIN",
+   "fingerprint": [
+    39,
+    3,
+    [
+     29,
+     30,
+     31,
+     36,
+     37,
+     38,
+     39,
+     45,
+     46,
+     47
+    ]
+   ],
+   "fixed": [
+    47,
+    31,
+    46,
+    30,
+    45,
+    29
+   ],
+   "goal_cell": 3,
+   "hashes": {
+    "action_context": "sha256:236b254069f8225f48d605c1b03764674ef4ebf72f06407d8d47f5a495ee0294",
+    "observation": "sha256:5ccfc5e5becab3b69ab98fd4a4a059f3a3bad9e0210eb8169bfeb9014bf1dd4b"
+   },
+   "ids": {
+    "A": "o00",
+    "B": "o01",
+    "C": "o02"
+   },
+   "items": [
+    {
+     "anchor": true,
+     "d_subset": null,
+     "kind": "ORDERED_TEACHER",
+     "priority": 0,
+     "query": "seq:p13_2026151005:o02>44.o01>28.o00>22",
+     "sequence": [
+      [
+       "o02",
+       44
+      ],
+      [
+       "o01",
+       28
+      ],
+      [
+       "o00",
+       22
+      ]
+     ],
+     "token": "C B A",
+     "z_layout": {
+      "active": [
+       true,
+       true,
+       true,
+       true,
+       true,
+       true,
+       true,
+       true,
+       false
+      ],
+      "active_count": 8,
+      "hash": "sha256:662f93e35126010fa23cf5995b42f9e2ff0c8c1c2358554fca7c9e27dcdd8db0",
+      "query": {
+       "z0": "seq:p13_2026151005:empty",
+       "zO[0]": "seq:p13_2026151005:o01>28.o00>22",
+       "zO[1]": "seq:p13_2026151005:o02>44.o00>22",
+       "zO[2]": "seq:p13_2026151005:o02>44.o01>28",
+       "zR": "seq:p13_2026151005:o02>44.o01>28.o00>22",
+       "zS[A+B]": "scene:p13_2026151005:o00>22.o01>28",
+       "zS[A]": "scene:p13_2026151005:o00>22",
+       "zS[B]": "scene:p13_2026151005:o01>28"
+      },
+      "root": "p13_2026151005",
+      "sequence": [
+       [
+        "o02",
+        44
+       ],
+       [
+        "o01",
+        28
+       ],
+       [
+        "o00",
+        22
+       ]
+      ],
+      "slots": [
+       "z0",
+       "zS[A]",
+       "zS[B]",
+       "zS[A+B]",
+       "zR",
+       "zO[0]",
+       "zO[1]",
+       "zO[2]",
+       "zO[3]"
+      ],
+      "version": "Z_LAYOUT_V3_R4"
+     }
+    },
+    {
+     "anchor": false,
+     "d_subset": null,
+     "kind": "ORDERED_TEACHER",
+     "priority": 1,
+     "query": "seq:p13_2026151005:o00>22.o01>28.o02>44",
+     "sequence": [
+      [
+       "o00",
+       22
+      ],
+      [
+       "o01",
+       28
+      ],
+      [
+       "o02",
+       44
+      ]
+     ],
+     "token": "A B C",
+     "z_layout": {
+      "active": [
+       true,
+       true,
+       true,
+       true,
+       true,
+       true,
+       true,
+       true,
+       false
+      ],
+      "active_count": 8,
+      "hash": "sha256:0b849fe6baaaed344f11b1269f0e02cde9c28f11d7bafc93112fb6d0f5e7742b",
+      "query": {
+       "z0": "seq:p13_2026151005:empty",
+       "zO[0]": "seq:p13_2026151005:o01>28.o02>44",
+       "zO[1]": "seq:p13_2026151005:o00>22.o02>44",
+       "zO[2]": "seq:p13_2026151005:o00>22.o01>28",
+       "zR": "seq:p13_2026151005:o00>22.o01>28.o02>44",
+       "zS[A+B]": "scene:p13_2026151005:o00>22.o01>28",
+       "zS[A]": "scene:p13_2026151005:o00>22",
+       "zS[B]": "scene:p13_2026151005:o01>28"
+      },
+      "root": "p13_2026151005",
+      "sequence": [
+       [
+        "o00",
+        22
+       ],
+       [
+        "o01",
+        28
+       ],
+       [
+        "o02",
+        44
+       ]
+      ],
+      "slots": [
+       "z0",
+       "zS[A]",
+       "zS[B]",
+       "zS[A+B]",
+       "zR",
+       "zO[0]",
+       "zO[1]",
+       "zO[2]",
+       "zO[3]"
+      ],
+      "version": "Z_LAYOUT_V3_R4"
+     }
+    },
+    {
+     "anchor": false,
+     "d_subset": null,
+     "kind": "ORDERED_TEACHER",
+     "priority": 2,
+     "query": "seq:p13_2026151005:o01>28.o02>44.o00>22",
+     "sequence": [
+      [
+       "o01",
+       28
+      ],
+      [
+       "o02",
+       44
+      ],
+      [
+       "o00",
+       22
+      ]
+     ],
+     "token": "B C A",
+     "z_layout": {
+      "active": [
+       true,
+       true,
+       true,
+       true,
+       true,
+       true,
+       true,
+       true,
+       false
+      ],
+      "active_count": 8,
+      "hash": "sha256:4206d80f489b814db5ca16de700cf86f1ddcdb1ac54576c90d5a288a2e507582",
+      "query": {
+       "z0": "seq:p13_2026151005:empty",
+       "zO[0]": "seq:p13_2026151005:o02>44.o00>22",
+       "zO[1]": "seq:p13_2026151005:o01>28.o00>22",
+       "zO[2]": "seq:p13_2026151005:o01>28.o02>44",
+       "zR": "seq:p13_2026151005:o01>28.o02>44.o00>22",
+       "zS[A+B]": "scene:p13_2026151005:o00>22.o01>28",
+       "zS[A]": "scene:p13_2026151005:o00>22",
+       "zS[B]": "scene:p13_2026151005:o01>28"
+      },
+      "root": "p13_2026151005",
+      "sequence": [
+       [
+        "o01",
+        28
+       ],
+       [
+        "o02",
+        44
+       ],
+       [
+        "o00",
+        22
+       ]
+      ],
+      "slots": [
+       "z0",
+       "zS[A]",
+       "zS[B]",
+       "zS[A+B]",
+       "zR",
+       "zO[0]",
+       "zO[1]",
+       "zO[2]",
+       "zO[3]"
+      ],
+      "version": "Z_LAYOUT_V3_R4"
+     }
+    },
+    {
+     "anchor": false,
+     "d_subset": null,
+     "kind": "ORDERED_TEACHER",
+     "priority": 3,
+     "query": "seq:p13_2026151005:o02>44.o01>28",
+     "sequence": [
+      [
+       "o02",
+       44
+      ],
+      [
+       "o01",
+       28
+      ]
+     ],
+     "token": "C B",
+     "z_layout": {
+      "active": [
+       true,
+       true,
+       true,
+       true,
+       true,
+       true,
+       true,
+       false,
+       false
+      ],
+      "active_count": 7,
+      "hash": "sha256:1bb7fdc601e74dc34edd0b8123838e5a21bbbce4a65b6a892ba94ed1f2dd28c6",
+      "query": {
+       "z0": "seq:p13_2026151005:empty",
+       "zO[0]": "seq:p13_2026151005:o01>28",
+       "zO[1]": "seq:p13_2026151005:o02>44",
+       "zR": "seq:p13_2026151005:o02>44.o01>28",
+       "zS[A+B]": "scene:p13_2026151005:o00>22.o01>28",
+       "zS[A]": "scene:p13_2026151005:o00>22",
+       "zS[B]": "scene:p13_2026151005:o01>28"
+      },
+      "root": "p13_2026151005",
+      "sequence": [
+       [
+        "o02",
+        44
+       ],
+       [
+        "o01",
+        28
+       ]
+      ],
+      "slots": [
+       "z0",
+       "zS[A]",
+       "zS[B]",
+       "zS[A+B]",
+       "zR",
+       "zO[0]",
+       "zO[1]",
+       "zO[2]",
+       "zO[3]"
+      ],
+      "version": "Z_LAYOUT_V3_R4"
+     }
+    },
+    {
+     "anchor": false,
+     "d_subset": null,
+     "kind": "ORDERED_TEACHER",
+     "priority": 4,
+     "query": "seq:p13_2026151005:o01>28.o00>22",
+     "sequence": [
+      [
+       "o01",
+       28
+      ],
+      [
+       "o00",
+       22
+      ]
+     ],
+     "token": "B A",
+     "z_layout": {
+      "active": [
+       true,
+       true,
+       true,
+       true,
+       true,
+       true,
+       true,
+       false,
+       false
+      ],
+      "active_count": 7,
+      "hash": "sha256:360e58a16cee17b922a7cfc892823462729736d027f7e9abf2252e689cd8b468",
+      "query": {
+       "z0": "seq:p13_2026151005:empty",
+       "zO[0]": "seq:p13_2026151005:o00>22",
+       "zO[1]": "seq:p13_2026151005:o01>28",
+       "zR": "seq:p13_2026151005:o01>28.o00>22",
+       "zS[A+B]": "scene:p13_2026151005:o00>22.o01>28",
+       "zS[A]": "scene:p13_2026151005:o00>22",
+       "zS[B]": "scene:p13_2026151005:o01>28"
+      },
+      "root": "p13_2026151005",
+      "sequence": [
+       [
+        "o01",
+        28
+       ],
+       [
+        "o00",
+        22
+       ]
+      ],
+      "slots": [
+       "z0",
+       "zS[A]",
+       "zS[B]",
+       "zS[A+B]",
+       "zR",
+       "zO[0]",
+       "zO[1]",
+       "zO[2]",
+       "zO[3]"
+      ],
+      "version": "Z_LAYOUT_V3_R4"
+     }
+    },
+    {
+     "anchor": false,
+     "d_subset": null,
+     "kind": "ORDERED_TEACHER",
+     "priority": 5,
+     "query": "seq:p13_2026151005:o00>22",
+     "sequence": [
+      [
+       "o00",
+       22
+      ]
+     ],
+     "token": "A",
+     "z_layout": {
+      "active": [
+       true,
+       true,
+       true,
+       true,
+       true,
+       false,
+       false,
+       false,
+       false
+      ],
+      "active_count": 5,
+      "hash": "sha256:77d8132ce3741fd4c6e3fc55ab8ded9da2a1b98f3ecd6ac5e7587d5c48f53ed0",
+      "query": {
+       "z0": "seq:p13_2026151005:empty",
+       "zR": "seq:p13_2026151005:o00>22",
+       "zS[A+B]": "scene:p13_2026151005:o00>22.o01>28",
+       "zS[A]": "scene:p13_2026151005:o00>22",
+       "zS[B]": "scene:p13_2026151005:o01>28"
+      },
+      "root": "p13_2026151005",
+      "sequence": [
+       [
+        "o00",
+        22
+       ]
+      ],
+      "slots": [
+       "z0",
+       "zS[A]",
+       "zS[B]",
+       "zS[A+B]",
+       "zR",
+       "zO[0]",
+       "zO[1]",
+       "zO[2]",
+       "zO[3]"
+      ],
+      "version": "Z_LAYOUT_V3_R4"
+     }
+    },
+    {
+     "anchor": false,
+     "d_subset": [],
+     "kind": "ORDERED_TEACHER",
+     "priority": 6,
+     "query": "seq:p13_2026151005:empty",
+     "sequence": [],
+     "token": "",
+     "z_layout": {
+      "active": [
+       true,
+       true,
+       true,
+       true,
+       false,
+       false,
+       false,
+       false,
+       false
+      ],
+      "active_count": 4,
+      "hash": "sha256:efefa72b2e44f1d9b302aa402ad44e3cf52071554a0bb2ff72921e96170d7193",
+      "query": {
+       "z0": "seq:p13_2026151005:empty",
+       "zS[A+B]": "scene:p13_2026151005:o00>22.o01>28",
+       "zS[A]": "scene:p13_2026151005:o00>22",
+       "zS[B]": "scene:p13_2026151005:o01>28"
+      },
+      "root": "p13_2026151005",
+      "sequence": [],
+      "slots": [
+       "z0",
+       "zS[A]",
+       "zS[B]",
+       "zS[A+B]",
+       "zR",
+       "zO[0]",
+       "zO[1]",
+       "zO[2]",
+       "zO[3]"
+      ],
+      "version": "Z_LAYOUT_V3_R4"
+     }
+    },
+    {
+     "anchor": false,
+     "d_subset": [
+      "A"
+     ],
+     "edit": {
+      "o00": 22
+     },
+     "edit_kind": "A",
+     "eligible": true,
+     "intervened_scene_hash": "sha256:132aeea17240b5cf3eace8dd933fcf9fba51b0f362b5a0fe6b08dcb350c85aa0",
+     "kind": "SCENE_TARGET_ONLY",
+     "priority": 7,
+     "query": "scene:p13_2026151005:o00>22",
+     "token": "edit:A"
+    },
+    {
+     "anchor": false,
+     "d_subset": [
+      "B"
+     ],
+     "edit": {
+      "o01": 28
+     },
+     "edit_kind": "B",
+     "eligible": true,
+     "intervened_scene_hash": "sha256:51319044b0216f628cc16d3e0a4eaddda6f91c0ab29bd3d065d8015cc4cd95c5",
+     "kind": "SCENE_TARGET_ONLY",
+     "priority": 8,
+     "query": "scene:p13_2026151005:o01>28",
+     "token": "edit:B"
+    },
+    {
+     "anchor": false,
+     "d_subset": [
+      "A",
+      "B"
+     ],
+     "edit": {
+      "o00": 22,
+      "o01": 28
+     },
+     "edit_kind": "A+B",
+     "eligible": true,
+     "intervened_scene_hash": "sha256:428b5c72b5f6d22d3b31b514d4e30ace190cebe1d9ad5eeb16a638c97310ef38",
+     "kind": "SCENE_TARGET_ONLY",
+     "priority": 9,
+     "query": "scene:p13_2026151005:o00>22.o01>28",
+     "token": "edit:A+B"
+    }
+   ],
+   "lineage": "p13_2026151005",
+   "mechanism": "ORD_CHAIN",
+   "n_objects": 10,
+   "parking": {
+    "o00": 22,
+    "o01": 28
+   },
+   "predicates": [
+    {
+     "check": "z0: sound certificate",
+     "ok": true,
+     "value": true,
+     "want": true
+    },
+    {
+     "check": "z0: TARGET_PICK",
+     "ok": true,
+     "value": true,
+     "want": true
+    },
+    {
+     "check": "inner first: ORDER_FIRST_ACTION",
+     "ok": true,
+     "value": true,
+     "want": true
+    },
+    {
+     "check": "C pickable after none",
+     "ok": true,
+     "value": true,
+     "want": true
+    },
+    {
+     "check": "B pickable after ['o02']",
+     "ok": true,
+     "value": true,
+     "want": true
+    },
+    {
+     "check": "A pickable after ['o01', 'o02']",
+     "ok": true,
+     "value": true,
+     "want": true
+    },
+    {
+     "check": "target open after the chain",
+     "ok": true,
+     "value": true,
+     "want": true
+    }
+   ],
+   "role_cells": {
+    "A": 38,
+    "B": 37,
+    "C": 36,
+    "T": 39
+   },
+   "scene": {
+    "action_hash": null,
+    "domain_policy": "ALL_SUPPORTED",
+    "lattice": {
+     "cols": 8,
+     "pitch_m": 0.08,
+     "rows": 8
+    },
+    "legal_cells": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     25,
+     26,
+     27,
+     28,
+     29,
+     30,
+     31,
+     32,
+     33,
+     34,
+     35,
+     36,
+     37,
+     38,
+     39,
+     40,
+     41,
+     42,
+     43,
+     44,
+     45,
+     46,
+     47,
+     48,
+     49,
+     50,
+     51,
+     52,
+     53,
+     54,
+     55,
+     56,
+     57,
+     58,
+     59,
+     60,
+     61,
+     62,
+     63
+    ],
+    "objects": [
+     {
+      "cell": 38,
+      "id": "o00",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.52,
+       0.36
+      ]
+     },
+     {
+      "cell": 37,
+      "id": "o01",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.44,
+       0.36
+      ]
+     },
+     {
+      "cell": 36,
+      "id": "o02",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.36,
+       0.36
+      ]
+     },
+     {
+      "cell": 47,
+      "id": "o03",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.6,
+       0.44
+      ]
+     },
+     {
+      "cell": 31,
+      "id": "o04",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.6,
+       0.28
+      ]
+     },
+     {
+      "cell": 46,
+      "id": "o05",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.52,
+       0.44
+      ]
+     },
+     {
+      "cell": 30,
+      "id": "o06",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.52,
+       0.28
+      ]
+     },
+     {
+      "cell": 45,
+      "id": "o07",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.44,
+       0.44
+      ]
+     },
+     {
+      "cell": 29,
+      "id": "o08",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.44,
+       0.28
+      ]
+     },
+     {
+      "cell": 39,
+      "id": "t0",
+      "kind": "target",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.6,
+       0.36
+      ]
+     }
+    ],
+    "robot": {
+     "attached_id": null,
+     "attachment": "free",
+     "gripper_gap_m": 0.07,
+     "q_rad": [
+      1.5707963267948966,
+      1.5707963267948966,
+      1.5707963267948966
+     ]
+    },
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "root_id": "p13_2026151005",
+    "variant_id": "obstructed"
+   },
+   "scene_hash": "sha256:fe7e807f2cd06ba5d0fdf15ee40efab2ecd1e5474ef8f199b1fb2c08011191fa",
+   "seed": 2026151005,
+   "split": "dev",
+   "stratum": "S0",
+   "variant": "ORD_CHAIN3"
+  },
+  "p13_2026151006": {
+   "attempt": 1,
+   "batch": 0,
+   "construction": "P13 GRAMMAR + SOUND-CERTIFICATE / POSE-SCREEN INTENT (mechanism-conditioned case-control; no learned / teacher input)",
+   "dest": {
+    "A": [
+     36
+    ],
+    "B": [
+     52
+    ],
+    "D": [
+     23
+    ]
+   },
+   "family": "OMIT_OPT",
+   "fingerprint": [
+    46,
+    3,
+    [
+     22,
+     37,
+     38,
+     44,
+     45,
+     46,
+     53,
+     54
+    ]
+   ],
+   "fixed": [
+    54,
+    38,
+    53,
+    37
+   ],
+   "goal_cell": 3,
+   "hashes": {
+    "action_context": "sha256:236b254069f8225f48d605c1b03764674ef4ebf72f06407d8d47f5a495ee0294",
+    "observation": "sha256:ba6dcc3e752af17dff014521f9cfd0b749295b0d3ff6ead15db54dfdafd58e2c"
+   },
+   "ids": {
+    "A": "o00",
+    "B": "o01",
+    "D": "o02"
+   },
+   "items": [
+    {
+     "anchor": true,
+     "d_subset": null,
+     "kind": "ORDERED_TEACHER",
+     "priority": 0,
+     "query": "seq:p13_2026151006:o01>52.o00>36.o02>23",
+     "sequence": [
+      [
+       "o01",
+       52
+      ],
+      [
+       "o00",
+       36
+      ],
+      [
+       "o02",
+       23
+      ]
+     ],
+     "token": "B A D",
+     "z_layout": {
+      "active": [
+       true,
+       true,
+       true,
+       true,
+       true,
+       true,
+       true,
+       true,
+       false
+      ],
+      "active_count": 8,
+      "hash": "sha256:bdaf1c839f8c4be5cf02de8ab7c7f9ddabaddb726980894b011d36b25667f8b6",
+      "query": {
+       "z0": "seq:p13_2026151006:empty",
+       "zO[0]": "seq:p13_2026151006:o00>36.o02>23",
+       "zO[1]": "seq:p13_2026151006:o01>52.o02>23",
+       "zO[2]": "seq:p13_2026151006:o01>52.o00>36",
+       "zR": "seq:p13_2026151006:o01>52.o00>36.o02>23",
+       "zS[A+B]": "scene:p13_2026151006:o00>36.o01>52",
+       "zS[A]": "scene:p13_2026151006:o00>36",
+       "zS[B]": "scene:p13_2026151006:o01>52"
+      },
+      "root": "p13_2026151006",
+      "sequence": [
+       [
+        "o01",
+        52
+       ],
+       [
+        "o00",
+        36
+       ],
+       [
+        "o02",
+        23
+       ]
+      ],
+      "slots": [
+       "z0",
+       "zS[A]",
+       "zS[B]",
+       "zS[A+B]",
+       "zR",
+       "zO[0]",
+       "zO[1]",
+       "zO[2]",
+       "zO[3]"
+      ],
+      "version": "Z_LAYOUT_V3_R4"
+     }
+    },
+    {
+     "anchor": false,
+     "d_subset": null,
+     "kind": "ORDERED_TEACHER",
+     "priority": 1,
+     "query": "seq:p13_2026151006:o01>52.o00>36",
+     "sequence": [
+      [
+       "o01",
+       52
+      ],
+      [
+       "o00",
+       36
+      ]
+     ],
+     "token": "B A",
+     "z_layout": {
+      "active": [
+       true,
+       true,
+       true,
+       true,
+       true,
+       true,
+       true,
+       false,
+       false
+      ],
+      "active_count": 7,
+      "hash": "sha256:139e6b29e6b06b63618197299d820b6383d4b1f3633a86e8927d321a4786ef6c",
+      "query": {
+       "z0": "seq:p13_2026151006:empty",
+       "zO[0]": "seq:p13_2026151006:o00>36",
+       "zO[1]": "seq:p13_2026151006:o01>52",
+       "zR": "seq:p13_2026151006:o01>52.o00>36",
+       "zS[A+B]": "scene:p13_2026151006:o00>36.o01>52",
+       "zS[A]": "scene:p13_2026151006:o00>36",
+       "zS[B]": "scene:p13_2026151006:o01>52"
+      },
+      "root": "p13_2026151006",
+      "sequence": [
+       [
+        "o01",
+        52
+       ],
+       [
+        "o00",
+        36
+       ]
+      ],
+      "slots": [
+       "z0",
+       "zS[A]",
+       "zS[B]",
+       "zS[A+B]",
+       "zR",
+       "zO[0]",
+       "zO[1]",
+       "zO[2]",
+       "zO[3]"
+      ],
+      "version": "Z_LAYOUT_V3_R4"
+     }
+    },
+    {
+     "anchor": false,
+     "d_subset": null,
+     "kind": "ORDERED_TEACHER",
+     "priority": 2,
+     "query": "seq:p13_2026151006:o00>36.o02>23",
+     "sequence": [
+      [
+       "o00",
+       36
+      ],
+      [
+       "o02",
+       23
+      ]
+     ],
+     "token": "A D",
+     "z_layout": {
+      "active": [
+       true,
+       true,
+       true,
+       true,
+       true,
+       true,
+       true,
+       false,
+       false
+      ],
+      "active_count": 7,
+      "hash": "sha256:21ae0dbc37d9bc035dcc183173a7ed891e89259f278068bc5c60571c1b45f784",
+      "query": {
+       "z0": "seq:p13_2026151006:empty",
+       "zO[0]": "seq:p13_2026151006:o02>23",
+       "zO[1]": "seq:p13_2026151006:o00>36",
+       "zR": "seq:p13_2026151006:o00>36.o02>23",
+       "zS[A+B]": "scene:p13_2026151006:o00>36.o01>52",
+       "zS[A]": "scene:p13_2026151006:o00>36",
+       "zS[B]": "scene:p13_2026151006:o01>52"
+      },
+      "root": "p13_2026151006",
+      "sequence": [
+       [
+        "o00",
+        36
+       ],
+       [
+        "o02",
+        23
+       ]
+      ],
+      "slots": [
+       "z0",
+       "zS[A]",
+       "zS[B]",
+       "zS[A+B]",
+       "zR",
+       "zO[0]",
+       "zO[1]",
+       "zO[2]",
+       "zO[3]"
+      ],
+      "version": "Z_LAYOUT_V3_R4"
+     }
+    },
+    {
+     "anchor": false,
+     "d_subset": null,
+     "kind": "ORDERED_TEACHER",
+     "priority": 3,
+     "query": "seq:p13_2026151006:o01>52.o02>23",
+     "sequence": [
+      [
+       "o01",
+       52
+      ],
+      [
+       "o02",
+       23
+      ]
+     ],
+     "token": "B D",
+     "z_layout": {
+      "active": [
+       true,
+       true,
+       true,
+       true,
+       true,
+       true,
+       true,
+       false,
+       false
+      ],
+      "active_count": 7,
+      "hash": "sha256:288983a1bdc24ff1c7236be684d9f89e4bad8ea0562ac5698c74776e307f9fba",
+      "query": {
+       "z0": "seq:p13_2026151006:empty",
+       "zO[0]": "seq:p13_2026151006:o02>23",
+       "zO[1]": "seq:p13_2026151006:o01>52",
+       "zR": "seq:p13_2026151006:o01>52.o02>23",
+       "zS[A+B]": "scene:p13_2026151006:o00>36.o01>52",
+       "zS[A]": "scene:p13_2026151006:o00>36",
+       "zS[B]": "scene:p13_2026151006:o01>52"
+      },
+      "root": "p13_2026151006",
+      "sequence": [
+       [
+        "o01",
+        52
+       ],
+       [
+        "o02",
+        23
+       ]
+      ],
+      "slots": [
+       "z0",
+       "zS[A]",
+       "zS[B]",
+       "zS[A+B]",
+       "zR",
+       "zO[0]",
+       "zO[1]",
+       "zO[2]",
+       "zO[3]"
+      ],
+      "version": "Z_LAYOUT_V3_R4"
+     }
+    },
+    {
+     "anchor": false,
+     "d_subset": null,
+     "kind": "ORDERED_TEACHER",
+     "priority": 4,
+     "query": "seq:p13_2026151006:o00>36.o01>52.o02>23",
+     "sequence": [
+      [
+       "o00",
+       36
+      ],
+      [
+       "o01",
+       52
+      ],
+      [
+       "o02",
+       23
+      ]
+     ],
+     "token": "A B D",
+     "z_layout": {
+      "active": [
+       true,
+       true,
+       true,
+       true,
+       true,
+       true,
+       true,
+       true,
+       false
+      ],
+      "active_count": 8,
+      "hash": "sha256:239cf074cdb836de3029f3c5f72d02c36e66f72e71410bd77ee068a6ee2efc29",
+      "query": {
+       "z0": "seq:p13_2026151006:empty",
+       "zO[0]": "seq:p13_2026151006:o01>52.o02>23",
+       "zO[1]": "seq:p13_2026151006:o00>36.o02>23",
+       "zO[2]": "seq:p13_2026151006:o00>36.o01>52",
+       "zR": "seq:p13_2026151006:o00>36.o01>52.o02>23",
+       "zS[A+B]": "scene:p13_2026151006:o00>36.o01>52",
+       "zS[A]": "scene:p13_2026151006:o00>36",
+       "zS[B]": "scene:p13_2026151006:o01>52"
+      },
+      "root": "p13_2026151006",
+      "sequence": [
+       [
+        "o00",
+        36
+       ],
+       [
+        "o01",
+        52
+       ],
+       [
+        "o02",
+        23
+       ]
+      ],
+      "slots": [
+       "z0",
+       "zS[A]",
+       "zS[B]",
+       "zS[A+B]",
+       "zR",
+       "zO[0]",
+       "zO[1]",
+       "zO[2]",
+       "zO[3]"
+      ],
+      "version": "Z_LAYOUT_V3_R4"
+     }
+    },
+    {
+     "anchor": false,
+     "d_subset": [],
+     "kind": "ORDERED_TEACHER",
+     "priority": 5,
+     "query": "seq:p13_2026151006:empty",
+     "sequence": [],
+     "token": "",
+     "z_layout": {
+      "active": [
+       true,
+       true,
+       true,
+       true,
+       false,
+       false,
+       false,
+       false,
+       false
+      ],
+      "active_count": 4,
+      "hash": "sha256:28aae442da72422a361a15d9c0e352b420b52d64ceecb47f846df5b469250881",
+      "query": {
+       "z0": "seq:p13_2026151006:empty",
+       "zS[A+B]": "scene:p13_2026151006:o00>36.o01>52",
+       "zS[A]": "scene:p13_2026151006:o00>36",
+       "zS[B]": "scene:p13_2026151006:o01>52"
+      },
+      "root": "p13_2026151006",
+      "sequence": [],
+      "slots": [
+       "z0",
+       "zS[A]",
+       "zS[B]",
+       "zS[A+B]",
+       "zR",
+       "zO[0]",
+       "zO[1]",
+       "zO[2]",
+       "zO[3]"
+      ],
+      "version": "Z_LAYOUT_V3_R4"
+     }
+    },
+    {
+     "anchor": false,
+     "d_subset": [
+      "A"
+     ],
+     "edit": {
+      "o00": 36
+     },
+     "edit_kind": "A",
+     "eligible": true,
+     "intervened_scene_hash": "sha256:5c6c77ab97b505778cf462d0032a4b8b01495b6b0819721fdbb2d52427866901",
+     "kind": "SCENE_TARGET_ONLY",
+     "priority": 6,
+     "query": "scene:p13_2026151006:o00>36",
+     "token": "edit:A"
+    },
+    {
+     "anchor": false,
+     "d_subset": [
+      "B"
+     ],
+     "edit": {
+      "o01": 52
+     },
+     "edit_kind": "B",
+     "eligible": true,
+     "intervened_scene_hash": "sha256:eb4995b5dbc6b3b1619aed1825e404bcd167d54b21111bc7e18576f1ac8bda08",
+     "kind": "SCENE_TARGET_ONLY",
+     "priority": 7,
+     "query": "scene:p13_2026151006:o01>52",
+     "token": "edit:B"
+    },
+    {
+     "anchor": false,
+     "d_subset": [
+      "A",
+      "B"
+     ],
+     "edit": {
+      "o00": 36,
+      "o01": 52
+     },
+     "edit_kind": "A+B",
+     "eligible": true,
+     "intervened_scene_hash": "sha256:ccc3235a67e8c9e6181593f5419b30f056e9d3324be8907d8623f3015de9d9ec",
+     "kind": "SCENE_TARGET_ONLY",
+     "priority": 8,
+     "query": "scene:p13_2026151006:o00>36.o01>52",
+     "token": "edit:A+B"
+    }
+   ],
+   "lineage": "p13_2026151006",
+   "mechanism": "OMIT_OPT",
+   "n_objects": 8,
+   "parking": {
+    "o00": 36,
+    "o01": 52
+   },
+   "predicates": [
+    {
+     "check": "z0: sound certificate",
+     "ok": true,
+     "value": true,
+     "want": true
+    },
+    {
+     "check": "z0: TARGET_PICK",
+     "ok": true,
+     "value": true,
+     "want": true
+    },
+    {
+     "check": "inner first: ORDER_FIRST_ACTION",
+     "ok": true,
+     "value": true,
+     "want": true
+    },
+    {
+     "check": "B pickable after none",
+     "ok": true,
+     "value": true,
+     "want": true
+    },
+    {
+     "check": "A pickable after ['o01']",
+     "ok": true,
+     "value": true,
+     "want": true
+    },
+    {
+     "check": "target open after the chain",
+     "ok": true,
+     "value": true,
+     "want": true
+    },
+    {
+     "check": "D pickable after the chain",
+     "ok": true,
+     "value": true,
+     "want": true
+    }
+   ],
+   "role_cells": {
+    "A": 45,
+    "B": 44,
+    "D": 22,
+    "T": 46
+   },
+   "scene": {
+    "action_hash": null,
+    "domain_policy": "ALL_SUPPORTED",
+    "lattice": {
+     "cols": 8,
+     "pitch_m": 0.08,
+     "rows": 8
+    },
+    "legal_cells": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     25,
+     26,
+     27,
+     28,
+     29,
+     30,
+     31,
+     32,
+     33,
+     34,
+     35,
+     36,
+     37,
+     38,
+     39,
+     40,
+     41,
+     42,
+     43,
+     44,
+     45,
+     46,
+     47,
+     48,
+     49,
+     50,
+     51,
+     52,
+     53,
+     54,
+     55,
+     56,
+     57,
+     58,
+     59,
+     60,
+     61,
+     62,
+     63
+    ],
+    "objects": [
+     {
+      "cell": 45,
+      "id": "o00",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.44,
+       0.44
+      ]
+     },
+     {
+      "cell": 44,
+      "id": "o01",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.36,
+       0.44
+      ]
+     },
+     {
+      "cell": 22,
+      "id": "o02",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.52,
+       0.2
+      ]
+     },
+     {
+      "cell": 54,
+      "id": "o03",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.52,
+       0.52
+      ]
+     },
+     {
+      "cell": 38,
+      "id": "o04",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.52,
+       0.36
+      ]
+     },
+     {
+      "cell": 53,
+      "id": "o05",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.44,
+       0.52
+      ]
+     },
+     {
+      "cell": 37,
+      "id": "o06",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.44,
+       0.36
+      ]
+     },
+     {
+      "cell": 46,
+      "id": "t0",
+      "kind": "target",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.52,
+       0.44
+      ]
+     }
+    ],
+    "robot": {
+     "attached_id": null,
+     "attachment": "free",
+     "gripper_gap_m": 0.07,
+     "q_rad": [
+      0.7853981633974483,
+      1.5707963267948966,
+      1.5707963267948966
+     ]
+    },
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "root_id": "p13_2026151006",
+    "variant_id": "obstructed"
+   },
+   "scene_hash": "sha256:d6f1f5c97912ea09bdcc27c9f9b402e262aad939ae930c2bb5d2605f4049fd23",
+   "seed": 2026151006,
+   "split": "dev",
+   "stratum": "S2",
+   "variant": "OMIT_OPT"
+  },
+  "p13_2026151007": {
+   "attempt": 5,
+   "batch": 0,
+   "construction": "P13 GRAMMAR + SOUND-CERTIFICATE / POSE-SCREEN INTENT (mechanism-conditioned case-control; no learned / teacher input)",
+   "dest": {
+    "A": [
+     59
+    ],
+    "B": [
+     60
+    ],
+    "C": [
+     52
+    ]
+   },
+   "family": "TRI_SERIAL",
+   "fingerprint": [
+    23,
+    47,
+    [
+     23,
+     48,
+     49,
+     56
+    ]
+   ],
+   "fixed": [],
+   "goal_cell": 47,
+   "hashes": {
+    "action_context": "sha256:59027fbbbacba7083150508c74410503cc7b5c5143b792b3f1ee428bcb09d2bd",
+    "observation": "sha256:9fb20f9aaf69518cec2f5a11e73357e0390f277d33a96ab4ec69d7bc664151ee"
+   },
+   "ids": {
+    "A": "o00",
+    "B": "o01",
+    "C": "o02"
+   },
+   "items": [
+    {
+     "anchor": true,
+     "d_subset": [],
+     "kind": "ORDERED_TEACHER",
+     "priority": 0,
+     "query": "seq:p13_2026151007:empty",
+     "sequence": [],
+     "token": "",
+     "z_layout": {
+      "active": [
+       true,
+       true,
+       true,
+       true,
+       true,
+       true,
+       true,
+       true,
+       false,
+       false,
+       false,
+       false,
+       false
+      ],
+      "active_count": 8,
+      "hash": "sha256:ea86f2cd7ca86bf926b31971603f13c4d91ce275905251db0d3b32f4c96c6e61",
+      "query": {
+       "z0": "seq:p13_2026151007:empty",
+       "zS[A+B+C]": "scene:p13_2026151007:o00>59.o01>60.o02>52",
+       "zS[A+B]": "scene:p13_2026151007:o00>59.o01>60",
+       "zS[A+C]": "scene:p13_2026151007:o00>59.o02>52",
+       "zS[A]": "scene:p13_2026151007:o00>59",
+       "zS[B+C]": "scene:p13_2026151007:o01>60.o02>52",
+       "zS[B]": "scene:p13_2026151007:o01>60",
+       "zS[C]": "scene:p13_2026151007:o02>52"
+      },
+      "root": "p13_2026151007",
+      "sequence": [],
+      "slots": [
+       "z0",
+       "zS[A]",
+       "zS[B]",
+       "zS[C]",
+       "zS[A+B]",
+       "zS[A+C]",
+       "zS[B+C]",
+       "zS[A+B+C]",
+       "zR",
+       "zO[0]",
+       "zO[1]",
+       "zO[2]",
+       "zO[3]"
+      ],
+      "version": "Z_LAYOUT_V3_R4"
+     }
+    },
+    {
+     "anchor": false,
+     "d_subset": [
+      "A"
+     ],
+     "edit": {
+      "o00": 59
+     },
+     "edit_kind": "A",
+     "eligible": true,
+     "intervened_scene_hash": "sha256:d782062303906c195204ca5e03b79442dc601b1a9d88fbadccba49414b0200e8",
+     "kind": "SCENE_TARGET_ONLY",
+     "priority": 1,
+     "query": "scene:p13_2026151007:o00>59",
+     "token": "edit:A"
+    },
+    {
+     "anchor": false,
+     "d_subset": [
+      "B"
+     ],
+     "edit": {
+      "o01": 60
+     },
+     "edit_kind": "B",
+     "eligible": true,
+     "intervened_scene_hash": "sha256:b7a34867e4871cc2b107d6e4787ea81222830a41cfe77967e3059c54d7a13225",
+     "kind": "SCENE_TARGET_ONLY",
+     "priority": 2,
+     "query": "scene:p13_2026151007:o01>60",
+     "token": "edit:B"
+    },
+    {
+     "anchor": false,
+     "d_subset": [
+      "C"
+     ],
+     "edit": {
+      "o02": 52
+     },
+     "edit_kind": "C",
+     "eligible": true,
+     "intervened_scene_hash": "sha256:478290286035d192c0bdffde5a158ca7ce49e9f6b0e8a417a7bbb137ba4a5a9d",
+     "kind": "SCENE_TARGET_ONLY",
+     "priority": 3,
+     "query": "scene:p13_2026151007:o02>52",
+     "token": "edit:C"
+    },
+    {
+     "anchor": false,
+     "d_subset": [
+      "A",
+      "B"
+     ],
+     "edit": {
+      "o00": 59,
+      "o01": 60
+     },
+     "edit_kind": "A+B",
+     "eligible": true,
+     "intervened_scene_hash": "sha256:19a66abaee0554af9343fbf4a1546a3f40d2f08e5815edf180465991dabc2dae",
+     "kind": "SCENE_TARGET_ONLY",
+     "priority": 4,
+     "query": "scene:p13_2026151007:o00>59.o01>60",
+     "token": "edit:A+B"
+    },
+    {
+     "anchor": false,
+     "d_subset": [
+      "A",
+      "C"
+     ],
+     "edit": {
+      "o00": 59,
+      "o02": 52
+     },
+     "edit_kind": "A+C",
+     "eligible": true,
+     "intervened_scene_hash": "sha256:da26cb0d0ba1845b653cce469aa8b9178ff8c85ed0b2f1741c0d8a78d05bd3c3",
+     "kind": "SCENE_TARGET_ONLY",
+     "priority": 5,
+     "query": "scene:p13_2026151007:o00>59.o02>52",
+     "token": "edit:A+C"
+    },
+    {
+     "anchor": false,
+     "d_subset": [
+      "B",
+      "C"
+     ],
+     "edit": {
+      "o01": 60,
+      "o02": 52
+     },
+     "edit_kind": "B+C",
+     "eligible": true,
+     "intervened_scene_hash": "sha256:5a96ecc0a192c6c671a632199be17abc97d93ebdec941f71fcf2b23dcf5d78ee",
+     "kind": "SCENE_TARGET_ONLY",
+     "priority": 6,
+     "query": "scene:p13_2026151007:o01>60.o02>52",
+     "token": "edit:B+C"
+    },
+    {
+     "anchor": false,
+     "d_subset": [
+      "A",
+      "B",
+      "C"
+     ],
+     "edit": {
+      "o00": 59,
+      "o01": 60,
+      "o02": 52
+     },
+     "edit_kind": "A+B+C",
+     "eligible": true,
+     "intervened_scene_hash": "sha256:e65cc0e5ba0815486e8f62db75f838dabf464bfd0566a616d1151d43db1b8114",
+     "kind": "SCENE_TARGET_ONLY",
+     "priority": 7,
+     "query": "scene:p13_2026151007:o00>59.o01>60.o02>52",
+     "token": "edit:A+B+C"
+    }
+   ],
+   "lineage": "p13_2026151007",
+   "mechanism": "TRI_SERIAL",
+   "n_objects": 4,
+   "parking": {
+    "o00": 59,
+    "o01": 60,
+    "o02": 52
+   },
+   "predicates": [
+    {
+     "check": "z0: sound certificate",
+     "ok": true,
+     "value": true,
+     "want": true
+    },
+    {
+     "check": "edit A: certified",
+     "ok": true,
+     "value": true,
+     "want": true
+    },
+    {
+     "check": "edit B: certified",
+     "ok": true,
+     "value": true,
+     "want": true
+    },
+    {
+     "check": "edit C: certified",
+     "ok": true,
+     "value": true,
+     "want": true
+    },
+    {
+     "check": "edit A+B: certified",
+     "ok": true,
+     "value": true,
+     "want": true
+    },
+    {
+     "check": "edit A+C: certified",
+     "ok": true,
+     "value": true,
+     "want": true
+    },
+    {
+     "check": "edit B+C: certified",
+     "ok": true,
+     "value": true,
+     "want": true
+    },
+    {
+     "check": "edit A+B+C: open (intent)",
+     "ok": true,
+     "value": true,
+     "want": true
+    }
+   ],
+   "role_cells": {
+    "A": 49,
+    "B": 56,
+    "C": 48,
+    "T": 23
+   },
+   "scene": {
+    "action_hash": null,
+    "domain_policy": "ALL_SUPPORTED",
+    "lattice": {
+     "cols": 8,
+     "pitch_m": 0.08,
+     "rows": 8
+    },
+    "legal_cells": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     25,
+     26,
+     27,
+     28,
+     29,
+     30,
+     31,
+     32,
+     33,
+     34,
+     35,
+     36,
+     37,
+     38,
+     39,
+     40,
+     41,
+     42,
+     43,
+     44,
+     45,
+     46,
+     47,
+     48,
+     49,
+     50,
+     51,
+     52,
+     53,
+     54,
+     55,
+     56,
+     57,
+     58,
+     59,
+     60,
+     61,
+     62,
+     63
+    ],
+    "objects": [
+     {
+      "cell": 49,
+      "id": "o00",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.12,
+       0.52
+      ]
+     },
+     {
+      "cell": 56,
+      "id": "o01",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.04,
+       0.6
+      ]
+     },
+     {
+      "cell": 48,
+      "id": "o02",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.04,
+       0.52
+      ]
+     },
+     {
+      "cell": 23,
+      "id": "t0",
+      "kind": "target",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.6,
+       0.2
+      ]
+     }
+    ],
+    "robot": {
+     "attached_id": null,
+     "attachment": "free",
+     "gripper_gap_m": 0.07,
+     "q_rad": [
+      1.5707963267948966,
+      -1.5707963267948966,
+      -1.5707963267948966
+     ]
+    },
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "root_id": "p13_2026151007",
+    "variant_id": "obstructed"
+   },
+   "scene_hash": "sha256:00f5ba73b7cdd2ad4e6a172d3ad5c042b6610d0d3edcd1d05e5a4a4574fd5fa4",
+   "seed": 2026151007,
+   "split": "dev",
+   "stratum": "S1",
+   "variant": "TRI_SERIAL"
+  },
+  "p13_2026151008": {
+   "attempt": 4,
+   "batch": 0,
+   "construction": "P13 GRAMMAR + SOUND-CERTIFICATE / POSE-SCREEN INTENT (mechanism-conditioned case-control; no learned / teacher input)",
+   "dest": {
+    "A": [
+     59
+    ],
+    "B": [
+     3
+    ],
+    "C": [
+     29
+    ]
+   },
+   "family": "TRI_OR",
+   "fingerprint": [
+    13,
+    44,
+    [
+     5,
+     12,
+     13,
+     21,
+     56
+    ]
+   ],
+   "fixed": [
+    12
+   ],
+   "goal_cell": 44,
+   "hashes": {
+    "action_context": "sha256:9675d6f345100615d323f8102b5582e988091d27886b2930ebd55fe9deb52dd5",
+    "observation": "sha256:435cad08461f7e6a7219106d436aa6c1d682bac6befed89601c93e9299b20188"
+   },
+   "ids": {
+    "A": "o00",
+    "B": "o01",
+    "C": "o02"
+   },
+   "items": [
+    {
+     "anchor": true,
+     "d_subset": [],
+     "kind": "ORDERED_TEACHER",
+     "priority": 0,
+     "query": "seq:p13_2026151008:empty",
+     "sequence": [],
+     "token": "",
+     "z_layout": {
+      "active": [
+       true,
+       true,
+       true,
+       true,
+       true,
+       true,
+       true,
+       true,
+       false,
+       false,
+       false,
+       false,
+       false
+      ],
+      "active_count": 8,
+      "hash": "sha256:9e6eef08af96ecd6ef9ab08c065a6ce530b707cd76ac7519376959073a440437",
+      "query": {
+       "z0": "seq:p13_2026151008:empty",
+       "zS[A+B+C]": "scene:p13_2026151008:o00>59.o01>3.o02>29",
+       "zS[A+B]": "scene:p13_2026151008:o00>59.o01>3",
+       "zS[A+C]": "scene:p13_2026151008:o00>59.o02>29",
+       "zS[A]": "scene:p13_2026151008:o00>59",
+       "zS[B+C]": "scene:p13_2026151008:o01>3.o02>29",
+       "zS[B]": "scene:p13_2026151008:o01>3",
+       "zS[C]": "scene:p13_2026151008:o02>29"
+      },
+      "root": "p13_2026151008",
+      "sequence": [],
+      "slots": [
+       "z0",
+       "zS[A]",
+       "zS[B]",
+       "zS[C]",
+       "zS[A+B]",
+       "zS[A+C]",
+       "zS[B+C]",
+       "zS[A+B+C]",
+       "zR",
+       "zO[0]",
+       "zO[1]",
+       "zO[2]",
+       "zO[3]"
+      ],
+      "version": "Z_LAYOUT_V3_R4"
+     }
+    },
+    {
+     "anchor": false,
+     "d_subset": [
+      "A"
+     ],
+     "edit": {
+      "o00": 59
+     },
+     "edit_kind": "A",
+     "eligible": true,
+     "intervened_scene_hash": "sha256:d77f394b1322783a38c3c1b87a2cdb9ecf0886b8117048f859cfea7f269c3089",
+     "kind": "SCENE_TARGET_ONLY",
+     "priority": 1,
+     "query": "scene:p13_2026151008:o00>59",
+     "token": "edit:A"
+    },
+    {
+     "anchor": false,
+     "d_subset": [
+      "B"
+     ],
+     "edit": {
+      "o01": 3
+     },
+     "edit_kind": "B",
+     "eligible": true,
+     "intervened_scene_hash": "sha256:32e53cc8019f037ea294a5e25a65e95e00f20391ada33850d91b6a2561437834",
+     "kind": "SCENE_TARGET_ONLY",
+     "priority": 2,
+     "query": "scene:p13_2026151008:o01>3",
+     "token": "edit:B"
+    },
+    {
+     "anchor": false,
+     "d_subset": [
+      "C"
+     ],
+     "edit": {
+      "o02": 29
+     },
+     "edit_kind": "C",
+     "eligible": true,
+     "intervened_scene_hash": "sha256:2dd6ed9ba618b64417c2bf75b28595d671b4af9b90fe7cd0feafa4ed509a2e92",
+     "kind": "SCENE_TARGET_ONLY",
+     "priority": 3,
+     "query": "scene:p13_2026151008:o02>29",
+     "token": "edit:C"
+    },
+    {
+     "anchor": false,
+     "d_subset": [
+      "A",
+      "B"
+     ],
+     "edit": {
+      "o00": 59,
+      "o01": 3
+     },
+     "edit_kind": "A+B",
+     "eligible": true,
+     "intervened_scene_hash": "sha256:9d5dcd6df8f285895c5936ed0e2bb265f33cf29a467cc29280891b53051b7a37",
+     "kind": "SCENE_TARGET_ONLY",
+     "priority": 4,
+     "query": "scene:p13_2026151008:o00>59.o01>3",
+     "token": "edit:A+B"
+    },
+    {
+     "anchor": false,
+     "d_subset": [
+      "A",
+      "C"
+     ],
+     "edit": {
+      "o00": 59,
+      "o02": 29
+     },
+     "edit_kind": "A+C",
+     "eligible": true,
+     "intervened_scene_hash": "sha256:ab831a9c62ccbece060586d1a3cc41eea3d1c48e106356929c628f6632f7b364",
+     "kind": "SCENE_TARGET_ONLY",
+     "priority": 5,
+     "query": "scene:p13_2026151008:o00>59.o02>29",
+     "token": "edit:A+C"
+    },
+    {
+     "anchor": false,
+     "d_subset": [
+      "B",
+      "C"
+     ],
+     "edit": {
+      "o01": 3,
+      "o02": 29
+     },
+     "edit_kind": "B+C",
+     "eligible": true,
+     "intervened_scene_hash": "sha256:baad6fa23905a4c09b410295dc94c7341442888433bbaf5d554342a182af25d4",
+     "kind": "SCENE_TARGET_ONLY",
+     "priority": 6,
+     "query": "scene:p13_2026151008:o01>3.o02>29",
+     "token": "edit:B+C"
+    },
+    {
+     "anchor": false,
+     "d_subset": [
+      "A",
+      "B",
+      "C"
+     ],
+     "edit": {
+      "o00": 59,
+      "o01": 3,
+      "o02": 29
+     },
+     "edit_kind": "A+B+C",
+     "eligible": true,
+     "intervened_scene_hash": "sha256:6c33287444a65a7c6e721c45aada16943db7bb2e96a8a792b012c9431b0fb3fd",
+     "kind": "SCENE_TARGET_ONLY",
+     "priority": 7,
+     "query": "scene:p13_2026151008:o00>59.o01>3.o02>29",
+     "token": "edit:A+B+C"
+    }
+   ],
+   "lineage": "p13_2026151008",
+   "mechanism": "TRI_OR",
+   "n_objects": 5,
+   "parking": {
+    "o00": 59,
+    "o01": 3,
+    "o02": 29
+   },
+   "predicates": [
+    {
+     "check": "z0: sound certificate",
+     "ok": true,
+     "value": true,
+     "want": true
+    },
+    {
+     "check": "edit A: certified",
+     "ok": true,
+     "value": true,
+     "want": true
+    },
+    {
+     "check": "edit B: certified",
+     "ok": true,
+     "value": true,
+     "want": true
+    },
+    {
+     "check": "edit C: certified",
+     "ok": true,
+     "value": true,
+     "want": true
+    },
+    {
+     "check": "edit A+B: open (intent)",
+     "ok": true,
+     "value": true,
+     "want": true
+    },
+    {
+     "check": "edit A+C: open (intent)",
+     "ok": true,
+     "value": true,
+     "want": true
+    },
+    {
+     "check": "edit B+C: certified",
+     "ok": true,
+     "value": true,
+     "want": true
+    },
+    {
+     "check": "edit A+B+C: open (intent)",
+     "ok": true,
+     "value": true,
+     "want": true
+    }
+   ],
+   "role_cells": {
+    "A": 56,
+    "B": 5,
+    "C": 21,
+    "T": 13
+   },
+   "scene": {
+    "action_hash": null,
+    "domain_policy": "ALL_SUPPORTED",
+    "lattice": {
+     "cols": 8,
+     "pitch_m": 0.08,
+     "rows": 8
+    },
+    "legal_cells": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     25,
+     26,
+     27,
+     28,
+     29,
+     30,
+     31,
+     32,
+     33,
+     34,
+     35,
+     36,
+     37,
+     38,
+     39,
+     40,
+     41,
+     42,
+     43,
+     44,
+     45,
+     46,
+     47,
+     48,
+     49,
+     50,
+     51,
+     52,
+     53,
+     54,
+     55,
+     56,
+     57,
+     58,
+     59,
+     60,
+     61,
+     62,
+     63
+    ],
+    "objects": [
+     {
+      "cell": 56,
+      "id": "o00",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.04,
+       0.6
+      ]
+     },
+     {
+      "cell": 5,
+      "id": "o01",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.44,
+       0.04
+      ]
+     },
+     {
+      "cell": 21,
+      "id": "o02",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.44,
+       0.2
+      ]
+     },
+     {
+      "cell": 12,
+      "id": "o03",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.36,
+       0.12
+      ]
+     },
+     {
+      "cell": 13,
+      "id": "t0",
+      "kind": "target",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.44,
+       0.12
+      ]
+     }
+    ],
+    "robot": {
+     "attached_id": null,
+     "attachment": "free",
+     "gripper_gap_m": 0.07,
+     "q_rad": [
+      1.5707963267948966,
+      -1.5707963267948966,
+      -1.5707963267948966
+     ]
+    },
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "root_id": "p13_2026151008",
+    "variant_id": "obstructed"
+   },
+   "scene_hash": "sha256:045dc867456a309e4ee5dc2fe58c2ff3b38df23d4483facfb61d6de9fe05e5e4",
+   "seed": 2026151008,
+   "split": "dev",
+   "stratum": "S1",
+   "variant": "TRI_OR"
+  },
+  "p13_2026151009": {
+   "attempt": 0,
+   "batch": 0,
+   "construction": "NATURAL (no prescreen, no intent)",
+   "dest": {
+    "A": [
+     59
+    ],
+    "B": [
+     5
+    ],
+    "C": [
+     31
+    ]
+   },
+   "family": "NAT",
+   "fingerprint": [
+    21,
+    45,
+    [
+     13,
+     21,
+     29,
+     34
+    ]
+   ],
+   "fixed": [],
+   "goal_cell": 45,
+   "hashes": {
+    "action_context": "sha256:0dae5d45e4b7d4c241d530d38812ff7a489f077218188181103139803eaf7fae",
+    "observation": "sha256:242cd9982d7422f62b17a5912a77b0a91f6489536b307160af6ef83a83000811"
+   },
+   "ids": {
+    "A": "o00",
+    "B": "o01",
+    "C": "o02"
+   },
+   "items": [
+    {
+     "anchor": true,
+     "d_subset": null,
+     "kind": "ORDERED_TEACHER",
+     "priority": 0,
+     "query": "seq:p13_2026151009:o00>59",
+     "sequence": [
+      [
+       "o00",
+       59
+      ]
+     ],
+     "token": "A",
+     "z_layout": {
+      "active": [
+       true,
+       true,
+       true,
+       true,
+       true,
+       false,
+       false,
+       false,
+       false
+      ],
+      "active_count": 5,
+      "hash": "sha256:21dda26cc239b0f1cb5177909857089f38d80fa58fa92d5efb203461c71be141",
+      "query": {
+       "z0": "seq:p13_2026151009:empty",
+       "zR": "seq:p13_2026151009:o00>59",
+       "zS[A+B]": "scene:p13_2026151009:o00>59.o01>5",
+       "zS[A]": "scene:p13_2026151009:o00>59",
+       "zS[B]": "scene:p13_2026151009:o01>5"
+      },
+      "root": "p13_2026151009",
+      "sequence": [
+       [
+        "o00",
+        59
+       ]
+      ],
+      "slots": [
+       "z0",
+       "zS[A]",
+       "zS[B]",
+       "zS[A+B]",
+       "zR",
+       "zO[0]",
+       "zO[1]",
+       "zO[2]",
+       "zO[3]"
+      ],
+      "version": "Z_LAYOUT_V3_R4"
+     }
+    },
+    {
+     "anchor": false,
+     "d_subset": null,
+     "kind": "ORDERED_TEACHER",
+     "priority": 1,
+     "query": "seq:p13_2026151009:o01>5",
+     "sequence": [
+      [
+       "o01",
+       5
+      ]
+     ],
+     "token": "B",
+     "z_layout": {
+      "active": [
+       true,
+       true,
+       true,
+       true,
+       true,
+       false,
+       false,
+       false,
+       false
+      ],
+      "active_count": 5,
+      "hash": "sha256:0a85858b83868f772be11ef5f4f1e2c3185f6556de2efa16874c66e392788961",
+      "query": {
+       "z0": "seq:p13_2026151009:empty",
+       "zR": "seq:p13_2026151009:o01>5",
+       "zS[A+B]": "scene:p13_2026151009:o00>59.o01>5",
+       "zS[A]": "scene:p13_2026151009:o00>59",
+       "zS[B]": "scene:p13_2026151009:o01>5"
+      },
+      "root": "p13_2026151009",
+      "sequence": [
+       [
+        "o01",
+        5
+       ]
+      ],
+      "slots": [
+       "z0",
+       "zS[A]",
+       "zS[B]",
+       "zS[A+B]",
+       "zR",
+       "zO[0]",
+       "zO[1]",
+       "zO[2]",
+       "zO[3]"
+      ],
+      "version": "Z_LAYOUT_V3_R4"
+     }
+    },
+    {
+     "anchor": false,
+     "d_subset": null,
+     "kind": "ORDERED_TEACHER",
+     "priority": 2,
+     "query": "seq:p13_2026151009:o00>59.o01>5",
+     "sequence": [
+      [
+       "o00",
+       59
+      ],
+      [
+       "o01",
+       5
+      ]
+     ],
+     "token": "A B",
+     "z_layout": {
+      "active": [
+       true,
+       true,
+       true,
+       true,
+       true,
+       true,
+       true,
+       false,
+       false
+      ],
+      "active_count": 7,
+      "hash": "sha256:91fa7cf42bcc005a3b76c468eca4c5d616ace2e616eff58d941ae004e60ab7c3",
+      "query": {
+       "z0": "seq:p13_2026151009:empty",
+       "zO[0]": "seq:p13_2026151009:o01>5",
+       "zO[1]": "seq:p13_2026151009:o00>59",
+       "zR": "seq:p13_2026151009:o00>59.o01>5",
+       "zS[A+B]": "scene:p13_2026151009:o00>59.o01>5",
+       "zS[A]": "scene:p13_2026151009:o00>59",
+       "zS[B]": "scene:p13_2026151009:o01>5"
+      },
+      "root": "p13_2026151009",
+      "sequence": [
+       [
+        "o00",
+        59
+       ],
+       [
+        "o01",
+        5
+       ]
+      ],
+      "slots": [
+       "z0",
+       "zS[A]",
+       "zS[B]",
+       "zS[A+B]",
+       "zR",
+       "zO[0]",
+       "zO[1]",
+       "zO[2]",
+       "zO[3]"
+      ],
+      "version": "Z_LAYOUT_V3_R4"
+     }
+    },
+    {
+     "anchor": false,
+     "d_subset": null,
+     "kind": "ORDERED_TEACHER",
+     "priority": 3,
+     "query": "seq:p13_2026151009:o01>5.o00>59",
+     "sequence": [
+      [
+       "o01",
+       5
+      ],
+      [
+       "o00",
+       59
+      ]
+     ],
+     "token": "B A",
+     "z_layout": {
+      "active": [
+       true,
+       true,
+       true,
+       true,
+       true,
+       true,
+       true,
+       false,
+       false
+      ],
+      "active_count": 7,
+      "hash": "sha256:65dbab22236c5c137b72e24180e8546a1ae138df3c9e8ece7459ce43e692cf06",
+      "query": {
+       "z0": "seq:p13_2026151009:empty",
+       "zO[0]": "seq:p13_2026151009:o00>59",
+       "zO[1]": "seq:p13_2026151009:o01>5",
+       "zR": "seq:p13_2026151009:o01>5.o00>59",
+       "zS[A+B]": "scene:p13_2026151009:o00>59.o01>5",
+       "zS[A]": "scene:p13_2026151009:o00>59",
+       "zS[B]": "scene:p13_2026151009:o01>5"
+      },
+      "root": "p13_2026151009",
+      "sequence": [
+       [
+        "o01",
+        5
+       ],
+       [
+        "o00",
+        59
+       ]
+      ],
+      "slots": [
+       "z0",
+       "zS[A]",
+       "zS[B]",
+       "zS[A+B]",
+       "zR",
+       "zO[0]",
+       "zO[1]",
+       "zO[2]",
+       "zO[3]"
+      ],
+      "version": "Z_LAYOUT_V3_R4"
+     }
+    },
+    {
+     "anchor": false,
+     "d_subset": [],
+     "kind": "ORDERED_TEACHER",
+     "priority": 4,
+     "query": "seq:p13_2026151009:empty",
+     "sequence": [],
+     "token": "",
+     "z_layout": {
+      "active": [
+       true,
+       true,
+       true,
+       true,
+       false,
+       false,
+       false,
+       false,
+       false
+      ],
+      "active_count": 4,
+      "hash": "sha256:42028278d981266e265693218bc62375e2a45af9e350070f90765a97a307bf93",
+      "query": {
+       "z0": "seq:p13_2026151009:empty",
+       "zS[A+B]": "scene:p13_2026151009:o00>59.o01>5",
+       "zS[A]": "scene:p13_2026151009:o00>59",
+       "zS[B]": "scene:p13_2026151009:o01>5"
+      },
+      "root": "p13_2026151009",
+      "sequence": [],
+      "slots": [
+       "z0",
+       "zS[A]",
+       "zS[B]",
+       "zS[A+B]",
+       "zR",
+       "zO[0]",
+       "zO[1]",
+       "zO[2]",
+       "zO[3]"
+      ],
+      "version": "Z_LAYOUT_V3_R4"
+     }
+    },
+    {
+     "anchor": false,
+     "d_subset": [
+      "A"
+     ],
+     "edit": {
+      "o00": 59
+     },
+     "edit_kind": "A",
+     "eligible": true,
+     "intervened_scene_hash": "sha256:5f65f493876cc90b894863a7d24c92f791ad6df6e0dc715c4456ea226d243577",
+     "kind": "SCENE_TARGET_ONLY",
+     "priority": 5,
+     "query": "scene:p13_2026151009:o00>59",
+     "token": "edit:A"
+    },
+    {
+     "anchor": false,
+     "d_subset": [
+      "B"
+     ],
+     "edit": {
+      "o01": 5
+     },
+     "edit_kind": "B",
+     "eligible": true,
+     "intervened_scene_hash": "sha256:1757ae0652a36d7407b1a1d11e66b522282738943c657d7ab03e66fa3ddb53fc",
+     "kind": "SCENE_TARGET_ONLY",
+     "priority": 6,
+     "query": "scene:p13_2026151009:o01>5",
+     "token": "edit:B"
+    },
+    {
+     "anchor": false,
+     "d_subset": [
+      "A",
+      "B"
+     ],
+     "edit": {
+      "o00": 59,
+      "o01": 5
+     },
+     "edit_kind": "A+B",
+     "eligible": true,
+     "intervened_scene_hash": "sha256:9d539b9276d146310abb8b3ba450e958c5ea49064e9d0e90bd24b7594dbf98d0",
+     "kind": "SCENE_TARGET_ONLY",
+     "priority": 7,
+     "query": "scene:p13_2026151009:o00>59.o01>5",
+     "token": "edit:A+B"
+    }
+   ],
+   "lineage": "p13_2026151009",
+   "mechanism": "NAT",
+   "n_objects": 4,
+   "parking": {
+    "o00": 59,
+    "o01": 5
+   },
+   "predicates": [],
+   "role_cells": {
+    "A": 34,
+    "B": 13,
+    "C": 29,
+    "T": 21
+   },
+   "scene": {
+    "action_hash": null,
+    "domain_policy": "ALL_SUPPORTED",
+    "lattice": {
+     "cols": 8,
+     "pitch_m": 0.08,
+     "rows": 8
+    },
+    "legal_cells": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     25,
+     26,
+     27,
+     28,
+     29,
+     30,
+     31,
+     32,
+     33,
+     34,
+     35,
+     36,
+     37,
+     38,
+     39,
+     40,
+     41,
+     42,
+     43,
+     44,
+     45,
+     46,
+     47,
+     48,
+     49,
+     50,
+     51,
+     52,
+     53,
+     54,
+     55,
+     56,
+     57,
+     58,
+     59,
+     60,
+     61,
+     62,
+     63
+    ],
+    "objects": [
+     {
+      "cell": 34,
+      "id": "o00",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.2,
+       0.36
+      ]
+     },
+     {
+      "cell": 13,
+      "id": "o01",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.44,
+       0.12
+      ]
+     },
+     {
+      "cell": 29,
+      "id": "o02",
+      "kind": "obstacle",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.44,
+       0.28
+      ]
+     },
+     {
+      "cell": 21,
+      "id": "t0",
+      "kind": "target",
+      "radius_m": 0.024,
+      "support": "table",
+      "xy_m": [
+       0.44,
+       0.2
+      ]
+     }
+    ],
+    "robot": {
+     "attached_id": null,
+     "attachment": "free",
+     "gripper_gap_m": 0.07,
+     "q_rad": [
+      1.5707963267948966,
+      1.5707963267948966,
+      1.5707963267948966
+     ]
+    },
+    "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+    "root_id": "p13_2026151009",
+    "variant_id": "obstructed"
+   },
+   "scene_hash": "sha256:b617a0d29be0014400de85b68f379adc9f53eba5479d7fa6a4506f7a499d5503",
+   "seed": 2026151009,
+   "split": "dev",
+   "stratum": "S0",
+   "variant": "NAT"
+  }
+ },
+ "stage": "P10B",
+ "unavailable": [],
+ "units": [
+  {
+   "kind": "ORDERED_TEACHER",
+   "query": "seq:p13_2026151005:o02>44.o01>28.o00>22",
+   "relocation_key": "g4c_lf_p4/p13_2026151005/o02>44.o01>28.o00>22/seed20261021/reloc",
+   "root": "p13_2026151005",
+   "seed": 20261021,
+   "sequence": [
+    [
+     "o02",
+     44
+    ],
+    [
+     "o01",
+     28
+    ],
+    [
+     "o00",
+     22
+    ]
+   ],
+   "target_key": "g4c_lf_p4/p13_2026151005/o02>44.o01>28.o00>22/seed20261021/target",
+   "unit": "seq:p13_2026151005:o02>44.o01>28.o00>22#s20261021"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "query": "seq:p13_2026151005:o02>44.o01>28.o00>22",
+   "relocation_key": "g4c_lf_p4/p13_2026151005/o02>44.o01>28.o00>22/seed20261022/reloc",
+   "root": "p13_2026151005",
+   "seed": 20261022,
+   "sequence": [
+    [
+     "o02",
+     44
+    ],
+    [
+     "o01",
+     28
+    ],
+    [
+     "o00",
+     22
+    ]
+   ],
+   "target_key": "g4c_lf_p4/p13_2026151005/o02>44.o01>28.o00>22/seed20261022/target",
+   "unit": "seq:p13_2026151005:o02>44.o01>28.o00>22#s20261022"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "query": "seq:p13_2026151005:o02>44.o01>28.o00>22",
+   "relocation_key": "g4c_lf_p4/p13_2026151005/o02>44.o01>28.o00>22/seed20261023/reloc",
+   "root": "p13_2026151005",
+   "seed": 20261023,
+   "sequence": [
+    [
+     "o02",
+     44
+    ],
+    [
+     "o01",
+     28
+    ],
+    [
+     "o00",
+     22
+    ]
+   ],
+   "target_key": "g4c_lf_p4/p13_2026151005/o02>44.o01>28.o00>22/seed20261023/target",
+   "unit": "seq:p13_2026151005:o02>44.o01>28.o00>22#s20261023"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "query": "seq:p13_2026151005:o00>22.o01>28.o02>44",
+   "relocation_key": "g4c_lf_p4/p13_2026151005/o00>22.o01>28.o02>44/seed20261021/reloc",
+   "root": "p13_2026151005",
+   "seed": 20261021,
+   "sequence": [
+    [
+     "o00",
+     22
+    ],
+    [
+     "o01",
+     28
+    ],
+    [
+     "o02",
+     44
+    ]
+   ],
+   "target_key": "g4c_lf_p4/p13_2026151005/o00>22.o01>28.o02>44/seed20261021/target",
+   "unit": "seq:p13_2026151005:o00>22.o01>28.o02>44#s20261021"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "query": "seq:p13_2026151005:o00>22.o01>28.o02>44",
+   "relocation_key": "g4c_lf_p4/p13_2026151005/o00>22.o01>28.o02>44/seed20261022/reloc",
+   "root": "p13_2026151005",
+   "seed": 20261022,
+   "sequence": [
+    [
+     "o00",
+     22
+    ],
+    [
+     "o01",
+     28
+    ],
+    [
+     "o02",
+     44
+    ]
+   ],
+   "target_key": "g4c_lf_p4/p13_2026151005/o00>22.o01>28.o02>44/seed20261022/target",
+   "unit": "seq:p13_2026151005:o00>22.o01>28.o02>44#s20261022"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "query": "seq:p13_2026151005:o00>22.o01>28.o02>44",
+   "relocation_key": "g4c_lf_p4/p13_2026151005/o00>22.o01>28.o02>44/seed20261023/reloc",
+   "root": "p13_2026151005",
+   "seed": 20261023,
+   "sequence": [
+    [
+     "o00",
+     22
+    ],
+    [
+     "o01",
+     28
+    ],
+    [
+     "o02",
+     44
+    ]
+   ],
+   "target_key": "g4c_lf_p4/p13_2026151005/o00>22.o01>28.o02>44/seed20261023/target",
+   "unit": "seq:p13_2026151005:o00>22.o01>28.o02>44#s20261023"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "query": "seq:p13_2026151005:o01>28.o02>44.o00>22",
+   "relocation_key": "g4c_lf_p4/p13_2026151005/o01>28.o02>44.o00>22/seed20261021/reloc",
+   "root": "p13_2026151005",
+   "seed": 20261021,
+   "sequence": [
+    [
+     "o01",
+     28
+    ],
+    [
+     "o02",
+     44
+    ],
+    [
+     "o00",
+     22
+    ]
+   ],
+   "target_key": "g4c_lf_p4/p13_2026151005/o01>28.o02>44.o00>22/seed20261021/target",
+   "unit": "seq:p13_2026151005:o01>28.o02>44.o00>22#s20261021"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "query": "seq:p13_2026151005:o01>28.o02>44.o00>22",
+   "relocation_key": "g4c_lf_p4/p13_2026151005/o01>28.o02>44.o00>22/seed20261022/reloc",
+   "root": "p13_2026151005",
+   "seed": 20261022,
+   "sequence": [
+    [
+     "o01",
+     28
+    ],
+    [
+     "o02",
+     44
+    ],
+    [
+     "o00",
+     22
+    ]
+   ],
+   "target_key": "g4c_lf_p4/p13_2026151005/o01>28.o02>44.o00>22/seed20261022/target",
+   "unit": "seq:p13_2026151005:o01>28.o02>44.o00>22#s20261022"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "query": "seq:p13_2026151005:o01>28.o02>44.o00>22",
+   "relocation_key": "g4c_lf_p4/p13_2026151005/o01>28.o02>44.o00>22/seed20261023/reloc",
+   "root": "p13_2026151005",
+   "seed": 20261023,
+   "sequence": [
+    [
+     "o01",
+     28
+    ],
+    [
+     "o02",
+     44
+    ],
+    [
+     "o00",
+     22
+    ]
+   ],
+   "target_key": "g4c_lf_p4/p13_2026151005/o01>28.o02>44.o00>22/seed20261023/target",
+   "unit": "seq:p13_2026151005:o01>28.o02>44.o00>22#s20261023"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "query": "seq:p13_2026151005:o02>44.o01>28",
+   "relocation_key": "g4c_lf_p4/p13_2026151005/o02>44.o01>28/seed20261021/reloc",
+   "root": "p13_2026151005",
+   "seed": 20261021,
+   "sequence": [
+    [
+     "o02",
+     44
+    ],
+    [
+     "o01",
+     28
+    ]
+   ],
+   "target_key": "g4c_lf_p4/p13_2026151005/o02>44.o01>28/seed20261021/target",
+   "unit": "seq:p13_2026151005:o02>44.o01>28#s20261021"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "query": "seq:p13_2026151005:o02>44.o01>28",
+   "relocation_key": "g4c_lf_p4/p13_2026151005/o02>44.o01>28/seed20261022/reloc",
+   "root": "p13_2026151005",
+   "seed": 20261022,
+   "sequence": [
+    [
+     "o02",
+     44
+    ],
+    [
+     "o01",
+     28
+    ]
+   ],
+   "target_key": "g4c_lf_p4/p13_2026151005/o02>44.o01>28/seed20261022/target",
+   "unit": "seq:p13_2026151005:o02>44.o01>28#s20261022"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "query": "seq:p13_2026151005:o02>44.o01>28",
+   "relocation_key": "g4c_lf_p4/p13_2026151005/o02>44.o01>28/seed20261023/reloc",
+   "root": "p13_2026151005",
+   "seed": 20261023,
+   "sequence": [
+    [
+     "o02",
+     44
+    ],
+    [
+     "o01",
+     28
+    ]
+   ],
+   "target_key": "g4c_lf_p4/p13_2026151005/o02>44.o01>28/seed20261023/target",
+   "unit": "seq:p13_2026151005:o02>44.o01>28#s20261023"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "query": "seq:p13_2026151005:o01>28.o00>22",
+   "relocation_key": "g4c_lf_p4/p13_2026151005/o01>28.o00>22/seed20261021/reloc",
+   "root": "p13_2026151005",
+   "seed": 20261021,
+   "sequence": [
+    [
+     "o01",
+     28
+    ],
+    [
+     "o00",
+     22
+    ]
+   ],
+   "target_key": "g4c_lf_p4/p13_2026151005/o01>28.o00>22/seed20261021/target",
+   "unit": "seq:p13_2026151005:o01>28.o00>22#s20261021"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "query": "seq:p13_2026151005:o01>28.o00>22",
+   "relocation_key": "g4c_lf_p4/p13_2026151005/o01>28.o00>22/seed20261022/reloc",
+   "root": "p13_2026151005",
+   "seed": 20261022,
+   "sequence": [
+    [
+     "o01",
+     28
+    ],
+    [
+     "o00",
+     22
+    ]
+   ],
+   "target_key": "g4c_lf_p4/p13_2026151005/o01>28.o00>22/seed20261022/target",
+   "unit": "seq:p13_2026151005:o01>28.o00>22#s20261022"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "query": "seq:p13_2026151005:o01>28.o00>22",
+   "relocation_key": "g4c_lf_p4/p13_2026151005/o01>28.o00>22/seed20261023/reloc",
+   "root": "p13_2026151005",
+   "seed": 20261023,
+   "sequence": [
+    [
+     "o01",
+     28
+    ],
+    [
+     "o00",
+     22
+    ]
+   ],
+   "target_key": "g4c_lf_p4/p13_2026151005/o01>28.o00>22/seed20261023/target",
+   "unit": "seq:p13_2026151005:o01>28.o00>22#s20261023"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "query": "seq:p13_2026151005:o00>22",
+   "relocation_key": "g4c_lf_p4/p13_2026151005/o00>22/seed20261021/reloc",
+   "root": "p13_2026151005",
+   "seed": 20261021,
+   "sequence": [
+    [
+     "o00",
+     22
+    ]
+   ],
+   "target_key": "g4c_lf_p4/p13_2026151005/o00>22/seed20261021/target",
+   "unit": "seq:p13_2026151005:o00>22#s20261021"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "query": "seq:p13_2026151005:o00>22",
+   "relocation_key": "g4c_lf_p4/p13_2026151005/o00>22/seed20261022/reloc",
+   "root": "p13_2026151005",
+   "seed": 20261022,
+   "sequence": [
+    [
+     "o00",
+     22
+    ]
+   ],
+   "target_key": "g4c_lf_p4/p13_2026151005/o00>22/seed20261022/target",
+   "unit": "seq:p13_2026151005:o00>22#s20261022"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "query": "seq:p13_2026151005:o00>22",
+   "relocation_key": "g4c_lf_p4/p13_2026151005/o00>22/seed20261023/reloc",
+   "root": "p13_2026151005",
+   "seed": 20261023,
+   "sequence": [
+    [
+     "o00",
+     22
+    ]
+   ],
+   "target_key": "g4c_lf_p4/p13_2026151005/o00>22/seed20261023/target",
+   "unit": "seq:p13_2026151005:o00>22#s20261023"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "query": "seq:p13_2026151005:empty",
+   "relocation_key": "g4c_lf_p4/p13_2026151005/empty/seed20261021/reloc",
+   "root": "p13_2026151005",
+   "seed": 20261021,
+   "sequence": [],
+   "target_key": "g4c_lf_p4/p13_2026151005/empty/seed20261021/target",
+   "unit": "seq:p13_2026151005:empty#s20261021"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "query": "seq:p13_2026151005:empty",
+   "relocation_key": "g4c_lf_p4/p13_2026151005/empty/seed20261022/reloc",
+   "root": "p13_2026151005",
+   "seed": 20261022,
+   "sequence": [],
+   "target_key": "g4c_lf_p4/p13_2026151005/empty/seed20261022/target",
+   "unit": "seq:p13_2026151005:empty#s20261022"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "query": "seq:p13_2026151005:empty",
+   "relocation_key": "g4c_lf_p4/p13_2026151005/empty/seed20261023/reloc",
+   "root": "p13_2026151005",
+   "seed": 20261023,
+   "sequence": [],
+   "target_key": "g4c_lf_p4/p13_2026151005/empty/seed20261023/target",
+   "unit": "seq:p13_2026151005:empty#s20261023"
+  },
+  {
+   "edit": {
+    "o00": 22
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:132aeea17240b5cf3eace8dd933fcf9fba51b0f362b5a0fe6b08dcb350c85aa0",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151005:o00>22",
+   "relocation_key": "g4c_lf_p4/p13_2026151005/scene/o00>22/seed20261021/reloc",
+   "root": "p13_2026151005",
+   "seed": 20261021,
+   "target_key": "g4c_lf_p4/p13_2026151005/scene/o00>22/seed20261021/target",
+   "unit": "scene:p13_2026151005:o00>22#s20261021"
+  },
+  {
+   "edit": {
+    "o00": 22
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:132aeea17240b5cf3eace8dd933fcf9fba51b0f362b5a0fe6b08dcb350c85aa0",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151005:o00>22",
+   "relocation_key": "g4c_lf_p4/p13_2026151005/scene/o00>22/seed20261022/reloc",
+   "root": "p13_2026151005",
+   "seed": 20261022,
+   "target_key": "g4c_lf_p4/p13_2026151005/scene/o00>22/seed20261022/target",
+   "unit": "scene:p13_2026151005:o00>22#s20261022"
+  },
+  {
+   "edit": {
+    "o00": 22
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:132aeea17240b5cf3eace8dd933fcf9fba51b0f362b5a0fe6b08dcb350c85aa0",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151005:o00>22",
+   "relocation_key": "g4c_lf_p4/p13_2026151005/scene/o00>22/seed20261023/reloc",
+   "root": "p13_2026151005",
+   "seed": 20261023,
+   "target_key": "g4c_lf_p4/p13_2026151005/scene/o00>22/seed20261023/target",
+   "unit": "scene:p13_2026151005:o00>22#s20261023"
+  },
+  {
+   "edit": {
+    "o01": 28
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:51319044b0216f628cc16d3e0a4eaddda6f91c0ab29bd3d065d8015cc4cd95c5",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151005:o01>28",
+   "relocation_key": "g4c_lf_p4/p13_2026151005/scene/o01>28/seed20261021/reloc",
+   "root": "p13_2026151005",
+   "seed": 20261021,
+   "target_key": "g4c_lf_p4/p13_2026151005/scene/o01>28/seed20261021/target",
+   "unit": "scene:p13_2026151005:o01>28#s20261021"
+  },
+  {
+   "edit": {
+    "o01": 28
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:51319044b0216f628cc16d3e0a4eaddda6f91c0ab29bd3d065d8015cc4cd95c5",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151005:o01>28",
+   "relocation_key": "g4c_lf_p4/p13_2026151005/scene/o01>28/seed20261022/reloc",
+   "root": "p13_2026151005",
+   "seed": 20261022,
+   "target_key": "g4c_lf_p4/p13_2026151005/scene/o01>28/seed20261022/target",
+   "unit": "scene:p13_2026151005:o01>28#s20261022"
+  },
+  {
+   "edit": {
+    "o01": 28
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:51319044b0216f628cc16d3e0a4eaddda6f91c0ab29bd3d065d8015cc4cd95c5",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151005:o01>28",
+   "relocation_key": "g4c_lf_p4/p13_2026151005/scene/o01>28/seed20261023/reloc",
+   "root": "p13_2026151005",
+   "seed": 20261023,
+   "target_key": "g4c_lf_p4/p13_2026151005/scene/o01>28/seed20261023/target",
+   "unit": "scene:p13_2026151005:o01>28#s20261023"
+  },
+  {
+   "edit": {
+    "o00": 22,
+    "o01": 28
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:428b5c72b5f6d22d3b31b514d4e30ace190cebe1d9ad5eeb16a638c97310ef38",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151005:o00>22.o01>28",
+   "relocation_key": "g4c_lf_p4/p13_2026151005/scene/o00>22.o01>28/seed20261021/reloc",
+   "root": "p13_2026151005",
+   "seed": 20261021,
+   "target_key": "g4c_lf_p4/p13_2026151005/scene/o00>22.o01>28/seed20261021/target",
+   "unit": "scene:p13_2026151005:o00>22.o01>28#s20261021"
+  },
+  {
+   "edit": {
+    "o00": 22,
+    "o01": 28
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:428b5c72b5f6d22d3b31b514d4e30ace190cebe1d9ad5eeb16a638c97310ef38",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151005:o00>22.o01>28",
+   "relocation_key": "g4c_lf_p4/p13_2026151005/scene/o00>22.o01>28/seed20261022/reloc",
+   "root": "p13_2026151005",
+   "seed": 20261022,
+   "target_key": "g4c_lf_p4/p13_2026151005/scene/o00>22.o01>28/seed20261022/target",
+   "unit": "scene:p13_2026151005:o00>22.o01>28#s20261022"
+  },
+  {
+   "edit": {
+    "o00": 22,
+    "o01": 28
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:428b5c72b5f6d22d3b31b514d4e30ace190cebe1d9ad5eeb16a638c97310ef38",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151005:o00>22.o01>28",
+   "relocation_key": "g4c_lf_p4/p13_2026151005/scene/o00>22.o01>28/seed20261023/reloc",
+   "root": "p13_2026151005",
+   "seed": 20261023,
+   "target_key": "g4c_lf_p4/p13_2026151005/scene/o00>22.o01>28/seed20261023/target",
+   "unit": "scene:p13_2026151005:o00>22.o01>28#s20261023"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "query": "seq:p13_2026151006:o01>52.o00>36.o02>23",
+   "relocation_key": "g4c_lf_p4/p13_2026151006/o01>52.o00>36.o02>23/seed20261021/reloc",
+   "root": "p13_2026151006",
+   "seed": 20261021,
+   "sequence": [
+    [
+     "o01",
+     52
+    ],
+    [
+     "o00",
+     36
+    ],
+    [
+     "o02",
+     23
+    ]
+   ],
+   "target_key": "g4c_lf_p4/p13_2026151006/o01>52.o00>36.o02>23/seed20261021/target",
+   "unit": "seq:p13_2026151006:o01>52.o00>36.o02>23#s20261021"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "query": "seq:p13_2026151006:o01>52.o00>36.o02>23",
+   "relocation_key": "g4c_lf_p4/p13_2026151006/o01>52.o00>36.o02>23/seed20261022/reloc",
+   "root": "p13_2026151006",
+   "seed": 20261022,
+   "sequence": [
+    [
+     "o01",
+     52
+    ],
+    [
+     "o00",
+     36
+    ],
+    [
+     "o02",
+     23
+    ]
+   ],
+   "target_key": "g4c_lf_p4/p13_2026151006/o01>52.o00>36.o02>23/seed20261022/target",
+   "unit": "seq:p13_2026151006:o01>52.o00>36.o02>23#s20261022"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "query": "seq:p13_2026151006:o01>52.o00>36.o02>23",
+   "relocation_key": "g4c_lf_p4/p13_2026151006/o01>52.o00>36.o02>23/seed20261023/reloc",
+   "root": "p13_2026151006",
+   "seed": 20261023,
+   "sequence": [
+    [
+     "o01",
+     52
+    ],
+    [
+     "o00",
+     36
+    ],
+    [
+     "o02",
+     23
+    ]
+   ],
+   "target_key": "g4c_lf_p4/p13_2026151006/o01>52.o00>36.o02>23/seed20261023/target",
+   "unit": "seq:p13_2026151006:o01>52.o00>36.o02>23#s20261023"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "query": "seq:p13_2026151006:o01>52.o00>36",
+   "relocation_key": "g4c_lf_p4/p13_2026151006/o01>52.o00>36/seed20261021/reloc",
+   "root": "p13_2026151006",
+   "seed": 20261021,
+   "sequence": [
+    [
+     "o01",
+     52
+    ],
+    [
+     "o00",
+     36
+    ]
+   ],
+   "target_key": "g4c_lf_p4/p13_2026151006/o01>52.o00>36/seed20261021/target",
+   "unit": "seq:p13_2026151006:o01>52.o00>36#s20261021"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "query": "seq:p13_2026151006:o01>52.o00>36",
+   "relocation_key": "g4c_lf_p4/p13_2026151006/o01>52.o00>36/seed20261022/reloc",
+   "root": "p13_2026151006",
+   "seed": 20261022,
+   "sequence": [
+    [
+     "o01",
+     52
+    ],
+    [
+     "o00",
+     36
+    ]
+   ],
+   "target_key": "g4c_lf_p4/p13_2026151006/o01>52.o00>36/seed20261022/target",
+   "unit": "seq:p13_2026151006:o01>52.o00>36#s20261022"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "query": "seq:p13_2026151006:o01>52.o00>36",
+   "relocation_key": "g4c_lf_p4/p13_2026151006/o01>52.o00>36/seed20261023/reloc",
+   "root": "p13_2026151006",
+   "seed": 20261023,
+   "sequence": [
+    [
+     "o01",
+     52
+    ],
+    [
+     "o00",
+     36
+    ]
+   ],
+   "target_key": "g4c_lf_p4/p13_2026151006/o01>52.o00>36/seed20261023/target",
+   "unit": "seq:p13_2026151006:o01>52.o00>36#s20261023"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "query": "seq:p13_2026151006:o00>36.o02>23",
+   "relocation_key": "g4c_lf_p4/p13_2026151006/o00>36.o02>23/seed20261021/reloc",
+   "root": "p13_2026151006",
+   "seed": 20261021,
+   "sequence": [
+    [
+     "o00",
+     36
+    ],
+    [
+     "o02",
+     23
+    ]
+   ],
+   "target_key": "g4c_lf_p4/p13_2026151006/o00>36.o02>23/seed20261021/target",
+   "unit": "seq:p13_2026151006:o00>36.o02>23#s20261021"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "query": "seq:p13_2026151006:o00>36.o02>23",
+   "relocation_key": "g4c_lf_p4/p13_2026151006/o00>36.o02>23/seed20261022/reloc",
+   "root": "p13_2026151006",
+   "seed": 20261022,
+   "sequence": [
+    [
+     "o00",
+     36
+    ],
+    [
+     "o02",
+     23
+    ]
+   ],
+   "target_key": "g4c_lf_p4/p13_2026151006/o00>36.o02>23/seed20261022/target",
+   "unit": "seq:p13_2026151006:o00>36.o02>23#s20261022"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "query": "seq:p13_2026151006:o00>36.o02>23",
+   "relocation_key": "g4c_lf_p4/p13_2026151006/o00>36.o02>23/seed20261023/reloc",
+   "root": "p13_2026151006",
+   "seed": 20261023,
+   "sequence": [
+    [
+     "o00",
+     36
+    ],
+    [
+     "o02",
+     23
+    ]
+   ],
+   "target_key": "g4c_lf_p4/p13_2026151006/o00>36.o02>23/seed20261023/target",
+   "unit": "seq:p13_2026151006:o00>36.o02>23#s20261023"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "query": "seq:p13_2026151006:o01>52.o02>23",
+   "relocation_key": "g4c_lf_p4/p13_2026151006/o01>52.o02>23/seed20261021/reloc",
+   "root": "p13_2026151006",
+   "seed": 20261021,
+   "sequence": [
+    [
+     "o01",
+     52
+    ],
+    [
+     "o02",
+     23
+    ]
+   ],
+   "target_key": "g4c_lf_p4/p13_2026151006/o01>52.o02>23/seed20261021/target",
+   "unit": "seq:p13_2026151006:o01>52.o02>23#s20261021"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "query": "seq:p13_2026151006:o01>52.o02>23",
+   "relocation_key": "g4c_lf_p4/p13_2026151006/o01>52.o02>23/seed20261022/reloc",
+   "root": "p13_2026151006",
+   "seed": 20261022,
+   "sequence": [
+    [
+     "o01",
+     52
+    ],
+    [
+     "o02",
+     23
+    ]
+   ],
+   "target_key": "g4c_lf_p4/p13_2026151006/o01>52.o02>23/seed20261022/target",
+   "unit": "seq:p13_2026151006:o01>52.o02>23#s20261022"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "query": "seq:p13_2026151006:o01>52.o02>23",
+   "relocation_key": "g4c_lf_p4/p13_2026151006/o01>52.o02>23/seed20261023/reloc",
+   "root": "p13_2026151006",
+   "seed": 20261023,
+   "sequence": [
+    [
+     "o01",
+     52
+    ],
+    [
+     "o02",
+     23
+    ]
+   ],
+   "target_key": "g4c_lf_p4/p13_2026151006/o01>52.o02>23/seed20261023/target",
+   "unit": "seq:p13_2026151006:o01>52.o02>23#s20261023"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "query": "seq:p13_2026151006:o00>36.o01>52.o02>23",
+   "relocation_key": "g4c_lf_p4/p13_2026151006/o00>36.o01>52.o02>23/seed20261021/reloc",
+   "root": "p13_2026151006",
+   "seed": 20261021,
+   "sequence": [
+    [
+     "o00",
+     36
+    ],
+    [
+     "o01",
+     52
+    ],
+    [
+     "o02",
+     23
+    ]
+   ],
+   "target_key": "g4c_lf_p4/p13_2026151006/o00>36.o01>52.o02>23/seed20261021/target",
+   "unit": "seq:p13_2026151006:o00>36.o01>52.o02>23#s20261021"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "query": "seq:p13_2026151006:o00>36.o01>52.o02>23",
+   "relocation_key": "g4c_lf_p4/p13_2026151006/o00>36.o01>52.o02>23/seed20261022/reloc",
+   "root": "p13_2026151006",
+   "seed": 20261022,
+   "sequence": [
+    [
+     "o00",
+     36
+    ],
+    [
+     "o01",
+     52
+    ],
+    [
+     "o02",
+     23
+    ]
+   ],
+   "target_key": "g4c_lf_p4/p13_2026151006/o00>36.o01>52.o02>23/seed20261022/target",
+   "unit": "seq:p13_2026151006:o00>36.o01>52.o02>23#s20261022"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "query": "seq:p13_2026151006:o00>36.o01>52.o02>23",
+   "relocation_key": "g4c_lf_p4/p13_2026151006/o00>36.o01>52.o02>23/seed20261023/reloc",
+   "root": "p13_2026151006",
+   "seed": 20261023,
+   "sequence": [
+    [
+     "o00",
+     36
+    ],
+    [
+     "o01",
+     52
+    ],
+    [
+     "o02",
+     23
+    ]
+   ],
+   "target_key": "g4c_lf_p4/p13_2026151006/o00>36.o01>52.o02>23/seed20261023/target",
+   "unit": "seq:p13_2026151006:o00>36.o01>52.o02>23#s20261023"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "query": "seq:p13_2026151006:empty",
+   "relocation_key": "g4c_lf_p4/p13_2026151006/empty/seed20261021/reloc",
+   "root": "p13_2026151006",
+   "seed": 20261021,
+   "sequence": [],
+   "target_key": "g4c_lf_p4/p13_2026151006/empty/seed20261021/target",
+   "unit": "seq:p13_2026151006:empty#s20261021"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "query": "seq:p13_2026151006:empty",
+   "relocation_key": "g4c_lf_p4/p13_2026151006/empty/seed20261022/reloc",
+   "root": "p13_2026151006",
+   "seed": 20261022,
+   "sequence": [],
+   "target_key": "g4c_lf_p4/p13_2026151006/empty/seed20261022/target",
+   "unit": "seq:p13_2026151006:empty#s20261022"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "query": "seq:p13_2026151006:empty",
+   "relocation_key": "g4c_lf_p4/p13_2026151006/empty/seed20261023/reloc",
+   "root": "p13_2026151006",
+   "seed": 20261023,
+   "sequence": [],
+   "target_key": "g4c_lf_p4/p13_2026151006/empty/seed20261023/target",
+   "unit": "seq:p13_2026151006:empty#s20261023"
+  },
+  {
+   "edit": {
+    "o00": 36
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:5c6c77ab97b505778cf462d0032a4b8b01495b6b0819721fdbb2d52427866901",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151006:o00>36",
+   "relocation_key": "g4c_lf_p4/p13_2026151006/scene/o00>36/seed20261021/reloc",
+   "root": "p13_2026151006",
+   "seed": 20261021,
+   "target_key": "g4c_lf_p4/p13_2026151006/scene/o00>36/seed20261021/target",
+   "unit": "scene:p13_2026151006:o00>36#s20261021"
+  },
+  {
+   "edit": {
+    "o00": 36
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:5c6c77ab97b505778cf462d0032a4b8b01495b6b0819721fdbb2d52427866901",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151006:o00>36",
+   "relocation_key": "g4c_lf_p4/p13_2026151006/scene/o00>36/seed20261022/reloc",
+   "root": "p13_2026151006",
+   "seed": 20261022,
+   "target_key": "g4c_lf_p4/p13_2026151006/scene/o00>36/seed20261022/target",
+   "unit": "scene:p13_2026151006:o00>36#s20261022"
+  },
+  {
+   "edit": {
+    "o00": 36
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:5c6c77ab97b505778cf462d0032a4b8b01495b6b0819721fdbb2d52427866901",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151006:o00>36",
+   "relocation_key": "g4c_lf_p4/p13_2026151006/scene/o00>36/seed20261023/reloc",
+   "root": "p13_2026151006",
+   "seed": 20261023,
+   "target_key": "g4c_lf_p4/p13_2026151006/scene/o00>36/seed20261023/target",
+   "unit": "scene:p13_2026151006:o00>36#s20261023"
+  },
+  {
+   "edit": {
+    "o01": 52
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:eb4995b5dbc6b3b1619aed1825e404bcd167d54b21111bc7e18576f1ac8bda08",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151006:o01>52",
+   "relocation_key": "g4c_lf_p4/p13_2026151006/scene/o01>52/seed20261021/reloc",
+   "root": "p13_2026151006",
+   "seed": 20261021,
+   "target_key": "g4c_lf_p4/p13_2026151006/scene/o01>52/seed20261021/target",
+   "unit": "scene:p13_2026151006:o01>52#s20261021"
+  },
+  {
+   "edit": {
+    "o01": 52
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:eb4995b5dbc6b3b1619aed1825e404bcd167d54b21111bc7e18576f1ac8bda08",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151006:o01>52",
+   "relocation_key": "g4c_lf_p4/p13_2026151006/scene/o01>52/seed20261022/reloc",
+   "root": "p13_2026151006",
+   "seed": 20261022,
+   "target_key": "g4c_lf_p4/p13_2026151006/scene/o01>52/seed20261022/target",
+   "unit": "scene:p13_2026151006:o01>52#s20261022"
+  },
+  {
+   "edit": {
+    "o01": 52
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:eb4995b5dbc6b3b1619aed1825e404bcd167d54b21111bc7e18576f1ac8bda08",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151006:o01>52",
+   "relocation_key": "g4c_lf_p4/p13_2026151006/scene/o01>52/seed20261023/reloc",
+   "root": "p13_2026151006",
+   "seed": 20261023,
+   "target_key": "g4c_lf_p4/p13_2026151006/scene/o01>52/seed20261023/target",
+   "unit": "scene:p13_2026151006:o01>52#s20261023"
+  },
+  {
+   "edit": {
+    "o00": 36,
+    "o01": 52
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:ccc3235a67e8c9e6181593f5419b30f056e9d3324be8907d8623f3015de9d9ec",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151006:o00>36.o01>52",
+   "relocation_key": "g4c_lf_p4/p13_2026151006/scene/o00>36.o01>52/seed20261021/reloc",
+   "root": "p13_2026151006",
+   "seed": 20261021,
+   "target_key": "g4c_lf_p4/p13_2026151006/scene/o00>36.o01>52/seed20261021/target",
+   "unit": "scene:p13_2026151006:o00>36.o01>52#s20261021"
+  },
+  {
+   "edit": {
+    "o00": 36,
+    "o01": 52
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:ccc3235a67e8c9e6181593f5419b30f056e9d3324be8907d8623f3015de9d9ec",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151006:o00>36.o01>52",
+   "relocation_key": "g4c_lf_p4/p13_2026151006/scene/o00>36.o01>52/seed20261022/reloc",
+   "root": "p13_2026151006",
+   "seed": 20261022,
+   "target_key": "g4c_lf_p4/p13_2026151006/scene/o00>36.o01>52/seed20261022/target",
+   "unit": "scene:p13_2026151006:o00>36.o01>52#s20261022"
+  },
+  {
+   "edit": {
+    "o00": 36,
+    "o01": 52
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:ccc3235a67e8c9e6181593f5419b30f056e9d3324be8907d8623f3015de9d9ec",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151006:o00>36.o01>52",
+   "relocation_key": "g4c_lf_p4/p13_2026151006/scene/o00>36.o01>52/seed20261023/reloc",
+   "root": "p13_2026151006",
+   "seed": 20261023,
+   "target_key": "g4c_lf_p4/p13_2026151006/scene/o00>36.o01>52/seed20261023/target",
+   "unit": "scene:p13_2026151006:o00>36.o01>52#s20261023"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "query": "seq:p13_2026151007:empty",
+   "relocation_key": "g4c_lf_p4/p13_2026151007/empty/seed20261021/reloc",
+   "root": "p13_2026151007",
+   "seed": 20261021,
+   "sequence": [],
+   "target_key": "g4c_lf_p4/p13_2026151007/empty/seed20261021/target",
+   "unit": "seq:p13_2026151007:empty#s20261021"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "query": "seq:p13_2026151007:empty",
+   "relocation_key": "g4c_lf_p4/p13_2026151007/empty/seed20261022/reloc",
+   "root": "p13_2026151007",
+   "seed": 20261022,
+   "sequence": [],
+   "target_key": "g4c_lf_p4/p13_2026151007/empty/seed20261022/target",
+   "unit": "seq:p13_2026151007:empty#s20261022"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "query": "seq:p13_2026151007:empty",
+   "relocation_key": "g4c_lf_p4/p13_2026151007/empty/seed20261023/reloc",
+   "root": "p13_2026151007",
+   "seed": 20261023,
+   "sequence": [],
+   "target_key": "g4c_lf_p4/p13_2026151007/empty/seed20261023/target",
+   "unit": "seq:p13_2026151007:empty#s20261023"
+  },
+  {
+   "edit": {
+    "o00": 59
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:d782062303906c195204ca5e03b79442dc601b1a9d88fbadccba49414b0200e8",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151007:o00>59",
+   "relocation_key": "g4c_lf_p4/p13_2026151007/scene/o00>59/seed20261021/reloc",
+   "root": "p13_2026151007",
+   "seed": 20261021,
+   "target_key": "g4c_lf_p4/p13_2026151007/scene/o00>59/seed20261021/target",
+   "unit": "scene:p13_2026151007:o00>59#s20261021"
+  },
+  {
+   "edit": {
+    "o00": 59
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:d782062303906c195204ca5e03b79442dc601b1a9d88fbadccba49414b0200e8",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151007:o00>59",
+   "relocation_key": "g4c_lf_p4/p13_2026151007/scene/o00>59/seed20261022/reloc",
+   "root": "p13_2026151007",
+   "seed": 20261022,
+   "target_key": "g4c_lf_p4/p13_2026151007/scene/o00>59/seed20261022/target",
+   "unit": "scene:p13_2026151007:o00>59#s20261022"
+  },
+  {
+   "edit": {
+    "o00": 59
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:d782062303906c195204ca5e03b79442dc601b1a9d88fbadccba49414b0200e8",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151007:o00>59",
+   "relocation_key": "g4c_lf_p4/p13_2026151007/scene/o00>59/seed20261023/reloc",
+   "root": "p13_2026151007",
+   "seed": 20261023,
+   "target_key": "g4c_lf_p4/p13_2026151007/scene/o00>59/seed20261023/target",
+   "unit": "scene:p13_2026151007:o00>59#s20261023"
+  },
+  {
+   "edit": {
+    "o01": 60
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:b7a34867e4871cc2b107d6e4787ea81222830a41cfe77967e3059c54d7a13225",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151007:o01>60",
+   "relocation_key": "g4c_lf_p4/p13_2026151007/scene/o01>60/seed20261021/reloc",
+   "root": "p13_2026151007",
+   "seed": 20261021,
+   "target_key": "g4c_lf_p4/p13_2026151007/scene/o01>60/seed20261021/target",
+   "unit": "scene:p13_2026151007:o01>60#s20261021"
+  },
+  {
+   "edit": {
+    "o01": 60
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:b7a34867e4871cc2b107d6e4787ea81222830a41cfe77967e3059c54d7a13225",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151007:o01>60",
+   "relocation_key": "g4c_lf_p4/p13_2026151007/scene/o01>60/seed20261022/reloc",
+   "root": "p13_2026151007",
+   "seed": 20261022,
+   "target_key": "g4c_lf_p4/p13_2026151007/scene/o01>60/seed20261022/target",
+   "unit": "scene:p13_2026151007:o01>60#s20261022"
+  },
+  {
+   "edit": {
+    "o01": 60
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:b7a34867e4871cc2b107d6e4787ea81222830a41cfe77967e3059c54d7a13225",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151007:o01>60",
+   "relocation_key": "g4c_lf_p4/p13_2026151007/scene/o01>60/seed20261023/reloc",
+   "root": "p13_2026151007",
+   "seed": 20261023,
+   "target_key": "g4c_lf_p4/p13_2026151007/scene/o01>60/seed20261023/target",
+   "unit": "scene:p13_2026151007:o01>60#s20261023"
+  },
+  {
+   "edit": {
+    "o02": 52
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:478290286035d192c0bdffde5a158ca7ce49e9f6b0e8a417a7bbb137ba4a5a9d",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151007:o02>52",
+   "relocation_key": "g4c_lf_p4/p13_2026151007/scene/o02>52/seed20261021/reloc",
+   "root": "p13_2026151007",
+   "seed": 20261021,
+   "target_key": "g4c_lf_p4/p13_2026151007/scene/o02>52/seed20261021/target",
+   "unit": "scene:p13_2026151007:o02>52#s20261021"
+  },
+  {
+   "edit": {
+    "o02": 52
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:478290286035d192c0bdffde5a158ca7ce49e9f6b0e8a417a7bbb137ba4a5a9d",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151007:o02>52",
+   "relocation_key": "g4c_lf_p4/p13_2026151007/scene/o02>52/seed20261022/reloc",
+   "root": "p13_2026151007",
+   "seed": 20261022,
+   "target_key": "g4c_lf_p4/p13_2026151007/scene/o02>52/seed20261022/target",
+   "unit": "scene:p13_2026151007:o02>52#s20261022"
+  },
+  {
+   "edit": {
+    "o02": 52
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:478290286035d192c0bdffde5a158ca7ce49e9f6b0e8a417a7bbb137ba4a5a9d",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151007:o02>52",
+   "relocation_key": "g4c_lf_p4/p13_2026151007/scene/o02>52/seed20261023/reloc",
+   "root": "p13_2026151007",
+   "seed": 20261023,
+   "target_key": "g4c_lf_p4/p13_2026151007/scene/o02>52/seed20261023/target",
+   "unit": "scene:p13_2026151007:o02>52#s20261023"
+  },
+  {
+   "edit": {
+    "o00": 59,
+    "o01": 60
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:19a66abaee0554af9343fbf4a1546a3f40d2f08e5815edf180465991dabc2dae",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151007:o00>59.o01>60",
+   "relocation_key": "g4c_lf_p4/p13_2026151007/scene/o00>59.o01>60/seed20261021/reloc",
+   "root": "p13_2026151007",
+   "seed": 20261021,
+   "target_key": "g4c_lf_p4/p13_2026151007/scene/o00>59.o01>60/seed20261021/target",
+   "unit": "scene:p13_2026151007:o00>59.o01>60#s20261021"
+  },
+  {
+   "edit": {
+    "o00": 59,
+    "o01": 60
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:19a66abaee0554af9343fbf4a1546a3f40d2f08e5815edf180465991dabc2dae",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151007:o00>59.o01>60",
+   "relocation_key": "g4c_lf_p4/p13_2026151007/scene/o00>59.o01>60/seed20261022/reloc",
+   "root": "p13_2026151007",
+   "seed": 20261022,
+   "target_key": "g4c_lf_p4/p13_2026151007/scene/o00>59.o01>60/seed20261022/target",
+   "unit": "scene:p13_2026151007:o00>59.o01>60#s20261022"
+  },
+  {
+   "edit": {
+    "o00": 59,
+    "o01": 60
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:19a66abaee0554af9343fbf4a1546a3f40d2f08e5815edf180465991dabc2dae",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151007:o00>59.o01>60",
+   "relocation_key": "g4c_lf_p4/p13_2026151007/scene/o00>59.o01>60/seed20261023/reloc",
+   "root": "p13_2026151007",
+   "seed": 20261023,
+   "target_key": "g4c_lf_p4/p13_2026151007/scene/o00>59.o01>60/seed20261023/target",
+   "unit": "scene:p13_2026151007:o00>59.o01>60#s20261023"
+  },
+  {
+   "edit": {
+    "o00": 59,
+    "o02": 52
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:da26cb0d0ba1845b653cce469aa8b9178ff8c85ed0b2f1741c0d8a78d05bd3c3",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151007:o00>59.o02>52",
+   "relocation_key": "g4c_lf_p4/p13_2026151007/scene/o00>59.o02>52/seed20261021/reloc",
+   "root": "p13_2026151007",
+   "seed": 20261021,
+   "target_key": "g4c_lf_p4/p13_2026151007/scene/o00>59.o02>52/seed20261021/target",
+   "unit": "scene:p13_2026151007:o00>59.o02>52#s20261021"
+  },
+  {
+   "edit": {
+    "o00": 59,
+    "o02": 52
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:da26cb0d0ba1845b653cce469aa8b9178ff8c85ed0b2f1741c0d8a78d05bd3c3",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151007:o00>59.o02>52",
+   "relocation_key": "g4c_lf_p4/p13_2026151007/scene/o00>59.o02>52/seed20261022/reloc",
+   "root": "p13_2026151007",
+   "seed": 20261022,
+   "target_key": "g4c_lf_p4/p13_2026151007/scene/o00>59.o02>52/seed20261022/target",
+   "unit": "scene:p13_2026151007:o00>59.o02>52#s20261022"
+  },
+  {
+   "edit": {
+    "o00": 59,
+    "o02": 52
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:da26cb0d0ba1845b653cce469aa8b9178ff8c85ed0b2f1741c0d8a78d05bd3c3",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151007:o00>59.o02>52",
+   "relocation_key": "g4c_lf_p4/p13_2026151007/scene/o00>59.o02>52/seed20261023/reloc",
+   "root": "p13_2026151007",
+   "seed": 20261023,
+   "target_key": "g4c_lf_p4/p13_2026151007/scene/o00>59.o02>52/seed20261023/target",
+   "unit": "scene:p13_2026151007:o00>59.o02>52#s20261023"
+  },
+  {
+   "edit": {
+    "o01": 60,
+    "o02": 52
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:5a96ecc0a192c6c671a632199be17abc97d93ebdec941f71fcf2b23dcf5d78ee",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151007:o01>60.o02>52",
+   "relocation_key": "g4c_lf_p4/p13_2026151007/scene/o01>60.o02>52/seed20261021/reloc",
+   "root": "p13_2026151007",
+   "seed": 20261021,
+   "target_key": "g4c_lf_p4/p13_2026151007/scene/o01>60.o02>52/seed20261021/target",
+   "unit": "scene:p13_2026151007:o01>60.o02>52#s20261021"
+  },
+  {
+   "edit": {
+    "o01": 60,
+    "o02": 52
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:5a96ecc0a192c6c671a632199be17abc97d93ebdec941f71fcf2b23dcf5d78ee",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151007:o01>60.o02>52",
+   "relocation_key": "g4c_lf_p4/p13_2026151007/scene/o01>60.o02>52/seed20261022/reloc",
+   "root": "p13_2026151007",
+   "seed": 20261022,
+   "target_key": "g4c_lf_p4/p13_2026151007/scene/o01>60.o02>52/seed20261022/target",
+   "unit": "scene:p13_2026151007:o01>60.o02>52#s20261022"
+  },
+  {
+   "edit": {
+    "o01": 60,
+    "o02": 52
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:5a96ecc0a192c6c671a632199be17abc97d93ebdec941f71fcf2b23dcf5d78ee",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151007:o01>60.o02>52",
+   "relocation_key": "g4c_lf_p4/p13_2026151007/scene/o01>60.o02>52/seed20261023/reloc",
+   "root": "p13_2026151007",
+   "seed": 20261023,
+   "target_key": "g4c_lf_p4/p13_2026151007/scene/o01>60.o02>52/seed20261023/target",
+   "unit": "scene:p13_2026151007:o01>60.o02>52#s20261023"
+  },
+  {
+   "edit": {
+    "o00": 59,
+    "o01": 60,
+    "o02": 52
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:e65cc0e5ba0815486e8f62db75f838dabf464bfd0566a616d1151d43db1b8114",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151007:o00>59.o01>60.o02>52",
+   "relocation_key": "g4c_lf_p4/p13_2026151007/scene/o00>59.o01>60.o02>52/seed20261021/reloc",
+   "root": "p13_2026151007",
+   "seed": 20261021,
+   "target_key": "g4c_lf_p4/p13_2026151007/scene/o00>59.o01>60.o02>52/seed20261021/target",
+   "unit": "scene:p13_2026151007:o00>59.o01>60.o02>52#s20261021"
+  },
+  {
+   "edit": {
+    "o00": 59,
+    "o01": 60,
+    "o02": 52
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:e65cc0e5ba0815486e8f62db75f838dabf464bfd0566a616d1151d43db1b8114",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151007:o00>59.o01>60.o02>52",
+   "relocation_key": "g4c_lf_p4/p13_2026151007/scene/o00>59.o01>60.o02>52/seed20261022/reloc",
+   "root": "p13_2026151007",
+   "seed": 20261022,
+   "target_key": "g4c_lf_p4/p13_2026151007/scene/o00>59.o01>60.o02>52/seed20261022/target",
+   "unit": "scene:p13_2026151007:o00>59.o01>60.o02>52#s20261022"
+  },
+  {
+   "edit": {
+    "o00": 59,
+    "o01": 60,
+    "o02": 52
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:e65cc0e5ba0815486e8f62db75f838dabf464bfd0566a616d1151d43db1b8114",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151007:o00>59.o01>60.o02>52",
+   "relocation_key": "g4c_lf_p4/p13_2026151007/scene/o00>59.o01>60.o02>52/seed20261023/reloc",
+   "root": "p13_2026151007",
+   "seed": 20261023,
+   "target_key": "g4c_lf_p4/p13_2026151007/scene/o00>59.o01>60.o02>52/seed20261023/target",
+   "unit": "scene:p13_2026151007:o00>59.o01>60.o02>52#s20261023"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "query": "seq:p13_2026151008:empty",
+   "relocation_key": "g4c_lf_p4/p13_2026151008/empty/seed20261021/reloc",
+   "root": "p13_2026151008",
+   "seed": 20261021,
+   "sequence": [],
+   "target_key": "g4c_lf_p4/p13_2026151008/empty/seed20261021/target",
+   "unit": "seq:p13_2026151008:empty#s20261021"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "query": "seq:p13_2026151008:empty",
+   "relocation_key": "g4c_lf_p4/p13_2026151008/empty/seed20261022/reloc",
+   "root": "p13_2026151008",
+   "seed": 20261022,
+   "sequence": [],
+   "target_key": "g4c_lf_p4/p13_2026151008/empty/seed20261022/target",
+   "unit": "seq:p13_2026151008:empty#s20261022"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "query": "seq:p13_2026151008:empty",
+   "relocation_key": "g4c_lf_p4/p13_2026151008/empty/seed20261023/reloc",
+   "root": "p13_2026151008",
+   "seed": 20261023,
+   "sequence": [],
+   "target_key": "g4c_lf_p4/p13_2026151008/empty/seed20261023/target",
+   "unit": "seq:p13_2026151008:empty#s20261023"
+  },
+  {
+   "edit": {
+    "o00": 59
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:d77f394b1322783a38c3c1b87a2cdb9ecf0886b8117048f859cfea7f269c3089",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151008:o00>59",
+   "relocation_key": "g4c_lf_p4/p13_2026151008/scene/o00>59/seed20261021/reloc",
+   "root": "p13_2026151008",
+   "seed": 20261021,
+   "target_key": "g4c_lf_p4/p13_2026151008/scene/o00>59/seed20261021/target",
+   "unit": "scene:p13_2026151008:o00>59#s20261021"
+  },
+  {
+   "edit": {
+    "o00": 59
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:d77f394b1322783a38c3c1b87a2cdb9ecf0886b8117048f859cfea7f269c3089",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151008:o00>59",
+   "relocation_key": "g4c_lf_p4/p13_2026151008/scene/o00>59/seed20261022/reloc",
+   "root": "p13_2026151008",
+   "seed": 20261022,
+   "target_key": "g4c_lf_p4/p13_2026151008/scene/o00>59/seed20261022/target",
+   "unit": "scene:p13_2026151008:o00>59#s20261022"
+  },
+  {
+   "edit": {
+    "o00": 59
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:d77f394b1322783a38c3c1b87a2cdb9ecf0886b8117048f859cfea7f269c3089",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151008:o00>59",
+   "relocation_key": "g4c_lf_p4/p13_2026151008/scene/o00>59/seed20261023/reloc",
+   "root": "p13_2026151008",
+   "seed": 20261023,
+   "target_key": "g4c_lf_p4/p13_2026151008/scene/o00>59/seed20261023/target",
+   "unit": "scene:p13_2026151008:o00>59#s20261023"
+  },
+  {
+   "edit": {
+    "o01": 3
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:32e53cc8019f037ea294a5e25a65e95e00f20391ada33850d91b6a2561437834",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151008:o01>3",
+   "relocation_key": "g4c_lf_p4/p13_2026151008/scene/o01>3/seed20261021/reloc",
+   "root": "p13_2026151008",
+   "seed": 20261021,
+   "target_key": "g4c_lf_p4/p13_2026151008/scene/o01>3/seed20261021/target",
+   "unit": "scene:p13_2026151008:o01>3#s20261021"
+  },
+  {
+   "edit": {
+    "o01": 3
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:32e53cc8019f037ea294a5e25a65e95e00f20391ada33850d91b6a2561437834",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151008:o01>3",
+   "relocation_key": "g4c_lf_p4/p13_2026151008/scene/o01>3/seed20261022/reloc",
+   "root": "p13_2026151008",
+   "seed": 20261022,
+   "target_key": "g4c_lf_p4/p13_2026151008/scene/o01>3/seed20261022/target",
+   "unit": "scene:p13_2026151008:o01>3#s20261022"
+  },
+  {
+   "edit": {
+    "o01": 3
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:32e53cc8019f037ea294a5e25a65e95e00f20391ada33850d91b6a2561437834",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151008:o01>3",
+   "relocation_key": "g4c_lf_p4/p13_2026151008/scene/o01>3/seed20261023/reloc",
+   "root": "p13_2026151008",
+   "seed": 20261023,
+   "target_key": "g4c_lf_p4/p13_2026151008/scene/o01>3/seed20261023/target",
+   "unit": "scene:p13_2026151008:o01>3#s20261023"
+  },
+  {
+   "edit": {
+    "o02": 29
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:2dd6ed9ba618b64417c2bf75b28595d671b4af9b90fe7cd0feafa4ed509a2e92",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151008:o02>29",
+   "relocation_key": "g4c_lf_p4/p13_2026151008/scene/o02>29/seed20261021/reloc",
+   "root": "p13_2026151008",
+   "seed": 20261021,
+   "target_key": "g4c_lf_p4/p13_2026151008/scene/o02>29/seed20261021/target",
+   "unit": "scene:p13_2026151008:o02>29#s20261021"
+  },
+  {
+   "edit": {
+    "o02": 29
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:2dd6ed9ba618b64417c2bf75b28595d671b4af9b90fe7cd0feafa4ed509a2e92",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151008:o02>29",
+   "relocation_key": "g4c_lf_p4/p13_2026151008/scene/o02>29/seed20261022/reloc",
+   "root": "p13_2026151008",
+   "seed": 20261022,
+   "target_key": "g4c_lf_p4/p13_2026151008/scene/o02>29/seed20261022/target",
+   "unit": "scene:p13_2026151008:o02>29#s20261022"
+  },
+  {
+   "edit": {
+    "o02": 29
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:2dd6ed9ba618b64417c2bf75b28595d671b4af9b90fe7cd0feafa4ed509a2e92",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151008:o02>29",
+   "relocation_key": "g4c_lf_p4/p13_2026151008/scene/o02>29/seed20261023/reloc",
+   "root": "p13_2026151008",
+   "seed": 20261023,
+   "target_key": "g4c_lf_p4/p13_2026151008/scene/o02>29/seed20261023/target",
+   "unit": "scene:p13_2026151008:o02>29#s20261023"
+  },
+  {
+   "edit": {
+    "o00": 59,
+    "o01": 3
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:9d5dcd6df8f285895c5936ed0e2bb265f33cf29a467cc29280891b53051b7a37",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151008:o00>59.o01>3",
+   "relocation_key": "g4c_lf_p4/p13_2026151008/scene/o00>59.o01>3/seed20261021/reloc",
+   "root": "p13_2026151008",
+   "seed": 20261021,
+   "target_key": "g4c_lf_p4/p13_2026151008/scene/o00>59.o01>3/seed20261021/target",
+   "unit": "scene:p13_2026151008:o00>59.o01>3#s20261021"
+  },
+  {
+   "edit": {
+    "o00": 59,
+    "o01": 3
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:9d5dcd6df8f285895c5936ed0e2bb265f33cf29a467cc29280891b53051b7a37",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151008:o00>59.o01>3",
+   "relocation_key": "g4c_lf_p4/p13_2026151008/scene/o00>59.o01>3/seed20261022/reloc",
+   "root": "p13_2026151008",
+   "seed": 20261022,
+   "target_key": "g4c_lf_p4/p13_2026151008/scene/o00>59.o01>3/seed20261022/target",
+   "unit": "scene:p13_2026151008:o00>59.o01>3#s20261022"
+  },
+  {
+   "edit": {
+    "o00": 59,
+    "o01": 3
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:9d5dcd6df8f285895c5936ed0e2bb265f33cf29a467cc29280891b53051b7a37",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151008:o00>59.o01>3",
+   "relocation_key": "g4c_lf_p4/p13_2026151008/scene/o00>59.o01>3/seed20261023/reloc",
+   "root": "p13_2026151008",
+   "seed": 20261023,
+   "target_key": "g4c_lf_p4/p13_2026151008/scene/o00>59.o01>3/seed20261023/target",
+   "unit": "scene:p13_2026151008:o00>59.o01>3#s20261023"
+  },
+  {
+   "edit": {
+    "o00": 59,
+    "o02": 29
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:ab831a9c62ccbece060586d1a3cc41eea3d1c48e106356929c628f6632f7b364",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151008:o00>59.o02>29",
+   "relocation_key": "g4c_lf_p4/p13_2026151008/scene/o00>59.o02>29/seed20261021/reloc",
+   "root": "p13_2026151008",
+   "seed": 20261021,
+   "target_key": "g4c_lf_p4/p13_2026151008/scene/o00>59.o02>29/seed20261021/target",
+   "unit": "scene:p13_2026151008:o00>59.o02>29#s20261021"
+  },
+  {
+   "edit": {
+    "o00": 59,
+    "o02": 29
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:ab831a9c62ccbece060586d1a3cc41eea3d1c48e106356929c628f6632f7b364",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151008:o00>59.o02>29",
+   "relocation_key": "g4c_lf_p4/p13_2026151008/scene/o00>59.o02>29/seed20261022/reloc",
+   "root": "p13_2026151008",
+   "seed": 20261022,
+   "target_key": "g4c_lf_p4/p13_2026151008/scene/o00>59.o02>29/seed20261022/target",
+   "unit": "scene:p13_2026151008:o00>59.o02>29#s20261022"
+  },
+  {
+   "edit": {
+    "o00": 59,
+    "o02": 29
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:ab831a9c62ccbece060586d1a3cc41eea3d1c48e106356929c628f6632f7b364",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151008:o00>59.o02>29",
+   "relocation_key": "g4c_lf_p4/p13_2026151008/scene/o00>59.o02>29/seed20261023/reloc",
+   "root": "p13_2026151008",
+   "seed": 20261023,
+   "target_key": "g4c_lf_p4/p13_2026151008/scene/o00>59.o02>29/seed20261023/target",
+   "unit": "scene:p13_2026151008:o00>59.o02>29#s20261023"
+  },
+  {
+   "edit": {
+    "o01": 3,
+    "o02": 29
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:baad6fa23905a4c09b410295dc94c7341442888433bbaf5d554342a182af25d4",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151008:o01>3.o02>29",
+   "relocation_key": "g4c_lf_p4/p13_2026151008/scene/o01>3.o02>29/seed20261021/reloc",
+   "root": "p13_2026151008",
+   "seed": 20261021,
+   "target_key": "g4c_lf_p4/p13_2026151008/scene/o01>3.o02>29/seed20261021/target",
+   "unit": "scene:p13_2026151008:o01>3.o02>29#s20261021"
+  },
+  {
+   "edit": {
+    "o01": 3,
+    "o02": 29
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:baad6fa23905a4c09b410295dc94c7341442888433bbaf5d554342a182af25d4",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151008:o01>3.o02>29",
+   "relocation_key": "g4c_lf_p4/p13_2026151008/scene/o01>3.o02>29/seed20261022/reloc",
+   "root": "p13_2026151008",
+   "seed": 20261022,
+   "target_key": "g4c_lf_p4/p13_2026151008/scene/o01>3.o02>29/seed20261022/target",
+   "unit": "scene:p13_2026151008:o01>3.o02>29#s20261022"
+  },
+  {
+   "edit": {
+    "o01": 3,
+    "o02": 29
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:baad6fa23905a4c09b410295dc94c7341442888433bbaf5d554342a182af25d4",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151008:o01>3.o02>29",
+   "relocation_key": "g4c_lf_p4/p13_2026151008/scene/o01>3.o02>29/seed20261023/reloc",
+   "root": "p13_2026151008",
+   "seed": 20261023,
+   "target_key": "g4c_lf_p4/p13_2026151008/scene/o01>3.o02>29/seed20261023/target",
+   "unit": "scene:p13_2026151008:o01>3.o02>29#s20261023"
+  },
+  {
+   "edit": {
+    "o00": 59,
+    "o01": 3,
+    "o02": 29
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:6c33287444a65a7c6e721c45aada16943db7bb2e96a8a792b012c9431b0fb3fd",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151008:o00>59.o01>3.o02>29",
+   "relocation_key": "g4c_lf_p4/p13_2026151008/scene/o00>59.o01>3.o02>29/seed20261021/reloc",
+   "root": "p13_2026151008",
+   "seed": 20261021,
+   "target_key": "g4c_lf_p4/p13_2026151008/scene/o00>59.o01>3.o02>29/seed20261021/target",
+   "unit": "scene:p13_2026151008:o00>59.o01>3.o02>29#s20261021"
+  },
+  {
+   "edit": {
+    "o00": 59,
+    "o01": 3,
+    "o02": 29
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:6c33287444a65a7c6e721c45aada16943db7bb2e96a8a792b012c9431b0fb3fd",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151008:o00>59.o01>3.o02>29",
+   "relocation_key": "g4c_lf_p4/p13_2026151008/scene/o00>59.o01>3.o02>29/seed20261022/reloc",
+   "root": "p13_2026151008",
+   "seed": 20261022,
+   "target_key": "g4c_lf_p4/p13_2026151008/scene/o00>59.o01>3.o02>29/seed20261022/target",
+   "unit": "scene:p13_2026151008:o00>59.o01>3.o02>29#s20261022"
+  },
+  {
+   "edit": {
+    "o00": 59,
+    "o01": 3,
+    "o02": 29
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:6c33287444a65a7c6e721c45aada16943db7bb2e96a8a792b012c9431b0fb3fd",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151008:o00>59.o01>3.o02>29",
+   "relocation_key": "g4c_lf_p4/p13_2026151008/scene/o00>59.o01>3.o02>29/seed20261023/reloc",
+   "root": "p13_2026151008",
+   "seed": 20261023,
+   "target_key": "g4c_lf_p4/p13_2026151008/scene/o00>59.o01>3.o02>29/seed20261023/target",
+   "unit": "scene:p13_2026151008:o00>59.o01>3.o02>29#s20261023"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "query": "seq:p13_2026151009:o00>59",
+   "relocation_key": "g4c_lf_p4/p13_2026151009/o00>59/seed20261021/reloc",
+   "root": "p13_2026151009",
+   "seed": 20261021,
+   "sequence": [
+    [
+     "o00",
+     59
+    ]
+   ],
+   "target_key": "g4c_lf_p4/p13_2026151009/o00>59/seed20261021/target",
+   "unit": "seq:p13_2026151009:o00>59#s20261021"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "query": "seq:p13_2026151009:o00>59",
+   "relocation_key": "g4c_lf_p4/p13_2026151009/o00>59/seed20261022/reloc",
+   "root": "p13_2026151009",
+   "seed": 20261022,
+   "sequence": [
+    [
+     "o00",
+     59
+    ]
+   ],
+   "target_key": "g4c_lf_p4/p13_2026151009/o00>59/seed20261022/target",
+   "unit": "seq:p13_2026151009:o00>59#s20261022"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "query": "seq:p13_2026151009:o00>59",
+   "relocation_key": "g4c_lf_p4/p13_2026151009/o00>59/seed20261023/reloc",
+   "root": "p13_2026151009",
+   "seed": 20261023,
+   "sequence": [
+    [
+     "o00",
+     59
+    ]
+   ],
+   "target_key": "g4c_lf_p4/p13_2026151009/o00>59/seed20261023/target",
+   "unit": "seq:p13_2026151009:o00>59#s20261023"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "query": "seq:p13_2026151009:o01>5",
+   "relocation_key": "g4c_lf_p4/p13_2026151009/o01>5/seed20261021/reloc",
+   "root": "p13_2026151009",
+   "seed": 20261021,
+   "sequence": [
+    [
+     "o01",
+     5
+    ]
+   ],
+   "target_key": "g4c_lf_p4/p13_2026151009/o01>5/seed20261021/target",
+   "unit": "seq:p13_2026151009:o01>5#s20261021"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "query": "seq:p13_2026151009:o01>5",
+   "relocation_key": "g4c_lf_p4/p13_2026151009/o01>5/seed20261022/reloc",
+   "root": "p13_2026151009",
+   "seed": 20261022,
+   "sequence": [
+    [
+     "o01",
+     5
+    ]
+   ],
+   "target_key": "g4c_lf_p4/p13_2026151009/o01>5/seed20261022/target",
+   "unit": "seq:p13_2026151009:o01>5#s20261022"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "query": "seq:p13_2026151009:o01>5",
+   "relocation_key": "g4c_lf_p4/p13_2026151009/o01>5/seed20261023/reloc",
+   "root": "p13_2026151009",
+   "seed": 20261023,
+   "sequence": [
+    [
+     "o01",
+     5
+    ]
+   ],
+   "target_key": "g4c_lf_p4/p13_2026151009/o01>5/seed20261023/target",
+   "unit": "seq:p13_2026151009:o01>5#s20261023"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "query": "seq:p13_2026151009:o00>59.o01>5",
+   "relocation_key": "g4c_lf_p4/p13_2026151009/o00>59.o01>5/seed20261021/reloc",
+   "root": "p13_2026151009",
+   "seed": 20261021,
+   "sequence": [
+    [
+     "o00",
+     59
+    ],
+    [
+     "o01",
+     5
+    ]
+   ],
+   "target_key": "g4c_lf_p4/p13_2026151009/o00>59.o01>5/seed20261021/target",
+   "unit": "seq:p13_2026151009:o00>59.o01>5#s20261021"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "query": "seq:p13_2026151009:o00>59.o01>5",
+   "relocation_key": "g4c_lf_p4/p13_2026151009/o00>59.o01>5/seed20261022/reloc",
+   "root": "p13_2026151009",
+   "seed": 20261022,
+   "sequence": [
+    [
+     "o00",
+     59
+    ],
+    [
+     "o01",
+     5
+    ]
+   ],
+   "target_key": "g4c_lf_p4/p13_2026151009/o00>59.o01>5/seed20261022/target",
+   "unit": "seq:p13_2026151009:o00>59.o01>5#s20261022"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "query": "seq:p13_2026151009:o00>59.o01>5",
+   "relocation_key": "g4c_lf_p4/p13_2026151009/o00>59.o01>5/seed20261023/reloc",
+   "root": "p13_2026151009",
+   "seed": 20261023,
+   "sequence": [
+    [
+     "o00",
+     59
+    ],
+    [
+     "o01",
+     5
+    ]
+   ],
+   "target_key": "g4c_lf_p4/p13_2026151009/o00>59.o01>5/seed20261023/target",
+   "unit": "seq:p13_2026151009:o00>59.o01>5#s20261023"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "query": "seq:p13_2026151009:o01>5.o00>59",
+   "relocation_key": "g4c_lf_p4/p13_2026151009/o01>5.o00>59/seed20261021/reloc",
+   "root": "p13_2026151009",
+   "seed": 20261021,
+   "sequence": [
+    [
+     "o01",
+     5
+    ],
+    [
+     "o00",
+     59
+    ]
+   ],
+   "target_key": "g4c_lf_p4/p13_2026151009/o01>5.o00>59/seed20261021/target",
+   "unit": "seq:p13_2026151009:o01>5.o00>59#s20261021"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "query": "seq:p13_2026151009:o01>5.o00>59",
+   "relocation_key": "g4c_lf_p4/p13_2026151009/o01>5.o00>59/seed20261022/reloc",
+   "root": "p13_2026151009",
+   "seed": 20261022,
+   "sequence": [
+    [
+     "o01",
+     5
+    ],
+    [
+     "o00",
+     59
+    ]
+   ],
+   "target_key": "g4c_lf_p4/p13_2026151009/o01>5.o00>59/seed20261022/target",
+   "unit": "seq:p13_2026151009:o01>5.o00>59#s20261022"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "query": "seq:p13_2026151009:o01>5.o00>59",
+   "relocation_key": "g4c_lf_p4/p13_2026151009/o01>5.o00>59/seed20261023/reloc",
+   "root": "p13_2026151009",
+   "seed": 20261023,
+   "sequence": [
+    [
+     "o01",
+     5
+    ],
+    [
+     "o00",
+     59
+    ]
+   ],
+   "target_key": "g4c_lf_p4/p13_2026151009/o01>5.o00>59/seed20261023/target",
+   "unit": "seq:p13_2026151009:o01>5.o00>59#s20261023"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "query": "seq:p13_2026151009:empty",
+   "relocation_key": "g4c_lf_p4/p13_2026151009/empty/seed20261021/reloc",
+   "root": "p13_2026151009",
+   "seed": 20261021,
+   "sequence": [],
+   "target_key": "g4c_lf_p4/p13_2026151009/empty/seed20261021/target",
+   "unit": "seq:p13_2026151009:empty#s20261021"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "query": "seq:p13_2026151009:empty",
+   "relocation_key": "g4c_lf_p4/p13_2026151009/empty/seed20261022/reloc",
+   "root": "p13_2026151009",
+   "seed": 20261022,
+   "sequence": [],
+   "target_key": "g4c_lf_p4/p13_2026151009/empty/seed20261022/target",
+   "unit": "seq:p13_2026151009:empty#s20261022"
+  },
+  {
+   "kind": "ORDERED_TEACHER",
+   "query": "seq:p13_2026151009:empty",
+   "relocation_key": "g4c_lf_p4/p13_2026151009/empty/seed20261023/reloc",
+   "root": "p13_2026151009",
+   "seed": 20261023,
+   "sequence": [],
+   "target_key": "g4c_lf_p4/p13_2026151009/empty/seed20261023/target",
+   "unit": "seq:p13_2026151009:empty#s20261023"
+  },
+  {
+   "edit": {
+    "o00": 59
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:5f65f493876cc90b894863a7d24c92f791ad6df6e0dc715c4456ea226d243577",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151009:o00>59",
+   "relocation_key": "g4c_lf_p4/p13_2026151009/scene/o00>59/seed20261021/reloc",
+   "root": "p13_2026151009",
+   "seed": 20261021,
+   "target_key": "g4c_lf_p4/p13_2026151009/scene/o00>59/seed20261021/target",
+   "unit": "scene:p13_2026151009:o00>59#s20261021"
+  },
+  {
+   "edit": {
+    "o00": 59
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:5f65f493876cc90b894863a7d24c92f791ad6df6e0dc715c4456ea226d243577",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151009:o00>59",
+   "relocation_key": "g4c_lf_p4/p13_2026151009/scene/o00>59/seed20261022/reloc",
+   "root": "p13_2026151009",
+   "seed": 20261022,
+   "target_key": "g4c_lf_p4/p13_2026151009/scene/o00>59/seed20261022/target",
+   "unit": "scene:p13_2026151009:o00>59#s20261022"
+  },
+  {
+   "edit": {
+    "o00": 59
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:5f65f493876cc90b894863a7d24c92f791ad6df6e0dc715c4456ea226d243577",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151009:o00>59",
+   "relocation_key": "g4c_lf_p4/p13_2026151009/scene/o00>59/seed20261023/reloc",
+   "root": "p13_2026151009",
+   "seed": 20261023,
+   "target_key": "g4c_lf_p4/p13_2026151009/scene/o00>59/seed20261023/target",
+   "unit": "scene:p13_2026151009:o00>59#s20261023"
+  },
+  {
+   "edit": {
+    "o01": 5
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:1757ae0652a36d7407b1a1d11e66b522282738943c657d7ab03e66fa3ddb53fc",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151009:o01>5",
+   "relocation_key": "g4c_lf_p4/p13_2026151009/scene/o01>5/seed20261021/reloc",
+   "root": "p13_2026151009",
+   "seed": 20261021,
+   "target_key": "g4c_lf_p4/p13_2026151009/scene/o01>5/seed20261021/target",
+   "unit": "scene:p13_2026151009:o01>5#s20261021"
+  },
+  {
+   "edit": {
+    "o01": 5
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:1757ae0652a36d7407b1a1d11e66b522282738943c657d7ab03e66fa3ddb53fc",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151009:o01>5",
+   "relocation_key": "g4c_lf_p4/p13_2026151009/scene/o01>5/seed20261022/reloc",
+   "root": "p13_2026151009",
+   "seed": 20261022,
+   "target_key": "g4c_lf_p4/p13_2026151009/scene/o01>5/seed20261022/target",
+   "unit": "scene:p13_2026151009:o01>5#s20261022"
+  },
+  {
+   "edit": {
+    "o01": 5
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:1757ae0652a36d7407b1a1d11e66b522282738943c657d7ab03e66fa3ddb53fc",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151009:o01>5",
+   "relocation_key": "g4c_lf_p4/p13_2026151009/scene/o01>5/seed20261023/reloc",
+   "root": "p13_2026151009",
+   "seed": 20261023,
+   "target_key": "g4c_lf_p4/p13_2026151009/scene/o01>5/seed20261023/target",
+   "unit": "scene:p13_2026151009:o01>5#s20261023"
+  },
+  {
+   "edit": {
+    "o00": 59,
+    "o01": 5
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:9d539b9276d146310abb8b3ba450e958c5ea49064e9d0e90bd24b7594dbf98d0",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151009:o00>59.o01>5",
+   "relocation_key": "g4c_lf_p4/p13_2026151009/scene/o00>59.o01>5/seed20261021/reloc",
+   "root": "p13_2026151009",
+   "seed": 20261021,
+   "target_key": "g4c_lf_p4/p13_2026151009/scene/o00>59.o01>5/seed20261021/target",
+   "unit": "scene:p13_2026151009:o00>59.o01>5#s20261021"
+  },
+  {
+   "edit": {
+    "o00": 59,
+    "o01": 5
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:9d539b9276d146310abb8b3ba450e958c5ea49064e9d0e90bd24b7594dbf98d0",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151009:o00>59.o01>5",
+   "relocation_key": "g4c_lf_p4/p13_2026151009/scene/o00>59.o01>5/seed20261022/reloc",
+   "root": "p13_2026151009",
+   "seed": 20261022,
+   "target_key": "g4c_lf_p4/p13_2026151009/scene/o00>59.o01>5/seed20261022/target",
+   "unit": "scene:p13_2026151009:o00>59.o01>5#s20261022"
+  },
+  {
+   "edit": {
+    "o00": 59,
+    "o01": 5
+   },
+   "eligible": true,
+   "intervened_scene_hash": "sha256:9d539b9276d146310abb8b3ba450e958c5ea49064e9d0e90bd24b7594dbf98d0",
+   "kind": "SCENE_TARGET_ONLY",
+   "query": "scene:p13_2026151009:o00>59.o01>5",
+   "relocation_key": "g4c_lf_p4/p13_2026151009/scene/o00>59.o01>5/seed20261023/reloc",
+   "root": "p13_2026151009",
+   "seed": 20261023,
+   "target_key": "g4c_lf_p4/p13_2026151009/scene/o00>59.o01>5/seed20261023/target",
+   "unit": "scene:p13_2026151009:o00>59.o01>5#s20261023"
+  }
+ ],
+ "version": "P10B_FAMILIES_V1_1"
+}
