@@ -1,0 +1,362 @@
+{
+ "D": {
+  "D": {
+   "gated_all": {
+    "exact": 0.8858447488584473,
+    "f1": 0.9025875190258752
+   },
+   "gated_feasible_originals_exact": 0.9506172839506172,
+   "gated_infeasible_f1": 0.8916900093370682
+  },
+  "D-pairless": {
+   "gated_all": {
+    "exact": 0.867579908675799,
+    "f1": 0.8812785388127853
+   },
+   "gated_feasible_originals_exact": 0.8888888888888888,
+   "gated_infeasible_f1": 0.8795518207282914
+  },
+  "conditional_truth_known_infeasible_P13": {
+   "A": {
+    "exact": 0.7983193277310925,
+    "f1": 0.8323062558356676,
+    "jaccard": 0.8239962651727356,
+    "precision": 0.8674136321195144,
+    "recall": 0.8529411764705883
+   },
+   "D": {
+    "exact": 0.8711484593837534,
+    "f1": 0.8916900093370682,
+    "jaccard": 0.8865546218487395,
+    "precision": 0.9341736694677871,
+    "recall": 0.9523809523809524
+   },
+   "D-pairless": {
+    "exact": 0.8627450980392156,
+    "f1": 0.8795518207282914,
+    "jaccard": 0.8753501400560223,
+    "precision": 0.907563025210084,
+    "recall": 0.9677871148459383
+   },
+   "K-B": {
+    "exact": 0.8431372549019608,
+    "f1": 0.8655462184873949,
+    "jaccard": 0.8599439775910364,
+    "precision": 0.880952380952381,
+    "recall": 0.9145658263305322
+   },
+   "K-C": {
+    "exact": 0.8487394957983193,
+    "f1": 0.8636788048552755,
+    "jaccard": 0.8599439775910364,
+    "precision": 0.8851540616246497,
+    "recall": 0.896358543417367
+   },
+   "SF": {
+    "exact": 0.8207282913165268,
+    "f1": 0.8442577030812326,
+    "jaccard": 0.838935574229692,
+    "precision": 0.8641456582633054,
+    "recall": 0.8655462184873951
+   },
+   "geometry_heuristic": {
+    "exact": 0.6890756302521008,
+    "f1": 0.8235294117647058,
+    "jaccard": 0.7899159663865546,
+    "precision": 0.8697478991596639,
+    "recall": 0.9201680672268907
+   }
+  },
+  "feasible_originals": 27,
+  "geometry_heuristic": {
+   "gated_all": {
+    "exact": 0.6095890410958904,
+    "f1": 0.7191780821917808
+   },
+   "gated_feasible_originals_exact": 0.25925925925925924
+  },
+  "note": "empty-vs-empty counts as F1 1 (p11 _set_metrics convention); union of minimal sets is not universal necessity",
+  "roots": 146
+ },
+ "F3": {
+  "bootstrap_ci95": [
+   -0.06375189556814276,
+   0.014696884489343353
+  ],
+  "mean_delta_nats": -0.022473723886189484,
+  "reading": "root-level sign test favours removing F3 (more roots better without it); the mean-effect CI crosses 0 and the magnitude (|0.022| nats) is below the 0.05 practical threshold: mean harm is NOT established; no demonstrated benefit",
+  "sign_test": {
+   "B-F3pm_better_roots": 40,
+   "B_better_roots": 22,
+   "p_holm": 0.030015864349067285,
+   "p_raw": 0.030015864349067285
+  }
+ },
+ "F4": {
+  "admission": {
+   "all": {
+    "B-F4": 0.6046511627906976,
+    "K-B": 0.834625322997416
+   },
+   "blind": {
+    "B-F4": 0.6090534979423868,
+    "K-B": 0.8930041152263375
+   },
+   "natural": {
+    "B-F4": 0.5972222222222222,
+    "K-B": 0.7361111111111112
+   }
+  },
+  "root_success": {
+   "all": {
+    "B-F4": 0.524547803617571,
+    "K-B": 0.7338501291989663
+   },
+   "blind": {
+    "B-F4": 0.5679012345679012,
+    "K-B": 0.8353909465020577
+   },
+   "natural": {
+    "B-F4": 0.4513888888888889,
+    "K-B": 0.5625
+   }
+  },
+  "success_given_attempt": {
+   "all": {
+    "B-F4": 0.8675213675213675,
+    "K-B": 0.8792569659442725
+   },
+   "blind": {
+    "B-F4": 0.9324324324324325,
+    "K-B": 0.9354838709677419
+   },
+   "natural": {
+    "B-F4": 0.7558139534883721,
+    "K-B": 0.7641509433962265
+   }
+  }
+ },
+ "F5": {
+  "challenge": 0.17457345314479625,
+  "generic_only_tested": false,
+  "natural": -1.139713882135876,
+  "renamed": "COMBINED generic pairwise + higher-order block (B-F5spm removes cpl AND ho_*)"
+ },
+ "J_regret": {
+  "comparable_selected": {
+   "coverage_choices": {
+    "abstain": 184,
+    "both_verified": 23,
+    "different_choice_not_both_verified": 6,
+    "same_choice": 294
+   },
+   "unit": "teacher first-witness travel (J_first)",
+   "witnessed_travel_noJ_minus_J": {
+    "a_larger": 5,
+    "b_larger": 7,
+    "ci95": [
+     -0.0836475789232575,
+     0.4575662111396356
+    ],
+    "mean_a_minus_b": 0.14259761333520063,
+    "roots": 12,
+    "sign_p": 0.7744140625,
+    "ties": 0
+   }
+  },
+  "historical": {
+   "K-B|J": 0.20977441629713026,
+   "K-B|noJ": 0.300469879602984,
+   "K-B|shuffledJ": 0.23554568650092175
+  },
+  "status": "ORACLE-FILTERED DIAGNOSTIC (alternatives restricted to teacher-VERIFIED candidates before choosing by J); not deployed travel regret"
+ },
+ "J_sign": {
+  "J_better_roots": 3,
+  "corrected_J_minus_noJ": 0.018518518518518517,
+  "corrected_ci95": [
+   -0.0,
+   0.04131054131054131
+  ],
+  "endpoint": "TEACHER-LABELLED CHOICE CORRECTNESS (chosen query VERIFIED), not physically executed success",
+  "meaning_of_stored_value": "noJ - J (computed on negated success); the field name says J - noJ",
+  "noJ_better_roots": 0,
+  "rates": {
+   "J": 0.8361823361823362,
+   "noJ": 0.8176638176638177
+  },
+  "sign_p": 0.25,
+  "stored_field": "B_success_J_minus_noJ",
+  "stored_mean_delta": -0.018518518518518517
+ },
+ "compute_P13_training": {
+  "best_estimate": 33221.9,
+  "child_process_time_completed_runs": 24705.1,
+  "raw_guard_sum": 440364.4,
+  "status": "BOUNDED ESTIMATE, not an exact measurement (thread-parent RUSAGE bug); raw readings preserved in runs/p13/guards",
+  "terminated_runs_wall_upper_bound": 8516.8,
+  "upper_bound_min_guard_wall": 33623.8
+ },
+ "execution": {
+  "admission": {
+   "all": {
+    "A": 0.6201550387596899,
+    "B-F2": 0.34108527131782945,
+    "B-F3pm": 0.834625322997416,
+    "B-F4": 0.6046511627906976,
+    "B-F5spm": 0.5400516795865633,
+    "G+M": 1.0,
+    "K-B": 0.834625322997416,
+    "K-C": 0.6718346253229974,
+    "SF": 0.3462532299741602,
+    "geometry": 1.0
+   },
+   "blind": {
+    "A": 0.6872427983539094,
+    "B-F2": 0.30864197530864196,
+    "B-F3pm": 0.8600823045267489,
+    "B-F4": 0.6090534979423868,
+    "B-F5spm": 0.5020576131687243,
+    "G+M": 1.0,
+    "K-B": 0.8930041152263375,
+    "K-C": 0.6872427983539094,
+    "SF": 0.3497942386831276,
+    "geometry": 1.0
+   },
+   "natural": {
+    "A": 0.5069444444444444,
+    "B-F2": 0.3958333333333333,
+    "B-F3pm": 0.7916666666666666,
+    "B-F4": 0.5972222222222222,
+    "B-F5spm": 0.6041666666666666,
+    "G+M": 1.0,
+    "K-B": 0.7361111111111112,
+    "K-C": 0.6458333333333334,
+    "SF": 0.3402777777777778,
+    "geometry": 1.0
+   }
+  },
+  "continuation_removed": [
+   "gm5c7723020c__p13_2026190009",
+   "cd17e0e8f89cf__p13_2026180027",
+   "c5f43be9983d1__p13_2026180027",
+   "gm5a3628f3ed__p13_2026180027",
+   "c55a5cc461c0f__p13_2026190041",
+   "cfae7cf2d1811__p13_2026190041",
+   "gm782bcb40e0__p13_2026190041"
+  ],
+  "episodes": 428,
+  "histogram_final_ledgers": {
+   "NO_REPAIR_WITNESS_WITHIN_BUDGET": 52,
+   "SUCCESS": 301,
+   "TARGET_CERTIFIED_INFEASIBLE": 28,
+   "TARGET_UNRESOLVED": 13,
+   "UNRESOLVED_CENSORED": 34
+  },
+  "jobs": 428,
+  "max_abs_difference_vs_reported": 1.1102230246251565e-16,
+  "narrative_histogram_0064": {
+   "NOT_RUN_BUDGET": 7,
+   "NO_REPAIR_WITNESS_WITHIN_BUDGET": 51,
+   "SUCCESS": 295
+  },
+  "reconciliation": "0064's histogram was printed at 21:27 UTC before the worker-2 continuation (guard 21:28 UTC) ran the 7 never-attempted jobs (6 SUCCESS, 1 NO_REPAIR_WITNESS); EXEC_RESULTS.json was written at 21:36 UTC from the final ledgers, so per-arm success already used all 428 episodes; only the narrative histogram was stale",
+  "reported_success": {
+   "A": 0.5581395348837209,
+   "B-F2": 0.3126614987080103,
+   "B-F3pm": 0.7080103359173125,
+   "B-F4": 0.524547803617571,
+   "B-F5spm": 0.48320413436692505,
+   "G+M": 0.7829457364341085,
+   "K-B": 0.7338501291989663,
+   "K-C": 0.5788113695090439,
+   "SF": 0.3178294573643411,
+   "geometry": 0.6124031007751938
+  },
+  "roots": 129,
+  "success": {
+   "all": {
+    "A": 0.5581395348837209,
+    "B-F2": 0.3126614987080103,
+    "B-F3pm": 0.7080103359173127,
+    "B-F4": 0.524547803617571,
+    "B-F5spm": 0.48320413436692505,
+    "G+M": 0.7829457364341085,
+    "K-B": 0.7338501291989663,
+    "K-C": 0.578811369509044,
+    "SF": 0.3178294573643411,
+    "geometry": 0.6124031007751938
+   },
+   "blind": {
+    "A": 0.6378600823045268,
+    "B-F2": 0.2962962962962963,
+    "B-F3pm": 0.757201646090535,
+    "B-F4": 0.5679012345679012,
+    "B-F5spm": 0.4732510288065843,
+    "G+M": 0.8641975308641975,
+    "K-B": 0.8353909465020577,
+    "K-C": 0.6213991769547325,
+    "SF": 0.3333333333333333,
+    "geometry": 0.6049382716049383
+   },
+   "natural": {
+    "A": 0.423611111111111,
+    "B-F2": 0.34027777777777773,
+    "B-F3pm": 0.625,
+    "B-F4": 0.4513888888888889,
+    "B-F5spm": 0.5,
+    "G+M": 0.6458333333333334,
+    "K-B": 0.5625,
+    "K-C": 0.5069444444444444,
+    "SF": 0.29166666666666663,
+    "geometry": 0.625
+   }
+  },
+  "success_given_attempt": {
+   "all": {
+    "A": 0.9,
+    "B-F2": 0.9166666666666666,
+    "B-F3pm": 0.848297213622291,
+    "B-F4": 0.8675213675213675,
+    "B-F5spm": 0.8947368421052632,
+    "G+M": 0.7829457364341085,
+    "K-B": 0.8792569659442725,
+    "K-C": 0.8615384615384616,
+    "SF": 0.917910447761194,
+    "geometry": 0.6124031007751938
+   },
+   "blind": {
+    "A": 0.9281437125748503,
+    "B-F2": 0.96,
+    "B-F3pm": 0.8803827751196173,
+    "B-F4": 0.9324324324324325,
+    "B-F5spm": 0.9426229508196722,
+    "G+M": 0.8641975308641975,
+    "K-B": 0.9354838709677419,
+    "K-C": 0.9041916167664671,
+    "SF": 0.9529411764705882,
+    "geometry": 0.6049382716049383
+   },
+   "natural": {
+    "A": 0.8356164383561644,
+    "B-F2": 0.8596491228070176,
+    "B-F3pm": 0.7894736842105263,
+    "B-F4": 0.7558139534883721,
+    "B-F5spm": 0.8275862068965517,
+    "G+M": 0.6458333333333334,
+    "K-B": 0.7641509433962265,
+    "K-C": 0.7849462365591398,
+    "SF": 0.8571428571428571,
+    "geometry": 0.625
+   }
+  }
+ },
+ "historical_hashes": {
+  "runs/p13/PREREG.json": "sha256:fd9679cc9dd8d671c2480f893c0ec83e7520e09d3c049f1e53d77ad0e2ec1271",
+  "runs/p13/holdout/PREDICTIONS_FROZEN.json": "sha256:8d9354ea3d803c6443a9e71f0915d5ec20073d728de1d36d86379e29572b697c",
+  "runs/p13/p13_4/F1_J.json": "sha256:06ab7c85c8c89e141026424acf82bf2102b1a12e424fb43e5cc2c47558f4374e",
+  "runs/p13/p13_4/TARGETED.json": "sha256:3e69b932b91ef91437de769b8a14151d0b468f8e3bb874593821c1b7513a64d0",
+  "runs/p13/p13_5/EXEC_RESULTS.json": "sha256:cd8a029c9dafa11465ba653cb786242f4e984c010149aac3491baf9573a3e217",
+  "runs/p13/p13_6/D13.json": "sha256:4583005b8ceff9257bb1885b40829a6f39be9355e79b3198a2ba45a0b3e3005a"
+ }
+}
