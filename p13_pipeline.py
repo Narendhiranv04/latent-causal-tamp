@@ -163,7 +163,10 @@ def records(dirs, split, out_name) -> None:
         plan = rd(Path(d) / "plan.json")
         lab = {} if split == "blind" else pc._labels({q: x for q, x in _sealed(d).items()})
         dl = None if split == "blind" else pd.d_labels(plan, {q: x for q, x in _sealed(d).items()})
+        drop = set(sum((v for k_, v in rd(OUT / "DEDUP.json").items() if k_ != "rule"), []))
         for k, r in plan["roots"].items():
+            if k in drop:
+                continue
             ed = [it for it in r["items"] if it["kind"] == "SCENE_TARGET_ONLY" and it.get("d_subset")]
             sq = [it for it in r["items"] if it["kind"] == "ORDERED_TEACHER"]
             rec, _ = pc._record(cfg, dino, k, r, lab, r["split"], "P13", ed, sq)
