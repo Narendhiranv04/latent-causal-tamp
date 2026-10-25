@@ -1,0 +1,32 @@
+{
+ "decomposition_max_abs_error": 1.4e-14,
+ "design": {
+  "F1": "static-validity prediction only unless veto/tie opportunities exist",
+  "F3_F5_primary": "joint four-bit log-loss under P_S + kappa MAE + kappa0 false-interaction",
+  "capacity_controls": "parameter-matched off arms",
+  "catalogue": "all parking subsets scored"
+ },
+ "engineering": "PASS",
+ "findings": {
+  "F1_deployment_path_reached": 0,
+  "J_changes_B_choice": {
+   "p10b_blind": 18,
+   "p12_holdout": 86
+  },
+  "analytic_veto_fires": 0,
+  "kappa_is_marginal_function": true,
+  "keyed_differs_p10b_blind": 18,
+  "keyed_differs_p12": 0
+ },
+ "spend": {
+  "analysis": 0,
+  "audit": 122.2,
+  "dev": 0,
+  "execution": 0,
+  "p12_continuation": 0,
+  "teacher": 0,
+  "training": 0
+ },
+ "stage": "P13-1",
+ "tests": "13/13 tests/test_p13.py"
+}
