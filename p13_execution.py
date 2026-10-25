@@ -225,3 +225,115 @@ def exec_eval() -> dict:
            "outcomes_and_failure_attribution": {a: {t: len(v) for t, v in d.items()} for a, d in why.items()}}
     cf.write_json(EXE / "EXEC_RESULTS.json", out)
     return out
+
+
+# ------------------------------------------------------------------ P13 figures (recorded data only; hypothetical edits labelled as such)
+DST = Path("visualizations/p13")
+
+
+def figures() -> None:
+    import effects as ef
+    import geometry as ge
+    import g4d_run as gr
+    import p6_viz as pv
+    import p13_factors as f13
+    from scene import scene_from_dict
+    from viz import COLORS, plt
+    DST.mkdir(parents=True, exist_ok=True)
+    cfg = cf.load_config("config.toml")
+    robot = ge.make_robot(cfg)
+    snap, P, y, st, cost = f13._p13_blind()
+    tg, ex, dd = rd(OUT / "p13_4" / "TARGETED.json"), rd(EXE / "EXEC_RESULTS.json"), rd(OUT / "p13_6" / "D13.json")
+    tag = lambda s: {"VERIFIED_FEASIBLE": "VERIFIED (recorded witness)", "CERTIFIED_INFEASIBLE": "CERTIFIED (sound certificate)"}.get(s, s or "UNLABELLED")  # noqa: E731
+    fams = ["PC_SERIAL", "PC_SG", "PR_SIDES", "PN_SIMP", "PN_GIMP", "ORD_CHAIN", "OMIT_OPT", "NAT"]
+    f, ax = plt.subplots(len(fams), 5, figsize=(24, 4.6 * len(fams)), squeeze=False)
+    for i, fam in enumerate(fams):
+        k = sorted(x for x in P if P[x]["family"] == fam)[0]
+        r, s = P[k], scene_from_dict(P[k]["scene"])
+        items = [it for it in r["items"] if it["token"] in ("", "edit:A", "edit:B", "edit:A+B")] + \
+                [it for it in r["items"] if it["kind"] == "ORDERED_TEACHER" and it["sequence"]][:1]
+        for j, it in enumerate(items[:5]):
+            a = ax[i, j]
+            se = ef.pose_substitution(robot, cfg, s, {"target_id": "t0"}, it["edit"])["scene"] if it["kind"] == "SCENE_TARGET_ONLY" else s
+            pv._panel(a, cfg, robot, se, r["goal_cell"], f"{fam} {k[-3:]}: {it['token'] or 'original task'}")
+            pv._tag(a, tag(st.get(it["query"])), pv.COL.get(st.get(it["query"]), "#999"), size=6)
+            if it["kind"] == "SCENE_TARGET_ONLY":
+                pv._tag(a, "HYPOTHETICAL FIXED-q0 SCENE EDIT - NOT A ROBOT RELOCATION", "#34495e", loc=(0.02, 0.93), size=6)
+            elif it["sequence"]:
+                pv._tag(a, "ORDERED RELOCATION QUERY (teacher label; start shown)", "#34495e", loc=(0.02, 0.93), size=6)
+    pv.png(f, DST / "P13_mechanism_cards.png", "P13 blind roots: one card per family with teacher-adjudicated original / edits / a repair")
+    k = sorted(x for x in P if P[x]["family"] == "TRI_SERIAL")[0]
+    r, s = P[k], scene_from_dict(P[k]["scene"])
+    lat = [it for it in r["items"] if it.get("d_subset") is not None and it["kind"] == "SCENE_TARGET_ONLY"]
+    f, ax = plt.subplots(2, 4, figsize=(20, 10))
+    for a, it in zip(ax.flat, [next(it for it in r["items"] if it["token"] == "")] + sorted(lat, key=lambda x: (len(x["d_subset"]), x["d_subset"]))):
+        se = ef.pose_substitution(robot, cfg, s, {"target_id": "t0"}, it["edit"])["scene"] if it["kind"] == "SCENE_TARGET_ONLY" else s
+        pv._panel(a, cfg, robot, se, r["goal_cell"], f"remove {'+'.join(it['d_subset']) or 'nothing'}")
+        pv._tag(a, tag(st.get(it["query"])), pv.COL.get(st.get(it["query"]), "#999"), size=7)
+    pv.png(f, DST / "P13_triple_lattice.png", f"P13 TRI_SERIAL {k}: all 8 hypothetical removal subsets (Delta_ABC from teacher labels)")
+    rows = [(n, v) for n, v in tg["primary"].items()] + [(n, v["challenge"]) for n, v in tg["secondary"].items() if v["challenge"]["roots"] > 1]
+    f, ax = plt.subplots(figsize=(10, 0.38 * len(rows) + 1.5))
+    for i, (n, v) in enumerate(rows):
+        lo, hi = v["ci95"]
+        ax.errorbar(v["mean_delta"], i, xerr=[[v["mean_delta"] - lo], [hi - v["mean_delta"]]], fmt="o", capsize=3, color="#2a6fdb" if n.startswith("H_") else "#777")
+        ax.text(hi, i, f"  n={v['roots']} p={v['p_raw']:.2g}" + (f" Holm={v['p_holm']:.2g}" if "p_holm" in v else ""), va="center", fontsize=7)
+    ax.axvline(0, color="#bbb")
+    ax.set(yticks=range(len(rows)), yticklabels=[n for n, _ in rows], xlabel="paired delta per root (> 0: full keyed B better)",
+           title="P13 blind challenge: preregistered primaries (blue, Holm over 4) and secondary contrasts (root bootstrap 95 % CI)")
+    pv.png(f, DST / "P13_factor_on_off.png", "P13 factor-on vs factor-off (matched retraining), prospective blind challenge")
+    arms = ["K-B", "K-C", "A", "SF", "B-F3pm", "B-F5spm", "B-F2", "B-F4", "B-V0", "B-U", "ZERO"]
+    f, ax = plt.subplots(figsize=(10, 4.5))
+    for i, c in enumerate(("-1", "0", "1")):
+        m = tg["means_by_kappa"].get(c, {})
+        ax.bar([x + 0.27 * i for x in range(len(arms))], [m.get(a, np.nan) for a in arms], 0.25, label=f"true kappa = {c}")
+    ax.set(xticks=[x + 0.27 for x in range(len(arms))], xticklabels=arms, ylabel="mean |kappa_hat - kappa| (seed-mean marginals)", title="P13 blind challenge: kappa error by true class")
+    ax.legend(fontsize=8)
+    pv.png(f, DST / "P13_kappa_by_class.png", "P13 kappa error by true interaction class (constant-zero control = ZERO)")
+    ea = [a for a in ("K-B", "K-C", "A", "SF", "B-F2", "B-F3pm", "B-F4", "B-F5spm", "geometry", "G+M") if a in ex["success"]]
+    f, ax = plt.subplots(1, 2, figsize=(18, 5))
+    ax[0].bar(range(len(ea)), [ex["success"][a] for a in ea], color=["#2a6fdb"] + ["#999"] * (len(ea) - 2) + ["#c0392b"])
+    ax[0].patches[-1].set_hatch("//")
+    for i, a in enumerate(ea):
+        ax[0].text(i, ex["success"][a] + 0.01, f"{ex['success'][a]:.2f}", ha="center", fontsize=8)
+    ax[0].set(xticks=range(len(ea)), xticklabels=ea, ylim=(0, 1), title=f"strict TOP1 success ({ex['coverage']['roots_fully_executed']} fully executed roots; G+M hatched = planner-assisted)")
+    ax[1].scatter([ex["cpu_per_root"][a] for a in ea], [ex["success"][a] for a in ea])
+    for a in ea:
+        ax[1].annotate(a, (ex["cpu_per_root"][a], ex["success"][a]), fontsize=8)
+    ax[1].set(xlabel="execution CPU-s per root (incl. abstain = 0)", ylabel="success", title="cost vs success")
+    pv.png(f, DST / "P13_executed_TOP1.png", "P13 executed strict TOP1 and cost / coverage")
+    f, ax = plt.subplots(figsize=(10, 4.5))
+    sets = [s for s in ("proof_grounded", "operational") if dd["all"][s]["N"]]
+    da = ("D", "D-pairless", "geometry_heuristic", "K-B", "K-C", "A", "SF")
+    for i, a in enumerate(da):
+        ax.bar([x + 0.12 * i for x in range(len(sets))], [dd["all"][s]["arms"][a]["f1"] for s in sets], 0.11, label=a)
+    ax.set(xticks=[x + 0.36 for x in range(len(sets))], xticklabels=[f"{s} N={dd['all'][s]['N']}" for s in sets], ylim=(0, 1), ylabel="per-root blocker F1 (no clearing set = miss)",
+           title="P13 blind: blocker union on exact lattices (infeasible originals)")
+    ax.legend(fontsize=7, ncol=2)
+    pv.png(f, DST / "P13_D_blockers.png", "P13 D vs D-pairless vs geometry vs matched A / B / C / SF (identical lattices)")
+    man = rd(EXE / "EXEC_JOBS.json")
+    for w in sorted((EXE / "episodes").glob("w*")):
+        led = rd(w / "ledger.json")["episodes"]
+        for j in man["jobs"]:
+            e, d = led.get(f"{j['arm']}__{j['root']}"), w / f"{j['arm']}__{j['root']}"
+            if e and e.get("outcome") == "SUCCESS" and j["choice"] != "GM" and len(j["ranked"][0]) >= 2 and (d / "relocation.npz").exists():
+                s, seq, frames = scene_from_dict(P[j["root"]]["scene"]), [tuple(a) for a in j["ranked"][0]], []
+                for qq, g, pos, mv in pv.trace_frames(robot, s, seq, gr._arrays(d / "relocation.npz"), gr._arrays(d / "target_witness.npz"), n_move=10, n_target=12):
+                    fg, a = plt.subplots(figsize=(5, 5))
+                    pv._panel(a, cfg, robot, s, P[j["root"]]["goal_cell"], f"{P[j['root']]['family']} {j['root'][-3:]}: TOP1 '{j['choice'].split(':', 2)[2]}'\nRECORDED episode",
+                              q=qq, gap=g, pos=pos, held=mv)
+                    pv._tag(a, "TOP1_COMMIT SUCCESS - recorded trajectory", COLORS["valid"])
+                    frames.append(pv._rgb(fg))
+                pv.gif(DST / "P13_executed_success.gif", frames, "P13 blind: one recorded multi-move strict-TOP1 success")
+                return
+
+
+def exec_continue(w, extra) -> None:
+    """Worker w hit its cap: its NOT_RUN_BUDGET placeholders (never attempted) are logged and removed, then the same frozen order resumes
+    with `extra` CPU-s (coverage stays outcome-blind: only the tail of the frozen order is affected)."""
+    lp = EXE / "episodes" / f"w{w}" / "ledger.json"
+    led = rd(lp)
+    rm = [k for k, v in led["episodes"].items() if v.get("outcome") == "NOT_RUN_BUDGET"]
+    led["episodes"] = {k: v for k, v in led["episodes"].items() if k not in rm}
+    lp.write_text(__import__("json").dumps(led, indent=1, default=float))
+    cf.write_json(EXE / f"continuation_w{w}_removed.json", {"removed": rm})
+    exec_worker(w, led["cpu_s"] + extra)
