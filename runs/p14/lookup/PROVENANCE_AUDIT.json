@@ -1,0 +1,39 @@
+{
+ "distinct_absolute_src_dst_keys": 291,
+ "fields_present": {
+  "attached": 6032,
+  "gap": 6032,
+  "held_local": 6032,
+  "phase": 6032,
+  "place_xy": 6032,
+  "q": 6032
+ },
+ "independent_roots_per_key": {
+  "keys_with_ge2_roots": 184,
+  "keys_with_ge5_roots": 99,
+  "median": 2.0
+ },
+ "missing": "no Cartesian timestamps or velocities (not needed: geometric sweep only); no per-waypoint scene snapshot (reconstructed from root scene + executed prefix); P10a / historical G-stage witnesses without job provenance are excluded",
+ "phase_schedules": {
+  "pregrasp->approach->close_attach->carry->release->retreat": 6032
+ },
+ "reconstructable_sweep": "yes: q (joint waypoints), gap, phase, attached and held_local give every robot body, the gripper and the carried disc at any interpolated configuration (geometry.bodies); joint-linear segments are what the certifier checks",
+ "records": 6032,
+ "records_by_source_split": {
+  "episode|blind": 1089,
+  "teacher|blind": 3159,
+  "teacher|dev": 393,
+  "teacher|train": 1039,
+  "teacher|validation": 352
+ },
+ "records_per_key": {
+  "max": 155,
+  "median": 10.0
+ },
+ "trace_fidelity_sample": {
+  "n": 150,
+  "replay_in_own_scene": {
+   "ALL_CLEAR": 150
+  }
+ }
+}
