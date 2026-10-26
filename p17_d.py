@@ -207,6 +207,18 @@ class Guide:
 
 
 # ------------------------------------------------------------------ probes, per-family calibration, Dp17 training
+def probes_from_inter(inter, split) -> list:
+    out = []
+    for k, v in inter.items():
+        for L in v.get("lattices", []):
+            st = L["statuses"].get("-")
+            y = 1 if st == db.V else 0 if st == db.C else None
+            if y is not None:
+                out.append({"split": split, "root": k, "target": L["target"], "dest": L["dest"], "others": L["others"], "y": y, "type": L["type"],
+                            "mask": L["mask"], "cells": v["state"]["cells"], "q": v["state"]["q"], "state": "intermediate"})
+    return out
+
+
 def probes_from_labels(labs, plan_roots, split) -> list:
     """Temporary-target probes: (root, state = original, target o, destination parking[o], no other edit) -> y (1 VERIFIED / 0 CERTIFIED)."""
     out = []
@@ -228,8 +240,8 @@ def score_probes(kind, probes, plan_by_split) -> list:
     out = []
     for p in probes:
         s0 = scene_from_dict(plan_by_split[p["split"]]["roots"][p["root"]]["scene"])
-        cells = {o.id: o.cell for o in s0.objects}
-        r = raw_temp_p(ms, s0, cfg, cells, s0.robot.q_rad, p["target"], p["dest"], p["others"])
+        cells = p.get("cells") or {o.id: o.cell for o in s0.objects}
+        r = raw_temp_p(ms, s0, cfg, cells, p.get("q") or s0.robot.q_rad, p["target"], p["dest"], p["others"])
         pf = min(max(r["p_feasible"], 1e-9), 1 - 1e-9)
         out.append({**p, "kind": kind, "logit_raw": float(np.log(pf / (1 - pf))), "marg": r["marg"], "pool": r["pool"]})
     return out

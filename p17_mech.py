@@ -219,7 +219,7 @@ def screen2(seed0, n, want, n_max=4, gen="reach") -> dict:
     for i in range(n):
         c0 = time.process_time()
         rng = np.random.default_rng([seed0, i])
-        spec = reach_spec(rng) if gen == "reach" else corridor_spec(rng) if gen == "corridor" else random_spec(rng)
+        spec = {"reach": reach_spec, "corridor": corridor_spec, "corridor2": corridor2_spec}.get(gen, random_spec)(rng)
         stats["attempts"] += 1
         if spec is None:
             stats["no_layout"] += 1
@@ -237,6 +237,9 @@ def screen2(seed0, n, want, n_max=4, gen="reach") -> dict:
         stats["cpu_s"] += time.process_time() - c0
         stats.setdefault("min_len_no_repeat", {})
         stats["min_len_no_repeat"][str(a)] = stats["min_len_no_repeat"].get(str(a), 0) + 1
+        stats.setdefault("scenes", []).append([seed0, i, a, b])
+        if not ok and a is not None and a >= 3:                      # long-repair (M8) candidate kept whatever the screen's target
+            keep.append({"seed": [seed0, i], "root": root, "pose": {str(k): v for k, v in pr.items()}, "tag": f"long{a}"})
         if not ok:
             stats["rejected"] += 1
             continue
@@ -383,3 +386,33 @@ def evidence(root, key, positive, counterfactuals, tag, out_dir="runs/p17/mechan
         rec["figures"] = vz.mechanism(ph, root, pos["plan"], tag, rec)
     cf.write_json(out / f"{tag}.json", rec)
     return rec
+
+
+def corridor2_spec(rng):
+    """Two-wall shelf corridor (as P13 ORD_CHAIN, generalised): interior row r (1..6), target at column 7, a chain of 2-4 movers at
+    columns 6..3, fixed walls on rows r - 1 and r + 1 over the chain and the target; 0-1 extra movers; scarce free buffers (the rest of
+    the valid region partly filled with fixed structures). Geometry only."""
+    import config as cf
+    import geometry as ge
+    import p6_scenes as p6
+    cfg = cf.load_config("config.toml")
+    scr = p6.Screens(cfg, ge.make_robot(cfg))
+    r = int(rng.integers(1, 7))
+    k = int(rng.integers(2, 5))
+    cell = lambda rr, c: 8 * rr + c  # noqa: E731
+    T = cell(r, 7)
+    chain = [cell(r, 7 - i) for i in range(1, k + 1)]
+    walls = [cell(rr, c) for rr in (r - 1, r + 1) for c in range(7 - k, 8)]
+    used = set(chain + walls + [T])
+    outside = [c for c in sorted(scr.valid) if c not in used]
+    rng.shuffle(outside)
+    goal = next((c for c in outside if all(p6._cheb(c, x) >= 2 for x in chain + [T])), None)
+    if goal is None:
+        return None
+    rest = [c for c in outside if c != goal and p6._cheb(c, goal) >= 2]
+    n_free = int(rng.integers(1, 6))
+    free, extra = rest[:n_free], rest[n_free:n_free + int(rng.integers(0, 2))]
+    fill = rest[n_free + len(extra):]
+    fill = fill[:int(len(fill) * float(rng.uniform(0.0, 1.0)))]
+    return {"T": T, "goal": goal, "movers": chain + extra, "fixed": walls + fill, "stratum": str(rng.choice(["S0", "S1", "S2", "S3"])),
+            "gen": "corridor2", "free_buffers": free}

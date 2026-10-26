@@ -194,10 +194,26 @@ def greedy_vs_existential(items, part) -> None:
 
 
 def mech_screen(seed0, n, want, gen, part) -> None:
+    """Checkpointed per scene (resumable): each scene's outcome is appended before the next one starts."""
     import p17_mech as m
-    r = m.screen2(seed0, n, want, 4, gen)
-    (OUT / "mechanisms" / "screen").mkdir(parents=True, exist_ok=True)
-    cf.write_json(OUT / "mechanisms" / "screen" / f"{want}_{gen}_{part}.json", r)
+    f = OUT / "mechanisms" / "screen" / f"{want}_{gen}_{part}.json"
+    f.parent.mkdir(parents=True, exist_ok=True)
+    acc = rd(f) if f.exists() else {"stats": {}, "kept": [], "done": 0}
+    for i in range(acc["done"], n):
+        r = m.screen2(seed0 * 1000 + i, 1, want, 4, gen)
+        for k, v in r["stats"].items():
+            if isinstance(v, list):
+                acc["stats"].setdefault(k, [])
+                acc["stats"][k] += v
+            elif isinstance(v, dict):
+                acc["stats"].setdefault(k, {})
+                for kk, vv in v.items():
+                    acc["stats"][k][kk] = acc["stats"][k].get(kk, 0) + vv
+            else:
+                acc["stats"][k] = acc["stats"].get(k, 0) + v
+        acc["kept"] += r["kept"]
+        acc["done"] = i + 1
+        cf.write_json(f, acc)
 
 
 def m5_mine(items, part) -> None:
@@ -333,3 +349,158 @@ def label_queue(part, sealed=False) -> None:
         except FileExistsError:
             continue
         label_roots(split, [k], part, sealed=sealed)
+
+
+def det_p17(keys, tag) -> None:
+    """P17 determinism: corrected search (uniform order, repeats <= 2, n <= 4) on the given development roots; outcome + trajectory hash."""
+    import p15_lookup as pl
+    import p16_common as pc
+    import p17_exec as ex
+    idx = pl.index_v2()[0]
+    f = OUT / "shared" / f"DET_P17_{tag}.json"
+    res = rd(f) if f.exists() else {}
+    for split, k in keys:
+        if f"{split}|{k}" in res:
+            continue
+        task = pc.task_from_root(_plan(split)["roots"][k], k)
+        g = ex.d_root(task, idx, ["uniform"], {})["uniform"]
+        res[f"{split}|{k}"] = {x: g[x] for x in ("found", "replay", "traj", "claim", "moves", "travel", "used")} | {"nodes": g["log"]["nodes"],
+                                                                                                                 "hashseed": os.environ.get("PYTHONHASHSEED")}
+        cf.write_json(f, res)
+
+
+TRAIN_SPLITS, VAL_SPLITS = ("train", "dev", "calib", "p17train"), ("val",)
+
+
+def build_training_data() -> None:
+    """runs/p17/b/TRAIN.pt: {train: P13 train (P13 protocol, tagged) + P17-labelled P16 train / dev / calib + p17train,
+    val: P13 validation + P17-labelled P16 val}; runs/p17/d/D_ITEMS.pt: D items (P13: PARKING_LATTICE_V1 masked;
+    P16 / P17 roots: MULTI_DEST_LATTICE_V1)."""
+    import torch
+    import learn_data as ld
+    import p17_b as pb
+    import p17_d as pd
+    os.environ["P10C_OUT"] = "runs/p13/models"
+    p13 = torch.load("runs/p13/models/dataset_trainval.pt", weights_only=False)["roots"]
+    for r in p13:
+        r["audit"]["protocol"] = "P13_TEACHER_CONSTRUCTOR_CATALOGUE"
+    dino = ld.dino()
+    recs, labs_all, counts = {}, {}, {}
+    for s in TRAIN_SPLITS + VAL_SPLITS:
+        labs = merged(s)
+        plan = _plan(s)["roots"]
+        recs[s] = pb.records(plan, labs, "validation" if s in VAL_SPLITS else "train", dino)
+        labs_all[s] = labs
+        counts[f"p17_{s}"] = len(labs)
+    d = {"train": [r for r in p13 if r["audit"]["split"] == "train"] + [r for s in TRAIN_SPLITS for r in recs[s]],
+         "val": [r for r in p13 if r["audit"]["split"] == "validation"] + [r for s in VAL_SPLITS for r in recs[s]],
+         "counts": counts | {"p13_train": sum(r["audit"]["split"] == "train" for r in p13), "p13_val": sum(r["audit"]["split"] == "validation" for r in p13)}}
+    (OUT / "b").mkdir(parents=True, exist_ok=True)
+    torch.save(d, OUT / "b" / "TRAIN.pt")
+    items = {"train": [], "val": [], "protocols": {"P13": "PARKING_LATTICE_V1 (NO_CLEARING masked)", "P16/P17 roots": "MULTI_DEST_LATTICE_V1"}}
+    for part, src in (("train", [r for r in p13 if r["audit"]["split"] == "train"]), ("val", [r for r in p13 if r["audit"]["split"] == "validation"])):
+        for r, rec in zip(pb.prepare(src), src):
+            dd = dict(rec.get("d") or {})
+            if dd.get("y0") is None:
+                y0 = next((c["y"] for c in r["cands"] if not c["seq"]), None)
+                dd = {"y0": y0, "pool": []} if y0 is not None else dd
+            it = pd.item(r["R"], dd)
+            if it:
+                items[part].append(it)
+    for s in TRAIN_SPLITS + VAL_SPLITS:
+        part = "val" if s in VAL_SPLITS else "train"
+        for r in pb.prepare(recs[s]):
+            lab = labs_all[s][r["key"]]
+            pool = lab["catalogue"]["pool"]
+            st = {tuple(x.split("+")) if x != "-" else (): v for x, v in lab["multi_dest"]["statuses"].items()}
+            dlat = pd.lattice_from({S: v for S, v in st.items()}, pool)
+            dlat["pool"] = [r["ids"].index(o) for o in pool]
+            it = pd.item(r["R"], dlat)
+            if it:
+                items[part].append(it)
+    torch.save(items, OUT / "d" / "D_ITEMS.pt") if (OUT / "d").mkdir(parents=True, exist_ok=True) is None else None
+    cf.write_json(OUT / "b" / "TRAIN_COUNTS.json", d["counts"] | {"sha": sha(OUT / "b" / "TRAIN.pt"), "d_items": {k: len(v) for k, v in items.items() if k != "protocols"},
+                                                                  "d_masks": {k: sum(b is not None for *_, b in v) for k, v in items.items() if k != "protocols"}})
+
+
+def rescreen(seed0, idxs, gen, part) -> None:
+    """Deterministic re-run of specific screening scenes (seed = seed0 * 1000 + i) with full per-scene recording."""
+    import p17_mech as m
+    f = OUT / "mechanisms" / "screen" / f"rescreen_{gen}_{part}.json"
+    acc = rd(f) if f.exists() else {"kept": [], "scenes": []}
+    for i in idxs:
+        r = m.screen2(seed0 * 1000 + i, 1, "repeat", 4, gen)
+        acc["kept"] += r["kept"]
+        acc["scenes"] += r["stats"].get("scenes", [])
+        cf.write_json(f, acc)
+
+
+CAL_FIT, CAL_EVAL = ("train", "dev", "val", "p17train"), ("calib", "p17calib")
+
+
+def d_calibrate(kinds=("D", "Dp", "Dp16", "Dp17")) -> dict:
+    """Per-family temporary-target feasibility calibration (fit on training-side roots, evaluated on held-out calibration-side roots);
+    temporary-target blocker-marginal validation on every decided temporary lattice with a defined mask (both sides)."""
+    import p17_d as pd
+    plans = {s: _plan(s) for s in CAL_FIT + CAL_EVAL}
+    probes = {s: pd.probes_from_labels(merged(s), plans[s]["roots"], s) + pd.probes_from_inter(merged(s, "temp_inter"), s) for s in CAL_FIT + CAL_EVAL}
+    out = {}
+    for kind in kinds:
+        if kind == "Dp17" and not (Path("runs/p17/d/ckpt/P17-Dp-l2.0-s0.pt")).exists():
+            continue
+        fit = pd.score_probes(kind, [p for s in CAL_FIT for p in probes[s]], plans)
+        ev = pd.score_probes(kind, [p for s in CAL_EVAL for p in probes[s]], plans)
+        cal = pd.fit_calibration(kind, fit)
+        a, b = cal["slope"], cal["bias"]
+        held = [(1 / (1 + np.exp(-(a * p["logit_raw"] + b))), p["y"]) for p in ev]
+        rec = lambda rows, c: float(np.mean([pp >= 0.5 for pp, y in rows if y == c])) if any(y == c for _, y in rows) else None  # noqa: E731
+        cal["held_out"] = {"n": len(held), "positives": sum(y for _, y in held), "feasible_recall": rec(held, 1), "infeasible_recall": rec(held, 0),
+                           "brier": float(np.mean([(pp - y) ** 2 for pp, y in held])) if held else None}
+        masks = [p for p in fit + ev if p["y"] == 0 and p["type"] == "MINIMAL_SETS" and p["mask"] is not None]
+        tp = sum(int(m >= 0.5) and b_ for p in masks for m, b_ in zip(p["marg"], p["mask"]))
+        fp = sum(int(m >= 0.5) and not b_ for p in masks for m, b_ in zip(p["marg"], p["mask"]))
+        fn = sum((m < 0.5) and b_ for p in masks for m, b_ in zip(p["marg"], p["mask"]))
+        cal["temp_blocker_marginals"] = {"lattices_with_mask": len(masks), "f1": 2 * tp / max(1, 2 * tp + fp + fn), "tp": tp, "fp": fp, "fn": fn}
+        (OUT / "d" / "calibration").mkdir(parents=True, exist_ok=True)
+        cf.write_json(OUT / "d" / "calibration" / f"{kind}.json", cal)
+        out[kind] = cal
+    cf.write_json(OUT / "d" / "CALIBRATION_SUMMARY.json", out | {"probes": {s: len(v) for s, v in probes.items()}})
+    return out
+
+
+def temp_intermediate(split, keys, part) -> None:
+    """Temporary-target lattices at INTERMEDIATE states: for a labelled VERIFIED >= 2-move sequence, apply its first relocation with the
+    cheapest certified mode (actual terminal q) and build temporary lattices for the remaining pool objects there."""
+    import p15_lookup as pl
+    import p16_common as pc
+    import p16_motion as pm
+    import p17_d as pd
+    idx, plan, labs = pl.index_v2()[0], _plan(split), merged(split)
+    f = DATA / split / f"temp_inter_{part}.json"
+    res = rd(f) if f.exists() else {}
+    for k in keys:
+        if k in res or k not in labs:
+            continue
+        seqs = [s for s, v in labs[k]["sequences"].items() if v["y"] == 1 and v["len"] >= 2]
+        if not seqs:
+            res[k] = {"skipped": "no verified >= 2-move sequence"}
+            cf.write_json(f, res)
+            continue
+        task = pc.task_from_root(plan["roots"][k], k)
+        phys = pm.DetPhysics(task, idx, budget=P17_LABEL_BUDGET)
+        cells0, q0 = {o.id: o.cell for o in phys.s0.objects}, np.asarray(phys.s0.robot.q_rad, float)
+        o1, d1 = seqs[0].split(".")[0].split(">")
+        outs = [x for x in phys.edges(cells0, q0, o1, int(d1)) if x[0] == pm.V]
+        if not outs:
+            res[k] = {"skipped": "first move not re-verified"}
+            cf.write_json(f, res)
+            continue
+        e = min(outs, key=lambda x: x[3])
+        cells1, q1 = {**cells0, o1: int(d1)}, e[2]
+        cat = labs[k]["catalogue"]
+        pool = [o for o in cat["pool"] if o != o1]
+        dest = {o: cat["parking"][o] for o in pool if cat["parking"][o] not in cells1.values()}
+        pool = [o for o in pool if o in dest]
+        res[k] = {"sequence": seqs[0], "state": {"cells": cells1, "q": [float(x) for x in q1]},
+                  "lattices": pd.temp_lattice(phys, cells1, q1, pool, dest) if len(pool) >= 2 else [], "used": phys.used}
+        cf.write_json(f, res)
