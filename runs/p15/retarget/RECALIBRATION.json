@@ -1,0 +1,50 @@
+{
+ "cross_validated": {
+  "decided": 157,
+  "decided_roots": 36,
+  "gate": {
+   "pass": true,
+   "threshold": "balanced_accuracy >= 0.70 and feasible_recall >= 0.70 (engineering-use, corrected interface)"
+  },
+  "p_new": {
+   "auroc": 0.9215328467153284,
+   "balanced_accuracy": 0.9244525547445255,
+   "balanced_accuracy_root_ci95": [
+    0.8705735294117647,
+    0.9888888888888889
+   ],
+   "brier": 0.047719031339897106,
+   "feasible_recall": 0.948905109489051,
+   "infeasible_recall": 0.9,
+   "nll": 0.36953876141939446
+  },
+  "p_old": {
+   "auroc": 0.9408759124087591,
+   "balanced_accuracy": 0.5912408759124088,
+   "balanced_accuracy_root_ci95": [
+    0.5437233231707317,
+    0.6388976793248945
+   ],
+   "brier": 0.6402692294301309,
+   "feasible_recall": 0.18248175182481752,
+   "infeasible_recall": 1.0,
+   "nll": 6.2913777839001765
+  },
+  "probes": 157,
+  "roots": 36,
+  "status_counts": {
+   "CERTIFIED_INFEASIBLE": 20,
+   "VERIFIED_FEASIBLE": 137
+  }
+ },
+ "decided": 157,
+ "fit_all_dev": {
+  "bias": -19.9818335008962,
+  "temperature": 0.7620589093163525
+ },
+ "gate": {
+  "raw_pass": false,
+  "recalibrated_cv_pass": true
+ },
+ "roots": 36
+}
