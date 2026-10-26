@@ -39,9 +39,14 @@ def job(name, call, cpu, module="p16_eval", category="audit", wall=None, env=Non
     import os
     import teacher
     (OUT / "guards").mkdir(parents=True, exist_ok=True)
-    cpu = min(cpu, JOB["cpu_s"], CAPS[category] - spent(category))
+    res_dir = OUT / "reservations"
+    res_dir.mkdir(parents=True, exist_ok=True)
+    reserved = sum(rd(f)["cpu"] for f in res_dir.glob(f"{category}__*.json"))
+    cpu = min(cpu, JOB["cpu_s"], CAPS[category] - spent(category) - reserved)    # caps of RUNNING jobs are reserved (no oversubscription)
     if cpu < 5:
         raise SystemExit(f"{category} budget exhausted")
+    resf = res_dir / f"{category}__{name}.json"
+    cf.write_json(resf, {"cpu": cpu})
     old = dict(os.environ)
     os.environ.update(env or {})
     try:
@@ -57,6 +62,7 @@ def job(name, call, cpu, module="p16_eval", category="audit", wall=None, env=Non
           {"cpu_cap_s": cpu, "call": f"{module}.{call}", "category": category, "env": env or {}, "utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())}
     cf.write_json(OUT / "guards" / f"{name}{'' if n == 1 else f'_attempt{n}'}.json", rec)
     (OUT / f"heartbeat_{name}.txt").unlink(missing_ok=True)
+    resf.unlink(missing_ok=True)
     print(json.dumps({k: rec[k] for k in ("stop", "returncode", "cpu_s", "wall_s")} | {category: round(spent(category), 1)}))
     return rec
 
@@ -237,7 +243,7 @@ def build_split(name, counts) -> None:
         pd.build_plan(DATA / name, specs, max_attempts=600, root_cpu=300.0)
 
 
-def label_split(name, keys=None, budget=None, part="") -> None:
+def label_split(name, keys=None, budget=None, part="", sequences=True) -> None:
     """Scene-only catalogue + deterministic physical labels per root (sealed file for the test split)."""
     import p15_lookup as pl
     import p16_common as pc
@@ -247,13 +253,13 @@ def label_split(name, keys=None, budget=None, part="") -> None:
     f = DATA / name / (("sealed_labels" if name.startswith("test") else "labels") + (f"_{part}" if part else "") + ".json")
     res = rd(f) if f.exists() else {}
     for k in keys or sorted(plan["roots"]):
-        if k in res:
+        if k in res or k in merged(name, f.name.split("_")[0]):
             continue
         c0 = time.process_time()
         task = pc.task_from_root(plan["roots"][k], k)
         phys = pm.DetPhysics(task, idx, budget=budget or LABEL_BUDGET)
         cat = pc.catalogue(task, phys, idx)
-        lab = pc.label(task, phys, cat)
+        lab = pc.label(task, phys, cat, sequences)
         res[k] = {"family": plan["roots"][k]["family"], "catalogue": {x: cat[x] for x in ("pool", "parking", "movers")}, **lab,
                   "cpu_s": time.process_time() - c0}
         cf.write_json(f, res)
@@ -319,6 +325,7 @@ def b_select(arm, rows, pol, R=None, pool_idx=None, rng=None):
         if not H:
             return next(r["query"] for r in rows if r["m"] == 0)
         m = [r for r in rows if r["m"] == len(H) and {i for i, _ in r["seq_idx"]} == H]
+        m = sorted(m, key=lambda r: r["query"])
         return m[0]["query"] if m else "ABSTAIN"
     return pb.choose(rows, pol["t0"], pol["t"], pol.get("temp", 1.0), pol.get("bias", 0.0))
 
@@ -362,8 +369,9 @@ def b_exec(name, keys, arms, policies, seeds=(0, 1, 2), part="") -> None:
             if q == "ABSTAIN":
                 out["arms"][a] = {"choice": q, "status": "ABSTAIN", "moves": None, "travel": None}
                 continue
-            seq = next(x["seq"] for x in rows if x["query"] == q)
-            v = pc.verify_sequence(phys, [tuple(s) for s in seq])
+            sig = q.rsplit(":", 1)[1]                                   # keyed query identity -> exact (object, cell) sequence
+            seq = [] if sig == "empty" else [(a.split(">")[0], int(a.split(">")[1])) for a in sig.split(".")]
+            v = pc.verify_sequence(phys, seq)
             rep = pm.replay(phys, v["plan"]) if v["plan"] else None
             out["arms"][a] = {"choice": q, "m": len(seq), "status": v["status"], "failed_step": v["failed_step"], "replay": rep and rep["ok"],
                               "moves": v["plan"]["moves"] if v["plan"] else None, "travel": v["plan"]["travel"] if v["plan"] else None,
@@ -708,3 +716,157 @@ def d_analysis(rows, primary=("Dp16", "geometry"), unions=None) -> dict:
                     "motion_checks": [rows[k]["guides"][a]["used"]["motion_checks"], rows[k]["guides"][b]["used"]["motion_checks"]] if a in guides else None})
     return {"common_roots": len(ks), "per_guide": per, "primary": prim, "secondary": sec, "co_solved_vs_" + b: co, "extra_moves_vs_proven_optimum": extra,
             "disagreement": {"first_move_differs": sum(x["first_differs"] for x in dis), "rows": dis}}
+
+
+# ------------------------------------------------------------------ pre-registration (written and pushed BEFORE any test label)
+D_GUIDES = ("Dp16", "Dp16-norec", "Dp", "D", "geometry", "geometry-norec", "uniform")
+D_TEST_FAMS = ("DENSE", "PN_SIMP", "PN_GIMP", "PC_SG", "PR_SIDES", "ORD_CHAIN", "OMIT_OPT", "TRI_OR", "TRI_CTRL")
+
+
+def write_prereg() -> dict:
+    import glob
+    test = rd(DATA / "test" / "plan.json")
+    d_keys = sorted(k for k, r in test["roots"].items() if r["family"] in D_TEST_FAMS)
+    b_keys = sorted(k for k, r in test["roots"].items() if r["family"] in B_TEST_FAMS)
+    pre = {"version": "P16_PREREG_V1", "base": "20f775483077a568efb225f22aa93ca619160c53",
+           "test_roster": {"plan": sha(DATA / "test" / "plan.json"), "roots": len(test["roots"]), "d_roots": d_keys, "b_roots": b_keys,
+                           "order": "p16_eval.test_order (family-interleaved), 12 workers round-robin; one process per root list"},
+           "execution": "p16_eval.test_exec: per root, D guides (D roots) then every B arm (B roots) on ONE exact shared cache, physics budget "
+                        "{400, 6, 16, 8} (P16_FAST); sealed output; lattice-only sealed labels on the D roots (original + parked subsets)",
+           "scope_reason": "measured cost pilots (D: ~255 virtual / root on mechanism roots; B: ~200 CPU-s / root) vs the 38k execution cap: B on "
+                           "NAT 120 + 24 mechanism roots (DENSE excluded: B's catalogue is <= 2 moves), D on DENSE 24 + 24 mechanism roots",
+           "splits": rd(DATA / "SPLIT_COUNTS.json"), "excluded": rd(DATA / "EXCLUDED.json"), "leakage": sha(DATA / "LEAKAGE.json"),
+           "code": {p: sha(p) for p in ("p16_common.py", "p16_motion.py", "p16_b.py", "p16_d.py", "p16_eval.py")},
+           "planner_profile": "P16_FAST (max_nodes 1500, max_plan_failures 2, transit 500 nodes); no CPU / wall adjudication",
+           "checkpoints": {p: sha(p) for p in sorted(glob.glob("runs/p16/b/ckpt/*.pt") + glob.glob("runs/p16/d/ckpt/*.pt"))},
+           "training_data": sha(OUT / "b" / "TRAIN.pt"), "policies": rd(OUT / "b" / "POLICIES.json"),
+           "B": {"arms": list(B_ARMS), "ensemble": "mean prior marginal over seeds 0-2",
+                 "rule": "no-op-first: EMPTY if p(empty) >= t0, else admitted (p >= t) repair with fewest moves then highest p, else ABSTAIN; "
+                         "(t0, t) per arm from the calibration split only",
+                 "execution": "chosen candidate certified step by step (verify_sequence, cheapest certified mode) + independent replay",
+                 "primary": "H-B1: on B test roots whose ORIGINAL is decided feasible by the certifier, correct no-op rate LB vs P13:K-B (exact two-sided "
+                            "sign test, alpha 0.05, root bootstrap CI); minimal meaningful effect +15 pp; UNDERPOWERED if < 6 discordant or < 60 "
+                            "decided feasible originals",
+                 "guard": "non-inferiority check (reported, not tested): LB strict repair success on decided infeasible originals not lower than "
+                          "P13:K-B by more than 10 pp (CI)",
+                 "secondary": ["LB vs every other arm on strict TOP1 (Holm)", "H-B2 generic-only coupling: LB+G vs LB strict TOP1 (in the Holm family)",
+                               "unnecessary relocation, wrong no-op, abstain, attempted coverage, success | attempt, by family",
+                               "candidate ranking on the labelled test subset (within-root AUROC, UNKNOWN censored)"]},
+           "D": {"guides": list(D_GUIDES) + ["oracle (after unsealing; original scene-only lattice union)"],
+                 "search": {"n_max": 4, "per_obj": 2, "node_cap": 500, "budget": {"motion_checks": 400, "online_moves": 6, "goal_plans": 16,
+                                                                                  "transit_plans": 8}, "movers": "scene-only, cap 6", "slots": "scene-only, <= 6"},
+                 "primary": "H-D1: strict success (plan found + independent replay CLEAR) Dp16 vs geometry on the 48 D test roots, exact two-sided "
+                            "sign test, alpha 0.05; minimal meaningful effect +10 pp or >= 20 % fewer motion checks at non-inferior success; "
+                            "UNDERPOWERED if < 6 discordant",
+                 "secondary": ["each other guide vs geometry (Holm)", "virtual-CPU / node anytime success", "proof coverage, unknown counts",
+                               "co-solved moves / travel", "extra moves vs proven optima only", "first-move disagreement analysis",
+                               "diagnosis on the test lattice: feasibility AUROC / Brier / recalls, union-blocker F1 / exact, union vs necessary"]},
+           "order": "freeze + push -> test labels + B / D execution (sealed) -> label / outcome manifest hash commit -> unseal -> oracle guide -> analysis",
+           "no_adaptive_stopping": True, "budget_stop": "a resource stop is reported as incomplete coverage on the fixed root order"}
+    pre["hash"] = cf.stable_hash({k: v for k, v in pre.items() if k != "hash"})
+    cf.write_json(OUT / "P16_PREREG.json", pre)
+    return pre
+
+
+def test_order(keys) -> list:
+    """Fixed, family-interleaved processing order (seed % 1000, seed // 1000) so that a budget stop leaves balanced coverage."""
+    return sorted(keys, key=lambda k: (int(k.split("_")[-1]) % 1000, int(k.split("_")[-1]) // 1000))
+
+
+def label_many(pairs, part, full=("calib",)) -> None:
+    """One worker over mixed (split, key) pairs (skips keys already labelled in any part file). Splits not in `full` get lattice-only
+    labels (original + parked subsets; no sequence labels) after the measured cost (~390 CPU-s / full root) threatened the data cap."""
+    for n, k in pairs:
+        label_split(n, [k], part=part, sequences=n in full)
+
+
+# ------------------------------------------------------------------ sealed prospective run: one process per root list, D guides then B arms on ONE exact cache
+B_TEST_FAMS = ("NAT", "PN_SIMP", "PN_GIMP", "PC_SG", "PR_SIDES", "ORD_CHAIN", "OMIT_OPT", "TRI_OR", "TRI_CTRL")
+
+
+def _d_root(k, task, plan, idx, guides, dino, cache, oracle=None, n_max=4, per_obj=2, node_cap=500):
+    import p16_common as pc
+    import p16_d as pdd
+    import p16_motion as pm
+    out = {}
+    for g in guides:
+        c0 = time.process_time()
+        phys = pm.DetPhysics(task, idx, cache=cache)
+        cells0 = {o.id: o.cell for o in phys.s0.objects}
+        movers, omitted = pc.propose_movers(task, cells0)
+        order = pdd.guide(g, task, phys, movers, plan["roots"][k], dino, oracle)
+        r = pc.search(phys, order.order, movers, pc.slot_fn(phys, idx), cells0, phys.s0.robot.q_rad, n_max, per_obj, node_cap)
+        rep = pm.replay(phys, r["plan"]) if r["found"] else None
+        steps = r["plan"]["steps"] if r["found"] else []
+        out[g] = {"found": r["found"], "replay": rep and rep["ok"], "traj": rep and rep.get("traj"), "claim": r["claim"],
+                  "min_moves_proven": r["min_moves_proven"], "min_travel_proven": r["min_travel_proven"], "moves": len(steps),
+                  "travel": r["plan"]["travel"] if r["found"] else None, "steps": [(s["object"], s["dest"], s["via"], s.get("mode"), s.get("transit")) for s in steps],
+                  "repeat_move": len({s["object"] for s in steps}) != len(steps), "flags": r["flags"], "log": r["log"], "used": phys.used, "stats": phys.stats,
+                  "d_calls": order.d_calls, "d_cpu": order.d_cpu, "cpu_actual": time.process_time() - c0,
+                  "cpu_virtual": phys.vcpu + (time.process_time() - c0 - phys.pcpu), "movers": movers, "omitted": omitted, "order_trace": order.trace[:20]}
+    return out
+
+
+def _b_root(k, task, plan, idx, ms, arms, policies, dino, cache):
+    import numpy as np
+    import p16_b as pb
+    import p16_common as pc
+    import p16_motion as pm
+    c0 = time.process_time()
+    phys = pm.DetPhysics(task, idx, cache=cache)
+    cat = pc.catalogue(task, phys, idx)
+    st0 = phys.goal({o.id: o.cell for o in phys.s0.objects}, np.asarray(phys.s0.robot.q_rad, float))[0]
+    r = pb.prepare(pb.records(plan, {k: {"catalogue": cat, "original": {"y": None}, "edits": {}, "sequences": {}}}, "test", dino, with_labels=False))[0]
+    rows_by = {}
+    for a, mm in ms.items():
+        sc = [pb.score(m, a, [r])[k] for m in mm]
+        rows_by[a] = []
+        for i, x in enumerate(sc[0]):
+            p_ = float(np.mean([s[i]["p"] for s in sc]))
+            rows_by[a].append(dict(x, p=p_, u=float(np.log(max(p_, 1e-9)) - np.log1p(-min(p_, 1 - 1e-9))), seq_idx=[(r["ids"].index(o), d) for o, d in x["seq"]]))
+    base = next(iter(rows_by.values()))
+    rng = np.random.default_rng(int(k.split("_")[-1]))
+    out = {"y0_status": st0, "catalogue": {x: cat[x] for x in ("pool", "parking", "movers")}, "arms": {}}
+    for a in arms:
+        rows = rows_by.get(a, base)
+        q = b_select(a, rows, policies.get(a, {}), r["R"], [r["ids"].index(o) for o in cat["pool"]], rng)
+        if q == "ABSTAIN":
+            out["arms"][a] = {"choice": q, "status": "ABSTAIN", "moves": None, "travel": None}
+            continue
+        sig = q.rsplit(":", 1)[1]
+        seq = [] if sig == "empty" else [(x.split(">")[0], int(x.split(">")[1])) for x in sig.split(".")]
+        v = pc.verify_sequence(phys, seq)
+        rep = pm.replay(phys, v["plan"]) if v["plan"] else None
+        out["arms"][a] = {"choice": q, "m": len(seq), "status": v["status"], "failed_step": v["failed_step"], "replay": rep and rep["ok"],
+                          "moves": v["plan"]["moves"] if v["plan"] else None, "travel": v["plan"]["travel"] if v["plan"] else None,
+                          "p_choice": next((x["p"] for x in rows if x["query"] == q), None)}
+    out["scores"] = {a: [(x["query"], round(x["u"], 4)) for x in rw] for a, rw in rows_by.items()}
+    out |= {"used": phys.used, "stats": phys.stats, "cpu_s": time.process_time() - c0}
+    return out
+
+
+def test_exec(name, keys, part, seeds=(0, 1, 2), oracles=None, guides=None, do_b=True) -> None:
+    """Sealed frozen evaluation: per root, D guides (D roots only) then every B arm (B roots only) on one exact shared cache."""
+    import p15_lookup as pl
+    import p16_b as pb
+    import p16_common as pc
+    import learn_data as ld
+    plan, idx = rd(DATA / name / "plan.json"), pl.index_v2()[0]
+    pol = rd(OUT / "b" / "POLICIES.json")
+    ms = {a: [pb.load_any(a, s) for s in seeds] for a in B_LEARNED}
+    dino = ld.dino()
+    f = DATA / name / (("sealed_exec" if name.startswith("test") else "exec") + f"_{part}.json")
+    res = rd(f) if f.exists() else {}
+    for k in keys:
+        if k in res:
+            continue
+        fam, c0 = plan["roots"][k]["family"], time.process_time()
+        task, cache = pc.task_from_root(plan["roots"][k], k), {}
+        out = {"family": fam}
+        if fam in D_TEST_FAMS:
+            out["d"] = _d_root(k, task, plan, idx, guides or D_GUIDES, dino, cache, (oracles or {}).get(k))
+        if fam in B_TEST_FAMS and do_b:
+            out["b"] = _b_root(k, task, plan, idx, ms, B_ARMS, pol, dino, cache)
+        out["cpu_root"] = time.process_time() - c0
+        res[k] = out
+        cf.write_json(f, res)

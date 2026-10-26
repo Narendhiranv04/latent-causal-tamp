@@ -1,0 +1,260 @@
+{
+ "p13_2026231004": {
+  "catalogue": {
+   "movers": [
+    "o00",
+    "o01",
+    "o02"
+   ],
+   "parking": {
+    "o00": 38,
+    "o01": 61,
+    "o02": 59
+   },
+   "pool": [
+    "o01",
+    "o00",
+    "o02"
+   ]
+  },
+  "cpu_s": 1055.9493714750001,
+  "edits": {
+   "o00": {
+    "status": "CERTIFIED_INFEASIBLE",
+    "y": 0
+   },
+   "o00+o02": {
+    "status": "VERIFIED",
+    "y": 1
+   },
+   "o01": {
+    "status": "CERTIFIED_INFEASIBLE",
+    "y": 0
+   },
+   "o01+o00": {
+    "status": "CERTIFIED_INFEASIBLE",
+    "y": 0
+   },
+   "o01+o00+o02": {
+    "status": "VERIFIED",
+    "y": 1
+   },
+   "o01+o02": {
+    "status": "VERIFIED",
+    "y": 1
+   },
+   "o02": {
+    "status": "VERIFIED",
+    "y": 1
+   }
+  },
+  "family": "NAT",
+  "original": {
+   "status": "CERTIFIED_INFEASIBLE",
+   "y": 0
+  },
+  "sequences": {
+   "o00>38": {
+    "failed_step": 0,
+    "status": "UNKNOWN_PLANNER",
+    "travel": null,
+    "y": null
+   },
+   "o00>38.o01>61": {
+    "failed_step": 0,
+    "status": "UNKNOWN_PLANNER",
+    "travel": null,
+    "y": null
+   },
+   "o00>38.o02>59": {
+    "failed_step": 0,
+    "status": "UNKNOWN_PLANNER",
+    "travel": null,
+    "y": null
+   },
+   "o01>61": {
+    "failed_step": "target",
+    "status": "CERTIFIED_INFEASIBLE",
+    "travel": null,
+    "y": 0
+   },
+   "o01>61.o00>38": {
+    "failed_step": 1,
+    "status": "UNKNOWN_PLANNER",
+    "travel": null,
+    "y": null
+   },
+   "o01>61.o02>59": {
+    "failed_step": "target",
+    "status": "UNKNOWN_PLANNER",
+    "travel": null,
+    "y": null
+   },
+   "o02>59": {
+    "failed_step": null,
+    "status": "VERIFIED",
+    "travel": 4.1175739338908945,
+    "y": 1
+   },
+   "o02>59.o00>38": {
+    "failed_step": null,
+    "status": "VERIFIED",
+    "travel": 3.6230841228529975,
+    "y": 1
+   },
+   "o02>59.o01>61": {
+    "failed_step": "target",
+    "status": "UNKNOWN_PLANNER",
+    "travel": null,
+    "y": null
+   }
+  },
+  "stats": {
+   "cache_hits": 0,
+   "certificate_checks": 20,
+   "library_collision": 21,
+   "lookup_candidates_tried": 35,
+   "lookup_hits": 8,
+   "rare_mode_used": 0,
+   "transit_direct": 6,
+   "transit_planned": 1,
+   "transit_unknown": 6,
+   "wall_clock_cut": 0
+  },
+  "used": {
+   "goal_plans": 8,
+   "motion_checks": 35,
+   "online_moves": 4,
+   "transit_plans": 7
+  }
+ },
+ "p13_2026231021": {
+  "catalogue": {
+   "movers": [
+    "o00",
+    "o01",
+    "o02"
+   ],
+   "parking": {
+    "o00": 39,
+    "o01": 36,
+    "o02": 38
+   },
+   "pool": [
+    "o00",
+    "o02",
+    "o01"
+   ]
+  },
+  "cpu_s": 129.85235683299993,
+  "edits": {
+   "o00": {
+    "status": "VERIFIED",
+    "y": 1
+   },
+   "o00+o01": {
+    "status": "VERIFIED",
+    "y": 1
+   },
+   "o00+o02": {
+    "status": "VERIFIED",
+    "y": 1
+   },
+   "o00+o02+o01": {
+    "status": "VERIFIED",
+    "y": 1
+   },
+   "o01": {
+    "status": "VERIFIED",
+    "y": 1
+   },
+   "o02": {
+    "status": "VERIFIED",
+    "y": 1
+   },
+   "o02+o01": {
+    "status": "VERIFIED",
+    "y": 1
+   }
+  },
+  "family": "NAT",
+  "original": {
+   "status": "VERIFIED",
+   "y": 1
+  },
+  "sequences": {
+   "o00>39": {
+    "failed_step": null,
+    "status": "VERIFIED",
+    "travel": 2.9784731157302997,
+    "y": 1
+   },
+   "o00>39.o01>36": {
+    "failed_step": null,
+    "status": "VERIFIED",
+    "travel": 3.5109167250557816,
+    "y": 1
+   },
+   "o00>39.o02>38": {
+    "failed_step": null,
+    "status": "VERIFIED",
+    "travel": 3.0101019330594077,
+    "y": 1
+   },
+   "o01>36": {
+    "failed_step": null,
+    "status": "VERIFIED",
+    "travel": 2.228155738290629,
+    "y": 1
+   },
+   "o01>36.o00>39": {
+    "failed_step": null,
+    "status": "VERIFIED",
+    "travel": 3.9064379993303744,
+    "y": 1
+   },
+   "o01>36.o02>38": {
+    "failed_step": null,
+    "status": "VERIFIED",
+    "travel": 1.586422289611265,
+    "y": 1
+   },
+   "o02>38": {
+    "failed_step": "target",
+    "status": "UNKNOWN_PLANNER",
+    "travel": null,
+    "y": null
+   },
+   "o02>38.o00>39": {
+    "failed_step": null,
+    "status": "VERIFIED",
+    "travel": 2.7044636097840025,
+    "y": 1
+   },
+   "o02>38.o01>36": {
+    "failed_step": null,
+    "status": "VERIFIED",
+    "travel": 2.21318935995536,
+    "y": 1
+   }
+  },
+  "stats": {
+   "cache_hits": 0,
+   "certificate_checks": 26,
+   "library_collision": 66,
+   "lookup_candidates_tried": 82,
+   "lookup_hits": 16,
+   "rare_mode_used": 5,
+   "transit_direct": 12,
+   "transit_planned": 2,
+   "transit_unknown": 0,
+   "wall_clock_cut": 0
+  },
+  "used": {
+   "goal_plans": 17,
+   "motion_checks": 82,
+   "online_moves": 3,
+   "transit_plans": 2
+  }
+ }
+}

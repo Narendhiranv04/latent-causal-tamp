@@ -1,0 +1,131 @@
+{
+ "p13_2026221013": {
+  "catalogue": {
+   "movers": [
+    "o00",
+    "o01",
+    "o02"
+   ],
+   "parking": {
+    "o00": 29,
+    "o01": 59,
+    "o02": 60
+   },
+   "pool": [
+    "o00",
+    "o02",
+    "o01"
+   ]
+  },
+  "cpu_s": 529.087378654,
+  "edits": {
+   "o00": {
+    "status": "UNKNOWN_PLANNER",
+    "y": null
+   },
+   "o00+o01": {
+    "status": "UNKNOWN_PLANNER",
+    "y": null
+   },
+   "o00+o02": {
+    "status": "UNKNOWN_PLANNER",
+    "y": null
+   },
+   "o00+o02+o01": {
+    "status": "VERIFIED",
+    "y": 1
+   },
+   "o01": {
+    "status": "UNKNOWN_PLANNER",
+    "y": null
+   },
+   "o02": {
+    "status": "UNKNOWN_PLANNER",
+    "y": null
+   },
+   "o02+o01": {
+    "status": "UNKNOWN_PLANNER",
+    "y": null
+   }
+  },
+  "family": "NAT",
+  "original": {
+   "status": "UNKNOWN_PLANNER",
+   "y": null
+  },
+  "sequences": {
+   "o00>29": {
+    "failed_step": "target",
+    "status": "UNKNOWN_PLANNER",
+    "travel": null,
+    "y": null
+   },
+   "o00>29.o01>59": {
+    "failed_step": "target",
+    "status": "UNKNOWN_PLANNER",
+    "travel": null,
+    "y": null
+   },
+   "o00>29.o02>60": {
+    "failed_step": "target",
+    "status": "UNKNOWN_PLANNER",
+    "travel": null,
+    "y": null
+   },
+   "o01>59": {
+    "failed_step": "target",
+    "status": "UNKNOWN_PLANNER",
+    "travel": null,
+    "y": null
+   },
+   "o01>59.o00>29": {
+    "failed_step": null,
+    "status": "VERIFIED",
+    "travel": 1.969923673363045,
+    "y": 1
+   },
+   "o01>59.o02>60": {
+    "failed_step": "target",
+    "status": "UNKNOWN_PLANNER",
+    "travel": null,
+    "y": null
+   },
+   "o02>60": {
+    "failed_step": "target",
+    "status": "UNKNOWN_PLANNER",
+    "travel": null,
+    "y": null
+   },
+   "o02>60.o00>29": {
+    "failed_step": "target",
+    "status": "UNKNOWN_PLANNER",
+    "travel": null,
+    "y": null
+   },
+   "o02>60.o01>59": {
+    "failed_step": "target",
+    "status": "UNKNOWN_PLANNER",
+    "travel": null,
+    "y": null
+   }
+  },
+  "stats": {
+   "cache_hits": 0,
+   "certificate_checks": 26,
+   "library_collision": 220,
+   "lookup_candidates_tried": 292,
+   "lookup_hits": 13,
+   "rare_mode_used": 1,
+   "transit_direct": 7,
+   "transit_planned": 4,
+   "transit_unknown": 59,
+   "wall_clock_cut": 0
+  },
+  "used": {
+   "goal_plans": 17,
+   "motion_checks": 292,
+   "online_moves": 3,
+   "transit_plans": 12
+  }
+ }
+}

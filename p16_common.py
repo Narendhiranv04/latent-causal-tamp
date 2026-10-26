@@ -203,7 +203,7 @@ def catalogue(task, phys, idx=None) -> dict:
     return {"pool": pool, "parking": park, "edits": edits, "sequences": [[(o, park[o]) for o in s] for s in seqs], "movers": movers}
 
 
-def label(task, phys, cat) -> dict:
+def label(task, phys, cat, sequences=True) -> dict:
     """Statuses for the original task, every lattice edit (target-only query on the edited scene, robot at q0) and every sequence
     (verify_sequence). y = 1 VERIFIED, y = 0 only from a sound certificate (target CERTIFIED_INFEASIBLE / a step CERTIFIED or
     STATIC_INVALID), y = None otherwise (UNKNOWN: masked, never negative)."""
@@ -212,7 +212,7 @@ def label(task, phys, cat) -> dict:
     st0 = phys.goal(cells0, q0)[0]
     edits = {e["kind"]: phys.goal({**cells0, **e["edit"]}, q0)[0] for e in cat["edits"]}
     seqs = {}
-    for s in cat["sequences"]:
+    for s in cat["sequences"] if sequences else []:
         if not s:
             continue
         r = verify_sequence(phys, s)

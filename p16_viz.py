@@ -90,3 +90,78 @@ def plan_gif(name, key, out, n_max=4, per_obj=2, node_cap=500) -> dict:
     (DST / out).parent.mkdir(parents=True, exist_ok=True)
     pv.gif(DST / out, frames, f"P16 {name} {key}: certified scene-only plan replay")
     return {"found": True, "replay": rep, "steps": [(s["object"], s["dest"], s["via"], s.get("transit")) for s in steps], "claim": r["claim"]}
+
+
+def b_figures(rows, an, out="b/P16_B_test") -> None:
+    """(1) decision breakdown per arm on decided feasible / infeasible originals; (2) ensemble P(empty) distributions per learned arm."""
+    import p6_viz as pv
+    from viz import plt
+    arms = [a for a in an["per_arm"]]
+    f, ax = plt.subplots(1, 3, figsize=(22, 5.6))
+    x = np.arange(len(arms))
+    P = an["per_arm"]
+    nf, ni = max(1, an["feasible"]), max(1, an["infeasible"])
+    parts = [("correct no-op", [P[a]["noop_correct"] / nf for a in arms], "#2e9e5b"),
+             ("unnecessary relocation", [P[a]["unnecessary_relocation"] / nf for a in arms], "#e34948"),
+             ("abstain", [P[a]["abstain_feasible"] / nf for a in arms], "#a7b4c2")]
+    bot = np.zeros(len(arms))
+    for lab, v, c in parts:
+        ax[0].bar(x, v, 0.65, bottom=bot, color=c, label=lab, edgecolor="white")
+        bot += np.array(v)
+    ax[0].set_xticks(x, arms, rotation=40, ha="right")
+    ax[0].set(ylabel="fraction of decided feasible originals", title=f"feasible originals (n = {an['feasible']})", ylim=(0, 1.05))
+    ax[0].legend(fontsize=7, loc="lower right", framealpha=0.95)
+    parts = [("repair verified", [P[a]["repair_success"] / ni for a in arms], "#2e9e5b"),
+             ("attempt not verified", [(P[a]["attempted_infeasible"] - P[a]["repair_success"]) / ni for a in arms], "#eda100"),
+             ("wrong no-op", [P[a]["wrong_noop"] / ni for a in arms], "#e34948"), ("abstain", [P[a]["abstain_infeasible"] / ni for a in arms], "#a7b4c2")]
+    bot = np.zeros(len(arms))
+    for lab, v, c in parts:
+        ax[1].bar(x, v, 0.65, bottom=bot, color=c, label=lab, edgecolor="white")
+        bot += np.array(v)
+    ax[1].set_xticks(x, arms, rotation=40, ha="right")
+    ax[1].set(ylabel="fraction of decided infeasible originals", title=f"infeasible originals (n = {an['infeasible']})", ylim=(0, 1.05))
+    ax[1].legend(fontsize=7, loc="lower right", framealpha=0.95)
+    learned = [a for a in arms if a in COL and a not in ("geometry", "empty_always", "random")]
+    feas = [k for k, v in rows.items() if v["y0_status"] == "VERIFIED"]
+    inf = [k for k, v in rows.items() if v["y0_status"] in ("CERTIFIED_INFEASIBLE", "STATIC_INVALID")]
+    for j, a in enumerate(learned):
+        pf = [1 / (1 + np.exp(-rows[k]["scores"][a][0][1])) for k in feas if a in rows[k]["scores"]]
+        pi = [1 / (1 + np.exp(-rows[k]["scores"][a][0][1])) for k in inf if a in rows[k]["scores"]]
+        ax[2].scatter(np.full(len(pf), j) - 0.12 + np.random.default_rng(j).uniform(-0.06, 0.06, len(pf)), pf, s=10, color="#2e9e5b", alpha=0.6)
+        ax[2].scatter(np.full(len(pi), j) + 0.12 + np.random.default_rng(j + 9).uniform(-0.06, 0.06, len(pi)), pi, s=10, color="#e34948", alpha=0.6)
+    ax[2].set_xticks(range(len(learned)), learned, rotation=40, ha="right")
+    ax[2].set(ylabel="ensemble P(empty repair feasible)", title="no-op probability: green = feasible original, red = infeasible", ylim=(0, 1))
+    (DST / out).parent.mkdir(parents=True, exist_ok=True)
+    pv.png(f, DST / f"{out}.png", "P16-B test: decision breakdown and no-op probabilities (denominators = decided originals)")
+
+
+def d_figures(rows, an, out="d/P16_D_test") -> None:
+    """Anytime success vs search nodes, mean calls, virtual CPU (incl. D inference), co-solved travel vs geometry."""
+    import p6_viz as pv
+    from viz import plt
+    g = list(an["per_guide"])
+    f, ax = plt.subplots(1, 3, figsize=(20, 5.4))
+    ts = [25, 50, 100, 200, 500]
+    for k in g:
+        ax[0].plot(ts, [an["per_guide"][k]["anytime_nodes"][str(t)] for t in ts], marker="o", ms=4, lw=2 if k in ("Dp16", "geometry") else 1.2,
+                   color=COL.get(k, "#555"), label=f"{k} ({an['per_guide'][k]['success']}/{an['common_roots']})")
+    ax[0].set(xscale="log", xlabel="search nodes (deterministic work)", ylabel="roots solved (replay CLEAR)", title="anytime success vs nodes")
+    ax[0].legend(fontsize=7, loc="lower right", framealpha=0.95)
+    x = np.arange(len(g))
+    ax[1].bar(x, [an["per_guide"][k]["calls_mean"]["motion_checks"] for k in g], 0.6, color=[COL.get(k, "#555") for k in g])
+    for i, k in enumerate(g):
+        ax[1].text(i, an["per_guide"][k]["calls_mean"]["motion_checks"] + 2, f"{an['per_guide'][k]['cpu_virtual_mean']:.0f}s", ha="center", fontsize=7)
+    ax[1].set_xticks(x, g, rotation=35, ha="right")
+    ax[1].set(ylabel="mean motion checks per root (label: mean virtual CPU incl. D)", title="search effort")
+    b = "geometry"
+    for k in g:
+        if k == b:
+            continue
+        both = [r for r in rows if rows[r]["guides"][k]["found"] and rows[r]["guides"][k]["replay"] and rows[r]["guides"][b]["found"] and rows[r]["guides"][b]["replay"]]
+        ax[2].scatter([rows[r]["guides"][b]["travel"] for r in both], [rows[r]["guides"][k]["travel"] for r in both], s=18, color=COL.get(k, "#555"), label=k, alpha=0.7)
+    lim = ax[2].get_xlim()[1]
+    ax[2].plot([0, lim], [0, lim], color="#7a7975", ls="--", lw=1)
+    ax[2].set(xlabel="geometry: plan travel", ylabel="guide: plan travel", title="co-solved roots")
+    ax[2].legend(fontsize=7, framealpha=0.95)
+    (DST / out).parent.mkdir(parents=True, exist_ok=True)
+    pv.png(f, DST / f"{out}.png", "P16-D test: anytime success, effort and co-solved travel (identical action domain, budgets and certifier)")

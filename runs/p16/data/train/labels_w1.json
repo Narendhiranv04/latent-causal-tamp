@@ -1,0 +1,392 @@
+{
+ "p13_2026220001": {
+  "catalogue": {
+   "movers": [
+    "o00",
+    "o01",
+    "o02",
+    "o03"
+   ],
+   "parking": {
+    "o00": 6,
+    "o02": 37,
+    "o03": 36
+   },
+   "pool": [
+    "o00",
+    "o03",
+    "o02"
+   ]
+  },
+  "cpu_s": 36.140333080999994,
+  "edits": {
+   "o00": {
+    "status": "CERTIFIED_INFEASIBLE",
+    "y": 0
+   },
+   "o00+o02": {
+    "status": "CERTIFIED_INFEASIBLE",
+    "y": 0
+   },
+   "o00+o03": {
+    "status": "CERTIFIED_INFEASIBLE",
+    "y": 0
+   },
+   "o00+o03+o02": {
+    "status": "CERTIFIED_INFEASIBLE",
+    "y": 0
+   },
+   "o02": {
+    "status": "CERTIFIED_INFEASIBLE",
+    "y": 0
+   },
+   "o03": {
+    "status": "CERTIFIED_INFEASIBLE",
+    "y": 0
+   },
+   "o03+o02": {
+    "status": "CERTIFIED_INFEASIBLE",
+    "y": 0
+   }
+  },
+  "family": "DENSE",
+  "original": {
+   "status": "CERTIFIED_INFEASIBLE",
+   "y": 0
+  },
+  "sequences": {
+   "o00>6": {
+    "failed_step": 0,
+    "status": "UNKNOWN_PLANNER",
+    "travel": null,
+    "y": null
+   },
+   "o00>6.o02>37": {
+    "failed_step": 0,
+    "status": "UNKNOWN_PLANNER",
+    "travel": null,
+    "y": null
+   },
+   "o00>6.o03>36": {
+    "failed_step": 0,
+    "status": "UNKNOWN_PLANNER",
+    "travel": null,
+    "y": null
+   },
+   "o02>37": {
+    "failed_step": "target",
+    "status": "CERTIFIED_INFEASIBLE",
+    "travel": null,
+    "y": 0
+   },
+   "o02>37.o00>6": {
+    "failed_step": 1,
+    "status": "UNKNOWN_PLANNER",
+    "travel": null,
+    "y": null
+   },
+   "o02>37.o03>36": {
+    "failed_step": "target",
+    "status": "CERTIFIED_INFEASIBLE",
+    "travel": null,
+    "y": 0
+   },
+   "o03>36": {
+    "failed_step": "target",
+    "status": "CERTIFIED_INFEASIBLE",
+    "travel": null,
+    "y": 0
+   },
+   "o03>36.o00>6": {
+    "failed_step": 1,
+    "status": "UNKNOWN_PLANNER",
+    "travel": null,
+    "y": null
+   },
+   "o03>36.o02>37": {
+    "failed_step": "target",
+    "status": "CERTIFIED_INFEASIBLE",
+    "travel": null,
+    "y": 0
+   }
+  },
+  "stats": {
+   "cache_hits": 0,
+   "certificate_checks": 19,
+   "library_collision": 25,
+   "lookup_candidates_tried": 25,
+   "lookup_hits": 0,
+   "rare_mode_used": 0,
+   "transit_direct": 0,
+   "transit_planned": 0,
+   "transit_unknown": 0,
+   "wall_clock_cut": 0
+  },
+  "used": {
+   "goal_plans": 0,
+   "motion_checks": 25,
+   "online_moves": 7,
+   "transit_plans": 0
+  }
+ },
+ "p13_2026220005": {
+  "catalogue": {
+   "movers": [
+    "o00",
+    "o01",
+    "o02",
+    "o03"
+   ],
+   "parking": {
+    "o01": 44,
+    "o02": 3,
+    "o03": 45
+   },
+   "pool": [
+    "o03",
+    "o01",
+    "o02"
+   ]
+  },
+  "cpu_s": 45.02441969899999,
+  "edits": {
+   "o01": {
+    "status": "UNKNOWN_PLANNER",
+    "y": null
+   },
+   "o01+o02": {
+    "status": "VERIFIED",
+    "y": 1
+   },
+   "o02": {
+    "status": "VERIFIED",
+    "y": 1
+   },
+   "o03": {
+    "status": "UNKNOWN_PLANNER",
+    "y": null
+   },
+   "o03+o01": {
+    "status": "UNKNOWN_PLANNER",
+    "y": null
+   },
+   "o03+o01+o02": {
+    "status": "VERIFIED",
+    "y": 1
+   },
+   "o03+o02": {
+    "status": "VERIFIED",
+    "y": 1
+   }
+  },
+  "family": "DENSE",
+  "original": {
+   "status": "UNKNOWN_PLANNER",
+   "y": null
+  },
+  "sequences": {
+   "o01>44": {
+    "failed_step": "target",
+    "status": "UNKNOWN_PLANNER",
+    "travel": null,
+    "y": null
+   },
+   "o01>44.o02>3": {
+    "failed_step": null,
+    "status": "VERIFIED",
+    "travel": 3.253082520790611,
+    "y": 1
+   },
+   "o01>44.o03>45": {
+    "failed_step": "target",
+    "status": "UNKNOWN_PLANNER",
+    "travel": null,
+    "y": null
+   },
+   "o02>3": {
+    "failed_step": null,
+    "status": "VERIFIED",
+    "travel": 2.782569557922583,
+    "y": 1
+   },
+   "o02>3.o01>44": {
+    "failed_step": null,
+    "status": "VERIFIED",
+    "travel": 3.8067653581823357,
+    "y": 1
+   },
+   "o02>3.o03>45": {
+    "failed_step": null,
+    "status": "VERIFIED",
+    "travel": 3.6580842128575295,
+    "y": 1
+   },
+   "o03>45": {
+    "failed_step": "target",
+    "status": "UNKNOWN_PLANNER",
+    "travel": null,
+    "y": null
+   },
+   "o03>45.o01>44": {
+    "failed_step": "target",
+    "status": "UNKNOWN_PLANNER",
+    "travel": null,
+    "y": null
+   },
+   "o03>45.o02>3": {
+    "failed_step": null,
+    "status": "VERIFIED",
+    "travel": 3.629284276110777,
+    "y": 1
+   }
+  },
+  "stats": {
+   "cache_hits": 0,
+   "certificate_checks": 26,
+   "library_collision": 5,
+   "lookup_candidates_tried": 16,
+   "lookup_hits": 11,
+   "rare_mode_used": 3,
+   "transit_direct": 7,
+   "transit_planned": 4,
+   "transit_unknown": 0,
+   "wall_clock_cut": 0
+  },
+  "used": {
+   "goal_plans": 17,
+   "motion_checks": 16,
+   "online_moves": 4,
+   "transit_plans": 4
+  }
+ },
+ "p13_2026220009": {
+  "catalogue": {
+   "movers": [
+    "o00",
+    "o01",
+    "o02",
+    "o03"
+   ],
+   "parking": {
+    "o00": 59,
+    "o02": 29,
+    "o03": 61
+   },
+   "pool": [
+    "o02",
+    "o03",
+    "o00"
+   ]
+  },
+  "cpu_s": 1519.4242756570002,
+  "edits": {
+   "o00": {
+    "status": "UNKNOWN_PLANNER",
+    "y": null
+   },
+   "o02": {
+    "status": "VERIFIED",
+    "y": 1
+   },
+   "o02+o00": {
+    "status": "UNKNOWN_PLANNER",
+    "y": null
+   },
+   "o02+o03": {
+    "status": "UNKNOWN_PLANNER",
+    "y": null
+   },
+   "o02+o03+o00": {
+    "status": "UNKNOWN_PLANNER",
+    "y": null
+   },
+   "o03": {
+    "status": "UNKNOWN_PLANNER",
+    "y": null
+   },
+   "o03+o00": {
+    "status": "UNKNOWN_PLANNER",
+    "y": null
+   }
+  },
+  "family": "DENSE",
+  "original": {
+   "status": "VERIFIED",
+   "y": 1
+  },
+  "sequences": {
+   "o00>59": {
+    "failed_step": "target",
+    "status": "UNKNOWN_PLANNER",
+    "travel": null,
+    "y": null
+   },
+   "o00>59.o02>29": {
+    "failed_step": "target",
+    "status": "UNKNOWN_PLANNER",
+    "travel": null,
+    "y": null
+   },
+   "o00>59.o03>61": {
+    "failed_step": "target",
+    "status": "UNKNOWN_PLANNER",
+    "travel": null,
+    "y": null
+   },
+   "o02>29": {
+    "failed_step": 0,
+    "status": "UNKNOWN_PLANNER",
+    "travel": null,
+    "y": null
+   },
+   "o02>29.o00>59": {
+    "failed_step": 0,
+    "status": "UNKNOWN_PLANNER",
+    "travel": null,
+    "y": null
+   },
+   "o02>29.o03>61": {
+    "failed_step": 0,
+    "status": "UNKNOWN_PLANNER",
+    "travel": null,
+    "y": null
+   },
+   "o03>61": {
+    "failed_step": "target",
+    "status": "UNKNOWN_PLANNER",
+    "travel": null,
+    "y": null
+   },
+   "o03>61.o00>59": {
+    "failed_step": "target",
+    "status": "UNKNOWN_PLANNER",
+    "travel": null,
+    "y": null
+   },
+   "o03>61.o02>29": {
+    "failed_step": 1,
+    "status": "UNKNOWN_PLANNER",
+    "travel": null,
+    "y": null
+   }
+  },
+  "stats": {
+   "cache_hits": 0,
+   "certificate_checks": 20,
+   "library_collision": 276,
+   "lookup_candidates_tried": 281,
+   "lookup_hits": 5,
+   "rare_mode_used": 1,
+   "transit_direct": 4,
+   "transit_planned": 1,
+   "transit_unknown": 0,
+   "wall_clock_cut": 0
+  },
+  "used": {
+   "goal_plans": 13,
+   "motion_checks": 281,
+   "online_moves": 4,
+   "transit_plans": 1
+  }
+ }
+}

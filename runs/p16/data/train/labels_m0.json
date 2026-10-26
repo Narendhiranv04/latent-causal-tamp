@@ -1,0 +1,261 @@
+{
+ "p13_2026220013": {
+  "catalogue": {
+   "movers": [
+    "o00",
+    "o01",
+    "o02",
+    "o03"
+   ],
+   "parking": {
+    "o00": 23,
+    "o02": 44,
+    "o03": 59
+   },
+   "pool": [
+    "o02",
+    "o00",
+    "o03"
+   ]
+  },
+  "cpu_s": 426.583121951,
+  "edits": {
+   "o00": {
+    "status": "VERIFIED",
+    "y": 1
+   },
+   "o00+o03": {
+    "status": "VERIFIED",
+    "y": 1
+   },
+   "o02": {
+    "status": "VERIFIED",
+    "y": 1
+   },
+   "o02+o00": {
+    "status": "VERIFIED",
+    "y": 1
+   },
+   "o02+o00+o03": {
+    "status": "UNKNOWN_PLANNER",
+    "y": null
+   },
+   "o02+o03": {
+    "status": "UNKNOWN_PLANNER",
+    "y": null
+   },
+   "o03": {
+    "status": "VERIFIED",
+    "y": 1
+   }
+  },
+  "family": "DENSE",
+  "original": {
+   "status": "VERIFIED",
+   "y": 1
+  },
+  "sequences": {
+   "o00>23": {
+    "failed_step": 0,
+    "status": "UNKNOWN_PLANNER",
+    "travel": null,
+    "y": null
+   },
+   "o00>23.o02>44": {
+    "failed_step": 0,
+    "status": "UNKNOWN_PLANNER",
+    "travel": null,
+    "y": null
+   },
+   "o00>23.o03>59": {
+    "failed_step": 0,
+    "status": "UNKNOWN_PLANNER",
+    "travel": null,
+    "y": null
+   },
+   "o02>44": {
+    "failed_step": null,
+    "status": "VERIFIED",
+    "travel": 1.4733579199542501,
+    "y": 1
+   },
+   "o02>44.o00>23": {
+    "failed_step": 1,
+    "status": "UNKNOWN_PLANNER",
+    "travel": null,
+    "y": null
+   },
+   "o02>44.o03>59": {
+    "failed_step": "target",
+    "status": "UNKNOWN_PLANNER",
+    "travel": null,
+    "y": null
+   },
+   "o03>59": {
+    "failed_step": null,
+    "status": "VERIFIED",
+    "travel": 2.961119787915191,
+    "y": 1
+   },
+   "o03>59.o00>23": {
+    "failed_step": null,
+    "status": "VERIFIED",
+    "travel": 3.278784989379873,
+    "y": 1
+   },
+   "o03>59.o02>44": {
+    "failed_step": "target",
+    "status": "UNKNOWN_PLANNER",
+    "travel": null,
+    "y": null
+   }
+  },
+  "stats": {
+   "cache_hits": 0,
+   "certificate_checks": 20,
+   "library_collision": 127,
+   "lookup_candidates_tried": 138,
+   "lookup_hits": 11,
+   "rare_mode_used": 1,
+   "transit_direct": 6,
+   "transit_planned": 3,
+   "transit_unknown": 0,
+   "wall_clock_cut": 0
+  },
+  "used": {
+   "goal_plans": 13,
+   "motion_checks": 138,
+   "online_moves": 3,
+   "transit_plans": 3
+  }
+ },
+ "p13_2026221016": {
+  "catalogue": {
+   "movers": [
+    "o00",
+    "o01",
+    "o02"
+   ],
+   "parking": {
+    "o00": 59,
+    "o01": 28,
+    "o02": 54
+   },
+   "pool": [
+    "o02",
+    "o00",
+    "o01"
+   ]
+  },
+  "cpu_s": 192.24841543300005,
+  "edits": {
+   "o00": {
+    "status": "UNKNOWN_PLANNER",
+    "y": null
+   },
+   "o00+o01": {
+    "status": "VERIFIED",
+    "y": 1
+   },
+   "o01": {
+    "status": "UNKNOWN_PLANNER",
+    "y": null
+   },
+   "o02": {
+    "status": "UNKNOWN_PLANNER",
+    "y": null
+   },
+   "o02+o00": {
+    "status": "UNKNOWN_PLANNER",
+    "y": null
+   },
+   "o02+o00+o01": {
+    "status": "VERIFIED",
+    "y": 1
+   },
+   "o02+o01": {
+    "status": "UNKNOWN_PLANNER",
+    "y": null
+   }
+  },
+  "family": "NAT",
+  "original": {
+   "status": "UNKNOWN_PLANNER",
+   "y": null
+  },
+  "sequences": {
+   "o00>59": {
+    "failed_step": "target",
+    "status": "UNKNOWN_PLANNER",
+    "travel": null,
+    "y": null
+   },
+   "o00>59.o01>28": {
+    "failed_step": null,
+    "status": "VERIFIED",
+    "travel": 2.714518930453918,
+    "y": 1
+   },
+   "o00>59.o02>54": {
+    "failed_step": "target",
+    "status": "UNKNOWN_PLANNER",
+    "travel": null,
+    "y": null
+   },
+   "o01>28": {
+    "failed_step": "target",
+    "status": "UNKNOWN_PLANNER",
+    "travel": null,
+    "y": null
+   },
+   "o01>28.o00>59": {
+    "failed_step": "target",
+    "status": "UNKNOWN_PLANNER",
+    "travel": null,
+    "y": null
+   },
+   "o01>28.o02>54": {
+    "failed_step": "target",
+    "status": "UNKNOWN_PLANNER",
+    "travel": null,
+    "y": null
+   },
+   "o02>54": {
+    "failed_step": "target",
+    "status": "UNKNOWN_PLANNER",
+    "travel": null,
+    "y": null
+   },
+   "o02>54.o00>59": {
+    "failed_step": "target",
+    "status": "UNKNOWN_PLANNER",
+    "travel": null,
+    "y": null
+   },
+   "o02>54.o01>28": {
+    "failed_step": "target",
+    "status": "UNKNOWN_PLANNER",
+    "travel": null,
+    "y": null
+   }
+  },
+  "stats": {
+   "cache_hits": 0,
+   "certificate_checks": 26,
+   "library_collision": 4,
+   "lookup_candidates_tried": 13,
+   "lookup_hits": 9,
+   "rare_mode_used": 0,
+   "transit_direct": 5,
+   "transit_planned": 4,
+   "transit_unknown": 0,
+   "wall_clock_cut": 0
+  },
+  "used": {
+   "goal_plans": 17,
+   "motion_checks": 13,
+   "online_moves": 6,
+   "transit_plans": 4
+  }
+ }
+}

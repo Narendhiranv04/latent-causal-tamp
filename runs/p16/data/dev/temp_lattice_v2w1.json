@@ -383,5 +383,94 @@
    "online_moves": 1,
    "transit_plans": 0
   }
+ },
+ "p13_2026219000": {
+  "catalogue": {
+   "parking": {
+    "o00": 59,
+    "o01": 6,
+    "o02": 20
+   },
+   "pool": [
+    "o01",
+    "o02",
+    "o00"
+   ]
+  },
+  "cpu_s": 372.576189807,
+  "lattices": [
+   {
+    "dest": 6,
+    "mask": null,
+    "necessary": null,
+    "others": [
+     "o02",
+     "o00"
+    ],
+    "provenance": null,
+    "sets": [],
+    "statuses": {
+     "-": null,
+     "o00": "VERIFIED_FEASIBLE",
+     "o02": null,
+     "o02+o00": "VERIFIED_FEASIBLE"
+    },
+    "target": "o01",
+    "type": "UNKNOWN_ORIGINAL",
+    "y0": null
+   },
+   {
+    "dest": 20,
+    "mask": null,
+    "necessary": null,
+    "others": [
+     "o01",
+     "o00"
+    ],
+    "provenance": null,
+    "sets": [],
+    "statuses": {
+     "-": null,
+     "o00": "VERIFIED_FEASIBLE",
+     "o01": null,
+     "o01+o00": "VERIFIED_FEASIBLE"
+    },
+    "target": "o02",
+    "type": "UNKNOWN_ORIGINAL",
+    "y0": null
+   },
+   {
+    "dest": 59,
+    "mask": [
+     0,
+     0
+    ],
+    "necessary": [
+     0,
+     0
+    ],
+    "others": [
+     "o01",
+     "o02"
+    ],
+    "provenance": "proof_grounded",
+    "sets": [],
+    "statuses": {
+     "-": "VERIFIED_FEASIBLE",
+     "o01": "VERIFIED_FEASIBLE",
+     "o01+o02": "VERIFIED_FEASIBLE",
+     "o02": "VERIFIED_FEASIBLE"
+    },
+    "target": "o00",
+    "type": "FEASIBLE_ORIGINAL",
+    "y0": 1
+   }
+  ],
+  "used": {
+   "goal_plans": 0,
+   "motion_checks": 494,
+   "online_moves": 5,
+   "transit_plans": 12
+  }
  }
 }
