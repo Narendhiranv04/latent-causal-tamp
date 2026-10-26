@@ -6,7 +6,7 @@
  },
  "defect": "p15_search.Physics._take set the search-wide truncation flag when ANY single budget (e.g. the 6 online moves) was exhausted, so the whole search stopped although motion checks / goal plans remained (e.g. p13_2026180012 stopped after 59/400 motion checks)",
  "fix": "per-resource exhaustion: an exhausted motion-check or online budget makes only the affected edge UNKNOWN_BUDGET (a partially adjudicated lookup adds UNKNOWN_BUDGET beside its certified modes); search-wide stop only at the CPU cap or goal-plan exhaustion",
- "information_used": "only the guide-independent defect; observed outcomes were identical across guides on every common root",
+ "information_used": "only the guide-independent defect. Observed v1 outcomes: success / found / moves / travel identical across guides on every common root (RETRO 2 roots x 3 arms, PROSP 8 roots x 3 arms); one claim difference (p13_2026200013: D-pairless MIN_MOVES only, geometry / uniform MIN_MOVES_AND_MIN_TRAVEL, same 1-move plan, travel 0.897). D, D-norec arms had no completed root.",
  "observed_before_amendment": {
   "PROSP": {
    "arms": [
