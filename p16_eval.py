@@ -936,3 +936,35 @@ def analyze() -> dict:
     cf.write_json(OUT / "eval" / "B_TEST.json", ab)
     cf.write_json(OUT / "eval" / "D_TEST.json", ad | {"diagnosis": diag, "oracle_types": {k: v[1] for k, v in orc.items()}})
     return {"b": ab, "d": ad, "diag": diag}
+
+
+def test_queue(part, seeds=(0, 1, 2)) -> None:
+    """Amendment 1: workers claim roots atomically from runs/p16/data/test/queue.json (NAT B-only first, then D roots in frozen order);
+    models loaded once per worker; identical per-root computation to test_exec."""
+    import os
+    import p15_lookup as pl
+    import p16_b as pb
+    import p16_common as pc
+    import learn_data as ld
+    plan, idx, q = rd(DATA / "test" / "plan.json"), pl.index_v2()[0], rd(DATA / "test" / "queue.json")
+    pol, dino = rd(OUT / "b" / "POLICIES.json"), ld.dino()
+    ms = {a: [pb.load_any(a, s) for s in seeds] for a in B_LEARNED}
+    claims = DATA / "test" / "claims"
+    claims.mkdir(exist_ok=True)
+    f = DATA / "test" / f"sealed_exec_{part}.json"
+    res = rd(f) if f.exists() else {}
+    for k in q["nat"] + q["d"]:
+        try:
+            os.close(os.open(claims / f"{k}.claim", os.O_CREAT | os.O_EXCL))
+        except FileExistsError:
+            continue
+        fam, c0 = plan["roots"][k]["family"], time.process_time()
+        task, cache = pc.task_from_root(plan["roots"][k], k), {}
+        out = {"family": fam}
+        if fam in D_TEST_FAMS:
+            out["d"] = _d_root(k, task, plan, idx, D_GUIDES, dino, cache)
+        if fam in B_TEST_FAMS:
+            out["b"] = _b_root(k, task, plan, idx, ms, B_ARMS, pol, dino, cache)
+        out["cpu_root"] = time.process_time() - c0
+        res[k] = out
+        cf.write_json(f, res)
