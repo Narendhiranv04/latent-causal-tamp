@@ -246,3 +246,58 @@ def m7_jobs(items, part) -> None:
             continue
         res[f"{s}|{k}"] = m.m7_library(_plan(s)["roots"][k], k, pos)
         cf.write_json(f, res)
+
+
+# ------------------------------------------------------------------ shared-domain proposal recall on small exhaustive scenes (contract 5.2 / 6.3)
+def recall_candidates(n=12, max_movers=3) -> list:
+    """Labelled development roots with a decided infeasible original and <= max_movers movers (plan order; no outcome-based choice)."""
+    out = []
+    for s in ("dev", "train", "calib", "val", "p17train"):
+        for k, v in sorted(merged(s).items()):
+            if v["original"]["y"] == 0 and len(v["catalogue"]["movers"]) <= max_movers:
+                out.append((s, k))
+    return out[:n]
+
+
+def proposal_recall(items, part, max_moves=3, max_seqs=400) -> None:
+    """Exhaustive enumeration of the B generator's domain (p17_domain.exhaustive_sequences; <= max_moves for <= 2 movers, else max_moves - 1)
+    with existential verification of
+    every sequence (P17_SEQ_BUDGET_V1, shared exact cache); recall of the capped B catalogue over certified solutions (all / per length /
+    minimal length); corrected D search (uniform order, width-4 domain) minimum moves vs the exhaustive minimum."""
+    import p15_lookup as pl
+    import p16_common as pc
+    import p16_motion as pm
+    import p17_b as pb
+    import p17_domain as dm
+    import p17_exec as ex
+    import p17_verify as pv
+    idx = pl.index_v2()[0]
+    f = OUT / "shared" / f"PROPOSAL_RECALL_{part}.json"
+    res = rd(f) if f.exists() else {}
+    for s, k in items:
+        if f"{s}|{k}" in res:
+            continue
+        c0 = time.process_time()
+        task, cache = pc.task_from_root(_plan(s)["roots"][k], k), {}
+        fac = lambda: pm.DetPhysics(task, idx, budget=pb.SEQ_BUDGET, cache=cache)  # noqa: E731
+        base = fac()
+        mm = max_moves if len(dm.movers(task, {o.id: o.cell for o in base.s0.objects})[0]) <= 2 else max_moves - 1
+        seqs = [q for q in dm.exhaustive_sequences(task, base, idx, max_moves=mm) if q]
+        if len(seqs) > max_seqs:
+            res[f"{s}|{k}"] = {"skipped": f"{len(seqs)} sequences > {max_seqs}"}
+            cf.write_json(f, res)
+            continue
+        st = {}
+        for q in seqs:
+            v = pv.verify_existential(fac(), [tuple(a) for a in q], first=True)
+            st[pb.sig(q)] = (v["status"], len(q))
+        cat = {pb.sig(q) for q in pb.catalogue(task, base, idx)["sequences"] if q}
+        cert = {a for a, (x, _) in st.items() if x == pv.V}
+        L = min((n for a, (x, n) in st.items() if x == pv.V), default=None)
+        d = ex.d_root(task, idx, ["uniform"], cache)["uniform"]
+        res[f"{s}|{k}"] = {"sequences": len(seqs), "certified": len(cert), "unknown": sum(str(x).startswith("UNKNOWN") for x, _ in st.values()),
+                           "catalogue": len(cat), "recall_all": len(cert & cat) / len(cert) if cert else None,
+                           "max_moves": mm, "recall_by_len": {n: [len({a for a in cert & cat if st[a][1] == n}), len({a for a in cert if st[a][1] == n})] for n in range(1, mm + 1)},
+                           "min_len_exhaustive": L, "min_len_in_catalogue": bool(L and any(st[a][1] == L for a in cert & cat)),
+                           "d_search": {"found": d["found"], "moves": d["moves"], "claim": d["claim"]}, "cpu_s": time.process_time() - c0}
+        cf.write_json(f, res)

@@ -48,7 +48,8 @@ def d_root(task, idx, guides, cache, oracle=None, dino=None, n_max=4, per_obj=2,
 
 def b_root(task, idx, plan_root, key, arms, policies, ms, dino, cache) -> dict:
     """One B root: catalogue, scores (ensemble mean over seeds), choices, existential execution, baselines. Arm names: 'X' (own scores and
-    policy), 'X|nocpl' (inference-only coupling toggle, own policy), 'X@Y' (X's scores, Y's thresholds)."""
+    policy), 'X|nocpl' (inference-only coupling toggle, own policy), 'X@Y' (X's scores, Y's thresholds), 'X#topK' (verify-then-next over X's
+    admitted list, at most K physical verifications, all charged)."""
     import p16_motion as pm
     import p17_b as pb
     import p17_verify as pv
@@ -61,7 +62,7 @@ def b_root(task, idx, plan_root, key, arms, policies, ms, dino, cache) -> dict:
     r = pb.prepare(pb.records({key: plan_root}, {key: {"catalogue": cat, "original": {"y": None}, "edits": {}, "sequences": {}}}, "test", dino,
                               with_labels=False))[0]
     rows_by = {}
-    for a in {x.split("@")[0] for x in arms if x.split("@")[0].split("|")[0] in ms}:
+    for a in {x.split("#")[0].split("@")[0] for x in arms if x.split("#")[0].split("@")[0].split("|")[0] in ms}:
         mm = ms[a.split("|")[0]]
         if a.endswith("|nocpl"):
             sc = []
@@ -79,13 +80,8 @@ def b_root(task, idx, plan_root, key, arms, policies, ms, dino, cache) -> dict:
     rng = np.random.default_rng(int(key.split("_")[-1]) % (2 ** 31))
     out = {"y0_status": st0, "catalogue": {x: cat[x] for x in ("pool", "parking", "movers", "generated", "kept", "omitted")}, "arms": {}}
     verified = {}
-    for a in arms:
-        sk, _, thr = a.partition("@")                        # 'X@Y': X's scores under Y's frozen thresholds (swapped-threshold analysis)
-        rows = rows_by.get(sk, any_rows)
-        q = p16e.b_select(sk, rows, policies.get(thr or a, {}), r["R"], [r["ids"].index(o) for o in cat["pool"]], rng)
-        if q == "ABSTAIN":
-            out["arms"][a] = {"choice": q, "status": "ABSTAIN"}
-            continue
+
+    def ver(q):
         if q not in verified:
             ph = fac()
             v = pv.verify_existential(ph, _seq(q), first=True)
@@ -93,7 +89,33 @@ def b_root(task, idx, plan_root, key, arms, policies, ms, dino, cache) -> dict:
             verified[q] = {"status": v["status"] if not (v["status"] == pv.V and not (rep or {}).get("ok")) else "UNKNOWN_REPLAY_FAILED",
                            "moves": v["plan"]["moves"] if v["plan"] else None, "travel": v["plan"]["travel"] if v["plan"] else None,
                            "replay": bool(rep and rep["ok"]), "used": ph.used}
-        out["arms"][a] = {"choice": q, "m": len(_seq(q)), **verified[q], "p_choice": next((x["p"] for x in rows if x["query"] == q), None)}
+        return verified[q]
+
+    for a in arms:
+        a0, _, k = a.partition("#top")                       # 'X#top3': verify-then-next over X's admitted list (a separate condition)
+        sk, _, thr = a0.partition("@")                       # 'X@Y': X's scores under Y's frozen thresholds (swapped-threshold analysis)
+        rows = rows_by.get(sk, any_rows)
+        pol = policies.get(thr or a0, {})
+        if k:
+            pp = lambda u: 1 / (1 + np.exp(-(u - pol.get("bias", 0.0)) / pol.get("temp", 1.0)))  # noqa: E731
+            e = next(x for x in rows if x["m"] == 0)
+            lst = ([e["query"]] if pp(e["u"]) >= pol["t0"] else []) + [x["query"] for x in sorted((x for x in rows if x["m"] > 0 and pp(x["u"]) >= pol["t"]),
+                                                                                                   key=lambda x: (x["m"], -x["u"], x["query"]))]
+            tried, used = [], {}
+            for q in lst[:int(k)]:
+                v = ver(q)
+                tried.append((q, v["status"]))
+                used = {c: used.get(c, 0) + n for c, n in v["used"].items()}
+                if v["status"] == pv.V:
+                    break
+            q = tried[-1][0] if tried else "ABSTAIN"
+            out["arms"][a] = {"choice": q, "status": "ABSTAIN"} if not tried else {"choice": q, "m": len(_seq(q)), **verified[q], "used": used, "tried": tried}
+            continue
+        q = p16e.b_select(sk, rows, pol, r["R"], [r["ids"].index(o) for o in cat["pool"]], rng)
+        if q == "ABSTAIN":
+            out["arms"][a] = {"choice": q, "status": "ABSTAIN"}
+            continue
+        out["arms"][a] = {"choice": q, "m": len(_seq(q)), **ver(q), "p_choice": next((x["p"] for x in rows if x["query"] == q), None)}
     out["scores"] = {a: [(x["query"], round(x["u"], 4)) for x in rw] for a, rw in rows_by.items()}
     out["cpu_s"] = time.process_time() - c0
     return out
@@ -131,7 +153,7 @@ def run_roots(split, keys, part, mode, guides=None, arms=None, oracles=None, sea
     ms, pol = {}, {}
     if "b" in mode:
         pol = json.loads(Path("runs/p17/b/POLICIES.json").read_text())
-        ms = {a: [pb.load(a, s) for s in range(pol.get("_seeds", 3))] for a in {x.split("@")[0].split("|")[0] for x in arms}
+        ms = {a: [pb.load(a, s) for s in range(pol.get("_seeds", 3))] for a in {x.split("#")[0].split("@")[0].split("|")[0] for x in arms}
               if a not in ("empty_always", "random", "geometry", "verify_first")}
     for k in keys:
         if k in res:

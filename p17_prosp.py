@@ -29,7 +29,7 @@ def retro_d(part, guides=R_GUIDES) -> None:
 
 # ------------------------------------------------------------------ prospective cohort: pre-registration, sealed execution, custody
 P_GUIDES = ("Dp17", "Dp17-norec", "Dp17-blk", "Dp16", "Dp16-norec", "Dp", "D", "geometry", "geometry-norec", "uniform")
-B_EXEC_ARMS = B_LEARNED + ("LB+G@LB", "LB@LB+G", "empty_always", "random", "geometry", "verify_first")
+B_EXEC_ARMS = B_LEARNED + ("LB+G@LB", "LB@LB+G", "LB#top3", "LB+G#top3", "empty_always", "random", "geometry", "verify_first")
 N_NAT_D_CONTROLS = 12
 CODE = ("p16_motion.py", "p16_common.py", "p15_search.py", "p17_search.py", "p17_verify.py", "p17_domain.py", "p17_b.py", "p17_d.py", "p17_exec.py",
         "p17_eval.py", "p17_analysis.py", "p16_eval.py", "p16_b.py", "d_blockers.py", "unique_factor.py", "unique_factor_keyed.py", "abc7_models.py")
@@ -61,20 +61,28 @@ def prereg() -> dict:
                        "n_max": 4, "per_obj": 2, "planner_profile": "P16_FAST"},
            "checkpoints": {c: sha(c) for c in ck}, "training_data": {f: sha(f) for f in ("runs/p17/b/TRAIN.pt", "runs/p17/d/D_ITEMS.pt")},
            "code": {c: sha(c) for c in CODE},
-           "order": "freeze + push -> sealed labels (D roster) + sealed B / D execution -> sealed-output manifest hash commit + push -> unseal -> oracle guide -> analysis",
-           "mechanism_tags": "post hoc from physics labels only; natural (NAT) and constructed strata reported separately"}
+           "order": "freeze + push -> sealed labels (all p17test roots) + sealed B / D execution -> sealed-output manifest hash commit + push -> unseal -> oracle guide -> analysis",
+           "mechanism_tags": "post hoc from physics labels only; natural (NAT) and constructed strata reported separately",
+           "power": {"minimal_important_effect": "5 percentage points strict TOP1 (B); any non-zero bounded-budget success difference (D)",
+                     "pilot_discordance": {"P16 LB vs LB+G": "16 / 112 decided roots, 0:16", "P16 LB vs ALWAYS_EMPTY": "65 / 112, 25:40",
+                                           "P16 Dp16 vs geometry": "0 / 21"},
+                     "expectation": "B: ~150 decided roots -> ~21 LB vs LB+G discordant pairs; an exact sign test at 0.05 needs >= 16:5, power ~0.5 at a "
+                                    "true 3:1 split and ~1 at the P16 0:16 split. D: P16 showed 0 discordant pairs; a D vs geometry contrast with < 6 "
+                                    "discordant pairs is reported UNDERPOWERED, never as equivalence.",
+                     "status_rule": "paired results with fewer than 6 discordant roots are labelled UNDERPOWERED"}}
     cf.write_json(OUT / "PREREG.json", out)
     return out
 
 
 def p_queue(part, mode) -> None:
-    """Sealed prospective worker: mode 'label' (D roster, sealed labels), 'b' or 'd' (sealed execution); atomic per-root claims."""
+    """Sealed prospective worker: mode 'label' (sealed labels: D roster first, then every other B root), 'b' or 'd' (sealed execution);
+    atomic per-root claims."""
     import p17_exec as ex
     if not (OUT / "PREREG.json").exists():
         raise SystemExit("not pre-registered")
     ro = p_rosters()
     if mode == "label":
-        q = ro["d"]
+        q = ro["d"] + [k for k in ro["b"] if k not in ro["d"]]                # D roster first, then the remaining B roots
         claims = DATA / "p17test" / "label_claims"
         claims.mkdir(parents=True, exist_ok=True)
         for k in q:
