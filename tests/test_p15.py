@@ -144,3 +144,47 @@ def test_14_exhausted_edge_budget_does_not_stop_search():
     import inspect
     src = inspect.getsource(ps.Physics.truncated) + inspect.getsource(ps.Physics._take)
     assert "self._trunc = True\n            return False" not in src and '"goal_plans" in self.exhausted' in src
+
+
+def _root0():
+    plan = json.loads(Path("runs/p15/prospective/plan.json").read_text())
+    k = sorted(plan["roots"])[0]
+    return k, plan["roots"][k]
+
+
+def test_retarget_scene_moves_target_role_and_keeps_geometry():
+    import p15_retarget as pr
+    from scene import scene_from_dict
+    _, r = _root0()
+    s = scene_from_dict(r["scene"])
+    o = next(x.id for x in s.objects if x.kind == "obstacle")
+    s2 = pr.retarget_scene(s, {}, o, s.robot.q_rad)
+    assert s2.get(o).kind == "target" and s2.get("t0").kind == "obstacle"
+    assert [(x.id, x.cell, x.radius_m) for x in s.objects] == [(x.id, x.cell, x.radius_m) for x in s2.objects]
+
+
+def test_index_v2_excludes_evaluation_roots_and_fingerprints():
+    import p15_lookup as pl
+    import p14_sweep_index as sx
+    idx, dropped = pl.index_v2()
+    P, excl = sx._plans(), set(json.loads(Path("runs/p14/eval_roster.json").read_text())["excluded_roots"])
+    bad = {pl.json_fp(P[k]) for k in excl if k in P}
+    roots = {e["root"] for es in idx.by_key.values() for e in es}
+    assert dropped == 17 and not roots & excl and not {pl.json_fp(P[k]) for k in roots} & bad
+
+
+def test_prospective_roster_disjoint_from_index_and_sealed_before_unseal():
+    leak = json.loads(Path("runs/p15/prospective/LEAKAGE_CHECK.json").read_text())
+    pre = json.loads(Path("runs/p15/P15_PREREG.json").read_text())
+    assert leak["roots"] == 32 and not leak["index_overlap_by_root_or_fingerprint"] and len(pre["prospective"]["roster"]) == 32
+
+
+def test_lookup_variants_only_filter_candidates():
+    src = Path("p15_search.py").read_text()
+    assert 'c["similarity"] >= SIM_THR' in src and 'c["rank_in_mode"] == 0' in src and abs(ps.SIM_THR - 1.0499131944444444) < 1e-12
+
+
+def test_sign_test_exact_values():
+    import p15_bench as pb
+    assert abs(pb.sign_test([True] * 6, [False] * 6)["p_two_sided"] - 0.03125) < 1e-12
+    assert pb.sign_test([True] * 5, [False] * 5)["status"] == "UNDERPOWERED"

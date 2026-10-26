@@ -536,3 +536,75 @@ def b_closure() -> dict:
     (OUT / "B").mkdir(parents=True, exist_ok=True)
     cf.write_json(OUT / "B" / "B_CLOSURE.json", out)
     return out
+
+
+# ------------------------------------------------------------------ P15-6 lookup ablations (geometry guide, first 12 retro roots, same budget / cap)
+ABL = {"local": dict(lookup="local"), "global": dict(lookup="global"), "threshold": dict(lookup="combined+thr"),
+       "modal_top1": dict(modal_only=True), "representative": dict(lookup="combined+rep"), "online_only": dict(use_index=False)}
+
+
+def ablation_summary() -> dict:
+    """Each variant vs combined (RETRO_geometry on the same roots): success, calls, lookup hits / rare modes, online fallbacks, CPU,
+    co-solved moves / travel, paired sign test; index build CPU amortized against the online-only per-root CPU difference."""
+    roots = rd(OUT / "P15_PREREG.json")["retrospective"]["roster"][:12]
+    base = rd(OUT / "search" / "RETRO_geometry.json")
+    runs = {"combined": base} | {a: rd(OUT / "search" / f"ABL_{a}.json") for a in ABL if (OUT / "search" / f"ABL_{a}.json").exists()}
+    ks = [k for k in roots if all(k in v for v in runs.values())]
+    per = {}
+    for a, v in runs.items():
+        rows = [v[k] for k in ks]
+        co = [k for k in ks if ok(v[k]) and ok(base[k])]
+        x, y = [ok(v[k]) for k in ks], [ok(base[k]) for k in ks]
+        per[a] = {"n": len(ks), "success": sum(x), "calls_mean": {c: float(np.mean([r["used"][c] for r in rows])) for c in rows[0]["used"]} if rows else {},
+                  "lookup": {c: int(sum(r["stats"][c] for r in rows)) for c in rows[0]["stats"]} if rows else {},
+                  "online_fallback_edges": int(sum(r["used"]["online_moves"] for r in rows)), "cpu_mean": float(np.mean([r["cpu_s"] for r in rows])) if rows else None,
+                  "capped": sum(bool(r["truncated"]) for r in rows), "min_moves_proven": sum(r["min_moves_proven"] for r in rows),
+                  "co_solved_with_combined": len(co),
+                  "co_moves": [float(np.mean([v[k]["plan"]["moves"] for k in co])), float(np.mean([base[k]["plan"]["moves"] for k in co]))] if co else None,
+                  "co_travel": [float(np.mean([v[k]["plan"]["travel"] for k in co])), float(np.mean([base[k]["plan"]["travel"] for k in co]))] if co else None,
+                  "vs_combined": sign_test(x, y)}
+    build = rd(P14 / "guards" / "p14_d1_build_index.json")["cpu_s"] if (P14 / "guards" / "p14_d1_build_index.json").exists() else None
+    if "online_only" in per and build:
+        d = per["online_only"]["cpu_mean"] - per["combined"]["cpu_mean"]
+        per["amortization"] = {"index_build_cpu_s": build, "per_root_cpu_saving": d, "break_even_roots": build / d if d > 0 else None}
+    out = {"roots": ks, "variants": per, "note": "resource / coverage ablations: threshold, modal_top1 and representative change the number of "
+                                                 "available edges; downstream differences are not attributed to similarity scoring alone"}
+    cf.write_json(OUT / "eval" / "ABLATION_SUMMARY.json", out)
+    return out
+
+
+# ------------------------------------------------------------------ regression and manifests
+def regression() -> None:
+    """Historical suite + P12-P15 tests + six replays (same harness as P13 / P14), outputs under runs/p15/regression."""
+    import subprocess
+    d = OUT / "regression"
+    d.mkdir(parents=True, exist_ok=True)
+    (d / "countcalls.py").write_text(Path("runs/p8/audit/regression/countcalls.py").read_text())
+    subprocess.run([sys.executable, "run.py", "g4c-lf-p4-regression", "--out", str(d), "--cpu", "2400", "--wall", "6000"], capture_output=True, text=True)
+
+
+SOURCES = ("p15_bench.py", "p15_retarget.py", "p15_lookup.py", "p15_search.py", "p15_viz.py", "tests/test_p15.py")
+
+
+def code_manifest() -> None:
+    cf.write_json(OUT / "P15_CODE_MANIFEST.json", {"sources": {p: sha(p) for p in SOURCES}, "search_version": "P15_TRISTATE_SEARCH_V1+AMENDMENT_1",
+                                                   "d_checkpoints": {str(p): sha(p) for p in sorted(Path("runs/p13/models/ckpt").glob("P13-D*-s*.pt"))},
+                                                   "index_p14": sha(P14 / "lookup" / "INDEX.json")})
+
+
+def manifest(status) -> None:
+    import hashlib
+    import subprocess
+    reg = rd(OUT / "regression" / "regression_result.json")
+    arts = sorted(str(p) for sub in ("audit", "retarget", "lookup", "search", "eval", "B", "prospective") for p in (OUT / sub).glob("*.json"))
+    out = {"stage": "P15", "base": "cbd5d9b1509fcfdad733545b7d0e9cba4181ee4f", "status": status,
+           "gates": {g.stem: {k: v for k, v in rd(g).items() if k != "spend"} for g in sorted(OUT.glob("P15_*_GATE.json"))},
+           "regression": {"tests": reg.get("tests"), "replays": reg.get("replays")}, "spend_cpu_s": {c: round(spent(c), 1) for c in CAPS}, "caps": CAPS,
+           "prereg": sha(OUT / "P15_PREREG.json"), "amendment_1": sha(OUT / "P15_PREREG_AMENDMENT_1.json"),
+           "sources": {p: sha(p) for p in SOURCES}, "artifacts": {p: sha(p) for p in arts},
+           "figures": {str(p): sha(p) for p in sorted(Path("visualizations/p15").glob("*")) if p.suffix not in (".sha256", ".json")},
+           "historical_unchanged": {p: (sha(p), h) for p, h in rd(OUT / "audit" / "P15_0_AUDIT.json")["historical_hashes"].items()},
+           "head_at_manifest": subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True).stdout.strip()}
+    out["historical_mismatches"] = [p for p, (a, b) in out["historical_unchanged"].items() if a != b]
+    out["hash"] = "sha256:" + hashlib.sha256(json.dumps(out, sort_keys=True).encode()).hexdigest()
+    cf.write_json(OUT / "P15_FINAL_MANIFEST.json", out)
