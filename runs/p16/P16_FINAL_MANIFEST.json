@@ -1,0 +1,168 @@
+{
+ "amendment_1": "sha256:ec9a0f9d232d7f2c1b6222df4c65cdc0af778c39319faade4600499f7ee97ae8",
+ "base": "20f775483077a568efb225f22aa93ca619160c53",
+ "caps": {
+  "audit": 3000.0,
+  "b_dev": 10000.0,
+  "d_dev": 10000.0,
+  "data": 55000.0,
+  "execution": 38000.0,
+  "final": 6000.0,
+  "motion": 9000.0,
+  "shared": 10000.0,
+  "training": 20000.0
+ },
+ "figures": {
+  "visualizations/p16/b/P16_B_test.png": "sha256:a92a08c3f6258748839e9985a84eb090d3f4b744459065c1e12c4e5e63c00a43",
+  "visualizations/p16/d/P16_D_test.png": "sha256:bba31f5b523e57d991244bc41f444b288e5a4d32b357be3a13311a4c74c9dbdf",
+  "visualizations/p16/d/P16_test_PR_SIDES_47002_Dp16.gif": "sha256:4ddde628c9fbecd23f391297cc60b3bd968285165b42ec2e66a4f3fa8a7f0f7e",
+  "visualizations/p16/d/P16_test_PR_SIDES_47002_geometry.gif": "sha256:a3feddb246e46ce8522c670abb3a8d575c9de4d39d43b697223a5acb0d459af8",
+  "visualizations/p16/shared/P16_dev_ORD_CHAIN_13000.gif": "sha256:b0188ea15663e334d420ae21f51aaa8e8c177068f98c8ac765af7b450a80e597",
+  "visualizations/p16/shared/P16_dev_families.png": "sha256:4477053c72497ef52a854f8c97b319a1bee43b62346b636c285563b426f07e0e"
+ },
+ "gates": {
+  "P16_0_GATE": {
+   "errata": 4,
+   "historical_files": 50082,
+   "historical_mismatches": [],
+   "privileged_paths_in_p16_api": 0,
+   "regression": {
+    "replays": "6/6",
+    "tests": "457/457"
+   },
+   "stage": "P16-0",
+   "status": "PASS"
+  },
+  "P16_1_GATE": {
+   "default_profile": {
+    "hashseeds": 3,
+    "identical": true,
+    "roots": 4
+   },
+   "fast_profile": {
+    "equals_default": true,
+    "identical": true,
+    "repeats": 2,
+    "roots": 3
+   },
+   "online_only": "2/8",
+   "stage": "P16-1",
+   "status": "PASS_DETERMINISM_PARTIAL_COVERAGE",
+   "stopped_runs": "4 default-profile runs stopped at root 5 to respect the motion cap",
+   "transit": {
+    "of": 4,
+    "planned_lower_travel_roots": 2
+   },
+   "wall_clock_cuts": 0
+  },
+  "P16_2_GATE": {
+   "api": "scene-only (deletion test passes)",
+   "dev_roots": 12,
+   "families_not_realised": [
+    6,
+    8
+   ],
+   "families_realised": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    7,
+    9,
+    10
+   ],
+   "historical_mismatches": [],
+   "leakage": {
+    "duplicates_excluded": 2,
+    "index_overlap": 0
+   },
+   "spec": "responses-phases/P16_3D_MIGRATION_SPECIFICATION.md",
+   "splits": {
+    "calib": 40,
+    "test": 168,
+    "train": 79,
+    "val": 21
+   },
+   "stage": "P16-2",
+   "status": "PASS"
+  },
+  "P16_B_GATE": {
+   "arms_trained": 15,
+   "exact_maths": "factorized joint == brute force; UNKNOWN marginalized",
+   "noop_distinct": true,
+   "policies": "runs/p16/b/POLICIES.json",
+   "prospective": "see 0088",
+   "scene_only": true,
+   "stage": "P16-B",
+   "status": "PASS_METHOD"
+  },
+  "P16_D_GATE": {
+   "dp16_trained": 3,
+   "label_fix": "NO_CLEARING_SET masked",
+   "prospective": "see 0088",
+   "recursion": "feasibility-only",
+   "search": "scene-only expanded finite graph",
+   "stage": "P16-D",
+   "status": "PASS_METHOD",
+   "temp_marginals": "UNDERPOWERED (2 labelled temporary-target blocker lattices)"
+  },
+  "P16_FINAL_GATE": {
+   "b_primary": "SUPPORTED",
+   "b_vs_empty": "NEGATIVE",
+   "coverage": {
+    "B": "135/144",
+    "D": "21/48"
+   },
+   "d_effort": "NEGATIVE",
+   "d_primary": "UNDERPOWERED",
+   "hb2": "SUPPORTED_ONE_COHORT",
+   "historical_mismatches": [],
+   "oracle": "NOT_RUN",
+   "regression": {
+    "replays": "6/6",
+    "tests": "474/474"
+   },
+   "stage": "P16-FINAL",
+   "status": "PARTIAL"
+  }
+ },
+ "hash": "sha256:fa2fe1727471275f923af1db044ae0d156e0de5ca50ef14ee9e4753256b9a6f0",
+ "head_at_manifest": "9389d349073de873768d7eb828026755eaf8b096",
+ "historical_mismatches": [],
+ "prereg": "sha256:92f4022159e9388ccd3ce5b4f446fe5ea772ab7b9ac6f5407171493ea280534a",
+ "regression": {
+  "replays": {
+   "g1_hardening": true,
+   "g1_robot": true,
+   "g2_interventions": true,
+   "g3_5_initial_scene": true,
+   "g3_repairs": true,
+   "g4a_evidence_audit": true
+  },
+  "tests": {
+   "failed": 0,
+   "passed": 474,
+   "skipped": 0
+  }
+ },
+ "results": {
+  "B": "sha256:41e64736528c66fcad85d85403a59aa3fb047c964f1bd8b5246edad6e218319a",
+  "D": "sha256:8bb67f1dc1851ba81808622de581157bf9aa91d8ee3e012221eb3b990b08cb83"
+ },
+ "sealed_manifest": "sha256:ead7da88d229e9b4036117806e9a29ba1c22ed2209c2f0321a0acc6cf234c3ae",
+ "spend_cpu_s": {
+  "audit": 828.1,
+  "b_dev": 1203.4,
+  "d_dev": 10009.5,
+  "data": 37733.8,
+  "execution": 37755.7,
+  "final": 1320.2,
+  "motion": 8160.1,
+  "shared": 6299.1,
+  "training": 5683.2
+ },
+ "stage": "P16",
+ "status": "PARTIAL",
+ "training_data": "sha256:1d9c736ce23b54992f6f9e63102af587d95d84a4b57a738c70a476ee12456e16"
+}

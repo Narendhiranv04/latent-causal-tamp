@@ -968,3 +968,24 @@ def test_queue(part, seeds=(0, 1, 2)) -> None:
         out["cpu_root"] = time.process_time() - c0
         res[k] = out
         cf.write_json(f, res)
+
+
+SOURCES = ("p16_common.py", "p16_motion.py", "p16_b.py", "p16_d.py", "p16_eval.py", "p16_viz.py", "tests/test_p16.py")
+
+
+def manifests(status="PARTIAL") -> None:
+    import glob
+    cf.write_json(OUT / "P16_CODE_MANIFEST.json", {"sources": {p: sha(p) for p in SOURCES},
+                                                   "checkpoints": {p: sha(p) for p in sorted(glob.glob("runs/p16/b/ckpt/*.pt") + glob.glob("runs/p16/d/ckpt/*.pt"))},
+                                                   "planner_profile": "P16_FAST", "search": "p16_common.search (expanded finite, repeat <= 2)"})
+    reg = rd(OUT / "regression_final" / "regression_result.json")
+    out = {"stage": "P16", "base": "20f775483077a568efb225f22aa93ca619160c53", "status": status,
+           "gates": {g.stem: {k: v for k, v in rd(g).items() if k != "spend"} for g in sorted(OUT.glob("P16_*_GATE.json"))},
+           "prereg": sha(OUT / "P16_PREREG.json"), "amendment_1": sha(OUT / "P16_PREREG_AMENDMENT_1.json"),
+           "sealed_manifest": sha(DATA / "test" / "SEALED_MANIFEST.json"), "training_data": sha(OUT / "b" / "TRAIN.pt"),
+           "regression": {"tests": reg.get("tests"), "replays": reg.get("replays")}, "spend_cpu_s": {c: round(spent(c), 1) for c in CAPS}, "caps": CAPS,
+           "results": {"B": sha(OUT / "eval" / "B_TEST.json"), "D": sha(OUT / "eval" / "D_TEST.json")},
+           "figures": {p: sha(p) for p in sorted(glob.glob("visualizations/p16/*/*")) if not p.endswith(".sha256")},
+           "historical_mismatches": verify_historical(), "head_at_manifest": _git("rev-parse", "HEAD").strip()}
+    out["hash"] = cf.stable_hash({k: v for k, v in out.items() if k != "hash"})
+    cf.write_json(OUT / "P16_FINAL_MANIFEST.json", out)

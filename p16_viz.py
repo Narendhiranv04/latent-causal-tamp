@@ -169,3 +169,12 @@ def d_figures(rows, an, out="d/P16_D_test") -> None:
     ax[2].legend(fontsize=7, framealpha=0.95)
     (DST / out).parent.mkdir(parents=True, exist_ok=True)
     pv.png(f, DST / f"{out}.png", "P16-D test: anytime success, effort and co-solved travel (identical action domain, budgets and certifier)")
+
+
+def figures() -> None:
+    import p16_eval as pe
+    rows = pe.merged("test", "sealed_exec")
+    b = {k: {"family": v["family"], **v["b"]} for k, v in rows.items() if "b" in v}
+    d = {k: {"family": v["family"], "guides": v["d"]} for k, v in rows.items() if "d" in v}
+    b_figures(b, rd(pe.OUT / "eval" / "B_TEST.json"))
+    d_figures(d, rd(pe.OUT / "eval" / "D_TEST.json"))
