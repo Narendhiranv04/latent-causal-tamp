@@ -100,34 +100,43 @@ def raw_temp_p(ms, s0, cfg, cells, q, target, dest, others):
     return pr.d_predict(ms, rec, target, list(others) + ["t0"])
 
 
-def _fit_tb(z, y, iters=200):
-    z, y, w = np.asarray(z, float), np.asarray(y, float), np.array([1.0, 0.0])
-    X = np.stack([z, np.ones_like(z)], 1)
+def _fit_tb(z, y, form="full", iters=200, ridge=1.0):
+    """MAP Platt scaling p' = sigmoid(a z + b), Gaussian prior centred on the identity map (precision `ridge`). form: 'identity' (a, b) =
+    (1, 0); 'bias' (a = 1, b fitted); 'full' (a, b fitted)."""
+    z, y, w0 = np.asarray(z, float), np.asarray(y, float), np.array([1.0, 0.0])
+    if form == "identity" or not len(z):
+        return 1.0, 0.0
+    X, w, free = np.stack([z, np.ones_like(z)], 1), w0.copy(), [0, 1] if form == "full" else [1]
     for _ in range(iters):
-        p = 1 / (1 + np.exp(-X @ w))
-        H = (X * (p * (1 - p))[:, None]).T @ X + 1e-6 * np.eye(2)
-        w = w - np.linalg.solve(H, X.T @ (p - y))
+        p = 1 / (1 + np.exp(-np.clip(X @ w, -500, 500)))
+        Xf = X[:, free]
+        H = (Xf * (p * (1 - p))[:, None]).T @ Xf + ridge * np.eye(len(free))
+        w[free] = w[free] - np.linalg.solve(H, Xf.T @ (p - y) + ridge * (w[free] - w0[free]))
     return float(w[0]), float(w[1])
 
 
 def fit_calibration(kind, probes) -> dict:
-    """probes: [{'root', 'logit_raw', 'y'}] for THIS model family; root-split 2-fold CV report + fit on all; p' = sigmoid(a * logit + b)."""
+    """probes: [{'root', 'logit_raw', 'y'}] for THIS model family. The calibration form (identity / bias / full) is selected by root-split
+    2-fold cross-validated log loss on the same probes, then fitted on all; p' = sigmoid(a * logit + b)."""
     roots = sorted({p["root"] for p in probes})
     half = set(roots[::2])
-    cv = []
-    for tr_, te_ in ((half, set(roots) - half), (set(roots) - half, half)):
-        A = [p for p in probes if p["root"] in tr_]
-        B = [p for p in probes if p["root"] in te_]
-        if len({p["y"] for p in A}) < 2 or not B:
-            continue
-        a, b = _fit_tb([p["logit_raw"] for p in A], [p["y"] for p in A])
-        cv += [(1 / (1 + np.exp(-(a * p["logit_raw"] + b))), p["y"]) for p in B]
+    sg = lambda a, b, p: 1 / (1 + np.exp(-np.clip(a * p["logit_raw"] + b, -500, 500)))  # noqa: E731
+    ll = lambda rows: float(np.mean([-np.log(max(pp if y else 1 - pp, 1e-12)) for pp, y in rows])) if rows else None  # noqa: E731
     rec = lambda rows, c: float(np.mean([pp >= 0.5 for pp, y in rows if y == c])) if any(y == c for _, y in rows) else None  # noqa: E731
-    a, b = _fit_tb([p["logit_raw"] for p in probes], [p["y"] for p in probes]) if len({p["y"] for p in probes}) == 2 else (1.0, 0.0)
-    raw = [(1 / (1 + np.exp(-p["logit_raw"])), p["y"]) for p in probes]
-    return {"kind": kind, "n": len(probes), "roots": len(roots), "positives": sum(p["y"] for p in probes), "slope": a, "bias": b,
-            "raw": {"feasible_recall": rec(raw, 1), "infeasible_recall": rec(raw, 0)},
-            "cv": {"n": len(cv), "feasible_recall": rec(cv, 1), "infeasible_recall": rec(cv, 0)}}
+    forms = {}
+    for form in ("identity", "bias", "full"):
+        cv = []
+        for tr_, te_ in ((half, set(roots) - half), (set(roots) - half, half)):
+            A, B = [p for p in probes if p["root"] in tr_], [p for p in probes if p["root"] in te_]
+            if A and B:
+                a, b = _fit_tb([p["logit_raw"] for p in A], [p["y"] for p in A], form)
+                cv += [(sg(a, b, p), p["y"]) for p in B]
+        forms[form] = {"cv_logloss": ll(cv), "n": len(cv), "feasible_recall": rec(cv, 1), "infeasible_recall": rec(cv, 0)}
+    best = min(forms, key=lambda f: (forms[f]["cv_logloss"] if forms[f]["cv_logloss"] is not None else np.inf, ["identity", "bias", "full"].index(f)))
+    a, b = _fit_tb([p["logit_raw"] for p in probes], [p["y"] for p in probes], best)
+    raw = [(sg(1.0, 0.0, p), p["y"]) for p in probes]
+    return {"kind": kind, "n": len(probes), "roots": len(roots), "positives": sum(p["y"] for p in probes), "form": best, "slope": a, "bias": b,
+            "raw": {"feasible_recall": rec(raw, 1), "infeasible_recall": rec(raw, 0), "logloss": ll(raw)}, "cv": forms[best], "cv_forms": forms}
 
 
 class Guide:
@@ -207,29 +216,39 @@ class Guide:
 
 
 # ------------------------------------------------------------------ probes, per-family calibration, Dp17 training
+def _lattice_probes(L, split, root, base, dest, extra):
+    """One probe per decided state of a temporary lattice: target L['target'] -> L['dest'] with the subset U of the other pool objects
+    parked at their destinations (U = '-' is the unedited state)."""
+    out = []
+    for U, st in L["statuses"].items():
+        y = 1 if st == db.V else 0 if st == db.C else None
+        if y is None:
+            continue
+        parked = {} if U == "-" else {x: int(dest[x]) for x in U.split("+")}
+        out.append({"split": split, "root": root, "target": L["target"], "dest": L["dest"], "others": L["others"], "y": y, "type": L["type"],
+                    "mask": L["mask"] if U == "-" else None, "U": U, "cells": {**base, **parked} if base or parked else None, **extra})
+    return out
+
+
 def probes_from_inter(inter, split) -> list:
     out = []
     for k, v in inter.items():
         for L in v.get("lattices", []):
-            st = L["statuses"].get("-")
-            y = 1 if st == db.V else 0 if st == db.C else None
-            if y is not None:
-                out.append({"split": split, "root": k, "target": L["target"], "dest": L["dest"], "others": L["others"], "y": y, "type": L["type"],
-                            "mask": L["mask"], "cells": v["state"]["cells"], "q": v["state"]["q"], "state": "intermediate"})
+            out += _lattice_probes(L, split, k, v["state"]["cells"], v.get("dest", {}), {"q": v["state"]["q"], "state": "intermediate"})
     return out
 
 
 def probes_from_labels(labs, plan_roots, split) -> list:
-    """Temporary-target probes: (root, state = original, target o, destination parking[o], no other edit) -> y (1 VERIFIED / 0 CERTIFIED)."""
+    """Temporary-target probes at the original state: (root, target o -> parking[o], other pool objects parked in subset U) -> y (1 VERIFIED /
+    0 CERTIFIED); UNKNOWN states are not probes."""
+    from scene import scene_from_dict
     out = []
     for k, v in labs.items():
-        for L in v.get("temp_lattices", []):
-            st = L["statuses"].get("-")
-            y = 1 if st == db.V else 0 if st == db.C else None
-            if y is None:
-                continue
-            out.append({"split": split, "root": k, "target": L["target"], "dest": L["dest"], "others": L["others"], "y": y, "type": L["type"],
-                        "mask": L["mask"]})
+        if not v.get("temp_lattices"):
+            continue
+        base = {o.id: o.cell for o in scene_from_dict(plan_roots[k]["scene"]).objects}
+        for L in v["temp_lattices"]:
+            out += _lattice_probes(L, split, k, base, v["catalogue"]["parking"], {"state": "original"})
     return out
 
 
@@ -247,8 +266,9 @@ def score_probes(kind, probes, plan_by_split) -> list:
     return out
 
 
-def train_dp17(seed, lam=2.0, updates=600, data="runs/p17/d/D_ITEMS.pt") -> None:
-    """Pairless D on P13 items (PARKING_LATTICE_V1, NO_CLEARING masked) + P16 / P17 roots with MULTI_DEST_LATTICE_V1 labels (tagged)."""
+def train_dp17(seed, lam=2.0, updates=3000, data="runs/p17/d/D_ITEMS.pt", patience_evals=15, tol=1e-3) -> None:
+    """Pairless D on P13 items (PARKING_LATTICE_V1, NO_CLEARING masked) + P16 / P17 roots with MULTI_DEST_LATTICE_V1 labels (tagged). Validation
+    every 20 updates; early stop after patience_evals evaluations without relative improvement > tol; best checkpoint restored."""
     import copy
     import math
     import torch
@@ -258,7 +278,7 @@ def train_dp17(seed, lam=2.0, updates=600, data="runs/p17/d/D_ITEMS.pt") -> None
     rng = np.random.default_rng(seed)
     m = db.ModelD(pair=False).double()
     opt = torch.optim.AdamW(m.parameters(), lr=1e-3, weight_decay=1e-4)
-    best, hist, c0 = (math.inf, None, -1), [], time.process_time()
+    best, hist, c0, stale = (math.inf, None, -1), [], time.process_time(), 0
     for u in range(updates):
         batch = [tr[i] for i in rng.choice(len(tr), 12, replace=False)]
         opt.zero_grad()
@@ -270,13 +290,18 @@ def train_dp17(seed, lam=2.0, updates=600, data="runs/p17/d/D_ITEMS.pt") -> None
             with torch.no_grad():
                 v = float(np.mean([float(db.nll(*m(R, pool), y0, b, 1.0)) for R, pool, y0, b in va]))
             hist.append({"update": u + 1, "train": float(loss), "val": v})
-            if v < best[0]:
-                best = (v, copy.deepcopy(m.state_dict()), u + 1)
+            if v < best[0] * (1 - tol) if math.isfinite(best[0]) else True:
+                best, stale = (v, copy.deepcopy(m.state_dict()), u + 1), 0
+            else:
+                stale += 1
+            if stale >= patience_evals:
+                break
     m.load_state_dict(best[1])
     (OUT / "ckpt").mkdir(parents=True, exist_ok=True)
     torch.save(m.state_dict(), OUT / "ckpt" / f"P17-Dp-l{lam}-s{seed}.pt")
     import config as cf
     (OUT / "runs").mkdir(parents=True, exist_ok=True)
     cf.write_json(OUT / "runs" / f"P17-Dp-l{lam}-s{seed}.json", {"seed": seed, "lambda_B": lam, "val_nll": best[0], "best_update": best[2], "history": hist,
+                                                                "updates_cap": updates, "stopped_early": stale >= patience_evals, "patience_evals": patience_evals,
                                                                 "train_items": len(tr), "train_masks": sum(b is not None for *_, b in tr), "val_items": len(va),
                                                                 "train_cpu_s": round(time.process_time() - c0, 1), "protocols": d.get("protocols")})

@@ -177,26 +177,70 @@ def model(arm):
     return m
 
 
-def fit(arm, seed, train, val, updates, patience_evals=8):
-    """P13 / P16 optimiser (AdamW 1e-3, batch 12 RootSampler, clip 10) with validation early stopping on root NLL; FULLB keeps its historical
+def fit(arm, seed, train, val, updates, patience_evals=15):
+    """P13 / P16 optimiser (AdamW 1e-3, batch 12 RootSampler, clip 10) with validation early stopping on root NLL (_fit_es); FULLB keeps its historical
     lambda_static = lambda_travel = 1, every other arm uses 0."""
-    import p9_l3 as l3
     import joint_likelihood as jl
     import unique_factor as uf
     import unique_factor_keyed as ufk
     objective = "poe" if arm in ("A", "SF") else "unique"
     lam = 1.0 if arm == "FULLB" else 0.0
-    l3.build = lambda a: model(arm)
     old_u, old_j = uf.total, jl.total
     uf.total, jl.total = functools.partial(old_u, lam_static=lam, lam_travel=lam), functools.partial(old_j, lam_static=lam, lam_travel=lam)
     try:
         with ufk.installed() if arm in KEYED else contextlib.nullcontext():
-            return l3.fit(arm, seed, updates, train, val, objective)
+            return _fit_es(arm, seed, updates, train, val, objective, patience_evals)
     finally:
         uf.total, jl.total = old_u, old_j
 
 
-def train(arm, seed, data="runs/p17/b/TRAIN.pt", updates=1200) -> None:
+def _fit_es(arm, seed, updates, train, val, objective, patience_evals, every=20, tol=1e-3):
+    """p9_l3.fit (same optimiser, sampler, clip, validation cadence, best-checkpoint restore) plus early stopping: stop once validation root
+    NLL has not improved by more than tol (relative) for patience_evals consecutive evaluations; updates is the hard cap."""
+    import collections
+    import copy
+    import abc8
+    import joint_likelihood as jl
+    import unique_factor as uf
+    torch.manual_seed(seed)
+    np.random.seed(seed)
+    m = model(arm)
+    tot_fn = uf.total if objective == "unique" else jl.total
+    opt = torch.optim.AdamW(m.parameters(), lr=1e-3, weight_decay=1e-4)
+    smp, hist, best, stale = abc8.RootSampler(train, 12, seed), [], (float("inf"), None, -1), 0
+    for u in range(updates):
+        opt.zero_grad()
+        tot, rec = tot_fn(m, [train[i] for i in smp.next()])
+        if not torch.isfinite(tot):
+            hist.append({"update": u, "nonfinite": True})
+            break
+        tot.backward()
+        g = collections.defaultdict(float)
+        for n, p in m.named_parameters():
+            if p.grad is not None:
+                g[n.split(".")[0]] += float(p.grad.norm()) ** 2
+        pre = float(torch.nn.utils.clip_grad_norm_(m.parameters(), 10.0))
+        opt.step()
+        rec |= {"update": u, "total": float(tot.detach()), "grad_pre": pre, "clipped": pre > 10.0, "grad_by_module": {k: round(v ** 0.5, 5) for k, v in g.items()}}
+        if (u + 1) % every == 0:
+            with torch.no_grad():
+                rec["val"] = tot_fn(m, val)[1]["nll"]
+            if rec["val"] < best[0] * (1 - tol) if np.isfinite(best[0]) else True:
+                best, stale = (rec["val"], copy.deepcopy(m.state_dict()), u + 1), 0
+            else:
+                stale += 1
+        hist.append(rec)
+        if stale >= patience_evals:
+            break
+    if best[1] is not None:
+        m.load_state_dict(best[1])
+    return m, {"history": hist, "best_update": best[2], "val_root_nll": best[0], "updates": updates, "updates_run": len(hist),
+               "stopped_early": stale >= patience_evals, "patience_evals": patience_evals, "eval_every": every, "tol": tol,
+               "params": sum(p.numel() for p in m.parameters()),
+               "clip_fraction": float(np.mean([h.get("clipped", False) for h in hist])), "nonfinite": any(h.get("nonfinite") for h in hist)}
+
+
+def train(arm, seed, data="runs/p17/b/TRAIN.pt", updates=3000) -> None:
     import p17_eval as pe
     d = torch.load(data, weights_only=False)
     tr, va = prepare(d["train"]), prepare(d["val"])
@@ -240,7 +284,32 @@ def coupling_off(m):
 
 
 def score(m, arm, roots) -> dict:
-    """{root: [{query, seq, m, u, p}]} deployable prior marginals (no labels used)."""
+    """{root: [{query, seq, m, u, p}]} deployable prior marginals (no labels used): exactly p9_l3.root_eval9's prior-marginal rows, without
+    its offline conditionals / evidence (which deployment never uses)."""
+    import abc7_train as t7
+    import joint_likelihood as jl
+    import unique_factor as uf
+    import unique_factor_keyed as ufk
+    base = arm[4:] if arm.startswith("P13:") else arm.split("|")[0]
+    mode = "factorized" if base in ("A", "SF") else "unique"
+    out = {}
+    with ufk.installed() if base in KEYED else contextlib.nullcontext(), torch.no_grad():
+        for r in roots:
+            sq = [q for c in r["cands"] if not c["seq"] for s, q in zip(c["slots"], c["z_q"]) if s[:2] in ("z0", "zS")]
+            if mode == "unique":
+                pm = uf.prior_marginals(uf.instances(m, r))
+            else:
+                pm = {q: float(torch.sigmoid(x)) for q, x in jl.factorized_logits(m, r, t7.forward(m, r)).items()}
+            rows = []
+            for c in r["cands"]:
+                p = min(max(pm[c["query"] if c["seq"] else sq[0]], 1e-9), 1 - 1e-9)
+                rows.append({"query": c["query"], "seq": [(r["ids"][i], d) for i, d in c["seq"]], "m": len(c["seq"]), "u": float(np.log(p) - np.log1p(-p)), "p": p})
+            out[r["key"]] = rows
+    return out
+
+
+def score_slow(m, arm, roots) -> dict:
+    """Reference: the same rows through p9_l3.root_eval9 (used by the equality test)."""
     import p9_l3 as l3
     import unique_factor_keyed as ufk
     base = arm[4:] if arm.startswith("P13:") else arm.split("|")[0]

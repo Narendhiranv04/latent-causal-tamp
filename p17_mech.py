@@ -416,3 +416,96 @@ def corridor2_spec(rng):
     fill = fill[:int(len(fill) * float(rng.uniform(0.0, 1.0)))]
     return {"T": T, "goal": goal, "movers": chain + extra, "fixed": walls + fill, "stratum": str(rng.choice(["S0", "S1", "S2", "S3"])),
             "gen": "corridor2", "free_buffers": free}
+
+
+# ------------------------------------------------------------------ M7: exact finite LIBRARY motion domain (declared scope, not global)
+LIB_DOMAIN = "P17_LIBRARY_DOMAIN_V1"
+
+
+def lib_domain(task, idx, cache=None, target="planner"):
+    """Finite, exactly decidable motion domain for relocations: the frozen lookup library's candidate trajectories (first K_MODES verified
+    terminal configurations) with DIRECT joint-space transits only; no online relocation planning. A relocation edge with no realization in
+    this finite set is REFUTED_IN_LIBRARY_DOMAIN (decided within the domain, never a global negative). Target action: the P16_FAST
+    deterministic planner (VERIFIED is sound) and the scoped certificates; a planner failure stays UNKNOWN and blocks any proof.
+    target='library': the target action is decided in the same finite set (library target trajectories for (target cell -> goal) with a
+    direct transit; none realizable -> REFUTED_IN_LIBRARY_DOMAIN); the planner is used only when the library has no target candidate."""
+    import p15_search as ps
+    import p16_motion as pm
+
+    class LibDomain(pm.DetPhysics):
+        def _goal(self, cells, q, k):
+            if target != "library":
+                return super()._goal(cells, q, k)
+            import geometry as ge
+            import motion as mo
+            import ordered as od
+            import p14_eval as p14
+            import p14_sweep_index as sx
+            import p15_retarget as pr
+            s = self.scene(cells, q)
+            c = pr.certified(self.cfg, self.robot, s, "t0", self.goal_cell)
+            if c:
+                return (ps.CI, {"certificates": c}, 0.0)
+            res = sx.lookup_candidates(self.idx, "t0", cells["t0"], self.goal_cell, s, self.goal_cell, s.get("t0").radius_m, "combined", self.modal_only)
+            if not res["candidates"]:
+                return super()._goal(cells, q, k)
+            for cand in res["candidates"]:
+                a = self.idx.arrays(cand["entry"])
+                tr, how = self._transit(s, "t0", q, a, k)
+                if tr is None:
+                    continue
+                try:
+                    v = mo.certify_trajectory(self.robot, s, "t0", a, self.p["delta"], self.p["eps"], self.p["evals"])
+                except ValueError:
+                    continue
+                if all(x.status == ge.CLEAR for x in v):
+                    rec = p14._merge(tr, a)
+                    return (ps.V, rec, float(od.joint_travel(self.robot, [tr])["J"] or 0.0) + cand["travel_J"])
+            return (ps.CI, {"scope": LIB_DOMAIN, "why": "no library target realization", "candidates": len(res["candidates"])}, 0.0)
+
+        def _edges(self, cells, q, o, d, k):
+            res = super()._edges(cells, q, o, d, k)
+            if res and not any(x[0] == ps.V for x in res) and res[0][0] == ps.U_BUD and \
+                    (res[0][4] or {}).get("lookup") in ("LIBRARY_COLLISION", ps.U_TR, ps.U_LIB):
+                return [(ps.CI, None, None, 0.0, {"scope": LIB_DOMAIN, "why": res[0][4]["lookup"]})]
+            return res
+
+    return LibDomain(task, idx, budget={"motion_checks": 10 ** 9, "online_moves": 0, "goal_plans": 10 ** 6, "transit_plans": 0},
+                     transit="direct", cache=cache)
+
+
+def m7_library(root, key, positive=None, n_max=4, node_cap=10 ** 6, target="library") -> dict:
+    """M7 within LIB_DOMAIN: (i) the repeat witness is VERIFIED in the domain and replayed; (ii) the corrected search with per_obj = 1 (no
+    repeat) over the same declared slots returns NO_PLAN_IN_FULLY_ADJUDICATED_FINITE_GRAPH (every edge and goal decided); (iii) per_obj = 2
+    finds a plan. M7 holds in the domain iff (i) and (ii)."""
+    import p15_lookup as pl
+    import p16_common as pc
+    import p16_motion as pm
+    import p17_domain as dm
+    import p17_search as s17
+    import p17_verify as pv
+    idx = pl.index_v2()[0]
+    task, cache = pc.task_from_root(root, key), {}
+    out = {"domain": LIB_DOMAIN, "target_action": target, "root": key}
+    ph = lib_domain(task, idx, cache, target)
+    cells0, q0 = {o.id: o.cell for o in ph.s0.objects}, np.asarray(ph.s0.robot.q_rad, float)
+    mv, _ = dm.movers(task, cells0)
+    if positive:
+        c0 = time.process_time()
+        v = pv.verify_existential(ph, [tuple(a) for a in positive])
+        rep = pm.replay(ph, v["plan"]) if v["plan"] else None
+        out["positive"] = {"sequence": positive, "status": v["status"], "replay": rep, "travel": v["plan"]["travel"] if v["plan"] else None,
+                           "steps": [(s["object"], s["dest"], s.get("via"), s.get("mode"), s.get("transit")) for s in v["plan"]["steps"]] if v["plan"] else None,
+                           "cpu_s": time.process_time() - c0}
+    for per_obj in (1, 2):
+        c0 = time.process_time()
+        ph = lib_domain(task, idx, cache, target)
+        r = s17.search(ph, lambda c, q, m, cands: cands, mv, dm.slot_fn(ph, idx, width=4, origin=cells0), cells0, q0, n_max, per_obj, node_cap)
+        out[f"per_obj_{per_obj}"] = {"found": r["found"], "claim": r["claim"], "flags": r["flags"], "moves": r["plan"]["moves"] if r["found"] else None,
+                                     "steps": [(s["object"], s["dest"], s.get("via")) for s in r["plan"]["steps"]] if r["found"] else None,
+                                     "edges": r["log"]["edges"], "goals": r["log"]["goals"], "nodes": r["log"]["nodes"], "cpu_s": time.process_time() - c0}
+        if per_obj == 1 and r["claim"] != "NO_PLAN_IN_FULLY_ADJUDICATED_FINITE_GRAPH" and not positive:
+            break
+    out["M7_in_domain"] = bool(out.get("positive", {}).get("status") == pv.V and (out["positive"]["replay"] or {}).get("ok")
+                               and out["per_obj_1"]["claim"] == "NO_PLAN_IN_FULLY_ADJUDICATED_FINITE_GRAPH")
+    return out

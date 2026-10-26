@@ -47,7 +47,8 @@ def d_root(task, idx, guides, cache, oracle=None, dino=None, n_max=4, per_obj=2,
 
 
 def b_root(task, idx, plan_root, key, arms, policies, ms, dino, cache) -> dict:
-    """One B root: catalogue, scores (ensemble mean over seeds), choices, existential execution, baselines."""
+    """One B root: catalogue, scores (ensemble mean over seeds), choices, existential execution, baselines. Arm names: 'X' (own scores and
+    policy), 'X|nocpl' (inference-only coupling toggle, own policy), 'X@Y' (X's scores, Y's thresholds)."""
     import p16_motion as pm
     import p17_b as pb
     import p17_verify as pv
@@ -60,8 +61,15 @@ def b_root(task, idx, plan_root, key, arms, policies, ms, dino, cache) -> dict:
     r = pb.prepare(pb.records({key: plan_root}, {key: {"catalogue": cat, "original": {"y": None}, "edits": {}, "sequences": {}}}, "test", dino,
                               with_labels=False))[0]
     rows_by = {}
-    for a, mm in ms.items():
-        sc = [pb.score(m, a, [r])[key] for m in mm]
+    for a in {x.split("@")[0] for x in arms if x.split("@")[0].split("|")[0] in ms}:
+        mm = ms[a.split("|")[0]]
+        if a.endswith("|nocpl"):
+            sc = []
+            for m in mm:
+                with pb.coupling_off(m):
+                    sc.append(pb.score(m, a, [r])[key])
+        else:
+            sc = [pb.score(m, a, [r])[key] for m in mm]
         rows_by[a] = []
         for i, x in enumerate(sc[0]):
             p_ = float(np.mean([s[i]["p"] for s in sc]))
@@ -72,8 +80,9 @@ def b_root(task, idx, plan_root, key, arms, policies, ms, dino, cache) -> dict:
     out = {"y0_status": st0, "catalogue": {x: cat[x] for x in ("pool", "parking", "movers", "generated", "kept", "omitted")}, "arms": {}}
     verified = {}
     for a in arms:
-        rows = rows_by.get(a, any_rows)
-        q = p16e.b_select(a, rows, policies.get(a, {}), r["R"], [r["ids"].index(o) for o in cat["pool"]], rng)
+        sk, _, thr = a.partition("@")                        # 'X@Y': X's scores under Y's frozen thresholds (swapped-threshold analysis)
+        rows = rows_by.get(sk, any_rows)
+        q = p16e.b_select(sk, rows, policies.get(thr or a, {}), r["R"], [r["ids"].index(o) for o in cat["pool"]], rng)
         if q == "ABSTAIN":
             out["arms"][a] = {"choice": q, "status": "ABSTAIN"}
             continue
@@ -104,8 +113,10 @@ def verify_first(task, idx, cache, dino=None) -> dict:
             "cpu_virtual": ph.vcpu + g["cpu_virtual"], "cpu_actual": time.process_time() - c0}
 
 
-def run_roots(split, keys, part, mode, guides=None, arms=None, oracles=None, sealed=False) -> None:
-    """mode 'd', 'b' or 'bd'. Per-root checkpointed output runs/p17/data/<split>/{sealed_}exec_<part>.json."""
+def run_roots(split, keys, part, mode, guides=None, arms=None, oracles=None, sealed=False, tag="exec", claims=None) -> None:
+    """mode 'd', 'b' or 'bd'. Per-root checkpointed output runs/p17/data/<split>/{sealed_}<tag>_<part>.json. claims: a directory for atomic
+    per-root claims shared by several workers (a root is computed by exactly one worker)."""
+    import os
     import json
     from pathlib import Path
     import p15_lookup as pl
@@ -114,16 +125,23 @@ def run_roots(split, keys, part, mode, guides=None, arms=None, oracles=None, sea
     import p17_eval as pe
     import learn_data as ld
     idx, plan = pl.index_v2()[0], pe._plan(split)
-    f = pe.DATA / split / (("sealed_exec" if sealed else "exec") + f"_{part}.json")
+    f = pe.DATA / split / (("sealed_" if sealed else "") + f"{tag}_{part}.json")
     res = pe.rd(f) if f.exists() else {}
     dino = ld.dino()
     ms, pol = {}, {}
     if "b" in mode:
         pol = json.loads(Path("runs/p17/b/POLICIES.json").read_text())
-        ms = {a: [pb.load(a, s) for s in range(pol.get("_seeds", 3))] for a in arms if a not in ("empty_always", "random", "geometry", "verify_first")}
+        ms = {a: [pb.load(a, s) for s in range(pol.get("_seeds", 3))] for a in {x.split("@")[0].split("|")[0] for x in arms}
+              if a not in ("empty_always", "random", "geometry", "verify_first")}
     for k in keys:
         if k in res:
             continue
+        if claims is not None:
+            Path(claims).mkdir(parents=True, exist_ok=True)
+            try:
+                os.close(os.open(Path(claims) / f"{k}.claim", os.O_CREAT | os.O_EXCL))
+            except FileExistsError:
+                continue
         c0, w0 = time.process_time(), time.time()
         task, cache = pc.task_from_root(plan["roots"][k], k), {}
         out = {"family": plan["roots"][k].get("family")}

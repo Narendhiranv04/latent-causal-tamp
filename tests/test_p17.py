@@ -177,3 +177,211 @@ def test_b_and_d_share_one_action_domain():
     first = {tuple(s[0]) for s in rep["sequences"] if s}
     mv, _ = dm.movers(task, cells)
     assert first == {(o, d) for o in mv for d in sl(cells, o)[:6]}                          # B's 1-move set == D's root expansions
+
+
+def test_fast_b_scorer_equals_root_eval9_marginals():
+    import torch
+    import p17_b as pb
+    recs = torch.load("runs/p16/b/DEV_records.pt", weights_only=False)
+    rs = pb.prepare((recs["roots"] if isinstance(recs, dict) else recs)[:2])
+    for arm in ("LB", "LB+G", "FULLB", "A"):
+        torch.manual_seed(0)
+        m = pb.model(arm).eval()
+        f, s = pb.score(m, arm, rs), pb.score_slow(m, arm, rs)
+        for k in f:
+            assert [x["query"] for x in f[k]] == [x["query"] for x in s[k]]
+            assert max(abs(x["p"] - y["p"]) for x, y in zip(f[k], s[k])) < 1e-12
+
+
+# ------------------------------------------------------------------ P17 search: repeats, cycles and finite-domain claims
+def _repeat_toy():
+    # only A->5, B->6, A->7 clears the target; no-repeat plans are all decided negative.
+    e = {("A", 5, 0.0): [(ps.V, 1.0, 1.0)], ("B", 6, 1.0): [(ps.V, 2.0, 1.0)], ("A", 7, 2.0): [(ps.V, 3.0, 1.0)]}
+    g = {((("A", 7), ("B", 6), ("t0", 9)), 3.0): (ps.V, 0.5)}
+    t = Toy(g, e)
+    t.e = {k: v for k, v in e.items()}
+    dflt = [(ps.CI, None, 0.0)]
+    t.edges = lambda cells, q, o, d, _t=t: [(st, [{"q": np.zeros((2, 3)), "gap": np.zeros(2)}], None if q2 is None else np.array([q2]), tt, {"via": "toy"})
+                                          for st, q2, tt in _t.e.get((o, d, float(q[0])), dflt)]
+    t.goal = lambda cells, q, _g=g: ((lambda st, tt: (st, {"certificates": ["TARGET_PICK"]} if st == ps.CI else {"q": np.zeros((2, 3)), "gap": np.zeros(2)}, tt))(
+        *_g.get((tuple(sorted(cells.items())), float(q[0])), (ps.CI, 0.0))))
+    return t
+
+
+def test_repeat_needed_no_repeat_class_fully_refuted():
+    t = _phys(_repeat_toy())
+    r1 = _run(t, s17.search, n=4, per_obj=1)
+    assert not r1["found"] and r1["claim"] == "NO_PLAN_IN_FULLY_ADJUDICATED_FINITE_GRAPH"
+    r2 = _run(_phys(_repeat_toy()), s17.search, n=4, per_obj=2)
+    assert r2["found"] and [(s["object"], s["dest"]) for s in r2["plan"]["steps"]] == [("A", 5), ("B", 6), ("A", 7)]
+    assert r2["claim"].startswith("MIN_MOVES")
+    ref = s17.exhaustive(_phys(_repeat_toy()), ["A", "B"], lambda c, o: [x for x in (5, 6, 7) if x not in c.values()], {"A": 1, "B": 2, "t0": 9},
+                         np.array([0.0]), 4, 2)
+    assert ref["best"][0] == 3 and not ref["undecided_depths"]
+
+
+def test_library_domain_refutation_is_scoped_and_budget_stays_unknown(monkeypatch):
+    import p15_search as ps_
+    import p16_motion as pm
+    import p17_mech as m
+    _, task, _, idx = _dev_phys()
+    ph = m.lib_domain(task, idx)
+    for why, expect in (("LIBRARY_COLLISION", ps_.CI), (ps_.U_TR, ps_.CI), (ps_.U_LIB, ps_.CI),
+                        ("motion_checks exhausted before all modes were tried", ps_.U_BUD)):
+        monkeypatch.setattr(pm.DetPhysics, "_edges", lambda self, c, q, o, d, k, _w=why: [(ps_.U_BUD, None, None, 0.0, {"lookup": _w})])
+        r = type(ph)._edges(ph, {}, None, "o00", 1, ("edge",))
+        assert r[0][0] == expect and (expect != ps_.CI or r[0][4]["scope"] == m.LIB_DOMAIN)
+    assert ph.transit == "direct" and ph.budget["online_moves"] == 0
+
+
+# ------------------------------------------------------------------ replay: continuity and mid-sweep collision
+def test_replay_rejects_discontinuity_and_moved_obstacle_in_recorded_sweep():
+    import copy
+    import p16_motion as pm
+    _, task, _, idx = _dev_phys()
+    ph = pm.DetPhysics(task, idx)
+    v = pv.verify_existential(ph, [("o02", 62)], first=True)
+    assert v["status"] == pv.V and pm.replay(ph, v["plan"])["ok"]
+    bad = copy.deepcopy(v["plan"])
+    bad["records"][-1]["q"] = np.asarray(bad["records"][-1]["q"], float) + 0.05
+    assert pm.replay(ph, bad) == {"ok": False, "step": "target", "why": "discontinuous record"} or not pm.replay(ph, bad)["ok"]
+    moved = copy.deepcopy(v["plan"])
+    moved["steps"][0]["dest"] = 36                                   # P17 M5 instance: o02 at 36 lies in the recorded target sweep
+    assert not pm.replay(ph, moved)["ok"]
+
+
+# ------------------------------------------------------------------ B: lean / generic / capacity / coupling-off controls
+def _b_roots(n=2):
+    import torch
+    import p17_b as pb
+    recs = torch.load("runs/p16/b/DEV_records.pt", weights_only=False)
+    return pb.prepare((recs["roots"] if isinstance(recs, dict) else recs)[:n])
+
+
+def test_b_arms_structure_and_parameter_matched_control():
+    import p17_b as pb
+    n = {a: sum(p.numel() for p in pb.model(a).parameters()) for a in ("LB", "LB+G", "LB-W", "FULLB")}
+    assert n["LB"] < n["LB+G"] and abs(n["LB-W"] - n["LB+G"]) / n["LB+G"] < 0.001 and n["FULLB"] > n["LB+G"]
+    g = dict(pb.model("LB+G").named_modules())
+    assert "cpl" in g and not any(k.startswith(("pair_scene", "pair_omit", "ho_")) for k in g)
+    assert not any(k.startswith("cpl") for k in dict(pb.model("LB").named_modules()))
+
+
+def test_coupling_off_is_inference_only_and_keeps_original_marginal():
+    import torch
+    import p17_b as pb
+    rs = _b_roots()
+    torch.manual_seed(0)
+    m = pb.model("LB+G").eval()
+    with torch.no_grad():
+        for p in m.cpl.parameters():
+            p.add_(torch.randn_like(p))                                # make the generic term clearly non-zero
+    sd = {k: v.clone() for k, v in m.state_dict().items()}
+    on = pb.score(m, "LB+G", rs)
+    with pb.coupling_off(m):
+        off = pb.score(m, "LB+G", rs)
+    assert all(torch.equal(sd[k], v) for k, v in m.state_dict().items())
+    diff_rep = 0.0
+    for k in on:
+        e_on, e_off = [x for x in on[k] if x["m"] == 0], [x for x in off[k] if x["m"] == 0]
+        assert abs(e_on[0]["p"] - e_off[0]["p"]) < 1e-12                # P(z0) invariant: no scene-pair term in LB+G
+        diff_rep = max(diff_rep, max(abs(a["p"] - b["p"]) for a, b in zip(on[k], off[k]) if a["m"] > 0))
+    assert diff_rep > 1e-6                                              # repair marginals do change
+
+
+def test_layout_long_sequences_repeats_and_order():
+    import pytest
+    import p17_b as pb
+    lay = pb.layout("k", [("a", 1), ("b", 2), ("a", 3), ("c", 4)], [])
+    assert lay["query"]["zR"] == "seq:k:a>1.b>2.a>3.c>4" and lay["active_count"] <= pb.MAX_ACTIVE
+    with pytest.raises(ValueError):
+        pb.layout("k", [("a", 1), ("a", 2)], [])
+    rev = pb.layout("k", [("b", 2), ("a", 1)], [])
+    assert rev["query"]["zR"] != pb.layout("k", [("a", 1), ("b", 2)], [])["query"]["zR"]
+    assert pb.layout("k", [("a", 1)], [])["query"]["zR"] != pb.layout("k", [("a", 2)], [])["query"]["zR"]
+    om = pb.layout("k", [("a", 1), ("b", 2), ("a", 3)], [])                # omitting b would make a consecutive repeat: inactive
+    assert om["active"][om["slots"].index("zO[1]")] is False
+
+
+def test_early_stopping_training_finite_gradients():
+    import p17_b as pb
+    rs = _b_roots(4)
+    m, rec = pb.fit("LB", 0, rs[:3], rs[3:], updates=40, patience_evals=1)
+    assert not rec["nonfinite"] and rec["best_update"] > 0 and rec["updates_run"] <= 40
+    assert all(np.isfinite(h["grad_pre"]) for h in rec["history"] if "grad_pre" in h)
+
+
+# ------------------------------------------------------------------ D: label protocol versions, per-family calibration
+def test_platt_forms_finite_and_identity_when_calibrated():
+    import p17_d as pd
+    a, b = pd._fit_tb([5.0, 6.0, -5.0, -6.0], [1, 1, 0, 0], "full")              # separable: prior keeps it finite
+    assert np.isfinite(a) and np.isfinite(b) and abs(a) < 50
+    rng = np.random.default_rng(0)
+    z = rng.normal(0, 2, 4000)
+    y = (rng.random(4000) < 1 / (1 + np.exp(-z))).astype(int)
+    pr = [{"root": f"r{i % 40}", "logit_raw": float(zz), "y": int(yy)} for i, (zz, yy) in enumerate(zip(z, y))]
+    c = pd.fit_calibration("X", pr)
+    assert abs(c["slope"] - 1) < 0.2 and abs(c["bias"]) < 0.2
+
+
+def test_guide_uses_only_its_own_family_calibration(tmp_path, monkeypatch):
+    import json
+    import pytest
+    import p17_d as pd
+    _, task, ph, _ = _dev_phys()
+    monkeypatch.setattr(pd, "OUT", tmp_path)
+    (tmp_path / "calibration").mkdir()
+    with pytest.raises(SystemExit):
+        pd.Guide("Dp16", task, ph, ["o00"])
+    (tmp_path / "calibration" / "Dp.json").write_text(json.dumps({"slope": 9.0, "bias": 9.0}))
+    with pytest.raises(SystemExit):
+        pd.Guide("Dp16", task, ph, ["o00"])                                     # another family's file is never used
+    (tmp_path / "calibration" / "Dp16.json").write_text(json.dumps({"slope": 2.0, "bias": -1.0}))
+    assert pd.Guide("Dp16", task, ph, ["o00"]).cal == {"slope": 2.0, "bias": -1.0}
+    assert pd.Guide("Dp16-norec", task, ph, ["o00"]).recursion is False
+
+
+def test_multi_destination_semantics_existential_and_unknown():
+    import d_blockers as db
+    import p15_search as ps_
+    import p17_d as pd
+
+    class P:
+        s0 = type("S", (), {"objects": [type("O", (), {"id": i, "cell": c})() for i, c in (("a", 1), ("b", 2), ("t0", 9))],
+                            "robot": type("R", (), {"q_rad": (0.0,)})()})()
+
+        def goal(self, cells, q):
+            return ({(1, 2): ps_.CI, (5, 2): ps_.CI, (6, 2): ps_.V, (1, 7): ps_.U_PLAN, (1, 8): ps_.CI}.get((cells["a"], cells["b"]), ps_.CI), None, 0)
+    r = pd.multi_dest_lattice(P(), ["a", "b"], lambda c, o: {"a": [5, 6], "b": [7, 8]}[o], k=2)
+    assert r["statuses"][("a",)] == db.V                                        # one admissible assignment verifies -> sufficient
+    assert r["statuses"][()] == db.C
+    assert r["statuses"][("b",)] is None                                        # one assignment UNKNOWN -> not negative
+
+
+# ------------------------------------------------------------------ custody / leakage / resumption
+def test_split_custody_calibration_disjoint_and_prereg_required(tmp_path, monkeypatch):
+    import pytest
+    import p17_data as pe
+    import p17_prosp as pp
+    assert not set(pe.CAL_FIT + pe.CAL_EVAL) & set(pe.D_TRAIN_SPLITS)
+    assert "p17calib" not in pe.TRAIN_SPLITS and not any(s.startswith("p17test") for s in pe.TRAIN_SPLITS + pe.VAL_SPLITS + pe.CAL_FIT + pe.CAL_EVAL)
+    monkeypatch.setattr(pp, "OUT", tmp_path)
+    with pytest.raises(SystemExit):
+        pp.p_queue("w0", "b")
+    lk, ex = pe.rd(pe.DATA / "LEAKAGE.json"), pe.rd(pe.DATA / "EXCLUDED.json")
+    excl = {k for kk, v in ex.items() if kk != "reason" for k in v}
+    assert not lk["index_overlap"]
+    for pair in lk["duplicates"].values():                                     # every fingerprint duplicate has an excluded member
+        assert any(k in excl for _, k in pair) and not any("p17test" in d for d, _ in pair)
+
+
+def test_labelling_resumes_from_checkpoint(tmp_path, monkeypatch):
+    import config as cf
+    import p17_b as pb
+    import p17_data as pe
+    monkeypatch.setattr(pe, "DATA", tmp_path)
+    (tmp_path / "dev").mkdir()
+    cf.write_json(tmp_path / "dev" / "labels_w9.json", {"p13_2026210000": {"done": True}})
+    monkeypatch.setattr(pe, "_plan", lambda s: {"roots": {"p13_2026210000": {}}})
+    monkeypatch.setattr(pb, "catalogue", lambda *a, **k: (_ for _ in ()).throw(AssertionError("recomputed")))
+    pe.label_roots("dev", ["p13_2026210000"], "w0")
