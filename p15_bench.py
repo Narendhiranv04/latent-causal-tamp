@@ -16,7 +16,7 @@ OUT = Path("runs/p15")
 P14 = Path("runs/p14")
 CAPS = {"audit": 3000.0, "retarget_probe": 8000.0, "retarget_train": 10000.0, "retarget_teacher": 15000.0, "index": 6000.0,
         "search_dev": 8000.0, "retro24": 27000.0, "prospective": 38000.0, "ablation": 12000.0, "b_diag": 3000.0, "regression": 3000.0}
-JOB = {"cpu_s": 3000.0, "wall_s": 40000.0}
+JOB = {"cpu_s": 6500.0, "wall_s": 60000.0}
 
 
 def rd(p):
@@ -180,7 +180,7 @@ def run_arm(guide, roster, out_name, split="test", recursion=True, budget=None, 
     import p14_eval as pe
     import p15_lookup as pl
     import p15_search as ps
-    rs, P, D = pe._roots(split) if split in ("test", "dev") else pe._roots("test")
+    rs, P, D = pe._roots(split) if split in ("test", "dev") else _prosp_roots()
     idx, _ = pl.index_v2()
     res = rd(OUT / "search" / f"{out_name}.json") if (OUT / "search" / f"{out_name}.json").exists() else {}
     for k in roster:
@@ -204,3 +204,88 @@ def run_arm(guide, roster, out_name, split="test", recursion=True, budget=None, 
                   "cpu_s": time.process_time() - c0, "wall_s": time.time() - w0, "guide": guide, "recursion": g.recursion}
         (OUT / "search").mkdir(parents=True, exist_ok=True)
         cf.write_json(OUT / "search" / f"{out_name}.json", res)
+
+
+# ------------------------------------------------------------------ prospective cohort (new seeds; frozen before any outcome)
+PROSP = OUT / "prospective"
+PROSP_FAMS = ("PC_SG", "PR_SIDES", "PN_SIMP", "PN_GIMP", "ORD_CHAIN", "OMIT_OPT")
+
+
+def build_prospective(seed0=2026200000) -> None:
+    """32 new roots: 4 per executable mechanism family (mechanism-conditioned) + 8 NAT (unconditioned, feasible controls). Labels later: only
+    the original task and the parking-lattice edits are teacher-labelled (oracle arm / blocker-union metric)."""
+    import p13_pipeline as pp
+    pd = pp._register()
+    specs = [{"family": f, "seed": seed0 + 10 * i + j, "index": 4 * i + j, "wave": 0, "batch": 1, "split": "blind"} for i, f in enumerate(PROSP_FAMS) for j in range(4)]
+    specs += [{"family": "NAT", "seed": seed0 + 100 + j, "index": 24 + j, "wave": 0, "batch": 1, "split": "blind"} for j in range(8)]
+    if not (PROSP / "plan.json").exists():
+        pd.build_plan(PROSP, specs, max_attempts=600, root_cpu=300.0)
+    plan = rd(PROSP / "plan.json")
+    keep = lambda q: q["token"] == "" or str(q["token"]).startswith("edit:")  # noqa: E731
+    plan["queries"] = [q for q in plan["queries"] if keep(q)]
+    qs = {q["query"] for q in plan["queries"]}
+    plan["units"] = [u for u in plan["units"] if u["query"] in qs]
+    plan["label_scope"] = "original task + parking-lattice edits only (oracle / blocker union); search outcomes are the primary physical endpoint"
+    plan["plan_hash"] = cf.stable_hash({x: v for x, v in plan.items() if x != "plan_hash"})
+    cf.write_json(PROSP / "plan.json", plan)
+
+
+def prospective_records() -> None:
+    """Unlabelled learner records (same pipeline as P13) written under runs/p15/prospective; leakage check against the index."""
+    import os
+    import torch
+    os.environ["P10C_OUT"] = "runs/p13/models"
+    import learn_data as ld
+    import p10c_train_eval as pc
+    import p15_lookup as pl
+    cfg, dino, recs = cf.load_config("config.toml"), ld.dino(), []
+    plan = rd(PROSP / "plan.json")
+    for k, r in plan["roots"].items():
+        ed = [it for it in r["items"] if it["kind"] == "SCENE_TARGET_ONLY" and it.get("d_subset")]
+        sq = [it for it in r["items"] if it["kind"] == "ORDERED_TEACHER"]
+        rec, _ = pc._record(cfg, dino, k, r, {}, "blind", "P15_PROSPECTIVE", ed, sq)
+        rec["audit"] |= {"family": r["family"], "variant": r["variant"]}
+        ids = rec["audit"]["ids"]
+        rec["d"] = {"pool": [ids.index(o) for o in r["parking"]], "roles": [{v: kk for kk, v in r["ids"].items()}[o] for o in r["parking"]]}
+        recs.append(rec)
+    torch.save({"version": "P15_PROSPECTIVE_RECORDS_V1", "roots": recs}, PROSP / "records.pt")
+    idx, _ = pl.index_v2()
+    import p14_sweep_index as sx
+    P = sx._plans()
+    fps = {pl.json_fp(P[e["root"]]) for es in idx.by_key.values() for e in es}
+    leak = [k for k, r in plan["roots"].items() if pl.json_fp(r) in fps or k in {e["root"] for es in idx.by_key.values() for e in es}]
+    cf.write_json(PROSP / "LEAKAGE_CHECK.json", {"roots": len(plan["roots"]), "index_overlap_by_root_or_fingerprint": leak})
+
+
+def _prosp_sealed():
+    """Prospective teacher outcomes; refused before runs/p15/prospective/UNSEALED (written only after the label hash commit)."""
+    import p6_run as p6r
+    import operational_teacher as ot
+    if not (PROSP / "UNSEALED").exists():
+        raise SystemExit("P15 prospective labels are sealed")
+    plan, static, pol = rd(PROSP / "plan.json"), rd(PROSP / "static_admission.json")["certificates"], ot.load_policy("teacher_opneg.toml")
+    res = {}
+    for k in plan["roots"]:
+        f = PROSP / "sealed" / f"{k}.json"
+        if f.exists():
+            done = rd(f)["done"]
+            for q in plan["queries"]:
+                if q["root"] == k and q["query"] in done:
+                    res[q["query"]] = {**p6r.judge(static, pol, q, done[q["query"]]), "query": q, "root": k}
+    return res
+
+
+def _prosp_roots():
+    import os
+    import torch
+    os.environ["P10C_OUT"] = "runs/p13/models"
+    import abc7_train as t7
+    import p10b_dataset as pd
+    ds = torch.load(PROSP / "records.pt", weights_only=False)
+    rs = {}
+    for r, rec in zip(t7.prepare(ds), ds["roots"]):
+        r["ids"], r["audit"], r["d"] = rec["audit"]["ids"], rec["audit"], rec.get("d")
+        rs[r["key"]] = r
+    plan = rd(PROSP / "plan.json")
+    D = pd.d_labels(plan, _prosp_sealed()) if (PROSP / "UNSEALED").exists() else {k: {} for k in plan["roots"]}
+    return rs, plan["roots"], D

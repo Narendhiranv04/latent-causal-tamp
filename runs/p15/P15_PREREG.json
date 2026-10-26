@@ -1,0 +1,146 @@
+{
+ "base": "cbd5d9b1509fcfdad733545b7d0e9cba4181ee4f",
+ "caps": {
+  "ablation": 12000.0,
+  "audit": 3000.0,
+  "b_diag": 3000.0,
+  "index": 6000.0,
+  "prospective": 38000.0,
+  "regression": 3000.0,
+  "retarget_probe": 8000.0,
+  "retarget_teacher": 15000.0,
+  "retarget_train": 10000.0,
+  "retro24": 27000.0,
+  "search_dev": 8000.0
+ },
+ "guides": {
+  "D": "frozen P13 D (lambda 1.0, 3 seeds) on the rebuilt current state; recursion with DEV-recalibrated temporary-target feasibility",
+  "D-norec": "D without recursion",
+  "D-pairless": "frozen D-pairless (lambda 2.0), same recursion policy",
+  "geometry": "analytic heuristic, geometry recursion; zero-move-first gate common to all arms (== Geometry_same_gate)",
+  "oracle": "teacher ORIGINAL blocker union only (non-deployable), no recursion",
+  "uniform": "catalogue order"
+ },
+ "hash": "sha256:0f35c23786297652ebe5b97bd6d3bccf12c1a8b6816bd3cb73ce389b78f15d1e",
+ "index": {
+  "entries": 4821,
+  "fingerprint_dropped": 17,
+  "hash_p14": "sha256:4c29bbd376cc295f4c291b23df446c24eb970de014d9363fe54be5fdc11e0a0c",
+  "ranking": "combined (local + 0.25 global)",
+  "source": "P14 INDEX minus fingerprint leakage",
+  "threshold": "none (DEV threshold rejected on TEST, 0075)"
+ },
+ "prospective": {
+  "leakage": {
+   "index_overlap_by_root_or_fingerprint": [],
+   "roots": 32
+  },
+  "multiplicity": "single primary contrast; all others secondary",
+  "no_adaptive_stopping": true,
+  "order": "freeze+push -> deployable arms (outcome-blind) + teacher labels (sealed) -> label hash commit -> unseal -> oracle arm -> analysis",
+  "plan_hash": "sha256:07a30ab6cfd4ea0744aef0f62db3d6f685056a0f58277fca6b90c3b6e29e451a",
+  "power": "significance needs >= 6 discordant roots all one way (6/0 p = 0.031); 10 discordant at 80 % win -> power 0.38; non-significance is NOT equivalence; UNDERPOWERED if < 6 informative pairs",
+  "primary": "paired strict physical success (plan found AND independent replay CLEAR), D vs geometry, exact two-sided sign test, alpha 0.05, root bootstrap CI; minimal meaningful effect +10 pp success or >= 20 % fewer planner calls at non-inferior success",
+  "roster": [
+   "p13_2026200000",
+   "p13_2026200001",
+   "p13_2026200002",
+   "p13_2026200003",
+   "p13_2026200010",
+   "p13_2026200011",
+   "p13_2026200012",
+   "p13_2026200013",
+   "p13_2026200020",
+   "p13_2026200021",
+   "p13_2026200022",
+   "p13_2026200023",
+   "p13_2026200030",
+   "p13_2026200031",
+   "p13_2026200032",
+   "p13_2026200033",
+   "p13_2026200040",
+   "p13_2026200041",
+   "p13_2026200042",
+   "p13_2026200043",
+   "p13_2026200050",
+   "p13_2026200051",
+   "p13_2026200052",
+   "p13_2026200053",
+   "p13_2026200100",
+   "p13_2026200101",
+   "p13_2026200102",
+   "p13_2026200103",
+   "p13_2026200104",
+   "p13_2026200105",
+   "p13_2026200106",
+   "p13_2026200107"
+  ],
+  "secondary": [
+   "equal-CPU anytime success (incl. D inference) from the anytime logs",
+   "planner / motion / goal calls",
+   "nodes",
+   "min-move / min-travel proof coverage",
+   "moves / travel on co-solved roots",
+   "unknown-status counts",
+   "moves_outside_original_blocker_union",
+   "extra moves only vs proven optima"
+  ]
+ },
+ "recalibration": {
+  "bias": -19.9818335008962,
+  "temperature": 0.7620589093163525
+ },
+ "retrospective": {
+  "roster": [
+   "p13_2026180003",
+   "p13_2026180012",
+   "p13_2026180021",
+   "p13_2026180006",
+   "p13_2026180015",
+   "p13_2026180024",
+   "p13_2026180005",
+   "p13_2026180014",
+   "p13_2026180023",
+   "p13_2026180004",
+   "p13_2026180013",
+   "p13_2026180022",
+   "p13_2026180001",
+   "p13_2026180010",
+   "p13_2026180019",
+   "p13_2026180000",
+   "p13_2026180009",
+   "p13_2026180018",
+   "p13_2026190002",
+   "p13_2026190005",
+   "p13_2026190007",
+   "p13_2026190000",
+   "p13_2026190001",
+   "p13_2026190006"
+  ],
+  "status": "RETROSPECTIVE / EXPLORATORY (6 roots had P14 outcomes)"
+ },
+ "search": {
+  "K_DEST": 4,
+  "K_MODES": 3,
+  "N_MAX": 3,
+  "action_domain": "CATALOGUE_RESTRICTED movers, move-once",
+  "budget": {
+   "goal_plans": 16,
+   "motion_checks": 400,
+   "online_moves": 6
+  },
+  "cpu_cap_per_root_s": 400.0,
+  "objective": "lexmin (relocations, ordered.joint_travel)",
+  "statuses": [
+   "VERIFIED",
+   "CERTIFIED_INFEASIBLE",
+   "STATIC_INVALID",
+   "UNKNOWN_PLANNER",
+   "UNKNOWN_BUDGET",
+   "UNKNOWN_NO_LIBRARY_WITNESS",
+   "UNKNOWN_TRANSIT"
+  ],
+  "version": "P15_TRISTATE_SEARCH_V1"
+ },
+ "version": "P15_PREREG_V1"
+}
