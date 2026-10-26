@@ -1,0 +1,13 @@
+{
+ "call": "p16_eval.build_split(\"dev\", {f: (6 if f==\"DENSE\" else 2) for f in p.DEV_FAMS})",
+ "category": "shared",
+ "cpu_cap_s": 2000,
+ "cpu_s": 1.11,
+ "env": {},
+ "overshoot_s": 0.0,
+ "returncode": 1,
+ "stderr_tail": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n    import torch; torch.set_num_threads(1); import p16_eval; p16_eval.build_split(\"dev\", {f: (6 if f==\"DENSE\" else 2) for f in p.DEV_FAMS})\n                                                                                                                               ^\nNameError: name 'p' is not defined\n",
+ "stop": "ERROR",
+ "utc": "2026-10-26T05:40:39Z",
+ "wall_s": 1.26
+}

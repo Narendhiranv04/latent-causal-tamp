@@ -1,0 +1,79 @@
+{
+ "determinism": {
+  "hash_seed": "Python str hashing is randomized per process (PYTHONHASHSEED); any order derived from set iteration is process-dependent (tested empirically in P16-1)",
+  "p15_cpu_cap": "p15_search.Physics.truncated: per-root process_time cap (150 s soft) -> search frontier depends on CPU speed / contention",
+  "p15_prospective_replay": "PROSP 053: D re-run plan differed from the benchmark record (P15 0078 section 6); geometry steps equal, travel differed (different witness / online path)",
+  "planner_budget": "planner.plan: RRT-Connect stops at max_nodes (deterministic, seed = call_seed(planner2d.seed, key)) or max_wall_seconds=300.0 (safety; flagged wall_clock_cut)"
+ },
+ "errata": {
+  "D_no_clearing_set": "d_blockers.minimal_sets returns mask [0]*n for NO_CLEARING_SET_WITHIN_POOL; p10c_train_eval.d_items trained proof-grounded ones as an all-zero blocker mask (P13 train 2, validation 1). P16 D masks these records.",
+  "P12_kappa": "P12 kappa endpoint = abs(mean_seed(kappa_hat) - kappa_true) (corrected in P13); always report the kappa==0 baseline.",
+  "P15_0080_lean_inference": "0080 section 5 called B-F3pm / B-F5spm / B-F5qpm 'post-hoc inference masks'. They are separately trained, parameter-matched checkpoints (p13_pipeline._arms: removed factor + widened scene head, PM widths 320/641/448). B-F5spm removes generic AND higher-order coupling (abc8 'B-structured'); it is not generic-only.",
+  "P15_prospective_CI": "P15 prospective bootstrap CI [0, 0] reflects zero observed discordances; it is not an equivalence interval."
+ },
+ "head": "20f775483077a568efb225f22aa93ca619160c53",
+ "historical_dirty_tracked": [],
+ "historical_files": 50082,
+ "labels": {
+  "test": {
+   "blind|None|None|mask_nll=False": 169
+  },
+  "trainval": {
+   "train|FEASIBLE_ORIGINAL|proof_grounded|mask_nll=False": 21,
+   "train|INCOMPLETE|operational|mask_nll=False": 4,
+   "train|INCOMPLETE|proof_grounded|mask_nll=False": 27,
+   "train|MINIMAL_SETS|operational|mask_nll=False": 37,
+   "train|MINIMAL_SETS|proof_grounded|mask_nll=True": 134,
+   "train|NO_CLEARING_SET_WITHIN_POOL|operational|mask_nll=False": 10,
+   "train|NO_CLEARING_SET_WITHIN_POOL|proof_grounded|mask_nll=True": 2,
+   "train|None|None|mask_nll=False": 204,
+   "train|UNKNOWN_ORIGINAL|None|mask_nll=False": 1,
+   "validation|FEASIBLE_ORIGINAL|proof_grounded|mask_nll=False": 6,
+   "validation|INCOMPLETE|proof_grounded|mask_nll=False": 8,
+   "validation|MINIMAL_SETS|operational|mask_nll=False": 17,
+   "validation|MINIMAL_SETS|proof_grounded|mask_nll=True": 38,
+   "validation|NO_CLEARING_SET_WITHIN_POOL|operational|mask_nll=False": 4,
+   "validation|NO_CLEARING_SET_WITHIN_POOL|proof_grounded|mask_nll=True": 1
+  }
+ },
+ "manifest_hash": "sha256:8d628ac7e85d0a70123ca2154bf8d9393f44564ea496e7c533366ee014d01388",
+ "p15_spend": {
+  "ablation": 8047.1,
+  "audit": 1.1,
+  "b_diag": 3.1,
+  "index": 1675.9,
+  "prospective": 24796.2,
+  "regression": 757.9,
+  "retarget_probe": 384.3,
+  "retarget_teacher": 0,
+  "retarget_train": 0,
+  "retro24": 19798.7,
+  "search_dev": 1367.7
+ },
+ "privileged": {
+  "findings": {
+   "b_catalogue": "Frozen B scores the constructor catalogue (root['items'] ORDERED_TEACHER / SCENE_TARGET_ONLY): candidate GENERATION is privileged (mechanism-aware constructor) although labels are not read at inference. P16 B scores scene-only candidates.",
+   "d_pool": "Frozen D's pool = root['parking'] (constructor lattice objects). P16 D pool = all movable non-target objects (cap) in the scene.",
+   "p15_movers": "p15_bench.run_arm: movers = objects in ORDERED_TEACHER catalogue sequences (constructor-provided): CATALOGUE_RESTRICTED, not scene-only. Kept as historical replay protocol; P16 uses p16_common.propose_movers (scene-only).",
+   "p15_oracle": "Guide('oracle') reads the teacher blocker mask (declared non-deployable)."
+  },
+  "lines": {
+   "abc7_train.py": [],
+   "p10c_train_eval.py": [
+    108
+   ],
+   "p14_d_search.py": [
+    189,
+    314
+   ],
+   "p15_bench.py": [
+    78,
+    193,
+    194,
+    197,
+    245
+   ],
+   "p15_search.py": []
+  }
+ }
+}
