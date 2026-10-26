@@ -13,6 +13,7 @@ import p15_search as ps
 
 V, CI, SI, U_PLAN, U_BUD, U_LIB, U_TR = ps.V, ps.CI, ps.SI, ps.U_PLAN, ps.U_BUD, ps.U_LIB, ps.U_TR
 BUDGET = {"motion_checks": 400, "online_moves": 6, "goal_plans": 16, "transit_plans": 8}
+FAST = {"max_nodes": 1500, "max_plan_failures": 2, "transit_nodes": 500}         # declared P16 planner profile (re-validated in P16-1)
 
 
 def traj_hash(recs) -> str:
@@ -33,12 +34,17 @@ class DetPhysics(ps.Physics):
     """transit: 'direct' (P15 semantics: straight joint segment only) | 'planned' (direct, else bounded certified RRT transit)."""
 
     def __init__(self, root, idx=None, lookup="combined", modal_only=False, budget=None, transit="planned", transit_nodes=800, use_lookup=True,
-                 cache=None):
+                 cache=None, profile="fast"):
         super().__init__(root, idx if use_lookup else None, lookup, modal_only, dict(budget or BUDGET), None)
+        if profile == "fast":                                            # P16_FAST: deterministic node budgets, cheaper failures
+            transit_nodes = min(transit_nodes, FAST["transit_nodes"])
         self.cache, self.vcpu, self.pcpu = cache, 0.0, 0.0
-        self.tag = (lookup, modal_only, transit, transit_nodes, use_lookup)
+        self.tag = (lookup, modal_only, transit, transit_nodes, use_lookup, profile)
         self.cfg = copy.deepcopy(self.cfg)
         self.cfg["planner2d"]["max_wall_seconds"] = 1e9                 # node budgets decide; no wall-clock adjudication
+        if profile == "fast":
+            self.cfg["planner2d"]["max_nodes"], self.cfg["skill2d"]["max_plan_failures"] = FAST["max_nodes"], FAST["max_plan_failures"]
+        self.profile = profile
         self.transit, self.tcfg = transit, dict(self.cfg["planner2d"], max_nodes=transit_nodes)
         self.stats |= {"transit_direct": 0, "transit_planned": 0, "transit_unknown": 0, "library_collision": 0, "wall_clock_cut": 0, "cache_hits": 0}
         self.edge_log = []
@@ -65,6 +71,10 @@ class DetPhysics(ps.Physics):
         u0, s0, c0 = dict(self.used), dict(self.stats), time.process_time()
         res = fn()
         cpu = time.process_time() - c0
+        first = res[0] if k[0] == "goal" else (res[0][0] if res else None)
+        self.edge_log.append({"kind": k[0], "obj": k[2] if k[0] == "edge" else None, "dest": k[3] if k[0] == "edge" else None,
+                              "status": first if isinstance(first, str) else None, "cpu": round(cpu, 3),
+                              "used": {x: self.used[x] - u0[x] for x in self.used if self.used[x] != u0[x]}})
         self.vcpu, self.pcpu = self.vcpu + cpu, self.pcpu + cpu
         self.memo[k] = res
         cens = res[0] == U_BUD if k[0] == "goal" else any(x[0] == U_BUD for x in res)

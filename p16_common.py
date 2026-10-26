@@ -185,8 +185,8 @@ POOL_CAP = 3
 
 def catalogue(task, phys, idx=None) -> dict:
     """pool = up to POOL_CAP movable objects nearest the target; parking = distinct first scene-only slot per pool object (original
-    state); edits = every nonempty pool subset parked (D lattice / B scene queries); sequences = empty, singles, ordered pairs and the
-    two extreme orders of the triple (B candidates). Pure function of the task + physics screens."""
+    state); edits = every nonempty pool subset parked (D lattice / B scene queries); sequences = empty, singles and ordered pairs (B
+    candidates; 3-move repairs are left to the search). Pure function of the task + physics screens."""
     import itertools
     cells0 = {o.id: o.cell for o in phys.s0.objects}
     movers, _ = propose_movers(task, cells0)
@@ -200,8 +200,6 @@ def catalogue(task, phys, idx=None) -> dict:
     pool = [o for o in pool if o in park]
     edits = [{"kind": "+".join(u), "edit": {o: park[o] for o in u}, "eligible": True} for n in range(1, len(pool) + 1) for u in itertools.combinations(pool, n)]
     seqs = [[]] + [[o] for o in pool] + [list(p) for p in itertools.permutations(pool, 2)]
-    if len(pool) == 3:
-        seqs += [list(pool), list(reversed(pool))]
     return {"pool": pool, "parking": park, "edits": edits, "sequences": [[(o, park[o]) for o in s] for s in seqs], "movers": movers}
 
 

@@ -123,7 +123,7 @@ def test_historical_manifest_unchanged():
 class _Fake:
     def __init__(self, cache, budget):
         self.memo, self.cache, self.tag, self.budget = {}, cache, ("t",), dict(budget)
-        self.used, self.stats, self.vcpu, self.pcpu = {k: 0 for k in budget}, {"cache_hits": 0, "x": 0}, 0.0, 0.0
+        self.used, self.stats, self.vcpu, self.pcpu, self.edge_log = {k: 0 for k in budget}, {"cache_hits": 0, "x": 0}, 0.0, 0.0, []
 
     def truncated(self):
         return False
@@ -142,10 +142,127 @@ def test_shared_cache_exact_virtual_accounting():
         return run
     cache = {}
     a = _Fake(cache, {"motion_checks": 10})
-    pm.DetPhysics._cached(a, ("edge", 1), fn(a))
+    pm.DetPhysics._cached(a, ("edge", 1, "o", 5), fn(a))
     b = _Fake(cache, {"motion_checks": 10})
-    r = pm.DetPhysics._cached(b, ("edge", 1), fn(b))
+    r = pm.DetPhysics._cached(b, ("edge", 1, "o", 5), fn(b))
     assert len(calls) == 1 and b.used["motion_checks"] == 3 and b.stats["x"] == 2 and b.stats["cache_hits"] == 1 and r[0][0] == pm.V
     c = _Fake(cache, {"motion_checks": 2})                       # cannot afford the recorded consumption -> recompute with own budget
-    pm.DetPhysics._cached(c, ("edge", 1), fn(c))
+    pm.DetPhysics._cached(c, ("edge", 1, "o", 5), fn(c))
     assert len(calls) == 2 and c.stats["cache_hits"] == 0
+
+
+def _lean_root():
+    import torch
+    import p16_b as pb
+    import p16_eval as pe
+    labs = pe.merged("dev", "labels")
+    if not labs:
+        return None, None
+    k = sorted(labs)[0]
+    plan = json.loads((pe.DATA / "dev" / "plan.json").read_text())
+    r = pb.prepare(pb.records(plan, {k: labs[k]}, "train"))[0]
+    torch.manual_seed(0)
+    return pb.model("LB"), r
+
+
+def test_lean_b_is_exactly_factorized_and_matches_brute_force():
+    import unique_factor as uf
+    import unique_factor_keyed as ufk
+    import joint_likelihood as jl
+    m, r = _lean_root()
+    if m is None:
+        return
+    with ufk.installed():
+        inst = uf.instances(m, r)
+        lab = jl.labels(r)
+        ll, n = uf.log_evidence(inst, lab)
+        pm = uf.prior_marginals(inst)
+        closed = sum(np.log(pm[q] if y else 1 - pm[q]) for q, y in lab.items() if y is not None)
+        assert all(float(b["energy"].abs().max()) == 0.0 for b in inst["blocks"].values())
+        assert abs(float(ll) - uf.brute_force(inst, lab)) < 1e-9 and abs(float(ll) - closed) < 1e-9 and n == sum(y is not None for y in lab.values())
+
+
+def test_lean_b_unknown_labels_are_marginalized_not_negative():
+    import unique_factor as uf
+    import unique_factor_keyed as ufk
+    import joint_likelihood as jl
+    m, r = _lean_root()
+    if m is None:
+        return
+    with ufk.installed():
+        inst = uf.instances(m, r)
+        lab = jl.labels(r)
+        unk = [q for q, y in lab.items() if y is None]
+        if not unk:
+            return
+        assert abs(float(uf.log_evidence(inst, lab)[0]) - float(uf.log_evidence(inst, {q: y for q, y in lab.items() if y is not None})[0])) < 1e-12
+        assert abs(float(uf.log_evidence(inst, {**lab, unk[0]: 0})[0]) - float(uf.log_evidence(inst, lab)[0])) > 1e-9
+
+
+def test_lean_b_order_sensitive_and_no_op_distinct_from_abstain():
+    import torch
+    import p16_b as pb
+    m, r = _lean_root()
+    if m is None:
+        return
+    two = next(c for c in r["cands"] if len(c["seq"]) == 2)
+    m._memo = {}
+    with torch.no_grad():
+        a = float(m.order(r["R"], two["seq"])[0])
+        m._memo = {}
+        b = float(m.order(r["R"], list(reversed(two["seq"])))[0])
+    m._memo = None
+    assert abs(a - b) > 1e-9                                         # F2 order-sensitive repair unary
+    rows = [{"query": "e", "m": 0, "u": 3.0}, {"query": "r", "m": 1, "u": 3.0}]
+    assert pb.choose(rows, 0.5, 0.5) == "e" and pb.choose([dict(rows[0], u=-3.0), dict(rows[1], u=-3.0)], 0.5, 0.5) == "ABSTAIN"
+    assert pb.choose([dict(rows[0], u=-3.0), rows[1]], 0.5, 0.5) == "r"
+
+
+def test_keyed_identity_rejects_one_query_two_sequences():
+    import pytest
+    import joint_likelihood as jl
+    import unique_factor_keyed as ufk
+    m, r = _lean_root()
+    if m is None:
+        return
+    r = dict(r, cands=[dict(c) for c in r["cands"]])
+    one = next(i for i, c in enumerate(r["cands"]) if len(c["seq"]) == 1)
+    two = next(i for i, c in enumerate(r["cands"]) if len(c["seq"]) == 1 and i != one)
+    r["cands"][two] = dict(r["cands"][two], z_q=[r["cands"][one]["query"] if s == "zR" else q for s, q in zip(r["cands"][two]["slots"], r["cands"][two]["z_q"])])
+    with pytest.raises(jl.IdentityError):
+        ufk.instances(m, r)
+
+
+def _lab(y0, edits):
+    return {"original": {"y": y0}, "edits": {k: {"y": v} for k, v in edits.items()}}
+
+
+def test_d_union_vs_necessary_alternative_clearing_sets():
+    import p16_d as pd
+    d = pd.lattice(_lab(0, {"a": 1, "b": 1, "a+b": 1}), ["a", "b"])           # A or B suffices
+    assert d["type"] == "MINIMAL_SETS" and d["mask"] == [1, 1] and d["necessary"] == [0, 0]
+    d = pd.lattice(_lab(0, {"a": 0, "b": 0, "a+b": 1}), ["a", "b"])           # complementary: both needed
+    assert d["mask"] == [1, 1] and d["necessary"] == [1, 1]
+
+
+def test_d_no_clearing_set_and_incomplete_lattice_get_no_blocker_term():
+    import p16_d as pd
+    d = pd.lattice(_lab(0, {"a": 0, "b": 0, "a+b": 0}), ["a", "b"])
+    assert d["type"] == "NO_CLEARING_SET_WITHIN_POOL" and pd.item("R", {**d, "pool": [0, 1]}) == ("R", [], 0, None)
+    d = pd.lattice(_lab(0, {"a": None, "b": 0, "a+b": 1}), ["a", "b"])
+    assert d["type"] == "INCOMPLETE" and pd.item("R", {**d, "pool": [0, 1]})[3] is None
+    d = pd.lattice(_lab(1, {"a": 1, "b": 1, "a+b": 1}), ["a", "b"])
+    assert d["type"] == "FEASIBLE_ORIGINAL" and pd.item("R", {**d, "pool": [0, 1]}) == ("R", [], 1, None)
+    assert pd.lattice(_lab(None, {}), ["a"])["y0"] is None and pd.item("R", {"y0": None}) is None
+
+
+def test_d_pairless_conditional_vs_gated_marginals():
+    import torch
+    import d_blockers as db
+    a, w = torch.tensor([0.3, -1.2], dtype=torch.float64), torch.zeros(2, 2, dtype=torch.float64)
+    lp = db.blocker_logp(a, w)
+    m = (lp.exp()[:, None] * db.states(2)).sum(0)
+    assert torch.allclose(m, torch.sigmoid(a)) and abs(float(lp.exp().sum()) - 1) < 1e-12   # pairless = independent Bernoullis
+    w2 = torch.tensor([[0.0, 2.0], [2.0, 0.0]], dtype=torch.float64)
+    m2 = (db.blocker_logp(a, w2).exp()[:, None] * db.states(2)).sum(0)
+    assert not torch.allclose(m2, torch.sigmoid(a))                                           # paired term couples them
