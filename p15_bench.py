@@ -289,3 +289,114 @@ def _prosp_roots():
     plan = rd(PROSP / "plan.json")
     D = pd.d_labels(plan, _prosp_sealed()) if (PROSP / "UNSEALED").exists() else {k: {} for k in plan["roots"]}
     return rs, plan["roots"], D
+
+
+def prospective_label(chunk_cpu=6000.0) -> None:
+    """Static admission + P13_S100_V2 teacher collection of the prospective plan; split 'blind' -> outcomes only in PROSP/sealed."""
+    import p13_pipeline as pp
+    pd = pp._register()
+    if not (PROSP / "static_admission.json").exists():
+        pd.admit(PROSP)
+    pd.collect(PROSP, chunk_cpu=chunk_cpu)
+
+
+def prospective_label_manifest() -> None:
+    files = sorted(str(f) for f in (PROSP / "sealed").glob("*.json"))
+    cf.write_json(PROSP / "LABELS_MANIFEST.json", {"files": {f: sha(f) for f in files}, "n": len(files)})
+
+
+def prospective_unseal() -> None:
+    import p13_pipeline as pp
+    if not pp._on_origin(str(PROSP / "LABELS_MANIFEST.json")):
+        raise SystemExit("label manifest not on origin/main")
+    man = rd(PROSP / "LABELS_MANIFEST.json")
+    if any(sha(f) != h for f, h in man["files"].items()):
+        raise SystemExit("sealed outcome changed after the manifest")
+    (PROSP / "UNSEALED").write_text(sha(PROSP / "LABELS_MANIFEST.json") + "\n")
+
+
+# ------------------------------------------------------------------ P15-5 analysis (paired, root-level; never pooled over queries)
+ARMS5 = ("D", "D-norec", "D-pairless", "geometry", "uniform", "oracle")
+CPU_GRID = (10.0, 25.0, 50.0, 100.0, 200.0, 400.0)
+
+
+def sign_test(a, b) -> dict:
+    """Exact two-sided sign test on paired binary outcomes (discordant pairs only)."""
+    from math import comb
+    w, l = sum(x and not y for x, y in zip(a, b)), sum(y and not x for x, y in zip(a, b))
+    n = w + l
+    p = 1.0 if n == 0 else min(1.0, 2 * sum(comb(n, i) for i in range(0, min(w, l) + 1)) / 2 ** n)
+    return {"a_only": w, "b_only": l, "discordant": n, "p_two_sided": p, "status": "UNDERPOWERED" if n < 6 else "TESTED"}
+
+
+def boot_diff(a, b, n=10000, seed=0) -> list:
+    rng = np.random.default_rng(seed)
+    a, b = np.asarray(a, float), np.asarray(b, float)
+    ix = rng.integers(0, len(a), (n, len(a)))
+    return [float(x) for x in np.percentile((a[ix] - b[ix]).mean(1), [2.5, 97.5])]
+
+
+def ok(v) -> bool:
+    return bool(v["found"] and v["replay_success"])
+
+
+def summarize(cohort, arms=ARMS5, primary=("D", "geometry")) -> dict:
+    """cohort RETRO or PROSP. Strict success = plan found AND independent replay CLEAR; paired on roots completed by both arms."""
+    runs = {a: rd(OUT / "search" / f"{cohort}_{a}.json") for a in arms if (OUT / "search" / f"{cohort}_{a}.json").exists()}
+    common = sorted(set.intersection(*[set(v) for v in runs.values()])) if runs else []
+    per = {}
+    for a, v in runs.items():
+        rows = [v[k] for k in common]
+        solved = [r for r in rows if ok(r)]
+        st = collections.Counter()
+        for r in rows:
+            for kind in ("edges", "goals"):
+                for s, c in r["log"][kind].items():
+                    st[f"{kind}:{s}"] += c
+        per[a] = {"roots_completed": len(v), "n": len(rows), "success": len(solved), "found": sum(r["found"] for r in rows),
+                  "replay_fail": sum(r["found"] and not r["replay_success"] for r in rows),
+                  "claims": dict(collections.Counter(r["claim"] for r in rows)),
+                  "min_moves_proven": sum(r["min_moves_proven"] for r in rows), "min_travel_proven": sum(r["min_travel_proven"] for r in rows),
+                  "truncated": sum(bool(r["truncated"]) for r in rows),
+                  "calls_mean": {k: float(np.mean([r["used"][k] for r in rows])) for k in rows[0]["used"]} if rows else {},
+                  "nodes_mean": float(np.mean([r["log"]["nodes"] for r in rows])) if rows else None,
+                  "cpu_mean": float(np.mean([r["cpu_s"] for r in rows])) if rows else None,
+                  "cpu_median": float(np.median([r["cpu_s"] for r in rows])) if rows else None,
+                  "d_calls_mean": float(np.mean([r["d_calls"] for r in rows])) if rows else None,
+                  "d_cpu_mean": float(np.mean([r["d_cpu_s"] for r in rows])) if rows else None,
+                  "status_counts": dict(st),
+                  "anytime_success": {str(t): sum(ok(r) and r["log"].get("anytime") and r["log"]["anytime"][0]["cpu_s"] <= t for r in rows)
+                                      for t in CPU_GRID},
+                  "moves_outside_original_blocker_union": [r["moves_outside_original_blocker_union"] for r in rows if r["found"]],
+                  "lookup_stats": {k: int(sum(r["stats"][k] for r in rows)) for k in (rows[0]["stats"] if rows else {})}}
+    pairs = {}
+    ref = primary[1]
+    for a in runs:
+        if a == ref or ref not in runs:
+            continue
+        x, y = [ok(runs[a][k]) for k in common], [ok(runs[ref][k]) for k in common]
+        co = [k for k in common if ok(runs[a][k]) and ok(runs[ref][k])]
+        pairs[f"{a}_vs_{ref}"] = {**sign_test(x, y), "diff": (sum(x) - sum(y)) / max(1, len(common)), "ci95": boot_diff(x, y) if common else None,
+                                  "co_solved": len(co),
+                                  "co_solved_moves": [float(np.mean([runs[a][k]["plan"]["moves"] for k in co])) if co else None,
+                                                      float(np.mean([runs[ref][k]["plan"]["moves"] for k in co])) if co else None],
+                                  "co_solved_travel": [float(np.mean([runs[a][k]["plan"]["travel"] for k in co])) if co else None,
+                                                       float(np.mean([runs[ref][k]["plan"]["travel"] for k in co])) if co else None],
+                                  "calls_motion_mean": [float(np.mean([runs[a][k]["used"]["motion_checks"] for k in common])),
+                                                        float(np.mean([runs[ref][k]["used"]["motion_checks"] for k in common]))]}
+    ex = {}
+    for a, v in runs.items():                      # extra moves only against PROVEN optima (any arm's min-moves proof on that root)
+        e = []
+        for k in common:
+            pr = [runs[b][k]["plan"]["moves"] for b in runs if runs[b][k]["min_moves_proven"]]
+            if pr and ok(v[k]):
+                e.append(v[k]["plan"]["moves"] - min(pr))
+        ex[a] = {"n_with_proven_optimum": len(e), "extra_moves": dict(collections.Counter(e))}
+    fam = {a: dict(collections.Counter(f"{v[k]['family']}:{int(ok(v[k]))}" for k in common)) for a, v in runs.items()}
+    out = {"cohort": cohort, "common_roots": common, "n_common": len(common), "arms": per, "paired_vs_" + ref: pairs,
+           "extra_moves_vs_proven_optimum": ex, "by_family": fam,
+           "per_root": {k: {a: [int(ok(runs[a][k])), runs[a][k]["plan"]["moves"] if runs[a][k]["found"] else None,
+                                round(runs[a][k]["cpu_s"], 1), runs[a][k]["claim"][:20]] for a in runs} for k in common}}
+    (OUT / "eval").mkdir(parents=True, exist_ok=True)
+    cf.write_json(OUT / "eval" / f"{cohort}_SUMMARY.json", out)
+    return out

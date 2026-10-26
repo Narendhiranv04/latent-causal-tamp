@@ -120,6 +120,8 @@ def test_12_deterministic_rerun():
     g = {(C0, 0.0): (ps.CI, 0), ((("A", 5), ("B", 2), ("t0", 9)), 1.0): (ps.V, 1.0)}
     e = {("A", 5, 0.0): [(ps.V, 1.0, 1.0)]}
     a, b = run(Toy(g, e)), run(Toy(g, e))
+    for r in (a, b):                                                                      # anytime CPU stamps are timing, not outputs
+        r["log"]["anytime"] = [{k: v for k, v in x.items() if k != "cpu_s"} for x in r["log"].get("anytime", [])]
     assert json.dumps(a, default=str, sort_keys=True) == json.dumps(b, default=str, sort_keys=True)
 
 
@@ -127,3 +129,18 @@ def test_metric_renamed_and_builder_reproduces_training_record():
     p = json.loads(Path("runs/p15/retarget/PROBES.json").read_text())
     assert p["summary"]["decided"] >= 40
     assert "moves_outside_original_blocker_union" in Path("p15_bench.py").read_text()
+
+
+def test_13_partial_budget_edge_expands_verified_but_blocks_proofs():
+    """An edge with one certified mode plus UNKNOWN_BUDGET (lookup budget exhausted before all modes) is expanded; no min-travel proof."""
+    g = {(C0, 0.0): (ps.CI, 0), ((("A", 5), ("B", 2), ("t0", 9)), 1.0): (ps.V, 1.0)}
+    e = {("A", 5, 0.0): [(ps.V, 1.0, 1.0), (ps.U_BUD, None, 0.0)], ("A", 6, 0.0): [(ps.CI, None, 0)], ("B", 5, 0.0): [(ps.CI, None, 0)],
+         ("B", 6, 0.0): [(ps.CI, None, 0)]}
+    r = run(Toy(g, e))
+    assert r["found"] and r["plan"]["moves"] == 1 and r["min_moves_proven"] and not r["min_travel_proven"]
+
+
+def test_14_exhausted_edge_budget_does_not_stop_search():
+    import inspect
+    src = inspect.getsource(ps.Physics.truncated) + inspect.getsource(ps.Physics._take)
+    assert "self._trunc = True\n            return False" not in src and '"goal_plans" in self.exhausted' in src

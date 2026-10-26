@@ -101,16 +101,18 @@ class Physics:
         self.budget, self.cpu_cap, self.c0 = dict(budget or self.BUDGET), cpu_cap, time.process_time()
         self.used = {k: 0 for k in self.budget}
         self.memo, self.stats = {}, {"lookup_hits": 0, "lookup_candidates_tried": 0, "certificate_checks": 0, "rare_mode_used": 0}
-        self._trunc = False
+        self._trunc, self.exhausted = False, set()
 
     def truncated(self):
-        if self.cpu_cap is not None and time.process_time() - self.c0 > self.cpu_cap:
+        """Search-wide stop: CPU cap, or goal-plan budget exhausted (no new plan can be verified). An exhausted motion-check or
+        online budget only makes the affected edges UNKNOWN_BUDGET (P15 PREREG amendment 1)."""
+        if self.cpu_cap is not None and time.process_time() - self.c0 > self.cpu_cap or "goal_plans" in self.exhausted:
             self._trunc = True
         return self._trunc
 
     def _take(self, k):
         if self.used[k] >= self.budget[k] or self.truncated():
-            self._trunc = True
+            self.exhausted.add(k)
             return False
         self.used[k] += 1
         return True
@@ -176,7 +178,8 @@ class Physics:
                 if len(outs) >= K_MODES:
                     break
                 if not self._take("motion_checks"):
-                    return outs or [(U_BUD, None, None, 0.0, {})]
+                    why = U_BUD
+                    break
                 self.stats["lookup_candidates_tried"] += 1
                 a = self.idx.arrays(c["entry"])
                 st, _ = pl._certify(self, s, o, q, a)
@@ -190,7 +193,7 @@ class Physics:
                 outs.append((V, [tr, a], np.asarray(a["q"][-1], float), float(od.joint_travel(self.robot, [tr])["J"] or 0.0) + c["travel_J"],
                              {"via": "lookup", "mode": c["mode"], "support": c["support"], "entry": f"{c['entry']['file']}#{c['entry']['index']}"}))
         if outs:
-            return outs
+            return outs + ([(U_BUD, None, None, 0.0, {"lookup": "motion_checks exhausted before all modes were tried"})] if why == U_BUD else [])
         if not self._take("online_moves"):
             return [(U_BUD, None, None, 0.0, {"lookup": why})]
         r = sk.plan_skill(self.robot, s, o, d, self.cfg, self._key(*k), q_start=np.asarray(q, float), q_goal=None)

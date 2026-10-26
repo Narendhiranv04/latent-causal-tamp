@@ -1,0 +1,42 @@
+{
+ "cpu_cap_per_root_s": {
+  "new": 150.0,
+  "old": 400.0,
+  "why": "complete roster coverage within the contract caps for all arms (retro24 remaining / 6 arms / 24 roots ~ 175 s; prospective (remaining - labels) / 6 arms / 32 roots ~ 158 s)"
+ },
+ "defect": "p15_search.Physics._take set the search-wide truncation flag when ANY single budget (e.g. the 6 online moves) was exhausted, so the whole search stopped although motion checks / goal plans remained (e.g. p13_2026180012 stopped after 59/400 motion checks)",
+ "fix": "per-resource exhaustion: an exhausted motion-check or online budget makes only the affected edge UNKNOWN_BUDGET (a partially adjudicated lookup adds UNKNOWN_BUDGET beside its certified modes); search-wide stop only at the CPU cap or goal-plan exhaustion",
+ "information_used": "only the guide-independent defect; observed outcomes were identical across guides on every common root",
+ "observed_before_amendment": {
+  "PROSP": {
+   "arms": [
+    "PROSP_D-pairless",
+    "PROSP_geometry",
+    "PROSP_uniform"
+   ],
+   "common_roots": 8,
+   "identical_outcomes_across_guides": false
+  },
+  "RETRO": {
+   "arms": [
+    "RETRO_geometry",
+    "RETRO_oracle",
+    "RETRO_uniform"
+   ],
+   "common_roots": 2,
+   "identical_outcomes_across_guides": true
+  },
+  "roots_per_arm": {
+   "PROSP_D-pairless": 8,
+   "PROSP_geometry": 8,
+   "PROSP_uniform": 8,
+   "RETRO_geometry": 2,
+   "RETRO_oracle": 2,
+   "RETRO_uniform": 2
+  }
+ },
+ "prereg": "sha256:dc0e701829e7da5599daa5be0257e74fa2d02c6df51afc6979f8c0d1f2185106",
+ "unchanged": "rosters, guides, budgets {400, 6, 16}, action domain, objective, primary hypothesis, statistics, order of operations",
+ "version": "P15_PREREG_AMENDMENT_1",
+ "void_outputs": "runs/p15/search/void_v1 (kept, never analysed); guard CPU stays charged"
+}
