@@ -262,3 +262,32 @@ def keying_audit(n_roots=40) -> dict:
     out["roots"] = len(rs)
     cf.write_json(OUT / "audit" / "KEYING_INVARIANCE.json", out)
     return out
+
+
+def regression() -> None:
+    """Historical suite + P12 / P13 / P14 tests + six replays, outputs under runs/p14/regression (fixture planner calls itemized)."""
+    import subprocess
+    d = OUT / "regression"
+    d.mkdir(parents=True, exist_ok=True)
+    (d / "countcalls.py").write_text(Path("runs/p8/audit/regression/countcalls.py").read_text())
+    subprocess.run([sys.executable, "run.py", "g4c-lf-p4-regression", "--out", str(d), "--cpu", "1900", "--wall", "5000"], capture_output=True, text=True)
+
+
+def manifest() -> None:
+    """P14 final manifest: sources, prereg, P14-A and P14-D artifacts (separate sections), figures, regression, ledger."""
+    import hashlib
+    import subprocess
+    reg = rd(OUT / "regression" / "regression_result.json")
+    A = sorted(map(str, list((OUT / "audit").glob("*.json")) + list((OUT / "calibration").glob("*.json"))))
+    D = sorted(map(str, list((OUT / "lookup").glob("*.json")) + list((OUT / "search").glob("*.json")) + list((OUT / "eval").glob("*.json"))))
+    out = {"stage": "P14", "base": "99bccf7cbc57feb6150d0d50062548af4d3eebe1", "status": "PARTIAL",
+           "gates": {g.stem: rd(g).get("engineering", rd(g).get("decision")) for g in sorted(OUT.glob("P14_*_GATE.json"))},
+           "regression": {"tests": reg.get("tests"), "replays": reg.get("replays")}, "spend_cpu_s": {c: round(spent(c), 1) for c in CAPS}, "caps": CAPS,
+           "prereg": sha(OUT / "P14_PREREG.json"), "eval_roster": sha(OUT / "eval_roster.json"),
+           "sources": {p: sha(p) for p in ("p14_audit.py", "p14_eval.py", "p14_sweep_index.py", "p14_d_search.py", "tests/test_p14.py")},
+           "P14_A": {p: sha(p) for p in A if "VALIDATION_ROWS" not in p} | {"runs/p14/calibration/VALIDATION_ROWS.json": sha(OUT / "calibration" / "VALIDATION_ROWS.json")},
+           "P14_D": {p: sha(p) for p in D}, "figures": {str(p): sha(p) for p in sorted(Path("visualizations/p14").glob("*")) if p.suffix != ".sha256"},
+           "historical_unchanged": rd(OUT / "audit" / "P13_ERRATA.json")["historical_hashes"],
+           "head_at_manifest": subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True).stdout.strip()}
+    out["hash"] = "sha256:" + hashlib.sha256(json.dumps(out, sort_keys=True).encode()).hexdigest()
+    cf.write_json(OUT / "P14_FINAL_MANIFEST.json", out)

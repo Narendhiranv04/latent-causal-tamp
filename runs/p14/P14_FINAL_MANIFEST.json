@@ -1,0 +1,98 @@
+{
+ "P14_A": {
+  "runs/p14/audit/KEYING_INVARIANCE.json": "sha256:adf50565fa983288b39e1903f1e495c84a1d5682b8ee0059aac57832f35eb81f",
+  "runs/p14/audit/P13_ERRATA.json": "sha256:667718e788112f4cc44cc035a6ae4bf1c51b5521a63f796219eedc33cd0daa34",
+  "runs/p14/calibration/CF_JOBS.json": "sha256:5ed10bb798f76d56799a2e8ad9730646332c43dd9fdcc53b6b7985fa45e770b5",
+  "runs/p14/calibration/MATCHED_ADMISSION.json": "sha256:134491d86196715a5cd0d2eb18bc5353228d6e1c07767e12716924343ca0d55d",
+  "runs/p14/calibration/NATURAL_DIAG.json": "sha256:2c8d2a70cc9a0e9d4df2b6a2d6a30b35e31d922e35306b5a4d90c0d37332559b",
+  "runs/p14/calibration/VALIDATION_ROWS.json": "sha256:8a1639d7a888a6c2ad5b28fbde21f6425a1cc5bb0f2ba8a2fe2ad270e1cf5339",
+  "runs/p14/calibration/cf_removed_w3.json": "sha256:38fd4f9658df02ef1da868ac26cc86c6ddfa95b9b724a85cd49158320a4cbd45"
+ },
+ "P14_D": {
+  "runs/p14/eval/D3_SUMMARY.json": "sha256:f3435cfe226bfee9aa37950f9d9a7a8afe3126c456b14495222252624d60d4d2",
+  "runs/p14/lookup/INDEX.json": "sha256:1f24527be90296343a4ae0a2c91a202f170c91752b20eb66f689b306bd59f5ed",
+  "runs/p14/lookup/MODE_STATS.json": "sha256:9c1e65d84612eaceff6ad58a26cbb5eafde0c0f84d2794b988cd0a47e0b096cd",
+  "runs/p14/lookup/PROVENANCE_AUDIT.json": "sha256:9bea0f8730b0df61d6825763895ad3f6342447f845df42c809432782ee623941",
+  "runs/p14/search/ABL_modal.json": "sha256:5b6bcf5445782b22b46d73a713caf1799c4319360bd4fae6313658992c64d296",
+  "runs/p14/search/ABL_online.json": "sha256:a58ff1a8a8ae99cbe84b216d3391c2043c423787c2c73b2082389b42c6f9615f",
+  "runs/p14/search/DEV_D-pairless.json": "sha256:7e6f55a8ef09c146151cb3caac1a9ac1914e90149576192bc9e2f9ca699fe5f8",
+  "runs/p14/search/DEV_D.json": "sha256:009874fcfc4376094e116f7280c290c418eac21a3911c2fa5d09ef142645c52c",
+  "runs/p14/search/DEV_geometry.json": "sha256:862170e1c187a4dd6da4d9f43cc5a99eec3e2f51067f2c50c9dd7a1ddef9beae",
+  "runs/p14/search/DEV_oracle.json": "sha256:216e2a26087669422a6dbb379a96d70b64dae08870c26ccae58bdcc1153ea67e",
+  "runs/p14/search/DEV_uninformed.json": "sha256:42f8f37aa797867ebeb3cf8e303d39ab2e05dec83a790149c1942a6880702dad",
+  "runs/p14/search/D_INTERFACE_PROBE.json": "sha256:1f15f948acc3ce094768a4cfbd46563f55fa3ef973e111660874648d91ec7de6",
+  "runs/p14/search/EVAL_D-pairless.json": "sha256:91be857a5f808cb7a7c61867004a8407cdc066e54a8efbef30becff4235d6443",
+  "runs/p14/search/EVAL_D.json": "sha256:6f8bfafff0ba5132cffc643df348ab53864927a688bc40711783fd41a1f029e0",
+  "runs/p14/search/EVAL_geometry.json": "sha256:137f5f9b74992c54a348a6badd0fbc8cc8c361517feb532ca39ab3e4df5b5594",
+  "runs/p14/search/EVAL_oracle.json": "sha256:43454458b97af4c95b26f67d756a571e9951f060118f3723c49f24bdbcd5852b",
+  "runs/p14/search/EVAL_uninformed.json": "sha256:5195d85f5e422fae7efd29df75420cea14662dcd6f85d1e799da771c8f6d643f",
+  "runs/p14/search/dev_roots.json": "sha256:5d465752e9670719584612b2c2871b931783532d3bd575e40c3bb5adc7641b89"
+ },
+ "base": "99bccf7cbc57feb6150d0d50062548af4d3eebe1",
+ "caps": {
+  "a_correction": 2500.0,
+  "a_diagnostics": 3000.0,
+  "d_index": 4000.0,
+  "d_pilot": 8000.0,
+  "d_search": 5000.0,
+  "regression": 2000.0
+ },
+ "eval_roster": "sha256:40c4a19d10a9be5d1109fe742ff3ddda6757a4d13702b761e6ca8139a5b68ff8",
+ "figures": {
+  "visualizations/p14/P14_search_case_004.gif": "sha256:eb7a9408534e5e26447e96547f56ee2760c8530d61b638d809608b7cecddda89",
+  "visualizations/p14/P14_search_case_004.png": "sha256:1e7e959f3967dbc3ad59f37fc88185ab753786cbb679880a5fac1eb09db298f2"
+ },
+ "gates": {
+  "P14_A0_GATE": "PASS",
+  "P14_A1_GATE": "PASS",
+  "P14_COHORT_GATE": "NOT LAUNCHED",
+  "P14_D0_GATE": "PASS",
+  "P14_D1_GATE": "PASS",
+  "P14_D2_GATE": "PASS",
+  "P14_D3_GATE": "PARTIAL (pilot budget exhausted: 6-7 of 24 roots per method)",
+  "P14_FINAL_GATE": "PASS"
+ },
+ "hash": "sha256:5b475948a3062bcdca5ed8f0e3b8eac87fc04d8422d15150ae9c0352d153e88e",
+ "head_at_manifest": "4bb95b8d0b3cd97deeba743ae2834180ee6da9b2",
+ "historical_unchanged": {
+  "runs/p13/PREREG.json": "sha256:fd9679cc9dd8d671c2480f893c0ec83e7520e09d3c049f1e53d77ad0e2ec1271",
+  "runs/p13/holdout/PREDICTIONS_FROZEN.json": "sha256:8d9354ea3d803c6443a9e71f0915d5ec20073d728de1d36d86379e29572b697c",
+  "runs/p13/p13_4/F1_J.json": "sha256:06ab7c85c8c89e141026424acf82bf2102b1a12e424fb43e5cc2c47558f4374e",
+  "runs/p13/p13_4/TARGETED.json": "sha256:3e69b932b91ef91437de769b8a14151d0b468f8e3bb874593821c1b7513a64d0",
+  "runs/p13/p13_5/EXEC_RESULTS.json": "sha256:cd8a029c9dafa11465ba653cb786242f4e984c010149aac3491baf9573a3e217",
+  "runs/p13/p13_6/D13.json": "sha256:4583005b8ceff9257bb1885b40829a6f39be9355e79b3198a2ba45a0b3e3005a"
+ },
+ "prereg": "sha256:970984d1116d702d422b817e00b5302f00bdd7f32ba6528afc9469addf252319",
+ "regression": {
+  "replays": {
+   "g1_hardening": true,
+   "g1_robot": true,
+   "g2_interventions": true,
+   "g3_5_initial_scene": true,
+   "g3_repairs": true,
+   "g4a_evidence_audit": true
+  },
+  "tests": {
+   "failed": 0,
+   "passed": 438,
+   "skipped": 0
+  }
+ },
+ "sources": {
+  "p14_audit.py": "sha256:125496af91e1570745ff86fc6ef21de782c3ebdca71431c4193b9124fed34b73",
+  "p14_d_search.py": "sha256:a0f5736f1664688e944d90057dd4929ea8687d87ad358ccf14837450f5253306",
+  "p14_eval.py": "sha256:bb7fe339e42e9dac2850315e99fd839c1e8110c1aca48bd31c4e5a7ee9b2d8ec",
+  "p14_sweep_index.py": "sha256:c25c1a526cbd1e60121d375d425a5308d95316c4cee31b5d8cb56fa12653a427",
+  "tests/test_p14.py": "sha256:da17026c0273ee6305bf0a3c212176af400e776dc980d273c282d39f2fd1ef55"
+ },
+ "spend_cpu_s": {
+  "a_correction": 23.2,
+  "a_diagnostics": 1863.6,
+  "d_index": 1142.9,
+  "d_pilot": 6947.1,
+  "d_search": 3481.7,
+  "regression": 735.4
+ },
+ "stage": "P14",
+ "status": "PARTIAL"
+}

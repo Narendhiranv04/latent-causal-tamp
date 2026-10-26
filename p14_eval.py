@@ -279,5 +279,115 @@ def run_method(method, split, roots, out_name, lookup="combined", modal_only=Fal
             out["plan"] = {k2: v for k2, v in out["plan"].items() if k2 != "records"} | {"n_records": len(out["plan"]["records"])}
         out |= {"family": P[k]["family"], "y0": dl.get("y0"), "union_mask": dl.get("mask"), "pool": dl.get("pool")}
         res[k] = out
-    (OUT / "search").mkdir(parents=True, exist_ok=True)
-    cf.write_json(OUT / "search" / f"{out_name}.json", res)
+        (OUT / "search").mkdir(parents=True, exist_ok=True)
+        cf.write_json(OUT / "search" / f"{out_name}.json", res)              # after every root: a capped job keeps what it finished
+
+
+# ------------------------------------------------------------------ figures (recorded / certified motions only)
+def _merge(tr, a):
+    return {"q": np.concatenate([tr["q"][:1], a["q"]]), "gap": np.concatenate([tr["gap"][:1], a["gap"]]),
+            "phase": np.concatenate([np.array(["pregrasp"]), a["phase"]]), "attached": np.concatenate([np.array([False]), a["attached"]]),
+            "held_local": a["held_local"], "place_xy": a["place_xy"]}
+
+
+def case_figure(split="dev", key=None, method="D", budget=None) -> None:
+    """One search case: initial scene with D blocker scores, retrieved swept modes for the first move, executed certified trajectories,
+    final scene and cost decomposition; plus a GIF sampled ONLY from the recorded / certified arrays of the found plan."""
+    import torch
+    import p6_scenes as p6
+    import p6_viz as pv
+    import p14_d_search as ds
+    from scene import scene_from_dict
+    from viz import COLORS, plt
+    rs, P, D = _roots(split)
+    cx = ds.Ctx(budget=budget or EVAL_BUDGET)
+    rr, root = rs[key], P[key]
+    g = ds.Guide(method, rr["R"], cx.robot, ds.d_models(method == "D-pairless") if method in ("D", "D-pairless") else [])
+    out = ds.search(cx, root, rr, g)
+    if not out["found"]:
+        raise SystemExit("no plan found for the case figure")
+    s0, goal, ids = scene_from_dict(root["scene"]), root["goal_cell"], rr["ids"]
+    movers = sorted({o for it in root["items"] if it["kind"] == "ORDERED_TEACHER" for o, _ in it["sequence"]})
+    xy = torch.as_tensor(np.array([s0.get(o).xy_m for o in ids]), dtype=torch.float64)
+    sc = g.score(cx, rr["R"].tid, xy, np.asarray(s0.robot.q_rad, float), [ids.index(o) for o in movers])
+    plan, recs = out["plan"], out["plan"]["records"]
+    rel, i = [], 0
+    for st in plan["steps"]:
+        rel.append(_merge(recs[i], recs[i + 1]) if st["via"] == "lookup" else recs[i])
+        i += 2 if st["via"] == "lookup" else 1
+    f, ax = plt.subplots(1, 4, figsize=(24, 6))
+    pv._panel(ax[0], cx.cfg, cx.robot, s0, goal, f"{key[-3:]} {root['family']}: initial (D blocker score)")
+    for o, v in zip(movers, sc):
+        x, y = s0.get(o).xy_m
+        ax[0].text(x, y + 0.035, f"{o}:{v:.2f}", ha="center", fontsize=8, color="#c0392b", weight="bold")
+    st0 = plan["steps"][0]
+    lk = ds.sx.lookup_candidates(cx.idx, st0["object"], s0.get(st0["object"]).cell, st0["dest"], s0, goal, s0.get(st0["object"]).radius_m)
+    pv._panel(ax[1], cx.cfg, cx.robot, s0, goal, f"lookup {st0['object']}->{st0['dest']}: {lk.get('modes', 0)} modes (swept cells)")
+    for mi, c in enumerate([c for c in lk.get("candidates", []) if c["rank_in_mode"] == 0][:3]):
+        for cell in c["entry"]["_all"]:
+            ax[1].add_patch(plt.Rectangle(((cell % 8) * 0.08, (cell // 8) * 0.08), 0.08, 0.08, fc=["#2a6fdb", "#e07b00", "#2e9e5b"][mi], alpha=0.18, zorder=1))
+        ax[1].text(0.01, 0.62 - 0.04 * mi, f"mode {mi}: support {c['support']} roots, travel {c['travel_J']:.2f}", fontsize=7, color=["#2a6fdb", "#e07b00", "#2e9e5b"][mi])
+    sN = p6.moved(s0, {st["object"]: st["dest"] for st in plan["steps"]})
+    pv._panel(ax[2], cx.cfg, cx.robot, sN, goal, "after relocations: executed tool paths (certified)")
+    import geometry as ge
+    for a, col in zip(rel + recs[-1:], ["#2a6fdb", "#e07b00", "#8e5bd0", "#c0392b"]):
+        pts = np.array([ge.fk(cx.robot, q)[0][-1] for q, _, _ in __import__("motion").samples(a, 60)])
+        ax[2].plot(pts[:, 0], pts[:, 1], color=col, lw=1.2)
+    tv = [ds.travel(cx.robot, [a]) for a in rel] + [ds.travel(cx.robot, recs[-1:])]
+    ax[3].bar(range(len(tv)), tv, color=["#2a6fdb"] * len(rel) + ["#c0392b"])
+    ax[3].set(xticks=range(len(tv)), xticklabels=[f"{st['object']}->{st['dest']}\n({st['via']})" for st in plan["steps"]] + ["target"],
+              ylabel="measured joint travel (normalized)", title=f"lexicographic cost: {plan['moves']} moves, travel {plan['travel']:.2f}")
+    DSTV = __import__("pathlib").Path("visualizations/p14")
+    DSTV.mkdir(parents=True, exist_ok=True)
+    pv.png(f, DSTV / f"P14_search_case_{key[-3:]}.png", f"P14-D2 search case {key} ({method}-guided): scores, retrieved modes, executed plan, cost")
+    frames = []
+    for qq, gp, pos, mv in pv.trace_frames(cx.robot, s0, [(st["object"], st["dest"]) for st in plan["steps"]], rel, recs[-1:], n_move=10, n_target=12):
+        fg, a = plt.subplots(figsize=(5, 5))
+        pv._panel(a, cx.cfg, cx.robot, s0, goal, f"{key[-3:]}: certified plan ({plan['moves']} moves)\nRECORDED / CERTIFIED arrays", q=qq, gap=gp, pos=pos, held=mv)
+        pv._tag(a, "replayed certified motion", COLORS["valid"])
+        frames.append(pv._rgb(fg))
+    pv.gif(DSTV / f"P14_search_case_{key[-3:]}.gif", frames, f"P14-D2 {key}: certified plan replay")
+
+
+def d3_summary() -> dict:
+    """D3 tables from the EVAL_* / ABL_* run files (identical roots, slots, index, planner, budget)."""
+    S = OUT / "search"
+    runs = {m: rd(S / f"EVAL_{m}.json") for m in METHODS if (S / f"EVAL_{m}.json").exists()}
+    common = sorted(set.intersection(*[set(v) for v in runs.values()]))
+    ok = lambda v: bool(v.get("found") and (v.get("replay") or {}).get("success"))  # noqa: E731
+
+    def summ(d, ks):
+        st = [d[k]["stats"] for k in ks]
+        steps = [s for k in ks if ok(d[k]) for s in d[k]["plan"]["steps"]]
+        return {"roots": len(ks), "success": float(np.mean([ok(d[k]) for k in ks])),
+                "feasible_original_zero_move_success": float(np.mean([ok(d[k]) and d[k]["plan"]["moves"] == 0 for k in ks if d[k]["y0"] == 1] or [np.nan])),
+                "mean_moves_solved": float(np.mean([d[k]["plan"]["moves"] for k in ks if ok(d[k])] or [np.nan])),
+                "mean_travel_solved": float(np.mean([d[k]["plan"]["travel"] for k in ks if ok(d[k])] or [np.nan])),
+                "unnecessary_moves_total": int(sum(d[k].get("unnecessary_moves") or 0 for k in ks if ok(d[k]))),
+                "blockers_displaced_total": int(sum(d[k].get("blockers_displaced") or 0 for k in ks if ok(d[k]))),
+                "depth_exhaustive_solved": int(sum(bool(d[k]["depth_exhaustive"]) for k in ks if ok(d[k]))),
+                "steps_lookup": sum(s["via"] == "lookup" for s in steps), "steps_online": sum(s["via"] == "online" for s in steps),
+                "online_fallback_fraction_of_verified_moves": float(sum(x["online_moves"] for x in st) / max(1, sum(x["online_moves"] + x["lookup_hits"] for x in st))),
+                "lookup_hit_rate": float(sum(x["lookup_hits"] for x in st) / max(1, sum(x["lookup_hits"] + x["lookup_misses"] for x in st))),
+                **{f"mean_{c}": float(np.mean([x[c] for x in st])) for c in ("nodes", "motion_checks", "online_moves", "target_checks", "D_calls")},
+                "modal_rejections_rescued": int(sum(x["modal_rejections_rescued"] for x in st)), "lookup_unknown": int(sum(x["lookup_unknown"] for x in st)),
+                "truncated": int(sum(bool(x["truncated"]) for x in st)), "cpu_s_total": float(sum(d[k]["cpu_s"] for k in ks)),
+                "cpu_s_mean": float(np.mean([d[k]["cpu_s"] for k in ks]))}
+    out = {"common_roots": len(common), "methods": {m: summ(d, common) for m, d in runs.items()}}
+    suc = {m: {k: float(ok(d[k])) for k in common} for m, d in runs.items()}
+    out["paired_success"] = {f"{a}-{b}": paired(suc[a], suc[b]) for a, b in (("D", "geometry"), ("D", "D-pairless"), ("D", "uninformed"), ("geometry", "uninformed"),
+                                                                              ("oracle", "D"), ("oracle", "geometry")) if a in suc and b in suc}
+    both = lambda a, b: [k for k in common if ok(runs[a][k]) and ok(runs[b][k])]  # noqa: E731
+    out["paired_cost_on_both_solved"] = {f"{a}-{b}": {"moves": paired({k: runs[a][k]["plan"]["moves"] for k in both(a, b)}, {k: runs[b][k]["plan"]["moves"] for k in both(a, b)}),
+                                                      "travel": paired({k: runs[a][k]["plan"]["travel"] for k in both(a, b)}, {k: runs[b][k]["plan"]["travel"] for k in both(a, b)}),
+                                                      "cpu": paired({k: runs[a][k]["cpu_s"] for k in common}, {k: runs[b][k]["cpu_s"] for k in common})}
+                                         for a, b in (("D", "geometry"), ("D", "uninformed"), ("D", "D-pairless")) if a in runs and b in runs}
+    out["by_family"] = {f: {m: float(np.mean([ok(d[k]) for k in common if d[k]["family"] == f])) for m, d in runs.items()} for f in sorted({runs["D"][k]["family"] for k in common})}
+    abl = {v: rd(S / f"ABL_{v}.json") for v in ("online", "modal", "local", "global") if (S / f"ABL_{v}.json").exists()}
+    if abl and "D" in runs:
+        ks = sorted(set.intersection(*[set(v) for v in abl.values()]) & set(runs["D"]))
+        out["lookup_ablation"] = {"roots": len(ks), "D_combined_all_modes": summ(runs["D"], ks), **{v: summ(d, ks) for v, d in abl.items()}}
+        out["modal_only_false_rejections"] = {"combined_rescued_by_rare_mode": int(sum(runs["D"][k]["stats"]["modal_rejections_rescued"] for k in ks)),
+                                              "roots_solved_combined_not_modal": [k for k in ks if ok(runs["D"][k]) and not ok(abl["modal"][k])] if "modal" in abl else None}
+    cf.write_json(OUT / "eval" / "D3_SUMMARY.json", out) if (OUT / "eval").mkdir(parents=True, exist_ok=True) is None else None
+    return out
