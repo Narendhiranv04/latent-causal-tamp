@@ -231,3 +231,53 @@ def cf_continue(extra=300.0) -> None:
             f.write_text(_j.dumps(led, indent=1, default=float))
             cf.write_json(OUT / "calibration" / f"cf_removed_{f.parent.name}.json", {"removed": rm})
             cf_worker(int(f.parent.name[1:]), led["cpu_s"] + extra)
+
+
+# ------------------------------------------------------------------ P14-D2 / D3: method runs (identical scenes, slots, index, planner, budget)
+METHODS = ("D", "D-pairless", "geometry", "uninformed", "oracle")
+EVAL_BUDGET = {"motion_checks": 120, "online_moves": 6, "target_checks": 16}
+
+
+def _roots(split):
+    import os
+    os.environ["P10C_OUT"] = str(P13 / "models")
+    import p13_pipeline as pp
+    import p10b_dataset as pd
+    if split == "dev":
+        rs = {r["key"]: r for r in pp._prepared("trainval") if str(r["audit"].get("source", "")).startswith("P13")}
+        dirs = sorted((pp.OUT / "data").glob("*_b*"))
+    else:
+        rs = {r["key"]: r for r in pp._prepared("test")}
+        dirs = sorted(pp.HOLD.glob("*_b*"))
+    P, D = {}, {}
+    for d in dirs:
+        plan = pp.rd(d / "plan.json")
+        P |= plan["roots"]
+        D |= pd.d_labels(plan, pp._sealed(d))
+    return rs, P, D
+
+
+def run_method(method, split, roots, out_name, lookup="combined", modal_only=False, online=True, budget=None) -> None:
+    """One process per (method, variant): runs the search on every listed root, replays each found plan, writes one JSON."""
+    import p14_d_search as ds
+    rs, P, D = _roots(split)
+    ms = ds.d_models(method == "D-pairless") if method in ("D", "D-pairless") else []
+    res = {}
+    for k in roots:
+        cx = ds.Ctx(lookup=lookup, modal_only=modal_only, online=online, budget=budget or EVAL_BUDGET)
+        ids = rs[k]["ids"]
+        dl = D[k]
+        orc = {ids.index(o): m for o, m in zip(dl["pool"], dl["mask"])} if dl.get("mask") else ({ids.index(o): 0 for o in dl["pool"]} if dl.get("y0") == 1 else None)
+        g = ds.Guide("geometry" if method == "lookup-only" else method, rs[k]["R"], cx.robot, ms, orc)
+        out = ds.search(cx, P[k], rs[k], g, key=f"p14/{split}/{method}/{k}")
+        if out["found"]:
+            out["replay"] = ds.replay(cx, P[k], out["plan"])
+            moved = [s["object"] for s in out["plan"]["steps"]]
+            union = {o for o, m in zip(dl["pool"], dl["mask"] or [0] * len(dl["pool"])) if m} if dl.get("mask") or dl.get("y0") == 1 else None
+            out["unnecessary_moves"] = None if union is None else sum(o not in union for o in moved)
+            out["blockers_displaced"] = None if union is None else sum(o in union for o in moved)
+            out["plan"] = {k2: v for k2, v in out["plan"].items() if k2 != "records"} | {"n_records": len(out["plan"]["records"])}
+        out |= {"family": P[k]["family"], "y0": dl.get("y0"), "union_mask": dl.get("mask"), "pool": dl.get("pool")}
+        res[k] = out
+    (OUT / "search").mkdir(parents=True, exist_ok=True)
+    cf.write_json(OUT / "search" / f"{out_name}.json", res)

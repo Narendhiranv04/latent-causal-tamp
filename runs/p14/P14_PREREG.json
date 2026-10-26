@@ -1,0 +1,95 @@
+{
+ "A_track": {
+  "status": "A0 errata + A1 diagnostics complete (exploratory); repair cohort only after the D pilot gate with separate caps"
+ },
+ "D_track": {
+  "D_models": "frozen P13 D (lambda 1.0) / D-pairless (lambda 2.0), 3 seeds; never retrained",
+  "index": {
+   "entries": 4838,
+   "excluded": "every P13 blind / natural root",
+   "hash": "sha256:4c29bbd376cc295f4c291b23df446c24eb970de014d9363fe54be5fdc11e0a0c",
+   "version": "P14_SWEEP_INDEX_V1"
+  },
+  "lookup_ablations": [
+   "online-only (no lookup)",
+   "modal-top1",
+   "local-only",
+   "global-only"
+  ],
+  "methods": [
+   "D",
+   "D-pairless",
+   "geometry",
+   "uninformed",
+   "oracle"
+  ],
+  "no_label_use": "teacher labels only for the oracle arm and for scoring unnecessary moves",
+  "primary_hypothesis": "D-guided vs geometry-guided: paired root success (plan found AND replay success), exact two-sided sign test; secondary: moves, travel, unnecessary moves, node / planner-call counts, CPU; descriptive only (pilot, n = 24)",
+  "roster_ablation": [
+   "p13_2026180003",
+   "p13_2026180006",
+   "p13_2026180005",
+   "p13_2026180004",
+   "p13_2026180001",
+   "p13_2026180000",
+   "p13_2026190002",
+   "p13_2026190000"
+  ],
+  "roster_primary": [
+   "p13_2026180003",
+   "p13_2026180012",
+   "p13_2026180021",
+   "p13_2026180006",
+   "p13_2026180015",
+   "p13_2026180024",
+   "p13_2026180005",
+   "p13_2026180014",
+   "p13_2026180023",
+   "p13_2026180004",
+   "p13_2026180013",
+   "p13_2026180022",
+   "p13_2026180001",
+   "p13_2026180010",
+   "p13_2026180019",
+   "p13_2026180000",
+   "p13_2026180009",
+   "p13_2026180018",
+   "p13_2026190002",
+   "p13_2026190005",
+   "p13_2026190007",
+   "p13_2026190000",
+   "p13_2026190001",
+   "p13_2026190006"
+  ],
+  "search": {
+   "K_DEST": 4,
+   "N_MAX": 3,
+   "budget": {
+    "motion_checks": 120,
+    "online_moves": 6,
+    "target_checks": 16
+   },
+   "execution": "independent re-certified replay",
+   "goal_test": "online planner target pick-and-place in the final scene",
+   "objective": "lexicographic (relocations, ordered.joint_travel)",
+   "planner_keys": "pure function of the physical query (identical witnesses across methods)"
+  },
+  "similarity": {
+   "MODE_IOU": 0.6,
+   "STEP_M": 0.004,
+   "W_GLOBAL": 0.25,
+   "default_ranking": "combined"
+  }
+ },
+ "base_commit": "99bccf7cbc57feb6150d0d50062548af4d3eebe1",
+ "caps": {
+  "a_correction": 2500.0,
+  "a_diagnostics": 3000.0,
+  "d_index": 4000.0,
+  "d_pilot": 8000.0,
+  "d_search": 5000.0,
+  "regression": 2000.0
+ },
+ "hash": "sha256:24099c4fca130c066b3c60715060a046d51292e91a0c63a576f077f77af963a5",
+ "version": "P14_PREREG_V1"
+}

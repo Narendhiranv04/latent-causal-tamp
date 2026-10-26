@@ -191,3 +191,100 @@ def build_index(exclude="runs/p14/eval_roster.json") -> None:
     idx = {"version": "P14_SWEEP_INDEX_V1", "entries": ents, "skipped": dict(skipped), "step_m": STEP_M, "excluded_roots": len(excl)}
     idx["hash"] = cf.stable_hash({"n": len(ents), "keys": sorted((e["src"], e["dst"], e["file"], e["index"]) for e in ents)})
     cf.write_json(OUT / "lookup" / "INDEX.json", idx)
+
+
+# ------------------------------------------------------------------ D1: retrieval (hard filter -> similarity -> swept-mode clusters)
+W_GLOBAL = 0.25          # combined score = local + W_GLOBAL * global (fixed before any evaluation; DEV only)
+MODE_IOU = 0.6           # two witnesses belong to one motion mode if their whole-path swept-cell IoU >= MODE_IOU
+
+
+class Index:
+    def __init__(self, path=OUT / "lookup" / "INDEX.json"):
+        d = rd(path)
+        self.version, self.hash = d["version"], d["hash"]
+        self.by_key = collections.defaultdict(list)
+        for e in d["entries"]:
+            e["_all"] = set().union(*map(set, e["swept"].values()))
+            self.by_key[(e["src"], e["dst"])].append(e)
+        self._arr = {}
+
+    def arrays(self, e):
+        import g4d_run as gr
+        k = (e["file"], e["index"])
+        if k not in self._arr:
+            self._arr[k] = gr._arrays(Path(e["file"]))[e["index"]]
+        return self._arr[k]
+
+
+def _sim(a, b):
+    m = [(x, y) for x, y in zip(a, b)]
+    return sum(x == y for x, y in m) / len(m)
+
+
+def lookup_candidates(idx, oid, src, dst, scene, goal, radius, mode="combined", modal_only=False) -> dict:
+    """Ordered candidate witnesses for 'object at src -> dst' in `scene`. Hard filters first (absolute src / dst for the fixed-base arm, object
+    footprint); then similarity (local = 3x3 + 4x4 windows at source and destination; global = 64-cell occupancy); then motion modes by
+    swept-cell IoU, ranked by independent supporting roots, best similarity, travel. Nothing here is a feasibility decision: candidates are
+    certified in the exact current scene by the caller; an empty result is UNKNOWN under lookup."""
+    pool = idx.by_key.get((src, dst), [])
+    rej = collections.Counter()
+    ok = []
+    for e in pool:
+        if abs(e["radius"] - radius) > 1e-9:
+            rej["footprint"] += 1
+            continue
+        ok.append(e)
+    if not ok:
+        return {"status": "UNKNOWN_NO_COMPATIBLE_WITNESS", "candidates": [], "modes": 0, "rejected": dict(rej), "pool": len(pool)}
+    occ = _occ(scene, goal, oid)
+    w3s, w4s = windows(occ, src)
+    w3d, w4d = windows(occ, dst)
+    score = {}
+    for e in ok:
+        loc = (_sim(w3s, e["w3_src"]) + _sim(w4s, e["w4_src"]) + _sim(w3d, e["w3_dst"]) + _sim(w4d, e["w4_dst"])) / 4
+        glo = _sim(occ, e["global"])
+        score[id(e)] = {"local": loc, "global": glo, "combined": loc + W_GLOBAL * glo}[mode]
+    ranked = sorted(ok, key=lambda e: (-score[id(e)], e["travel_J"], e["file"], e["index"]))
+    modes = []
+    for e in ranked:
+        for m in modes:
+            u = m[0]["_all"]
+            if len(u & e["_all"]) / max(1, len(u | e["_all"])) >= MODE_IOU:
+                m.append(e)
+                break
+        else:
+            modes.append([e])
+    modes.sort(key=lambda m: (-len({x["support_id"] for x in m}), -max(score[id(x)] for x in m), min(x["travel_J"] for x in m)))
+    occupied = {o.cell for o in scene.objects if o.id != oid}
+    cands = []
+    for mi, m in enumerate(modes):
+        for j, e in enumerate(m if not modal_only else m[:1]):
+            cands.append({"entry": e, "mode": mi, "rank_in_mode": j, "support": len({x["support_id"] for x in m}), "similarity": score[id(e)],
+                          "travel_J": e["travel_J"], "screen_hits": sorted(e["_all"] & occupied)})
+        if modal_only:
+            break
+    return {"status": "CANDIDATES", "candidates": cands, "modes": len(modes), "rejected": dict(rej), "pool": len(pool),
+            "index": idx.version, "index_hash": idx.hash}
+
+
+def mode_stats() -> dict:
+    """Library structure: motion modes per absolute (src, dst) key, independent support per mode, duplicate inflation."""
+    idx = Index()
+    per = []
+    for key, es in idx.by_key.items():
+        modes = []
+        for e in sorted(es, key=lambda e: (e["travel_J"], e["file"], e["index"])):
+            for m in modes:
+                if len(m[0]["_all"] & e["_all"]) / max(1, len(m[0]["_all"] | e["_all"])) >= MODE_IOU:
+                    m.append(e)
+                    break
+            else:
+                modes.append([e])
+        per.append({"key": key, "records": len(es), "roots": len({e["support_id"] for e in es}), "modes": len(modes),
+                    "modes_ge2_roots": sum(len({x["support_id"] for x in m}) >= 2 for m in modes)})
+    out = {"keys": len(per), "entries": sum(p["records"] for p in per), "modes_total": sum(p["modes"] for p in per),
+           "keys_with_ge2_modes": sum(p["modes"] >= 2 for p in per), "independent_supported_modes": sum(p["modes_ge2_roots"] for p in per),
+           "records_per_root_ratio": float(sum(p["records"] for p in per) / max(1, sum(p["roots"] for p in per))),
+           "median_modes_per_key": float(np.median([p["modes"] for p in per]))}
+    cf.write_json(OUT / "lookup" / "MODE_STATS.json", out)
+    return out
