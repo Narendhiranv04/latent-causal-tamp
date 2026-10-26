@@ -194,7 +194,7 @@ def run_arm(guide, roster, out_name, split="test", recursion=True, budget=None, 
         movers = sorted({o for it in root["items"] if it["kind"] == "ORDERED_TEACHER" for o, _ in it["sequence"]})
         out = ps.search(phys, g.order(phys, movers), movers, _slots(phys, idx), {o.id: o.cell for o in phys.s0.objects}, phys.s0.robot.q_rad)
         rep = ps.replay(phys, out["plan"]) if out["found"] else None
-        union = {o for o, m in zip(dl["pool"], dl["mask"])} if dl.get("mask") else (set() if dl.get("y0") == 1 else None)
+        union = {o for o, m in zip(dl["pool"], dl["mask"]) if m} if dl.get("mask") else (set() if dl.get("y0") == 1 else None)
         moved = [s["object"] for s in out["plan"]["steps"]] if out["found"] else []
         res[k] = {"family": root["family"], "y0": dl.get("y0"), "found": out["found"], "replay_success": rep, "claim": out["claim"],
                   "min_moves_proven": out["min_moves_proven"], "min_travel_proven": out["min_travel_proven"], "flags": out["flags"],
@@ -342,8 +342,12 @@ def ok(v) -> bool:
 
 def summarize(cohort, arms=ARMS5, primary=("D", "geometry")) -> dict:
     """cohort RETRO or PROSP. Strict success = plan found AND independent replay CLEAR; paired on roots completed by both arms."""
+    import p14_eval as pe
     runs = {a: rd(OUT / "search" / f"{cohort}_{a}.json") for a in arms if (OUT / "search" / f"{cohort}_{a}.json").exists()}
     common = sorted(set.intersection(*[set(v) for v in runs.values()])) if runs else []
+    D = (pe._roots("test") if cohort == "RETRO" else _prosp_roots())[2]          # labels only score the union metric (unsealed)
+    union = {k: ({o for o, m in zip(D[k]["pool"], D[k]["mask"]) if m} if D[k].get("mask") else (set() if D[k].get("y0") == 1 else None)) for k in common}
+    outside = lambda r, k: None if union[k] is None or not r["found"] else sum(s_["object"] not in union[k] for s_ in r["plan"]["steps"])  # noqa: E731
     per = {}
     for a, v in runs.items():
         rows = [v[k] for k in common]
@@ -367,7 +371,7 @@ def summarize(cohort, arms=ARMS5, primary=("D", "geometry")) -> dict:
                   "status_counts": dict(st),
                   "anytime_success": {str(t): sum(ok(r) and r["log"].get("anytime") and r["log"]["anytime"][0]["cpu_s"] <= t for r in rows)
                                       for t in CPU_GRID},
-                  "moves_outside_original_blocker_union": [r["moves_outside_original_blocker_union"] for r in rows if r["found"]],
+                  "moves_outside_original_blocker_union": dict(collections.Counter(str(outside(v[k], k)) for k in common if v[k]["found"])),
                   "lookup_stats": {k: int(sum(r["stats"][k] for r in rows)) for k in (rows[0]["stats"] if rows else {})}}
     pairs = {}
     ref = primary[1]

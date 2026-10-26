@@ -1,0 +1,928 @@
+{
+ "p13_2026180003": {
+  "claim": "BEST_VERIFIED_WITHIN_BUDGET",
+  "cpu_s": 43.610961263,
+  "d_calls": 0,
+  "d_cpu_s": 0.0,
+  "family": "PC_SG",
+  "flags": {
+   "0": {
+    "all_decided": true,
+    "search_enumeration_complete": true
+   },
+   "1": {
+    "all_decided": false,
+    "search_enumeration_complete": true
+   },
+   "2": {
+    "all_decided": false,
+    "search_enumeration_complete": true
+   }
+  },
+  "found": true,
+  "guide": "geometry",
+  "log": {
+   "anytime": [
+    {
+     "cpu_s": 19.966675373999998,
+     "moves": 2,
+     "travel": 5.837831661632905
+    },
+    {
+     "cpu_s": 40.063559645000005,
+     "moves": 2,
+     "travel": 4.753180996190562
+    }
+   ],
+   "edges": {
+    "UNKNOWN_BUDGET": 27,
+    "UNKNOWN_PLANNER": 2,
+    "VERIFIED": 15
+   },
+   "goals": {
+    "CERTIFIED_INFEASIBLE": 7,
+    "VERIFIED": 3
+   },
+   "nodes": 18,
+   "pruned_bnb": 0,
+   "pruned_dominated": 0,
+   "terminal_q_alternatives": 0
+  },
+  "min_moves_proven": false,
+  "min_travel_proven": false,
+  "moves_outside_original_blocker_union": 0,
+  "plan": {
+   "moves": 2,
+   "steps": [
+    {
+     "dest": 36,
+     "lookup": "LIBRARY_COLLISION",
+     "object": "o01",
+     "via": "online"
+    },
+    {
+     "dest": 59,
+     "entry": "runs/p12/dev/q/seq__p12_2026138006__o00-36.o01-59/seed20261021/units/seq__p12_2026138006__o00-36.o01-59#s20261021/relocation.npz#1",
+     "mode": 2,
+     "object": "o00",
+     "support": 2,
+     "via": "lookup"
+    }
+   ],
+   "travel": 4.753180996190562
+  },
+  "recursion": true,
+  "replay_success": true,
+  "stats": {
+   "certificate_checks": 47,
+   "lookup_candidates_tried": 59,
+   "lookup_hits": 4,
+   "rare_mode_used": 3
+  },
+  "truncated": false,
+  "used": {
+   "goal_plans": 3,
+   "motion_checks": 59,
+   "online_moves": 6
+  },
+  "wall_s": 43.61902117729187,
+  "y0": 0
+ },
+ "p13_2026180004": {
+  "claim": "MIN_MOVES_AND_MIN_TRAVEL_WITHIN_FULLY_ADJUDICATED_FINITE_GRAPH",
+  "cpu_s": 50.647478730999865,
+  "d_calls": 0,
+  "d_cpu_s": 0.0,
+  "family": "PN_GIMP",
+  "flags": {
+   "0": {
+    "all_decided": true,
+    "search_enumeration_complete": true
+   },
+   "1": {
+    "all_decided": true,
+    "search_enumeration_complete": true
+   }
+  },
+  "found": true,
+  "guide": "geometry",
+  "log": {
+   "anytime": [
+    {
+     "cpu_s": 2.5485131209998144,
+     "moves": 1,
+     "travel": 1.3885168023550394
+    },
+    {
+     "cpu_s": 3.9964837400000306,
+     "moves": 1,
+     "travel": 0.890520562066992
+    }
+   ],
+   "edges": {
+    "VERIFIED": 12
+   },
+   "goals": {
+    "CERTIFIED_INFEASIBLE": 2,
+    "VERIFIED": 3
+   },
+   "nodes": 14,
+   "pruned_bnb": 8,
+   "pruned_dominated": 0,
+   "terminal_q_alternatives": 2
+  },
+  "min_moves_proven": true,
+  "min_travel_proven": true,
+  "moves_outside_original_blocker_union": 0,
+  "plan": {
+   "moves": 1,
+   "steps": [
+    {
+     "dest": 31,
+     "entry": "runs/p10b/batch2/q/seq__p10b_2026111072__o00-31.o01-4/seed20261021/units/seq__p10b_2026111072__o00-31.o01-4#s20261021/relocation.npz#0",
+     "mode": 0,
+     "object": "o00",
+     "support": 2,
+     "via": "lookup"
+    }
+   ],
+   "travel": 0.890520562066992
+  },
+  "recursion": true,
+  "replay_success": true,
+  "stats": {
+   "certificate_checks": 15,
+   "lookup_candidates_tried": 10,
+   "lookup_hits": 7,
+   "rare_mode_used": 3
+  },
+  "truncated": false,
+  "used": {
+   "goal_plans": 3,
+   "motion_checks": 10,
+   "online_moves": 5
+  },
+  "wall_s": 50.657050132751465,
+  "y0": 0
+ },
+ "p13_2026180005": {
+  "claim": "NO_PLAN_FOUND",
+  "cpu_s": 227.75599068600002,
+  "d_calls": 0,
+  "d_cpu_s": 0.0,
+  "family": "PN_SIMP",
+  "flags": {
+   "0": {
+    "all_decided": true,
+    "search_enumeration_complete": true
+   },
+   "1": {
+    "all_decided": false,
+    "search_enumeration_complete": false
+   }
+  },
+  "found": false,
+  "guide": "geometry",
+  "log": {
+   "edges": {
+    "VERIFIED": 3
+   },
+   "goals": {
+    "CERTIFIED_INFEASIBLE": 1,
+    "UNKNOWN_BUDGET": 2,
+    "UNKNOWN_PLANNER": 1
+   },
+   "nodes": 5,
+   "pruned_bnb": 0,
+   "pruned_dominated": 0,
+   "terminal_q_alternatives": 2
+  },
+  "min_moves_proven": false,
+  "min_travel_proven": false,
+  "moves_outside_original_blocker_union": null,
+  "plan": null,
+  "recursion": true,
+  "replay_success": null,
+  "stats": {
+   "certificate_checks": 5,
+   "lookup_candidates_tried": 4,
+   "lookup_hits": 3,
+   "rare_mode_used": 2
+  },
+  "truncated": true,
+  "used": {
+   "goal_plans": 1,
+   "motion_checks": 4,
+   "online_moves": 0
+  },
+  "wall_s": 227.87649416923523,
+  "y0": 0
+ },
+ "p13_2026180006": {
+  "claim": "MIN_MOVES_WITHIN_FULLY_ADJUDICATED_FINITE_GRAPH",
+  "cpu_s": 298.294654562,
+  "d_calls": 0,
+  "d_cpu_s": 0.0,
+  "family": "PR_SIDES",
+  "flags": {
+   "0": {
+    "all_decided": true,
+    "search_enumeration_complete": true
+   },
+   "1": {
+    "all_decided": false,
+    "search_enumeration_complete": false
+   }
+  },
+  "found": true,
+  "guide": "geometry",
+  "log": {
+   "anytime": [
+    {
+     "cpu_s": 4.839511528999992,
+     "moves": 1,
+     "travel": 1.769624876257382
+    }
+   ],
+   "edges": {
+    "VERIFIED": 12
+   },
+   "goals": {
+    "CERTIFIED_INFEASIBLE": 1,
+    "UNKNOWN_BUDGET": 2,
+    "UNKNOWN_PLANNER": 1,
+    "VERIFIED": 9
+   },
+   "nodes": 14,
+   "pruned_bnb": 0,
+   "pruned_dominated": 0,
+   "terminal_q_alternatives": 6
+  },
+  "min_moves_proven": true,
+  "min_travel_proven": false,
+  "moves_outside_original_blocker_union": 0,
+  "plan": {
+   "moves": 1,
+   "steps": [
+    {
+     "dest": 28,
+     "entry": "runs/p12/holdout/batch3/q/seq__p12_2026140048__o01-60.o00-28/seed20261021/units/seq__p12_2026140048__o01-60.o00-28#s20261021/relocation.npz#1",
+     "mode": 0,
+     "object": "o00",
+     "support": 5,
+     "via": "lookup"
+    }
+   ],
+   "travel": 1.769624876257382
+  },
+  "recursion": true,
+  "replay_success": true,
+  "stats": {
+   "certificate_checks": 19,
+   "lookup_candidates_tried": 17,
+   "lookup_hits": 10,
+   "rare_mode_used": 6
+  },
+  "truncated": true,
+  "used": {
+   "goal_plans": 10,
+   "motion_checks": 17,
+   "online_moves": 2
+  },
+  "wall_s": 298.45425248146057,
+  "y0": 0
+ },
+ "p13_2026180012": {
+  "claim": "MIN_MOVES_WITHIN_FULLY_ADJUDICATED_FINITE_GRAPH",
+  "cpu_s": 91.807635817,
+  "d_calls": 0,
+  "d_cpu_s": 0.0,
+  "family": "PC_SG",
+  "flags": {
+   "0": {
+    "all_decided": true,
+    "search_enumeration_complete": true
+   },
+   "1": {
+    "all_decided": true,
+    "search_enumeration_complete": true
+   },
+   "2": {
+    "all_decided": false,
+    "search_enumeration_complete": true
+   }
+  },
+  "found": true,
+  "guide": "geometry",
+  "log": {
+   "anytime": [
+    {
+     "cpu_s": 22.890384813000004,
+     "moves": 2,
+     "travel": 2.906021280512518
+    },
+    {
+     "cpu_s": 52.794263214000004,
+     "moves": 2,
+     "travel": 2.5755722856853858
+    },
+    {
+     "cpu_s": 88.669233975,
+     "moves": 2,
+     "travel": 2.457891131912647
+    }
+   ],
+   "edges": {
+    "CERTIFIED_INFEASIBLE": 1,
+    "UNKNOWN_BUDGET": 30,
+    "VERIFIED": 37
+   },
+   "goals": {
+    "CERTIFIED_INFEASIBLE": 15,
+    "UNKNOWN_PLANNER": 3,
+    "VERIFIED": 10
+   },
+   "nodes": 40,
+   "pruned_bnb": 0,
+   "pruned_dominated": 0,
+   "terminal_q_alternatives": 6
+  },
+  "min_moves_proven": true,
+  "min_travel_proven": false,
+  "moves_outside_original_blocker_union": 0,
+  "plan": {
+   "moves": 2,
+   "steps": [
+    {
+     "dest": 63,
+     "lookup": "UNKNOWN_NO_LIBRARY_WITNESS",
+     "object": "o01",
+     "via": "online"
+    },
+    {
+     "dest": 44,
+     "entry": "runs/p13/data/train_b4/q/seq__p13_2026160056__o00-44.o01-28/seed20261021/units/seq__p13_2026160056__o00-44.o01-28#s20261021/relocation.npz#0",
+     "mode": 0,
+     "object": "o00",
+     "support": 4,
+     "via": "lookup"
+    }
+   ],
+   "travel": 2.457891131912647
+  },
+  "recursion": true,
+  "replay_success": true,
+  "stats": {
+   "certificate_checks": 81,
+   "lookup_candidates_tried": 80,
+   "lookup_hits": 21,
+   "rare_mode_used": 7
+  },
+  "truncated": false,
+  "used": {
+   "goal_plans": 13,
+   "motion_checks": 80,
+   "online_moves": 6
+  },
+  "wall_s": 91.81901669502258,
+  "y0": 0
+ },
+ "p13_2026180013": {
+  "claim": "MIN_MOVES_AND_MIN_TRAVEL_WITHIN_FULLY_ADJUDICATED_FINITE_GRAPH",
+  "cpu_s": 35.49375494099991,
+  "d_calls": 0,
+  "d_cpu_s": 0.0,
+  "family": "PN_GIMP",
+  "flags": {
+   "0": {
+    "all_decided": true,
+    "search_enumeration_complete": true
+   },
+   "1": {
+    "all_decided": true,
+    "search_enumeration_complete": true
+   }
+  },
+  "found": true,
+  "guide": "geometry",
+  "log": {
+   "anytime": [
+    {
+     "cpu_s": 4.585547116000043,
+     "moves": 1,
+     "travel": 3.0128817493827365
+    },
+    {
+     "cpu_s": 25.068462498000144,
+     "moves": 1,
+     "travel": 2.6064394948132015
+    }
+   ],
+   "edges": {
+    "VERIFIED": 11
+   },
+   "goals": {
+    "CERTIFIED_INFEASIBLE": 6,
+    "VERIFIED": 6
+   },
+   "nodes": 13,
+   "pruned_bnb": 0,
+   "pruned_dominated": 0,
+   "terminal_q_alternatives": 1
+  },
+  "min_moves_proven": true,
+  "min_travel_proven": true,
+  "moves_outside_original_blocker_union": 0,
+  "plan": {
+   "moves": 1,
+   "steps": [
+    {
+     "dest": 54,
+     "lookup": "UNKNOWN_NO_LIBRARY_WITNESS",
+     "object": "o00",
+     "via": "online"
+    }
+   ],
+   "travel": 2.6064394948132015
+  },
+  "recursion": true,
+  "replay_success": true,
+  "stats": {
+   "certificate_checks": 22,
+   "lookup_candidates_tried": 16,
+   "lookup_hits": 5,
+   "rare_mode_used": 3
+  },
+  "truncated": false,
+  "used": {
+   "goal_plans": 6,
+   "motion_checks": 16,
+   "online_moves": 6
+  },
+  "wall_s": 35.506529092788696,
+  "y0": 0
+ },
+ "p13_2026180014": {
+  "claim": "MIN_MOVES_WITHIN_FULLY_ADJUDICATED_FINITE_GRAPH",
+  "cpu_s": 43.65327563300002,
+  "d_calls": 0,
+  "d_cpu_s": 0.0,
+  "family": "PN_SIMP",
+  "flags": {
+   "0": {
+    "all_decided": true,
+    "search_enumeration_complete": true
+   },
+   "1": {
+    "all_decided": false,
+    "search_enumeration_complete": true
+   }
+  },
+  "found": true,
+  "guide": "geometry",
+  "log": {
+   "anytime": [
+    {
+     "cpu_s": 7.758655878000013,
+     "moves": 1,
+     "travel": 2.7587724587817943
+    },
+    {
+     "cpu_s": 17.77034636999997,
+     "moves": 1,
+     "travel": 1.4444800986435524
+    },
+    {
+     "cpu_s": 21.284670951000066,
+     "moves": 1,
+     "travel": 1.3069068890479656
+    },
+    {
+     "cpu_s": 25.21283131200005,
+     "moves": 1,
+     "travel": 0.968998467484518
+    }
+   ],
+   "edges": {
+    "UNKNOWN_BUDGET": 1,
+    "UNKNOWN_PLANNER": 3,
+    "VERIFIED": 5
+   },
+   "goals": {
+    "CERTIFIED_INFEASIBLE": 1,
+    "VERIFIED": 5
+   },
+   "nodes": 7,
+   "pruned_bnb": 0,
+   "pruned_dominated": 0,
+   "terminal_q_alternatives": 0
+  },
+  "min_moves_proven": true,
+  "min_travel_proven": false,
+  "moves_outside_original_blocker_union": 0,
+  "plan": {
+   "moves": 1,
+   "steps": [
+    {
+     "dest": 62,
+     "lookup": "UNKNOWN_TRANSIT",
+     "object": "o00",
+     "via": "online"
+    }
+   ],
+   "travel": 0.968998467484518
+  },
+  "recursion": true,
+  "replay_success": true,
+  "stats": {
+   "certificate_checks": 15,
+   "lookup_candidates_tried": 5,
+   "lookup_hits": 2,
+   "rare_mode_used": 1
+  },
+  "truncated": false,
+  "used": {
+   "goal_plans": 5,
+   "motion_checks": 5,
+   "online_moves": 6
+  },
+  "wall_s": 43.676881074905396,
+  "y0": 0
+ },
+ "p13_2026180015": {
+  "claim": "MIN_MOVES_WITHIN_FULLY_ADJUDICATED_FINITE_GRAPH",
+  "cpu_s": 21.16307861000007,
+  "d_calls": 0,
+  "d_cpu_s": 0.0,
+  "family": "PR_SIDES",
+  "flags": {
+   "0": {
+    "all_decided": true,
+    "search_enumeration_complete": true
+   },
+   "1": {
+    "all_decided": false,
+    "search_enumeration_complete": true
+   }
+  },
+  "found": true,
+  "guide": "geometry",
+  "log": {
+   "anytime": [
+    {
+     "cpu_s": 1.392887557999984,
+     "moves": 1,
+     "travel": 2.1252805482159185
+    },
+    {
+     "cpu_s": 2.422442853000007,
+     "moves": 1,
+     "travel": 1.5351373171630716
+    },
+    {
+     "cpu_s": 5.4037872380000636,
+     "moves": 1,
+     "travel": 1.4137790765189437
+    }
+   ],
+   "edges": {
+    "VERIFIED": 10
+   },
+   "goals": {
+    "CERTIFIED_INFEASIBLE": 1,
+    "UNKNOWN_PLANNER": 1,
+    "VERIFIED": 8
+   },
+   "nodes": 12,
+   "pruned_bnb": 1,
+   "pruned_dominated": 0,
+   "terminal_q_alternatives": 1
+  },
+  "min_moves_proven": true,
+  "min_travel_proven": false,
+  "moves_outside_original_blocker_union": 0,
+  "plan": {
+   "moves": 1,
+   "steps": [
+    {
+     "dest": 7,
+     "lookup": "LIBRARY_COLLISION",
+     "object": "o00",
+     "via": "online"
+    }
+   ],
+   "travel": 1.4137790765189437
+  },
+  "recursion": true,
+  "replay_success": true,
+  "stats": {
+   "certificate_checks": 19,
+   "lookup_candidates_tried": 10,
+   "lookup_hits": 6,
+   "rare_mode_used": 1
+  },
+  "truncated": false,
+  "used": {
+   "goal_plans": 9,
+   "motion_checks": 10,
+   "online_moves": 4
+  },
+  "wall_s": 21.167938709259033,
+  "y0": 0
+ },
+ "p13_2026180021": {
+  "claim": "NO_PLAN_FOUND",
+  "cpu_s": 253.037478086,
+  "d_calls": 0,
+  "d_cpu_s": 0.0,
+  "family": "PC_SG",
+  "flags": {
+   "0": {
+    "all_decided": true,
+    "search_enumeration_complete": true
+   },
+   "1": {
+    "all_decided": false,
+    "search_enumeration_complete": true
+   },
+   "2": {
+    "all_decided": false,
+    "search_enumeration_complete": false
+   }
+  },
+  "found": false,
+  "guide": "geometry",
+  "log": {
+   "edges": {
+    "UNKNOWN_PLANNER": 4,
+    "VERIFIED": 11
+   },
+   "goals": {
+    "CERTIFIED_INFEASIBLE": 8,
+    "UNKNOWN_PLANNER": 1
+   },
+   "nodes": 14,
+   "pruned_bnb": 0,
+   "pruned_dominated": 0,
+   "terminal_q_alternatives": 5
+  },
+  "min_moves_proven": false,
+  "min_travel_proven": false,
+  "moves_outside_original_blocker_union": null,
+  "plan": null,
+  "recursion": true,
+  "replay_success": null,
+  "stats": {
+   "certificate_checks": 18,
+   "lookup_candidates_tried": 9,
+   "lookup_hits": 6,
+   "rare_mode_used": 3
+  },
+  "truncated": true,
+  "used": {
+   "goal_plans": 1,
+   "motion_checks": 9,
+   "online_moves": 6
+  },
+  "wall_s": 253.06990337371826,
+  "y0": 0
+ },
+ "p13_2026180022": {
+  "claim": "MIN_MOVES_AND_MIN_TRAVEL_WITHIN_FULLY_ADJUDICATED_FINITE_GRAPH",
+  "cpu_s": 31.87344436500007,
+  "d_calls": 0,
+  "d_cpu_s": 0.0,
+  "family": "PN_GIMP",
+  "flags": {
+   "0": {
+    "all_decided": true,
+    "search_enumeration_complete": true
+   },
+   "1": {
+    "all_decided": true,
+    "search_enumeration_complete": true
+   }
+  },
+  "found": true,
+  "guide": "geometry",
+  "log": {
+   "anytime": [
+    {
+     "cpu_s": 2.8134715940000206,
+     "moves": 1,
+     "travel": 1.4671614306480474
+    },
+    {
+     "cpu_s": 7.983249174999855,
+     "moves": 1,
+     "travel": 1.0556096888700592
+    }
+   ],
+   "edges": {
+    "VERIFIED": 12
+   },
+   "goals": {
+    "CERTIFIED_INFEASIBLE": 7,
+    "VERIFIED": 5
+   },
+   "nodes": 14,
+   "pruned_bnb": 1,
+   "pruned_dominated": 0,
+   "terminal_q_alternatives": 1
+  },
+  "min_moves_proven": true,
+  "min_travel_proven": true,
+  "moves_outside_original_blocker_union": 0,
+  "plan": {
+   "moves": 1,
+   "steps": [
+    {
+     "dest": 53,
+     "lookup": "UNKNOWN_NO_LIBRARY_WITNESS",
+     "object": "o00",
+     "via": "online"
+    }
+   ],
+   "travel": 1.0556096888700592
+  },
+  "recursion": true,
+  "replay_success": true,
+  "stats": {
+   "certificate_checks": 23,
+   "lookup_candidates_tried": 23,
+   "lookup_hits": 6,
+   "rare_mode_used": 1
+  },
+  "truncated": false,
+  "used": {
+   "goal_plans": 5,
+   "motion_checks": 23,
+   "online_moves": 6
+  },
+  "wall_s": 31.881397485733032,
+  "y0": 0
+ },
+ "p13_2026180023": {
+  "claim": "MIN_MOVES_WITHIN_FULLY_ADJUDICATED_FINITE_GRAPH",
+  "cpu_s": 162.03120306899996,
+  "d_calls": 0,
+  "d_cpu_s": 0.0,
+  "family": "PN_SIMP",
+  "flags": {
+   "0": {
+    "all_decided": true,
+    "search_enumeration_complete": true
+   },
+   "1": {
+    "all_decided": false,
+    "search_enumeration_complete": false
+   }
+  },
+  "found": true,
+  "guide": "geometry",
+  "log": {
+   "anytime": [
+    {
+     "cpu_s": 160.57494395399988,
+     "moves": 1,
+     "travel": 1.787561258124013
+    }
+   ],
+   "edges": {
+    "VERIFIED": 3
+   },
+   "goals": {
+    "CERTIFIED_INFEASIBLE": 1,
+    "UNKNOWN_BUDGET": 2,
+    "VERIFIED": 1
+   },
+   "nodes": 5,
+   "pruned_bnb": 0,
+   "pruned_dominated": 0,
+   "terminal_q_alternatives": 2
+  },
+  "min_moves_proven": true,
+  "min_travel_proven": false,
+  "moves_outside_original_blocker_union": null,
+  "plan": {
+   "moves": 1,
+   "steps": [
+    {
+     "dest": 59,
+     "entry": "runs/p13/data/train_b4/q/seq__p13_2026160054__o00-59.o01-38/seed20261021/units/seq__p13_2026160054__o00-59.o01-38#s20261021/relocation.npz#0",
+     "mode": 0,
+     "object": "o00",
+     "support": 29,
+     "via": "lookup"
+    }
+   ],
+   "travel": 1.787561258124013
+  },
+  "recursion": true,
+  "replay_success": true,
+  "stats": {
+   "certificate_checks": 5,
+   "lookup_candidates_tried": 3,
+   "lookup_hits": 3,
+   "rare_mode_used": 2
+  },
+  "truncated": true,
+  "used": {
+   "goal_plans": 1,
+   "motion_checks": 3,
+   "online_moves": 0
+  },
+  "wall_s": 162.07607221603394,
+  "y0": 0
+ },
+ "p13_2026180024": {
+  "claim": "MIN_MOVES_AND_MIN_TRAVEL_WITHIN_FULLY_ADJUDICATED_FINITE_GRAPH",
+  "cpu_s": 38.822187525000004,
+  "d_calls": 0,
+  "d_cpu_s": 0.0,
+  "family": "PR_SIDES",
+  "flags": {
+   "0": {
+    "all_decided": true,
+    "search_enumeration_complete": true
+   },
+   "1": {
+    "all_decided": true,
+    "search_enumeration_complete": true
+   }
+  },
+  "found": true,
+  "guide": "geometry",
+  "log": {
+   "anytime": [
+    {
+     "cpu_s": 3.184742343000039,
+     "moves": 1,
+     "travel": 1.8301747104486297
+    },
+    {
+     "cpu_s": 5.067052326999942,
+     "moves": 1,
+     "travel": 1.6006385866874129
+    },
+    {
+     "cpu_s": 7.328858870999966,
+     "moves": 1,
+     "travel": 1.472858423843836
+    },
+    {
+     "cpu_s": 16.38176243199996,
+     "moves": 1,
+     "travel": 1.470163215342582
+    },
+    {
+     "cpu_s": 38.00033389500004,
+     "moves": 1,
+     "travel": 1.065881153137952
+    }
+   ],
+   "edges": {
+    "VERIFIED": 15
+   },
+   "goals": {
+    "CERTIFIED_INFEASIBLE": 1,
+    "VERIFIED": 9
+   },
+   "nodes": 17,
+   "pruned_bnb": 6,
+   "pruned_dominated": 0,
+   "terminal_q_alternatives": 4
+  },
+  "min_moves_proven": true,
+  "min_travel_proven": true,
+  "moves_outside_original_blocker_union": 0,
+  "plan": {
+   "moves": 1,
+   "steps": [
+    {
+     "dest": 47,
+     "lookup": "UNKNOWN_TRANSIT",
+     "object": "o01",
+     "via": "online"
+    }
+   ],
+   "travel": 1.065881153137952
+  },
+  "recursion": true,
+  "replay_success": true,
+  "stats": {
+   "certificate_checks": 21,
+   "lookup_candidates_tried": 22,
+   "lookup_hits": 12,
+   "rare_mode_used": 4
+  },
+  "truncated": false,
+  "used": {
+   "goal_plans": 9,
+   "motion_checks": 22,
+   "online_moves": 3
+  },
+  "wall_s": 38.83084154129028,
+  "y0": 0
+ }
+}

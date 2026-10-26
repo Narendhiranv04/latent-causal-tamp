@@ -65,7 +65,7 @@ def bench(cohort) -> None:
         ax[1].bar(x + (j - 1) * 0.27, m[:, j] * (1 if j == 0 else 10), 0.25, color=col, label=c)
     ax[1].set_xticks(x, arms, rotation=25, ha="right")
     ax[1].set(ylabel="mean calls per root", title="planner / certifier calls")
-    ax[1].legend(frameon=False, fontsize=8)
+    ax[1].legend(fontsize=7, loc="lower right", framealpha=0.95, edgecolor="#d6d5d0")
     cpu = np.array([np.mean([runs[a][k]["cpu_s"] for k in ks]) for a in arms])
     dcpu = np.array([np.mean([runs[a][k]["d_cpu_s"] for k in ks]) for a in arms])
     ax[2].bar(x, cpu - dcpu, 0.6, color="#a7b4c2", label="search + certification")
@@ -75,7 +75,7 @@ def bench(cohort) -> None:
         ax[2].text(i, cpu[i] + 1, f"{t} capped", ha="center", fontsize=7, color="#52514e")
     ax[2].set_xticks(x, arms, rotation=25, ha="right")
     ax[2].set(ylabel="mean CPU-s per root", title="runtime breakdown (soft cap 150 s)")
-    ax[2].legend(frameon=False, fontsize=8)
+    ax[2].legend(fontsize=7, loc="lower right", framealpha=0.95, edgecolor="#d6d5d0")
     if "D" in runs and "geometry" in runs:
         co = [k for k in ks if _ok(runs["D"][k]) and _ok(runs["geometry"][k])]
         a_, b_ = [runs["geometry"][k]["plan"]["travel"] for k in co], [runs["D"][k]["plan"]["travel"] for k in co]
@@ -146,7 +146,9 @@ def case(cohort, key, guides=("D", "geometry")) -> dict:
         pv._panel(a0, phys.cfg, phys.robot, s0, goal, f"{key[-3:]} {root['family']} | {g}: initial blocker scores")
         for o in movers:
             x, y = s0.get(o).xy_m
-            a0.text(x, y + 0.035, f"{o}:{float(sc.get(g, {}).get(o, 0)):.2f}", ha="center", fontsize=8, color=ARM_COL[g], weight="bold")
+            a0.text(x, y, o[1:], ha="center", va="center", fontsize=6, color="#0b0b0b")
+        a0.text(0.02, 0.98, "blocker score (higher = moved first)\n" + "\n".join(f"{o}: {float(sc.get(g, {}).get(o, 0)):.2f}" for o in movers),
+                transform=a0.transAxes, va="top", fontsize=8, color=ARM_COL[g], bbox=dict(fc="white", ec="#d6d5d0", alpha=0.9))
         if not r["found"]:
             why = collections.Counter({k: v for kind in ("edges", "goals") for k, v in r["log"][kind].items() if k != "VERIFIED"}).most_common(3)
             for j in range(1, 3 + n_steps):
@@ -162,8 +164,8 @@ def case(cohort, key, guides=("D", "geometry")) -> dict:
         for mi, c in enumerate([c for c in lk.get("candidates", []) if c["rank_in_mode"] == 0][:3]):
             for cell in c["entry"]["_all"]:
                 ax[gi][1].add_patch(plt.Rectangle(((cell % 8) * 0.08, (cell // 8) * 0.08), 0.08, 0.08, fc=["#2a6fdb", "#e07b00", "#2e9e5b"][mi], alpha=0.16, zorder=1))
-            ax[gi][1].text(0.01, 0.62 - 0.04 * mi, f"mode {mi}: {c['support']} roots, travel {c['travel_J']:.2f}" + (" (used)" if st0.get("mode") == mi else ""),
-                           fontsize=7, color=["#2a6fdb", "#e07b00", "#2e9e5b"][mi])
+            ax[gi][1].text(0.02, 0.98 - 0.06 * mi, f"mode {mi}: {c['support']} roots, travel {c['travel_J']:.2f}" + (" (used)" if st0.get("mode") == mi else ""),
+                           transform=ax[gi][1].transAxes, va="top", fontsize=8, color=["#2a6fdb", "#e07b00", "#2e9e5b"][mi])
         rel, i, cells = [], 0, dict(cells0)
         for j, st in enumerate(steps):
             a = pe._merge(recs[i], recs[i + 1]) if st["via"] == "lookup" else recs[i]
@@ -184,7 +186,7 @@ def case(cohort, key, guides=("D", "geometry")) -> dict:
         ac.bar(range(len(tv)), tv, color=[ARM_COL[g]] * len(rel) + [COLORS["target"]])
         ac.set(xticks=range(len(tv)), xticklabels=[f"{s['object']}->{s['dest']}" for s in steps] + ["target"], ylabel="joint travel",
                title=f"{g}: {r['plan']['moves']} moves, travel {r['plan']['travel']:.2f}\n{r['claim'][:40]}  replay {'CLEAR' if out[g]['replay'] else 'FAIL'}")
-        if out[g]["replay"] and gi == 0:
+        if out[g]["replay"]:
             frames = []
             for qq, gp, pos, mv in pv.trace_frames(phys.robot, s0, [(s["object"], s["dest"]) for s in steps], rel, recs[-1:], n_move=10, n_target=12):
                 fg, a = plt.subplots(figsize=(5, 5))

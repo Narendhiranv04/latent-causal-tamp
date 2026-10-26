@@ -90,3 +90,18 @@ No claim ever refers to global continuous-space optimality.
 
 - `unnecessary_moves` is renamed **`moves_outside_original_blocker_union`**.
 - True **extra moves vs optimum** are computed only where a min-moves claim is proven. Otherwise UNKNOWN.
+
+## 6. Addendum: PREREG amendment 1 (before any valid outcome)
+
+**Defect.** `Physics._take` set the search-wide truncation flag as soon as **any** single budget ran out, for example the 6 online moves. The search then stopped with motion checks and goal plans still left: p13_2026180012 stopped at 59 / 400 checks. The defect was guide-independent.
+
+**Fix:**
+- An exhausted motion-check or online budget now makes only the affected edge `UNKNOWN_BUDGET`.
+- A partially adjudicated lookup adds `UNKNOWN_BUDGET` beside its certified modes, so `all_decided` stays false.
+- The search stops only at the CPU cap or when goal plans run out.
+- Tests 13 and 14 cover the fix.
+- Run outputs from before the fix are kept under `runs/p15/search/void_v1/`.
+
+**Per-root CPU cap: 400 → 150 s (soft).** The cap is checked between adjudications, so one planner call can overrun it.
+
+The amendment is in `runs/p15/P15_PREREG_AMENDMENT_1.json`, pushed in `8a1bf8e` / `554c40f`. The test count is now 19.

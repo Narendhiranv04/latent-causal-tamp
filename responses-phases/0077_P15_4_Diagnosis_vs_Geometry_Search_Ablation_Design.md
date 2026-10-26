@@ -47,3 +47,13 @@ D inference CPU and call counts are recorded per root and included in every CPU 
 - **Retrospective:** 6 arms × 24 roots ≈ 14 k, under the 27 k cap.
 - **Prospective:** 6 arms × 32 roots ≈ 19 k plus ≈ 3 k teacher labels, under the 38 k cap.
 - **Hard cap per root:** 400 CPU-s.
+
+## 6. Addendum: amendment 1
+
+Two things changed:
+- **Per-root cap:** a soft cap of 150 s (it was 400 s), so that every arm completes its roster within the category caps.
+- **Budget semantics:** the per-resource fix described in 0076 §6.
+
+**Unchanged:** rosters, guides, budgets, action domain, objective, primary hypothesis, statistics and the order of operations.
+
+**Coverage:** both cohorts were run completely (6 arms × 24 and 6 arms × 32).
