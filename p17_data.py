@@ -279,7 +279,16 @@ def b_scores(arm, rs, seeds=B_SEEDS) -> dict:
     return ens
 
 
-def b_calibrate(arms=B_LEARNED, seeds=B_SEEDS) -> dict:
+def b_calibrate_merge() -> dict:
+    """Merge per-part policy files into runs/p17/b/POLICIES.json."""
+    out = {}
+    for f in sorted((OUT / "b").glob("POLICIES_*.json")):
+        out |= rd(f)
+    cf.write_json(OUT / "b" / "POLICIES.json", out)
+    return out
+
+
+def b_calibrate(arms=B_LEARNED, seeds=B_SEEDS, part=None) -> dict:
     """Per arm: (t0, t) of the no-op-first rule maximizing existential-label-scored correct decisions on p17calib (p16_b.calibrate; UNKNOWN
     choices count as not correct; roots with UNKNOWN y0 excluded). Nothing from test enters. Writes runs/p17/b/POLICIES.json."""
     import p16_b as p16b
@@ -291,5 +300,5 @@ def b_calibrate(arms=B_LEARNED, seeds=B_SEEDS) -> dict:
     for a in arms:
         ens = b_scores(a, rs, seeds)
         out[a] = p16b.calibrate({k: v for k, v in ens.items() if y[k].get(next(x["query"] for x in v if x["m"] == 0)) is not None}, y)
-        cf.write_json(OUT / "b" / "POLICIES.json", out)
+        cf.write_json(OUT / "b" / (f"POLICIES_{part}.json" if part else "POLICIES.json"), out)
     return out

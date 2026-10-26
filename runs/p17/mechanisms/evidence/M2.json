@@ -1,0 +1,108 @@
+{
+ "counterfactuals": [
+  {
+   "certificate": null,
+   "fails": [
+    [
+     "UNKNOWN_PLANNER",
+     0
+    ]
+   ],
+   "sequence": [
+    [
+     "o01",
+     29
+    ]
+   ],
+   "status": "UNKNOWN_PLANNER"
+  },
+  {
+   "certificate": {
+    "kind": [
+     "TARGET_PICK"
+    ],
+    "step": "target"
+   },
+   "fails": [
+    [
+     "CERTIFIED_TARGET_Q_INDEPENDENT",
+     1
+    ],
+    [
+     "CERTIFIED_TARGET_Q_INDEPENDENT",
+     1
+    ],
+    [
+     "CERTIFIED_TARGET_Q_INDEPENDENT",
+     1
+    ]
+   ],
+   "sequence": [
+    [
+     "o00",
+     59
+    ]
+   ],
+   "status": "CERTIFIED_INFEASIBLE"
+  }
+ ],
+ "figures": {
+  "gif": "visualizations/p17/mechanisms/M2.gif",
+  "png": "visualizations/p17/mechanisms/M2.png"
+ },
+ "fingerprint": [
+  31,
+  6,
+  [
+   23,
+   30,
+   31,
+   39,
+   48
+  ]
+ ],
+ "original_certificates": [
+  "TARGET_PICK"
+ ],
+ "original_status": "CERTIFIED_INFEASIBLE",
+ "positive": {
+  "branches_verified": 6,
+  "replay": {
+   "ok": true,
+   "step": null,
+   "traj": "d72c51c8bd1f45c8",
+   "why": null
+  },
+  "sequence": [
+   [
+    "o00",
+    52
+   ],
+   [
+    "o01",
+    29
+   ]
+  ],
+  "status": "VERIFIED",
+  "steps": [
+   [
+    "o00",
+    52,
+    "lookup",
+    0,
+    "direct"
+   ],
+   [
+    "o01",
+    29,
+    "lookup",
+    2,
+    "direct"
+   ]
+  ],
+  "travel": 3.1730333084436086,
+  "witness_file": "runs/p17/mechanisms/evidence/M2_witness.npz"
+ },
+ "root": "p13_2026234000",
+ "tag": "M2"
+}

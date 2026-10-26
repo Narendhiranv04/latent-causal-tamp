@@ -9,7 +9,8 @@ travel; the target action ends each branch. Status:
   CERTIFIED_INFEASIBLE  only when a MOTION-INDEPENDENT sound certificate applies at a step: occupancy at step i is fixed by the
                         sequence, so a pose-only certificate (STATIC_INVALID / ORDER_FIRST_ACTION / STATIC_ENDPOINT_INVALID /
                         TARGET_PICK / GOAL_OVERLAP / FIRST_MOVER) at step i refutes every realization. A q-dependent certificate
-                        (LINK0_SECTOR_PICK) refutes only the branch whose q it was computed for.
+                        (LINK0_SECTOR_PICK) refutes only the branch whose q it was computed for; for the EMPTY sequence that branch
+                        (q0) is the only realization, so it certifies.
   UNKNOWN_*             otherwise (budget, planner, transit, branch cap), with per-branch provenance. Never a negative label."""
 from __future__ import annotations
 
@@ -43,7 +44,7 @@ def verify_existential(phys, seq, max_branches=MAX_BRANCHES, first=False) -> dic
             st, r, tj = phys.goal(cells, q)
             if st == V:
                 found.append({"moves": len(seq), "travel": J + tj, "steps": steps, "records": recs + [r]})
-            elif st == CI and _q_independent(r if isinstance(r, dict) else None):
+            elif st == CI and (_q_independent(r if isinstance(r, dict) else None) or not seq):   # empty sequence: q0 is the only realization
                 proof.update(step="target", kind=sorted(r["certificates"]))
                 fails.append(("CERTIFIED_TARGET_Q_INDEPENDENT", i))
             else:

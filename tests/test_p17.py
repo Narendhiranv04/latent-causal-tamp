@@ -385,3 +385,10 @@ def test_labelling_resumes_from_checkpoint(tmp_path, monkeypatch):
     monkeypatch.setattr(pe, "_plan", lambda s: {"roots": {"p13_2026210000": {}}})
     monkeypatch.setattr(pb, "catalogue", lambda *a, **k: (_ for _ in ()).throw(AssertionError("recomputed")))
     pe.label_roots("dev", ["p13_2026210000"], "w0")
+
+
+def test_empty_sequence_q_dependent_certificate_is_sound_at_q0():
+    t = _phys(Toy({((("A", 1), ("B", 2), ("t0", 9)), 0.0): (ps.CI, 0.0)}, {}, cert=("LINK0_SECTOR_PICK",)))
+    assert pv.verify_existential(t, [])["status"] == pv.CI                     # q0 is the only realization of the empty sequence
+    t2 = _phys(Toy({((("A", 5), ("B", 2), ("t0", 9)), 1.0): (ps.CI, 0.0)}, {("A", 5, 0.0): [(ps.V, 1.0, 1.0)]}, cert=("LINK0_SECTOR_PICK",)))
+    assert pv.verify_existential(t2, [("A", 5)])["status"].startswith("UNKNOWN")  # after a move: only that branch is refuted
