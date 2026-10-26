@@ -20,6 +20,7 @@ V, CI, SI = "VERIFIED", "CERTIFIED_INFEASIBLE", "STATIC_INVALID"
 U_PLAN, U_BUD, U_LIB, U_TR = "UNKNOWN_PLANNER", "UNKNOWN_BUDGET", "UNKNOWN_NO_LIBRARY_WITNESS", "UNKNOWN_TRANSIT"
 DECIDED = (V, CI, SI)
 K_MODES, K_DEST, N_MAX = 3, 4, 3
+SIM_THR = 1.0499131944444444                                  # TRANSFER_SUMMARY.json threshold.value (DEV-fitted)
 
 
 def state_key(cells, q, moved):
@@ -172,7 +173,12 @@ class Physics:
             return [(SI if cert == ["STATIC_ENDPOINT_INVALID"] else CI, None, None, 0.0, {"certificates": cert})]
         outs, why = [], U_LIB
         if self.idx is not None:
-            res = sx.lookup_candidates(self.idx, o, cells[o], d, s, self.goal_cell, s.get(o).radius_m, self.lookup, self.modal_only)
+            mode, _, var = self.lookup.partition("+")
+            res = sx.lookup_candidates(self.idx, o, cells[o], d, s, self.goal_cell, s.get(o).radius_m, mode, self.modal_only)
+            if var == "thr":                       # P15-6 ablation: DEV-fitted minimum combined similarity (rejected for deployment, 0075)
+                res["candidates"] = [c for c in res["candidates"] if c["similarity"] >= SIM_THR]
+            elif var == "rep":                     # P15-6 ablation: one representative per motion mode (clustering loss)
+                res["candidates"] = [c for c in res["candidates"] if c["rank_in_mode"] == 0]
             seen_q = []
             for c in res["candidates"]:
                 if len(outs) >= K_MODES:

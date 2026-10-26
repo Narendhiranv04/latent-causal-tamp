@@ -1,0 +1,31 @@
+{
+ "admission": "separate calibration split, equal coverage",
+ "arms": [
+  "K-B (frozen)",
+  "lean-B matched retrain (no F3/F4/HO), 3 seeds"
+ ],
+ "cohort": {
+  "feasible_originals_min": 60,
+  "mechanism_roots": 48,
+  "natural_roots": 120,
+  "seeds": "disjoint from P13-P15"
+ },
+ "cost_cpu_s": {
+  "labels": 22000,
+  "lean_B_train": 7500,
+  "records_inference": 1000,
+  "regression": 1000,
+  "total": 31500
+ },
+ "power_sim": {
+  "assumption": "46% -> 20% wrong choice, independent errors",
+  "n24": 0.33,
+  "n48": 0.69,
+  "n60": 0.81
+ },
+ "primary": "paired top-1 label-correct on feasible originals, exact sign test, alpha 0.05",
+ "question": "zero-move-first calibrated admission on feasible originals; F3/F4/F5 necessity under test-independent matched admission",
+ "status": "NOT_STARTED",
+ "stop": "UNDERPOWERED if calibration split < 12 or test < 60 feasible originals; no adaptive stopping",
+ "version": "P16_PROPOSAL_DRAFT"
+}

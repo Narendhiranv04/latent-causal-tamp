@@ -400,3 +400,139 @@ def summarize(cohort, arms=ARMS5, primary=("D", "geometry")) -> dict:
     (OUT / "eval").mkdir(parents=True, exist_ok=True)
     cf.write_json(OUT / "eval" / f"{cohort}_SUMMARY.json", out)
     return out
+
+
+# ------------------------------------------------------------------ P15-7 B closure (saved P13 frozen predictions + P13/P14 labels only)
+def _fit_tb(z, y, iters=200):
+    """Validation-only temperature + bias: p' = sigmoid(a z + b) by Newton on the logistic NLL (a = 1 / T)."""
+    z, y, w = np.asarray(z, float), np.asarray(y, float), np.array([1.0, 0.0])
+    X = np.stack([z, np.ones_like(z)], 1)
+    for _ in range(iters):
+        p = 1 / (1 + np.exp(-X @ w))
+        g, H = X.T @ (p - y), (X * (p * (1 - p))[:, None]).T @ X + 1e-6 * np.eye(2)
+        w = w - np.linalg.solve(H, g)
+    return float(w[0]), float(w[1])
+
+
+def b_closure() -> dict:
+    """(1) validation vs test admission; (2) common-candidate ranking by u with UNKNOWN candidates censored (never negative), paired vs
+    K-B; (3) coverage-risk with censoring bounds; (4) original-feasible zero-move behaviour; (5) validation-only temperature + bias
+    calibration and its effect on decisions under frozen rankings. No training, no new labels."""
+    import math
+    import p13_factors as f13
+    import p14_eval as pe
+    snap, P, y, st, cost = f13._p13_blind()
+    A, vr = f13._by_arm(snap), rd(P14 / "calibration" / "VALIDATION_ROWS.json")
+    ma, nd = rd(P14 / "calibration" / "MATCHED_ADMISSION.json")["summary"], rd(P14 / "calibration" / "NATURAL_DIAG.json")
+    arms = pe.ARMS
+    adm = {a: {n: {"val_coverage_mean": float(np.mean(ma[f"{a}|{n}"]["val_coverage"])), "test_admission": ma[f"{a}|{n}"]["test_admission"],
+                   "executed_success_lower_bound": ma[f"{a}|{n}"]["executed_success_lower_bound"], "label_correct": ma[f"{a}|{n}"]["label_correct_root_rate"]}
+               for n in ("historical", "coverage_matched", "false_admission_matched")} for a in arms}
+    qsets = {k: {a: {tuple(sorted(r["query"] for r in A[a][s]["roots"][k]["rows"])) for s in A[a]} for a in arms} for k in P}
+    common = sorted(k for k in P if len({x for a in arms for x in qsets[k][a]}) == 1)
+    rank = {}
+    for a in arms + ("fewest_moves", "random"):
+        per = {}
+        for k in common:
+            vals = []
+            for s in (A[a] if a in arms else [None]):
+                rows = A[a][s]["roots"][k]["rows"] if a in arms else A["K-B"][0]["roots"][k]["rows"]
+                if a == "fewest_moves":
+                    order = sorted(rows, key=lambda r: (r["m"], r["query"]))
+                elif a == "random":
+                    order = rows
+                else:
+                    order = sorted(rows, key=lambda r: (-r["u"], r["query"]))
+                lab = [y.get(r["query"]) for r in order]
+                dec = [v for v in lab if v is not None]
+                f, n = sum(dec), len(dec)
+                if f == 0:
+                    continue
+                pos = [i for i, v in enumerate(dec) if v == 1]
+                ffr = (n + 1) / (f + 1) if a == "random" else pos[0] + 1
+                unk_ahead = 0 if a == "random" else lab[:lab.index(1)].count(None)
+                auc = None
+                if 0 < f < n and a not in ("random",):
+                    sc = [(-i) for i in range(len(order))]                    # rank position as score (ties impossible)
+                    pp_ = [sc[i] for i, v in enumerate(lab) if v == 1]
+                    nn_ = [sc[i] for i, v in enumerate(lab) if v == 0]
+                    auc = float(np.mean([p_ > q_ for p_ in pp_ for q_ in nn_]))
+                vals.append({"ffr": ffr, "top1": lab[0] if a != "random" else f / n, "unk_ahead": unk_ahead, "auc": auc, "n_dec": n, "n_unk": len(lab) - n})
+            if vals:
+                per[k] = {x: (float(np.mean([v[x] for v in vals if v[x] is not None])) if any(v[x] is not None for v in vals) else None)
+                          for x in ("ffr", "auc", "unk_ahead")} | {"top1_feasible": float(np.mean([v["top1"] == 1 if a != "random" else v["top1"] for v in vals])),
+                                                                   "top1_unknown": float(np.mean([v["top1"] is None for v in vals]))}
+        aucs = [v["auc"] for v in per.values() if v["auc"] is not None]
+        rank[a] = {"roots_with_decided_feasible": len(per), "first_feasible_rank_mean": float(np.mean([v["ffr"] for v in per.values()])),
+                   "top1_decided_feasible": float(np.mean([v["top1_feasible"] for v in per.values()])),
+                   "top1_unknown_censored": float(np.mean([v["top1_unknown"] for v in per.values()])),
+                   "unknown_ranked_ahead_mean": float(np.mean([v["unk_ahead"] for v in per.values()])),
+                   "within_root_auroc_mean": float(np.mean(aucs)) if aucs else None, "auroc_roots": len(aucs), "_per": per}
+    paired_rank = {}
+    for a in arms[1:] + ("fewest_moves",):
+        ks = [k for k in rank["K-B"]["_per"] if k in rank[a]["_per"] and rank["K-B"]["_per"][k]["auc"] is not None and rank[a]["_per"][k]["auc"] is not None]
+        x, z = [rank["K-B"]["_per"][k]["auc"] for k in ks], [rank[a]["_per"][k]["auc"] for k in ks]
+        w, l = sum(p_ > q_ + 1e-12 for p_, q_ in zip(x, z)), sum(q_ > p_ + 1e-12 for p_, q_ in zip(x, z))
+        paired_rank[f"K-B_vs_{a}"] = {"roots": len(ks), "K-B_better": w, "other_better": l, "auc_diff_mean": float(np.mean(np.subtract(x, z))) if ks else None,
+                                      "sign_p": sign_test([True] * w + [False] * l, [False] * w + [True] * l)["p_two_sided"],
+                                      "ci95": boot_diff(x, z) if ks else None}
+    cr = {}
+    for a in arms:
+        rows = []
+        for t in pe.GRID[::5]:
+            cov, lo, hi, n = 0, 0, 0, 0
+            for s in A[a]:
+                for k in common:
+                    q = pe._choose(A[a][s]["roots"][k]["rows"], A[a][s]["tau"], t)
+                    n += 1
+                    if q != "ABSTAIN":
+                        cov += 1
+                        lo += y.get(q) == 0
+                        hi += y.get(q) in (0, None)
+            rows.append({"t": float(t), "coverage": cov / n, "risk_lower": lo / max(cov, 1), "risk_upper_unknown_as_failure": hi / max(cov, 1)})
+        cr[a] = rows
+    cal = {}
+    empty = {k: f"seq:{k}:empty" for k in P}
+    for a in arms:
+        res = []
+        for s in sorted(A[a]):
+            tau, thr = A[a][s]["tau"], A[a][s]["threshold"]
+            v = [r for rs in vr[f"P13-{a}-s{s}"].values() for r in rs if r["y"] in (0, 1)]
+            sl, b = _fit_tb([r["u"] / tau for r in v], [r["y"] for r in v])
+            te = [(r["u"] / tau, y[r["query"]], r["query"]) for k in common for r in A[a][s]["roots"][k]["rows"] if r["query"] in y]
+            p0 = np.array([1 / (1 + math.exp(-z)) for z, _, _ in te])
+            p1 = np.array([1 / (1 + math.exp(-(sl * z + b))) for z, _, _ in te])
+            yy = np.array([t_ for _, t_, _ in te])
+            em = np.array([q == empty[q.split(":")[1]] for _, _, q in te])
+            nll = lambda p, m: float(np.mean(-np.log(np.clip(np.where(yy[m] == 1, p[m], 1 - p[m]), 1e-12, 1))))  # noqa: E731
+            ch0 = {k: pe._choose(A[a][s]["roots"][k]["rows"], tau, thr) for k in common}
+            rec_rows = {k: [dict(r, u=tau * (sl * r["u"] / tau + b)) for r in A[a][s]["roots"][k]["rows"]] for k in common}
+            ch1 = {k: pe._choose(rec_rows[k], tau, thr) for k in common}
+            vcov0 = np.mean([pe._choose(rs, tau, thr) != "ABSTAIN" for rs in vr[f"P13-{a}-s{s}"].values()])
+            vr1 = {k: [dict(r, u=tau * (sl * r["u"] / tau + b)) for r in rs] for k, rs in vr[f"P13-{a}-s{s}"].items()}
+            tm = min(pe.GRID, key=lambda t: (abs(np.mean([pe._choose(rs, tau, t) != "ABSTAIN" for rs in vr1.values()]) - vcov0), t))
+            ch2 = {k: pe._choose(rec_rows[k], tau, tm) for k in common}
+            lc = lambda ch: float(np.mean([y.get(q) == 1 for q in ch.values()]))  # noqa: E731
+            res.append({"seed": s, "slope": sl, "bias": b, "temperature": 1 / sl if sl else None, "val_rows": len(v),
+                        "test_candidates": len(te), "brier": [float(np.mean((p0 - yy) ** 2)), float(np.mean((p1 - yy) ** 2))],
+                        "nll": [nll(p0, np.ones_like(em)), nll(p1, np.ones_like(em))],
+                        "empty_feasible_recall": [float((p0[em & (yy == 1)] >= 0.5).mean()) if (em & (yy == 1)).any() else None,
+                                                  float((p1[em & (yy == 1)] >= 0.5).mean()) if (em & (yy == 1)).any() else None],
+                        "empty_nll": [nll(p0, em), nll(p1, em)] if em.any() else None,
+                        "fixed_threshold_choice_changes": sum(ch0[k] != ch1[k] for k in common),
+                        "label_correct_fixed": [lc(ch0), lc(ch1)], "admission_fixed": [float(np.mean([q != "ABSTAIN" for q in ch0.values()])),
+                                                                                         float(np.mean([q != "ABSTAIN" for q in ch1.values()]))],
+                        "val_coverage_matched_threshold": float(tm), "coverage_matched_choice_changes": sum(ch0[k] != ch2[k] for k in common)})
+        cal[a] = res
+    zero = {st_: {a: {x: nd[st_][a][x] for x in ("feasible_recall", "infeasible_recall", "brier", "nll", "auroc", "TOP1_empty_on_feasible_originals", "reliability")}
+                  for a in arms if a in nd[st_]} | {"N": nd[st_]["N"], "feasible": nd[st_]["feasible"]} for st_ in ("natural", "blind")}
+    for a in rank.values():
+        a.pop("_per")
+    out = {"admission_validation_vs_test": adm, "common_roots": len(common), "roots_total": len(P), "ranking_censored": rank,
+           "ranking_paired_vs_K-B": paired_rank, "coverage_risk": cr, "zero_move_original": zero, "calibration_validation_only": cal,
+           "lean_inference": "B-F3pm / B-F5spm / B-F5qpm are post-hoc inference masks of trained checkpoints, NOT matched retrains; "
+                             "generic-only F5 remains NOT experimentally established",
+           "note": "saved P13 frozen predictions and P13 teacher labels (VERIFIED / CERTIFIED); UNKNOWN candidates censored"}
+    (OUT / "B").mkdir(parents=True, exist_ok=True)
+    cf.write_json(OUT / "B" / "B_CLOSURE.json", out)
+    return out
