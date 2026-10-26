@@ -855,7 +855,7 @@ def test_exec(name, keys, part, seeds=(0, 1, 2), oracles=None, guides=None, do_b
     pol = rd(OUT / "b" / "POLICIES.json")
     ms = {a: [pb.load_any(a, s) for s in seeds] for a in B_LEARNED}
     dino = ld.dino()
-    f = DATA / name / (("sealed_exec" if name.startswith("test") else "exec") + f"_{part}.json")
+    f = DATA / name / (("sealed_exec" if name.startswith("test") and do_b else "exec") + f"_{part}.json")
     res = rd(f) if f.exists() else {}
     for k in keys:
         if k in res:
@@ -870,3 +870,69 @@ def test_exec(name, keys, part, seeds=(0, 1, 2), oracles=None, guides=None, do_b
         out["cpu_root"] = time.process_time() - c0
         res[k] = out
         cf.write_json(f, res)
+
+
+# ------------------------------------------------------------------ custody: manifest -> push -> unseal -> oracle -> analysis
+def test_manifest() -> None:
+    files = sorted(str(f) for f in (DATA / "test").glob("sealed_*.json"))
+    cf.write_json(DATA / "test" / "SEALED_MANIFEST.json", {"files": {f: sha(f) for f in files}, "n": len(files)})
+
+
+def _on_origin(path) -> bool:
+    subprocess.run(["git", "fetch", "-q", "origin"], check=True)
+    r = subprocess.run(["git", "show", f"origin/main:{path}"], capture_output=True)
+    return r.returncode == 0 and r.stdout == Path(path).read_bytes()
+
+
+def test_unseal() -> None:
+    m = DATA / "test" / "SEALED_MANIFEST.json"
+    if not _on_origin(str(m)):
+        raise SystemExit("sealed manifest not on origin/main")
+    if any(sha(f) != h for f, h in rd(m)["files"].items()):
+        raise SystemExit("sealed file changed after the manifest")
+    (DATA / "test" / "UNSEALED").write_text(sha(m) + "\n")
+
+
+def test_oracles() -> dict:
+    """Original scene-only lattice union per D test root (unsealed labels); None where the lattice is not MINIMAL_SETS / feasible."""
+    import p16_d as pdd
+    if not (DATA / "test" / "UNSEALED").exists():
+        raise SystemExit("sealed")
+    out = {}
+    for k, v in merged("test", "sealed_labels").items():
+        d = pdd.lattice(v, v["catalogue"]["pool"])
+        out[k] = ({o: m for o, m in zip(v["catalogue"]["pool"], d["mask"])} if d["mask"] is not None else None, d["type"])
+    return out
+
+
+def run_oracle(keys, part) -> None:
+    orc = {k: v[0] for k, v in test_oracles().items() if v[0] is not None}
+    test_exec("test", [k for k in keys if k in orc], part, oracles=orc, guides=("oracle",), do_b=False)
+
+
+def analyze() -> dict:
+    """B and D prospective analyses from the unsealed outputs (oracle merged into D rows)."""
+    if not (DATA / "test" / "UNSEALED").exists():
+        raise SystemExit("sealed")
+    rows = merged("test", "sealed_exec")
+    orc_rows = {}
+    for f in sorted((DATA / "test").glob("exec_oracle_*.json")):
+        orc_rows |= rd(f)
+    b = {k: {"family": v["family"], **v["b"]} for k, v in rows.items() if "b" in v}
+    d = {k: {"family": v["family"], "guides": {**v["d"], **(orc_rows.get(k, {}).get("d", {}))}} for k, v in rows.items() if "d" in v}
+    orc = test_oracles()
+    unions = {k: {o for o, m in x[0].items() if m} for k, x in orc.items() if x[0] is not None}
+    ab, ad = b_analysis(b), d_analysis({k: v for k, v in d.items()}, unions=unions)
+    labs = merged("test", "sealed_labels")
+    diag = {}
+    import p16_b as pb
+    import p16_d as pdd
+    plan = rd(DATA / "test" / "plan.json")
+    rs = pb.prepare(pb.records(plan, labs, "test"))
+    for kind in ("D", "Dp", "Dp16"):
+        x = pdd.diagnose(pdd.models(kind), rs, labs)
+        diag[kind] = {k_: v_ for k_, v_ in x.items() if k_ != "rows"}
+    (OUT / "eval").mkdir(parents=True, exist_ok=True)
+    cf.write_json(OUT / "eval" / "B_TEST.json", ab)
+    cf.write_json(OUT / "eval" / "D_TEST.json", ad | {"diagnosis": diag, "oracle_types": {k: v[1] for k, v in orc.items()}})
+    return {"b": ab, "d": ad, "diag": diag}

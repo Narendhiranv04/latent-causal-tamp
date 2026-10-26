@@ -55,7 +55,7 @@ def gallery(name="dev", out="shared/P16_dev_families.png") -> None:
     pv.png(f, DST / out, f"P16 {name} roots: scene-only pool (dashed = parking slot), dotted ring = fixed structure, lattice semantics, search result")
 
 
-def plan_gif(name, key, out, n_max=4, per_obj=2, node_cap=500) -> dict:
+def plan_gif(name, key, out, n_max=4, per_obj=2, node_cap=500, guide="uniform", expect=None) -> dict:
     """Deterministic re-run of the uniform scene-only search on one root; GIF of the replay-CLEAR certified arrays + a static summary."""
     import p15_lookup as pl
     import p16_common as pc
@@ -69,12 +69,16 @@ def plan_gif(name, key, out, n_max=4, per_obj=2, node_cap=500) -> dict:
     phys = pm.DetPhysics(task, idx)
     cells0 = {o.id: o.cell for o in phys.s0.objects}
     movers, _ = pc.propose_movers(task, cells0)
-    r = pc.search(phys, pe.uniform_order, movers, pc.slot_fn(phys, idx), cells0, phys.s0.robot.q_rad, n_max, per_obj, node_cap)
+    import p16_d as pdd
+    order = pe.uniform_order if guide == "uniform" else pdd.guide(guide, task, phys, movers).order
+    r = pc.search(phys, order, movers, pc.slot_fn(phys, idx), cells0, phys.s0.robot.q_rad, n_max, per_obj, node_cap)
     if not r["found"]:
         return {"found": False}
     rep = pm.replay(phys, r["plan"])
     if not rep["ok"]:
         return {"found": True, "replay": rep}
+    if expect is not None and rep["traj"] != expect:
+        return {"found": True, "replay": rep, "matches_record": False}
     steps, recs = r["plan"]["steps"], r["plan"]["records"]
     rel, i = [], 0
     for st in steps:
@@ -83,7 +87,7 @@ def plan_gif(name, key, out, n_max=4, per_obj=2, node_cap=500) -> dict:
     frames = []
     for qq, gp, pos, mv in pv.trace_frames(phys.robot, phys.s0, [(s["object"], s["dest"]) for s in steps], rel, recs[-1:], n_move=10, n_target=12):
         fg, a = plt.subplots(figsize=(5, 5))
-        pv._panel(a, phys.cfg, phys.robot, phys.s0, phys.goal_cell, f"{key[-5:]} {plan['roots'][key]['family']}: {len(steps)} moves, travel "
+        pv._panel(a, phys.cfg, phys.robot, phys.s0, phys.goal_cell, f"{key[-5:]} {plan['roots'][key]['family']} [{guide}]: {len(steps)} moves, travel "
                   f"{r['plan']['travel']:.2f}\n{r['claim'][:44]}", q=qq, gap=gp, pos=pos, held=mv)
         pv._tag(a, f"replayed certified motion {rep['traj']}", COLORS["valid"])
         frames.append(pv._rgb(fg))

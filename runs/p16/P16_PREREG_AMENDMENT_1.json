@@ -1,0 +1,11 @@
+{
+ "change": "remaining roots re-queued: all remaining NAT (B-only) roots first, then the remaining D (+B) roots in the frozen test_order; workers draw from the queue; the remaining execution budget is shared; per-root computation is deterministic and unchanged",
+ "done_before": 33,
+ "execution_spent_before": 19223.8,
+ "prereg": "sha256:92f4022159e9388ccd3ce5b4f446fe5ea772ab7b9ac6f5407171493ea280534a",
+ "reason": "execution scheduling only: the family-interleaved order front-loaded 7-guide D roots (measured ~550 CPU-s / root vs ~45 for B-only NAT roots); with 12 equal per-worker caps the run would have covered ~68 / 168 roots, starving the NAT roots that carry H-B1. No outcome was inspected (only per-root CPU and counts).",
+ "remaining_d_roots": 29,
+ "remaining_nat": 106,
+ "unchanged": "roots, arms, guides, models, policies, budgets, search, certifier, hypotheses, statistics, custody",
+ "version": "P16_PREREG_AMENDMENT_1"
+}

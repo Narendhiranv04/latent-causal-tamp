@@ -60,3 +60,51 @@ Union vs necessary on DEV:
 | oracle | original scene-only lattice union (scope-limited, after unsealing) |
 
 - **Shared cache:** all guides on a root use one exact cache with virtual accounting (0083 §1). Budgets and CPU are therefore identical to separate runs, while physical work is computed once.
+
+## 5. Retraining (corrected labels) and D0 diagnosis
+
+**Training.** D-pairless was retrained ("Dp16", λ_B = 2.0, 3 seeds, P13 schedule: 600 updates, batch 12, validation-NLL selection).
+- **Data:** the same roots as B (P13 trainval + P16 train / dev); 509 train items (159 defined masks, 142 feasible originals) and 91 val items.
+- **Result:** validation NLL 0.320 / 0.318 / 0.283; 185,250 parameters; about 10 CPU-s per seed (`runs/p16/d/runs/`).
+
+**Original-target diagnosis on the clean calibration split** (30 decided originals, 15 feasible, 7 defined MINIMAL_SETS masks; the calibration split was never used by any D):
+
+| model | feasibility AUROC | Brier | feasible recall | infeasible recall | union-blocker F1 (gated) | exact mask | masks with union ≠ necessary |
+|---|---|---|---|---|---|---|---|
+| frozen P13 D (paired) | 0.920 | 0.126 | 0.733 | 0.933 | 0.818 | 0.714 | 2 / 7 |
+| frozen P13 Dp | 0.907 | 0.104 | 0.800 | 0.933 | 0.818 | 0.714 | 2 / 7 |
+| **Dp16** | 0.911 | 0.103 | **0.867** | 0.933 | 0.818 | 0.714 | 2 / 7 |
+
+**Val split** (17 decided, 9 masks; used for Dp16 checkpoint selection, so flagged):
+- AUROC 0.879 / 0.879 / 0.894;
+- feasible recall 0.667 / 0.833 / 0.833;
+- union F1 0.897 for all three.
+
+**Readings.** The corrected-label retrain improves feasible-original recall slightly on calibration (0.867 vs 0.800 frozen pairless and 0.733 frozen paired), with identical blocker quality. On 15 feasible roots this is **not** a significant difference, and the pair term again shows no benefit.
+
+## 6. Temporary-target validation (P16-D0 requirement)
+
+| split | lattices (pool targets) | FEASIBLE (target directly movable) | MINIMAL_SETS | INCOMPLETE / UNKNOWN |
+|---|---|---|---|---|
+| dev | 28 | 16 | **2** | 10 |
+| val | 18 | 14 | 0 | 4 |
+| calib | 12 | 7 | 0 | 5 |
+
+- **Feasibility.** Raw temporary-target feasible recall on decided targets is low:
+  - calibration (8 decided): 0.43 (D), 0.57 (Dp), 0.57 (Dp16);
+  - val (14 decided, all feasible): 0.57, 0.79, 1.00.
+  - This matches P15: raw D under-predicts temporary-target feasibility. P15's DEV recalibration is what the recursion uses.
+- **Blocker marginals.** Only **2** temporary-target lattices with a defined blocker set were obtained (both DEV, ORD_CHAIN chains; F1 1.0 for all models). Temporary-target blocker marginals are therefore **UNDERPOWERED / not validated**. As pre-registered, recursion uses only feasibility, and no claim about learned recursive blocker accuracy is made.
+- **Budget note.** `d_dev` reached 10,010 of 10,000 CPU-s. Two temporary-lattice jobs launched concurrently were each allowed 4,000 and were stopped by me. The ledger now reserves the caps of running jobs (`runs/p16/reservations/`).
+
+## 7. D gate (`runs/p16/P16_D_GATE.json`)
+
+**PASS (method):**
+- corrected label rule;
+- retrained pairless D;
+- scene-only expanded search;
+- deterministic provider;
+- independent replay;
+- no-pruning guides.
+
+Learned recursive blocker diagnosis is **not validated** (above). End-to-end comparison: 0088.

@@ -77,3 +77,62 @@ The per-block pairwise energies are identically 0 (asserted in the test), and `u
 | B-F2 | 0.964 | 0.082 | 1.00 | 0.583 |
 
 The frozen K-B reproduces the P15 defect on a non-NAT feasible original: P(empty) = 0.41 on DENSE 10004. This is development evidence only (n = 2 feasible).
+
+## 4. Data, training and checkpoint selection (frozen in `437e771` before any test label)
+
+**Training data** (`runs/p16/b/TRAIN.pt`, sha `1d9c736c…`):
+
+| split | P13 roots | P16 roots |
+|---|---|---|
+| training | 440 P13 train (constructor catalogues, P13 teacher labels) | 79 train + 12 dev (scene-only catalogues, certificate-only labels) |
+| checkpoint selection | 74 P13 validation | 21 P16 val |
+
+- **P16 labels:**
+  - 42 train roots carry full sequence labels;
+  - the other 37 train roots and 16 val roots carry **lattice-only** labels (original + parked subsets), after measured labelling cost (~350 CPU-s per full root) threatened the `data` cap;
+  - the calibration split keeps full labels.
+- **Feasible NAT originals:** train 24, val 3, calib 12. Many NAT originals stay UNKNOWN under `P16_FAST` (train 9, calib 10); they are masked.
+
+**Training protocol** (P13 protocol, matched across arms): 400 updates, batch 12 (RootSampler), AdamW lr 1e-3, clip 10, checkpoint chosen on validation root NLL, λ_static = λ_travel = 0 for every arm.
+
+| arm (3 seeds) | best validation root NLL | best update | CPU-s / run |
+|---|---|---|---|
+| **LB** | 1.979 / 2.275 / 2.347 | 380 / 300 / 280 | 381–398 |
+| LB-F2 (order-invariant) | 2.362 / 2.612 / 2.639 | 380 / 200 / 280 | 340–352 |
+| LC (GRU order) | 1.951 / 2.155 / 2.487 | 400 / 300 / 400 | 403–410 |
+| **LB+G** (generic-only coupling) | **1.654 / 1.759 / 1.890** | 400 / 320 / 400 | 415–432 |
+| A (retrained) | 2.197 / 2.062 / 2.184 | 380 / 300 / 280 | 283–296 |
+
+**Validation readings (development evidence, not confirmatory):**
+- Removing order sensitivity (LB-F2) gives the worst validation NLL in every seed, which is consistent with P13's F2 finding.
+- The generic-only coupling arm gives the lowest validation NLL in every seed. This motivates H-B2 but is **not** a test result.
+- Several best checkpoints fall at the final evaluation (update 400), so longer training might help every arm equally. It was matched, not tuned.
+
+## 5. Calibration (calibration split only; `runs/p16/b/POLICIES.json`)
+
+The no-op-first thresholds were fitted on the 30 calibration roots with a decided original. Calibration-split correct decisions:
+
+| arm | t0 (no-op) | t (repair) | calib correct |
+|---|---|---|---|
+| LB | 0.87 | 0.56 | 0.667 |
+| LB-F2 | 0.87 | 0.23 | 0.633 |
+| LC | 0.87 | 0.35 | 0.700 |
+| LB+G | 0.76 | 0.74 | 0.700 |
+| A | 0.88 | 0.38 | 0.667 |
+| P13:K-B | 0.87 | 0.77 | 0.633 |
+| P13:A | 0.83 | 0.08 | 0.700 |
+| P13:SF | 0.82 | 0.17 | 0.633 |
+| P13:K-C | 0.90 | 0.62 | 0.700 |
+| P13:B-F2 | 0.83 | 0.62 | 0.600 |
+
+Every learned arm, frozen or new, is given the same calibrated no-op-first rule. Comparisons therefore isolate the scorer, not the decision rule.
+
+## 6. B gate (`runs/p16/P16_B_GATE.json`)
+
+- **Passed:**
+  - exact maths and inference;
+  - no-op, ABSTAIN and UNKNOWN distinct;
+  - scene-only candidate generation;
+  - a frozen calibration-split policy;
+  - matched 3-seed training of every new arm.
+- **Prospective physical evidence:** see 0088.
