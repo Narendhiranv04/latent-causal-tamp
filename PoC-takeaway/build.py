@@ -201,37 +201,52 @@ def scenes():
     save(fig, "01_scenes.png")
 
 
-# ------------------------------------------------------------------ table drawing
-def table(fig, rect, cols, widths, rows, header_fs=15, fs=15, row_h=None, styles=None, aligns=None):
-    """Plain table: header rule, light row rules, optional per-cell (color, weight, chip) styles."""
-    x0, y0, w, h = rect
-    ax = fig.add_axes(rect)
-    ax.set(xlim=(0, 1), ylim=(0, 1))
-    ax.axis("off")
-    n = len(rows) + 1
-    rh = row_h or 1 / n
-    xs = np.concatenate([[0], np.cumsum(widths)])
-    aligns = aligns or ["left"] * len(cols)
-    for j, c in enumerate(cols):
-        xx = xs[j] + 0.008 if aligns[j] == "left" else (xs[j] + xs[j + 1]) / 2
-        ax.text(xx, 1 - rh / 2, c, fontsize=header_fs, weight="bold", color=INK["secondary"], va="center", ha=aligns[j] if aligns[j] == "left" else "center")
-    ax.plot([0, 1], [1 - rh, 1 - rh], color=INK["primary"], lw=1.4)
-    for i, r in enumerate(rows):
-        y = 1 - rh * (i + 1.5)
-        st = (styles or {}).get(i, {})
-        if st.get("band"):
-            ax.add_patch(Rectangle((0, y - rh / 2), 1, rh, fc=st["band"], ec="none", zorder=0))
-        for j, v in enumerate(r):
-            cs = st.get(j, {})
-            xx = xs[j] + 0.008 if aligns[j] == "left" else (xs[j] + xs[j + 1]) / 2
-            if cs.get("chip"):
-                ax.add_patch(FancyBboxPatch((xs[j] + 0.008, y - rh * 0.28), 0.012, rh * 0.56, boxstyle="round,pad=0,rounding_size=0.003",
-                                            fc=cs["chip"], ec="none"))
-                xx += 0.02
-            ax.text(xx, y, v, fontsize=cs.get("fs", fs), weight=cs.get("weight", "normal"), color=cs.get("color", INK["primary"]), va="center",
-                    ha=aligns[j] if aligns[j] == "left" else "center", style=cs.get("style", "normal"))
-        ax.plot([0, 1], [y - rh / 2, y - rh / 2], color=INK["rule"], lw=1)
-    return ax
+# ------------------------------------------------------------------ paper-style tables (02 / 03 / 04)
+TXT, GREY, RULE = "#111111", "#6b6b6b", "#d9d9d9"
+
+
+def paper_table(name, heading, cols, body, notes=(), fs=21, row_h=0.075):
+    """Plain research-paper table on white: heading, thin light-grey horizontal rules only, optional italic group lines, small grey notes.
+    cols = [(label, width as figure fraction, 'left' | 'center')]; body = rows (lists of str) or ('group', text) / ('rule',)."""
+    fig = plt.figure(figsize=(W, H), facecolor="white")
+    x0 = 0.06
+    fig.text(x0, 0.90, heading, fontsize=40, color=TXT, va="baseline")
+    xs = [x0]
+    for _, w, _ in cols:
+        xs.append(xs[-1] + w)
+    x1 = xs[-1]
+    line = lambda y, lw=1.0: fig.add_artist(plt.Line2D([x0, x1], [y, y], color=RULE, lw=lw))  # noqa: E731
+    cell = lambda j, y, t, **k: fig.text(xs[j] if cols[j][2] == "left" else (xs[j] + xs[j + 1]) / 2, y, t, ha=cols[j][2],  # noqa: E731
+                                         va="center", **k)
+    y = 0.80
+    line(y + row_h * 0.55, 1.4)
+    for j, (lab, _, _) in enumerate(cols):
+        cell(j, y, lab, fontsize=fs - 3, color=GREY)
+    line(y - row_h * 0.5)
+    y -= row_h
+    for r in body:
+        if r[0] == "group":
+            y -= row_h * 0.12
+            fig.text(x0, y, r[1], fontsize=fs - 4, color=GREY, style="italic", va="center")
+            y -= row_h * 0.8
+            continue
+        if r[0] == "rule":
+            line(y + row_h * 0.5)
+            continue
+        bold = r[0] == "Total"
+        for j, t in enumerate(r):
+            cell(j, y, t, fontsize=fs, color=TXT, weight="bold" if bold and j == 0 else "normal")
+        y -= row_h
+    line(y + row_h * 0.5, 1.4)
+    for i, n in enumerate(notes):
+        fig.text(x0, y + row_h * 0.5 - 0.06 - i * 0.036, n, fontsize=14, color=GREY, va="center")
+    fig.savefig(HERE / name, dpi=DPI, facecolor="white")
+    plt.close(fig)
+    print("wrote", HERE / name)
+
+
+def pct(k, n):
+    return f"{k} / {n} ({round(100 * k / n)}%)"
 
 
 # ------------------------------------------------------------------ 02 dataset
@@ -251,171 +266,62 @@ def dataset():
         a["feas" if st == "VERIFIED" else "inf" if st in DEC[1:] else "unk"] += 1
         a["gen"] += sum(n for m, n in v["catalogue"]["generated"].items() if m != "0")
         a["tested"] += len(v["sequences"])
-        ver = sum(x.get("y") == 1 for x in v["sequences"].values())
-        a["ver"] += ver
         if st in DEC[1:]:
-            a["rep"] += ver > 0
-            a["iver"] += ver
-    test = {k: Counter(G[r["family"]] for r in rd(p)["roots"].values()) for k, p in D["test_plans"].items()}
+            a["rep"] += any(x.get("y") == 1 for x in v["sequences"].values())
     tot = sum(agg.values(), Counter())
-    big = lambda n: f"{n / 1000:.0f}k" if n >= 10000 else f"{n:,}"  # noqa: E731
-    rows, styles = [], {}
-    for g in order:
-        a = agg[g]
-        rows.append([g, f"{a['n']}", f"{test['P16 test'][g] or '–'}", f"{test['P17 test'][g] or '–'}", f"{a['feas']} / {a['inf']} / {a['unk']}",
-                     f"{big(a['gen'])} / {a['tested']:,}", f"{a['iver']:,}" if a["inf"] else "–", f"{a['rep']} / {a['inf']}" if a["inf"] else "–"])
-    rows.append(["TOTAL", f"{tot['n']}", f"{sum(test['P16 test'].values())}", f"{sum(test['P17 test'].values())}", f"{tot['feas']} / {tot['inf']} / {tot['unk']}",
-                 f"{big(tot['gen'])} / {tot['tested']:,}", f"{tot['iver']:,}", f"{tot['rep']} / {tot['inf']}"])
-    styles[len(rows) - 1] = {j: {"weight": "bold"} for j in range(8)} | {"band": "#f0efec"}
-    fig = plt.figure(figsize=(W, H))
-    title(fig, "Our 2D dataset", "Each scene is generated independently · base-scene × variant structure: not recorded")
-    cols = ["Scene type", "Dev\nscenes", "P16\ntest", "P17\ntest", "Task as is\nfeasible / infeasible / unknown", "Repairs\ngenerated / tested",
-            "Verified repair\nsequences", "Blocked scenes\nrepaired"]
-    table(fig, [0.04, 0.12, 0.92, 0.72], cols, [0.17, 0.07, 0.07, 0.07, 0.22, 0.17, 0.09, 0.14], rows, header_fs=13, fs=15, styles=styles,
-          aligns=["left"] + ["center"] * 7)
-    fig.text(0.04, 0.065, "Dev = train + validation + calibration scenes; outcome columns use these only (one labelling protocol). "
-             "Unknown is never counted as infeasible.", fontsize=13, color=INK["secondary"])
-    fig.text(0.04, 0.035, f"Plus {D['extra_training'].split(':')[1].split('(')[0].strip()} earlier P13 scenes used for training under an older protocol. "
-             "P17 test outcomes: sealed until P17 completes.", fontsize=13, color=INK["secondary"])
-    save(fig, "02_dataset.png")
-    return {"dev": dict(tot), "groups": {g: dict(agg[g]) for g in order}, "test": {k: dict(v) for k, v in test.items()}}
+    test = {k: len(rd(p)["roots"]) for k, p in D["test_plans"].items()}
+    row = lambda g, a: [g, f"{a['n']}", f"{a['feas']}", f"{a['inf']}", f"{a['unk']}", f"{a['tested']:,}", f"{a['rep']} / {a['inf']}" if a["inf"] else "–"]  # noqa: E731
+    body = [row(g, agg[g]) for g in order] + [("rule",), row("Total", tot)]
+    cols = [("Scene type", 0.25, "left"), ("Scenes", 0.07, "center"), ("Feasible\nas is", 0.11, "center"), ("Blocked", 0.10, "center"),
+            ("Unknown", 0.10, "center"), ("Repair plans\nchecked", 0.12, "center"), ("Blocked scenes\nrepaired", 0.13, "center")]
+    paper_table("02_dataset.png", "Our 2D dataset", cols, body, notes=[
+        "Unknown: the planner could not prove success or failure.",
+        f"Development scenes (training, validation, calibration). Held out for testing: {test['P16 test']} (P16) and {test['P17 test']} (P17) scenes.",
+        f"Repair plans checked: physically simulated, out of about {round(tot['gen'], -3):,} generated."], fs=20, row_h=0.072)
+    return {"dev": dict(tot), "groups": {g: dict(agg[g]) for g in order}, "test": test}
 
 
 # ------------------------------------------------------------------ 03 results
-def bar(ax, rows, maxv=1.0):
-    """Horizontal bars in one column: rows = [(color, value or None, text)]; None -> PENDING slot. Track = 0..maxv, text right of the bar."""
-    ax.set(xlim=(0, maxv * 1.42), ylim=(len(rows) - 0.5, -0.5))
-    ax.axis("off")
-    for i, (col, v, txt) in enumerate(rows):
-        ax.add_patch(Rectangle((0, i - 0.30), maxv, 0.60, fc="#f3f2ee", ec="none", zorder=0))
-        if v is None:
-            ax.text(0.03 * maxv, i, txt, fontsize=12.5, color=INK["muted"], va="center", style="italic")
-            continue
-        ax.add_patch(Rectangle((0, i - 0.30), max(v, 0.004 * maxv), 0.60, fc=col, ec="none"))
-        ax.text(v + 0.03 * maxv, i, txt, fontsize=14, va="center", color=INK["primary"], weight="bold")
-
-
-def labels(fig, rect, rows):
-    ax = fig.add_axes(rect)
-    ax.set(xlim=(0, 1), ylim=(len(rows) - 0.5, -0.5))
-    ax.axis("off")
-    for i, (fam, lab) in enumerate(rows):
-        ax.add_patch(Rectangle((0, i - 0.26), 0.03, 0.52, fc=AC[fam], ec="none"))
-        ax.text(0.06, i, lab, fontsize=14.5, va="center")
-
-
-COLS = [0.285, 0.455, 0.625, 0.805]           # metric column x positions (width 0.15)
+def obs(t, P):
+    """'{arm.key}' -> per_arm[arm][key] (P16 B_TEST); '{feasible}' / '{infeasible}' -> cohort sizes."""
+    return re.sub(r"\{([^}]+)\}", lambda m: str(P["per_arm"][m.group(1).split(".")[0]][m.group(1).split(".")[1]]) if "." in m.group(1)
+                  else str(P[m.group(1)]), t)
 
 
 def results(p17=None):
-    B, Dd = rd(S["results"]["b"]["file"]), rd(S["results"]["d"]["file"])
-    nf, ni, n = B["feasible"], B["infeasible"], B["decided_roots"]
-    pend = "P17 PENDING"
-    fig = plt.figure(figsize=(W, H))
-    fig.text(0.04, 0.955, "What worked", fontsize=30, weight="bold", va="top")
-    fig.text(0.96, 0.95, "Two protocols — compare within a section only", fontsize=14, color=INK["secondary"], va="top", ha="right")
-    fig.add_artist(plt.Line2D([0.785, 0.785], [0.04, 0.80], color=INK["rule"], lw=1.5))
-    # ---- section 1: repair selection
-    fig.text(0.04, 0.865, "Choosing a complete repair", fontsize=21, weight="bold", va="top")
-    fig.text(0.04, 0.822, f"P16 frozen test · {n} scenes ({nf} feasible as is, {ni} blocked) · one certifier for every choice", fontsize=13.5,
-             color=INK["secondary"], va="top")
-    rws = S["results"]["b"]["rows"]
-    top, hgt = 0.40, 0.355
-    labels(fig, [0.04, top, 0.24, hgt], [(f, l) for f, _, l in rws])
-    P = B["per_arm"]
-    specs = [("Complete tasks", lambda a: (a["noop_correct"] + a["repair_success"], n)), ("Correct “no move”", lambda a: (a["noop_correct"], nf)),
-             ("Blocked scenes repaired", lambda a: (a["repair_success"], ni))]
-    for j, (hdr, fn) in enumerate(specs):
-        ax = fig.add_axes([COLS[j], top, 0.15, hgt])
-        rows = []
-        for fam, arm, _ in rws:
-            k, d = fn(P[arm]) if arm in P else (None, None)
-            rows.append((AC[fam], k / d, f"{k}/{d}") if k is not None else (AC[fam], None, pend))
-        bar(ax, rows)
-        fig.text(COLS[j], top + hgt + 0.012, hdr, fontsize=14, weight="bold", color=INK["secondary"])
-    ax = fig.add_axes([COLS[3], top, 0.15, hgt])
-    rows = []
-    for fam, arm, _ in rws:
-        x = dig(p17, "b", "analysis", "per_arm", S["results"]["b"]["p17_rows"].get(arm, ""))
-        if x and x.get("strict_top1") is not None and x.get("n"):
-            rows.append((AC[fam], x["strict_top1"], f"{round(x['strict_top1'] * x['n'])}/{x['n']}"))
-        else:
-            rows.append((AC[fam], None, pend))
-    bar(ax, rows)
-    fig.text(COLS[3], top + hgt + 0.012, "P17 test: complete tasks", fontsize=14, weight="bold", color=INK["secondary"])
-    # ---- section 2: D search
-    fig.text(0.04, 0.325, "Searching for a rearrangement", fontsize=21, weight="bold", va="top")
-    nd = Dd["common_roots"]
-    fig.text(0.04, 0.282, f"P16 frozen test · {nd} of 48 constructed scenes completed · same search, only the ordering differs", fontsize=13.5,
-             color=INK["secondary"], va="top")
-    drs = S["results"]["d"]["rows"]
-    top, hgt = 0.035, 0.185
-    labels(fig, [0.04, top, 0.24, hgt], [(f, l) for f, _, l in drs])
-    PG = Dd["per_guide"]
-    ax = fig.add_axes([COLS[0], top, 0.15, hgt])
-    bar(ax, [(AC[fam], PG[g]["success"] / PG[g]["n"], f"{PG[g]['success']}/{PG[g]['n']}") for fam, g, _ in drs])
-    fig.text(COLS[0], top + hgt + 0.012, "Scenes solved", fontsize=14, weight="bold", color=INK["secondary"])
-    mx = max(PG[g]["calls_mean"]["motion_checks"] for _, g, _ in drs)
-    ax = fig.add_axes([COLS[1], top, 0.15, hgt])
-    bar(ax, [(AC[fam], PG[g]["calls_mean"]["motion_checks"], f"{PG[g]['calls_mean']['motion_checks']:.0f}") for fam, g, _ in drs], maxv=mx)
-    fig.text(COLS[1], top + hgt + 0.012, "Motion checks ↓", fontsize=14, weight="bold", color=INK["secondary"])
-    for j, (src, hdr) in enumerate((((p17 or {}).get("retro"), "P17: all 48 P16 scenes"), ((p17 or {}).get("d"), "P17 test: solved"))):
-        ax = fig.add_axes([COLS[2 + j], top, 0.15, hgt])
-        rows = []
-        for fam, g, _ in drs:
-            x = dig(src, "all_roots", "per_guide", S["results"]["d"]["p17_rows"].get(g, ""))
-            rows.append((AC[fam], x["success"] / x["n"], f"{x['success']}/{x['n']}") if x and x.get("n") else (AC[fam], None, pend))
-        bar(ax, rows)
-        fig.text(COLS[2 + j], top + hgt + 0.012, hdr, fontsize=14, weight="bold", color=INK["secondary"])
-    save(fig, "03_results.png")
+    R = S["results"]
+    B, Dd = rd(R["b_file"]), rd(R["d_file"])
+    pend = "Pending"
+    body = []
+    for grp in R["groups"]:
+        body.append(("group", grp["heading"]))
+        for r in grp["rows"]:
+            if grp["kind"] == "b":
+                x = B["per_arm"][r["arm"]]
+                v = pct(x["noop_correct"] + x["repair_success"], B["decided_roots"])
+                y = dig(p17, "b", "analysis", "per_arm", r["p17_arm"])
+                p = pct(round(y["strict_top1"] * y["n"]), y["n"]) if y and y.get("n") and y.get("strict_top1") is not None else pend
+                o = obs(r["observation"], B)
+            else:
+                x = Dd["per_guide"][r["arm"]]
+                v = pct(x["success"], x["n"])
+                y = dig(p17, "d", "all_roots", "per_guide", r["p17_arm"])
+                p = pct(y["success"], y["n"]) if y and y.get("n") else pend
+                o = r["observation"]
+            body.append([r["label"], v, o, p])
+    cols = [("Approach", 0.15, "left"), ("Success rate", 0.19, "left"), ("Main observation", 0.44, "left"), ("P17 test", 0.10, "left")]
+    nf, n = B["feasible"], B["decided_roots"]
+    paper_table("03_results.png", "What worked", cols, body, fs=20, notes=[
+        f"Doing nothing succeeds on {B['per_arm']['empty_always']['noop_correct']} / {n} (every feasible scene); A–C do not beat this baseline.",
+        f"D solves a different task, so it is not comparable with A–C. {Dd['common_roots']} of 48 planned D scenes were run before the compute cap.",
+        "Success: the chosen plan, or the choice to do nothing, is physically verified."], row_h=0.085)
 
 
 # ------------------------------------------------------------------ 04 ablations
-def fill(t, B, Dd, p17=None):
-    def r(m):
-        kind, a, *rest = m.group(1).split(":")
-        if kind == "b":
-            x = B["per_arm"][a]
-            return str(x["noop_correct"] + x["repair_success"])
-        if kind == "bp":
-            v = B["secondary"].get(f"{a}|strict_top1", {}).get("p_holm")
-            return "n/a" if v is None else (f"{v:.4f}" if v < 0.01 else f"{v:.2f}")
-        if kind == "d":
-            return str(Dd["per_guide"][a][rest[0]])
-        return m.group(0)
-    return re.sub(r"\{([^}]+)\}", r, t)
-
-
-def p17_ablation(row, p17):
-    k = row.get("p17")
-    if not k or not p17:
-        return "pending" if k else ""
-    if k == "primary":
-        x = dig(p17, "d", "all_roots", "primary")
-    elif k.startswith("Dp17"):
-        x = dig(p17, "d", "all_roots", "secondary", k)
-    else:
-        a, b = k.split("_vs_")
-        x = dig(p17, "b", "analysis", "secondary", f"{a}_vs_{b}|strict_top1") or dig(p17, "b", "analysis", "secondary", f"{b}_vs_{a}|strict_top1")
-    if not x:
-        return "P17: not reported"
-    return f"P17: {x.get('a_only')}:{x.get('b_only')} discordant, {x.get('status', 'tested').lower()}" if x.get("status") == "UNDERPOWERED" else \
-        f"P17: {x.get('a_only')}:{x.get('b_only')}, Holm p {x.get('p_holm_top1_family', x.get('p_holm', x.get('p'))):.2g}"
-
-
 def ablations(p17=None):
-    B, Dd = rd(S["results"]["b"]["file"]), rd(S["results"]["d"]["file"])
-    rows, styles = [], {}
-    for i, r in enumerate(S["ablations"]):
-        p = p17_ablation(r, p17)
-        rows.append([r["approach"], r["change"], fill(r["effect"], B, Dd), r["decision"], p or "—"])
-        styles[i] = {0: {"chip": AC[r["approach"]], "weight": "bold"}, 3: {"weight": "bold"},
-                     4: {"color": INK["muted"], "style": "italic", "fs": 13} if not p17 else {"fs": 13}}
-    fig = plt.figure(figsize=(W, H))
-    title(fig, "What the ablations taught us", "Matched comparisons only · P13 and P16 frozen tests · n.s. = not significant")
-    table(fig, [0.04, 0.05, 0.92, 0.79], ["Approach", "What we changed", "Observed effect", "Decision", "P17 check"], [0.095, 0.235, 0.30, 0.26, 0.11],
-          rows, header_fs=15, fs=14, styles=styles)
-    save(fig, "04_ablations.png")
+    body = [[r["approach"], r["tested"], r["finding"]] for r in S["ablations"]["rows"]]
+    cols = [("Approach", 0.15, "left"), ("What we tested", 0.40, "left"), ("Finding", 0.33, "left")]
+    paper_table("04_ablations.png", "What the ablations taught us", cols, body, notes=S["ablations"]["notes"], fs=21, row_h=0.085)
 
 
 # ------------------------------------------------------------------ GIFs (certified motion only)
@@ -688,7 +594,7 @@ def gifs(p17=False):
         if sl.get("alternative"):
             d = pan["D"]
             g = rows[k]["d"]["geometry"]
-            side += ["", "No D failure exists in P16", f"(all {rd(S['results']['d']['file'])['common_roots']} D scenes solved).",
+            side += ["", "No D failure exists in P16", f"(all {rd(S['results']['d_file'])['common_roots']} D scenes solved).",
                      f"D search: {d['nodes']} nodes, {d['checks']} checks;", f"geometry: {g['log']['nodes']} nodes, {g['used']['motion_checks']} checks."]
         sub = "Hand-picked qualitative example · not a statistic"
         gif_render(sl, pan, sl["file"], sl["title"], sub, side, set(plan[k].get("fixed", [])))
