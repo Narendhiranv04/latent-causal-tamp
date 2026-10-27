@@ -168,8 +168,8 @@ def calibration_figure(summary, out="d/P17_D_calibration") -> None:
                                    ("held-out", lambda c: c["held_out"]["feasible_recall"]))):
         ax[0].bar(x + (j - 1) * 0.25, [fn(summary[k]) or 0 for k in ks], 0.24, color=["#86b6ef", "#2a78d6", "#1c5cab"][j], label=lab)
     ax[0].set_xticks(x, ks)
-    ax[0].set(ylim=(0, 1.05), ylabel="feasible recall at p' >= 0.5", title="temporary-target feasibility per family (own calibration)")
-    ax[0].legend(fontsize=7)
+    ax[0].set(ylim=(0, 1.18), ylabel="feasible recall at p' >= 0.5", title="temporary-target feasibility per family (own calibration)")
+    ax[0].legend(fontsize=7, loc="upper center", ncol=3, framealpha=0.95)
     for j, form in enumerate(("identity", "bias", "full")):
         ax[1].bar(x + (j - 1) * 0.25, [summary[k]["cv_forms"][form]["cv_logloss"] or 0 for k in ks], 0.24, color=["#d6d5d0", "#2a78d6", "#eb6834"][j], label=form)
     ax[1].set_xticks(x, ks)
