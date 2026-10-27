@@ -131,12 +131,14 @@ def d_figures(rows, an, out="d/P17_D") -> None:
         ax[0].plot(ts, y, marker="o", ms=3, lw=2 if k in KEY else 0.9, color=KEY.get(k, NEUTRAL))
         ends.append([y[-1], f"{k} ({an['per_guide'][k]['success']}/{an['common_roots']})"])
     ends.sort()
-    gap = 0.045 * max(1, an["common_roots"])
+    lo, hi = ax[0].get_ylim()
+    gap = 0.045 * (hi - lo)                                          # label spacing in axis units, not root counts
     for i in range(1, len(ends)):
         ends[i][0] = max(ends[i][0], ends[i - 1][0] + gap)
     for yy, lab in ends:
-        ax[0].text(ts[-1] * 1.08, yy, lab, fontsize=7, va="center")
-    ax[0].set(xscale="log", xlabel="search nodes to first verified plan", ylabel="roots solved (replay CLEAR)", title="anytime success", xlim=(8, 1500))
+        ax[0].text(ts[-1] * 1.15, yy, lab, fontsize=7, va="center")
+    ax[0].set(xscale="log", xlabel="search nodes to first verified plan", ylabel="roots solved (replay CLEAR)", title="anytime success", xlim=(8, 6000),
+              ylim=(lo, max(hi, ends[-1][0] + gap)))
     x = np.arange(len(g))
     ax[1].bar(x, [an["per_guide"][k]["calls_mean"].get("motion_checks", 0) for k in g], 0.6, color=[KEY.get(k, NEUTRAL) for k in g])
     for i, k in enumerate(g):

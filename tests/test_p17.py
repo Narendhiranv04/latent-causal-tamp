@@ -392,3 +392,47 @@ def test_empty_sequence_q_dependent_certificate_is_sound_at_q0():
     assert pv.verify_existential(t, [])["status"] == pv.CI                     # q0 is the only realization of the empty sequence
     t2 = _phys(Toy({((("A", 5), ("B", 2), ("t0", 9)), 1.0): (ps.CI, 0.0)}, {("A", 5, 0.0): [(ps.V, 1.0, 1.0)]}, cert=("LINK0_SECTOR_PICK",)))
     assert pv.verify_existential(t2, [("A", 5)])["status"].startswith("UNKNOWN")  # after a move: only that branch is refuted
+
+
+def test_custody_manifest_refuses_incomplete_and_unseal_refuses_changed_file(tmp_path, monkeypatch):
+    import pytest
+    import config as cf
+    import p16_eval as p16e
+    import p17_final as pf
+    import p17_prosp as pp
+    (tmp_path / "running").mkdir()
+    monkeypatch.setattr(pf, "T", tmp_path)
+    monkeypatch.setattr(pf, "OUT", tmp_path)
+    monkeypatch.setattr(pp, "p_rosters", lambda: {"b": ["r0", "r1"], "d": ["r0"]})
+    monkeypatch.setattr(pf, "merged", lambda split, kind: {"r0": {}})
+    with pytest.raises(SystemExit):                                            # one B root missing
+        pf.p_manifest()
+    monkeypatch.setattr(pf, "merged", lambda split, kind: {"r0": {}} if kind == "sealed_exec_d" else {"r0": {}, "r1": {}})
+    (tmp_path / "PREREG.json").write_text("{}")
+    cf.write_json(tmp_path / "sealed_exec_b_b0.json", {"r0": 1})
+    m = pf.p_manifest()
+    assert m["roots"] == {"labels": 2, "exec_b": 2, "exec_d": 1} and len(m["files"]) == 1
+    monkeypatch.setattr(p16e, "_on_origin", lambda p: True)
+    cf.write_json(tmp_path / "sealed_exec_b_b0.json", {"r0": 2})              # changed after the manifest
+    with pytest.raises(SystemExit):
+        pf.p_unseal()
+    assert not (tmp_path / "UNSEALED").exists()
+    with pytest.raises(SystemExit):                                            # oracle / analysis refuse while sealed
+        pf.p_oracles()
+
+
+def test_analysis_trace_alias_preserves_first_move():
+    import p17_final as pf
+    g = {"found": True, "replay": True, "trace": [{"first": ["o00", 3]}]}
+    seen = {}
+
+    def fake(rows, unions):
+        seen.update(rows)
+        return {}
+    import p17_analysis as pa
+    old, pa.d_analysis = pa.d_analysis, fake
+    try:
+        pf._d_sets({"r": {"family": "DENSE", "guides": {"Dp17": g, "oracle": g}}}, {}, {})
+    finally:
+        pa.d_analysis = old
+    assert seen["r"]["guides"]["Dp17"]["order_trace"] == g["trace"] and "oracle" not in seen["r"]["guides"]

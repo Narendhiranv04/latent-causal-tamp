@@ -163,3 +163,57 @@ def analyze_retrospective() -> dict:
            "oracle_types": dict(collections.Counter(x[1] for x in orc.values())), "cpu_root_total": sum(v["cpu_root"] for v in r.values())}
     _w("P17_RETROSPECTIVE.json", out)
     return out
+
+
+# ------------------------------------------------------------------ gates and final manifest
+def final_gates() -> None:
+    import p17_eval as pe
+    P, R = rd(EVAL / "P17_PROSPECTIVE.json"), rd(EVAL / "P17_RETROSPECTIVE.json")
+    m7 = {k: v["M7_in_domain"] for w in (0, 1, 2) for k, v in rd(OUT / "mechanisms" / f"M7_LIB_w{w}.json").items()}
+    pe.gate("3", status="PARTIAL", realized=["M0", "M1", "M2", "M3", "M4", "M5", "M6", "M8_3", "M8_4", "M9"], m7={"witness": "p17train|p13_2026271039",
+            "finite_domain_proof": "BLOCKED", "roots": m7}, report="0093")
+    pe.gate("4", status="PASS", sealed_manifest=sha(T / "SEALED_MANIFEST.json"), unsealed=(T / "UNSEALED").read_text().strip(),
+            rosters=rd(T / "SEALED_MANIFEST.json")["roots"], oracle_roots=len(merged("p17test", "exec_oracle")), report="0096")
+    pe.gate("5", status={"METHOD_B_2D_COMPLETE": True, "METHOD_D_2D_COMPLETE": "PARTIAL_BLOCKED_M7", "P17_2D_COMPLETE": False},
+            b_primary=P["b"]["analysis"]["primary"], d_primary=P["d"]["all_roots"]["primary"], d_retro_primary=R["all_roots"]["primary"],
+            reports=["0097", "0098", "0099"])
+
+
+def final_manifest() -> dict:
+    import glob
+    import p17_eval as pe
+    import p17_prosp as pp
+    P, R = rd(EVAL / "P17_PROSPECTIVE.json"), rd(EVAL / "P17_RETROSPECTIVE.json")
+    g = [rd(f) for f in sorted(glob.glob(str(OUT / "guards" / "*.json")))]
+    cpu, wall = collections.Counter(), collections.Counter()
+    for x in g:
+        cpu[x["category"]] += x["cpu_s"]
+        wall[x["category"]] += x["wall_s"]
+    fam = lambda split: dict(collections.Counter(r.get("family") for r in _plan(split)["roots"].values()))  # noqa: E731
+    reg = rd(OUT / "regression_final" / "regression_result.json") if (OUT / "regression_final" / "regression_result.json").exists() else None
+    out = {"stage": "P17-5", "base": "bd9a2e8", "head_at_manifest": pe._git("rev-parse", "HEAD").strip(), "no_3d": True,
+           "verdicts": {"METHOD_B_2D_COMPLETE": True, "METHOD_D_2D_COMPLETE": "PARTIAL_BLOCKED_M7", "P17_2D_COMPLETE": False},
+           "gates": {s: rd(OUT / f"P17_{s}_GATE.json").get("status", "PASS") for s in ("0", "1", "3", "4", "5") if (OUT / f"P17_{s}_GATE.json").exists()},
+           "historical_mismatches": pe.verify_historical(), "prereg": sha(OUT / "PREREG.json"), "sealed_manifest": sha(T / "SEALED_MANIFEST.json"),
+           "unsealed": (T / "UNSEALED").read_text().strip(), "code": {c: sha(c) for c in pp.CODE + ("p17_final.py", "p17_viz.py", "p17_data.py", "p17_prosp.py",
+                                                                                                "p17_mechjobs.py", "p17_mech.py")},
+           "checkpoints": {c: sha(c) for c in sorted(glob.glob("runs/p17/b/ckpt/*.pt") + glob.glob("runs/p17/d/ckpt/*.pt"))},
+           "training_data": {f: sha(f) for f in ("runs/p17/b/TRAIN.pt", "runs/p17/d/D_ITEMS.pt")},
+           "splits": {s: fam(s) for s in ("p17train", "p17calib", "p17test")}, "rosters": pp.p_rosters() | {"retro": pp.retro_keys()},
+           "labels": {"p17test": P["labels"], "unknown_originals_p17test": sum(c.get("UNKNOWN_PLANNER", 0) for c in P["labels"]["original_by_family"].values())},
+           "planner_profile": "P16_FAST", "budgets": rd(OUT / "PREREG.json")["budgets"],
+           "cpu_h_by_category": {k: round(v / 3600, 2) for k, v in cpu.items()}, "wall_h_by_category": {k: round(v / 3600, 2) for k, v in wall.items()},
+           "cpu_h_total": round(sum(cpu.values()) / 3600, 1),
+           "cancellations": [{"job": x["call"][:80], "stop": x["stop"], "returncode": x["returncode"], "cpu_s": round(x["cpu_s"])} for x in g if x["stop"] != "COMPLETED"],
+           "cancellation_note": "all non-COMPLETED jobs are SIGTERM operator stops of mechanism screens / M5 mining / the label pilot; partial outputs are "
+                                "kept and only used where stated (0093); a temporary MAX_JOBS edit was reverted before any sealed run (PREREG hashes re-verified)",
+           "contrasts": {"b_primary": P["b"]["analysis"]["primary"], "b_secondary": P["b"]["analysis"]["secondary"], "d_primary": P["d"]["all_roots"]["primary"],
+                         "d_secondary": P["d"]["all_roots"]["secondary"], "d_retro_primary": R["all_roots"]["primary"], "d_retro_secondary": R["all_roots"]["secondary"]},
+           "proofs": {"m7_library_domain": {k: v["M7_in_domain"] for w in (0, 1, 2) for k, v in rd(OUT / "mechanisms" / f"M7_LIB_w{w}.json").items()},
+                      "d_claims_prospective": {gd: x["claims"] for gd, x in P["d"]["all_roots"]["per_guide"].items()}},
+           "figures": sorted(str(p) for p in Path("visualizations/p17").rglob("*") if p.suffix in (".png", ".gif")),
+           "reports": sorted(str(p) for p in Path("responses-phases").glob("009*_P17_*.md")) + ["responses-phases/P17_COMPLETE_2D_B_AND_D_SCIENTIFIC_DECISION.md"],
+           "regression": reg and {k: reg[k] for k in ("tests", "replays", "passed", "verdict") if k in reg}}
+    out["hash"] = cf.stable_hash({k: v for k, v in out.items() if k != "hash"})
+    cf.write_json(OUT / "P17_FINAL_MANIFEST.json", out)
+    return out

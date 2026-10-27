@@ -151,4 +151,5 @@ Search: `p17_exec.d_root` → `p17_search.search` on the shared domain, with `D_
 | `p17_prosp` | retrospective P16-root re-analysis, pre-registration, sealed prospective workers |
 | `p17_exec` | per-root B / D execution |
 | `p17_analysis` | frozen analyses |
+| `p17_final` | post-run custody (sealed manifest → push → unseal), prospective oracle guide, final analyses (frozen functions applied to unsealed outputs; matched per-root table), gates, final manifest |
 | `p17_viz` | figures and replay-only GIFs |
