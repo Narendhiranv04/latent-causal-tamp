@@ -101,133 +101,133 @@
    "TRI_CTRL": "Order and decoy puzzles"
   },
   "definitions": {
-   "scenes": "development scenes with P17 existential labels (P16 train / dev / val / calib + p17train + p17calib); each scene generated independently (no base x variant hierarchy is recorded, so that column is dropped)",
-   "feasible as is / blocked / unknown": "certified status of the target action in the unmodified scene: VERIFIED / CERTIFIED_INFEASIBLE or STATIC_INVALID / anything else (never counted as blocked)",
-   "repair plans checked": "len(sequences): 1-4 move ordered repairs physically verified one by one (existential verifier); generated total = sum of catalogue['generated'] (shown in the footnote)",
-   "blocked scenes repaired": "blocked scenes with >= 1 repair sequence labelled y = 1 (VERIFIED + replay CLEAR) / all blocked scenes"
+   "scenes": "326 development scenes with P17 existential labels (P16 train / dev / val / calib + p17train + p17calib; committed a4a15414); each generated independently, no base x variant hierarchy recorded",
+   "feasible / infeasible": "operational class of labels[root].original.status (101 VERIFIED / 225 = 175 certified + 50 unknown)",
+   "repair sequences generated / tested": "sum of catalogue['generated'] (1-4 move ordered repairs enumerated before stride sampling) / len(sequences) (physically verified one by one, existential verifier)",
+   "infeasible scenes repaired": "infeasible scenes with >= 1 repair sequence labelled y = 1 (VERIFIED + replay CLEAR) / all infeasible scenes"
   },
   "extra_training": "P13 constructor scenes used only for B training / validation under an older labelling protocol: 440 train + 74 val (responses-phases/0094 section 2)",
   "missing": [
-   "base-scene x variant counts: not recorded in any plan (column dropped)",
-   "P17 test outcomes: sealed (only scene counts used)",
-   "P16 test outcomes: P16 greedy protocol, not mixed into this table"
+   "base-scene x variant counts: not recorded (column dropped)",
+   "test scenes (P16 168, P17 174) are not in this table; P17 test outcomes are sealed"
   ]
  },
  "results": {
-  "b_file": "runs/p16/eval/B_TEST.json",
-  "d_file": "runs/p16/eval/D_TEST.json",
-  "reports": "responses-phases/0088_P16_Independent_B_and_D_Execution_Evaluations.md (tables I.1 and II.1), P16_B_AND_D_SCIENTIFIC_DECISION.md",
-  "success_definition": "A-C: strict task success on decided originals = correct no-move on a feasible scene (VERIFIED) or a verified + replayed repair on a blocked scene; denominator 112 (72 feasible + 40 blocked). D: plan found + independent replay CLEAR; denominator 21 common roots (21 of 48 planned D roots were run before the P16 execution cap)",
-  "groups": [
-   {
-    "kind": "b",
-    "heading": "Choosing a repair  —  P16 test, 112 scenes",
-    "rows": [
-     {
-      "label": "Approach A",
-      "arm": "A",
-      "configuration": "B_TEST arm 'A': the A architecture retrained on the P16 training data (3 seeds, ensemble; report 0088 'A (retrained)'). This is what scored 55/112. The frozen P13 A checkpoint is arm 'P13:A' (61/112 = 37 + 24) and is NOT the configuration shown.",
-      "observation": "Needless moves in {A.unnecessary_relocation}/{feasible} feasible scenes",
-      "evidence": "per_arm.A: noop_correct 31/72, unnecessary_relocation 41/72, repair_success 24/40",
-      "p17_arm": "A",
-      "p17_note": "P17 arm 'A' = A retrained on the P17 data (same role as P16 'A'); 'P13:A' also runs in P17 but is not used"
-     },
-     {
-      "label": "Approach B",
-      "arm": "LB",
-      "configuration": "B_TEST arm 'LB': production lean B (exact factorized scene + order-aware repair unaries, no learned coupling), P16 retrain, 3 seeds",
-      "observation": "Repairs {LB.repair_success}/{infeasible} blocked; {LB.unnecessary_relocation} needless moves",
-      "evidence": "per_arm.LB: noop_correct 32/72, unnecessary_relocation 40/72, repair_success 25/40",
-      "not_shown": "experimental variant LB+G (generic-only coupling) 73/112 (Holm p 0.0003 vs LB, one test set) - kept out of the public table",
-      "p17_arm": "LB"
-     },
-     {
-      "label": "Approach C",
-      "arm": "P13:K-C",
-      "configuration": "B_TEST arm 'P13:K-C': the historical C checkpoint frozen in P13, run unchanged in the P16 test",
-      "observation": "Most needless moves: {P13:K-C.unnecessary_relocation}/{feasible} feasible",
-      "evidence": "per_arm['P13:K-C']: noop_correct 27/72, unnecessary_relocation 45/72, repair_success 24/40",
-      "not_shown": "LC (lean B with GRU order, a P16 control, NOT historical C) 64/112",
-      "p17_arm": "P13:K-C"
-     }
-    ]
+  "p16_rows": "runs/p16/data/test/sealed_exec_*.json",
+  "arms": {
+   "A": {
+    "p16": "A",
+    "p17": "A",
+    "note": "arm 'A' = A architecture retrained on that phase's data (P16 0088 'A (retrained)'); the frozen P13 A checkpoint is 'P13:A' (not shown)"
    },
-   {
-    "kind": "d",
-    "heading": "Searching for a rearrangement  —  P16 test, 21 constructed scenes  (different task: not comparable with A–C)",
-    "rows": [
-     {
-      "label": "Approach D",
-      "arm": "Dp16",
-      "configuration": "D_TEST guide 'Dp16': P16 production D (pairless blocker model, feasibility-only recursion) guiding the shared corrected search",
-      "observation": "No advantage over geometric ordering",
-      "evidence": "per_guide.Dp16 21/21 and per_guide.geometry 21/21; primary Dp16 vs geometry 0 discordant (UNDERPOWERED); motion checks 117.0 vs 115.0",
-      "p17_arm": "Dp17",
-      "p17_note": "P17 production D on the P17 test (D roster, 90 scenes) and retrospective; separate protocol from A-C"
-     }
-    ]
+   "B": {
+    "p16": "LB",
+    "p17": "LB",
+    "note": "production lean B; experimental LB+G (generic coupling) not shown (P16 operational: detected 55/63, false alarms 25/72, resolved 35/63)"
+   },
+   "C": {
+    "p16": "P13:K-C",
+    "p17": "P13:K-C",
+    "note": "historical C checkpoint frozen in P13; NOT the LC control (P16 operational: 56/63, 32/72, 32/63)"
+   },
+   "D": {
+    "p16": "Dp16",
+    "p17": "Dp17",
+    "note": "D's learned original-target feasibility (raw seed-ensemble p_feasible) for detection; D-guided search for resolution"
    }
-  ],
+  },
+  "definitions": {
+   "ground truth": "operational class of the recorded ORIGINAL status (P16: B execution row y0_status; P17: labels original status)",
+   "A/B/C detected": "infeasible roots where the arm's choice is not EMPTY (a repair OR an abstention both flag the scene as blocked) / infeasible roots",
+   "A/B/C false alarms": "feasible roots where the choice is not EMPTY / feasible roots",
+   "A/B/C resolved": "infeasible roots where a non-empty repair was chosen and its execution status is VERIFIED with replay CLEAR (UNKNOWN / timeout = not resolved) / infeasible roots",
+   "D detected / false alarms": "p_feasible < 0.5 on infeasible / feasible roots (raw seed ensemble, not the planner)",
+   "D resolved": "D search found a plan with >= 1 move and replay CLEAR on an infeasible root / infeasible roots; 0-move plans on infeasible roots are label-vs-search-budget disagreements (counted in computed_p17.d_zero_move_on_infeasible at refresh)"
+  },
+  "p16_render": {
+   "cohort": "full P16 B-execution cohort: 135 roots with B rows = 72 feasible + 63 infeasible (40 CERTIFIED_INFEASIBLE + 23 UNKNOWN_PLANNER originals)",
+   "values": {
+    "A": "detected 57/63, false alarms 41/72, resolved 32/63",
+    "B": "57/63, 40/72, 35/63",
+    "C": "57/63, 45/72, 31/63"
+   },
+   "abstentions": "0 for A, LB and P13:K-C in P16",
+   "D": "Pending: P16 has only 17 matched roots (B and D both executed), all originally infeasible, so false alarms are undefined; the P16 D test (21 of 48 constructed roots) is a different, unmatched cohort and is NOT mixed into this table"
+  },
   "p17": {
    "manifest": "runs/p17/P17_FINAL_MANIFEST.json",
    "unsealed": "runs/p17/data/p17test/UNSEALED",
    "sealed_manifest": "runs/p17/data/p17test/SEALED_MANIFEST.json",
    "prospective": "runs/p17/eval/P17_PROSPECTIVE.json",
    "retrospective": "runs/p17/eval/P17_RETROSPECTIVE.json",
-   "fields": "A-C: b.analysis.per_arm[p17_arm].{strict_top1, n}; D: d.all_roots.per_guide.Dp17.{success, n}"
+   "matched_key": "P17_PROSPECTIVE.json 'matched': {root: {family, original, b: {arm: {choice, status, replay}}, d: {guide: {found, replay, moves}}, d_pfeas: {Dp16, Dp17}}} - the 90-root P17 D roster where B and D both ran; all four rows computed on exactly these roots (title 'Results · P17 test'); missing key -> Pending"
   }
  },
  "ablations": {
-  "notes": [
-   "Matched comparisons on the P13 and P16 frozen tests. Not yet replicated on the P17 test (pending)."
-  ],
   "rows": [
    {
-    "approach": "Approach B",
-    "tested": "Awareness of action order",
-    "finding": "Clear gain only on order puzzles",
-    "source": "P13_2D_FACTOR_SCIENTIFIC_DECISION.md row F2: +0.779 on order queries (Holm 3e-8), strict TOP1 +0.421 (natural +0.222, 2 natural order roots); P16: LB vs order-blind LB-F2 57 vs 60 /112, Holm 1.0, and P16 decision 'order-on vs order-off on test decisions: NOT SUPPORTED'"
+    "approach": "B",
+    "factor": "F1 — Static",
+    "finding": "Removed",
+    "source": "P13 factor decision row F1 (NOT_IDENTIFIED, held-out AUROC 0.535 -> drop; analytic veto kept); P16 decision 'learned F1 removed'"
    },
    {
-    "approach": "Approach B",
-    "tested": "Extra pairwise interaction terms",
-    "finding": "No reliable benefit; removed",
-    "source": "P13 decision rows F3 (scene pair: -0.023, slight harm) and F4 (omission pair: +0.014 < 0.05 threshold, natural -0.61); P16 decision 'F3, F4 removed'. Scene-edit and omission queries themselves are kept"
+    "approach": "B",
+    "factor": "F2 — Ordering",
+    "finding": "Retained",
+    "source": "P13 row F2 SUPPORTED_CONDITIONAL (+0.779 on order queries); P16 decision 'order-aware repair unaries retained' (test-decision order effect n.s. in P16, 0088 I.3)"
    },
    {
-    "approach": "Approach B",
-    "tested": "Generic coupling between choices",
-    "finding": "Promising; not yet replicated",
-    "source": "B_TEST LB+G 73/112 vs LB 57/112, 16:0 discordant, Holm p 0.0003 - one test set (P16 decision: 'SUPPORTED (one cohort)', replication required)"
+    "approach": "B",
+    "factor": "F3 — Scene pairs",
+    "finding": "Removed",
+    "source": "P13 row F3 HARMFUL (negligible) -> drop; P16 decision 'F3 removed'"
    },
    {
-    "approach": "Approach C",
-    "tested": "Recurrent vs predecessor-based ordering",
-    "finding": "Slightly better; not significant",
-    "source": "B_TEST LC (GRU order) 64/112 vs LB (prefix order) 57/112, 8:1 discordant, unadjusted p 0.039, Holm 0.31 (0088 I.2)"
+    "approach": "B",
+    "factor": "F4 — Omission",
+    "finding": "Removed",
+    "source": "P13 row F4 DEPLOYMENT-ONLY, re-test; P16 decision 'F4 removed (lambda = 0 / not built)'. Omission queries themselves are kept"
    },
    {
-    "approach": "Approach D",
-    "tested": "Pairwise blocker interactions",
-    "finding": "No reliable benefit",
-    "source": "P13 decision row 'D pair term' (blocker F1 +0.012, n.s.); P16 D_TEST paired D 21/21 = pairless 21/21; 8.8% fewer motion checks, below the 20% threshold (0088 II.1)"
+    "approach": "B",
+    "factor": "F5 — Generic coupling",
+    "finding": "Promising, unreplicated",
+    "source": "P16 decision H-B2 'SUPPORTED (one cohort)', replication required (LB+G vs LB, 16:0 discordant); P13 combined F5 had failed the natural-mix safety rule"
    },
    {
-    "approach": "Approach D",
-    "tested": "Learned vs geometric guidance",
-    "finding": "No advantage demonstrated",
-    "source": "D_TEST primary Dp16 vs geometry 21/21 vs 21/21, 0 discordant (UNDERPOWERED); motion checks +1.7% vs a -20% target (0088 II.1)"
+    "approach": "A",
+    "factor": "GRU ordering",
+    "finding": "Not isolated",
+    "source": "no matched A order-on / order-off ablation exists in P13-P16"
    },
    {
-    "approach": "Approach D",
-    "tested": "Recursive guidance",
-    "finding": "No effect seen; not validated",
-    "source": "D_TEST Dp16 vs Dp16-norec 21/21 each, motion checks 117.0 each; P16 decision 'recursion feasibility-only (blocker marginals not validated)'"
+    "approach": "C",
+    "factor": "GRU vs. B ordering",
+    "finding": "No clear gain",
+    "source": "P16 LC (GRU order) vs LB (prefix order): 64 vs 57 /112, Holm 0.31 (0088 I.2)"
+   },
+   {
+    "approach": "D",
+    "factor": "Blocker coupling",
+    "finding": "Removed",
+    "source": "P13 row 'D pair term' NO_BENEFIT -> D-pairless; P16: paired D kept only as a frozen comparator"
+   },
+   {
+    "approach": "D",
+    "factor": "Recursive guidance",
+    "finding": "Unproven",
+    "source": "P16 decision 'recursion feasibility-only (blocker marginals not validated)'; Dp16 vs Dp16-norec 21/21 each, same effort; P17 0095: temporary-target blocker marginals not validated (6 masks)"
+   },
+   {
+    "approach": "D",
+    "factor": "Search guidance",
+    "finding": "No gain yet",
+    "source": "P16 H-D1 Dp16 vs geometry 21/21 each, 0 discordant (UNDERPOWERED); effort +1.7% vs a -20% target: NEGATIVE"
    }
   ],
   "dropped": [
-   "Approach A action-ordering: no matched A ordering ablation exists in P13-P16 (not shown)",
-   "learned static factor (F1, not learnable, AUROC 0.535) and combined coupling: omitted to keep 7 rows"
+   "B 'F5 — Higher-order': the combined generic + higher-order F5 was removed (P16 decision), but the higher-order term alone is 'deferred' (P13 UNDERPOWERED, P16 'higher-order F5q deferred'), so 'Removed' would be inaccurate; row omitted to stay within 10 rows"
   ]
  },
  "gifs": {
@@ -314,10 +314,11 @@
  },
  "trace": {
   "01_scenes": "captions and plans from runs/p17/mechanisms/evidence/{M0,M1,M2,M3,M4,M6,M5,M8_3}.json (positive = VERIFIED + replay CLEAR; red = counterfactual sequences with their recorded status); M5 alternative slot from EXEMPLARS.json M5.instance",
-  "02_dataset": "all counts computed by build.py from the label files (326 dev scenes) and the two test plan.json files (scene counts only); 440 + 74 P13 scenes quoted from responses-phases/0094 section 2",
-  "03_results_B": "runs/p16/eval/B_TEST.json per_arm[arm]: success = noop_correct + repair_success over decided_roots (112); observations from unnecessary_relocation / feasible (72) and repair_success / infeasible (40). Matches 0088 table I.1",
-  "03_results_D": "runs/p16/eval/D_TEST.json per_guide.Dp16 success / n (21 common roots; 21 of 48 planned). Matches 0088 table II.1",
-  "04_ablations": "each row's 'source' names the report row or JSON field; no number is drawn in the image",
+  "02_dataset": "computed by build.py from the 326 development label files under the operational convention",
+  "03_results_B": "computed by build.py from runs/p16/data/test/sealed_exec_*.json per-root rows (b.y0_status, b.arms[arm].{choice, status, replay}) under the operational convention",
+  "03_results_D": "Pending for P16 (see results.p16_render.D); P17 from P17_PROSPECTIVE.json 'matched' at refresh",
+  "04_ablations": "each row's 'source'; no number in the image",
   "gifs": "choices from runs/p16/data/test/sealed_exec_*.json (unsealed in P16, manifest 9389d34); B-type arms re-verified (status must equal record) and D plans regenerated (replay hash must equal the recorded Dp16 hash) before drawing"
- }
+ },
+ "operational_convention": "Takeaway-only reading of the raw records (never modified): FEASIBLE = recorded status VERIFIED (+ replay CLEAR where a replay applies); everything else (CERTIFIED_INFEASIBLE, STATIC_INVALID, any UNKNOWN_*, budget exhaustion) = INFEASIBLE. Applied to originals, repair sequences and executed choices in 02 / 03."
 }

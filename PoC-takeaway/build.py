@@ -205,12 +205,12 @@ def scenes():
 TXT, GREY, RULE = "#111111", "#6b6b6b", "#d9d9d9"
 
 
-def paper_table(name, heading, cols, body, notes=(), fs=21, row_h=0.075):
-    """Plain research-paper table on white: heading, thin light-grey horizontal rules only, optional italic group lines, small grey notes.
-    cols = [(label, width as figure fraction, 'left' | 'center')]; body = rows (lists of str) or ('group', text) / ('rule',)."""
+def paper_table(name, heading, cols, body, fs=24, row_h=0.085):
+    """Title + plain table on white: thin light-grey horizontal rules only, no notes. cols = [(label, width fraction, 'left' | 'center')];
+    body = rows (lists of str) or ('rule',)."""
     fig = plt.figure(figsize=(W, H), facecolor="white")
-    x0 = 0.06
-    fig.text(x0, 0.90, heading, fontsize=40, color=TXT, va="baseline")
+    x0 = 0.07
+    fig.text(x0, 0.885, heading, fontsize=30, color="#333333", va="baseline")
     xs = [x0]
     for _, w, _ in cols:
         xs.append(xs[-1] + w)
@@ -218,35 +218,34 @@ def paper_table(name, heading, cols, body, notes=(), fs=21, row_h=0.075):
     line = lambda y, lw=1.0: fig.add_artist(plt.Line2D([x0, x1], [y, y], color=RULE, lw=lw))  # noqa: E731
     cell = lambda j, y, t, **k: fig.text(xs[j] if cols[j][2] == "left" else (xs[j] + xs[j + 1]) / 2, y, t, ha=cols[j][2],  # noqa: E731
                                          va="center", **k)
-    y = 0.80
-    line(y + row_h * 0.55, 1.4)
+    n = sum(1 for r in body if r[0] != "rule") + 1
+    y = min(0.5 + (n * row_h) / 2 - row_h / 2 - 0.02, 0.76)            # table block centred under the title, never above 0.76
+    line(y + row_h * 0.6, 1.3)
     for j, (lab, _, _) in enumerate(cols):
-        cell(j, y, lab, fontsize=fs - 3, color=GREY)
-    line(y - row_h * 0.5)
-    y -= row_h
+        cell(j, y, lab, fontsize=fs - 4, color=GREY)
+    line(y - row_h * 0.55)
+    y -= row_h * 1.1
     for r in body:
-        if r[0] == "group":
-            y -= row_h * 0.12
-            fig.text(x0, y, r[1], fontsize=fs - 4, color=GREY, style="italic", va="center")
-            y -= row_h * 0.8
-            continue
         if r[0] == "rule":
             line(y + row_h * 0.5)
             continue
-        bold = r[0] == "Total"
         for j, t in enumerate(r):
-            cell(j, y, t, fontsize=fs, color=TXT, weight="bold" if bold and j == 0 else "normal")
+            cell(j, y, t, fontsize=fs, color=TXT, weight="bold" if r[0] == "Total" and j == 0 else "normal")
         y -= row_h
-    line(y + row_h * 0.5, 1.4)
-    for i, n in enumerate(notes):
-        fig.text(x0, y + row_h * 0.5 - 0.06 - i * 0.036, n, fontsize=14, color=GREY, va="center")
+    line(y + row_h * 0.5, 1.3)
     fig.savefig(HERE / name, dpi=DPI, facecolor="white")
     plt.close(fig)
     print("wrote", HERE / name)
 
 
-def pct(k, n):
-    return f"{k} / {n} ({round(100 * k / n)}%)"
+def pc(k, n):
+    return f"{int(100 * k / n + 0.5)}% ({k}/{n})" if n else "Pending"         # round half up
+
+
+def feasible(status, replay=True):
+    """Operational convention (takeaway only): FEASIBLE iff the recorded status is VERIFIED (+ replay where applicable); everything else
+    (CERTIFIED_INFEASIBLE, STATIC_INVALID, UNKNOWN_*, budget) counts as INFEASIBLE."""
+    return status == "VERIFIED" and bool(replay)
 
 
 # ------------------------------------------------------------------ 02 dataset
@@ -261,67 +260,78 @@ def dataset():
     order = list(dict.fromkeys(G.values()))
     agg = defaultdict(Counter)
     for v in L.values():
-        a, st = agg[G[v["family"]]], v["original"]["status"]
+        a, ok = agg[G[v["family"]]], feasible(v["original"]["status"])
         a["n"] += 1
-        a["feas" if st == "VERIFIED" else "inf" if st in DEC[1:] else "unk"] += 1
+        a["feas" if ok else "inf"] += 1
         a["gen"] += sum(n for m, n in v["catalogue"]["generated"].items() if m != "0")
         a["tested"] += len(v["sequences"])
-        if st in DEC[1:]:
-            a["rep"] += any(x.get("y") == 1 for x in v["sequences"].values())
+        if not ok:
+            a["rep"] += any(x.get("y") == 1 for x in v["sequences"].values())     # y = 1 <=> VERIFIED + replay CLEAR
     tot = sum(agg.values(), Counter())
-    test = {k: len(rd(p)["roots"]) for k, p in D["test_plans"].items()}
-    row = lambda g, a: [g, f"{a['n']}", f"{a['feas']}", f"{a['inf']}", f"{a['unk']}", f"{a['tested']:,}", f"{a['rep']} / {a['inf']}" if a["inf"] else "–"]  # noqa: E731
+    k = lambda n: f"{n / 1000:,.0f}k" if n >= 10000 else f"{n:,}"  # noqa: E731
+    row = lambda g, a: [g, f"{a['n']}", f"{a['feas']}", f"{a['inf']}", f"{k(a['gen'])} / {a['tested']:,}", f"{a['rep']} / {a['inf']}"]  # noqa: E731
     body = [row(g, agg[g]) for g in order] + [("rule",), row("Total", tot)]
-    cols = [("Scene type", 0.25, "left"), ("Scenes", 0.07, "center"), ("Feasible\nas is", 0.11, "center"), ("Blocked", 0.10, "center"),
-            ("Unknown", 0.10, "center"), ("Repair plans\nchecked", 0.12, "center"), ("Blocked scenes\nrepaired", 0.13, "center")]
-    paper_table("02_dataset.png", "Our 2D dataset", cols, body, notes=[
-        "Unknown: the planner could not prove success or failure.",
-        f"Development scenes (training, validation, calibration). Held out for testing: {test['P16 test']} (P16) and {test['P17 test']} (P17) scenes.",
-        f"Repair plans checked: physically simulated, out of about {round(tot['gen'], -3):,} generated."], fs=20, row_h=0.072)
-    return {"dev": dict(tot), "groups": {g: dict(agg[g]) for g in order}, "test": test}
+    cols = [("Scene type", 0.27, "left"), ("Scenes", 0.08, "center"), ("Feasible", 0.10, "center"), ("Infeasible", 0.11, "center"),
+            ("Repair sequences\ngenerated / tested", 0.17, "center"), ("Infeasible scenes\nrepaired", 0.13, "center")]
+    paper_table("02_dataset.png", "Dataset · development scenes", cols, body, fs=22, row_h=0.078)
+    return {"groups": {g: dict(agg[g]) for g in order}, "total": dict(tot)}
 
 
 # ------------------------------------------------------------------ 03 results
-def obs(t, P):
-    """'{arm.key}' -> per_arm[arm][key] (P16 B_TEST); '{feasible}' / '{infeasible}' -> cohort sizes."""
-    return re.sub(r"\{([^}]+)\}", lambda m: str(P["per_arm"][m.group(1).split(".")[0]][m.group(1).split(".")[1]]) if "." in m.group(1)
-                  else str(P[m.group(1)]), t)
+def score_rows(roots, arms, guide=None):
+    """roots: {root: {'original': status, 'b': {arm: {choice, status, replay}}, 'd': {guide: {found, replay, moves}}, 'd_pfeas': {guide: p}}}.
+    Returns {label: (detected, false alarms, resolved) as (k, n) pairs} plus the D 0-move-on-infeasible disagreement count."""
+    F = [r for r in roots.values() if feasible(r["original"])]
+    I = [r for r in roots.values() if not feasible(r["original"])]
+    out = {}
+    for lab, arm in arms.items():
+        flag = lambda r: not r["b"][arm]["choice"].endswith(":empty")  # noqa: E731  (a repair OR an abstention flags the scene as blocked)
+        fix = lambda r: flag(r) and r["b"][arm]["choice"] != "ABSTAIN" and feasible(r["b"][arm]["status"], r["b"][arm].get("replay"))  # noqa: E731
+        out[lab] = ((sum(map(flag, I)), len(I)), (sum(map(flag, F)), len(F)), (sum(map(fix, I)), len(I)))
+    zero = None
+    if guide:
+        ok = [r for r in roots.values() if guide in r.get("d", {}) and guide in r.get("d_pfeas", {})]
+        Fd, Id = [r for r in ok if feasible(r["original"])], [r for r in ok if not feasible(r["original"])]
+        blk = lambda r: r["d_pfeas"][guide] < 0.5  # noqa: E731
+        res = lambda r: bool(r["d"][guide]["found"] and r["d"][guide]["replay"] and r["d"][guide]["moves"] >= 1)  # noqa: E731
+        zero = sum(bool(r["d"][guide]["found"] and r["d"][guide]["moves"] == 0) for r in Id)
+        if ok:
+            out["D"] = ((sum(map(blk, Id)), len(Id)), (sum(map(blk, Fd)), len(Fd)), (sum(map(res, Id)), len(Id)))
+    return out, zero
 
 
 def results(p17=None):
     R = S["results"]
-    B, Dd = rd(R["b_file"]), rd(R["d_file"])
-    pend = "Pending"
+    arms = {k: v for k, v in R["arms"].items() if k != "D"}
+    if p17 and dig(p17, "matched"):
+        roots, title, guide = p17["matched"], "Results · P17 test", R["arms"]["D"]["p17"]
+        arms = {k: v["p17"] for k, v in arms.items()}
+    else:
+        rows = {}
+        for f in glob.glob(R["p16_rows"]):
+            rows.update(rd(f))
+        roots = {k: {"original": v["b"]["y0_status"], "b": v["b"]["arms"]} for k, v in rows.items() if "b" in v}
+        title, guide = "Results · P16 test", None
+        arms = {k: v["p16"] for k, v in arms.items()}
+    try:
+        sc, zero = score_rows(roots, arms, guide)
+    except (KeyError, TypeError) as e:                                    # defensive: an unexpected / missing field -> every cell Pending
+        print("results: missing field", e)
+        sc, zero = {}, None
     body = []
-    for grp in R["groups"]:
-        body.append(("group", grp["heading"]))
-        for r in grp["rows"]:
-            if grp["kind"] == "b":
-                x = B["per_arm"][r["arm"]]
-                v = pct(x["noop_correct"] + x["repair_success"], B["decided_roots"])
-                y = dig(p17, "b", "analysis", "per_arm", r["p17_arm"])
-                p = pct(round(y["strict_top1"] * y["n"]), y["n"]) if y and y.get("n") and y.get("strict_top1") is not None else pend
-                o = obs(r["observation"], B)
-            else:
-                x = Dd["per_guide"][r["arm"]]
-                v = pct(x["success"], x["n"])
-                y = dig(p17, "d", "all_roots", "per_guide", r["p17_arm"])
-                p = pct(y["success"], y["n"]) if y and y.get("n") else pend
-                o = r["observation"]
-            body.append([r["label"], v, o, p])
-    cols = [("Approach", 0.15, "left"), ("Success rate", 0.19, "left"), ("Main observation", 0.44, "left"), ("P17 test", 0.10, "left")]
-    nf, n = B["feasible"], B["decided_roots"]
-    paper_table("03_results.png", "What worked", cols, body, fs=20, notes=[
-        f"Doing nothing succeeds on {B['per_arm']['empty_always']['noop_correct']} / {n} (every feasible scene); A–C do not beat this baseline.",
-        f"D solves a different task, so it is not comparable with A–C. {Dd['common_roots']} of 48 planned D scenes were run before the compute cap.",
-        "Success: the chosen plan, or the choice to do nothing, is physically verified."], row_h=0.085)
+    for lab in ("A", "B", "C", "D"):
+        x = sc.get(lab)
+        body.append([f"Approach {lab}", *(pc(*c) for c in x)] if x else [f"Approach {lab}", "Pending", "Pending", "Pending"])
+    cols = [("Approach", 0.22, "left"), ("Blockage detected ↑", 0.22, "center"), ("False alarms ↓", 0.20, "center"), ("Blockage resolved ↑", 0.22, "center")]
+    paper_table("03_results.png", title, cols, body, fs=25, row_h=0.10)
+    return {"cohort": title, "rows": {k: v for k, v in sc.items()}, "d_zero_move_on_infeasible": zero}
 
 
 # ------------------------------------------------------------------ 04 ablations
 def ablations(p17=None):
-    body = [[r["approach"], r["tested"], r["finding"]] for r in S["ablations"]["rows"]]
-    cols = [("Approach", 0.15, "left"), ("What we tested", 0.40, "left"), ("Finding", 0.33, "left")]
-    paper_table("04_ablations.png", "What the ablations taught us", cols, body, notes=S["ablations"]["notes"], fs=21, row_h=0.085)
+    body = [[r["approach"], r["factor"], r["finding"]] for r in S["ablations"]["rows"]]
+    cols = [("Approach", 0.20, "left"), ("Factor", 0.36, "left"), ("Finding", 0.30, "left")]
+    paper_table("04_ablations.png", "Ablations", cols, body, fs=22, row_h=0.062)
 
 
 # ------------------------------------------------------------------ GIFs (certified motion only)
@@ -612,10 +622,13 @@ def main():
         if not ok:
             raise SystemExit(f"--refresh-p17 refused: {why}")
         pr, re_ = rd(S["results"]["p17"]["prospective"]), rd(S["results"]["p17"]["retrospective"])
-        p17 = {"b": pr.get("b"), "d": pr.get("d"), "retro": re_}
+        p17 = {"b": pr.get("b"), "d": pr.get("d"), "retro": re_, "matched": pr.get("matched")}
     scenes()
     dataset()
-    results(p17)
+    out = results(p17)
+    if p17:                                                               # record the P17 denominators next to the configuration (folder-local)
+        S["results"]["computed_p17"] = out
+        (HERE / "sources.json").write_text(json.dumps(S, indent=1, ensure_ascii=False) + "\n")
     ablations(p17)
     if not a.no_gifs:
         gifs(p17=a.refresh_p17)
