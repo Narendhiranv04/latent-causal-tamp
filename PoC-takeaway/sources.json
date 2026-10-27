@@ -161,6 +161,68 @@
    "prospective": "runs/p17/eval/P17_PROSPECTIVE.json",
    "retrospective": "runs/p17/eval/P17_RETROSPECTIVE.json",
    "matched_key": "P17_PROSPECTIVE.json 'matched': {root: {family, original, b: {arm: {choice, status, replay}}, d: {guide: {found, replay, moves}}, d_pfeas: {Dp16, Dp17}}} - the 90-root P17 D roster where B and D both ran; all four rows computed on exactly these roots (title 'Results · P17 test'); missing key -> Pending"
+  },
+  "computed_p17": {
+   "cohort": "Results · P17 test",
+   "rows": {
+    "A": [
+     [
+      58,
+      63
+     ],
+     [
+      15,
+      27
+     ],
+     [
+      26,
+      63
+     ]
+    ],
+    "B": [
+     [
+      59,
+      63
+     ],
+     [
+      17,
+      27
+     ],
+     [
+      29,
+      63
+     ]
+    ],
+    "C": [
+     [
+      49,
+      63
+     ],
+     [
+      11,
+      27
+     ],
+     [
+      22,
+      63
+     ]
+    ],
+    "D": [
+     [
+      54,
+      63
+     ],
+     [
+      6,
+      27
+     ],
+     [
+      43,
+      63
+     ]
+    ]
+   },
+   "d_zero_move_on_infeasible": 0
   }
  },
  "ablations": {
@@ -174,8 +236,8 @@
    {
     "approach": "B",
     "factor": "F2 — Ordering",
-    "finding": "Retained",
-    "source": "P13 row F2 SUPPORTED_CONDITIONAL (+0.779 on order queries); P16 decision 'order-aware repair unaries retained' (test-decision order effect n.s. in P16, 0088 I.3)"
+    "finding": "Retained; mixed in P17",
+    "source": "P13 row F2 SUPPORTED_CONDITIONAL (+0.779 on order queries); P16 decision 'order-aware repair unaries retained' (test-decision order effect n.s. in P16, 0088 I.3); P17 (0097): ordered arms rank all 7 certified reversed-order pairs correctly (order-invariant LB-F2: 0.5), but LB-F2 beat LB on strict TOP1 13:31 (Holm 0.038) via the no-op threshold"
    },
    {
     "approach": "B",
@@ -192,8 +254,8 @@
    {
     "approach": "B",
     "factor": "F5 — Generic coupling",
-    "finding": "Promising, unreplicated",
-    "source": "P16 decision H-B2 'SUPPORTED (one cohort)', replication required (LB+G vs LB, 16:0 discordant); P13 combined F5 had failed the natural-mix safety rule"
+    "finding": "Not replicated",
+    "source": "P16 decision H-B2 'SUPPORTED (one cohort)', replication required (LB+G vs LB, 16:0 discordant); P13 combined F5 had failed the natural-mix safety rule; P17 prospective (0097): LB+G 0.350 vs LB 0.479, 3:21 (Holm 0.0025) -- a no-op threshold failure (P(z0) is coupling-invariant), not a score failure; the P16 gain is not replicated"
    },
    {
     "approach": "A",
@@ -204,26 +266,26 @@
    {
     "approach": "C",
     "factor": "GRU vs. B ordering",
-    "finding": "No clear gain",
-    "source": "P16 LC (GRU order) vs LB (prefix order): 64 vs 57 /112, Holm 0.31 (0088 I.2)"
+    "finding": "GRU better in P17",
+    "source": "P16 LC (GRU order) vs LB (prefix order): 64 vs 57 /112, Holm 0.31 (0088 I.2); P17 prospective (0097): LC (GRU order) vs LB 26:1 (Holm 5e-6), driven by no-op decisions (62 vs 36 / 75); offline scores equal (AUROC 0.966 each). Historical C (P13:K-C) 0.564 vs LB 0.479"
    },
    {
     "approach": "D",
     "factor": "Blocker coupling",
     "finding": "Removed",
-    "source": "P13 row 'D pair term' NO_BENEFIT -> D-pairless; P16: paired D kept only as a frozen comparator"
+    "source": "P13 row 'D pair term' NO_BENEFIT -> D-pairless; P16: paired D kept only as a frozen comparator; P17 (0098): paired D 68/90 = pairless Dp 68/90"
    },
    {
     "approach": "D",
     "factor": "Recursive guidance",
-    "finding": "Unproven",
-    "source": "P16 decision 'recursion feasibility-only (blocker marginals not validated)'; Dp16 vs Dp16-norec 21/21 each, same effort; P17 0095: temporary-target blocker marginals not validated (6 masks)"
+    "finding": "No benefit",
+    "source": "P16 decision 'recursion feasibility-only (blocker marginals not validated)'; Dp16 vs Dp16-norec 21/21 each, same effort; P17 0095: temporary-target blocker marginals not validated (6 masks); P17 (0098): no-recursion variants solve 71/90 vs 70 (Dp17) prospectively and 39-40 vs 38-39 / 48 retrospectively"
    },
    {
     "approach": "D",
     "factor": "Search guidance",
-    "finding": "No gain yet",
-    "source": "P16 H-D1 Dp16 vs geometry 21/21 each, 0 discordant (UNDERPOWERED); effort +1.7% vs a -20% target: NEGATIVE"
+    "finding": "No gain",
+    "source": "P16 H-D1 Dp16 vs geometry 21/21 each, 0 discordant (UNDERPOWERED); effort +1.7% vs a -20% target: NEGATIVE; P17 (0098): Dp17 vs geometry 70 vs 67 / 90 (4:1, UNDERPOWERED) and 39 vs 38 / 48 retrospective (2:1); oracle no better"
    }
   ],
   "dropped": [
@@ -260,8 +322,8 @@
     "B · lean ordered"
    ],
    "C": [
-    "LC",
-    "C · lean GRU order"
+    "P13:K-C",
+    "C · historical C"
    ],
    "D": [
     "Dp17",
@@ -310,6 +372,39 @@
    "No P16 scene where D failed (21/21 solved): slot 09 shows the best available D weakness (no effort saving), clearly labelled",
    "No P16 scene where only C fails: in slot 08 A fails the same way",
    "P17 contrasts: PENDING until --refresh-p17"
+  ],
+  "d_test": "runs/p16/eval/D_TEST.json",
+  "p17_slots": [
+   {
+    "file": "05_all_succeed.gif",
+    "root": "p13_2026290004",
+    "title": "All four succeed",
+    "family": "DENSE"
+   },
+   {
+    "file": "06_A_weakness.gif",
+    "root": "p13_2026291051",
+    "title": "A fails, another approach succeeds",
+    "family": "NAT"
+   },
+   {
+    "file": "07_B_weakness.gif",
+    "root": "p13_2026290009",
+    "title": "B fails, another approach succeeds",
+    "family": "DENSE"
+   },
+   {
+    "file": "08_C_weakness.gif",
+    "root": "p13_2026290024",
+    "title": "C fails, another approach succeeds",
+    "family": "DENSE"
+   },
+   {
+    "file": "09_D_weakness.gif",
+    "root": "p13_2026290025",
+    "title": "D finds no plan, geometry does",
+    "family": "DENSE"
+   }
   ]
  },
  "trace": {

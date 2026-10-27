@@ -410,7 +410,7 @@ def gif_render(slot, panels, fname, header, sub, side, fixed=()):
         fig.text(0.03, 0.895, sub, fontsize=14, color=INK["secondary"], va="top")
         for i, k in enumerate(("A", "B", "C", "D")):
             p = panels[k]
-            ax = fig.add_axes([0.0 + (i % 2) * 0.335, 0.435 - (i // 2) * 0.425, 0.335, 0.37])
+            ax = fig.add_axes([0.0 + (i % 2) * 0.335, 0.505 - (i // 2) * 0.425, 0.335, 0.30])
             fr = frames_by[k]
             ph = p.get("phys") or any_ph
             if fr:
@@ -430,11 +430,11 @@ def gif_render(slot, panels, fname, header, sub, side, fixed=()):
             ax.text(0.07, 1.055, p["label"], transform=ax.transAxes, fontsize=16, weight="bold", va="center")
             done = fr is None or t >= len(fr) - 1
             txt, col = (p["text"], ST[p["status"]]) if done else ("executing certified motion …", INK["muted"])
-            ax.text(0.02, 0.03, txt, transform=ax.transAxes, fontsize=14, weight="bold", color="white", va="bottom", zorder=20,
+            ax.text(0.12, -0.04, txt, transform=ax.transAxes, fontsize=14, weight="bold", color="white", va="top", zorder=20, clip_on=False,
                     bbox=dict(boxstyle="round,pad=0.35", fc=col, ec="none"))
         fig.text(0.69, 0.80, "\n".join(side), fontsize=15, color=INK["secondary"], va="top", linespacing=1.45)
         yy = 0.30
-        for lab, c in (("SUCCESS", ST["success"]), ("NEEDLESS MOVE", ST["needless"]), ("FAILED", ST["failed"]), ("UNKNOWN", ST["unknown"]), ("NOT RUN", ST["not_run"])):
+        for lab, c in (("SUCCESS", ST["success"]), ("NEEDLESS MOVE", ST["needless"]), ("FAILED", ST["failed"]), ("NOT RUN", ST["not_run"])):
             fig.text(0.70, yy, f"  {lab}  ", fontsize=12, weight="bold", color="white", bbox=dict(boxstyle="round,pad=0.3", fc=c, ec="none"))
             yy -= 0.05
         fig.canvas.draw()
@@ -475,7 +475,7 @@ def outcome(y0, seq, status):
     if status == "VERIFIED":
         return "success", f"SUCCESS · {len(seq)} move{'s' if len(seq) != 1 else ''}"
     if str(status).startswith("UNKNOWN"):
-        return "unknown", "UNKNOWN · planner unresolved"
+        return "failed", "NOT RESOLVED · planner budget"            # operational convention: unresolved counts as infeasible
     if status == "ABSTAIN":
         return "unknown", "ABSTAINED"
     if not seq:
@@ -566,16 +566,24 @@ def p17_select():
              ("07_B_weakness.gif", "B fails, another approach succeeds", lambda k: ok[k]["B"] is False and any(ok[k][s] for s in "ACD")),
              ("08_C_weakness.gif", "C fails, another approach succeeds", lambda k: ok[k]["C"] is False and any(ok[k][s] for s in "ABD")),
              ("09_D_weakness.gif", "D finds no plan, geometry does", lambda k: k in both and not ok[k]["D"] and okd(rows[k], "geometry"))]
-    out = []
+    only = lambda k, x: ok[k][x] is False and all(ok[k][s] for s in "ABC" if s != x)  # noqa: E731  (only x fails among A-C)
+    pref = {"06_A_weakness.gif": "A", "07_B_weakness.gif": "B", "08_C_weakness.gif": "C"}
+    out, used = [], set()
     for f, t, rule in rules:
-        k = next((k for k in both if rule(k)), None) or next((k for k in rows if rule(k)), None)
+        cands = [lambda k, f=f: f in pref and only(k, pref[f]), rule]          # preferred contrast first, then the general rule
+        k = next((k for c in cands for pool in (both, list(rows)) for k in pool if k not in used and c(k)), None)
+        used.add(k)
         out.append({"file": f, "root": k, "title": t, "rows": rows, "plan": plan})
     return out
 
 
 def gifs(p17=False):
     if p17:
-        for sl in p17_select():
+        sel = p17_select()
+        S["gifs"]["p17_slots"] = [{"file": sl["file"], "root": sl["root"], "title": sl["title"],
+                                   "family": sl["plan"][sl["root"]]["family"] if sl["root"] else None} for sl in sel]
+        (HERE / "sources.json").write_text(json.dumps(S, indent=1, ensure_ascii=False) + "\n")
+        for sl in sel:
             k = sl["root"]
             if k is None:
                 pending_gif(sl["file"], sl["title"], "no P17 test scene matches this contrast")
@@ -604,7 +612,7 @@ def gifs(p17=False):
         if sl.get("alternative"):
             d = pan["D"]
             g = rows[k]["d"]["geometry"]
-            side += ["", "No D failure exists in P16", f"(all {rd(S['results']['d_file'])['common_roots']} D scenes solved).",
+            side += ["", "No D failure exists in P16", f"(all {rd(S['gifs']['d_test'])['common_roots']} D scenes solved).",
                      f"D search: {d['nodes']} nodes, {d['checks']} checks;", f"geometry: {g['log']['nodes']} nodes, {g['used']['motion_checks']} checks."]
         sub = "Hand-picked qualitative example · not a statistic"
         gif_render(sl, pan, sl["file"], sl["title"], sub, side, set(plan[k].get("fixed", [])))
