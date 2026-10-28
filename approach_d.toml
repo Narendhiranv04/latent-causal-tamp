@@ -16,3 +16,22 @@ mode_iou = 0.6                          # same as the P14/P15 mode threshold
 mode_limit = 3                          # engineering default (spec §4.3), not a validated optimum
 witnesses_per_mode = 2
 status_on_no_witness = "UNKNOWN_NO_WITNESS"
+
+# G2a (approachD_G2_offline_only_instructions_v1_1): OFFLINE compiler. IK, IK-tracked lines and the certified planner run only here, before
+# inference. ad_compile.ccfg validates the exact key set. Node budgets decide (planner wall clock disabled), so compiles are deterministic.
+[compiler]
+version = "AD_COMPILER_V1"
+fixture = "GENERIC_EMPTY_WORKSPACE"     # the moved disc alone: no root, split or held-out scene geometry enters a template
+contract = "Q_HOME"                     # every template starts and ends exactly at q_home; root start q -> home only via ENTRY templates
+budget_id = "B_COMPILE_V1"
+planner_max_nodes = 4000                # config.toml planner2d canonical node budget
+templates_per_mode = 2                  # per relative mode: first distinct snapped grasp classes in canonical member order
+direct_k = 6                            # unseeded baselines (planner order / branch-spread), same K as the 3x2 and 6x1 shortlists
+max_grasp_shift_deg = 30.0              # rotated seed grasp -> declared grasp on the same branch: at most two 15-degree steps
+
+# G2a runtime contract (ad_runtime): frozen templates only; no IK, planner, connector or grasp synthesis is reachable.
+[runtime]
+version = "AD_RUNTIME_V1"
+check_budget = 6                        # exact certifications per requested move
+prefilter = true                        # swept-cell prefilter rejects only (conservative); the certifier alone accepts
+start_tol_rad = 1e-9                    # exact start-q continuity (canonical home)

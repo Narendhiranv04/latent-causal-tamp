@@ -1,0 +1,81 @@
+{
+ "DetPhysics.edges": {
+  "calls": {
+   "geometry.ik": 721,
+   "geometry.ik <- motion.solve": 481,
+   "geometry.ik <- skill._ik": 240,
+   "motion.ik_line": 37,
+   "motion.ik_line <- skill.screen_pick": 15,
+   "motion.ik_line <- skill.screen_place": 22,
+   "motion.ik_track": 37,
+   "motion.ik_track <- motion.ik_line": 37,
+   "ordered.certificates_for": 1,
+   "ordered.certificates_for <- p16_motion._edges": 1,
+   "ordered.first_screen": 1,
+   "ordered.first_screen <- ordered.certificates_for": 1,
+   "p16_motion.DetPhysics._edges": 1,
+   "p16_motion.DetPhysics._edges <- p16_motion.<lambda>": 1,
+   "planner.plan": 10,
+   "planner.plan <- skill.connect": 10,
+   "skill._ik": 240,
+   "skill._ik <- skill.screen_pick": 144,
+   "skill._ik <- skill.screen_place": 96,
+   "skill.pick_certificate": 1,
+   "skill.pick_certificate <- ordered.certificates_for": 1,
+   "skill.plan_skill": 1,
+   "skill.plan_skill <- p16_motion._edges": 1,
+   "skill.screen_pick": 3,
+   "skill.screen_pick <- ordered.first_screen": 1,
+   "skill.screen_pick <- skill.pick_certificate": 1,
+   "skill.screen_pick <- skill.plan_skill": 1,
+   "skill.screen_place": 2,
+   "skill.screen_place <- ordered.first_screen": 1,
+   "skill.screen_place <- skill.plan_skill": 1
+  },
+  "cpu_s": 0.592866024000001,
+  "result": "[('UNKNOWN_PLANNER', None, None, 0.0, {'planner': 'CERTIFIED_INFEASIBLE', 'lookup': 'UNKNOWN_BUDGET'})]"
+ },
+ "DetPhysics.goal": {
+  "calls": {
+   "geometry.ik": 261,
+   "geometry.ik <- motion.solve": 117,
+   "geometry.ik <- skill._ik": 144,
+   "motion.ik_line": 9,
+   "motion.ik_line <- skill.screen_pick": 9,
+   "motion.ik_track": 9,
+   "motion.ik_track <- motion.ik_line": 9,
+   "ordered.certificates_for": 1,
+   "ordered.certificates_for <- p15_retarget.certified": 1,
+   "p15_retarget.certified": 1,
+   "p15_retarget.certified <- p15_search._goal": 1,
+   "p15_search.Physics._goal": 1,
+   "p15_search.Physics._goal <- ad_runtime.g": 1,
+   "p16_motion.DetPhysics._goal": 1,
+   "p16_motion.DetPhysics._goal <- p16_motion.<lambda>": 1,
+   "sector_check._ik": 96,
+   "sector_check._ik <- sector_cert.produce": 48,
+   "sector_check._ik <- sector_check.check": 48,
+   "skill._ik": 144,
+   "skill._ik <- skill.screen_pick": 144,
+   "skill.pick_certificate": 1,
+   "skill.pick_certificate <- ordered.certificates_for": 1,
+   "skill.screen_pick": 3,
+   "skill.screen_pick <- sector_cert.produce": 1,
+   "skill.screen_pick <- sector_check.check": 1,
+   "skill.screen_pick <- skill.pick_certificate": 1
+  },
+  "cpu_s": 0.1330589600000005,
+  "result": "('CERTIFIED_INFEASIBLE', {'certificates': ['LINK0_SECTOR_PICK']}, 0.0)"
+ },
+ "p17_domain.movers+slot_fn": {
+  "calls": {},
+  "cpu_s": 3.5111391119999995,
+  "result": [
+   14,
+   7,
+   6,
+   13
+  ]
+ },
+ "root": "p13_2026210000"
+}

@@ -1,0 +1,76 @@
+{
+ "cases": {
+  "collision": true,
+  "exact": true,
+  "probe": true,
+  "shifted": true
+ },
+ "catalog": {
+  "arrays_sha256": "f0d61b7282d0eac9eed851a8aeb8180f74e2686e721bd2aa71d78c4c1288d242",
+  "hash": "sha256:2908fd08a0f94a1eee059fbd37f916993e635f28dff58de02a900505ebf488d4",
+  "templates": 1073,
+  "version": "AD_COMPILER_V1"
+ },
+ "figures": {
+  "cases": {
+   "collision": "Q00",
+   "exact": "Q05",
+   "path": "visualizations/approach_d/g2a/G2a_cases.png",
+   "probe": "Q04",
+   "shifted": "Q11"
+  },
+  "summary": "visualizations/approach_d/g2a/G2a_pilot_summary.png"
+ },
+ "files": {
+  "ad_compile.py": "sha256:5a86b784832a86cde4025b43d8a50c3fa7a33c1d60e4c0e742246ec76017705e",
+  "ad_pilot.py": "sha256:2cccf0de9d8f533569e0c3a89f55db5829c4886bcd8755d0812278acf9f6aee8",
+  "ad_runtime.py": "sha256:8bf63152da7c31220039a919fe0a52b0d5f962d5aaf3c95ca396a25ebb523234",
+  "ad_viz.py": "sha256:09d328d3180e9304b9128c3973c6eb55a95b5ccdfa8794db6978cd4545df1b95",
+  "approach_d.toml": "sha256:390b816e6200fb32d34c0fe3ee852fb832f5bc0e862ea3b407e39bf43d08d42d",
+  "config.toml": "sha256:56ede7f0ea1bd7b0e76e9b1bfd7d04f237e96f65276b79e498edce0b51b28d79",
+  "p14_sweep_index.py": "sha256:f861bfd8daad3647c7e48947d6c667bce4596240d7a679d1e93550ad33e4bbcc",
+  "p15_lookup.py": "sha256:9f3e53383dfb20af82546c95f03d94bd740abe7daad2d3cfa66a861a4a533fff",
+  "tests/test_approach_d.py": "sha256:70227bda9eece98add6351469a8f273b64990a00ef33c0cdc2d7fdb1f8459e01",
+  "tests/test_approach_d_g2a.py": "sha256:c9f0cc7dc1dafb07562b32416d79512151eb25bf09465db75b01ff00ce8cd099"
+ },
+ "g1_verify": {
+  "passed": true,
+  "replays": {
+   "g1_hardening": true,
+   "g1_robot": true,
+   "g2_interventions": true,
+   "g3_5_initial_scene": true,
+   "g3_repairs": true,
+   "g4a_evidence_audit": true
+  },
+  "tests": {
+   "failed": 0,
+   "passed": 513,
+   "skipped": 0
+  },
+  "verdict": "P3A_REGRESSION_CLOSED"
+ },
+ "head": "df913ae51800608b520b502249c0045a2f3ea188",
+ "regression": {
+  "passed": true,
+  "replays": {
+   "g1_hardening": true,
+   "g1_robot": true,
+   "g2_interventions": true,
+   "g3_5_initial_scene": true,
+   "g3_repairs": true,
+   "g4a_evidence_audit": true
+  },
+  "tests": {
+   "failed": 0,
+   "passed": 525,
+   "skipped": 0
+  },
+  "verdict": "P3A_REGRESSION_CLOSED"
+ },
+ "runtime_forbidden_calls": 0,
+ "scope": "offline compiler + zero-solver runtime contract + dev pilot; no G2b provider, no 442-query benchmark, no large catalog",
+ "stage": "APPROACH_D_G2a",
+ "tests": "12/12 (tests/test_approach_d_g2a.py)",
+ "verdict": "PASS"
+}
