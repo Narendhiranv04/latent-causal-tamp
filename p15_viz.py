@@ -203,3 +203,147 @@ def case(cohort, key, guides=("D", "geometry")) -> dict:
     import config as cf
     cf.write_json(DST / f"P15_{cohort}_case_{key[-3:]}.json", meta)
     return meta
+
+
+# ------------------------------------------------------------------ Approach D G1: relative retrieval evidence (no adaptation, no certification)
+PATCH_COL = {-1: "#52514e", 0: "#fcfcfb", 1: "#a7b4c2", 2: "#eb6834", 3: "#f6c7ad", 4: "#2a78d6"}
+
+
+def _cellbox(ax, c, n, color, ls):
+    """n x n window as stored: 3x3 centred on c, 4x4 anchored with c at local (1, 1)."""
+    from matplotlib.patches import Rectangle
+    r, k = divmod(c, 8)
+    ax.add_patch(Rectangle(((k - 1) * 0.08, (r - 1) * 0.08), n * 0.08, n * 0.08, fill=False, ec=color, ls=ls, lw=1.3, zorder=12))
+
+
+def _patches(ax, e, ref=None, title=""):
+    """W3_src | W4_src || W3_dst | W4_dst as categorical grids; cells differing from the query's (ref) are crossed."""
+    img = np.full((4, 17, 3), 1.0)
+    for x0, k in ((0, "w3_src"), (4, "w4_src"), (9, "w3_dst"), (13, "w4_dst")):
+        n = 3 if k.startswith("w3") else 4
+        for i, v in enumerate(e[k]):
+            r, c = divmod(i, n)
+            img[r, x0 + c] = [int(PATCH_COL[v][j:j + 2], 16) / 255 for j in (1, 3, 5)]
+            if ref is not None and ref[k][i] != v:
+                ax.plot(x0 + c, r, "x", color="#d03b3b", ms=7, mew=1.6)
+    ax.imshow(img, interpolation="nearest")
+    ax.set_xticks([1, 5.5, 10, 14.5], ["3x3 src", "4x4 src", "3x3 dst", "4x4 dst"], fontsize=7)
+    ax.set_yticks([])
+    ax.set_title(title, fontsize=8)
+
+
+def g1_figures(dst=Path("visualizations/approach_d/g1")) -> dict:
+    import config as cf
+    import geometry as ge
+    import motion as mo
+    import p14_sweep_index as sx
+    import p15_lookup as pl
+    import p6_viz as pv
+    from viz import COLORS, plt
+    dst.mkdir(parents=True, exist_ok=True)
+    rows = rd(pl.G1_OUT / "RETRIEVAL_ROWS.json")["rows"]
+    S, cov = rd(pl.G1_OUT / "RETRIEVAL_SUMMARY.json"), rd(pl.G1_OUT / "DOMAIN_COVERAGE.json")
+    idx, _ = pl.index_v2()
+    ri, P = pl.RelIndex(idx, pl.rel_cfg()), sx._plans()
+    cfg = cf.load_config("config.toml")
+    robot = ge.make_robot(cfg)
+    by = {f"{e['file']}#{e['index']}": e for es in idx.by_key.values() for e in es}
+    fp = {}
+    for es in idx.by_key.values():
+        for e in es:
+            fp.setdefault(pl.json_fp(P[e["root"]]), set()).add(e["support_id"])
+    pick = sorted((r for r in rows if r["proto"] == "LOKO" and r["variants"]["legacy_weights"]["hit1"]),
+                  key=lambda r: (-r["variants"]["legacy_weights"]["abs_keys"], -r["variants"]["legacy_weights"]["modes"], r["query"]))[0]
+    qe = by[pick["query"]]
+    excl = frozenset(fp[pl.json_fp(P[qe["root"]])] | {qe["root"]})
+    res = pl.lookup_relative(ri, qe, qe["radius"], excl, True)
+    cands, seen = [], set()
+    for c in res["candidates"]:
+        if tuple(c["abs_key"]) not in seen and len(cands) < 3:
+            seen.add(tuple(c["abs_key"]))
+            cands.append(c)
+    need = {(qe["file"], qe["index"])} | {(c["entry"]["file"], c["entry"]["index"]) for c in cands}
+    prov = {}
+    for p, a, r in sx.records():
+        if (p["file"], p["index"]) in need:
+            prov[(p["file"], p["index"])] = (sx.scene_at(r, p["prefix"]), r["goal_cell"], p["moved"], a)
+            if len(prov) == len(need):
+                break
+    f, ax = plt.subplots(2, 1 + len(cands), figsize=(4.9 * (1 + len(cands)), 6.6), gridspec_kw={"height_ratios": [4, 1]}, squeeze=False)
+    for j, (e, c) in enumerate([(qe, None)] + [(c["entry"], c) for c in cands]):
+        s, goal, oid, a = prov[(e["file"], e["index"])]
+        grasp = next(i for i, ph in enumerate(map(str, a["phase"])) if ph == "carry")
+        hold = s.get(oid).xy_m
+        if c is None:
+            title = (f"QUERY (held out, LOKO): {e['src']}->{e['dst']}  delta {tuple(e['delta_rc'])}\nexact-cell witnesses and same-fingerprint roots "
+                     "excluded")
+        else:
+            title = (f"RETRIEVED #{cands.index(c) + 1} (mode {c['mode']}): {e['src']}->{e['dst']}\nR={c['total']:.3f}  sim3={c['sim3']:.2f} "
+                     f"sim4={c['sim4']:.2f}  base residual {c['residual_m']:.3f} m")
+        pv._panel(ax[0][j], cfg, robot, s, goal, title, q=a["q"][grasp], gap=float(a["gap"][grasp]))
+        pts = np.array([ge.fk(robot, qq)[0][-1] for qq, _, _ in mo.samples(a, 80)])
+        ax[0][j].plot(pts[:, 0], pts[:, 1], color=COLORS["muted"] if c is None else COLORS["hypothetical"], lw=1.3, ls="--" if c is None else "-", zorder=11)
+        for cell, col in ((e["src"], COLORS["hypothetical"]), (e["dst"], COLORS["target_edge"])):
+            _cellbox(ax[0][j], cell, 3, col, "-")
+            _cellbox(ax[0][j], cell, 4, col, ":")
+        ax[0][j].annotate("", sx.center(e["dst"]), sx.center(e["src"]), arrowprops=dict(arrowstyle="-|>", color="#0b0b0b", lw=1.6), zorder=13)
+        ax[0][j].plot(*hold, "o", ms=3, color="#0b0b0b", zorder=13)
+        pv._tag(ax[0][j], "held-out witness: VERIFIED here, hidden from retrieval" if c is None else
+                "own scene: VERIFIED | query scene: NOT adapted, NOT verified",
+                COLORS["muted"] if c is None else COLORS["unresolved"], size=6.5)
+        _patches(ax[1][j], e, None if c is None else qe, "query patches" if c is None else "patches (x = differs from query)")
+    f.suptitle("Approach D G1: relative retrieval - same displacement and footprint, different absolute cells (3x3 solid / 4x4 dotted windows; "
+               "blue = source, brown = destination)", fontsize=10)
+    f.tight_layout()
+    p1 = dst / "G1_relative_match.png"
+    pv.png(f, p1, "Approach D G1: held-out query and top cross-location retrieved witnesses (retrieval only)")
+    # coverage / ranking ablation / residual / family map
+    f, ax = plt.subplots(1, 4, figsize=(22, 5.2))
+    groups = [("dev-root candidate moves", cov["absolute"], cov["relative"], cov["moves"]),
+              ("held-out LORO", S["LORO"]["absolute_coverage"], S["LORO"]["relative_coverage"], S["LORO"]["queries"]),
+              ("held-out LOKO\n(new location)", S["LOKO"]["absolute_coverage"], S["LOKO"]["relative_coverage"], S["LOKO"]["queries"])]
+    x = np.arange(len(groups))
+    for k, (lab, col, i) in enumerate((("absolute (src, dst) key", "#a7a6a1", 1), ("relative (drow, dcol, footprint) family", "#2a78d6", 2))):
+        v = [g[i] / g[3] for g in groups]
+        ax[0].bar(x + (k - 0.5) * 0.36, v, 0.34, color=col, label=lab)
+        for xx, g, vv in zip(x, groups, v):
+            ax[0].text(xx + (k - 0.5) * 0.36, vv + 0.01, f"{g[i]}/{g[3]}", ha="center", fontsize=7)
+    ax[0].set(xticks=x, ylim=(0, 1.12), ylabel="fraction with >= 1 indexed witness", title="a. candidate coverage (NOT motion availability)")
+    ax[0].set_xticklabels([g[0] for g in groups], fontsize=8)
+    ax[0].legend(fontsize=7, loc="upper left")
+    L = S["LOKO"]
+    names = list(pl.G1_VARIANTS)
+    n = L["relative_coverage"]
+    y = np.arange(len(names))
+    ax[1].barh(y + 0.18, [L["variants"][v]["hit1"] / n for v in names], 0.34, color="#2a78d6", label="top-1 same pattern")
+    ax[1].barh(y - 0.18, [L["variants"][v]["hitK"] / n for v in names], 0.34, color="#9ec2ee", label="any of shortlist (<= 6)")
+    ax[1].axvline(L["chance_hit1"], color="#52514e", ls="--", lw=1)
+    ax[1].text(L["chance_hit1"] + 0.01, len(names) - 0.4, f"random top-1 {L['chance_hit1']:.2f}", fontsize=7)
+    ax[1].set(yticks=y, xlim=(0, 1), xlabel=f"fraction of {n} covered LOKO queries", title="b. ranking / shortlist ablation (pattern proxy)")
+    ax[1].set_yticklabels(names, fontsize=8)
+    ax[1].invert_yaxis()
+    ax[1].legend(fontsize=7, loc="lower right")
+    ax[2].barh(y, [L["variants"][v]["mean_res1_m"] for v in names], 0.5, color="#a7a6a1")
+    ax[2].set(yticks=y, xlabel="mean base-rotation residual of top-1 (m)", title="c. robot-relative mismatch of the top-1 witness")
+    ax[2].set_yticklabels(names, fontsize=8)
+    ax[2].invert_yaxis()
+    fam = ri.fam[sx.rel_key(qe["src"], qe["dst"], qe["radius"])]
+    keys = sorted({(e["src"], e["dst"]) for e in fam})
+    base = cfg["arm2d"]["base_xy_m"]
+    rs = {k: sx.base_residual(base, *k, qe["src"], qe["dst"])[0] for k in keys}
+    import matplotlib as mpl
+    cm, nm = mpl.colors.ListedColormap(mpl.colormaps["Blues_r"](np.linspace(0, 0.7, 64))), mpl.colors.Normalize(0, max(rs.values()))
+    for r_ in range(9):
+        ax[3].plot([0, 0.64], [r_ * 0.08] * 2, color="#d6d5d0", lw=0.6)
+        ax[3].plot([r_ * 0.08] * 2, [0, 0.64], color="#d6d5d0", lw=0.6)
+    for k in keys:
+        ax[3].annotate("", sx.center(k[1]), sx.center(k[0]), arrowprops=dict(arrowstyle="-|>", color=cm(nm(rs[k])), lw=2.2 if k == (qe["src"], qe["dst"]) else 1.4))
+    ax[3].plot(*base, "s", color="#22262e", ms=9)
+    ax[3].text(base[0] + 0.02, base[1], "robot base", fontsize=7, va="center")
+    ax[3].set(xlim=(-0.2, 0.66), ylim=(-0.02, 0.66), aspect="equal", title=f"d. family {tuple(qe['delta_rc'])}: {len(keys)} absolute keys\n(thick = query; colour = base residual)")
+    f.colorbar(mpl.cm.ScalarMappable(nm, cm), ax=ax[3], fraction=0.04, label="residual (m)")
+    f.suptitle("Approach D G1 retrieval evidence - real witnesses, held out by root and geometry fingerprint; no motion adapted or certified", fontsize=10)
+    f.tight_layout()
+    p2 = dst / "G1_coverage_ablation.png"
+    pv.png(f, p2, "Approach D G1: coverage, ranking ablation, residuals and a relative family map")
+    return {"match": str(p1), "summary": str(p2), "query": pick["query"], "candidates": [f"{c['entry']['file']}#{c['entry']['index']}" for c in cands]}

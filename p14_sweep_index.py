@@ -288,3 +288,59 @@ def mode_stats() -> dict:
            "median_modes_per_key": float(np.median([p["modes"] for p in per]))}
     cf.write_json(OUT / "lookup" / "MODE_STATS.json", out)
     return out
+
+
+# ------------------------------------------------------------------ Approach D G1: relative-displacement view (opt-in; INDEX.json and the
+# absolute lookup above are unchanged). A relative family groups witnesses by (drow, dcol, footprint). Family membership is a RETRIEVAL
+# relation only: the fixed-base arm has no translation symmetry, so a witness recorded at other absolute cells is never reusable as is
+# (G2 must adapt and re-certify it). The arm's exact kinematic symmetry is rotation about its base (joint-1 offset; joint limits are +-pi),
+# so the robot-relative descriptor is the endpoint residual left after the best base rotation.
+REL_VERSION = "AD_REL_INDEX_V1"
+
+
+def center(c):
+    return np.array([(c % 8 + 0.5) * 0.08, (c // 8 + 0.5) * 0.08])
+
+
+def rel_key(src, dst, radius):
+    return (dst // 8 - src // 8, dst % 8 - src % 8, round(float(radius), 4))
+
+
+def descriptor(scene, goal, oid, src, dst) -> dict:
+    """Query descriptor in the stored-entry format (same occupancy codes and window anchoring as build_index)."""
+    occ = _occ(scene, goal, oid)
+    (w3s, w4s), (w3d, w4d) = windows(occ, src), windows(occ, dst)
+    return {"src": src, "dst": dst, "w3_src": w3s, "w4_src": w4s, "w3_dst": w3d, "w4_dst": w4d, "global": occ.tolist()}
+
+
+def local_sweep(swept, src, dst, r=2):
+    """Whole-path swept cells within Chebyshev r of source or destination, as (drow, dcol) offsets from the source: the object-local part
+    of the sweep (gripper and carried disc), comparable across positions. The remaining arm sweep depends on the fixed base."""
+    near = lambda c, x: max(abs(c // 8 - x // 8), abs(c % 8 - x % 8)) <= r  # noqa: E731
+    return frozenset((c // 8 - src // 8, c % 8 - src % 8) for ph in swept.values() for c in ph if near(c, src) or near(c, dst))
+
+
+def branch(q):
+    """Discrete terminal-configuration class (elbow and wrist bend signs): meaningful across positions, unlike absolute joint angles."""
+    return tuple(int(np.sign(x)) for x in np.asarray(q, float)[1:])
+
+
+def base_residual(base, ws, wd, qs, qd):
+    """(mean endpoint residual in metres, rotation psi) after the best rotation about the robot base that maps the witness endpoints
+    (ws, wd) onto the query endpoints (qs, qd); 0 iff the query move is an exact base-rotated copy (2-point Procrustes, fixed centre)."""
+    b = np.asarray(base, float)
+    u, v = np.stack([center(ws), center(wd)]) - b, np.stack([center(qs), center(qd)]) - b
+    psi = math.atan2(float(np.sum(u[:, 0] * v[:, 1] - u[:, 1] * v[:, 0])), float(np.sum(u * v)))
+    rot = np.array([[math.cos(psi), -math.sin(psi)], [math.sin(psi), math.cos(psi)]])
+    return float(np.mean(np.linalg.norm(u @ rot.T - v, axis=1))), psi
+
+
+def rel_view(idx, r=2) -> dict:
+    """{rel_key: [entries]} over idx.by_key (so leakage filtering already applied to by_key is honoured); adds each entry's object-local
+    sweep and terminal branch."""
+    out = collections.defaultdict(list)
+    for (src, dst), es in sorted(idx.by_key.items()):
+        for e in es:
+            e["_loc"], e["_branch"] = local_sweep(e["swept"], src, dst, r), branch(e["q_end"])
+            out[rel_key(src, dst, e["radius"])].append(e)
+    return dict(out)

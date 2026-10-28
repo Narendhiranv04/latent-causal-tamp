@@ -1,0 +1,76 @@
+{
+ "base_commit": "027fb7f86e2dbd8ca54421be3a8fe2e6525aa6a9",
+ "domain_coverage": {
+  "absolute": 548,
+  "moves": 1032,
+  "relative": 963,
+  "relative_only": 415
+ },
+ "files": {
+  "approach_d.toml": "sha256:fd70c556701655ba9087d8255e53adfd5e69469a234eb47cbaac3f7ba256235b",
+  "p14_sweep_index.py": "sha256:f861bfd8daad3647c7e48947d6c667bce4596240d7a679d1e93550ad33e4bbcc",
+  "p15_lookup.py": "sha256:9f3e53383dfb20af82546c95f03d94bd740abe7daad2d3cfa66a861a4a533fff",
+  "p15_viz.py": "sha256:52d7e04ef26a6a8c134ca569ddcc39a799326f8ce0d6e8ada0527b579adb331a",
+  "runs/p14/lookup/INDEX.json": "sha256:1f24527be90296343a4ae0a2c91a202f170c91752b20eb66f689b306bd59f5ed",
+  "tests/test_approach_d.py": "sha256:70227bda9eece98add6351469a8f273b64990a00ef33c0cdc2d7fdb1f8459e01"
+ },
+ "g0_baseline": {
+  "commit": "027fb7f",
+  "dir": "runs/approach_d/g0_baseline",
+  "failed": 0,
+  "replays_clear": 6,
+  "tests_passed": 502,
+  "verdict": "P3A_REGRESSION_CLOSED"
+ },
+ "held_out": {
+  "LOKO": {
+   "absolute_coverage": 0,
+   "chance_hit1": 0.16301404523181337,
+   "legacy_weights": {
+    "hit1": 149,
+    "hitK": 250,
+    "mean_abs_keys": 2.2825,
+    "mean_cross": 5.555,
+    "mean_modes": 2.895,
+    "mean_res1_m": 0.052657069276225474,
+    "mean_res_min_m": 0.040855370715658076,
+    "mean_returned": 5.555
+   },
+   "median_indexed_us": 4594.298487063497,
+   "median_scan_us": 7126.287993742153,
+   "queries": 442,
+   "relative_coverage": 400,
+   "scan_equal": 442
+  },
+  "LORO": {
+   "absolute_coverage": 330,
+   "chance_hit1": 0.2268593464482211,
+   "legacy_weights": {
+    "hit1": 214,
+    "hitK": 315,
+    "mean_abs_keys": 2.2085308056872037,
+    "mean_cross": 3.3364928909952605,
+    "mean_modes": 2.8412322274881516,
+    "mean_res1_m": 0.023036318881532986,
+    "mean_res_min_m": 0.016069335786881588,
+    "mean_returned": 5.485781990521327
+   },
+   "median_indexed_us": 4931.555478833616,
+   "median_scan_us": 7682.614988880232,
+   "queries": 442,
+   "relative_coverage": 422,
+   "scan_equal": 442
+  }
+ },
+ "index": {
+  "absolute": "sha256:4c29bbd376cc295f4c291b23df446c24eb970de014d9363fe54be5fdc11e0a0c",
+  "families": 62,
+  "modes": 372,
+  "relative": "sha256:e296cd16a885b5d411894b74b83c6706006060df4a4d990ba3522117545bf273",
+  "version": "AD_REL_INDEX_V1"
+ },
+ "scope": "retrieval only; no motion adapted or certified",
+ "stage": "APPROACH_D_G1",
+ "tests": "11/11 (tests/test_approach_d.py); full suite 513 passed, 0 failed + 6 replays CLEAR (runs/approach_d/g1/regression)",
+ "verdict": "PASS"
+}

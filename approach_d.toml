@@ -1,0 +1,18 @@
+# Approach D v1.0 overlay (approachD_methodology.pdf §6). config.toml is NOT edited: its hash is pinned by archived plans and the six
+# historical replays (audit.py), exactly as config_v2.toml was introduced. Sections arrive when code first reads them; G1 reads
+# [relative_lookup] only (p15_lookup.rel_cfg validates the exact key set: unknown or missing keys fail).
+# Spec knob mapping: patches = [3, 4] <=> alpha_3 > 0 and alpha_4 > 0 (no second authority); online_fallback / allow_absolute_fallback
+# belong to the G2 motion provider and are not read yet.
+
+[relative_lookup]
+key = "delta_rc_and_footprint"          # "absolute_src_dst" = legacy P14/P15 exact-cell lookup (switchable baseline)
+alpha_3 = 0.5                           # alpha_3 = alpha_4 = 0.5, alpha_global = 0.25, alpha_rho = 0 reproduces the legacy combined
+alpha_4 = 0.5                           # score (mean of the four windows + 0.25 x global agreement) entry by entry
+alpha_global = 0.25
+alpha_rho = 0.0                         # robot-base term (rotation residual): ablation only until G2 evidence exists
+rho_scale_m = 0.08                      # sim_rho = 1 / (1 + residual / rho_scale_m); one cell pitch
+local_sweep_cheb = 2                    # object-local sweep = swept cells within Chebyshev 2 of source or destination
+mode_iou = 0.6                          # same as the P14/P15 mode threshold
+mode_limit = 3                          # engineering default (spec §4.3), not a validated optimum
+witnesses_per_mode = 2
+status_on_no_witness = "UNKNOWN_NO_WITNESS"
