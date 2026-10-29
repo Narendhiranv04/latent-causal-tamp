@@ -29,6 +29,7 @@ import ad_runtime as ar
 
 VERSION = "D_CAUSAL_G3_V1"
 POLICIES = ("D_CAUSAL_G3", "GEOM_CAUSAL", "D_BLOCKER_ONLY", "D_CF_ONLY", "UNIFORM")
+G4_POLICIES = ("D_CAUSAL_G3", "D_CAUSAL_G4_SWEEP", "D_BLOCKER_ONLY", "GEOM_CAUSAL", "UNIFORM")   # G4 (opt-in): + stored-sweep demotion
 CKEYS = {"top_movers", "widening", "dests_per_mover", "templates_per_pair", "universe_slots", "beam", "max_depth", "max_reloc_attempts",
          "max_expansions", "max_d_calls"}
 OUT, FIG = Path("runs/approach_d/g3"), Path("visualizations/approach_d/g3")
@@ -86,6 +87,8 @@ class Geo:
             t = templates.get(a["template"])
             if t:
                 self.sweeps[i] = set(a["swept"]) | set(t["swept_by_phase"].get("pregrasp", []))
+            elif "entry_swept" in a:                          # G4 witness core: its own stored entry leg (the connector before it)
+                self.sweeps[i] = set(a["swept"]) | set(a["entry_swept"])
 
     def target_sweeps(self, cells):
         return [self.sweeps[i] for i in self.g.by_pair.get((cells["t0"], self.st.goal_cell), []) if i in self.sweeps]
@@ -97,6 +100,13 @@ class Geo:
     def conflict(self, cells, d):
         sw = self.target_sweeps(cells)
         return sum(d in s for s in sw) / max(1, len(sw))
+
+    def t_options(self, cells, d, movers):
+        """G4 stored-sweep compatibility of placing a mover at d: (stored T motions compatible now = sweep avoids every non-mover object,
+        of those how many also avoid d). Evidence from actual stored sweeps for ranking only, never a proof of infeasibility."""
+        fixed = {c for o, c in cells.items() if o != "t0" and o not in movers}
+        ok = [s for s in self.target_sweeps(cells) if not s & fixed]
+        return len(ok), sum(d not in s for s in ok)
 
 
 def universe(st, slot_f, prov, cells, movers, width):
@@ -116,7 +126,8 @@ def search(policy, prov, st, cells0, q0, movers, slot_f, geo, dor, cfg, seed=0) 
     """Verify-first causal beam search with logged widening; one shared budget per root. Returns SUCCESS/FAILURE plus a full trace."""
     A, budget = prov.g.actions, {"reloc": 0, "expand": 0}
     certified, trace = {}, []
-    usesD_mover, usesD_place = policy in ("D_CAUSAL_G3", "D_BLOCKER_ONLY"), policy in ("D_CAUSAL_G3", "D_CF_ONLY")
+    usesD_mover = policy in ("D_CAUSAL_G3", "D_BLOCKER_ONLY", "D_CAUSAL_G4_SWEEP")
+    usesD_place = policy in ("D_CAUSAL_G3", "D_CF_ONLY", "D_CAUSAL_G4_SWEEP")
     rng = np.random.default_rng([seed, cells0["t0"], st.goal_cell])
 
     def mover_rank(cells, q, elig):
@@ -152,6 +163,11 @@ def search(policy, prov, st, cells0, q0, movers, slot_f, geo, dor, cfg, seed=0) 
                 cs.sort(key=lambda c: (-c["p_after"], c["travel"], c["action"]))
             elif policy != "UNIFORM":
                 cs.sort(key=lambda c: (c["conflict"], c["travel"], c["action"]))
+            if policy == "D_CAUSAL_G4_SWEEP":                 # demote (never drop) placements inside every compatible stored T sweep
+                for c in cs:
+                    c["t_options"] = geo.t_options(cells, c["dest"], movers)
+                    c["demoted"] = c["t_options"][0] > 0 and c["t_options"][1] == 0
+                cs = [c for c in cs if not c["demoted"]] + [c for c in cs if c["demoted"]]
             per.append(cs)
         out = []
         for j in range(max((len(x) for x in per), default=0)):                         # interleave movers: diversity across objects
@@ -192,7 +208,8 @@ def search(policy, prov, st, cells0, q0, movers, slot_f, geo, dor, cfg, seed=0) 
                     cs, info = candidates(x, k)
                     trace.append({"stage": stage, "k": k, "depth": depth, "event": "frontier", "moved": list(x["moved"]), **info,
                                   "candidates": [{kk: c[kk] for kk in ("object", "dest", "action", "q_end", "travel", "conflict", "mover_score")}
-                                                 | ({"p_after": c["p_after"]} if "p_after" in c else {}) for c in cs]})
+                                                 | ({"p_after": c["p_after"]} if "p_after" in c else {})
+                                                 | ({"demoted": c["demoted"], "t_options": c["t_options"]} if "demoted" in c else {}) for c in cs]})
                     cand_all += [(x, c) for c in cs]
                 for x, c in cand_all:
                     if len(nxt) >= cfg["beam"]:

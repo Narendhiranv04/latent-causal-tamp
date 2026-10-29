@@ -72,3 +72,14 @@ max_depth = 2                           # relocations before the original target
 max_reloc_attempts = 60                 # new relocation certifications per root (identical for every policy)
 max_expansions = 30                     # frontier states expanded per root (identical for every policy)
 max_d_calls = 200                       # D forward passes per root (D policies; geometry / uniform use none)
+
+# G4 (approachD_G4_local_witness_catalog_and_causal_repair_instructions_v1_0): witness-grounded catalogs W-ROOT (exact DEV witness
+# reconstruction, engineering ceiling only) and W-TRANSFER (root-disjoint train witnesses), opt-in stored-sweep demotion. Local 2D only.
+[g4]
+seed = 0
+compile_attempts = 400                  # fresh offline planner / IK invocations (teacher re-runs + connectors), whichever cap first
+compile_cpu_s = 1200.0                  # offline CPU seconds over every G4 compile job
+cohort_b = 12                           # extra TRAIN roots with a verified >= 2-move sequence (W-ROOT reconstruction beyond DEV)
+transfer_roots = 32                     # TRAIN roots (disjoint from DEV) scanned in fixed root-id order for W-TRANSFER witnesses
+max_hops = 2                            # stored connectors chained to an action start (same as [provider])
+sweep_demote = "ALL_T_SWEEPS"           # D_CAUSAL_G4_SWEEP: demote a placement inside the sweep of every stored compatible T motion
