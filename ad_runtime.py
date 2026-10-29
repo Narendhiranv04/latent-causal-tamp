@@ -86,6 +86,36 @@ def check_entry(robot, cfg, scene, q, tpl) -> dict:
     return {"status": SUCCESS, "reason": None, "checks": 1, "template_id": tpl["id"], "q_end": tpl["q_end"]}
 
 
+def certify_free(robot, cfg, scene, a) -> dict:
+    """G2b: a stored free-arm leg or connector (open gripper, nothing held): record consistency (limits, gap, no attachment), then every
+    stored segment certified against every object at rest in `scene`. -> {'ok', 'verdict', 'pair', 'segment'}."""
+    q, gap = np.asarray(a["q"], float), np.asarray(a["gap"], float)
+    if any(np.asarray(a["attached"], bool)) or not all(ge.within_limits(robot, w) for w in q) or np.any(gap < 0) or \
+            np.any(gap > robot.open_gap + 1e-9):
+        return {"ok": False, "verdict": "RECORD_INVALID", "pair": None, "segment": None}
+    delta, eps, evals = _params(cfg)
+    ck = ge.Checker(robot, ge.make_world(scene), delta, eps)
+    for i in range(len(q) - 1):
+        v = ge.certify(ck, q[i], q[i + 1], gap[i], gap[i + 1], evals)
+        if v.status != ge.CLEAR:
+            return {"ok": False, "verdict": v.status, "pair": v.pair, "segment": i}
+    return {"ok": True, "verdict": ge.CLEAR, "pair": None, "segment": None}
+
+
+def certify_action(robot, cfg, scene, oid, a) -> dict:
+    """G2b: a stored object action (approach .. retreat, or any full template) in `scene` with `oid` resting at the action's pick pose:
+    motion.check_record (phases, attachment, held offset, pick and place consistency) then every stored segment in its phase context."""
+    delta, eps, evals = _params(cfg)
+    try:
+        vs = mo.certify_trajectory(robot, scene, oid, a, delta, eps, evals)
+    except ValueError as e:
+        return {"ok": False, "verdict": "RECORD_INVALID", "pair": str(e), "segment": None, "phase": None}
+    bad = next(((i, v) for i, v in enumerate(vs) if v.status != ge.CLEAR), None)
+    if bad is None:
+        return {"ok": True, "verdict": ge.CLEAR, "pair": None, "segment": None, "phase": None}
+    return {"ok": False, "verdict": bad[1].status, "pair": bad[1].pair, "segment": bad[0], "phase": str(a["phase"][bad[0]])}
+
+
 def check(robot, cfg, scene, oid, dst, q, templates, budget, prefilter=True) -> dict:
     """First-valid selection over an ordered list of compiled templates for 'oid -> dst' from the robot's actual q. Order: occupancy and
     footprint, exact start-q continuity, conservative swept-cell prefilter (may reject valid templates, never accepts one), then the exact

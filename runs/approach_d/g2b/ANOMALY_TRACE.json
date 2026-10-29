@@ -1,0 +1,135 @@
+{
+ "accepted_grasp": [
+  [
+   5.759586531581287,
+   -1
+  ],
+  [
+   5.759586531581288,
+   -1
+  ]
+ ],
+ "accepted_origins": [
+  "FAMILY_RETARGET"
+ ],
+ "accepted_template": "0ad19dda711f7a95",
+ "conclusion": "NOT AN ANOMALY: the P16 teacher label of the original, unrepaired task is VERIFIED (y=1) from q_initial; the G2a report wrongly called this root obstructed. The stored target action certifies from q_home and through the stored ROOT_ENTRY; without the entry connector there is no stored transition from q_initial (a finite-graph FAILURE, not infeasibility). No label is changed.",
+ "conditions": {
+  "a_q_initial_no_root_entry": {
+   "attempts": [
+    {
+     "action": "A:0ad19dda711f7a95",
+     "reason": "NO_COMPATIBLE_CONNECTOR"
+    },
+    {
+     "action": "A:eeee309b4c05abf5",
+     "reason": "NO_COMPATIBLE_CONNECTOR"
+    },
+    {
+     "action": "A:f982f618068b1858",
+     "reason": "NO_COMPATIBLE_CONNECTOR"
+    },
+    {
+     "action": "A:687ab2d10469a6be",
+     "reason": "NO_COMPATIBLE_CONNECTOR"
+    },
+    {
+     "action": "A:dd027154ceff8fa6",
+     "reason": "NO_COMPATIBLE_CONNECTOR"
+    },
+    {
+     "action": "A:b915292920aa23b2",
+     "reason": "NO_COMPATIBLE_CONNECTOR"
+    }
+   ],
+   "checks": 0,
+   "reason": "NO_COMPATIBLE_CONNECTOR",
+   "status": "FAILURE",
+   "steps": []
+  },
+  "b_q_initial_via_stored_root_entry": {
+   "attempts": [],
+   "checks": 1,
+   "reason": null,
+   "status": "SUCCESS",
+   "steps": [
+    [
+     "connector",
+     "R:97bd7eadec0925d1"
+    ],
+    [
+     "connector",
+     "E:0ad19dda711f7a95"
+    ],
+    [
+     "action",
+     "A:0ad19dda711f7a95"
+    ]
+   ]
+  },
+  "c_q_home": {
+   "attempts": [],
+   "checks": 1,
+   "reason": null,
+   "status": "SUCCESS",
+   "steps": [
+    [
+     "connector",
+     "E:0ad19dda711f7a95"
+    ],
+    [
+     "action",
+     "A:0ad19dda711f7a95"
+    ]
+   ]
+  }
+ },
+ "forbidden_calls": 0,
+ "offline_planner_from_q_initial": {
+  "cpu_s": 0.2292247809999992,
+  "pick": {
+   "branch": -1,
+   "phi_rad": 5.235987755982989
+  },
+  "place": {
+   "branch": -1,
+   "phi_rad": 5.759586531581287
+  },
+  "reason": "ALL_SEGMENTS_CERTIFIED",
+  "status": "VERIFIED_FEASIBLE",
+  "termination": "WITNESS_RECHECKED"
+ },
+ "p16_label_file": "runs/p16/data/dev/labels_v2w2.json",
+ "p16_label_original": {
+  "status": "VERIFIED",
+  "y": 1
+ },
+ "p16_stats": {
+  "cache_hits": 0,
+  "certificate_checks": 18,
+  "library_collision": 68,
+  "lookup_candidates_tried": 69,
+  "lookup_hits": 0,
+  "rare_mode_used": 0,
+  "transit_direct": 0,
+  "transit_planned": 0,
+  "transit_unknown": 1,
+  "wall_clock_cut": 0
+ },
+ "q_home": [
+  1.5707963267948966,
+  1.5707963267948966,
+  1.5707963267948966
+ ],
+ "q_initial": [
+  2.356194490192345,
+  -1.5707963267948966,
+  -1.5707963267948966
+ ],
+ "root": "p13_2026210004",
+ "stratum": "S3",
+ "target": [
+  52,
+  47
+ ]
+}

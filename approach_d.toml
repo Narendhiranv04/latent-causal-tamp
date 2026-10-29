@@ -35,3 +35,15 @@ version = "AD_RUNTIME_V1"
 check_budget = 6                        # exact certifications per requested move
 prefilter = true                        # swept-cell prefilter rejects only (conservative); the certifier alone accepts
 start_tol_rad = 1e-9                    # exact start-q continuity (canonical home)
+
+# G2b (approachD_G2b_solver_free_provider_instructions_v1_2): AD_PRECOMPILED provider over the finite robot-state graph. Opt-in only:
+# no historical arm reads this section. ad_provider.pcfg validates the exact key set.
+[provider]
+version = "AD_PRECOMPILED_V1"
+tiers = ["exact", "relative"]           # "catalog" (generic offline DIRECT templates) is an explicit, separately reported extension
+rank = "patch"                          # relative tier: "patch" (G1 3x3/4x4 + global), "geometry" (base-rotation residual only), "random"
+mode_limit = 6                          # 6 modes x 1 (3 x 2 stays configurable; DEV results do not separate them)
+per_mode = 1
+action_budget = 6                       # exact certifications of object actions per move (connector certifications counted separately)
+max_hops = 2                            # stored connectors chained to reach an action's start node (e.g. retreat -> home -> approach)
+prefilter = "OFF"                       # OFF | ADVISORY | HARD; HARD saves ~6x certifications on DEV but rejected valid paths

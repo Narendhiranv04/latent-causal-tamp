@@ -282,17 +282,17 @@ def compile_job(job) -> dict:
     home = np.array(robot.q_home)
     if not good or not goodp:
         cert = all(x.certified for x in allc if x.stage != "OK")
-        for how in ("order", "spread"):
+        for how in job.get("direct", ("order", "spread")):
             out[f"direct_{how}"] = []
             out["attempts"].append(attempt(f"DIRECT_OFFLINE:{how}", src, dst, {}, False, "NO_PICK_CANDIDATE" if not good else
                                            "NO_PLACE_CANDIDATE", "CERTIFIED" if cert else "NO_PLAN_FOUND", scr_cpu, None, c))
     else:
-        for how in ("order", "spread"):
+        for how in job.get("direct", ("order", "spread")):      # G2b jobs may restrict the unseeded baselines (compile budget)
             out[f"direct_{how}"] = [emit(f"DIRECT_OFFLINE:{how}", {"rank": i}, pr) for i, pr in enumerate(direct_pairs(good, goodp, home,
                                                                                                                    job["direct_k"], how))]
     out["modes"] = {}
     for sd in job.get("seeds", []):                           # members in canonical mode order; a mode keeps its first W distinct templates
-        if len(out["modes"].get(sd["mode"], [])) >= c["templates_per_mode"]:
+        if len(out["modes"].get(sd["mode"], [])) >= job.get("templates_per_mode", c["templates_per_mode"]):
             continue
         lin = {k: sd[k] for k in sd if k != "grasp"} | {"seed_grasp": sd["grasp"]}
         pair, why, shift = seeded_pair(good, goodp, sd["grasp"], sd["psi"], math.radians(c["max_grasp_shift_deg"])) if good and goodp \
@@ -312,6 +312,30 @@ def compile_job(job) -> dict:
         core = gr._arrays(Path(ex["file"]))[ex["index"]]
         out["exact"].append(emit("EXACT_CELL_WITNESS", {"witness": f"{ex['file']}#{ex['index']}", **ex}, core=core))
     return out
+
+
+# ------------------------------------------------------------------ G2b: finite robot-state graph (offline)
+PIECES = ("entry", "core", "exit")
+
+
+def segment(a) -> dict:
+    """Cut a validated home -> home record into its three stored pieces, exactly at existing waypoints (no new motion):
+    entry = the pregrasp leg (home -> approach start, free arm), core = approach .. retreat (the object action, ending after release and
+    the complete safe retreat), exit = the return_home leg (retreat end -> home, free arm). Pieces share their boundary waypoints
+    bit for bit, so concatenating them reproduces the record."""
+    ph = [str(x) for x in a["phase"]]
+    i0 = next(i for i, x in enumerate(ph) if x != "pregrasp")
+    i1 = max(i for i, x in enumerate(ph) if x == "retreat") + 1
+    free = lambda lo, hi: {"q": a["q"][lo:hi + 1], "gap": a["gap"][lo:hi + 1], "phase": a["phase"][lo:hi],  # noqa: E731
+                           "attached": a["attached"][lo:hi], "held_local": np.array([]), "place_xy": np.array([])}
+    core = {"q": a["q"][i0:i1 + 1], "gap": a["gap"][i0:i1 + 1], "phase": a["phase"][i0:i1], "attached": a["attached"][i0:i1],
+            "held_local": a["held_local"], "place_xy": a["place_xy"]}
+    return {"entry": free(0, i0), "core": core, "exit": free(i1, len(ph))}
+
+
+def qid(q) -> str:
+    """Exact joint-state identity (no tolerance clustering: equality is bitwise on the stored float64 waypoint)."""
+    return "q:" + hashlib.sha256(np.asarray(q, float).tobytes()).hexdigest()[:12]
 
 
 def compile_entries(strata) -> dict:
@@ -340,9 +364,9 @@ def compile_entries(strata) -> dict:
     return out
 
 
-def save_catalog(templates, attempts, name="CATALOG") -> dict:
+def save_catalog(templates, attempts, name="CATALOG", d=None) -> dict:
     """CATALOG.json (template rows + execution index (src, dst, radius, q_start) -> ids) and CATALOG_TEMPLATES.npz (frozen arrays)."""
-    d = OUT / "catalog"
+    d = Path(d) if d else OUT / "catalog"
     d.mkdir(parents=True, exist_ok=True)
     rows, arrs = {}, {}
     for row, a in templates:
@@ -373,12 +397,68 @@ def arrays_hash(arrs) -> str:
     return h.hexdigest()
 
 
-def load_catalog(name="CATALOG") -> dict:
+def load_catalog(name="CATALOG", d=None) -> dict:
     """id -> runtime template (row fields + frozen arrays + swept set), as ad_runtime.check consumes it."""
-    d = OUT / "catalog"
+    d = Path(d) if d else OUT / "catalog"
     cat, z = json.loads((d / f"{name}.json").read_text()), np.load(d / f"{name}_TEMPLATES.npz")
     out = {}
     for i, r in cat["templates"].items():
         a = {k.split("__")[1]: z[k] for k in z.files if k.startswith(f"{i}__")}
         out[i] = {**r, "arrays": a, "q_start": np.asarray(r["q_start"]), "q_end": np.asarray(r["q_end"])}
     return out
+
+
+def build_graph(templates, entries=(), d=Path("runs/approach_d/g2b/catalog"), name="GRAPH") -> dict:
+    """Offline: the finite robot-state graph served by ad_provider.Graph. templates: id -> loaded catalog template (relocation / target);
+    entries: loaded ENTRY templates (stratum -> home). No connector is synthesised here: every connector is an existing stored leg. Every
+    piece is validated in its compile fixture before it is admitted (actions: motion.certify_trajectory with the disc at src; legs and
+    connectors: free-arm certification; the exit leg with the disc at dst). Rejected pieces are listed, not dropped silently."""
+    import ad_runtime as ar
+    from dataclasses import replace
+    cfg, robot, p = setup()
+    home = np.array(robot.q_home)
+    nodes, actions, connectors, arrs, rejected = {}, {}, {}, {}, []
+
+    def node(q, role):
+        n = qid(q)
+        nodes.setdefault(n, {"q": np.asarray(q, float).tolist(), "roles": [], "gripper": "open", "attached": False})["roles"].append(role)
+        return n
+
+    node(home, "home")
+    c0 = time.process_time()
+    for t in sorted(templates.values(), key=lambda t: t["id"]):
+        sg, s = segment(t["arrays"]), fixture(cfg, t["src"])
+        moved = replace(s, objects=tuple(replace(o, cell=t["dst"], xy_m=s.lattice.center(t["dst"])) for o in s.objects))
+        checks = {"core": ar.certify_action(robot, cfg, s, "t0", sg["core"]), "entry": ar.certify_free(robot, cfg, s, sg["entry"]),
+                  "exit": ar.certify_free(robot, cfg, moved, sg["exit"]) if len(sg["exit"]["q"]) > 1 else {"ok": True}}
+        if not all(v["ok"] for v in checks.values()):
+            rejected.append({"template": t["id"], "checks": {k: v.get("verdict") for k, v in checks.items()}})
+            continue
+        a, r = node(sg["core"]["q"][0], f"approach_start:{t['id']}"), node(sg["core"]["q"][-1], f"retreat_end:{t['id']}")
+        der = t.get("derivations") or [{"origin": t["origin"], "lineage": t.get("lineage", {})}]
+        swept = sorted(set().union(*(set(t["swept_by_phase"].get(ph, [])) for ph in ("approach", "close_attach", "carry", "release", "retreat"))))
+        actions[f"A:{t['id']}"] = {"template": t["id"], "src": t["src"], "dst": t["dst"], "radius": t["radius"], "from": a, "to": r,
+                                   "origins": sorted({x["origin"] for x in der}), "modes": sorted({x["lineage"].get("mode") for x in der
+                                                                                                   if x["lineage"].get("mode")}),
+                                   "family_roots": sorted({x["lineage"].get("root") for x in der if x["origin"] == "FAMILY_RETARGET"}),
+                                   "swept": swept, "travel_J": t["travel_J"], "provenance": "CORE_SEGMENT_OF_COMPILED_TEMPLATE"}
+        arrs[f"A:{t['id']}"] = sg["core"]
+        connectors[f"E:{t['id']}"] = {"from": qid(home), "to": a, "origin": "ENTRY_LEG", "template": t["id"], "rank": 1}
+        arrs[f"E:{t['id']}"] = sg["entry"]
+        if len(sg["exit"]["q"]) > 1:
+            connectors[f"X:{t['id']}"] = {"from": r, "to": qid(home), "origin": "EXIT_LEG", "template": t["id"], "rank": 1}
+            arrs[f"X:{t['id']}"] = sg["exit"]
+    for e in entries:
+        s0 = node(e["q_start"], f"stratum:{e['stratum']}")
+        connectors[f"R:{e['id']}"] = {"from": s0, "to": qid(home), "origin": "ROOT_ENTRY", "template": e["id"], "rank": 1}
+        arrs[f"R:{e['id']}"] = e["arrays"]
+    flat = {f"{i}__{k}": np.asarray(v) for i, a in arrs.items() for k, v in a.items()}
+    d = Path(d)
+    d.mkdir(parents=True, exist_ok=True)
+    np.savez_compressed(d / f"{name}_ARRAYS.npz", **flat)
+    meta = {"version": "AD_GRAPH_V1", "compiler_version": VERSION, "nodes": nodes, "actions": actions, "connectors": connectors,
+            "rejected": rejected, "validation_cpu_s": time.process_time() - c0, "arrays_sha256": arrays_hash(flat),
+            "hubs": sorted(n for n, v in nodes.items() if any(r == "home" or r.startswith("stratum:") for r in v["roles"]))}
+    meta["hash"] = cf.stable_hash({"actions": sorted(actions), "connectors": sorted(connectors), "arrays": meta["arrays_sha256"]})
+    cf.write_json(d / f"{name}.json", meta)
+    return meta

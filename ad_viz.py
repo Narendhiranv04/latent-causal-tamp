@@ -3,6 +3,7 @@ collision bodies), and every shaded cell is the absolute swept set of that store
 sweep. Status colours always come with a written label."""
 from __future__ import annotations
 
+import collections
 import json
 import math
 from pathlib import Path
@@ -202,3 +203,134 @@ def summary_figure(dst=DST) -> Path:
 
 if __name__ == "__main__":
     print(json.dumps(figures(), indent=1))
+
+
+# ------------------------------------------------------------------ G2b: multi-action chains and the controlled comparison
+CONN = "#6f6f6f"
+
+
+def _chain_panels(axs, robot, prov, row, title_prefix):
+    """One panel per provider step: scene BEFORE the step, stored connectors (grey tool path, robot at their end nodes), the stored action
+    (blue tool path, robot at grasp and release, its absolute swept cells), the exact start / end node ids."""
+    import ad_provider as pv  # noqa: F401
+    g, cells = prov.g, {o.id: o.cell for o in prov.s0.objects}
+    for ax, st in zip(axs, row["log"]):
+        s = prov.scene(cells)
+        recs = st["steps"]
+        act = next((i for k, i in recs if k == "action"), None)
+        A = g.actions.get(act) if act else None
+        _base(ax, robot, s, f"{title_prefix} step {row['log'].index(st) + 1}: {st['object']} -> {st['dest']}  [{st['status']}]",
+              A["swept"] if A else (), cells.get(st["object"]), st["dest"])
+        for k, i in recs:
+            a = g.arrays[i]
+            if k == "connector":
+                pts = np.array([ge.fk(robot, qq)[0][-1] for qq, _, _ in mo.samples(a, 80)])
+                ax.plot(pts[:, 0], pts[:, 1], color=CONN, lw=1.1, ls="--", zorder=7)
+                viz.draw_robot(ax, robot, a["q"][-1], float(a["gap"][-1]), alpha=0.18, zorder=4)
+            else:
+                _motion(ax, robot, a)
+        nodes = [g.connectors[i]["from"] if k == "connector" else g.actions[i]["from"] for k, i in recs[:1]] + \
+                [g.connectors[i]["to"] if k == "connector" else g.actions[i]["to"] for k, i in recs]
+        text = " -> ".join(f"{i.split(':')[0]}:{i.split(':')[1][:6]}" for _, i in recs) if recs else "no accepted record"
+        if st["status"] == "SUCCESS":
+            _tag(ax, f"stored records: {text}\nq: {' -> '.join(n[2:8] for n in nodes)}\norigins: {', '.join(A['origins'])}", "valid")
+            cells = {**cells, st["object"]: st["dest"]}
+        else:
+            a0 = next((x for x in st["attempts"] if x.get("pair")), None)
+            if a0:
+                i = a0["action"]
+                k = None
+                aa = g.arrays[i]
+                body = a0["pair"].split("|")[0]
+                seg = next((j for j, ph in enumerate(aa["phase"]) if str(ph) == a0["phase"]), 0)
+                _motion(ax, robot, aa, frames=[], highlight=(body,), hl_frames=[seg, seg + 1])
+                for c in [o.cell for o in s.objects if o.id in a0["pair"].split("|")]:
+                    ax.add_patch(Circle(((c % 8 + 0.5) * 0.08, (c // 8 + 0.5) * 0.08), 0.03, fill=False, ec=viz.COLORS["invalid"], lw=2, zorder=12))
+            rc = ", ".join(f"{k}: {v}" for k, v in sorted(collections.Counter(x["reason"] for x in st["attempts"]).items()))
+            _tag(ax, f"FAILURE: {st['reason']}  ({st['checks']} exact checks)\nattempts: {rc}\n"
+                     + (f"first collision: {a0['pair']} in '{a0['phase']}'" if a0 else ""), "invalid")
+    return cells
+
+
+def g2b_figures(dst=Path("visualizations/approach_d/g2b")) -> dict:
+    import ad_g2b as g2
+    import ad_provider as pv
+    from scene import scene_from_dict
+    dst.mkdir(parents=True, exist_ok=True)
+    cfg, robot, _ = ac.setup()
+    g = pv.Graph(g2.OUT / "catalog")
+    P = g2.rd(g2.DEV_PLAN)["roots"]
+    C = g2.rd(g2.OUT / "CHAINS.json")["rows"]
+    out = {}
+    for name, key in (("G2b_chain_success.png", "F12|EXACT+REL_6x1+CATALOG"), ("G2b_chain_failure.png", "F03|EXACT+REL_6x1")):
+        row = C[key]
+        s = scene_from_dict(P[row["root"]]["scene"])
+        prov = pv.Precompiled(cfg, robot, s, P[row["root"]]["goal_cell"], g, lambda *a: [], 6)
+        n = len(row["log"])
+        fig, axs = plt.subplots(1, n + 1, figsize=(4.6 * (n + 1), 5.6), constrained_layout=True)
+        _base(axs[0], robot, s, f"{row['fixture']} root {row['root']} (start {row['stratum']})\ninitial scene, robot at q_initial", (),
+              s.get("t0").cell, P[row["root"]]["goal_cell"])
+        viz.draw_robot(axs[0], robot, s.robot.q_rad, robot.open_gap, alpha=0.9)
+        _tag(axs[0], f"original target t0 {s.get('t0').cell} -> goal {P[row['root']]['goal_cell']}\nsequence {row['sequence'] if isinstance(row['sequence'], list) else 'from declared candidate list'}"
+                     f"\npolicy {row['policy']}; zero runtime IK / planner calls", "unresolved")
+        _chain_panels(axs[1:], robot, prov, row, row["fixture"])
+        if row.get("replay"):
+            rp = row["replay"]
+            axs[-1].text(0.98, 0.98, f"independent replay: {rp['status']}\n{rp['records']} stored records, hash {rp['trajectory_hash']}",
+                         transform=axs[-1].transAxes, ha="right", va="top", fontsize=7.2, bbox={"fc": "white", "ec": viz.COLORS["valid"]})
+        fig.savefig(dst / name, dpi=140)
+        plt.close(fig)
+        out[name] = key
+    out["G2b_pilot.png"] = str(_pilot_figure(dst))
+    return out
+
+
+def _pilot_figure(dst):
+    import ad_g2b as g2
+    A = g2.rd(g2.OUT / "ANALYSIS.json")
+    S, n = A["summary"], A["queries"]
+    pols = ["EXACT_ONLY", "EXACT+REL_3x2", "EXACT+REL_6x1", "EXACT+GEOMETRY_6x1", "EXACT+RANDOM_6x1", "UNION_TRAVEL", "REL_6x1", "G2A_DIRECT_SPREAD_K6"]
+    fig, (a1, a2, a3) = plt.subplots(1, 3, figsize=(17, 4.8), constrained_layout=True, gridspec_kw={"width_ratios": [1.6, 0.9, 1.0]})
+    y = np.arange(len(pols))
+    st = [S[f"{p}|K6|OFF|strict"]["success"] for p in pols]
+    rl = [S[f"{p}|K6|OFF|relaxed"]["success"] for p in pols]
+    a1.barh(y, rl, height=0.62, color="#9fd09f", label="ends at retreat node (return home optional)")
+    a1.barh(y, st, height=0.62, color=viz.COLORS["valid"], label="home -> home (G2a contract)")
+    for yi, a, b in zip(y, st, rl):
+        a1.text(b + 0.4, yi, f"{a} / {b}", va="center", fontsize=8)
+    a1.set_yticks(y, [p + (" *" if p == "G2A_DIRECT_SPREAD_K6" else "") for p in pols], fontsize=8)
+    a1.invert_yaxis()
+    a1.set_xlim(0, n + 5)
+    a1.set_xlabel(f"dev relocation queries verified (n = {n}); <= 6 exact certifications, prefilter OFF\n* different template universe (G2a unseeded)",
+                  fontsize=8)
+    a1.legend(fontsize=7.5, loc="lower right", frameon=False)
+    a1.set_title("(a) retrieval policies on one shared template universe", fontsize=9, loc="left")
+    d = A["home_leg_diagnosis"]
+    keys = [("verified_home_to_home", viz.COLORS["valid"]), ("exit_leg_only", "#9fd09f"), ("entry_leg_only", "#eda100"),
+            ("entry_and_exit_legs", "#f0a08f"), ("core_fails", viz.COLORS["invalid"])]
+    left = 0
+    for k, c in keys:
+        a2.barh([0], [d[k]], left=left, color=c, ec="white", height=0.5, label=f"{k.replace('_', ' ')} ({d[k]})")
+        left += d[k]
+    a2.set_yticks([])
+    a2.set_xlabel(f"(query, template) checks in held-out scenes (n = {sum(d[k] for k, _ in keys)})", fontsize=8)
+    a2.legend(fontsize=7.5, loc="upper center", bbox_to_anchor=(0.5, -0.25), frameon=False)
+    a2.set_title("(b) where G2a home->home templates fail\n(exact certifier per piece)", fontsize=9, loc="left")
+    pp = ["EXACT+REL_6x1", "EXACT+REL_3x2", "REL_6x1", "REL_3x2"]
+    x = np.arange(len(pp))
+    for j, (m, c) in enumerate((("OFF", "#3b4351"), ("HARD", "#2a78d6"))):
+        v = [S[f"{p}|K6|{m}|strict"]["checks"] for p in pp]
+        a3.bar(x + (j - 0.5) * 0.36, v, width=0.34, color=c, label=f"{m}: exact certifications")
+        for xi, p in zip(x, pp):
+            a3.text(xi + (j - 0.5) * 0.36, S[f"{p}|K6|{m}|strict"]["checks"] + 2, str(S[f"{p}|K6|{m}|strict"]["success"]), ha="center", fontsize=8)
+    a3.set_xticks(x, pp, fontsize=7.5, rotation=15)
+    a3.set_ylabel("exact certifications (36 queries)")
+    a3.legend(fontsize=7.5, frameon=False, loc="upper center", bbox_to_anchor=(0.5, -0.2), ncol=2)
+    a3.set_title("(c) prefilter OFF vs HARD (labels = successes;\nADVISORY = OFF)", fontsize=9, loc="left")
+    for ax in (a1, a2, a3):
+        for side in ("top", "right"):
+            ax.spines[side].set_visible(False)
+    p = dst / "G2b_pilot.png"
+    fig.savefig(p, dpi=150)
+    plt.close(fig)
+    return p

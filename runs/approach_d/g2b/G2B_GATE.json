@@ -1,0 +1,89 @@
+{
+ "accepted_chains": [
+  {
+   "fixture": "F12",
+   "policy": "EXACT+REL_6x1+CATALOG",
+   "records": 9,
+   "trajectory_hash": "eec8537ff32a4f1f"
+  }
+ ],
+ "compile_ledger": {
+  "attempts": 88,
+  "budget": {
+   "compile_attempts": 120,
+   "cpu_s": 1500
+  },
+  "cpu_s": 101.113992959
+ },
+ "conditions": {
+  "1_tests_replays_g2a_reproduced": true,
+  "2_zero_runtime_solver_calls_and_guard_trips": true,
+  "3_multi_relocation_chain_to_T_and_failed_chain": true,
+  "4_nonhome_states_and_stored_connector_graph": true,
+  "5_certifier_decisive_prefilter_measured": true,
+  "6_anomaly_classified_with_test": true,
+  "7_shared_catalog_paired_comparison": true,
+  "8_hashes_switches_reasons_cache_tested": true
+ },
+ "figures": {
+  "failure": "visualizations/approach_d/g2b/G2b_chain_failure.png",
+  "pilot": "visualizations/approach_d/g2b/G2b_pilot.png",
+  "success": "visualizations/approach_d/g2b/G2b_chain_success.png"
+ },
+ "files": {
+  "ad_compile.py": "sha256:ca7c65e21a18cbf1b0cbb67003af46c33dade7977977532cf0024ac065c7a72a",
+  "ad_g2b.py": "sha256:2c1d4a68304590bb9316a1e4b22fe017163231444970baf21afc7b4a9777fd0f",
+  "ad_provider.py": "sha256:6e1b0f2bc7cd6d4b840651f391210740fea4fe76ba876fec6ecf16d26f4fd951",
+  "ad_runtime.py": "sha256:7c5fe0624f9a2a69efaa5a22b4a7cc302413ff614194a97998280f25a5e2c585",
+  "ad_viz.py": "sha256:213eea6973f9c34535effe2b1d9cda3565a864c622b88050cf71b85aa5b83edc",
+  "approach_d.toml": "sha256:f3ab6349bb6134e6cf4074641fc3f9ee34683c665fbc23ec052451ec0cab7ac7",
+  "config.toml": "sha256:56ede7f0ea1bd7b0e76e9b1bfd7d04f237e96f65276b79e498edce0b51b28d79",
+  "tests/test_approach_d.py": "sha256:70227bda9eece98add6351469a8f273b64990a00ef33c0cdc2d7fdb1f8459e01",
+  "tests/test_approach_d_g2a.py": "sha256:c9f0cc7dc1dafb07562b32416d79512151eb25bf09465db75b01ff00ce8cd099",
+  "tests/test_approach_d_g2b.py": "sha256:83b3ec40a1d4f4dfa81514a66a9c33085cc5ece87f83b32d8bba3bde713e0dfc"
+ },
+ "g2a_verify": {
+  "passed": true,
+  "replays": {
+   "g1_hardening": true,
+   "g1_robot": true,
+   "g2_interventions": true,
+   "g3_5_initial_scene": true,
+   "g3_repairs": true,
+   "g4a_evidence_audit": true
+  },
+  "tests": {
+   "failed": 0,
+   "passed": 525,
+   "skipped": 0
+  },
+  "verdict": "P3A_REGRESSION_CLOSED"
+ },
+ "graph": {
+  "arrays_sha256": "2a5f3db9ca55d17a344bcb4ae9e2fc12eafda634d38197426dba56c3237cd761",
+  "hash": "sha256:660b1a917e50f146158ee4a6fa593eba180e65ad1021789051a6d6ba26169ad5",
+  "version": "AD_GRAPH_V1"
+ },
+ "head": "4b8aa2c241f5e5101acd38bd603c9ab97a99e331",
+ "regression": {
+  "passed": true,
+  "replays": {
+   "g1_hardening": true,
+   "g1_robot": true,
+   "g2_interventions": true,
+   "g3_5_initial_scene": true,
+   "g3_repairs": true,
+   "g4a_evidence_audit": true
+  },
+  "tests": {
+   "failed": 0,
+   "passed": 537,
+   "skipped": 0
+  },
+  "verdict": "P3A_REGRESSION_CLOSED"
+ },
+ "runtime_forbidden_calls": 0,
+ "stage": "APPROACH_D_G2b",
+ "tests": "12/12 (tests/test_approach_d_g2b.py); Approach D 35/35 on final code",
+ "verdict": "PASS"
+}
