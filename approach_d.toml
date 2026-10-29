@@ -47,3 +47,14 @@ per_mode = 1
 action_budget = 6                       # exact certifications of object actions per move (connector certifications counted separately)
 max_hops = 2                            # stored connectors chained to reach an action's start node (e.g. retreat -> home -> approach)
 prefilter = "OFF"                       # OFF | ADVISORY | HARD; HARD saves ~6x certifications on DEV but rejected valid paths
+
+# Local research track (approachD_local_parallel_research_instructions_v1_3): bounded G2c-lite catalog pilot + matched ordering pilot on
+# the 12 P16-labelled DEV roots. Opt-in: read only by ad_local.py. Historical P17 protocol (0-4 relocations) is NOT converted to the future
+# 7-action dataset protocol.
+[local_pilot]
+top_movers = 3                          # P17 movers nearest the target
+slots = 2                               # first scene-only P17 slots per mover (no library destinations), recomputed per state
+max_depth = 2                           # relocations before the original target T
+node_cap = 60                           # relocation attempts per search (identical for every guide)
+compile_attempts = 500                  # local offline compile budget (attempts)
+compile_cpu_s = 1800                    # local offline compile budget (CPU seconds)

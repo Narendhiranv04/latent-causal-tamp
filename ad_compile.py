@@ -94,6 +94,11 @@ def direct_pairs(good, goodp, home, k, how="order"):
            for b in sorted(goodp, key=lambda c: (c.branch != a.branch, np.linalg.norm(c.q_end - a.q_end)))]
     if how == "order":
         return seq[:k]
+    if how == "access":                                   # local G2c-lite: one pair per (pick branch, place branch, 60-degree pick sector)
+        seen = {}
+        for a, b in seq:
+            seen.setdefault((a.branch, b.branch, int((a.phi % (2 * math.pi)) // (math.pi / 3))), (a, b))
+        return list(seen.values())[:k]
     cls = collections.OrderedDict()
     for a, b in seq:
         cls.setdefault((a.branch, b.branch), []).append((a, b))
@@ -256,6 +261,8 @@ def compile_job(job) -> dict:
 
     def emit(origin, lineage, pair=None, core=None):
         c0 = time.process_time()
+        if pair is not None and tuple(round(x, 6) for x in gkey(*pair)) in job.get("skip", ()):   # already catalogued: not recompiled
+            return None
         if pair is not None and gkey(*pair) in seen:          # identical declared grasp pair -> identical deterministic template
             tpl, neg0 = seen[gkey(*pair)]
             out["attempts"].append(attempt(origin, src, dst, lineage, tpl is not None, "DUPLICATE_OF_COMPILED" if tpl else "DUPLICATE_OF_FAILED",
@@ -338,6 +345,19 @@ def qid(q) -> str:
     return "q:" + hashlib.sha256(np.asarray(q, float).tobytes()).hexdigest()[:12]
 
 
+def compile_connector(cfg, robot, p, qa, qb, key):
+    """Offline free-arm connector qa -> qb (open gripper, nothing held) in the empty workspace: certified direct segment, else bounded
+    RRT-Connect. -> (arrays | None, termination, negative_kind)."""
+    ck = ge.Checker(robot, ge.make_world(fixture(cfg)), p["delta"], p["eps"])
+    r = pn.plan(ck, np.asarray(qa, float), np.asarray(qb, float), robot.open_gap, cfg["planner2d"], p["evals"], key, True)
+    if r.status != ge.CLEAR:
+        return None, r.reason, _neg(r)
+    path = np.asarray(r.path, float)
+    path[0], path[-1] = np.asarray(qa, float), np.asarray(qb, float)
+    return ({"q": path, "gap": np.full(len(path), robot.open_gap), "phase": np.array(["pregrasp"] * (len(path) - 1)),
+             "attached": np.zeros(len(path) - 1, bool), "held_local": np.array([]), "place_xy": np.array([])}, r.reason, None)
+
+
 def compile_entries(strata) -> dict:
     """ENTRY templates: each declared root start q -> home in the empty workspace (nothing held, open gripper), certified offline."""
     c = ccfg()
@@ -408,9 +428,9 @@ def load_catalog(name="CATALOG", d=None) -> dict:
     return out
 
 
-def build_graph(templates, entries=(), d=Path("runs/approach_d/g2b/catalog"), name="GRAPH") -> dict:
+def build_graph(templates, entries=(), d=Path("runs/approach_d/g2b/catalog"), name="GRAPH", extra=()) -> dict:
     """Offline: the finite robot-state graph served by ad_provider.Graph. templates: id -> loaded catalog template (relocation / target);
-    entries: loaded ENTRY templates (stratum -> home). No connector is synthesised here: every connector is an existing stored leg. Every
+    entries: loaded ENTRY templates (stratum -> home); extra: (from_q, to_q, arrays, provenance) connectors compiled offline. Every
     piece is validated in its compile fixture before it is admitted (actions: motion.certify_trajectory with the disc at src; legs and
     connectors: free-arm certification; the exit leg with the disc at dst). Rejected pieces are listed, not dropped silently."""
     import ad_runtime as ar
@@ -452,6 +472,13 @@ def build_graph(templates, entries=(), d=Path("runs/approach_d/g2b/catalog"), na
         s0 = node(e["q_start"], f"stratum:{e['stratum']}")
         connectors[f"R:{e['id']}"] = {"from": s0, "to": qid(home), "origin": "ROOT_ENTRY", "template": e["id"], "rank": 1}
         arrs[f"R:{e['id']}"] = e["arrays"]
+    for qa, qb, a, prov in extra:
+        if not ar.certify_free(robot, cfg, fixture(cfg), a)["ok"]:
+            rejected.append({"connector": prov})
+            continue
+        i = "C:" + hashlib.sha256(np.asarray(a["q"], float).tobytes()).hexdigest()[:12]
+        connectors[i] = {"from": node(qa, "connector_end"), "to": node(qb, "connector_end"), "origin": "COMPILED_DIRECT", "rank": 0, **prov}
+        arrs[i] = a
     flat = {f"{i}__{k}": np.asarray(v) for i, a in arrs.items() for k, v in a.items()}
     d = Path(d)
     d.mkdir(parents=True, exist_ok=True)
