@@ -334,3 +334,213 @@ def _pilot_figure(dst):
     fig.savefig(p, dpi=150)
     plt.close(fig)
     return p
+
+
+# ------------------------------------------------------------------ G3: D_CAUSAL_G3 figures (from saved traces; robots drawn from stored arrays)
+def _g3_setup(root, cat="C3"):
+    import ad_causal as C
+    import ad_g2b as g2
+    import ad_local as L
+    import ad_provider as pv
+    st = L.Stub(root)
+    g = pv.Graph(L.OUT / "catalog", f"GRAPH_{cat}")
+    ri, member = g2._ri()
+    prov = pv.Precompiled(st.cfg, st.robot, st.s0, st.goal_cell, g, g2.Ranker(ri, member, g2._excl(root), **g2.POLICIES["EXACT+REL_6x1+CATALOG"]),
+                          6, 2, "OFF", "g3-fig")
+    return C, L, st, g, prov, C.Geo(g, L._catalog_all(), st)
+
+
+def g3_figures(dst=Path("visualizations/approach_d/g3"), root="p13_2026216000", contrast="p13_2026219000") -> dict:
+    import ad_causal as Cz
+    import ad_runtime as ar
+    dst.mkdir(parents=True, exist_ok=True)
+    B = json.loads((Cz.OUT / "VIEW_B_C3.json").read_text())
+    out = {}
+    # ---- 01 pipeline on one real DEV root (D_CAUSAL_G3 trace)
+    C, L, st, g, prov, geo = _g3_setup(root)
+    cells0 = {o.id: o.cell for o in st.s0.objects}
+    tr = B["rows"][root]["D_CAUSAL_G3"]["trace"]
+    fr = next(t for t in tr if t["event"] == "frontier")
+    dor = C.DOracle(st, fr["eligible"], 10 ** 6)
+    d0 = dor.predict(cells0, st.s0.robot.q_rad)
+    fig, axs = plt.subplots(1, 4, figsize=(22, 5.8), constrained_layout=True, gridspec_kw={"width_ratios": [1, 1, 1.1, 1.05]})
+    _base(axs[0], st.robot, st.s0, f"(1) D on the ORIGINAL target t0 (learned)\np_T = {d0['p']:.3f} -> blocked; blocker marginals:", (),
+          cells0["t0"], st.goal_cell)
+    viz.draw_robot(axs[0], st.robot, st.s0.robot.q_rad, st.robot.open_gap, alpha=0.5)
+    for o in st.s0.objects:
+        if o.id in d0["marg"]:
+            c = o.cell
+            axs[0].text((c % 8 + 0.5) * 0.08, (c // 8 + 0.5) * 0.08 + 0.045, f"{o.id}: {d0['marg'][o.id]:.2f}", ha="center", fontsize=9, weight="bold",
+                        color=COL_G3["D"], zorder=20)
+            if o.id in fr["frontier"]:
+                axs[0].add_patch(Circle(o.xy_m, 0.034, fill=False, ec=COL_G3["D"], lw=2.5, zorder=19))
+    _tag(axs[0], f"frontier (top-2 by D): {', '.join(fr['frontier'])}", "valid")
+    _base(axs[1], st.robot, st.s0, "(2) Geometry proposes WHERE (non-learned)\nshade = share of stored T actions sweeping the cell", (), cells0["t0"],
+          st.goal_cell)
+    for c in range(64):
+        v = geo.conflict(cells0, c)
+        if v > 0:
+            axs[1].add_patch(Rectangle(((c % 8) * 0.08, (c // 8) * 0.08), 0.08, 0.08, fc="#e34948", alpha=0.35 * v, ec="none", zorder=1))
+    best = {}
+    for c in fr["candidates"]:
+        best[(c["object"], c["dest"])] = max(best.get((c["object"], c["dest"]), 0), c.get("p_after", 0))
+    for (o, d), p in best.items():
+        xy = ((d % 8 + 0.5) * 0.08, (d // 8 + 0.5) * 0.08)
+        axs[1].add_patch(Circle(xy, 0.03, fill=False, ec=COL_G3["D"], lw=2, ls="--", zorder=12))
+        axs[1].annotate("", xy, st.s0.get(o).xy_m, arrowprops=dict(arrowstyle="->", color="#7a7975", lw=1.2), zorder=11)
+    _tag(axs[1], "proposals = scene-only slots with a stored relocation motion,\nranked by sweep conflict (evidence, never a veto)", "unresolved")
+    cs = sorted(fr["candidates"], key=lambda c: -c.get("p_after", 0))
+    labels = [f"{c['object']}->{c['dest']}  [{c['action'][2:8]}]" for c in cs]
+    axs[2].barh(range(len(cs)), [c["p_after"] for c in cs], color=[COL_G3["D"] if c["object"] == fr["frontier"][0] else "#9ec5f0" for c in cs], height=0.6)
+    axs[2].axvline(fr["p_before"], color="#7a7975", ls="--", lw=1)
+    axs[2].text(fr["p_before"] + 0.01, len(cs) - 0.5, f"p_T now {fr['p_before']:.3f}", fontsize=8, color="#7a7975")
+    axs[2].set_yticks(range(len(cs)), labels, fontsize=8)
+    axs[2].invert_yaxis()
+    axs[2].set_xlim(0, 1)
+    axs[2].set_xlabel("D's predicted p_T for the ORIGINAL target after the hypothetical edit,\nat the stored motion's own end configuration q_end")
+    axs[2].set_title("(3) D evaluates each counterfactual (learned, inferred)", fontsize=9.5, loc="left")
+    axs[3].axis("off")
+    lines = [("(4) Provider checks stored motions (physical, verified)", True)]
+    for t in tr:
+        if t["event"] == "certify" and t["depth"] == 0:
+            lines.append((f"{t['object']} -> {t['dest']} [{t['action'][2:8]}]: {t['status']}" + (f" ({t['reason']})" if t["reason"] else ""), False))
+        if t["event"] == "verify_T" and t["depth"] == 1:
+            lines.append((f"after {', '.join(t['moved'])} moved: original T -> {t['status']} ({t['reason']})", False))
+    r = B["rows"][root]["D_CAUSAL_G3"]
+    lines += [("", False), (f"result: {r['status']} ({r['reason']}); {r['budget']['reloc']} relocation checks, {r['d_calls']} D calls", True),
+              ("D's best edit (o00 out of the way) IS physically realisable", False), ("as a stored relocation, but no stored T action then certifies:", False),
+              ("a motion-library limit, not a wrong diagnosis (historical", False), ("teacher: o00 -> 59 then T is VERIFIED).", False)]
+    y = 0.98
+    for t, b in lines:
+        axs[3].text(0, y, t, fontsize=8.8, weight="bold" if b else "normal", va="top", transform=axs[3].transAxes)
+        y -= 0.058
+    fig.suptitle(f"G3 D_CAUSAL_G3 on DEV root {root}: learned diagnosis builds the frontier, geometry proposes, D scores counterfactuals, the "
+                 "provider verifies (frozen catalog C3; zero runtime IK / planning)", fontsize=11, x=0.01, ha="left")
+    p = dst / "01_causal_pipeline.png"
+    fig.savefig(p, dpi=135)
+    plt.close(fig)
+    out["01"] = str(p)
+    # ---- 02 one-scene D vs geometry contrast (candidate frontier differs)
+    C, L, st2, g2_, prov2, geo2 = _g3_setup(contrast)
+    cells = {o.id: o.cell for o in st2.s0.objects}
+    fig, axs = plt.subplots(1, 2, figsize=(14, 6.4), constrained_layout=True)
+    for ax, pol, col in ((axs[0], "D_CAUSAL_G3", COL_G3["D"]), (axs[1], "GEOM_CAUSAL", "#6f6f6f")):
+        rr = B["rows"][contrast][pol]
+        f0 = next(t for t in rr["trace"] if t["event"] == "frontier")
+        _base(ax, st2.robot, st2.s0, f"{pol}: frontier {f0['frontier']} (eligible {f0['eligible']})", (), cells["t0"], st2.goal_cell)
+        viz.draw_robot(ax, st2.robot, st2.s0.robot.q_rad, st2.robot.open_gap, alpha=0.45)
+        for o in f0["frontier"]:
+            ax.add_patch(Circle(st2.s0.get(o).xy_m, 0.034, fill=False, ec=col, lw=2.6, zorder=19))
+        certs = [t for t in rr["trace"] if t["event"] == "certify" and t["depth"] == 0][:4]
+        for j, t in enumerate(certs):
+            d = t["dest"]
+            xy = ((d % 8 + 0.5) * 0.08, (d // 8 + 0.5) * 0.08)
+            ax.annotate("", xy, st2.s0.get(t["object"]).xy_m, arrowprops=dict(arrowstyle="->", color=col if t["status"] == "SUCCESS" else "#e34948",
+                                                                               lw=1.6), zorder=12)
+            ax.text(*xy, str(j + 1), fontsize=9, weight="bold", ha="center", va="center", color=col, zorder=13,
+                    bbox=dict(boxstyle="circle,pad=0.15", fc="white", ec=col))
+        txt = "\n".join(f"{j + 1}. {t['object']}->{t['dest']}: {t['status']}" + (f" ({t['reason']})" if t["reason"] else "") for j, t in enumerate(certs))
+        sc = ", ".join(f"{c['object']} {c['mover_score']:.2f}" for c in {c["object"]: c for c in f0["candidates"]}.values()) if f0["candidates"] else ""
+        _tag(ax, f"mover scores: {sc}\nfirst checks:\n{txt}\nresult: {rr['status']} ({rr['reason']})", "unresolved")
+    fig.suptitle(f"G3, DEV root {contrast} (same universe, catalog, budget): D's blocker marginals and geometry's\n"
+                 "stored-sweep relevance build DIFFERENT candidate frontiers", fontsize=11, x=0.01, ha="left")
+    p = dst / "02_one_scene_trace.png"
+    fig.savefig(p, dpi=135)
+    plt.close(fig)
+    out["02"] = str(p)
+    out["03"] = str(_g3_ablation(dst, B))
+    # ---- 04 failure case: D's best counterfactual realised, original T still not certifiable from stored motions
+    cert = next(t for t in tr if t["event"] == "certify" and t["status"] == "SUCCESS")
+    A = prov.g.actions[cert["action"]]
+    cells1 = {**cells0, cert["object"]: cert["dest"]}
+    q1 = prov.g.q[A["to"]]
+    with ar.forbid("raise") as calls:
+        gr = prov.goal(cells1, q1)
+        p1 = dor.predict(cells1, q1)
+    fig, axs = plt.subplots(1, 3, figsize=(19, 6.2), constrained_layout=True)
+    _base(axs[0], st.robot, st.s0, f"(a) D's top edit, realised: stored motion {cert['action'][2:10]}\n{cert['object']} {cells0[cert['object']]} -> "
+          f"{cert['dest']} (certified in the current scene)", A["swept"], cells0[cert["object"]], cert["dest"])
+    _motion(axs[0], st.robot, prov.g.arrays[cert["action"]])
+    _tag(axs[0], "VERIFIED stored relocation (core + stored connectors)", "valid")
+    s1 = prov.scene(cells1)
+    _base(axs[1], st.robot, s1, f"(b) after the edit: D predicts p_T = {p1['p']:.2f} for the ORIGINAL T\n(at the motion's real end configuration q_end)",
+          (), cells1["t0"], st.goal_cell)
+    viz.draw_robot(axs[1], st.robot, q1, st.robot.open_gap, alpha=0.8)
+    _tag(axs[1], "inferred by D, NOT a certificate", "unresolved")
+    att = next((a for a in gr["attempts"] if a.get("pair")), None)
+    _base(axs[2], st.robot, s1, f"(c) stored original-T actions checked: {gr['status']} ({gr['reason']})\nreasons: {gr.get('reason_counts')}",
+          prov.g.actions[att["action"]]["swept"] if att else (), cells1["t0"], st.goal_cell)
+    if att:
+        aa = prov.g.arrays[att["action"]]
+        seg = next((j for j, ph in enumerate(aa["phase"]) if str(ph) == att["phase"]), 0)
+        _motion(axs[2], st.robot, aa, frames=[], highlight=(att["pair"].split("|")[0],), hl_frames=[seg, seg + 1])
+        _tag(axs[2], f"first rejected T action: {att['pair']} in phase '{att['phase']}'\nfinite-library failure, not physical impossibility", "invalid")
+    fig.suptitle(f"G3 failure case ({root}): a causally sensible, physically realised edit, yet no stored T motion certifies afterwards "
+                 f"(forbidden calls: {sum(calls.values())})", fontsize=11, x=0.01, ha="left")
+    p = dst / "04_failure_case.png"
+    fig.savefig(p, dpi=135)
+    plt.close(fig)
+    out["04"] = str(p)
+    return out
+
+
+COL_G3 = {"D": "#1baf7a"}
+
+
+def _g3_ablation(dst, B):
+    import ad_causal as Cz
+    VA = {s: json.loads((Cz.OUT / f"VIEW_A_{s}.json").read_text()) for s in ("dev", "calib")}
+    S = B["summary"]
+    fig, axs = plt.subplots(1, 3, figsize=(19, 5.4), constrained_layout=True)
+    x = np.arange(2)
+    for j, (p, c) in enumerate((("D", COL_G3["D"]), ("geometry", "#9a9890"), ("uniform", "#c3c2b7"))):
+        v = [VA[s]["edit_auroc"][p] for s in ("dev", "calib")]
+        axs[0].bar(x + (j - 1) * 0.26, v, 0.24, color=c, label=p)
+        for xi, vi in zip(x, v):
+            axs[0].text(xi + (j - 1) * 0.26, vi + 0.01, f"{vi:.2f}", ha="center", fontsize=8.5)
+    n = {s: VA[s]["edit_counts"]["verified"] + VA[s]["edit_counts"]["certified_infeasible"] for s in ("dev", "calib")}
+    axs[0].set_xticks(x, [f"DEV (in D training)\n{n['dev']} decided edits", f"P16 calib (HELD OUT)\n{n['calib']} decided edits"])
+    axs[0].set_ylim(0.4, 1.05)
+    axs[0].set_ylabel("AUROC: does the score predict that the edit makes T feasible?")
+    axs[0].legend(fontsize=8, frameon=False, loc="lower right")
+    axs[0].set_title("(a) WHERE / WHETHER: counterfactual edit evaluation\n(saved labels, original q; UNKNOWN excluded)", fontsize=9.5, loc="left")
+    rows = B["rows"]
+    diff_set = diff_first = n_blk = 0
+    elig = []
+    for k, r in rows.items():
+        fd = [t for t in r["D_CAUSAL_G3"]["trace"] if t["event"] == "frontier"]
+        fg = [t for t in r["GEOM_CAUSAL"]["trace"] if t["event"] == "frontier"]
+        if not fd:
+            continue
+        n_blk += 1
+        elig.append(len(fd[0]["eligible"]))
+        diff_set += set(fd[0]["frontier"]) != set(fg[0]["frontier"])
+        a = next((t for t in r["D_CAUSAL_G3"]["trace"] if t["event"] == "certify"), {})
+        b = next((t for t in r["GEOM_CAUSAL"]["trace"] if t["event"] == "certify"), {})
+        diff_first += (a.get("object"), a.get("dest")) != (b.get("object"), b.get("dest"))
+    vals = [("root frontier SET differs", diff_set), ("first checked candidate differs", diff_first),
+            ("roots with <= 2 eligible movers\n(top-2 frontier = all movers)", sum(e <= 2 for e in elig))]
+    axs[1].barh(range(3), [v for _, v in vals], color=[COL_G3["D"], "#86b6ef", "#c3c2b7"])
+    for i, (_, v) in enumerate(vals):
+        axs[1].text(v + 0.1, i, f"{v}/{n_blk}", va="center", fontsize=9)
+    axs[1].set_yticks(range(3), [k for k, _ in vals], fontsize=8.5)
+    axs[1].invert_yaxis()
+    axs[1].set_xlim(0, n_blk + 1.5)
+    axs[1].set_title(f"(b) WHICH: does D change what is explored? (D vs geometry,\n{n_blk} blocked DEV roots; eligible movers {min(elig)}-{max(elig)})",
+                     fontsize=9.5, loc="left")
+    pols = list(S)
+    axs[2].bar(range(len(pols)), [S[p]["success"] for p in pols], color=[COL_G3["D"] if p.startswith("D") else "#9a9890" for p in pols], width=0.6)
+    for i, p in enumerate(pols):
+        axs[2].text(i, S[p]["success"] + 0.15, f"{S[p]['success']}/12\n{S[p]['reloc_certifications']} checks\n{S[p]['d_calls']} D calls", ha="center",
+                    fontsize=7.8)
+    axs[2].set_xticks(range(len(pols)), [p.replace("_", "\n") for p in pols], fontsize=8)
+    axs[2].set_ylim(0, 6)
+    axs[2].set_ylabel("DEV roots repaired end to end (stored motions, replayed)")
+    axs[2].set_title("(c) WHETHER it executes: matched end-to-end (catalog C3)\nonly the directly feasible root succeeds -> catalog ceiling",
+                     fontsize=9.5, loc="left")
+    fig.suptitle("G3 ablation — engineering works; scientific advantage INCONCLUSIVE on repair success (motion-library ceiling), "
+                 "positive on counterfactual evaluation", fontsize=11, x=0.01, ha="left")
+    p = dst / "03_ablation.png"
+    fig.savefig(p, dpi=140)
+    plt.close(fig)
+    return p

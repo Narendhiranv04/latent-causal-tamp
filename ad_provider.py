@@ -125,7 +125,7 @@ class Precompiled:
             tried.append({"path": path, "blocked_by": bad[0], "pair": bad[1]["pair"]})
         return None, "CONNECTOR_COLLISION", tried
 
-    def _act(self, cells, q, oid, dst, kind):
+    def _act(self, cells, q, oid, dst, kind, only=None):
         t0 = time.process_time()
         out = {"status": ar.FAILURE, "reason": None, "kind": kind, "object": oid, "dest": dst, "steps": [], "attempts": [], "checks": 0}
         q_node = self.g.node_of(q)
@@ -136,10 +136,11 @@ class Precompiled:
             out["reason"] = "DESTINATION_OCCUPIED"
         else:
             r = self.s0.get(oid).radius_m
-            cand = [i for i in self.g.by_pair.get((cells[oid], dst), []) if abs(self.g.actions[i]["radius"] - r) <= 1e-9]
+            cand = [i for i in self.g.by_pair.get((cells[oid], dst), []) if abs(self.g.actions[i]["radius"] - r) <= 1e-9
+                    and (only is None or i == only)]               # only: certify exactly one stored action (G3 scores a specific q_end)
             if not cand:
                 out["reason"] = NO_ACTION[kind]
-            for i in (self.order(self, cells, oid, dst, cand) if cand else []):
+            for i in ((self.order(self, cells, oid, dst, cand) if only is None else cand) if cand else []):
                 if out["checks"] >= self.budget:
                     out["reason"] = "CHECK_BUDGET_EXHAUSTED"
                     break
@@ -172,10 +173,10 @@ class Precompiled:
         self.cpu += time.process_time() - t0
         return out
 
-    def edges(self, cells, q, oid, dst):
+    def edges(self, cells, q, oid, dst, only=None):
         """One relocation oid -> dst from the exact robot state q: SUCCESS with stored steps (connectors + action) and the next state, or
-        FAILURE with a reason and every attempted record."""
-        return self._act(cells, q, oid, dst, "RELOCATION")
+        FAILURE with a reason and every attempted record. only = one stored action id: certify exactly that motion (its own q_end)."""
+        return self._act(cells, q, oid, dst, "RELOCATION", only)
 
     def goal(self, cells, q):
         """The ORIGINAL target T (t0 -> goal cell) with a precompiled target action; never a newly planned trajectory."""

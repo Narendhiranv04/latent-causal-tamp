@@ -58,3 +58,17 @@ max_depth = 2                           # relocations before the original target
 node_cap = 60                           # relocation attempts per search (identical for every guide)
 compile_attempts = 500                  # local offline compile budget (attempts)
 compile_cpu_s = 1800                    # local offline compile budget (CPU seconds)
+
+# G3 (approachD_G3_causal_repair_instructions_v1_4): D_CAUSAL_G3 bounded causal repair search. Opt-in; read only by ad_causal.py.
+# DEV-pilot defaults, not tuned on held-out data. Historical 0-4 relocation P17 protocol untouched; local pilot depth stays 2.
+[causal_search]
+top_movers = 2                          # initial D-controlled mover frontier; widening stages below
+widening = [2, 4, 0]                    # mover-frontier sizes per stage (0 = all eligible); same total budget across stages
+dests_per_mover = 3                     # geometric destination proposals per frontier mover
+templates_per_pair = 2                  # stored relocation motions (distinct q_end) scored per (object, destination)
+universe_slots = 4                      # common candidate universe: first scene-only P17 slots per eligible mover
+beam = 3                                # accepted successors kept per depth
+max_depth = 2                           # relocations before the original target T (current 12-root DEV pilot)
+max_reloc_attempts = 60                 # new relocation certifications per root (identical for every policy)
+max_expansions = 30                     # frontier states expanded per root (identical for every policy)
+max_d_calls = 200                       # D forward passes per root (D policies; geometry / uniform use none)
