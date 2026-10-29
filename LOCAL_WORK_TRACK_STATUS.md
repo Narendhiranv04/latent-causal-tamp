@@ -50,7 +50,7 @@ Compile steps are offline and charged to `runs/approach_d/local/COMPILE_LEDGER.j
 
 ## How this joins the server dataset track
 
-- **Server work runs separately.** The server dataset bootstrap (balanced 2D and xArm7 3D B/D datasets, binary teacher labels, 7-action protocol) runs on `user1@10.4.25.63` under `/data/user1/rss_ebm_dataset/`. Its code lives on a separate local branch, `dataset-bd-v1`, in its own worktree; this branch never imports it.
+- **Server work runs separately.** The server dataset bootstrap (balanced 2D and xArm7 3D B/D datasets, binary teacher labels, 7-action protocol) runs on the lab GPU server (host not recorded in the repo). Its code lives on a separate local branch, `dataset-bd-v1`, in its own worktree; this branch never imports it.
 - **When that dataset exists:**
   1. Build the precompiled library from its offline teacher witnesses: many alternatives per (state, target), plus near-base transit connectors. These are the two measured bottlenecks of §6.
   2. Re-run `ad_local.pilot` (unchanged guides, matched budgets) on its held-out roots.
