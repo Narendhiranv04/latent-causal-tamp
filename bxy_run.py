@@ -67,7 +67,8 @@ def train(arm, seed, lam_j, tag=None) -> dict:
     m, rec = fit(arm, seed, tr, va, lam_j)
     name = tag or f"{arm}-s{seed}"
     ck = OUT / "ckpt" / f"{name}.pt"
-    ck.parent.mkdir(parents=True, exist_ok=True)
+    for d in ("ckpt", "train"):
+        (OUT / d).mkdir(parents=True, exist_ok=True)
     torch.save(m.state_dict(), ck)
     import p17_eval as pe
     res = {"arm": arm, "seed": seed, **{k: v for k, v in rec.items() if k != "history"}, "train_cpu_s": round(time.process_time() - c0, 1),

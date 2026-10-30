@@ -1,0 +1,102 @@
+{
+ "arm": "LB",
+ "best_update": 320,
+ "checkpoint": "sha256:214fa9e94766bc6dbae23e1400dd5eee807f7407fdef17d5ea83b2d50842b59d",
+ "clip_fraction": 0.33064516129032256,
+ "data_hash": "sha256:78ca0e7c35d5a2b937554c03ce38b06db2486e5d74af5f2831e37e335ccb1a38",
+ "eval_every": 20,
+ "layout": "BXY_LB_LAYOUT_V1",
+ "model": "abc7_models.ModelBC7('B','none',order='pred')",
+ "nonfinite": false,
+ "objective": "unique_factor_keyed NLL, lambda_static=lambda_travel=0",
+ "params": 467365,
+ "patience_evals": 15,
+ "records": "sha256:357e2d43494f021a68487f99c85bd54ef3c04474c87b5de1ddf61c211f67d2c5",
+ "roots": {
+  "test": 34,
+  "train": 176,
+  "val": 21
+ },
+ "sampler_groups": "all roots kappa_group 'none' (BD edits are not A/B/A+B): uniform",
+ "seed": 2,
+ "stopped_early": true,
+ "test": {
+  "candidates_all": {
+   "acc@0.5": 0.6732673267326733,
+   "auroc": 0.6872294372294372,
+   "brier": 0.20583362345620967,
+   "log_loss": 0.5942942970393381,
+   "n": 202,
+   "positives": 132
+  },
+  "candidates_empty": {
+   "acc@0.5": 0.7058823529411765,
+   "auroc": 0.8175438596491228,
+   "brier": 0.17807978355509935,
+   "log_loss": 0.5200868928644925,
+   "n": 34,
+   "positives": 19
+  },
+  "candidates_nonempty": {
+   "acc@0.5": 0.6666666666666666,
+   "auroc": 0.6650040225261464,
+   "brier": 0.21145047200762482,
+   "log_loss": 0.6093124621699617,
+   "n": 168,
+   "positives": 113
+  },
+  "root_nll": 5.99097745055611,
+  "roots": 34,
+  "scene_edits": {
+   "acc@0.5": 0.6834532374100719,
+   "auroc": 0.7179432013769363,
+   "brier": 0.20638947998795085,
+   "log_loss": 0.6017682396903701,
+   "n": 139,
+   "positives": 83
+  }
+ },
+ "tol": 0.001,
+ "train_cpu_s": 4442.0,
+ "train_wall_s": 851.2,
+ "updates": 3000,
+ "updates_cap": 3000,
+ "updates_run": 620,
+ "val": {
+  "candidates_all": {
+   "acc@0.5": 0.7016129032258065,
+   "auroc": 0.7405360596849958,
+   "brier": 0.2003849327238686,
+   "log_loss": 0.591852283470603,
+   "n": 124,
+   "positives": 77
+  },
+  "candidates_empty": {
+   "acc@0.5": 0.7619047619047619,
+   "auroc": 0.8727272727272727,
+   "brier": 0.16009809328114213,
+   "log_loss": 0.4800032358551657,
+   "n": 21,
+   "positives": 11
+  },
+  "candidates_nonempty": {
+   "acc@0.5": 0.6893203883495146,
+   "auroc": 0.7268632268632269,
+   "brier": 0.20859875435782257,
+   "log_loss": 0.6146564582271485,
+   "n": 103,
+   "positives": 66
+  },
+  "root_nll": 6.135790716859808,
+  "roots": 21,
+  "scene_edits": {
+   "acc@0.5": 0.6875,
+   "auroc": 0.7818181818181819,
+   "brier": 0.20168501725921692,
+   "log_loss": 0.5777283531635538,
+   "n": 96,
+   "positives": 55
+  }
+ },
+ "val_root_nll": 6.135790716859808
+}
