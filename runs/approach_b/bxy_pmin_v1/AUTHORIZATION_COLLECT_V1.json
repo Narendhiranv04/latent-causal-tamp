@@ -1,0 +1,30 @@
+{
+ "authorization_text": "I explicitly authorize the collection phase PMIN_DEV_MATCHED under the following hard limits: aggregate worker CPU 64,000 CPU-seconds; per-root CPU 3,300 CPU-seconds; 8 concurrent workers maximum; collection wall time 13,800 seconds; 197 TRAIN/VAL roots; 2,165 new X queries; 1,807 new Y queries. The existing per-query teacher budgets must remain unchanged.",
+ "authorized_by": "user, BXY-P-MIN-COLLECT instruction message of 2026-10-31",
+ "created": 1793416447.151045,
+ "design_sha256": "8f164845e5804821b8fbf9411c52ca2584f22d6f6f4a0efd19b8c3bcb86ff658",
+ "executing_commit": "de3fee687fa20269e1588c526ba3321e82a5926d",
+ "historical_lock_authorized_flag": false,
+ "limits": {
+  "cpu_s": 64000.0,
+  "root_cpu_s": 3300.0,
+  "roots": 197,
+  "wall_s": 13800.0,
+  "workers": 8,
+  "x": 2165,
+  "y": 1807
+ },
+ "lock_sha256": "4d42027e8c111e49557a68c9e128d0359918dd6032dcf8431fd051c044dfffaa",
+ "lock_sources_sha256": "812e0cff49fc587779e36e12f7a6faefea789667abca3b66cdbb8af932865f6e",
+ "per_query_budget": {
+  "goal_plans": 3,
+  "motion_checks": 150,
+  "online_moves": 8,
+  "transit_plans": 6
+ },
+ "phase": "PMIN_DEV_MATCHED",
+ "runner": "bxy_pmin_collect.py",
+ "runner_sha256": "78b85a121f3d051ecfc6090a1da6b0d0fc960ae2ebb3d24f8f83744aac049462",
+ "runner_version": "BXY_PMIN_COLLECT_V1",
+ "version": "BXY_PMIN_COLLECT_AUTH_V1"
+}
