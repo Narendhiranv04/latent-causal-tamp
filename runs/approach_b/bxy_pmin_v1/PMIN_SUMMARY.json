@@ -1,0 +1,238 @@
+{
+ "cost": {
+  "PMIN_DEV_MATCHED": {
+   "checkpoint_rule": "after every finished root once 20 have finished: projected = spent / est(finished) * est(all); stop launching new roots (never kill a running one) if projected > requested cpu_s, and report",
+   "cpu_s_95": [
+    38538.94069999997,
+    42149.97392500002
+   ],
+   "cpu_s_mean": 40293.9626325,
+   "cpu_s_stress_p90": 90808.55620000002,
+   "est_wall_s_mean": 6295.931661328124,
+   "max_root_cpu_s_95": 1065.6777749999997,
+   "max_root_cpu_s_stress": 2170.944800000002,
+   "p9_rates": {
+    "n_x": 57,
+    "n_y": 59,
+    "x_mean_by_len": {
+     "1": 2.31,
+     "2": 5.59,
+     "3": 14.76,
+     "4": 15.04,
+     "5": 10.13
+    },
+    "x_mean_cpu_s": 6.617912280701754,
+    "y_mean_by_stratum": {
+     "K0": 8.54,
+     "K1": 19.99,
+     "K>=2": 10.14,
+     "None": 46.77
+    },
+    "y_mean_cpu_s": 18.272966101694916
+   },
+   "phase": "PMIN_DEV_MATCHED",
+   "requested": {
+    "cpu_s": 64000,
+    "root_cpu_s": 3300,
+    "wall_s": 13800,
+    "workers": 8
+   },
+   "roots": 197,
+   "x_cpu_s_mean": 18321.724999999737,
+   "x_queries": 2165,
+   "y_cpu_s_mean": 21823.713945097526,
+   "y_queries": 1807
+  },
+  "PMIN_FULL_CATALOGUE": {
+   "checkpoint_rule": "after every finished root once 20 have finished: projected = spent / est(finished) * est(all); stop launching new roots (never kill a running one) if projected > requested cpu_s, and report",
+   "cpu_s_95": [
+    17631.159900000002,
+    20242.258374999983
+   ],
+   "cpu_s_mean": 18892.682846500004,
+   "cpu_s_stress_p90": 42128.34760000001,
+   "est_wall_s_mean": 2951.9816947656254,
+   "max_root_cpu_s_95": 475.53479999999996,
+   "max_root_cpu_s_stress": 506.1884,
+   "p9_rates": {
+    "n_x": 57,
+    "n_y": 59,
+    "x_mean_by_len": {
+     "1": 2.31,
+     "2": 5.59,
+     "3": 14.76,
+     "4": 15.04,
+     "5": 10.13
+    },
+    "x_mean_cpu_s": 6.617912280701754,
+    "y_mean_by_stratum": {
+     "K0": 8.54,
+     "K1": 19.99,
+     "K>=2": 10.14,
+     "None": 46.77
+    },
+    "y_mean_cpu_s": 18.272966101694916
+   },
+   "phase": "PMIN_FULL_CATALOGUE",
+   "requested": {
+    "cpu_s": 31000,
+    "root_cpu_s": 800,
+    "wall_s": 6000,
+    "workers": 8
+   },
+   "roots": 196,
+   "x_cpu_s_mean": 6183.3330000000615,
+   "x_queries": 884,
+   "y_cpu_s_mean": 12558.109023529529,
+   "y_queries": 993
+  },
+  "PREFIX_COMPLETE": {
+   "checkpoint_rule": "after every finished root once 20 have finished: projected = spent / est(finished) * est(all); stop launching new roots (never kill a running one) if projected > requested cpu_s, and report",
+   "cpu_s_95": [
+    13282.104699999996,
+    15356.511950000006
+   ],
+   "cpu_s_mean": 14292.2180625,
+   "cpu_s_stress_p90": 30236.719500000007,
+   "est_wall_s_mean": 2233.159072265625,
+   "max_root_cpu_s_95": 687.0539999999999,
+   "max_root_cpu_s_stress": 1219.1657999999995,
+   "p9_rates": {
+    "n_x": 57,
+    "n_y": 59,
+    "x_mean_by_len": {
+     "1": 2.31,
+     "2": 5.59,
+     "3": 14.76,
+     "4": 15.04,
+     "5": 10.13
+    },
+    "x_mean_cpu_s": 6.617912280701754,
+    "y_mean_by_stratum": {
+     "K0": 8.54,
+     "K1": 19.99,
+     "K>=2": 10.14,
+     "None": 46.77
+    },
+    "y_mean_cpu_s": 18.272966101694916
+   },
+   "phase": "PREFIX_COMPLETE",
+   "requested": {
+    "cpu_s": 24000,
+    "root_cpu_s": 1900,
+    "wall_s": 6000,
+    "workers": 8
+   },
+   "roots": 161,
+   "x_cpu_s_mean": 4632.32922222224,
+   "x_queries": 819,
+   "y_cpu_s_mean": 9532.467431372612,
+   "y_queries": 826
+  }
+ },
+ "counts": {
+  "PMIN_DEV_MATCHED": {
+   "f1_screened_x_DEST_OCCUPIED": 48,
+   "f1_screened_y_PAIR_OVERLAP": 31,
+   "same_endpoint_order_groups": 551,
+   "x_K0": 1596,
+   "x_K1": 332,
+   "x_K>=2": 185,
+   "x_None": 109,
+   "x_len1": 556,
+   "x_len2": 756,
+   "x_len3": 600,
+   "x_len4": 242,
+   "x_len5": 60,
+   "x_len6": 8,
+   "x_reuse_p9": 57,
+   "x_to_query": 2165,
+   "x_train": 1980,
+   "x_val": 242,
+   "x_with_matched_y_in_phase": 2222,
+   "y_K0": 1331,
+   "y_K1": 304,
+   "y_K>=2": 146,
+   "y_None": 85,
+   "y_len0": 197,
+   "y_len1": 556,
+   "y_len2": 516,
+   "y_len3": 392,
+   "y_len4": 161,
+   "y_len5": 40,
+   "y_len6": 4,
+   "y_reuse_p9": 59,
+   "y_to_query": 1807,
+   "y_train": 1666,
+   "y_val": 200
+  },
+  "PMIN_FULL_CATALOGUE": {
+   "f1_screened_x_DEST_OCCUPIED": 17,
+   "f1_screened_y_PAIR_OVERLAP": 17,
+   "same_endpoint_order_groups": 77,
+   "x_K0": 608,
+   "x_K1": 207,
+   "x_K>=2": 70,
+   "x_None": 44,
+   "x_len1": 401,
+   "x_len2": 236,
+   "x_len3": 167,
+   "x_len4": 101,
+   "x_len5": 20,
+   "x_len6": 4,
+   "x_reuse_p9": 45,
+   "x_to_query": 884,
+   "x_train": 829,
+   "x_val": 100,
+   "x_with_matched_y_in_phase": 929,
+   "y_K0": 690,
+   "y_K1": 244,
+   "y_K>=2": 70,
+   "y_None": 45,
+   "y_len0": 197,
+   "y_len1": 401,
+   "y_len2": 200,
+   "y_len3": 146,
+   "y_len4": 81,
+   "y_len5": 20,
+   "y_len6": 4,
+   "y_reuse_p9": 56,
+   "y_to_query": 993,
+   "y_train": 938,
+   "y_val": 111
+  },
+  "PREFIX_COMPLETE": {
+   "f1_screened_x_DEST_OCCUPIED": 9,
+   "f1_screened_y_PAIR_OVERLAP": 9,
+   "same_endpoint_order_groups": 0,
+   "x_K0": 654,
+   "x_K1": 65,
+   "x_K>=2": 79,
+   "x_None": 46,
+   "x_len1": 414,
+   "x_len2": 276,
+   "x_len3": 126,
+   "x_len4": 24,
+   "x_len5": 4,
+   "x_reuse_p9": 25,
+   "x_to_query": 819,
+   "x_train": 751,
+   "x_val": 93,
+   "x_with_matched_y_in_phase": 844,
+   "y_K0": 654,
+   "y_K1": 65,
+   "y_K>=2": 79,
+   "y_None": 46,
+   "y_len1": 414,
+   "y_len2": 276,
+   "y_len3": 126,
+   "y_len4": 24,
+   "y_len5": 4,
+   "y_reuse_p9": 18,
+   "y_to_query": 826,
+   "y_train": 751,
+   "y_val": 93
+  }
+ },
+ "note": "informational summary; the frozen objects are PMIN_DESIGN.json + PMIN_LOCK.json"
+}
