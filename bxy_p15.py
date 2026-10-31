@@ -43,7 +43,7 @@ FACTORS = {"K_intent": [0, 1, 2, 3, 4], "mechanism": ["grasp", "place", "transfe
 PILOT_K = {0: 3, 1: 5, 2: 8, 3: 8, 4: 6}                       # 30 pilot slots, K_intent emphasis on 2-4 (construction intent, not verified K)
 MAX_CANDS, MAX_QUERIES = 12, 36
 PILOT_LIMITS = {"cpu_s": 8000.0, "root_cpu_s": 800.0, "workers": 4, "wall_s": 7200.0, "min_allow": 30.0}
-CONFIRM_PLAN = {"roots": 360, "K_intent": {0: 60, 1: 60, 2: 80, 3: 80, 4: 80}}
+CONFIRM_PLAN = {"roots": 360, "K_intent": {0: 40, 1: 40, 2: 50, 3: 50, 4: 180}}       # set from the pilot construction realization only
 
 
 # ------------------------------------------------------------------ ids and specs
@@ -414,7 +414,21 @@ def confirm_plan(pilot: dict | None = None) -> dict:
             "exposed test roots and the pilot namespace; pilot roots never enter it", "precision": "with n_inf initially infeasible roots, a paired "
             "difference of corrective success has 95 % half-width <= 1.96 * 0.5 / sqrt(n_inf) (worst case): n_inf = 150 -> 0.080, 200 -> 0.069",
             "pilot_evidence_used": "construction feasibility, rejection rate, verified-K realization and teacher cost only (no model was run on a pilot root)",
-            "pilot_summary": {k: pilot[k] for k in ("roots", "verified_K", "by_K_intent", "collection_cpu_s", "construction_cpu_s")} if pilot else None}
+            "pilot_summary": {k: pilot[k] for k in ("roots", "verified_K", "by_K_intent", "collection_cpu_s", "construction_cpu_s")} if pilot else None,
+            "expected_from_pilot": expected(pilot) if pilot else None}
+
+
+def expected(pilot) -> dict:
+    """Plan-level expectations from the pilot's per-K_intent realization (development pilot, very small n per level; indicative only)."""
+    rate = {}
+    for k, c in pilot["by_K_intent"].items():
+        n = sum(c.values())
+        rate[k] = {"n_pilot": n, "infeasible": (n - c.get("0", 0)) / n, "K>=2": sum(v for kk, v in c.items() if kk.isdigit() and int(kk) >= 2) / n,
+                   "no_verified_repair": c.get("None", 0) / n}
+    comp = CONFIRM_PLAN["K_intent"]
+    exp = {m: sum(comp[int(k)] * r[m] for k, r in rate.items()) for m in ("infeasible", "K>=2", "no_verified_repair")}
+    return {"pilot_rates": rate, "expected_counts": exp, "half_width_95_worst_case": 1.96 * 0.5 / max(exp["infeasible"], 1) ** 0.5,
+            "cost_cpu_s_per_root_pilot_mean": pilot["collection_cpu_s"] / pilot["roots"]}
 
 
 if __name__ == "__main__":
@@ -430,6 +444,13 @@ if __name__ == "__main__":
     elif cmd == "worker":
         os.environ.setdefault("OMP_NUM_THREADS", "1")
         worker(sys.argv[2])
+    elif cmd == "plan":
+        f = OUT / "CONFIRM_PLAN.json"
+        txt = json.dumps(confirm_plan(json.loads((OUT / "PILOT_SUMMARY.json").read_text())), indent=1, sort_keys=True, default=str)
+        if f.exists() and f.read_text() != txt:
+            raise FileExistsError("confirmatory plan already frozen with different content")
+        f.write_text(txt)
+        print(PM.sha_file(f))
     elif cmd == "summarize":
         s = summarize()
         (OUT / "PILOT_SUMMARY.json").write_text(json.dumps(s, indent=1, sort_keys=True, default=str))

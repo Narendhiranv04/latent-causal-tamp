@@ -80,7 +80,8 @@ def fig_catalogue(R, gen):
     ax[0].invert_yaxis()
     ax[0].set(xlabel="candidates over all pilot roots", title="outcome-blind catalogue: candidate kinds")
     acc = [a for a in gen["attempts"] if a["accepted"]]
-    ax[1].scatter([a["candidates"] for a in acc], [a["queries"] for a in acc], c=[KC[a["spec"]["K_intent"]] for a in acc], s=40, edgecolor=INK, lw=0.5)
+    jit = np.random.default_rng(0).uniform(-0.25, 0.25, len(acc))                # horizontal jitter only (many roots hit the 12-candidate cap)
+    ax[1].scatter(np.array([a["candidates"] for a in acc]) + jit, [a["queries"] for a in acc], c=[KC[a["spec"]["K_intent"]] for a in acc], s=40, edgecolor=INK, lw=0.5)
     ax[1].axhline(G.MAX_QUERIES, color="#b4441c", ls="--", lw=1)
     ax[1].legend(handles=[matplotlib.patches.Patch(color=KC[k], label=f"K_intent {k}") for k in KC], frameon=False, fontsize=7.5)
     ax[1].set(xlabel="complete candidates per root", ylabel="teacher queries per root (X + Y)", title=f"query design per root (cap {G.MAX_QUERIES})")
