@@ -1,0 +1,125 @@
+{
+ "attempted": true,
+ "budget": {
+  "goal_plans": 3,
+  "motion_checks": 150,
+  "online_moves": 8,
+  "transit_plans": 6
+ },
+ "budget_spent": {
+  "goal_plans": 0,
+  "motion_checks": 0,
+  "online_moves": 3,
+  "transit_plans": 1
+ },
+ "cache_hits": 1,
+ "classes": [
+  "omission",
+  "prefix"
+ ],
+ "connector_how": "planned",
+ "design_key": "X2:2d-mock2d_5000-w0000-s095:fae4efdd04eb:o02>20.o03>21.o00>61",
+ "failed_phase": null,
+ "final_q_after_connector": [
+  1.5707963267948966,
+  1.5707963267948966,
+  1.5707963267948966
+ ],
+ "final_q_before_connector": [
+  -0.6775941091856454,
+  2.111760309841138,
+  -0.6487680372580447
+ ],
+ "independent_replay": true,
+ "item": 16,
+ "legacy_witness_match": false,
+ "negative_kind": null,
+ "observed": true,
+ "ordered_actions": [
+  [
+   "o02",
+   20
+  ],
+  [
+   "o03",
+   21
+  ],
+  [
+   "o00",
+   61
+  ]
+ ],
+ "parent_y_key": "Y2:2d-mock2d_5000-w0000-s095:fae4efdd04eb:o00>61.o02>20.o03>21",
+ "process_cpu_s": 2.542,
+ "q0": [
+  1.5707963267948966,
+  1.5707963267948966,
+  1.5707963267948966
+ ],
+ "q_ref": [
+  1.5707963267948966,
+  1.5707963267948966,
+  1.5707963267948966
+ ],
+ "replay_why": null,
+ "root": "2d-mock2d_5000-w0000-s095",
+ "runner": "BXY_PMIN_COLLECT_V1",
+ "side": "x",
+ "steps": [
+  {
+   "J_record": 1.2177292520417373,
+   "dest": 20,
+   "object": "o02",
+   "via": "online",
+   "witness": [
+    "8c6c760e2eb1758d9374fe43"
+   ]
+  },
+  {
+   "J_record": 0.27728773718442795,
+   "dest": 21,
+   "object": "o03",
+   "via": "online",
+   "witness": [
+    "e9223c6e7b408568bcbd3d6d"
+   ]
+  },
+  {
+   "J_record": 0.8090660927908034,
+   "dest": 61,
+   "object": "o00",
+   "via": "online",
+   "witness": [
+    "2b9db197ae1413fd2ba210eb"
+   ]
+  }
+ ],
+ "teacher": "BXY_X_TEACHER_V1",
+ "teacher_hash": "sha256:4930754123e6905619b5e34ae450c8e78599643460c03e6cd0ce11393ea0a4fe",
+ "teacher_status": "VERIFIED",
+ "travel_parts": {
+  "J_between_actions": [
+   1.0451674175264294,
+   0.11024430261166779,
+   0.6467138223562159
+  ],
+  "J_connector": 1.0125438676538503,
+  "J_move": [
+   1.2177292520417373,
+   0.27728773718442795,
+   0.8090660927908034
+  ],
+  "J_prefix_stitched": 3.316626949670819,
+  "note": "J_between_actions = the pregrasp (free approach from the achieved state) part of each relocation record, already inside J_move"
+ },
+ "virtual_cpu_s": 4.085,
+ "witness_connector": "43fb8677f9ecf0a42e919587",
+ "witness_relocations": [
+  "8c6c760e2eb1758d9374fe43",
+  "e9223c6e7b408568bcbd3d6d",
+  "2b9db197ae1413fd2ba210eb"
+ ],
+ "x_key": "X2:2d-mock2d_5000-w0000-s095:fae4efdd04eb:o02>20.o03>21.o00>61",
+ "x_key_v1": "X:2d-mock2d_5000-w0000-s095:o02>20.o03>21.o00>61",
+ "y": 1
+}

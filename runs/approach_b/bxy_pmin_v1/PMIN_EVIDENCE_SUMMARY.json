@@ -1,0 +1,5961 @@
+{
+ "connector": {
+  "failed": {
+   "('UNKNOWN_TRANSIT', 'NO_PLAN_FOUND')": 42
+  },
+  "how": {
+   "direct": 576,
+   "planned": 1156
+  },
+  "prefix_reached": 1774,
+  "verified": 1732
+ },
+ "cpu": {
+  "aggregate": 32156.9,
+  "max_root": 2331.4,
+  "max_rss_mb": 149.3,
+  "roots": 197,
+  "verification_cpu_s": 531.3,
+  "x_mean_by_len": {
+   "1": 5.83,
+   "2": 4.73,
+   "3": 5.53,
+   "4": 4.18,
+   "5": 8.86,
+   "6": 6.29
+  },
+  "x_query_cpu": 11412.8,
+  "y_mean_by_outcome": {
+   "0": 44.5,
+   "1": 4.07
+  },
+  "y_query_cpu": 20089.4
+ },
+ "four_cell": {
+  "X=0,Y=0": 75,
+  "X=0,Y=1": 415,
+  "X=1,Y=0": 280,
+  "X=1,Y=1": 1452
+ },
+ "four_cell_by_K": {
+  "K0": {
+   "X=0,Y=0": 35,
+   "X=0,Y=1": 335,
+   "X=1,Y=0": 56,
+   "X=1,Y=1": 1170
+  },
+  "K1": {
+   "X=0,Y=0": 11,
+   "X=0,Y=1": 32,
+   "X=1,Y=0": 72,
+   "X=1,Y=1": 217
+  },
+  "K>=2": {
+   "X=0,Y=0": 14,
+   "X=0,Y=1": 35,
+   "X=1,Y=0": 79,
+   "X=1,Y=1": 57
+  },
+  "None": {
+   "X=0,Y=0": 15,
+   "X=0,Y=1": 13,
+   "X=1,Y=0": 73,
+   "X=1,Y=1": 8
+  }
+ },
+ "four_cell_by_class": {
+  "complete": {
+   "X=0,Y=0": 21,
+   "X=0,Y=1": 150,
+   "X=1,Y=0": 112,
+   "X=1,Y=1": 646
+  },
+  "omission": {
+   "X=0,Y=0": 49,
+   "X=0,Y=1": 235,
+   "X=1,Y=0": 197,
+   "X=1,Y=1": 853
+  },
+  "reversal": {
+   "X=0,Y=0": 17,
+   "X=0,Y=1": 123,
+   "X=1,Y=0": 40,
+   "X=1,Y=1": 348
+  }
+ },
+ "legacy": {
+  "x_legacy_tolerance": {
+   "differs": 15,
+   "exact": 250,
+   "within_1e-12": 707
+  },
+  "x_legacy_witness_match": {
+   "False": 722,
+   "True": 250
+  },
+  "y_agree": {
+   "True": 661
+  }
+ },
+ "observed": {
+  "x": 2222,
+  "x_pos": 1732,
+  "y": 1866,
+  "y_pos": 1521
+ },
+ "omission": {
+  "reading": "y 1->0: the omitted action was needed for the target in the edited-scene sense; y 1->1: not needed (redundant for Y); interaction +1: both actions jointly needed (Y_AB = 1, Y_A = Y_B = Y_0 = 0)",
+  "two_move_interaction": {
+   "-1": 13,
+   "-2": 1,
+   "0": 171,
+   "1": 15
+  },
+  "two_move_nonadditive_examples": [
+   {
+    "Y_0": 0,
+    "Y_A": 1,
+    "Y_AB": 1,
+    "Y_B": 1,
+    "root": "2d-mock2d_5000-w0000-s001",
+    "seq": [
+     [
+      "o01",
+      3
+     ],
+     [
+      "o00",
+      23
+     ]
+    ]
+   },
+   {
+    "Y_0": 0,
+    "Y_A": 0,
+    "Y_AB": 1,
+    "Y_B": 0,
+    "root": "2d-mock2d_5000-w0000-s261",
+    "seq": [
+     [
+      "o03",
+      63
+     ],
+     [
+      "o00",
+      46
+     ]
+    ]
+   },
+   {
+    "Y_0": 0,
+    "Y_A": 0,
+    "Y_AB": 1,
+    "Y_B": 0,
+    "root": "2d-mock2d_5000-w0000-s261",
+    "seq": [
+     [
+      "o00",
+      46
+     ],
+     [
+      "o01",
+      38
+     ]
+    ]
+   },
+   {
+    "Y_0": 1,
+    "Y_A": 0,
+    "Y_AB": 1,
+    "Y_B": 1,
+    "root": "2d-mock2d_5000-w0000-s089",
+    "seq": [
+     [
+      "o01",
+      52
+     ],
+     [
+      "o00",
+      31
+     ]
+    ]
+   },
+   {
+    "Y_0": 1,
+    "Y_A": 1,
+    "Y_AB": 1,
+    "Y_B": 0,
+    "root": "2d-mock2d_5000-w0000-s089",
+    "seq": [
+     [
+      "o00",
+      14
+     ],
+     [
+      "o01",
+      52
+     ]
+    ]
+   },
+   {
+    "Y_0": 1,
+    "Y_A": 1,
+    "Y_AB": 1,
+    "Y_B": 0,
+    "root": "2d-mock2d_5000-w0000-s089",
+    "seq": [
+     [
+      "o00",
+      47
+     ],
+     [
+      "o01",
+      52
+     ]
+    ]
+   },
+   {
+    "Y_0": 0,
+    "Y_A": 0,
+    "Y_AB": 1,
+    "Y_B": 0,
+    "root": "2d-mock2d_5000-w0000-s047",
+    "seq": [
+     [
+      "o00",
+      62
+     ],
+     [
+      "o01",
+      23
+     ]
+    ]
+   },
+   {
+    "Y_0": 0,
+    "Y_A": 1,
+    "Y_AB": 1,
+    "Y_B": 1,
+    "root": "2d-mock2d_5000-w0000-s103",
+    "seq": [
+     [
+      "o01",
+      55
+     ],
+     [
+      "o00",
+      59
+     ]
+    ]
+   },
+   {
+    "Y_0": 1,
+    "Y_A": 0,
+    "Y_AB": 1,
+    "Y_B": 1,
+    "root": "2d-mock2d_5000-w0000-s077",
+    "seq": [
+     [
+      "o00",
+      12
+     ],
+     [
+      "o01",
+      44
+     ]
+    ]
+   },
+   {
+    "Y_0": 0,
+    "Y_A": 1,
+    "Y_AB": 1,
+    "Y_B": 1,
+    "root": "2d-mock2d_5000-w0000-s002",
+    "seq": [
+     [
+      "o01",
+      23
+     ],
+     [
+      "o00",
+      52
+     ]
+    ]
+   },
+   {
+    "Y_0": 0,
+    "Y_A": 1,
+    "Y_AB": 1,
+    "Y_B": 1,
+    "root": "2d-mock2d_5000-w0000-s087",
+    "seq": [
+     [
+      "o01",
+      52
+     ],
+     [
+      "o00",
+      44
+     ]
+    ]
+   },
+   {
+    "Y_0": 1,
+    "Y_A": 0,
+    "Y_AB": 1,
+    "Y_B": 1,
+    "root": "2d-mock2d_5000-w0000-s266",
+    "seq": [
+     [
+      "o00",
+      46
+     ],
+     [
+      "o01",
+      13
+     ]
+    ]
+   },
+   {
+    "Y_0": 0,
+    "Y_A": 0,
+    "Y_AB": 0,
+    "Y_B": 1,
+    "root": "2d-mock2d_5000-w0000-s226",
+    "seq": [
+     [
+      "o00",
+      38
+     ],
+     [
+      "o02",
+      39
+     ]
+    ]
+   },
+   {
+    "Y_0": 0,
+    "Y_A": 1,
+    "Y_AB": 1,
+    "Y_B": 1,
+    "root": "2d-mock2d_5000-w0000-s117",
+    "seq": [
+     [
+      "o01",
+      31
+     ],
+     [
+      "o00",
+      44
+     ]
+    ]
+   },
+   {
+    "Y_0": 0,
+    "Y_A": 0,
+    "Y_AB": 1,
+    "Y_B": 0,
+    "root": "2d-mock2d_5000-w0000-s110",
+    "seq": [
+     [
+      "o00",
+      23
+     ],
+     [
+      "o01",
+      12
+     ]
+    ]
+   },
+   {
+    "Y_0": 0,
+    "Y_A": 0,
+    "Y_AB": 1,
+    "Y_B": 0,
+    "root": "2d-mock2d_5000-w0000-s110",
+    "seq": [
+     [
+      "o02",
+      20
+     ],
+     [
+      "o03",
+      21
+     ]
+    ]
+   },
+   {
+    "Y_0": 0,
+    "Y_A": 1,
+    "Y_AB": 1,
+    "Y_B": 1,
+    "root": "2d-mock2d_5000-w0000-s132",
+    "seq": [
+     [
+      "o00",
+      59
+     ],
+     [
+      "o01",
+      36
+     ]
+    ]
+   },
+   {
+    "Y_0": 0,
+    "Y_A": 0,
+    "Y_AB": 1,
+    "Y_B": 0,
+    "root": "2d-mock2d_5000-w0000-s265",
+    "seq": [
+     [
+      "o02",
+      20
+     ],
+     [
+      "o03",
+      44
+     ]
+    ]
+   },
+   {
+    "Y_0": 0,
+    "Y_A": 0,
+    "Y_AB": 1,
+    "Y_B": 0,
+    "root": "2d-mock2d_5000-w0000-s187",
+    "seq": [
+     [
+      "o02",
+      21
+     ],
+     [
+      "o00",
+      38
+     ]
+    ]
+   },
+   {
+    "Y_0": 0,
+    "Y_A": 0,
+    "Y_AB": 0,
+    "Y_B": 1,
+    "root": "2d-mock2d_5000-w0000-s005",
+    "seq": [
+     [
+      "o01",
+      59
+     ],
+     [
+      "o00",
+      52
+     ]
+    ]
+   }
+  ],
+  "two_move_nonadditive_n": 29,
+  "x_full_to_omitted": {
+   "0->0": 262,
+   "0->1": 151,
+   "1->0": 47,
+   "1->1": 1041
+  },
+  "y_full_to_omitted": {
+   "0->0": 114,
+   "0->1": 34,
+   "1->0": 131,
+   "1->1": 1007
+  }
+ },
+ "order": {
+  "concordant_0": 84,
+  "concordant_1": 354,
+  "discordant": 113,
+  "discordant_groups_with_certified_failure": 24,
+  "discordant_roots": 62,
+  "examples": [
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        23
+       ],
+       [
+        "o02",
+        31
+       ],
+       [
+        "o01",
+        3
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ],
+     [
+      [
+       [
+        "o01",
+        3
+       ],
+       [
+        "o02",
+        31
+       ],
+       [
+        "o00",
+        23
+       ]
+      ],
+      0,
+      "CERTIFIED_INFEASIBLE",
+      "relocation:2",
+      "{'certificates': ['ORDER_FIRST_ACTION']}"
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s001"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        52
+       ],
+       [
+        "o02",
+        36
+       ],
+       [
+        "o01",
+        23
+       ]
+      ],
+      0,
+      "UNKNOWN_TRANSIT",
+      "connector",
+      null
+     ],
+     [
+      [
+       [
+        "o01",
+        23
+       ],
+       [
+        "o02",
+        36
+       ],
+       [
+        "o00",
+        52
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s002"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        13
+       ],
+       [
+        "o01",
+        61
+       ],
+       [
+        "o02",
+        60
+       ],
+       [
+        "o03",
+        52
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ],
+     [
+      [
+       [
+        "o03",
+        52
+       ],
+       [
+        "o02",
+        60
+       ],
+       [
+        "o01",
+        61
+       ],
+       [
+        "o00",
+        13
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:2",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s014"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        29
+       ],
+       [
+        "o01",
+        61
+       ],
+       [
+        "o02",
+        60
+       ],
+       [
+        "o03",
+        52
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ],
+     [
+      [
+       [
+        "o03",
+        52
+       ],
+       [
+        "o02",
+        60
+       ],
+       [
+        "o01",
+        61
+       ],
+       [
+        "o00",
+        29
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:2",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s014"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        36
+       ],
+       [
+        "o01",
+        61
+       ],
+       [
+        "o02",
+        60
+       ],
+       [
+        "o03",
+        52
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ],
+     [
+      [
+       [
+        "o03",
+        52
+       ],
+       [
+        "o02",
+        60
+       ],
+       [
+        "o01",
+        61
+       ],
+       [
+        "o00",
+        36
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:2",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s014"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o01",
+        61
+       ],
+       [
+        "o02",
+        60
+       ],
+       [
+        "o03",
+        52
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ],
+     [
+      [
+       [
+        "o03",
+        52
+       ],
+       [
+        "o02",
+        60
+       ],
+       [
+        "o01",
+        61
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:2",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s014"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o03",
+        52
+       ],
+       [
+        "o02",
+        60
+       ],
+       [
+        "o01",
+        61
+       ],
+       [
+        "o00",
+        36
+       ],
+       [
+        "o04",
+        6
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:2",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ],
+     [
+      [
+       [
+        "o04",
+        6
+       ],
+       [
+        "o00",
+        36
+       ],
+       [
+        "o01",
+        61
+       ],
+       [
+        "o02",
+        60
+       ],
+       [
+        "o03",
+        52
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s014"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o03",
+        52
+       ],
+       [
+        "o02",
+        60
+       ],
+       [
+        "o01",
+        61
+       ],
+       [
+        "o00",
+        36
+       ],
+       [
+        "o05",
+        15
+       ],
+       [
+        "o04",
+        6
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:2",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ],
+     [
+      [
+       [
+        "o04",
+        6
+       ],
+       [
+        "o05",
+        15
+       ],
+       [
+        "o00",
+        36
+       ],
+       [
+        "o01",
+        61
+       ],
+       [
+        "o02",
+        60
+       ],
+       [
+        "o03",
+        52
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s014"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        30
+       ],
+       [
+        "o03",
+        37
+       ],
+       [
+        "o01",
+        31
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ],
+     [
+      [
+       [
+        "o01",
+        31
+       ],
+       [
+        "o03",
+        37
+       ],
+       [
+        "o00",
+        30
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:0",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s017"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o01",
+        31
+       ],
+       [
+        "o03",
+        13
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:0",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ],
+     [
+      [
+       [
+        "o03",
+        13
+       ],
+       [
+        "o01",
+        31
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s017"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o01",
+        31
+       ],
+       [
+        "o03",
+        37
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:0",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ],
+     [
+      [
+       [
+        "o03",
+        37
+       ],
+       [
+        "o01",
+        31
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s017"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        21
+       ],
+       [
+        "o01",
+        36
+       ],
+       [
+        "o03",
+        47
+       ]
+      ],
+      0,
+      "UNKNOWN_TRANSIT",
+      "connector",
+      null
+     ],
+     [
+      [
+       [
+        "o03",
+        47
+       ],
+       [
+        "o01",
+        36
+       ],
+       [
+        "o00",
+        21
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s039"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        37
+       ],
+       [
+        "o02",
+        22
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ],
+     [
+      [
+       [
+        "o02",
+        22
+       ],
+       [
+        "o00",
+        37
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:1",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s040"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        28
+       ],
+       [
+        "o01",
+        23
+       ]
+      ],
+      0,
+      "UNKNOWN_TRANSIT",
+      "connector",
+      null
+     ],
+     [
+      [
+       [
+        "o01",
+        23
+       ],
+       [
+        "o00",
+        28
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s042"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o01",
+        31
+       ],
+       [
+        "o00",
+        61
+       ],
+       [
+        "o03",
+        20
+       ],
+       [
+        "o02",
+        21
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ],
+     [
+      [
+       [
+        "o02",
+        21
+       ],
+       [
+        "o03",
+        20
+       ],
+       [
+        "o00",
+        61
+       ],
+       [
+        "o01",
+        31
+       ]
+      ],
+      0,
+      "UNKNOWN_TRANSIT",
+      "connector",
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s043"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        37
+       ],
+       [
+        "o02",
+        22
+       ]
+      ],
+      0,
+      "UNKNOWN_TRANSIT",
+      "connector",
+      null
+     ],
+     [
+      [
+       [
+        "o02",
+        22
+       ],
+       [
+        "o00",
+        37
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s044"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        52
+       ],
+       [
+        "o01",
+        31
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:1",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ],
+     [
+      [
+       [
+        "o01",
+        31
+       ],
+       [
+        "o00",
+        52
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s045"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        52
+       ],
+       [
+        "o02",
+        23
+       ],
+       [
+        "o01",
+        31
+       ]
+      ],
+      0,
+      "CERTIFIED_INFEASIBLE",
+      "relocation:2",
+      "{'certificates': ['ORDER_FIRST_ACTION']}"
+     ],
+     [
+      [
+       [
+        "o01",
+        31
+       ],
+       [
+        "o02",
+        23
+       ],
+       [
+        "o00",
+        52
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s045"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        36
+       ],
+       [
+        "o02",
+        4
+       ],
+       [
+        "o01",
+        23
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ],
+     [
+      [
+       [
+        "o01",
+        23
+       ],
+       [
+        "o02",
+        4
+       ],
+       [
+        "o00",
+        36
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:0",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s047"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        44
+       ],
+       [
+        "o02",
+        4
+       ],
+       [
+        "o01",
+        23
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ],
+     [
+      [
+       [
+        "o01",
+        23
+       ],
+       [
+        "o02",
+        4
+       ],
+       [
+        "o00",
+        44
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:0",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s047"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        20
+       ],
+       [
+        "o01",
+        28
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ],
+     [
+      [
+       [
+        "o01",
+        28
+       ],
+       [
+        "o00",
+        20
+       ]
+      ],
+      0,
+      "CERTIFIED_INFEASIBLE",
+      "relocation:1",
+      "{'certificates': ['ORDER_FIRST_ACTION']}"
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s048"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        37
+       ],
+       [
+        "o01",
+        28
+       ]
+      ],
+      0,
+      "CERTIFIED_INFEASIBLE",
+      "relocation:0",
+      "{'certificates': ['ORDER_FIRST_ACTION']}"
+     ],
+     [
+      [
+       [
+        "o01",
+        28
+       ],
+       [
+        "o00",
+        37
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s048"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o01",
+        28
+       ],
+       [
+        "o00",
+        37
+       ],
+       [
+        "o02",
+        54
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ],
+     [
+      [
+       [
+        "o02",
+        54
+       ],
+       [
+        "o00",
+        37
+       ],
+       [
+        "o01",
+        28
+       ]
+      ],
+      0,
+      "CERTIFIED_INFEASIBLE",
+      "relocation:1",
+      "{'certificates': ['ORDER_FIRST_ACTION']}"
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s048"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o01",
+        28
+       ],
+       [
+        "o00",
+        37
+       ],
+       [
+        "o03",
+        44
+       ],
+       [
+        "o02",
+        54
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ],
+     [
+      [
+       [
+        "o02",
+        54
+       ],
+       [
+        "o03",
+        44
+       ],
+       [
+        "o00",
+        37
+       ],
+       [
+        "o01",
+        28
+       ]
+      ],
+      0,
+      "CERTIFIED_INFEASIBLE",
+      "relocation:2",
+      "{'certificates': ['ORDER_FIRST_ACTION']}"
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s048"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o01",
+        46
+       ],
+       [
+        "o02",
+        36
+       ],
+       [
+        "o03",
+        12
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ],
+     [
+      [
+       [
+        "o03",
+        12
+       ],
+       [
+        "o02",
+        36
+       ],
+       [
+        "o01",
+        46
+       ]
+      ],
+      0,
+      "UNKNOWN_TRANSIT",
+      "connector",
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s057"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o03",
+        12
+       ],
+       [
+        "o02",
+        36
+       ],
+       [
+        "o01",
+        46
+       ],
+       [
+        "o00",
+        21
+       ],
+       [
+        "o04",
+        54
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:4",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ],
+     [
+      [
+       [
+        "o04",
+        54
+       ],
+       [
+        "o00",
+        21
+       ],
+       [
+        "o01",
+        46
+       ],
+       [
+        "o02",
+        36
+       ],
+       [
+        "o03",
+        12
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s057"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        38
+       ],
+       [
+        "o02",
+        46
+       ],
+       [
+        "o01",
+        47
+       ]
+      ],
+      0,
+      "CERTIFIED_INFEASIBLE",
+      "relocation:2",
+      "{'certificates': ['ORDER_FIRST_ACTION']}"
+     ],
+     [
+      [
+       [
+        "o01",
+        47
+       ],
+       [
+        "o02",
+        46
+       ],
+       [
+        "o00",
+        38
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s063"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        15
+       ],
+       [
+        "o01",
+        3
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:0",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ],
+     [
+      [
+       [
+        "o01",
+        3
+       ],
+       [
+        "o00",
+        15
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s064"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        23
+       ],
+       [
+        "o01",
+        3
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:0",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ],
+     [
+      [
+       [
+        "o01",
+        3
+       ],
+       [
+        "o00",
+        23
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s064"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        36
+       ],
+       [
+        "o01",
+        3
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:0",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ],
+     [
+      [
+       [
+        "o01",
+        3
+       ],
+       [
+        "o00",
+        36
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s064"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        30
+       ],
+       [
+        "o02",
+        31
+       ],
+       [
+        "o01",
+        63
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ],
+     [
+      [
+       [
+        "o01",
+        63
+       ],
+       [
+        "o02",
+        31
+       ],
+       [
+        "o00",
+        30
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:0",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s079"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        46
+       ],
+       [
+        "o01",
+        37
+       ],
+       [
+        "o02",
+        44
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:1",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ],
+     [
+      [
+       [
+        "o02",
+        44
+       ],
+       [
+        "o01",
+        37
+       ],
+       [
+        "o00",
+        46
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s082"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        31
+       ],
+       [
+        "o01",
+        52
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ],
+     [
+      [
+       [
+        "o01",
+        52
+       ],
+       [
+        "o00",
+        31
+       ]
+      ],
+      0,
+      "UNKNOWN_TRANSIT",
+      "connector",
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s089"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        13
+       ],
+       [
+        "o01",
+        36
+       ],
+       [
+        "o02",
+        61
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ],
+     [
+      [
+       [
+        "o02",
+        61
+       ],
+       [
+        "o01",
+        36
+       ],
+       [
+        "o00",
+        13
+       ]
+      ],
+      0,
+      "UNKNOWN_TRANSIT",
+      "connector",
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s091"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o02",
+        61
+       ],
+       [
+        "o01",
+        36
+       ],
+       [
+        "o00",
+        29
+       ],
+       [
+        "o03",
+        6
+       ]
+      ],
+      0,
+      "CERTIFIED_INFEASIBLE",
+      "relocation:3",
+      "{'certificates': ['ORDER_FIRST_ACTION']}"
+     ],
+     [
+      [
+       [
+        "o03",
+        6
+       ],
+       [
+        "o00",
+        29
+       ],
+       [
+        "o01",
+        36
+       ],
+       [
+        "o02",
+        61
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s091"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        61
+       ],
+       [
+        "o01",
+        60
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ],
+     [
+      [
+       [
+        "o01",
+        60
+       ],
+       [
+        "o00",
+        61
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:1",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s095"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o01",
+        60
+       ],
+       [
+        "o00",
+        61
+       ],
+       [
+        "o02",
+        20
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:1",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ],
+     [
+      [
+       [
+        "o02",
+        20
+       ],
+       [
+        "o00",
+        61
+       ],
+       [
+        "o01",
+        60
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s095"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o01",
+        60
+       ],
+       [
+        "o00",
+        61
+       ],
+       [
+        "o03",
+        21
+       ],
+       [
+        "o02",
+        20
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:1",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ],
+     [
+      [
+       [
+        "o02",
+        20
+       ],
+       [
+        "o03",
+        21
+       ],
+       [
+        "o00",
+        61
+       ],
+       [
+        "o01",
+        60
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s095"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        21
+       ],
+       [
+        "o01",
+        39
+       ],
+       [
+        "o02",
+        38
+       ],
+       [
+        "o03",
+        20
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ],
+     [
+      [
+       [
+        "o03",
+        20
+       ],
+       [
+        "o02",
+        38
+       ],
+       [
+        "o01",
+        39
+       ],
+       [
+        "o00",
+        21
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:2",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s098"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        28
+       ],
+       [
+        "o01",
+        39
+       ],
+       [
+        "o02",
+        38
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ],
+     [
+      [
+       [
+        "o02",
+        38
+       ],
+       [
+        "o01",
+        39
+       ],
+       [
+        "o00",
+        28
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:1",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s098"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        28
+       ],
+       [
+        "o01",
+        39
+       ],
+       [
+        "o02",
+        38
+       ],
+       [
+        "o03",
+        20
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ],
+     [
+      [
+       [
+        "o03",
+        20
+       ],
+       [
+        "o02",
+        38
+       ],
+       [
+        "o01",
+        39
+       ],
+       [
+        "o00",
+        28
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:2",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s098"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o01",
+        39
+       ],
+       [
+        "o02",
+        38
+       ],
+       [
+        "o03",
+        20
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ],
+     [
+      [
+       [
+        "o03",
+        20
+       ],
+       [
+        "o02",
+        38
+       ],
+       [
+        "o01",
+        39
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:2",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s098"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        6
+       ],
+       [
+        "o01",
+        14
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ],
+     [
+      [
+       [
+        "o01",
+        14
+       ],
+       [
+        "o00",
+        6
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:0",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s100"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        21
+       ],
+       [
+        "o01",
+        44
+       ],
+       [
+        "o02",
+        3
+       ],
+       [
+        "o03",
+        60
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ],
+     [
+      [
+       [
+        "o03",
+        60
+       ],
+       [
+        "o02",
+        3
+       ],
+       [
+        "o01",
+        44
+       ],
+       [
+        "o00",
+        21
+       ]
+      ],
+      0,
+      "UNKNOWN_TRANSIT",
+      "connector",
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s105"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o03",
+        60
+       ],
+       [
+        "o02",
+        3
+       ],
+       [
+        "o01",
+        44
+       ],
+       [
+        "o00",
+        37
+       ],
+       [
+        "o04",
+        5
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ],
+     [
+      [
+       [
+        "o04",
+        5
+       ],
+       [
+        "o00",
+        37
+       ],
+       [
+        "o01",
+        44
+       ],
+       [
+        "o02",
+        3
+       ],
+       [
+        "o03",
+        60
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:0",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s105"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        44
+       ],
+       [
+        "o02",
+        12
+       ],
+       [
+        "o01",
+        4
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ],
+     [
+      [
+       [
+        "o01",
+        4
+       ],
+       [
+        "o02",
+        12
+       ],
+       [
+        "o00",
+        44
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:0",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s109"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o01",
+        12
+       ],
+       [
+        "o00",
+        23
+       ],
+       [
+        "o02",
+        20
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:2",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ],
+     [
+      [
+       [
+        "o02",
+        20
+       ],
+       [
+        "o00",
+        23
+       ],
+       [
+        "o01",
+        12
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s110"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o01",
+        22
+       ],
+       [
+        "o00",
+        28
+       ],
+       [
+        "o02",
+        54
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:1",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ],
+     [
+      [
+       [
+        "o02",
+        54
+       ],
+       [
+        "o00",
+        28
+       ],
+       [
+        "o01",
+        22
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s112"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        44
+       ],
+       [
+        "o01",
+        31
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ],
+     [
+      [
+       [
+        "o01",
+        31
+       ],
+       [
+        "o00",
+        44
+       ]
+      ],
+      0,
+      "UNKNOWN_TRANSIT",
+      "connector",
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s117"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        13
+       ],
+       [
+        "o01",
+        31
+       ],
+       [
+        "o02",
+        36
+       ],
+       [
+        "o03",
+        52
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ],
+     [
+      [
+       [
+        "o03",
+        52
+       ],
+       [
+        "o02",
+        36
+       ],
+       [
+        "o01",
+        31
+       ],
+       [
+        "o00",
+        13
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:2",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s119"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        28
+       ],
+       [
+        "o01",
+        31
+       ],
+       [
+        "o02",
+        36
+       ],
+       [
+        "o03",
+        52
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ],
+     [
+      [
+       [
+        "o03",
+        52
+       ],
+       [
+        "o02",
+        36
+       ],
+       [
+        "o01",
+        31
+       ],
+       [
+        "o00",
+        28
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:2",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s119"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        37
+       ],
+       [
+        "o01",
+        31
+       ],
+       [
+        "o02",
+        36
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ],
+     [
+      [
+       [
+        "o02",
+        36
+       ],
+       [
+        "o01",
+        31
+       ],
+       [
+        "o00",
+        37
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:1",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s119"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        37
+       ],
+       [
+        "o01",
+        31
+       ],
+       [
+        "o02",
+        36
+       ],
+       [
+        "o03",
+        52
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ],
+     [
+      [
+       [
+        "o03",
+        52
+       ],
+       [
+        "o02",
+        36
+       ],
+       [
+        "o01",
+        31
+       ],
+       [
+        "o00",
+        37
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:2",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s119"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        37
+       ],
+       [
+        "o01",
+        31
+       ],
+       [
+        "o03",
+        52
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ],
+     [
+      [
+       [
+        "o03",
+        52
+       ],
+       [
+        "o01",
+        31
+       ],
+       [
+        "o00",
+        37
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:1",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s119"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        37
+       ],
+       [
+        "o02",
+        36
+       ],
+       [
+        "o03",
+        52
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ],
+     [
+      [
+       [
+        "o03",
+        52
+       ],
+       [
+        "o02",
+        36
+       ],
+       [
+        "o00",
+        37
+       ]
+      ],
+      0,
+      "UNKNOWN_TRANSIT",
+      "connector",
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s119"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        53
+       ],
+       [
+        "o01",
+        60
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ],
+     [
+      [
+       [
+        "o01",
+        60
+       ],
+       [
+        "o00",
+        53
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:1",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s131"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o02",
+        37
+       ],
+       [
+        "o01",
+        60
+       ],
+       [
+        "o00",
+        53
+       ],
+       [
+        "o04",
+        31
+       ],
+       [
+        "o03",
+        15
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ],
+     [
+      [
+       [
+        "o03",
+        15
+       ],
+       [
+        "o04",
+        31
+       ],
+       [
+        "o00",
+        53
+       ],
+       [
+        "o01",
+        60
+       ],
+       [
+        "o02",
+        37
+       ]
+      ],
+      0,
+      "CERTIFIED_INFEASIBLE",
+      "relocation:1",
+      "{'certificates': ['ORDER_FIRST_ACTION']}"
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s131"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        13
+       ],
+       [
+        "o01",
+        14
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:1",
+      "{'planner': 'CERTIFIED_INFEASIBLE', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ],
+     [
+      [
+       [
+        "o01",
+        14
+       ],
+       [
+        "o00",
+        13
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s147"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        60
+       ],
+       [
+        "o01",
+        44
+       ],
+       [
+        "o02",
+        59
+       ]
+      ],
+      0,
+      "CERTIFIED_INFEASIBLE",
+      "relocation:1",
+      "{'certificates': ['ORDER_FIRST_ACTION']}"
+     ],
+     [
+      [
+       [
+        "o02",
+        59
+       ],
+       [
+        "o01",
+        44
+       ],
+       [
+        "o00",
+        60
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s148"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        60
+       ],
+       [
+        "o01",
+        44
+       ],
+       [
+        "o02",
+        59
+       ],
+       [
+        "o03",
+        36
+       ]
+      ],
+      0,
+      "CERTIFIED_INFEASIBLE",
+      "relocation:1",
+      "{'certificates': ['ORDER_FIRST_ACTION']}"
+     ],
+     [
+      [
+       [
+        "o03",
+        36
+       ],
+       [
+        "o02",
+        59
+       ],
+       [
+        "o01",
+        44
+       ],
+       [
+        "o00",
+        60
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s148"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        60
+       ],
+       [
+        "o01",
+        44
+       ],
+       [
+        "o03",
+        36
+       ]
+      ],
+      0,
+      "CERTIFIED_INFEASIBLE",
+      "relocation:1",
+      "{'certificates': ['ORDER_FIRST_ACTION']}"
+     ],
+     [
+      [
+       [
+        "o03",
+        36
+       ],
+       [
+        "o01",
+        44
+       ],
+       [
+        "o00",
+        60
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s148"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        62
+       ],
+       [
+        "o01",
+        44
+       ],
+       [
+        "o02",
+        59
+       ],
+       [
+        "o03",
+        36
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:3",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ],
+     [
+      [
+       [
+        "o03",
+        36
+       ],
+       [
+        "o02",
+        59
+       ],
+       [
+        "o01",
+        44
+       ],
+       [
+        "o00",
+        62
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s148"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o01",
+        44
+       ],
+       [
+        "o02",
+        59
+       ],
+       [
+        "o03",
+        36
+       ]
+      ],
+      0,
+      "CERTIFIED_INFEASIBLE",
+      "relocation:0",
+      "{'certificates': ['ORDER_FIRST_ACTION']}"
+     ],
+     [
+      [
+       [
+        "o03",
+        36
+       ],
+       [
+        "o02",
+        59
+       ],
+       [
+        "o01",
+        44
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s148"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        39
+       ],
+       [
+        "o01",
+        20
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ],
+     [
+      [
+       [
+        "o01",
+        20
+       ],
+       [
+        "o00",
+        39
+       ]
+      ],
+      0,
+      "UNKNOWN_TRANSIT",
+      "connector",
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s149"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        13
+       ],
+       [
+        "o01",
+        22
+       ],
+       [
+        "o03",
+        53
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ],
+     [
+      [
+       [
+        "o03",
+        53
+       ],
+       [
+        "o01",
+        22
+       ],
+       [
+        "o00",
+        13
+       ]
+      ],
+      0,
+      "UNKNOWN_TRANSIT",
+      "connector",
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s152"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        61
+       ],
+       [
+        "o02",
+        62
+       ],
+       [
+        "o01",
+        63
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ],
+     [
+      [
+       [
+        "o01",
+        63
+       ],
+       [
+        "o02",
+        62
+       ],
+       [
+        "o00",
+        61
+       ]
+      ],
+      0,
+      "CERTIFIED_INFEASIBLE",
+      "relocation:0",
+      "{'certificates': ['ORDER_FIRST_ACTION']}"
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s153"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o01",
+        46
+       ],
+       [
+        "o00",
+        60
+       ],
+       [
+        "o02",
+        47
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:2",
+      "{'planner': 'CERTIFIED_INFEASIBLE', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ],
+     [
+      [
+       [
+        "o02",
+        47
+       ],
+       [
+        "o00",
+        60
+       ],
+       [
+        "o01",
+        46
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s156"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o01",
+        46
+       ],
+       [
+        "o00",
+        60
+       ],
+       [
+        "o03",
+        39
+       ],
+       [
+        "o02",
+        47
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:2",
+      "{'planner': 'CERTIFIED_INFEASIBLE', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ],
+     [
+      [
+       [
+        "o02",
+        47
+       ],
+       [
+        "o03",
+        39
+       ],
+       [
+        "o00",
+        60
+       ],
+       [
+        "o01",
+        46
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s156"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        46
+       ],
+       [
+        "o01",
+        7
+       ],
+       [
+        "o02",
+        36
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ],
+     [
+      [
+       [
+        "o02",
+        36
+       ],
+       [
+        "o01",
+        7
+       ],
+       [
+        "o00",
+        46
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:0",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s159"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o01",
+        7
+       ],
+       [
+        "o02",
+        36
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ],
+     [
+      [
+       [
+        "o02",
+        36
+       ],
+       [
+        "o01",
+        7
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:0",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s159"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        36
+       ],
+       [
+        "o02",
+        20
+       ]
+      ],
+      0,
+      "UNKNOWN_TRANSIT",
+      "connector",
+      null
+     ],
+     [
+      [
+       [
+        "o02",
+        20
+       ],
+       [
+        "o00",
+        36
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s163"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        20
+       ],
+       [
+        "o02",
+        62
+       ],
+       [
+        "o01",
+        63
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:2",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ],
+     [
+      [
+       [
+        "o01",
+        63
+       ],
+       [
+        "o02",
+        62
+       ],
+       [
+        "o00",
+        20
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s173"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        28
+       ],
+       [
+        "o01",
+        44
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:0",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ],
+     [
+      [
+       [
+        "o01",
+        44
+       ],
+       [
+        "o00",
+        28
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s175"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        60
+       ],
+       [
+        "o01",
+        3
+       ],
+       [
+        "o02",
+        36
+       ],
+       [
+        "o03",
+        37
+       ]
+      ],
+      0,
+      "UNKNOWN_TRANSIT",
+      "connector",
+      null
+     ],
+     [
+      [
+       [
+        "o03",
+        37
+       ],
+       [
+        "o02",
+        36
+       ],
+       [
+        "o01",
+        3
+       ],
+       [
+        "o00",
+        60
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s182"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        60
+       ],
+       [
+        "o02",
+        36
+       ],
+       [
+        "o03",
+        37
+       ]
+      ],
+      0,
+      "UNKNOWN_TRANSIT",
+      "connector",
+      null
+     ],
+     [
+      [
+       [
+        "o03",
+        37
+       ],
+       [
+        "o02",
+        36
+       ],
+       [
+        "o00",
+        60
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s182"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        52
+       ],
+       [
+        "o01",
+        45
+       ],
+       [
+        "o02",
+        28
+       ],
+       [
+        "o03",
+        61
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ],
+     [
+      [
+       [
+        "o03",
+        61
+       ],
+       [
+        "o02",
+        28
+       ],
+       [
+        "o01",
+        45
+       ],
+       [
+        "o00",
+        52
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:0",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s186"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        52
+       ],
+       [
+        "o01",
+        45
+       ],
+       [
+        "o03",
+        61
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ],
+     [
+      [
+       [
+        "o03",
+        61
+       ],
+       [
+        "o01",
+        45
+       ],
+       [
+        "o00",
+        52
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:0",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s186"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        52
+       ],
+       [
+        "o02",
+        28
+       ],
+       [
+        "o03",
+        61
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ],
+     [
+      [
+       [
+        "o03",
+        61
+       ],
+       [
+        "o02",
+        28
+       ],
+       [
+        "o00",
+        52
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:0",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s186"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        38
+       ],
+       [
+        "o02",
+        31
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ],
+     [
+      [
+       [
+        "o02",
+        31
+       ],
+       [
+        "o00",
+        38
+       ]
+      ],
+      0,
+      "CERTIFIED_INFEASIBLE",
+      "relocation:0",
+      "{'certificates': ['ORDER_FIRST_ACTION']}"
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s187"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o02",
+        36
+       ],
+       [
+        "o01",
+        22
+       ],
+       [
+        "o00",
+        52
+       ],
+       [
+        "o03",
+        15
+       ]
+      ],
+      0,
+      "CERTIFIED_INFEASIBLE",
+      "relocation:3",
+      "{'certificates': ['ORDER_FIRST_ACTION']}"
+     ],
+     [
+      [
+       [
+        "o03",
+        15
+       ],
+       [
+        "o00",
+        52
+       ],
+       [
+        "o01",
+        22
+       ],
+       [
+        "o02",
+        36
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s193"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o02",
+        36
+       ],
+       [
+        "o01",
+        22
+       ],
+       [
+        "o00",
+        52
+       ],
+       [
+        "o04",
+        31
+       ],
+       [
+        "o03",
+        15
+       ]
+      ],
+      0,
+      "CERTIFIED_INFEASIBLE",
+      "relocation:4",
+      "{'certificates': ['ORDER_FIRST_ACTION']}"
+     ],
+     [
+      [
+       [
+        "o03",
+        15
+       ],
+       [
+        "o04",
+        31
+       ],
+       [
+        "o00",
+        52
+       ],
+       [
+        "o01",
+        22
+       ],
+       [
+        "o02",
+        36
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s193"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        22
+       ],
+       [
+        "o02",
+        31
+       ],
+       [
+        "o01",
+        53
+       ],
+       [
+        "o03",
+        60
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:0",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ],
+     [
+      [
+       [
+        "o03",
+        60
+       ],
+       [
+        "o01",
+        53
+       ],
+       [
+        "o02",
+        31
+       ],
+       [
+        "o00",
+        22
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s196"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        23
+       ],
+       [
+        "o02",
+        31
+       ],
+       [
+        "o03",
+        60
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ],
+     [
+      [
+       [
+        "o03",
+        60
+       ],
+       [
+        "o02",
+        31
+       ],
+       [
+        "o00",
+        23
+       ]
+      ],
+      0,
+      "UNKNOWN_TRANSIT",
+      "connector",
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s196"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        28
+       ],
+       [
+        "o01",
+        14
+       ],
+       [
+        "o03",
+        29
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ],
+     [
+      [
+       [
+        "o03",
+        29
+       ],
+       [
+        "o01",
+        14
+       ],
+       [
+        "o00",
+        28
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:1",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s203"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o01",
+        14
+       ],
+       [
+        "o02",
+        47
+       ],
+       [
+        "o03",
+        29
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:0",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ],
+     [
+      [
+       [
+        "o03",
+        29
+       ],
+       [
+        "o02",
+        47
+       ],
+       [
+        "o01",
+        14
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s203"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        30
+       ],
+       [
+        "o01",
+        36
+       ],
+       [
+        "o02",
+        29
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ],
+     [
+      [
+       [
+        "o02",
+        29
+       ],
+       [
+        "o01",
+        36
+       ],
+       [
+        "o00",
+        30
+       ]
+      ],
+      0,
+      "UNKNOWN_TRANSIT",
+      "connector",
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s206"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        36
+       ],
+       [
+        "o02",
+        30
+       ],
+       [
+        "o01",
+        46
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ],
+     [
+      [
+       [
+        "o01",
+        46
+       ],
+       [
+        "o02",
+        30
+       ],
+       [
+        "o00",
+        36
+       ]
+      ],
+      0,
+      "CERTIFIED_INFEASIBLE",
+      "relocation:0",
+      "{'certificates': ['ORDER_FIRST_ACTION']}"
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s212"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o01",
+        46
+       ],
+       [
+        "o02",
+        39
+       ]
+      ],
+      0,
+      "CERTIFIED_INFEASIBLE",
+      "relocation:0",
+      "{'certificates': ['ORDER_FIRST_ACTION']}"
+     ],
+     [
+      [
+       [
+        "o02",
+        39
+       ],
+       [
+        "o01",
+        46
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s212"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o01",
+        46
+       ],
+       [
+        "o02",
+        53
+       ]
+      ],
+      0,
+      "CERTIFIED_INFEASIBLE",
+      "relocation:0",
+      "{'certificates': ['ORDER_FIRST_ACTION']}"
+     ],
+     [
+      [
+       [
+        "o02",
+        53
+       ],
+       [
+        "o01",
+        46
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s212"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        47
+       ],
+       [
+        "o01",
+        39
+       ]
+      ],
+      0,
+      "CERTIFIED_INFEASIBLE",
+      "relocation:0",
+      "{'certificates': ['ORDER_FIRST_ACTION']}"
+     ],
+     [
+      [
+       [
+        "o01",
+        39
+       ],
+       [
+        "o00",
+        47
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s214"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        14
+       ],
+       [
+        "o01",
+        36
+       ],
+       [
+        "o02",
+        5
+       ],
+       [
+        "o03",
+        47
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:0",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ],
+     [
+      [
+       [
+        "o03",
+        47
+       ],
+       [
+        "o02",
+        5
+       ],
+       [
+        "o01",
+        36
+       ],
+       [
+        "o00",
+        14
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s225"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        38
+       ],
+       [
+        "o01",
+        21
+       ],
+       [
+        "o02",
+        39
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:2",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ],
+     [
+      [
+       [
+        "o02",
+        39
+       ],
+       [
+        "o01",
+        21
+       ],
+       [
+        "o00",
+        38
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s226"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        38
+       ],
+       [
+        "o02",
+        39
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:1",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ],
+     [
+      [
+       [
+        "o02",
+        39
+       ],
+       [
+        "o00",
+        38
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s226"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        44
+       ],
+       [
+        "o01",
+        53
+       ]
+      ],
+      0,
+      "UNKNOWN_TRANSIT",
+      "connector",
+      null
+     ],
+     [
+      [
+       [
+        "o01",
+        53
+       ],
+       [
+        "o00",
+        44
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s235"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        20
+       ],
+       [
+        "o01",
+        44
+       ],
+       [
+        "o02",
+        39
+       ]
+      ],
+      0,
+      "UNKNOWN_TRANSIT",
+      "connector",
+      null
+     ],
+     [
+      [
+       [
+        "o02",
+        39
+       ],
+       [
+        "o01",
+        44
+       ],
+       [
+        "o00",
+        20
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s240"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        20
+       ],
+       [
+        "o01",
+        44
+       ],
+       [
+        "o02",
+        39
+       ],
+       [
+        "o03",
+        52
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:3",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ],
+     [
+      [
+       [
+        "o03",
+        52
+       ],
+       [
+        "o02",
+        39
+       ],
+       [
+        "o01",
+        44
+       ],
+       [
+        "o00",
+        20
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s240"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o01",
+        44
+       ],
+       [
+        "o02",
+        39
+       ],
+       [
+        "o03",
+        52
+       ]
+      ],
+      0,
+      "CERTIFIED_INFEASIBLE",
+      "relocation:1",
+      "{'certificates': ['ORDER_FIRST_ACTION']}"
+     ],
+     [
+      [
+       [
+        "o03",
+        52
+       ],
+       [
+        "o02",
+        39
+       ],
+       [
+        "o01",
+        44
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s240"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        47
+       ],
+       [
+        "o01",
+        46
+       ]
+      ],
+      0,
+      "CERTIFIED_INFEASIBLE",
+      "relocation:0",
+      "{'certificates': ['ORDER_FIRST_ACTION']}"
+     ],
+     [
+      [
+       [
+        "o01",
+        46
+       ],
+       [
+        "o00",
+        47
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s241"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        44
+       ],
+       [
+        "o02",
+        28
+       ],
+       [
+        "o01",
+        37
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ],
+     [
+      [
+       [
+        "o01",
+        37
+       ],
+       [
+        "o02",
+        28
+       ],
+       [
+        "o00",
+        44
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:0",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s242"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        4
+       ],
+       [
+        "o01",
+        6
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:1",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ],
+     [
+      [
+       [
+        "o01",
+        6
+       ],
+       [
+        "o00",
+        4
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s248"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        4
+       ],
+       [
+        "o01",
+        28
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:1",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ],
+     [
+      [
+       [
+        "o01",
+        28
+       ],
+       [
+        "o00",
+        4
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s260"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        46
+       ],
+       [
+        "o03",
+        63
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:0",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ],
+     [
+      [
+       [
+        "o03",
+        63
+       ],
+       [
+        "o00",
+        46
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s261"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        59
+       ],
+       [
+        "o01",
+        37
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ],
+     [
+      [
+       [
+        "o01",
+        37
+       ],
+       [
+        "o00",
+        59
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:0",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s262"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        59
+       ],
+       [
+        "o02",
+        39
+       ],
+       [
+        "o01",
+        37
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ],
+     [
+      [
+       [
+        "o01",
+        37
+       ],
+       [
+        "o02",
+        39
+       ],
+       [
+        "o00",
+        59
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:0",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s262"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o01",
+        13
+       ],
+       [
+        "o00",
+        28
+       ],
+       [
+        "o03",
+        14
+       ],
+       [
+        "o02",
+        7
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ],
+     [
+      [
+       [
+        "o02",
+        7
+       ],
+       [
+        "o03",
+        14
+       ],
+       [
+        "o00",
+        28
+       ],
+       [
+        "o01",
+        13
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:0",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s266"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o03",
+        30
+       ],
+       [
+        "o02",
+        4
+       ],
+       [
+        "o01",
+        61
+       ],
+       [
+        "o00",
+        63
+       ],
+       [
+        "o04",
+        3
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:4",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ],
+     [
+      [
+       [
+        "o04",
+        3
+       ],
+       [
+        "o00",
+        63
+       ],
+       [
+        "o01",
+        61
+       ],
+       [
+        "o02",
+        4
+       ],
+       [
+        "o03",
+        30
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s274"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o03",
+        30
+       ],
+       [
+        "o02",
+        4
+       ],
+       [
+        "o01",
+        61
+       ],
+       [
+        "o00",
+        63
+       ],
+       [
+        "o05",
+        21
+       ],
+       [
+        "o04",
+        3
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ],
+     [
+      [
+       [
+        "o04",
+        3
+       ],
+       [
+        "o05",
+        21
+       ],
+       [
+        "o00",
+        63
+       ],
+       [
+        "o01",
+        61
+       ],
+       [
+        "o02",
+        4
+       ],
+       [
+        "o03",
+        30
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:5",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s274"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        36
+       ],
+       [
+        "o01",
+        4
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ],
+     [
+      [
+       [
+        "o01",
+        4
+       ],
+       [
+        "o00",
+        36
+       ]
+      ],
+      0,
+      "UNKNOWN_TRANSIT",
+      "connector",
+      null
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s277"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        36
+       ],
+       [
+        "o01",
+        47
+       ],
+       [
+        "o02",
+        55
+       ],
+       [
+        "o03",
+        38
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ],
+     [
+      [
+       [
+        "o03",
+        38
+       ],
+       [
+        "o02",
+        55
+       ],
+       [
+        "o01",
+        47
+       ],
+       [
+        "o00",
+        36
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:1",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s279"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        36
+       ],
+       [
+        "o02",
+        55
+       ],
+       [
+        "o03",
+        38
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ],
+     [
+      [
+       [
+        "o03",
+        38
+       ],
+       [
+        "o02",
+        55
+       ],
+       [
+        "o00",
+        36
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:1",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s279"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        52
+       ],
+       [
+        "o01",
+        47
+       ],
+       [
+        "o02",
+        55
+       ],
+       [
+        "o03",
+        38
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ],
+     [
+      [
+       [
+        "o03",
+        38
+       ],
+       [
+        "o02",
+        55
+       ],
+       [
+        "o01",
+        47
+       ],
+       [
+        "o00",
+        52
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:1",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s279"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o00",
+        62
+       ],
+       [
+        "o02",
+        4
+       ],
+       [
+        "o01",
+        23
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ],
+     [
+      [
+       [
+        "o01",
+        23
+       ],
+       [
+        "o02",
+        4
+       ],
+       [
+        "o00",
+        62
+       ]
+      ],
+      0,
+      "UNKNOWN_PLANNER",
+      "relocation:0",
+      "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}"
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s047"
+   },
+   {
+    "orders": [
+     [
+      [
+       [
+        "o02",
+        30
+       ],
+       [
+        "o01",
+        46
+       ]
+      ],
+      1,
+      "VERIFIED",
+      null,
+      null
+     ],
+     [
+      [
+       [
+        "o01",
+        46
+       ],
+       [
+        "o02",
+        30
+       ]
+      ],
+      0,
+      "CERTIFIED_INFEASIBLE",
+      "relocation:0",
+      "{'certificates': ['ORDER_FIRST_ACTION']}"
+     ]
+    ],
+    "root": "2d-mock2d_5000-w0000-s212"
+   }
+  ],
+  "failing_orders": {
+   "budget_or_planner": 89,
+   "certificate_kinds": {
+    "{'certificates': ['ORDER_FIRST_ACTION']}": 24
+   },
+   "certified": 24,
+   "phase": {
+    "connector": 21,
+    "relocation:0": 37,
+    "relocation:1": 26,
+    "relocation:2": 21,
+    "relocation:3": 4,
+    "relocation:4": 3,
+    "relocation:5": 1
+   }
+  },
+  "groups": 551
+ },
+ "pairs": {
+  "matched_decided": 2222,
+  "roots_with_pair": 185,
+  "stitch_failed": 0
+ },
+ "rows": {
+  "x": 2222,
+  "y": 1866
+ },
+ "source": {
+  "x": {
+   "P9_PILOT": 57,
+   "PMIN_COLLECT": 2165
+  },
+  "y": {
+   "P9_PILOT": 59,
+   "PMIN_COLLECT": 1807
+  }
+ },
+ "status": {
+  "x": {
+   "CERTIFIED_INFEASIBLE": 162,
+   "UNKNOWN_PLANNER": 286,
+   "UNKNOWN_TRANSIT": 42,
+   "VERIFIED": 1732
+  },
+  "y": {
+   "CERTIFIED_INFEASIBLE": 64,
+   "UNKNOWN_PLANNER": 281,
+   "VERIFIED": 1521
+  }
+ },
+ "travel": {
+  "J_connector": {
+   "max": 3.337,
+   "mean": 0.93,
+   "median": 0.92,
+   "min": 0.095,
+   "n": 1452
+  },
+  "J_relocations": {
+   "max": 11.738,
+   "mean": 2.236,
+   "median": 1.84,
+   "min": 0.271,
+   "n": 1452
+  },
+  "J_target": {
+   "max": 5.658,
+   "mean": 1.653,
+   "median": 1.376,
+   "min": 0.33,
+   "n": 1452
+  },
+  "J_total": {
+   "max": 14.82,
+   "mean": 4.819,
+   "median": 4.573,
+   "min": 0.771,
+   "n": 1452
+  },
+  "by_m": {
+   "1": {
+    "max": 9.841,
+    "mean": 3.51,
+    "median": 3.368,
+    "min": 0.771,
+    "n": 405
+   },
+   "2": {
+    "max": 11.344,
+    "mean": 4.524,
+    "median": 4.369,
+    "min": 1.27,
+    "n": 533
+   },
+   "3": {
+    "max": 14.82,
+    "mean": 5.871,
+    "median": 5.572,
+    "min": 1.776,
+    "n": 364
+   },
+   "4": {
+    "max": 12.211,
+    "mean": 6.593,
+    "median": 6.505,
+    "min": 2.481,
+    "n": 123
+   },
+   "5": {
+    "max": 14.215,
+    "mean": 8.102,
+    "median": 7.643,
+    "min": 5.136,
+    "n": 24
+   },
+   "6": {
+    "max": 8.796,
+    "mean": 7.186,
+    "median": 7.498,
+    "min": 5.266,
+    "n": 3
+   }
+  },
+  "connector_share_median": 0.196,
+  "max_abs_parts_gap": 0.0,
+  "n": 1452,
+  "noop_target_travel": {
+   "max": 4.798,
+   "mean": 1.501,
+   "median": 1.237,
+   "min": 0.33,
+   "n": 142
+  }
+ },
+ "verification": {
+  "failed": [],
+  "positives_reverified": 3253
+ },
+ "x_by_K": {
+  "K0": {
+   "n": 1596,
+   "pos": 1226,
+   "rate": 0.768
+  },
+  "K1": {
+   "n": 332,
+   "pos": 289,
+   "rate": 0.87
+  },
+  "K>=2": {
+   "n": 185,
+   "pos": 136,
+   "rate": 0.735
+  },
+  "None": {
+   "n": 109,
+   "pos": 81,
+   "rate": 0.743
+  }
+ },
+ "x_by_class": {
+  "complete": {
+   "n": 407,
+   "pos": 329,
+   "rate": 0.808
+  },
+  "complete+omission": {
+   "n": 152,
+   "pos": 126,
+   "rate": 0.829
+  },
+  "complete+omission+prefix": {
+   "n": 171,
+   "pos": 146,
+   "rate": 0.854
+  },
+  "complete+omission+prefix+reversal": {
+   "n": 1,
+   "pos": 0,
+   "rate": 0.0
+  },
+  "complete+omission+reversal": {
+   "n": 51,
+   "pos": 42,
+   "rate": 0.824
+  },
+  "complete+prefix": {
+   "n": 47,
+   "pos": 37,
+   "rate": 0.787
+  },
+  "complete+reversal": {
+   "n": 100,
+   "pos": 78,
+   "rate": 0.78
+  },
+  "omission": {
+   "n": 552,
+   "pos": 422,
+   "rate": 0.764
+  },
+  "omission+prefix": {
+   "n": 365,
+   "pos": 284,
+   "rate": 0.778
+  },
+  "omission+reversal": {
+   "n": 42,
+   "pos": 30,
+   "rate": 0.714
+  },
+  "reversal": {
+   "n": 334,
+   "pos": 238,
+   "rate": 0.713
+  }
+ },
+ "x_by_len": {
+  "1": {
+   "n": 556,
+   "pos": 503,
+   "rate": 0.905
+  },
+  "2": {
+   "n": 756,
+   "pos": 620,
+   "rate": 0.82
+  },
+  "3": {
+   "n": 600,
+   "pos": 432,
+   "rate": 0.72
+  },
+  "4": {
+   "n": 242,
+   "pos": 140,
+   "rate": 0.579
+  },
+  "5": {
+   "n": 60,
+   "pos": 33,
+   "rate": 0.55
+  },
+  "6": {
+   "n": 8,
+   "pos": 4,
+   "rate": 0.5
+  }
+ },
+ "x_failed_step": {
+  "connector": 42,
+  "relocation:0": 240,
+  "relocation:1": 127,
+  "relocation:2": 60,
+  "relocation:3": 14,
+  "relocation:4": 6,
+  "relocation:5": 1
+ },
+ "x_negatives": {
+  "('connector', 'NO_PLAN_FOUND')": 42,
+  "('relocation', 'CERTIFIED')": 162,
+  "('relocation', 'NO_PLAN_FOUND')": 286
+ },
+ "y_by_K": {
+  "K0": {
+   "n": 1331,
+   "pos": 1258,
+   "rate": 0.945
+  },
+  "K1": {
+   "n": 304,
+   "pos": 193,
+   "rate": 0.635
+  },
+  "K>=2": {
+   "n": 146,
+   "pos": 57,
+   "rate": 0.39
+  },
+  "None": {
+   "n": 85,
+   "pos": 13,
+   "rate": 0.153
+  }
+ },
+ "y_by_moved": {
+  "0": {
+   "n": 197,
+   "pos": 142,
+   "rate": 0.721
+  },
+  "1": {
+   "n": 556,
+   "pos": 450,
+   "rate": 0.809
+  },
+  "2": {
+   "n": 516,
+   "pos": 432,
+   "rate": 0.837
+  },
+  "3": {
+   "n": 392,
+   "pos": 323,
+   "rate": 0.824
+  },
+  "4": {
+   "n": 161,
+   "pos": 139,
+   "rate": 0.863
+  },
+  "5": {
+   "n": 40,
+   "pos": 32,
+   "rate": 0.8
+  },
+  "6": {
+   "n": 4,
+   "pos": 3,
+   "rate": 0.75
+  }
+ },
+ "y_negatives": {
+  "CERTIFIED": 64,
+  "NO_PLAN_FOUND": 281
+ }
+}

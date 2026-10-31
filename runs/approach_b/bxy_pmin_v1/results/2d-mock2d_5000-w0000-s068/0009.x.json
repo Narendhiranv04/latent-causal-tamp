@@ -1,0 +1,109 @@
+{
+ "attempted": true,
+ "budget": {
+  "goal_plans": 3,
+  "motion_checks": 150,
+  "online_moves": 8,
+  "transit_plans": 6
+ },
+ "budget_spent": {
+  "goal_plans": 0,
+  "motion_checks": 0,
+  "online_moves": 2,
+  "transit_plans": 1
+ },
+ "cache_hits": 1,
+ "classes": [
+  "omission",
+  "prefix"
+ ],
+ "connector_how": "planned",
+ "design_key": "X2:2d-mock2d_5000-w0000-s068:ee4e2b715590:o02>37.o01>59",
+ "failed_phase": null,
+ "final_q_after_connector": [
+  1.5707963267948966,
+  -1.5707963267948966,
+  -1.5707963267948966
+ ],
+ "final_q_before_connector": [
+  2.0720230768346095,
+  -2.1095678400701487,
+  -0.22425462456361167
+ ],
+ "independent_replay": true,
+ "item": 9,
+ "legacy_witness_match": false,
+ "negative_kind": null,
+ "observed": true,
+ "ordered_actions": [
+  [
+   "o02",
+   37
+  ],
+  [
+   "o01",
+   59
+  ]
+ ],
+ "parent_y_key": "Y2:2d-mock2d_5000-w0000-s068:ee4e2b715590:o01>59.o02>37",
+ "process_cpu_s": 1.691,
+ "q0": [
+  1.5707963267948966,
+  -1.5707963267948966,
+  -1.5707963267948966
+ ],
+ "q_ref": [
+  1.5707963267948966,
+  -1.5707963267948966,
+  -1.5707963267948966
+ ],
+ "replay_why": null,
+ "root": "2d-mock2d_5000-w0000-s068",
+ "runner": "BXY_PMIN_COLLECT_V1",
+ "side": "x",
+ "steps": [
+  {
+   "J_record": 0.42242685846447486,
+   "dest": 37,
+   "object": "o02",
+   "via": "online",
+   "witness": [
+    "abeb3d9d83aafab1625a940e"
+   ]
+  },
+  {
+   "J_record": 0.7075602319473406,
+   "dest": 59,
+   "object": "o01",
+   "via": "online",
+   "witness": [
+    "33546eac1b4c21688f5b1b19"
+   ]
+  }
+ ],
+ "teacher": "BXY_X_TEACHER_V1",
+ "teacher_hash": "sha256:4930754123e6905619b5e34ae450c8e78599643460c03e6cd0ce11393ea0a4fe",
+ "teacher_status": "VERIFIED",
+ "travel_parts": {
+  "J_between_actions": [
+   0.2618998637828648,
+   0.5410359458968195
+  ],
+  "J_connector": 0.39939413973851196,
+  "J_move": [
+   0.42242685846447486,
+   0.7075602319473406
+  ],
+  "J_prefix_stitched": 1.5293812301503276,
+  "note": "J_between_actions = the pregrasp (free approach from the achieved state) part of each relocation record, already inside J_move"
+ },
+ "virtual_cpu_s": 2.959,
+ "witness_connector": "0b2d76e1bc161b3eb8e8cc88",
+ "witness_relocations": [
+  "abeb3d9d83aafab1625a940e",
+  "33546eac1b4c21688f5b1b19"
+ ],
+ "x_key": "X2:2d-mock2d_5000-w0000-s068:ee4e2b715590:o02>37.o01>59",
+ "x_key_v1": "X:2d-mock2d_5000-w0000-s068:o02>37.o01>59",
+ "y": 1
+}
