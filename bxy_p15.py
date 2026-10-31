@@ -7,7 +7,8 @@ sweep's mechanism pools (grasp / place / transfer), fixed structures off the swe
 optional order trap (a distractor on a blocker's natural parking cell). No populated scene is ever planned during construction (no witness
 chasing, no K selection, no rejection by any label): a root is rejected only for a geometric reason or an unverified target-only reference.
 Candidate catalogue (outcome-blind, geometry only): per movable object the nearest parking cells off the sweep, an incorrect placement
-inside the sweep, a destination in the q_ref arm footprint (connector constraint), the cell of another movable object (occupied destination);
+inside the sweep, the free off-sweep cell nearest the q_ref arm footprint (connector-to-q_ref corridor), the cell of another movable object
+(occupied destination); the phenomena are drained round-robin so each is represented under the per-root cap;
 single moves, ordered pairs of sweep-relevant objects in both orders, the occupied-destination pair in both orders, the full relevant set
 in two orders. Query design = P-min PMIN_DEV_MATCHED classes (y0, complete X / Y, reversal X, single-action omission X / Y) with F1.
 Namespaces: pilot (development only) and confirm (reserved; generate() refuses it in this gate). Root / family ids are disjoint from BD_GEN_V1.
@@ -185,33 +186,41 @@ def candidates(rec) -> list:
     free = [c for c in G["valid"] if c not in occ and c != goal]
     park_ok = [c for c in free if c not in sweep and c not in foot and bd_2d.cheb(c, src) >= 2 and bd_2d.cheb(c, goal) >= 2]
     rel = sorted((o for o in mov if c0[o] in sweep or any(bd_2d.cheb(c0[o], s) <= 1 for s in sweep)), key=lambda o: (math.dist(_xy(c0[o]), _xy(src)), o))
+    anchor = [_xy(c) for c in foot] or [tuple(G["robot"].base)]               # q_ref arm footprint (or the base when it rests off-board)
+    qref_dest = min((c for c in free if c not in sweep), key=lambda d: (min(math.dist(_xy(d), a_) for a_ in anchor), d), default=None)
     dest = {}
     for o in mov:
         parks = sorted(park_ok, key=lambda d: (math.dist(_xy(d), _xy(c0[o])), d))[:2]
         dest[o] = {"park1": parks[0] if parks else None, "park2": parks[1] if len(parks) > 1 else None,
-                   "wrong": near(c0[o], [c for c in free if c in sweep and c != src]), "qref": near(c0[o], [c for c in free if c in foot]),
+                   "wrong": near(c0[o], [c for c in free if c in sweep and c != src]), "qref": qref_dest,
                    "occupied": near(c0[o], [c0[p] for p in mov if p != o])}
-    out = []
-    add = lambda seq, kind: out.append(([(o, int(d)) for o, d in seq], kind)) if all(d is not None for _, d in seq) else None  # noqa: E731
+    groups = collections.defaultdict(list)                                        # one queue per phenomenon, drained round-robin
+    add = lambda g, seq, kind: groups[g].append(([(o, int(d)) for o, d in seq], kind)) if all(d is not None for _, d in seq) else None  # noqa: E731
     for o in rel:
-        add([(o, dest[o]["park1"])], "single_park")
-    for a_, b_ in itertools.combinations(rel[:4], 2):
-        add([(a_, dest[a_]["park1"]), (b_, dest[b_]["park1"])], "pair_park")
-        add([(b_, dest[b_]["park1"]), (a_, dest[a_]["park1"])], "pair_park_reversed")
-    if len(rel) >= 3:
-        full = [(o, dest[o]["park1"]) for o in rel[:6]]
-        add(full, "full_relevant")
-        add(full[::-1], "full_relevant_reversed")
-    for o in rel:
-        add([(o, dest[o]["wrong"])], "single_incorrect_placement")
-        add([(o, dest[o]["qref"])], "single_qref_destination")
+        add("park", [(o, dest[o]["park1"])], "single_park")
+        add("incorrect", [(o, dest[o]["wrong"])], "single_incorrect_placement")
+        add("connector", [(o, dest[o]["qref"])], "single_qref_corridor_destination")
         p = next((x for x in mov if c0[x] == dest[o]["occupied"]), None)
         if p is not None:
-            add([(p, dest[p]["park1"]), (o, dest[o]["occupied"])], "occupied_destination_pair")
-            add([(o, dest[o]["occupied"]), (p, dest[p]["park1"])], "occupied_destination_pair_wrong_order")
+            add("occupied", [(p, dest[p]["park1"]), (o, dest[o]["occupied"])], "occupied_destination_pair")
+            add("occupied", [(o, dest[o]["occupied"]), (p, dest[p]["park1"])], "occupied_destination_pair_wrong_order")
+    for a_, b_ in itertools.combinations(rel[:4], 2):
+        add("pair", [(a_, dest[a_]["park1"]), (b_, dest[b_]["park1"])], "pair_park")
+        add("pair", [(b_, dest[b_]["park1"]), (a_, dest[a_]["park1"])], "pair_park_reversed")
+    if len(rel) >= 3:
+        full = [(o, dest[o]["park1"]) for o in rel[:6]]
+        add("full", full, "full_relevant")
+        add("full", full[::-1], "full_relevant_reversed")
     for o in mov:
         if o not in rel:
-            add([(o, dest[o]["park1"])], "unnecessary_displacement")
+            add("unnecessary", [(o, dest[o]["park1"])], "unnecessary_displacement")
+    order = ("park", "pair", "incorrect", "occupied", "full", "connector", "unnecessary")
+    out, q = [], {g: list(groups[g]) for g in order}
+    while any(q.values()):
+        for g in order:
+            n = 2 if g in ("pair", "occupied", "full") else 1                   # ordered variants stay together
+            out += q[g][:n]
+            q[g] = q[g][n:]
     seen, uniq = set(), []
     for seq, kind in out:
         s = bd.sig(seq)
@@ -331,7 +340,8 @@ def authorize(out=OUT) -> dict:
         raise FileExistsError(str(f))
     a = {"gate": "BXY-P15", "scope": "optional development-pilot teacher collection of the frozen pilot design only (<= 30 new roots, namespace pilot)",
          "limits": PILOT_LIMITS, "workers": PILOT_LIMITS["workers"], "per_query_budget": bd_2d.QB, "pilot_design_sha256": PM.sha_file(out / "PILOT_DESIGN.json"),
-         "generation_construction_cpu_s": json.loads((out / "PILOT_GENERATION.json").read_text())["construction_cpu_s"],
+         "generation_construction_cpu_s": json.loads((out / "PILOT_GENERATION.json").read_text())["construction_cpu_s"] + (
+             json.loads((out / "SUPERSEDED_GENERATION.json").read_text())["superseded_generation_cpu_s"] if (out / "SUPERSEDED_GENERATION.json").exists() else 0.0),
          "runner_sha256": PM.sha_file("bxy_p15.py"), "teacher_hash": T.teacher_hash(), "authorized": True, "created_at": time.time(),
          "authorized_by": "user execution contract BXY-P13/P14/P15 (2026-11-01): <= 8,000 additional aggregate CPU-s, 4 workers, 7,200 s wall, "
                           "P-min per-query budgets as strict upper bounds"}

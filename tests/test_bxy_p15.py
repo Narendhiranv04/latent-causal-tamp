@@ -52,7 +52,7 @@ def test_design_respects_caps_f1_and_classes(roots):
 def test_catalogue_covers_the_required_phenomena(roots):
     kinds = {c["kind"] for r in roots for c in G.root_design("k", r)["catalogue"]}
     assert {"single_park", "pair_park", "pair_park_reversed", "single_incorrect_placement"} <= kinds
-    assert kinds & {"single_qref_destination", "occupied_destination_pair", "unnecessary_displacement"}
+    assert kinds & {"single_qref_corridor_destination", "occupied_destination_pair", "unnecessary_displacement"}
 
 
 def test_confirmatory_namespace_is_reserved_and_ids_are_disjoint(tmp_path):
