@@ -1,0 +1,9 @@
+...................................................                      [100%]
+=============================== warnings summary ===============================
+tests/test_bxy_p10.py::test_exact_likelihood_on_a_v2_view_matches_brute_force
+  /home/naren/Desktop/boltzmann_lfd/.claude/worktrees/approach-b-xy-v1/tests/test_bxy_p10.py:165: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+  Consider using tensor.detach() first. (Triggered internally at /pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:836.)
+    assert abs(float(ex) - X.brute_force(b, a, w, rt["parent"], rt["obs_y"], rt["obs_x"])) < 1e-9
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+51 passed, 1 warning in 18.24s
