@@ -1,0 +1,87 @@
+{
+ "arms": {
+  "DIRECT": "bxy_p11 DIRECT, retrained",
+  "XYQ": "bxy_p11 XY-quadratic, lambda_J = 1.0 (P12 lambda*), original objective",
+  "XYQ+CON": "XYQ + CON",
+  "XYQ+CON+GEO": "XYQ + CON + GEO",
+  "XYQ+GEO": "XYQ + GEO"
+ },
+ "bottlenecks_ranked": [
+  {
+   "evidence": "edited-Y Shapley share 0.36-0.42 of the corrective gap; within-root edited-Y AUROC 0.42-0.48 OOF and only 0.55-0.58 on the models' own training roots; P(Y_edit) - P(Y0) ~ +0.12..+0.16 whatever the recorded labels (edit-contrast agreement 0.00-0.06 on S0-feasible roots); a hand-made 8-clearance probe reaches pooled edited-Y AUROC 0.69 vs 0.59",
+   "id": "B1_EDITED_Y_CONTRAST"
+  },
+  {
+   "evidence": "Y0 Shapley share 0.13-0.28; Y0 AUROC 0.83-0.89 on training roots vs 0.65-0.71 OOF; the probe reaches 0.77 OOF; Y0 is 1 of ~20 terms per root (5.6 % of the joint NLL)",
+   "id": "B2_Y0_GENERALIZATION"
+  },
+  {
+   "evidence": "27-33 % of travel-arm choices on infeasible roots reject a verified repair whose p exceeds P(Y0) (MISSED_PENALTY_REJECTED; 13 % at gamma = 0); a penalty-free rule doubles-to-triples corrective success but repairs 55-65 % of feasible roots under the P12 models (because of B1's constant edit bonus)",
+   "id": "B3_SELECTION_PENALTY"
+  }
+ ],
+ "budget": {
+  "aggregate_cpu_s": 45000,
+  "per_run_cpu_s": 1500,
+  "runs": 75,
+  "wall_s": 21600,
+  "workers": 4
+ },
+ "contrasts": {
+  "C1": "XYQ+CON vs XYQ (PRIMARY)",
+  "C2": "XYQ+GEO vs XYQ (PRIMARY)",
+  "C3": "XYQ+CON+GEO vs XYQ (PRIMARY)",
+  "C4": "PONLY vs PRIMARY on the same checkpoints, every arm",
+  "C5": "XYQ+CON+GEO with PONLY vs XYQ with PRIMARY (pre-specified combination)"
+ },
+ "decision": {
+  "IMPROVES": "paired root-cluster bootstrap (B = 10000) delta success on infeasible roots: CI95 lower > 0, AND delta unnecessary-repair point estimate <= +0.05",
+  "TARGET_MET": "IMPROVES and delta success point estimate >= +0.10",
+  "multiplicity": "five pre-specified contrasts; 95 % CIs reported plus whether each survives Bonferroni (99 % CI); development evidence only",
+  "no_post_hoc_change": "criteria, arms, coefficients and rules are not changed after any P14 result"
+ },
+ "endpoints": {
+  "co_report": "the 39 repairable infeasible roots",
+  "guardrail": "unnecessary repair rate on the 131 initially feasible roots",
+  "primary": "verified success on the 45 initially infeasible roots (seed mean per root, OOF)"
+ },
+ "interventions": {
+  "CON": {
+   "definition": "per root, all pairs (s, t) of observed Y nodes (Y0 included) with y_s = 1, y_t = 0: l_root = n_obsY(root) * mean_pairs softplus(-(b_s - b_t)); L = L_joint + lambda_J L_J + kappa * mean over the batch roots of l_root (roots without a discordant pair contribute 0)",
+   "kappa": 1.0,
+   "kind": "training objective (auxiliary, NOT the exact likelihood)",
+   "targets": "B1 (and Y0-vs-edit contrasts of B2)"
+  },
+  "GEO": {
+   "definition": "b_s = scene(v_s, c) + mlp(8 -> 128 -> 1)(phi(S_s)); phi = bxy_p13.geo_features of the (edited) scene from the scorer's own tensors (object centres / radii / target flag, robot base, goal), distances / 0.08 m (cell units), counts raw; no label, witness, teacher or catalogue field",
+   "kind": "geometry-aware control on the Y unary only",
+   "targets": "B1 / B2 representation"
+  },
+  "PONLY": {
+   "definition": "argmin -log p over F1-admissible candidates incl. the no-op (alpha = beta = gamma = 0, eta = 0, no gate), ties by (m, C_d, signature)",
+   "kind": "selection only (no training)",
+   "targets": "B3"
+  }
+ },
+ "not_targeted": {
+  "X": "Shapley share ~0.09, within-root X AUROC 0.72",
+  "clipping": "0 % of batches exceed the clip norm at initialization, ~65 % at the restored checkpoints, dominated by X|Y terms of sharpened logits; no evidence that clipping limits the fit",
+  "query_normalization": "Y0 under-fit is not the problem (training-root AUROC 0.83-0.89); re-weighting would not address generalization"
+ },
+ "protocol": {
+  "folds": "5 family-grouped folds over the 176 roots (bxy_p11.folds procedure, early-stop subset inside each training part)",
+  "roots": "the 176 original TRAIN roots only (val21 and the 34 exposed test roots excluded)",
+  "runs": 75,
+  "seeds": [
+   0,
+   1,
+   2
+  ],
+  "training": "bxy_p11.TRAIN unchanged; early stopping on the exact joint NLL (XY) / success BCE (DIRECT) for every arm"
+ },
+ "selection_rules": {
+  "PONLY": "see PONLY",
+  "PRIMARY": "P11.1 PRIMARY (alpha 0.1, beta 0, gamma 0.05 for lambda_J-trained XY arms, 0 for DIRECT)"
+ },
+ "version": "BXY_P14_HYPOTHESES_V1"
+}
