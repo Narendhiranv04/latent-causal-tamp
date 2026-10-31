@@ -1,0 +1,64 @@
+{
+ "attempt": 1,
+ "cfg": {
+  "batch_roots": 12,
+  "clip_norm": 10.0,
+  "dtype": "float64",
+  "eval_every": 20,
+  "huber_delta": 1.0,
+  "lr": 0.001,
+  "max_updates": 3000,
+  "optimizer": "AdamW",
+  "patience_evals": 15,
+  "rel_tol": 0.001,
+  "tau": 1.0,
+  "torch_threads": 1,
+  "weight_decay": 0.0001
+ },
+ "env": {
+  "host_cpus": 32,
+  "python": "3.13.11",
+  "threads": 1,
+  "torch": "2.9.1+cu128"
+ },
+ "files": {
+  "best.pt": "4e6f17e8f0f40a6949bc8a9cab25fee56cbc0bd398f3359e9ed47ea7e07183bf",
+  "history.json": "bb6bd5426accdb9db59ad8e2119c8b099eac90970be9003c68344e708d62acb2",
+  "predictions.json": "60bb277e10d1d40aff491b2adb7c140267127b1966acbde499a9d87389a24adf"
+ },
+ "info": {
+  "best_update": 200,
+  "es_nll": 9.24620526848908,
+  "lambda_J": 0.1,
+  "params": 549799,
+  "stopped_early": true,
+  "updates_run": 500
+ },
+ "lambda_J": 0.1,
+ "numerical": {
+  "clipped_updates": 353,
+  "max_grad_pre": 95.50695558987026,
+  "nonfinite_updates": 0,
+  "warnings": []
+ },
+ "resumed_from_update": 0,
+ "rid": "cv/f0/XY-uncoupled-SA/s0",
+ "roots": {
+  "es": 21,
+  "predict": 41,
+  "train": 135
+ },
+ "roots_sha256": "ac1021cbce1aa4e74805fe4d52932f51cecdc9099630cc3207bb7fd724761692",
+ "spec": {
+  "arm": "XY-uncoupled-SA",
+  "early_stop": "fold0.early_stop",
+  "heldout": "fold0.heldout",
+  "id": "cv/f0/XY-uncoupled-SA/s0",
+  "lambda_J": "SELECTED",
+  "phase": "CROSSFIT",
+  "seed": 0,
+  "train": "fold0.train"
+ },
+ "synthetic": false,
+ "worker_cpu_s_final_attempt": 299.83749500000005
+}

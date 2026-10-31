@@ -8,6 +8,7 @@ from pathlib import Path
 
 import matplotlib
 matplotlib.use("Agg")
+import matplotlib.patches  # noqa: E402
 import matplotlib.pyplot as plt  # noqa: E402
 import numpy as np  # noqa: E402
 
@@ -64,7 +65,7 @@ def fig_training(L, RUNS, lam):
             if not h:
                 continue
             u, e = zip(*h)
-            a.plot(u, e, lw=0.9 if sp["phase"] == "SPLIT" else 0.5, alpha=0.95 if sp["phase"] == "SPLIT" and chosen else 0.25,
+            a.plot(u, e, lw=0.9 if sp["phase"] == "SPLIT" else 0.7, alpha=0.95 if sp["phase"] == "SPLIT" and chosen else 0.4,
                    color=ARM_C[arm] if chosen else "#bdbdb8", ls="-" if sp["phase"] == "SPLIT" else ":")
             a.plot(r["res"]["info"]["best_update"], r["res"]["info"]["es_nll"], "o", ms=3.5, color=ARM_C[arm] if chosen else "#bdbdb8")
         a.set(title=f"{arm}: early-stopping NLL per evaluation", xlabel="update", ylabel="mean root NLL (early-stop roots)")
@@ -81,7 +82,7 @@ def fig_training(L, RUNS, lam):
     a.set(title="restored checkpoint update and updates run (every finished run)", ylabel="update")
     a.legend(frameon=False, fontsize=8)
     _clean(a)
-    fig.suptitle("Training convergence: solid = SPLIT (coloured = selected lambda / lambda 0, grey = other lambdas), dotted = CROSSFIT folds", x=0.01, ha="left")
+    fig.suptitle("Training convergence: solid = SPLIT (coloured = selected lambda / lambda 0, grey = other lambdas), dotted = CROSSFIT folds (own early-stop subsets; levels not comparable with SPLIT); dots = restored best", x=0.01, ha="left")
     fig.tight_layout()
     return _save(fig, "01_training_convergence.png")
 
@@ -166,7 +167,7 @@ def fig_contrasts(E):
     ax[0].invert_yaxis()
     for t_ in tiers:
         ax[2].plot([], [], color=tc[t_], lw=2.2, label=t_)
-    ax[2].legend(frameon=False, fontsize=8, loc="lower right")
+    ax[2].legend(frameon=False, fontsize=8, loc="upper left")
     fig.suptitle("Paired root-cluster bootstrap (B = 10000, seed-averaged per root): point = mean, bar = 95% CI. PRIMARY_DEV decides; "
                  "development evidence only", x=0.01, ha="left")
     fig.tight_layout()
@@ -217,7 +218,7 @@ def fig_noop(E, tier="PRIMARY_DEV"):
         rng = np.random.default_rng(0)
         for k, cs in acc.items():
             y0, p = cs[0]["y0"], float(np.mean([c["p_noop"] for c in cs]))
-            rep = np.mean([c["sig"] not in ("", None) and c["sig"] != "empty" and c.get("sig") for c in cs]) if cs else 0
+            rep = np.mean([c["sig"] not in ("", None, "empty") for c in cs])
             x = (0 if y0 == 1 else 1) + rng.uniform(-0.18, 0.18)
             a.scatter(x, p, s=14, color="#1baf7a" if np.mean([c["success"] for c in cs]) >= 0.5 else "#b4441c", alpha=0.8,
                       marker="o" if rep < 0.5 else "^")
@@ -254,7 +255,7 @@ def fig_order_omission(E, tier="PRIMARY_DEV"):
     for j, side in enumerate(("x", "y", "success")):
         v = [t["omissions"][a]["sign_agreement"][side] for a in arms]
         ax[1].bar(np.arange(len(arms)) + (j - 1) * 0.27, [d["sign_agreement"] or 0 for d in v], 0.25, color=[ARM_C[a] for a in arms],
-                  alpha=(1.0, 0.65, 0.35)[j], edgecolor="white", label=f"{side} ({v[0]['pairs']} decided pairs)")
+                  alpha=(1.0, 0.65, 0.35)[j], edgecolor="white", label=f"{side} ({max(d['pairs'] for d in v)} decided pairs" + (", no Y head in DIRECT)" if side == "y" else ")"))
     ax[1].axhline(0.5, color="#888", ls="--", lw=0.8)
     ax[1].set_xticks(range(len(arms)), [SHORT[a] for a in arms])
     ax[1].set(ylim=(0, 1.05), ylabel="sign agreement", title="Omissions: predicted change matches the decided full -> omitted change")
@@ -320,6 +321,8 @@ def fig_resources(L):
     ax[0].bar(range(len(cpu)), [c for _, c in cpu], color=[ARM_C.get(a, "#999") for a in arms], width=1.0)
     ax[0].axhline(L["limits"]["per_run_cpu_s"], color="#b4441c", ls="--", lw=1)
     ax[0].text(0, L["limits"]["per_run_cpu_s"], " per-run ceiling", va="bottom", fontsize=8, color="#b4441c")
+    ax[0].legend(handles=[matplotlib.patches.Patch(color=ARM_C.get(a, "#999"), label=SHORT.get(a, a)) for a in ARMS], frameon=False, fontsize=7.5,
+                 loc="center right")
     ax[0].set(xlabel="run (ledger order)", ylabel="CPU-s incl. resumes", title="CPU per run")
     ev = sorted((e for e in L["events"] if e["kind"] in ("launch", "reap")), key=lambda e: e["t"])
     t0 = ev[0]["t"] if ev else 0
@@ -333,8 +336,10 @@ def fig_resources(L):
     ax[1].step(tt, nn, where="post", color=INK)
     ax[1].set(xlabel="hours since first launch", ylabel="running workers", title="memory-gated worker ramp")
     ax[2].plot(tt, aa, color="#2a78d6")
-    ax[2].axhline(L["limits"]["aggregate_cpu_s"], color="#b4441c", ls="--", lw=1)
-    ax[2].axhline(L["limits"]["aggregate_cpu_s"] - L["reserve"]["evaluation_cpu_s"], color="#f2a33a", ls=":", lw=1)
+    ax[2].axhline(L["limits"]["aggregate_cpu_s"], color="#b4441c", ls="--", lw=1, label="aggregate ceiling")
+    ax[2].axhline(L["limits"]["aggregate_cpu_s"] - L["reserve"]["evaluation_cpu_s"], color="#f2a33a", ls=":", lw=1,
+                  label="training cap (ceiling - eval reserve)")
+    ax[2].legend(frameon=False, fontsize=8, loc="center right")
     ax[2].set(xlabel="hours since first launch", ylabel="aggregate worker CPU-s (finished attempts)", title="aggregate CPU vs ceiling / training cap")
     for a in ax:
         _clean(a)

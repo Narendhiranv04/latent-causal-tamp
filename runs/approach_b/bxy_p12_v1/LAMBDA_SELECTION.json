@@ -1,0 +1,59 @@
+{
+ "es_nll": {
+  "XY-quadratic|0.1|0": 10.452876943744435,
+  "XY-quadratic|0.1|1": 10.306783371322975,
+  "XY-quadratic|0.1|2": 9.17297260744051,
+  "XY-quadratic|0.3|0": 9.822485233574222,
+  "XY-quadratic|0.3|1": 10.228777414265437,
+  "XY-quadratic|0.3|2": 9.437493339737411,
+  "XY-quadratic|1.0|0": 10.116716565156931,
+  "XY-quadratic|1.0|1": 10.27459886445728,
+  "XY-quadratic|1.0|2": 9.042005941656797,
+  "XY-uncoupled-SA|0.1|0": 10.449265890263604,
+  "XY-uncoupled-SA|0.1|1": 9.839182330680643,
+  "XY-uncoupled-SA|0.1|2": 8.999932000314667,
+  "XY-uncoupled-SA|0.3|0": 10.178194533144406,
+  "XY-uncoupled-SA|0.3|1": 9.803440225043724,
+  "XY-uncoupled-SA|0.3|2": 9.352184535155375,
+  "XY-uncoupled-SA|1.0|0": 10.097792654605493,
+  "XY-uncoupled-SA|1.0|1": 10.116131912831767,
+  "XY-uncoupled-SA|1.0|2": 9.12706615874377,
+  "XY-uncoupled|0.1|0": 10.03525786029704,
+  "XY-uncoupled|0.1|1": 9.376862705625873,
+  "XY-uncoupled|0.1|2": 9.976360839362671,
+  "XY-uncoupled|0.3|0": 10.010622599241747,
+  "XY-uncoupled|0.3|1": 9.690172083421364,
+  "XY-uncoupled|0.3|2": 9.435510955144345,
+  "XY-uncoupled|1.0|0": 10.120702189723476,
+  "XY-uncoupled|1.0|1": 9.797848151597153,
+  "XY-uncoupled|1.0|2": 10.00922753793038
+ },
+ "rule": "per J-trained arm: argmin over lambda of the 3-seed mean best val21 early-stopping NLL; relative difference <= 1e-3 to the minimum -> smaller lambda",
+ "selection": {
+  "XY-quadratic": {
+   "lambda": 1.0,
+   "mean_es_nll": {
+    "0.1": 9.97754430750264,
+    "0.3": 9.829585329192357,
+    "1.0": 9.811107123757003
+   }
+  },
+  "XY-uncoupled": {
+   "lambda": 0.3,
+   "mean_es_nll": {
+    "0.1": 9.796160468428527,
+    "0.3": 9.712101879269152,
+    "1.0": 9.975925959750336
+   }
+  },
+  "XY-uncoupled-SA": {
+   "lambda": 0.1,
+   "mean_es_nll": {
+    "0.1": 9.762793407086304,
+    "0.3": 9.777939764447835,
+    "1.0": 9.780330242060343
+   }
+  }
+ },
+ "t": 1793456615.1217654
+}
