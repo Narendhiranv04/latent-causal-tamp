@@ -1,0 +1,103 @@
+{
+ "attempted": true,
+ "budget": {
+  "goal_plans": 3,
+  "motion_checks": 150,
+  "online_moves": 8,
+  "transit_plans": 6
+ },
+ "budget_spent": {
+  "goal_plans": 0,
+  "motion_checks": 0,
+  "online_moves": 2,
+  "transit_plans": 1
+ },
+ "cache_hits": 0,
+ "connector_how": "planned",
+ "failed_phase": null,
+ "final_q_after_connector": [
+  0.7853981633974483,
+  1.5707963267948966,
+  1.5707963267948966
+ ],
+ "final_q_before_connector": [
+  -0.8415219435921184,
+  1.3021250166755456,
+  0.8483938659123202
+ ],
+ "independent_replay": true,
+ "item": "01_old_success",
+ "legacy_witness_match": false,
+ "negative_kind": null,
+ "observed": true,
+ "ordered_actions": [
+  [
+   "o02",
+   30
+  ],
+  [
+   "o01",
+   46
+  ]
+ ],
+ "parent_y_key": "Y2:2d-mock2d_5000-w0000-s212:72ac678e7716:o01>46.o02>30",
+ "process_cpu_s": 4.309,
+ "q0": [
+  0.7853981633974483,
+  1.5707963267948966,
+  1.5707963267948966
+ ],
+ "q_ref": [
+  0.7853981633974483,
+  1.5707963267948966,
+  1.5707963267948966
+ ],
+ "replay_why": null,
+ "root": "2d-mock2d_5000-w0000-s212",
+ "steps": [
+  {
+   "J_record": 0.8644843569151373,
+   "dest": 30,
+   "object": "o02",
+   "via": "online",
+   "witness": [
+    "d5bcfc831d34da77b4bc3db8"
+   ]
+  },
+  {
+   "J_record": 1.709771611685016,
+   "dest": 46,
+   "object": "o01",
+   "via": "online",
+   "witness": [
+    "fec2fefc200c70089507bf8a"
+   ]
+  }
+ ],
+ "teacher": "BXY_X_TEACHER_V1",
+ "teacher_hash": "sha256:4930754123e6905619b5e34ae450c8e78599643460c03e6cd0ce11393ea0a4fe",
+ "teacher_status": "VERIFIED",
+ "travel_parts": {
+  "J_between_actions": [
+   0.6760912869687669,
+   0.8190382672407097
+  ],
+  "J_connector": 0.7830551676340931,
+  "J_move": [
+   0.8644843569151373,
+   1.709771611685016
+  ],
+  "J_prefix_stitched": 3.3573111362342463,
+  "note": "J_between_actions = the pregrasp (free approach from the achieved state) part of each relocation record, already inside J_move"
+ },
+ "type": "old_success",
+ "virtual_cpu_s": 3.654,
+ "witness_connector": "8dfa3210598368c9e70e5efa",
+ "witness_relocations": [
+  "d5bcfc831d34da77b4bc3db8",
+  "fec2fefc200c70089507bf8a"
+ ],
+ "x_key": "X2:2d-mock2d_5000-w0000-s212:72ac678e7716:o02>30.o01>46",
+ "x_key_v1": "X:2d-mock2d_5000-w0000-s212:o02>30.o01>46",
+ "y": 1
+}
