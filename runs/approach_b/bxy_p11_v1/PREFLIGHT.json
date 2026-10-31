@@ -1,0 +1,263 @@
+{
+ "audit": {
+  "catalogue": {
+   "admissible_undecided": 0,
+   "candidates": 1143,
+   "f1_screened": 17,
+   "infeasible_with_successful_candidate": 48,
+   "initially_infeasible": 55
+  },
+  "dedup": {
+   "p9_reused_x": 57,
+   "p9_reused_y": 59,
+   "unobserved_rows": 0,
+   "x_rows": 2222,
+   "x_unique": 2222,
+   "y_rows": 1866,
+   "y_unique": 1866
+  },
+  "encoding": {
+   "x_by_length": {
+    "x_len1": 556,
+    "x_len2": 756,
+    "x_len3": 600,
+    "x_len4": 242,
+    "x_len5": 60,
+    "x_len6": 8
+   },
+   "x_seq_length_mismatch": 0
+  },
+  "evidence": {
+   "counts": {
+    "j_complete": 1452,
+    "j_noop": 142,
+    "pairs": 2222,
+    "train": 176,
+    "val": 21,
+    "x": 2222,
+    "y": 1866
+   },
+   "hashes": {
+    "BXY_SIDECAR_V2_PMIN.json": "0191f49bc165cf21b33246855f7e8a788a17fd74b187eb120d31548c4176cd7e",
+    "PMIN_DESIGN.json": "8f164845e5804821b8fbf9411c52ca2584f22d6f6f4a0efd19b8c3bcb86ff658",
+    "PMIN_LOCK.json": "4d42027e8c111e49557a68c9e128d0359918dd6032dcf8431fd051c044dfffaa"
+   }
+  },
+  "missingness": {
+   "unobserved_x_vars": 0,
+   "unobserved_y_vars": 0
+  },
+  "negatives": {
+   "x_CERTIFIED_INFEASIBLE": 162,
+   "x_UNKNOWN_PLANNER": 286,
+   "x_UNKNOWN_TRANSIT": 42,
+   "x_VERIFIED": 1732,
+   "y_CERTIFIED_INFEASIBLE": 64,
+   "y_UNKNOWN_PLANNER": 281,
+   "y_VERIFIED": 1521
+  },
+  "noop": {
+   "noop_travel_witnesses": 142,
+   "x_variables_with_empty_prefix": 0,
+   "y0_observed_roots": 197
+  },
+  "order": {
+   "order_failing_budget": 89,
+   "order_failing_certified": 24,
+   "order_groups": 551,
+   "order_groups_discordant": 113
+  },
+  "shared_y": {
+   "parent_edit_equals_endpoint": "enforced by bxy_p11.build (raises otherwise)",
+   "reversal_x_sharing_a_y_node": 528,
+   "y_nodes_with_2plus_x_children": 551
+  },
+  "splits": {
+   "families_straddling_train_val": 0,
+   "records_split_agree": true,
+   "test_roots_in_design": 0,
+   "test_roots_in_sidecar": 0,
+   "train": 176,
+   "val": 21
+  },
+  "strata": {
+   "train_K0": 131,
+   "train_K1": 32,
+   "train_K>=2": 5,
+   "train_None": 8,
+   "train_initially_infeasible": 45,
+   "val_K0": 11,
+   "val_K1": 5,
+   "val_K>=2": 4,
+   "val_None": 1,
+   "val_initially_infeasible": 10
+  },
+  "travel": {
+   "complete_witnesses": 1452,
+   "connector_in_every_complete_prefix": true,
+   "noop_witnesses": 142,
+   "on_failed_candidates": 0
+  }
+ },
+ "benchmark_in_design": {
+  "benchmark_max_rss_mb": 662.18359375,
+  "checkpoint": "after 12 finished runs: projected = spent / expected(finished) x expected(all); stop launching (never kill a running run) if projected > aggregate cap",
+  "evaluation_cpu_s": 10000,
+  "expected_wall_s_4_workers": 19831.073318662493,
+  "expected_wall_s_8_workers": 9915.536659331246,
+  "memory_gate": "launch a worker only if available memory >= 2.0 GB + 0.8 GB per running worker (ramp 2 -> 4 -> 8); the host showed ~4 GB available at P11, so the wall request assumes 4 effective workers",
+  "per_run_expected_cpu_s": {
+   "DIRECT": 599.0362464000007,
+   "XY-quadratic": 797.9458800749995,
+   "XY-quadratic-noJ": 755.750382525,
+   "XY-uncoupled": 893.6126762249999,
+   "XY-uncoupled-SA": 597.5303584499991
+  },
+  "per_run_worst_cpu_s": {
+   "DIRECT": 1725.1766412000052,
+   "XY-quadratic": 2006.7958927499985,
+   "XY-quadratic-noJ": 1670.235907650001,
+   "XY-uncoupled": 2129.23622925,
+   "XY-uncoupled-SA": 1316.2825011000036
+  },
+  "requested": {
+   "aggregate_cpu_s": 110000,
+   "memory_floor_gb": 2.0,
+   "per_run_cpu_s": 3500,
+   "torch_threads_per_worker": 1,
+   "wall_s": 31200,
+   "workers": 8
+  },
+  "runs": 108,
+  "runs_by_arm": {
+   "DIRECT": 18,
+   "XY-quadratic": 24,
+   "XY-quadratic-noJ": 18,
+   "XY-uncoupled": 24,
+   "XY-uncoupled-SA": 24
+  },
+  "sum_expected_cpu_s": 79324.29327464997,
+  "sum_worst_cpu_s": 191972.97683370017
+ },
+ "evidence": {
+  "counts": {
+   "j_complete": 1452,
+   "j_noop": 142,
+   "pairs": 2222,
+   "train": 176,
+   "val": 21,
+   "x": 2222,
+   "y": 1866
+  },
+  "hashes": {
+   "BXY_SIDECAR_V2_PMIN.json": "0191f49bc165cf21b33246855f7e8a788a17fd74b187eb120d31548c4176cd7e",
+   "PMIN_DESIGN.json": "8f164845e5804821b8fbf9411c52ca2584f22d6f6f4a0efd19b8c3bcb86ff658",
+   "PMIN_LOCK.json": "4d42027e8c111e49557a68c9e128d0359918dd6032dcf8431fd051c044dfffaa"
+  }
+ },
+ "leakage": {
+  "arms": {
+   "DIRECT": {
+    "choice_diff": 0,
+    "coeff_max_abs_diff": 0.0,
+    "perm_choice_diff": 0,
+    "pred_max_abs_diff": 0.0
+   },
+   "XY-quadratic": {
+    "choice_diff": 0,
+    "coeff_max_abs_diff": 0.0,
+    "perm_choice_diff": 0,
+    "pred_max_abs_diff": 0.0
+   },
+   "XY-quadratic-noJ": {
+    "choice_diff": 0,
+    "coeff_max_abs_diff": 0.0,
+    "perm_choice_diff": 0,
+    "pred_max_abs_diff": 0.0
+   },
+   "XY-uncoupled": {
+    "choice_diff": 0,
+    "coeff_max_abs_diff": 0.0,
+    "perm_choice_diff": 0,
+    "pred_max_abs_diff": 0.0
+   },
+   "XY-uncoupled-SA": {
+    "choice_diff": 0,
+    "coeff_max_abs_diff": 0.0,
+    "perm_choice_diff": 0,
+    "pred_max_abs_diff": 0.0
+   }
+  },
+  "evaluator_changed_roots": 197,
+  "labels_changed_roots": 197,
+  "model_roots": 12,
+  "passed": true,
+  "roots": 197,
+  "scorer_views_identical": 197
+ },
+ "lock_design_sha256": "24ffa822ac57c1ff33b0c20b52cbd7cbebfa975df74db1e1f14f8f2fec5782cf",
+ "no_training_performed": true,
+ "optimizer_steps": 0,
+ "params": {
+  "DIRECT": {
+   "active": 433443,
+   "extra_heads": [
+    "xs"
+   ],
+   "total": 549799
+  },
+  "LB (frozen reference)": {
+   "active": null,
+   "extra_heads": [],
+   "total": 467365
+  },
+  "XY-quadratic": {
+   "active": 483109,
+   "extra_heads": [
+    "xy"
+   ],
+   "total": 549799
+  },
+  "XY-quadratic-noJ": {
+   "active": 433443,
+   "extra_heads": [
+    "xy"
+   ],
+   "total": 549799
+  },
+  "XY-uncoupled": {
+   "active": 433700,
+   "extra_heads": [],
+   "total": 500390
+  },
+  "XY-uncoupled-SA": {
+   "active": 483109,
+   "extra_heads": [
+    "xs"
+   ],
+   "total": 549799
+  }
+ },
+ "passed": true,
+ "regression": {
+  "pytest_tail": {
+   "pytest_full.log": "EXIT 0",
+   "replay_g1_hardening.log": "{\"replay_passed\": true, \"trajectories\": 77}",
+   "replay_g1_robot.log": "{\"replay_passed\": true, \"trajectories\": 77}",
+   "replay_g2_interventions.log": "{\"replay_passed\": true, \"trajectories\": 2}",
+   "replay_g3_5_initial_scene.log": "{\"replay_passed\": true, \"trajectories\": 20}",
+   "replay_g3_repairs.log": "{\"replay_passed\": true, \"trajectories\": 50}",
+   "replay_g4a_evidence_audit.log": "{\"replay_passed\": true, \"trajectories\": 257}"
+  },
+  "replays": {
+   "g1_hardening": "0",
+   "g1_robot": "0",
+   "g2_interventions": "0",
+   "g3_5_initial_scene": "0",
+   "g3_repairs": "0",
+   "g4a_evidence_audit": "0"
+  }
+ },
+ "teacher_queries": 0,
+ "test_roots_touched": 0
+}
