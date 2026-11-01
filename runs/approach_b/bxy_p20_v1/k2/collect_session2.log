@@ -1,0 +1,15 @@
+Traceback (most recent call last):
+  File "/home/naren/Desktop/boltzmann_lfd/.claude/worktrees/approach-b-xy-v1/bxy_p20_k34.py", line 589, in <module>
+    print(json.dumps(collect(sys.argv[2]), indent=1, default=str))
+                     ~~~~~~~^^^^^^^^^^^^^
+  File "/home/naren/Desktop/boltzmann_lfd/.claude/worktrees/approach-b-xy-v1/bxy_p20_k34.py", line 528, in collect
+    return PC.supervise(d, roots=D["root_order"], limits=L, cmd=lambda k: [sys.executable, "bxy_p20_k34.py", "worker", wave, k], est=None,
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                        ramp=((0, 2), (2, 4)), gates=True)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/naren/Desktop/boltzmann_lfd/.claude/worktrees/approach-b-xy-v1/bxy_pmin_collect.py", line 235, in supervise
+    return _loop(out, L, roots, cmd, est, poll, ramp, gates, stop)
+  File "/home/naren/Desktop/boltzmann_lfd/.claude/worktrees/approach-b-xy-v1/bxy_pmin_collect.py", line 259, in _loop
+    _, status, ru = os.wait4(pid, 0)
+                    ~~~~~~~~^^^^^^^^
+ChildProcessError: [Errno 10] No child processes
