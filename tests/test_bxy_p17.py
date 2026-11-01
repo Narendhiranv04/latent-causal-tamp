@@ -107,3 +107,23 @@ def test_folds_hold_out_each_root_once_and_keep_families():
     for f in fo["folds"]:
         assert not ({fam[k] for k in f["heldout"]} & {fam[k] for k in f["train"] + f["early_stop"]})
     assert not any("confirm" in k for k in held)
+
+
+def test_travel_of_maps_complete_witnesses_only():
+    import bxy_p17_eval as EV
+    V = _views(60)
+    for sv, lab, ev in V:
+        t = EV.travel_of(sv, lab)
+        assert len(t) == len({(a, b) for a, b, _ in lab["j"]} & ({(None, sv["y0"])} | {(c["xi"], c["yi"]) for c in sv["cands"] if c["m"] > 0}))
+        for c in sv["cands"]:
+            if c["sig"] in t:
+                e = next(x for x in ev["cands"] if x["sig"] == c["sig"])
+                assert e["success"] == 1                                     # travel only on complete verified successes
+
+
+def test_analytic_reference_reads_geometry_only():
+    import bxy_p17_eval as EV
+    V = _views(40)
+    for sv, lab, ev in V:
+        rows = [dict(c, p=1.0) for c in sv["cands"]]
+        assert EV.analytic_rule(sv, rows) == EV.analytic_rule(sv, [dict(r) for r in rows])

@@ -48,6 +48,16 @@ def context() -> dict:
             "corpus": {k: v[2]["corpus"] for k, v in by.items()}}
 
 
+def travel_of(sv, lab) -> dict:
+    """{candidate sig: witnessed complete J} from the label view's complete-witness travel items (same rule for every corpus)."""
+    out = {}
+    for c in sv["cands"]:
+        for a, b, J in lab["j"]:
+            if c["admissible"] and ((c["m"] == 0 and a is None and b == sv["y0"]) or (c["m"] > 0 and a == c["xi"] and b == c["yi"])):
+                out[c["sig"]] = J
+    return out
+
+
 def succ_map(ev) -> dict:
     return {c["sig"]: c["success"] for c in ev["cands"]}
 
@@ -86,8 +96,8 @@ def sel(rows, ev, i, trav) -> dict:
     return r
 
 
-def root_row(arm, pred, sv, ev, rule) -> dict:
-    rows, trav = pred["cands"], {s: {"J": J} for s, J in ev["travel"].items() if J is not None}
+def root_row(arm, pred, sv, ev, rule, lab) -> dict:
+    rows, trav = pred["cands"], {s: {"J": J} for s, J in travel_of(sv, lab).items()}
     xy = M.ARMS[arm]["base"] != "DIRECT"
     out = {"y0": ev["y0"], "corpus": ev["corpus"], "vk": ev["verified_K"], "p_noop": next(r["p"] for r in rows if r["m"] == 0),
            "available": int(ev["y0"] == 0 and any(c["success"] == 1 for c in ev["cands"]))}
@@ -129,7 +139,7 @@ def root_row(arm, pred, sv, ev, rule) -> dict:
 def tables(C, R_) -> dict:
     T = {}
     for (a, s), P_ in C["oof"].items():
-        T[(a, s)] = {k: root_row(a, pr, C["by"][k][0], C["by"][k][2], R_[(a, C["fold_of"][k])]["rule"]) for k, pr in P_.items() if (a, C["fold_of"][k]) in R_}
+        T[(a, s)] = {k: root_row(a, pr, C["by"][k][0], C["by"][k][2], R_[(a, C["fold_of"][k])]["rule"], C["by"][k][1]) for k, pr in P_.items() if (a, C["fold_of"][k]) in R_}
     return T
 
 
@@ -210,7 +220,7 @@ def references(C) -> dict:
         if ev["y0"] is None:
             continue
         rows = [dict(c, p=1.0) for c in sv["cands"]]
-        trav = {s: {"J": J} for s, J in ev["travel"].items() if J is not None}
+        trav = {s: {"J": J} for s, J in travel_of(sv, lab).items()}
         for nm, fn in P.REFERENCES.items():
             out[nm][k] = sel(rows, ev, fn(rows), trav)
         out["ANALYTIC_ACCESS"][k] = sel(rows, ev, analytic_rule(sv, rows), trav)
