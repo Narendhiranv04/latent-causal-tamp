@@ -1,0 +1,704 @@
+{
+ "status": "CONCEPTUAL ILLUSTRATION - not a physically verified K4 witness from the dataset",
+ "viewBox": "0 0 1360 920",
+ "width_px": 1360,
+ "height_px": 920,
+ "world_to_svg": {
+  "px_per_m": 1000.0,
+  "x_px": "(x_m - (-0.6)) * 1000",
+  "y_px": "(0.84 - y_m) * 1000",
+  "world_window_m": {
+   "x": [
+    -0.6,
+    0.76
+   ],
+   "y": [
+    -0.08,
+    0.84
+   ]
+  },
+  "note": "world y up; svg y down"
+ },
+ "palette": {
+  "paper": "#F7F5F0",
+  "slate": "#263840",
+  "clay": "#B56852"
+ },
+ "geometry_source": "config.toml [suite] [arm2d] [gripper2d]",
+ "lattice": {
+  "rows": 8,
+  "cols": 8,
+  "pitch_m": 0.08,
+  "origin_world_m": [
+   0,
+   0
+  ],
+  "extent_svg_px": [
+   [
+    600.0,
+    200.0
+   ],
+   [
+    1240.0,
+    840.0
+   ]
+  ]
+ },
+ "disc_radius_m": 0.024,
+ "disc_radius_px": 24.0,
+ "robot": {
+  "base_world_m": [
+   -0.14,
+   0.32
+  ],
+  "base_svg_px": [
+   460.0,
+   520.0
+  ],
+  "link_lengths_m": [
+   0.42,
+   0.34,
+   0.2
+  ],
+  "home": {
+   "q_rad": [
+    1.5708,
+    1.5708,
+    1.5708
+   ],
+   "joints_svg_px": [
+    [
+     460.0,
+     520.0
+    ],
+    [
+     460.0,
+     100.0
+    ],
+    [
+     120.0,
+     100.0
+    ],
+    [
+     120.0,
+     300.0
+    ]
+   ]
+  },
+  "grasp_at_target": {
+   "q_rad": [
+    1.13017,
+    -2.67488,
+    1.54471
+   ],
+   "joints_svg_px": [
+    [
+     460.0,
+     520.0
+    ],
+    [
+     639.13,
+     140.12
+    ],
+    [
+     648.0,
+     480.0
+    ],
+    [
+     848.0,
+     480.0
+    ]
+   ]
+  },
+  "place_at_goal": {
+   "q_rad": [
+    0.53318,
+    -1.90772,
+    1.37455
+   ],
+   "joints_svg_px": [
+    [
+     460.0,
+     520.0
+    ],
+    [
+     821.7,
+     306.53
+    ],
+    [
+     888.0,
+     640.0
+    ],
+    [
+     1088.0,
+     640.0
+    ]
+   ]
+  }
+ },
+ "target": {
+  "row": 4,
+  "col": 3,
+  "index": 35,
+  "world_m": [
+   0.28,
+   0.36
+  ],
+  "svg_px": [
+   880.0,
+   480.0
+  ]
+ },
+ "goal": {
+  "row": 2,
+  "col": 6,
+  "index": 22,
+  "world_m": [
+   0.52,
+   0.2
+  ],
+  "svg_px": [
+   1120.0,
+   640.0
+  ]
+ },
+ "context_discs": {
+  "c0": {
+   "row": 7,
+   "col": 6,
+   "index": 62,
+   "world_m": [
+    0.52,
+    0.6
+   ],
+   "svg_px": [
+    1120.0,
+    240.0
+   ]
+  },
+  "c1": {
+   "row": 5,
+   "col": 6,
+   "index": 46,
+   "world_m": [
+    0.52,
+    0.44
+   ],
+   "svg_px": [
+    1120.0,
+    400.0
+   ]
+  },
+  "c2": {
+   "row": 0,
+   "col": 0,
+   "index": 0,
+   "world_m": [
+    0.04,
+    0.04
+   ],
+   "svg_px": [
+    640.0,
+    800.0
+   ]
+  },
+  "c3": {
+   "row": 1,
+   "col": 3,
+   "index": 11,
+   "world_m": [
+    0.28,
+    0.12
+   ],
+   "svg_px": [
+    880.0,
+    720.0
+   ]
+  },
+  "c4": {
+   "row": 0,
+   "col": 7,
+   "index": 7,
+   "world_m": [
+    0.6,
+    0.04
+   ],
+   "svg_px": [
+    1200.0,
+    800.0
+   ]
+  },
+  "c5": {
+   "row": 2,
+   "col": 0,
+   "index": 16,
+   "world_m": [
+    0.04,
+    0.2
+   ],
+   "svg_px": [
+    640.0,
+    640.0
+   ]
+  }
+ },
+ "relocations_in_order": [
+  {
+   "id": "b1",
+   "role": "NW of target",
+   "source": {
+    "row": 5,
+    "col": 2,
+    "index": 42,
+    "world_m": [
+     0.2,
+     0.44
+    ],
+    "svg_px": [
+     800.0,
+     400.0
+    ]
+   },
+   "destination": {
+    "row": 7,
+    "col": 3,
+    "index": 59,
+    "world_m": [
+     0.28,
+     0.6
+    ],
+    "svg_px": [
+     880.0,
+     240.0
+    ]
+   }
+  },
+  {
+   "id": "b2",
+   "role": "SW of target",
+   "source": {
+    "row": 3,
+    "col": 2,
+    "index": 26,
+    "world_m": [
+     0.2,
+     0.28
+    ],
+    "svg_px": [
+     800.0,
+     560.0
+    ]
+   },
+   "destination": {
+    "row": 1,
+    "col": 1,
+    "index": 9,
+    "world_m": [
+     0.12,
+     0.12
+    ],
+    "svg_px": [
+     720.0,
+     720.0
+    ]
+   }
+  },
+  {
+   "id": "b3",
+   "role": "W of target",
+   "source": {
+    "row": 4,
+    "col": 2,
+    "index": 34,
+    "world_m": [
+     0.2,
+     0.36
+    ],
+    "svg_px": [
+     800.0,
+     480.0
+    ]
+   },
+   "destination": {
+    "row": 6,
+    "col": 4,
+    "index": 52,
+    "world_m": [
+     0.36,
+     0.52
+    ],
+    "svg_px": [
+     960.0,
+     320.0
+    ]
+   }
+  },
+  {
+   "id": "b4",
+   "role": "W of goal (placement side)",
+   "source": {
+    "row": 2,
+    "col": 5,
+    "index": 21,
+    "world_m": [
+     0.44,
+     0.2
+    ],
+    "svg_px": [
+     1040.0,
+     640.0
+    ]
+   },
+   "destination": {
+    "row": 0,
+    "col": 5,
+    "index": 5,
+    "world_m": [
+     0.44,
+     0.04
+    ],
+    "svg_px": [
+     1040.0,
+     800.0
+    ]
+   }
+  }
+ ],
+ "declared_modes": [
+  {
+   "where": "target",
+   "heading_deg": 0,
+   "hits_initial": [
+    "b3"
+   ],
+   "distal_hits_initial": [
+    "b3"
+   ],
+   "hits_repaired": [],
+   "pose": {
+    "q_rad": [
+     1.13017,
+     -2.67488,
+     1.54471
+    ],
+    "joints_svg_px": [
+     [
+      460.0,
+      520.0
+     ],
+     [
+      639.13,
+      140.12
+     ],
+     [
+      648.0,
+      480.0
+     ],
+     [
+      848.0,
+      480.0
+     ]
+    ]
+   }
+  },
+  {
+   "where": "target",
+   "heading_deg": 45,
+   "hits_initial": [
+    "b1",
+    "b2",
+    "b3"
+   ],
+   "distal_hits_initial": [
+    "b2"
+   ],
+   "hits_repaired": [],
+   "pose": {
+    "q_rad": [
+     0.48461,
+     -2.4026,
+     2.70339
+    ],
+    "joints_svg_px": [
+     [
+      460.0,
+      520.0
+     ],
+     [
+      831.64,
+      324.34
+     ],
+     [
+      715.95,
+      644.05
+     ],
+     [
+      857.37,
+      502.63
+     ]
+    ]
+   }
+  },
+  {
+   "where": "target",
+   "heading_deg": -45,
+   "hits_initial": [
+    "b1"
+   ],
+   "distal_hits_initial": [
+    "b1"
+   ],
+   "hits_repaired": [],
+   "pose": {
+    "q_rad": [
+     1.58676,
+     -2.27476,
+     -0.0974
+    ],
+    "joints_svg_px": [
+     [
+      460.0,
+      520.0
+     ],
+     [
+      453.3,
+      100.05
+     ],
+     [
+      715.95,
+      315.95
+     ],
+     [
+      857.37,
+      457.37
+     ]
+    ]
+   }
+  },
+  {
+   "where": "goal",
+   "heading_deg": 0,
+   "hits_initial": [
+    "b4"
+   ],
+   "distal_hits_initial": [
+    "b4"
+   ],
+   "hits_repaired": [],
+   "pose": {
+    "q_rad": [
+     0.53318,
+     -1.90772,
+     1.37455
+    ],
+    "joints_svg_px": [
+     [
+      460.0,
+      520.0
+     ],
+     [
+      821.7,
+      306.53
+     ],
+     [
+      888.0,
+      640.0
+     ],
+     [
+      1088.0,
+      640.0
+     ]
+    ]
+   }
+  }
+ ],
+ "schematic_checks": {
+  "method": "capsule/rectangle-vs-disc overlap at drawn poses; joint-linear interpolation for the transfer; not planner certified",
+  "home_overlaps": [],
+  "grasp_overlaps": [],
+  "place_overlaps": [],
+  "transfer_sweep_overlaps": [],
+  "relocation_steps": [
+   {
+    "obj": "b1",
+    "src": [
+     5,
+     2
+    ],
+    "dst": [
+     7,
+     3
+    ],
+    "pick_free_heading_deg": -180,
+    "place_free_heading_deg": -170
+   },
+   {
+    "obj": "b2",
+    "src": [
+     3,
+     2
+    ],
+    "dst": [
+     1,
+     1
+    ],
+    "pick_free_heading_deg": -180,
+    "place_free_heading_deg": -130
+   },
+   {
+    "obj": "b3",
+    "src": [
+     4,
+     2
+    ],
+    "dst": [
+     6,
+     4
+    ],
+    "pick_free_heading_deg": -150,
+    "place_free_heading_deg": -180
+   },
+   {
+    "obj": "b4",
+    "src": [
+     2,
+     5
+    ],
+    "dst": [
+     0,
+     5
+    ],
+    "pick_free_heading_deg": -140,
+    "place_free_heading_deg": -135
+   }
+  ]
+ },
+ "transit_chain": "home -> pick b1 -> place b1 -> pick b2 -> ... -> place b4 -> home (robot never homes between relocations)",
+ "layers": {
+  "lattice": "svg/layers/lattice.svg",
+  "goal": "svg/layers/goal.svg",
+  "target": "svg/layers/target.svg",
+  "robot-home": "svg/layers/robot-home.svg",
+  "discs-context": "svg/layers/discs-context.svg",
+  "blockers-initial": "svg/layers/blockers-initial.svg",
+  "blockers-highlight": "svg/layers/blockers-highlight.svg",
+  "blocked-modes": "svg/layers/blocked-modes.svg",
+  "blocked-contacts": "svg/layers/blocked-contacts.svg",
+  "relocation-arrows": "svg/layers/relocation-arrows.svg",
+  "destinations": "svg/layers/destinations.svg",
+  "transit-chain": "svg/layers/transit-chain.svg",
+  "blockers-vacated": "svg/layers/blockers-vacated.svg",
+  "blockers-parked": "svg/layers/blockers-parked.svg",
+  "transfer-path": "svg/layers/transfer-path.svg",
+  "target-at-goal": "svg/layers/target-at-goal.svg",
+  "robot-grasp": "svg/layers/robot-grasp.svg",
+  "robot-place": "svg/layers/robot-place.svg",
+  "tool-at-goal": "svg/layers/tool-at-goal.svg"
+ },
+ "panels": {
+  "01_initial_scene": {
+   "svg": "svg/01_initial_scene.svg",
+   "png": "png/01_initial_scene.png",
+   "layers": [
+    "lattice",
+    "goal",
+    "discs-context",
+    "blockers-initial",
+    "target",
+    "robot-home"
+   ]
+  },
+  "02_blocked_access": {
+   "svg": "svg/02_blocked_access.svg",
+   "png": "png/02_blocked_access.png",
+   "layers": [
+    "lattice",
+    "goal",
+    "discs-context",
+    "blockers-initial",
+    "target",
+    "robot-home",
+    "blocked-modes",
+    "blocked-contacts"
+   ]
+  },
+  "03_obstacle_highlight": {
+   "svg": "svg/03_obstacle_highlight.svg",
+   "png": "png/03_obstacle_highlight.png",
+   "layers": [
+    "lattice",
+    "goal",
+    "discs-context",
+    "blockers-highlight",
+    "target",
+    "robot-home"
+   ]
+  },
+  "04_relocation_arrows": {
+   "svg": "svg/04_relocation_arrows.svg",
+   "png": "png/04_relocation_arrows.png",
+   "layers": [
+    "lattice",
+    "goal",
+    "discs-context",
+    "blockers-highlight",
+    "destinations",
+    "target",
+    "robot-home",
+    "relocation-arrows"
+   ]
+  },
+  "04b_relocation_with_transit": {
+   "svg": "svg/04b_relocation_with_transit.svg",
+   "png": "png/04b_relocation_with_transit.png",
+   "layers": [
+    "lattice",
+    "goal",
+    "discs-context",
+    "blockers-highlight",
+    "destinations",
+    "target",
+    "robot-home",
+    "transit-chain",
+    "relocation-arrows"
+   ]
+  },
+  "05_repaired_scene": {
+   "svg": "svg/05_repaired_scene.svg",
+   "png": "png/05_repaired_scene.png",
+   "layers": [
+    "lattice",
+    "goal",
+    "discs-context",
+    "blockers-vacated",
+    "blockers-parked",
+    "target",
+    "robot-home"
+   ]
+  },
+  "06_feasible_transfer": {
+   "svg": "svg/06_feasible_transfer.svg",
+   "png": "png/06_feasible_transfer.png",
+   "layers": [
+    "lattice",
+    "goal",
+    "discs-context",
+    "blockers-parked",
+    "target-at-goal",
+    "tool-at-goal",
+    "transfer-path",
+    "target",
+    "robot-grasp"
+   ]
+  },
+  "07_preview_blocked_repaired": {
+   "svg": "svg/07_preview_blocked_repaired.svg",
+   "png": "png/07_preview_blocked_repaired.png",
+   "viewBox": "0 0 2840 920",
+   "right_half_translate_px": [
+    1480,
+    0
+   ]
+  }
+ }
+}
