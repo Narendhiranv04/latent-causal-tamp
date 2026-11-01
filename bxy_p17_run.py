@@ -23,7 +23,9 @@ import bxy_p12_run as R
 import bxy_p17 as H
 
 OUT = H.OUT
-AUTH_NAME = "AUTHORIZATION.json"
+AUTH_NAME = "AUTHORIZATION_V2.json"                 # V1 (AUTHORIZATION.json) superseded by amendment, never edited
+AUTH_V1 = "AUTHORIZATION.json"
+FILES = {"best.pt", "history.json", "predictions.json", "predictions_es.json"}
 ENTRY = ("bxy_p17_run.py", "bxy_p17.py", "bxy_p17_data.py", "bxy_p16_inputs.py")
 
 
@@ -40,8 +42,27 @@ def auth_values() -> dict:
             "sources": PM.sources(ENTRY), "runner_sha256": R.sha("bxy_p17_run.py")}
 
 
+AMENDMENT = {"v1_sha256": "see auth_v1_sha256", "why": "bxy_p12_run.valid_result accepts exactly {best.pt, history.json, predictions.json}; the P17 worker "
+             "also writes predictions_es.json (frozen design: inner rule choice on early-stop predictions), so every finished run was reaped as "
+             "corrupt_output and requeued. Fix: Runner17 validates the 4-file set (valid17); the P12 runner is untouched.",
+             "charged": "the V1 session's 3,542.3 CPU-s and 910.7 s wall stay in LEDGER.json and count against the same 48,000 / 21,600 ceilings",
+             "reinstated": "the complete attempt-1 outputs of cv/f0/{A,B,C,D}/s0 are moved back from quarantine/ unchanged (their RESULT.json "
+                           "file hashes verify; attempt 2 of A and B reproduced attempt 1 bit for bit), so the worker returns ok without recomputing"}
+
+
+def valid17(out, rid) -> bool:
+    rd = Path(out) / "runs" / R.safe(rid)
+    try:
+        r = json.loads((rd / "RESULT.json").read_text())
+        ok = r["rid"] == rid and all(R.sha(rd / f) == h for f, h in r["files"].items()) and set(r["files"]) == FILES
+        p = json.loads((rd / "predictions.json").read_text())
+        return ok and len(p) == r["roots"]["predict"] and R.np.isfinite(r["info"]["es_nll"])
+    except (OSError, ValueError, KeyError, TypeError):
+        return False
+
+
 def authorize(out=OUT) -> dict:
-    a = auth_values() | {"authorized": True, "created_at": time.time(), "authorized_by": "user execution contract BXY-P16..P18 (2026-11-01) section F: "
+    a = auth_values() | {"authorized": True, "created_at": time.time(), "amendment": AMENDMENT, "auth_v1_sha256": R.sha(Path(out) / AUTH_V1), "authorized_by": "user execution contract BXY-P16..P18 (2026-11-01) section F: "
                          "<= 48,000 aggregate CPU-s incl. evaluation, <= 1,500 CPU-s per run, <= 4 workers, <= 21,600 s wall, <= 90 runs"}
     f = Path(out) / AUTH_NAME
     if f.exists():
@@ -193,6 +214,10 @@ class Runner17(R.Runner):
     def reconcile(self):
         with _swap(R, "worker_pids", worker_pids):
             super().reconcile()
+
+    def run(self):
+        with _swap(R, "valid_result", valid17):
+            return super().run()
 
     def start(self, rid):
         with _swap(R, "__file__", str(Path(__file__).resolve())):            # the worker entry is this file
