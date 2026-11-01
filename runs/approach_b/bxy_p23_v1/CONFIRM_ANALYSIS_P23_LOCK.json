@@ -1,0 +1,334 @@
+{
+ "K_labels": {
+  "K_catalogue": "shortest verified candidate, every shorter admissible candidate decided",
+  "K_cert": "construction certificate (every (K-1)-subset of movable discs removed leaves the target pick or place certified closed; declared grasp family, monotone collisions)",
+  "certified_necessary": "K_cert == K_catalogue (reported with and without)",
+  "never": "K_intent is never evidence; no global-minimality claim"
+ },
+ "attribution": "a positive whole-system X/Y vs DIRECT difference would not isolate the factorization: X/Y arms also use component labels and SYM supervision",
+ "endpoints": {
+  "C_availability_conditioned": "repair success over AVAIL roots",
+  "U_unconditional": "repair success over ALL INF roots (roots with no verified candidate count as failures for every arm)",
+  "unnecessary": "false repair (chosen m > 0) over FEA roots; harmful = chosen edit fails"
+ },
+ "frozen_models_sha256": "7324ff5377e106f85657d2aeb3a83882ccf2ef30b3ee673317e5d3f87b04197d",
+ "gates": {
+  "GUARDRAIL_FAILED": "positive but unnecessary increase > 0.05",
+  "IMPROVES": "Holm-rejected two-sided bootstrap test on U with Holm-level interval lower > 0, U point >= 0.10, C 95% CI lower > 0, and unnecessary-repair point increase <= +0.05 (historical P17 / P21 / P22 thresholds, unchanged)",
+  "NOT_ESTABLISHED": "otherwise (incl. ties)",
+  "ORDER": "O1 / O3 strict-order concordance difference: Holm-rejected with interval lower > 0 (historical 'ORDER_FAVOURS_FIRST', no magnitude threshold); O2 REP34 success: threshold 0.10 + guardrail (P21 H4 replication)",
+  "POSITIVE_BELOW_THRESHOLD": "as IMPROVES but U point < 0.10 (statistically positive, below the meaningful-effect criterion; not a supported advantage)",
+  "REVERSED": "Holm-level interval upper < 0",
+  "SECONDARY_K34": "same labels on REP34 conditional success (threshold 0.10, guardrail on FEA)",
+  "minimum_n_flag_UNDERPOWERED": {
+   "AVAIL": 30,
+   "FEA": 30,
+   "INF": 60,
+   "K_stratum_inferential": 10,
+   "REP34": 30,
+   "order_roots": 20
+  }
+ },
+ "generator_shift": "new seeds of the SAME K34 doorway family + V21B controls: no cross-generator or 3D claim",
+ "hierarchy": {
+  "authoritative_primary": "U_unconditional (P17 / P21 / P22 lineage: 'succ_inf'; the P22 'first' endpoint); the headline verdict of each comparison",
+  "consistency_requirement": "C_availability_conditioned 95% CI lower > 0 is REQUIRED for a positive primary label (no endpoint switching: C cannot rescue a failed U, U is never replaced by C)",
+  "descriptive_only": [
+   "K1-K4 strata with and without certification (Wilson 95%)",
+   "K0 no-op correctness",
+   "harmful unnecessary repairs",
+   "Y0 AUROC / Brier",
+   "omission sign",
+   "prefix Y pattern of repairs",
+   "witnessed travel on matched successes",
+   "certified vs fixed-budget negatives",
+   "catalogue availability by generator family",
+   "references incl. the oracle"
+  ],
+  "families": {
+   "ORDER (Holm over 3)": {
+    "O1_D_vs_G_strict_order": [
+     "D:XYQ-GEO-SYM",
+     "G:XYQ-GEO-SYM-ORDINV"
+    ],
+    "O2_D_vs_G_REP34_success": [
+     "D:XYQ-GEO-SYM",
+     "G:XYQ-GEO-SYM-ORDINV"
+    ],
+    "O3_E_vs_G_strict_order": [
+     "E:XY-UNC-SA-GEO-SYM",
+     "G:XYQ-GEO-SYM-ORDINV"
+    ]
+   },
+   "PRIMARY (Holm over 3)": {
+    "D_vs_DIRECT": [
+     "D:XYQ-GEO-SYM",
+     "A:DIRECT-GEO"
+    ],
+    "D_vs_E_coupling": [
+     "D:XYQ-GEO-SYM",
+     "E:XY-UNC-SA-GEO-SYM"
+    ],
+    "E_vs_DIRECT": [
+     "E:XY-UNC-SA-GEO-SYM",
+     "A:DIRECT-GEO"
+    ]
+   },
+   "SECONDARY_K34 (Holm over 3, REP34, conditional)": {
+    "D_vs_DIRECT": [
+     "D:XYQ-GEO-SYM",
+     "A:DIRECT-GEO"
+    ],
+    "D_vs_E_coupling": [
+     "D:XYQ-GEO-SYM",
+     "E:XY-UNC-SA-GEO-SYM"
+    ],
+    "E_vs_DIRECT": [
+     "E:XY-UNC-SA-GEO-SYM",
+     "A:DIRECT-GEO"
+    ]
+   }
+  }
+ },
+ "implementation": {
+  "analysis": "bxy_p24_analysis.py",
+  "analysis_sha256": "6f3a3defcaa021f517ad52ea0ad7c9806290e224bc15f8a3a32cc4d10a4b1359",
+  "engine_sha256": "839f7d0982cb431f5fc61c74db869bea6d5190cdb7ca094ecbd780673d8d24d2",
+  "runner_sha256": "791e295fe74d0fe4ba50e53972c24a85006154eb56a6cdc1affc41d816d3b4d0"
+ },
+ "missingness": {
+  "censored_query": "absent (never 0)",
+  "corrupt_row": "absent + custody event in the report",
+  "negatives": "attempted fixed-budget failures are operational 0 with negative kind CERTIFIED vs NO_PLAN_FOUND / TIMEOUT kept evaluator-side; no impossibility claim from budget failures",
+  "unattempted_query": "absent, reason kept",
+  "undecided_choice": "a chosen candidate with X or Y undecided is NOT a verified success (counted per arm); sensitivity: same tests excluding roots where any arm chose an undecided candidate",
+  "y0_unobserved": "excluded from success denominators, counted"
+ },
+ "models": {
+  "arms": [
+   "D:XYQ-GEO-SYM",
+   "E:XY-UNC-SA-GEO-SYM",
+   "A:DIRECT-GEO",
+   "G:XYQ-GEO-SYM-ORDINV"
+  ],
+  "ensemble": "15-member mean, F1 first, frozen pooled rule per arm; one deterministic predictor per arm",
+  "no_calibration_or_rule_tuning_on_test": true
+ },
+ "parent": {
+  "file": "runs/approach_b/bxy_p22_v1/CONFIRM_ANALYSIS_P22.json",
+  "primary_wording": {
+   "comparisons": [
+    "D vs DIRECT-GEO",
+    "E vs DIRECT-GEO",
+    "D vs E"
+   ],
+   "endpoints": [
+    "unconditional repair success on initially infeasible roots",
+    "availability-conditioned repair success"
+   ],
+   "gate": "IMPROVES if CI lower > 0, point >= 0.10 and unnecessary-repair increase <= 0.05",
+   "strata": [
+    "K1",
+    "K2",
+    "K3",
+    "K4"
+   ],
+   "test": "paired family bootstrap B = 10000, two-sided 95% CI; Holm across the three comparisons per endpoint"
+  },
+  "sha256": "0996a96f7c6d1c72a8f1282daaf59473bdd93eaace9447e8e805c4e472e46bf8"
+ },
+ "populations": {
+  "AVAIL": "INF with >= 1 teacher-verified candidate in the frozen catalogue",
+  "FEA": "initially feasible: Y0 = 1",
+  "INF": "initially infeasible: Y0 = 0 observed",
+  "REP34": "AVAIL with verified K in {3, 4} (K = shortest verified candidate with every shorter admissible candidate decided)"
+ },
+ "power": {
+  "note": "P21 per-root values are 3-seed means (sd deflated); a single ensemble gives per-root differences in {-1, 0, 1}, whose sd is about sqrt(disagreement rate) (P21: U 0.42, C 0.64, REP34 0.62 for D vs DIRECT), reported with the 0.3 / 0.5 / 1.0 sensitivity; the P22 0.062 half-width is a projection, not a guarantee",
+  "p21_paired": {
+   "C|D-A": {
+    "disagree_rate": 0.4126984126984127,
+    "mean": 0.07407407407407408,
+    "n": 63,
+    "sd": 0.3192983147142665
+   },
+   "C|D-G": {
+    "disagree_rate": 0.38095238095238093,
+    "mean": 0.12698412698412695,
+    "n": 63,
+    "sd": 0.37592691383678684
+   },
+   "REP34|D-A": {
+    "disagree_rate": 0.38095238095238093,
+    "mean": 1.057355261547768e-17,
+    "n": 21,
+    "sd": 0.27888667551135854
+   },
+   "REP34|D-G": {
+    "disagree_rate": 0.5238095238095238,
+    "mean": 0.22222222222222218,
+    "n": 21,
+    "sd": 0.43885372573625553
+   },
+   "U|D-A": {
+    "disagree_rate": 0.17333333333333334,
+    "mean": 0.031111111111111114,
+    "n": 150,
+    "sd": 0.20920882412192784
+   },
+   "U|D-G": {
+    "disagree_rate": 0.16,
+    "mean": 0.05333333333333334,
+    "n": 150,
+    "sd": 0.250517733851119
+   }
+  },
+  "projection_half_widths": {
+   "AVAIL|n_median=123|sd=0.300": {
+    "half_width_95": 0.05301817451844501,
+    "mde_80pct_power": 0.0757402493120643
+   },
+   "AVAIL|n_median=123|sd=0.319": {
+    "half_width_95": 0.05642871257655454,
+    "mde_80pct_power": 0.08061244653793505
+   },
+   "AVAIL|n_median=123|sd=0.500": {
+    "half_width_95": 0.08836362419740836,
+    "mde_80pct_power": 0.12623374885344052
+   },
+   "AVAIL|n_median=123|sd=0.642": {
+    "half_width_95": 0.11353242516031396,
+    "mde_80pct_power": 0.16218917880044853
+   },
+   "AVAIL|n_median=123|sd=1.000": {
+    "half_width_95": 0.1767272483948167,
+    "mde_80pct_power": 0.25246749770688104
+   },
+   "AVAIL|n_q10=97|sd=0.300": {
+    "half_width_95": 0.0597023545098568,
+    "mde_80pct_power": 0.085289077871224
+   },
+   "AVAIL|n_q10=97|sd=0.319": {
+    "half_width_95": 0.06354287059823656,
+    "mde_80pct_power": 0.09077552942605221
+   },
+   "AVAIL|n_q10=97|sd=0.500": {
+    "half_width_95": 0.09950392418309467,
+    "mde_80pct_power": 0.14214846311870666
+   },
+   "AVAIL|n_q10=97|sd=0.642": {
+    "half_width_95": 0.1278458407300827,
+    "mde_80pct_power": 0.1826369153286896
+   },
+   "AVAIL|n_q10=97|sd=1.000": {
+    "half_width_95": 0.19900784836618934,
+    "mde_80pct_power": 0.2842969262374133
+   },
+   "INF|n_median=228|sd=0.209": {
+    "half_width_95": 0.02715617797943628,
+    "mde_80pct_power": 0.03879453997062325
+   },
+   "INF|n_median=228|sd=0.300": {
+    "half_width_95": 0.03894125129771229,
+    "mde_80pct_power": 0.055630358996731834
+   },
+   "INF|n_median=228|sd=0.416": {
+    "half_width_95": 0.054041785868742725,
+    "mde_80pct_power": 0.07720255124106103
+   },
+   "INF|n_median=228|sd=0.500": {
+    "half_width_95": 0.06490208549618715,
+    "mde_80pct_power": 0.09271726499455306
+   },
+   "INF|n_median=228|sd=1.000": {
+    "half_width_95": 0.1298041709923743,
+    "mde_80pct_power": 0.18543452998910612
+   },
+   "INF|n_q10=193|sd=0.209": {
+    "half_width_95": 0.02951599413252111,
+    "mde_80pct_power": 0.04216570590360158
+   },
+   "INF|n_q10=193|sd=0.300": {
+    "half_width_95": 0.042325166144023235,
+    "mde_80pct_power": 0.06046452306289034
+   },
+   "INF|n_q10=193|sd=0.416": {
+    "half_width_95": 0.05873790618917884,
+    "mde_80pct_power": 0.08391129455596977
+   },
+   "INF|n_q10=193|sd=0.500": {
+    "half_width_95": 0.07054194357337207,
+    "mde_80pct_power": 0.10077420510481723
+   },
+   "INF|n_q10=193|sd=1.000": {
+    "half_width_95": 0.14108388714674414,
+    "mde_80pct_power": 0.20154841020963446
+   },
+   "REP34|n_median=101|sd=0.279": {
+    "half_width_95": 0.05439051234161413,
+    "mde_80pct_power": 0.07770073191659162
+   },
+   "REP34|n_median=101|sd=0.300": {
+    "half_width_95": 0.05850818678434736,
+    "mde_80pct_power": 0.08358312397763909
+   },
+   "REP34|n_median=101|sd=0.500": {
+    "half_width_95": 0.09751364464057893,
+    "mde_80pct_power": 0.13930520662939846
+   },
+   "REP34|n_median=101|sd=0.617": {
+    "half_width_95": 0.12037345628043455,
+    "mde_80pct_power": 0.1719620804006208
+   },
+   "REP34|n_median=101|sd=1.000": {
+    "half_width_95": 0.19502728928115787,
+    "mde_80pct_power": 0.27861041325879693
+   },
+   "REP34|n_q10=78|sd=0.279": {
+    "half_width_95": 0.061892287650847665,
+    "mde_80pct_power": 0.08841755378692523
+   },
+   "REP34|n_q10=78|sd=0.300": {
+    "half_width_95": 0.06657788960770222,
+    "mde_80pct_power": 0.09511127086814603
+   },
+   "REP34|n_q10=78|sd=0.500": {
+    "half_width_95": 0.11096314934617037,
+    "mde_80pct_power": 0.15851878478024337
+   },
+   "REP34|n_q10=78|sd=0.617": {
+    "half_width_95": 0.13697588533166397,
+    "mde_80pct_power": 0.1956798361880914
+   },
+   "REP34|n_q10=78|sd=1.000": {
+    "half_width_95": 0.22192629869234073,
+    "mde_80pct_power": 0.31703756956048673
+   }
+  }
+ },
+ "q_ref": "q_ref = q0 = scene robot state for every root (adapter refuses otherwise)",
+ "reconciliation_with_P22": [
+  "P22 listed two primary endpoints 'by K stratum' with Holm 'per endpoint': clarified to ONE authoritative endpoint (U, pooled over strata) with C as a required consistency condition; K strata are descriptive (K3 / K4 inferential only via the REP34 secondary family)",
+  "P22 did not define the population of the K3/K4 test: fixed as REP34 (P21 H1-H3 definition)",
+  "P22 froze D / E / A only: G is added (FROZEN_MODELS_P23_APPEND) with a separate ORDER family",
+  "P22 did not record the arms' pooled rules: recorded in FROZEN_MODELS_P23_APPEND, computed by the declared procedure",
+  "thresholds (0.10 gain, +0.05 unnecessary, CI lower > 0) are unchanged; Holm is now applied with explicit Holm-level intervals",
+  "prediction timing: predictions are computed and sealed (sha256 in the ledger) after the design freeze and BEFORE any teacher label (new, stricter)"
+ ],
+ "references": {
+  "ANALYTIC_ACCESS": "geometry-only rule (bxy_p17_eval.analytic_rule)",
+  "DISPLACEMENT_RANK": "",
+  "NOOP": "always no-op",
+  "SHORTEST_ADMISSIBLE": "",
+  "VERIFY_FIRST_ORACLE": "evaluator-only upper bound, cost = teacher verifications; never deployed or described as learned"
+ },
+ "statistics": {
+  "bootstrap": "paired, unit = root family (one per confirmation root), B = 10000, seed 0, percentile intervals",
+  "multiplicity": "Holm step-down at alpha 0.05 within each family; families are separate (primary / K34 secondary / order); 95% intervals also reported",
+  "p_value": "two-sided bootstrap p = min(1, 2 min(P*(d <= 0), P*(d >= 0)))",
+  "strict_order": "per root: same action multiset, same endpoint, both F1-admissible and observed, X discordant; |dpx| <= 1e-08 scores 0.5; root mean first, roots are the samples (pair x seed counts are never treated as independent)",
+  "ties_in_selection": "bxy_p11.choose: lowest cost, then (m, C_d, signature); deterministic"
+ },
+ "success": "a chosen candidate is a success iff the teacher verified it: X = 1 (every relocation in order from q0 with the achieved state carried, then the single connector to q_ref) and Y = 1 (target task from q_ref in the edited scene), with independent replay; for the no-op, Y0 = 1; predicted success never counts",
+ "version": "BXY_P23_CONFIRM_ANALYSIS_LOCK_V1"
+}

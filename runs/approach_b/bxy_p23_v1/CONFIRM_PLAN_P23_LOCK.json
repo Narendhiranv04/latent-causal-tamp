@@ -1,0 +1,5397 @@
+{
+ "construction_revision": {
+  "blocker_min_row": 2,
+  "min_row": 3,
+  "step_min_pick": 3,
+  "step_sector_certificate": true
+ },
+ "frozen_models_sha256": "7324ff5377e106f85657d2aeb3a83882ccf2ef30b3ee673317e5d3f87b04197d",
+ "generator": "BXY_GEN_K34C",
+ "labelling_order": "roots sorted by sha256('bxyg34confirm|label-order|<root_id>'): a budget stop leaves an outcome-independent remainder",
+ "max_cands": 24,
+ "max_queries": 60,
+ "mix_counts": {
+  "local_mixed|K2": 22,
+  "local_mixed|K3": 66,
+  "local_mixed|K4": 198,
+  "local_pick|K3": 44,
+  "local_pick|K4": 44,
+  "v21b_near_closed|K0": 66
+ },
+ "namespace": "bxyg34confirm",
+ "p18_plan": {
+  "path": "runs/approach_b/bxy_p18_v1/CONFIRM_PLAN_V21.json",
+  "sha256": "2ab2d5650d6820a043bcd63e7b87487d50eb1487fe22803220b4f4f8c9337f47",
+  "status": "immutable, not executed"
+ },
+ "p22_point_expected": {
+  "K0": 39.6,
+  "K1": 13.200000000000001,
+  "K2": 7.333333333333333,
+  "K3": 49.5,
+  "K4": 41.36,
+  "KNone": 100.39333333333333,
+  "cpu": 70321.74108666666,
+  "half_width_K34": 0.06168661790832467,
+  "repairable_K34": 90.86
+ },
+ "parent": {
+  "file": "runs/approach_b/bxy_p22_v1/CONFIRM_PLAN_K04.json",
+  "sha256": "3212dd3c6c83228aaace47b1779e86da4da3179b4d06e204cc9b026ae923adc1"
+ },
+ "per_query_teacher_budget": {
+  "goal_plans": 3,
+  "motion_checks": 150,
+  "online_moves": 8,
+  "transit_plans": 6
+ },
+ "projection": {
+  "AVAIL": {
+   "median": 123.0,
+   "q10": 97.0,
+   "q90": 152.0
+  },
+  "FEA": {
+   "median": 26.0,
+   "q10": 12.0,
+   "q90": 42.0
+  },
+  "INF": {
+   "median": 228.0,
+   "q10": 193.0,
+   "q90": 262.0
+  },
+  "K0": {
+   "median": 26.0,
+   "q10": 12.0,
+   "q90": 42.0
+  },
+  "K3": {
+   "median": 47.0,
+   "q10": 34.0,
+   "q90": 61.0
+  },
+  "K4": {
+   "median": 53.0,
+   "q10": 33.0,
+   "q90": 78.0
+  },
+  "REP34": {
+   "median": 101.0,
+   "q10": 78.0,
+   "q90": 128.0
+  },
+  "accepted": {
+   "median": 255.0,
+   "q10": 223.0,
+   "q90": 286.0
+  },
+  "cpu_point": {
+   "median": 70321.74108666666,
+   "q10": 70321.74108666666,
+   "q90": 70321.74108666666
+  }
+ },
+ "projection_basis": "P20 wave k3 realization (5-25 dev slots per family): Dirichlet(counts + 1/2) uncertainty; the P22 point projection (K3 49.5, K4 41.4, repairable 90.9, 70,322 CPU-s) is reproduced as a median-type figure, not a guarantee",
+ "rules": {
+  "adaptive_sampling": "none: no look at labels or model outputs before the single evaluation",
+  "collections": "exactly one generation, one design freeze (catalogue + queries + sealed predictions before any teacher call), one labelling run, one evaluation",
+  "disjoint_from": [
+   "BD_GEN_V1 and the 34 exposed test roots",
+   "bxyg2pilot",
+   "bxyg2confirm",
+   "bxyg21dev",
+   "bxyg21confirm (P18 plan, never generated)",
+   "bxyg34dev"
+  ],
+  "exclusion": "no root is dropped for difficulty or failure; only registered missingness (Y0 unobserved) leaves a denominator",
+  "replacement": "none: a rejected slot stays rejected and is reported; slot composition never changes",
+  "shortfall": "realized n below the analysis lock's minimums -> the locked analysis still runs once and is labelled UNDERPOWERED; no extra wave"
+ },
+ "seeds": "construction_seed = int(sha256-json([BXY_GEN_K34C, 'bxyg34confirm', 'c34', slot])[:8], 16); family id per slot (each root its own family)",
+ "slot_count": 440,
+ "slots": [
+  {
+   "slot": 0,
+   "spec": {
+    "K_intent": 2,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 1,
+   "spec": {
+    "K_intent": 2,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 2,
+   "spec": {
+    "K_intent": 2,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 3,
+   "spec": {
+    "K_intent": 2,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 4,
+   "spec": {
+    "K_intent": 2,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 5,
+   "spec": {
+    "K_intent": 2,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 6,
+   "spec": {
+    "K_intent": 2,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 7,
+   "spec": {
+    "K_intent": 2,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 8,
+   "spec": {
+    "K_intent": 2,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 9,
+   "spec": {
+    "K_intent": 2,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 10,
+   "spec": {
+    "K_intent": 2,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 11,
+   "spec": {
+    "K_intent": 2,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 12,
+   "spec": {
+    "K_intent": 2,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 13,
+   "spec": {
+    "K_intent": 2,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 14,
+   "spec": {
+    "K_intent": 2,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 15,
+   "spec": {
+    "K_intent": 2,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 16,
+   "spec": {
+    "K_intent": 2,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 17,
+   "spec": {
+    "K_intent": 2,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 18,
+   "spec": {
+    "K_intent": 2,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 19,
+   "spec": {
+    "K_intent": 2,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 20,
+   "spec": {
+    "K_intent": 2,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 21,
+   "spec": {
+    "K_intent": 2,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 22,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 23,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 24,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 25,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 26,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 27,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 28,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 29,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 30,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 31,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 32,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 33,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 34,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 35,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 36,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 37,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 38,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 39,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 40,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 41,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 42,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 43,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 44,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 45,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 46,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 47,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 48,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 49,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 50,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 51,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 52,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 53,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 54,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 55,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 56,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 57,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 58,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 59,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 60,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 61,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 62,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 63,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 64,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 65,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 66,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 67,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 68,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 69,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 70,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 71,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 72,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 73,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 74,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 75,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 76,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 77,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 78,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 79,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 80,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 81,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 82,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 83,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 84,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 85,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 86,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 87,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 88,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 89,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 90,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 91,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 92,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 93,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 94,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 95,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 96,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 97,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 98,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 99,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 100,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 101,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 102,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 103,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 104,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 105,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 106,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 107,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 108,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 109,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 110,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 111,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 112,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 113,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 114,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 115,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 116,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 117,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 118,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 119,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 120,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 121,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 122,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 123,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 124,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 125,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 126,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 127,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 128,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 129,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 130,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 131,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 132,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 133,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 134,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 135,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 136,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 137,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 138,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 139,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 140,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 141,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 142,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 143,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 144,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 145,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 146,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 147,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 148,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 149,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 150,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 151,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 152,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 153,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 154,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 155,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 156,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 157,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 158,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 159,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 160,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 161,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 162,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 163,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 164,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 165,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 166,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 167,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 168,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 169,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 170,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 171,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 172,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 173,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 174,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 175,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 176,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 177,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 178,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 179,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 180,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 181,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 182,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 183,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 184,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 185,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 186,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 187,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 188,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 189,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 190,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 191,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 192,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 193,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 194,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 195,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 196,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 197,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 198,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 199,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 200,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 201,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 202,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 203,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 204,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 205,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 206,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 207,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 208,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 209,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 210,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 211,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 212,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 213,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 214,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 215,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 216,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 217,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 218,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 219,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 220,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 221,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 222,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 223,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 224,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 225,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 226,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 227,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 228,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 229,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 230,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 231,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 232,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 233,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 234,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 235,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 236,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 237,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 238,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 239,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 240,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 241,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 242,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 243,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 244,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 245,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 246,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 247,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 248,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 249,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 250,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 251,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 252,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 253,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 254,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 255,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 256,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 257,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 258,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 259,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 260,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 261,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 262,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 263,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 264,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 265,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 266,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 267,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 268,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 269,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 270,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 271,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 272,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 273,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 274,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 275,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 276,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 277,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 278,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 279,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 280,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 281,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 282,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 283,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 284,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 285,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_mixed",
+    "mechanism": "local_mixed",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 286,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 287,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 288,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 289,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 290,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 291,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 292,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 293,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 294,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 295,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 296,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 297,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 298,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 299,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 300,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 301,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 302,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 303,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 304,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 305,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 306,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 307,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 308,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 309,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 310,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 311,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 312,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 313,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 314,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 315,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 316,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 317,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 318,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 319,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 320,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 321,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 322,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 323,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 324,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 325,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 326,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 327,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 328,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 329,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 330,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 331,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 332,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 333,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 334,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 335,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 336,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 337,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 338,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 339,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 340,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 341,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 342,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 343,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 344,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 345,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 346,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 347,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 348,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 349,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 350,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 351,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 352,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 353,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 354,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 355,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 356,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 357,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 358,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 359,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 360,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 361,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 362,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 363,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 364,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 365,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 366,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 367,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 368,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 369,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 370,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 371,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 372,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 373,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": true,
+    "family": "local_pick",
+    "mechanism": "local_pick",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 374,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 375,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "short",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 376,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "long",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 377,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 378,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "short",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 379,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "long",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 380,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 381,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "short",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 382,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "long",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 383,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 384,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "short",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 385,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "long",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 386,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 387,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "short",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 388,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "long",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 389,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 390,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "short",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 391,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "long",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 392,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 393,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "short",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 394,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "long",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 395,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 396,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "short",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 397,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "long",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 398,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 399,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "short",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 400,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "long",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 401,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 402,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "short",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 403,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "long",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 404,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 405,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "short",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 406,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "long",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 407,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 408,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "short",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 409,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "long",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 410,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 411,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "short",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 412,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "long",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 413,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 414,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "short",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 415,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "long",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 416,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 417,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "short",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 418,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "long",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 419,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 420,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "short",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 421,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "long",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 422,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 423,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "short",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 424,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "long",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 425,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 426,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "short",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 427,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "long",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 428,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 429,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "short",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 430,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "long",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 431,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 432,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "short",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 433,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "long",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 434,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 435,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "short",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 436,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "long",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "far",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 437,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "medium",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "slot": 438,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "short",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "slot": 439,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "long",
+    "distractors": true,
+    "family": "v21b_near_closed",
+    "mechanism": "v21b_near_closed",
+    "source": "far",
+    "start_pose": "nonhome"
+   }
+  }
+ ],
+ "version": "BXY_P23_CONFIRM_PLAN_LOCK_V1",
+ "wave_label": "c34"
+}

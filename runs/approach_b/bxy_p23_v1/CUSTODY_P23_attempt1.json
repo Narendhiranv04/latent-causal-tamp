@@ -1,0 +1,29 @@
+{
+ "candidates": {
+  "~": {
+   "disk": "nvme0n1",
+   "independent": false
+  },
+  "<windows-partition>": {
+   "disk": "nvme0n1",
+   "independent": false
+  },
+  "/mnt/newvolume": {
+   "disk": "nvme0n1",
+   "independent": false
+  }
+ },
+ "lsblk_disks": [
+  "zram0   disk",
+  "nvme0n1 disk",
+  ""
+ ],
+ "reason": "no physically independent volume or approved off-machine location; the P22 copy and every mounted volume are on the repository's own disk",
+ "repository_disk": "nvme0n1",
+ "status": "BLOCKED_CHECKPOINT_CUSTODY",
+ "user_steps": [
+  "attach an external drive (or approve an off-machine path / private storage)",
+  "run: python3 bxy_p23_preflight.py custody <mount point of that drive>",
+  "the step copies the 60 frozen D / E / A / G checkpoints + RESULT.json, verifies sha256, restores into a scratch directory, re-loads every member and re-scores one development root; P23 becomes READY only then"
+ ]
+}
