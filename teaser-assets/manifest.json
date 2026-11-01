@@ -240,6 +240,19 @@
     640.0,
     640.0
    ]
+  },
+  "c6": {
+   "row": 6,
+   "col": 3,
+   "index": 51,
+   "world_m": [
+    0.28,
+    0.52
+   ],
+   "svg_px": [
+    880.0,
+    320.0
+   ]
   }
  },
  "relocations_in_order": [
@@ -260,16 +273,16 @@
     ]
    },
    "destination": {
-    "row": 7,
-    "col": 3,
-    "index": 59,
+    "row": 5,
+    "col": 5,
+    "index": 45,
     "world_m": [
-     0.28,
-     0.6
+     0.44,
+     0.44
     ],
     "svg_px": [
-     880.0,
-     240.0
+     1040.0,
+     400.0
     ]
    }
   },
@@ -320,16 +333,16 @@
     ]
    },
    "destination": {
-    "row": 6,
-    "col": 4,
-    "index": 52,
+    "row": 3,
+    "col": 0,
+    "index": 24,
     "world_m": [
-     0.36,
-     0.52
+     0.04,
+     0.28
     ],
     "svg_px": [
-     960.0,
-     320.0
+     640.0,
+     560.0
     ]
    }
   },
@@ -526,11 +539,11 @@
      2
     ],
     "dst": [
-     7,
-     3
+     5,
+     5
     ],
     "pick_free_heading_deg": -180,
-    "place_free_heading_deg": -170
+    "place_free_heading_deg": -105
    },
    {
     "obj": "b2",
@@ -552,11 +565,11 @@
      2
     ],
     "dst": [
-     6,
-     4
+     3,
+     0
     ],
     "pick_free_heading_deg": -150,
-    "place_free_heading_deg": -180
+    "place_free_heading_deg": -175
    },
    {
     "obj": "b4",
@@ -711,24 +724,24 @@
    ],
    "crop_viewBox_px": [
     400,
-    60,
+    0,
     900,
-    820
+    880
    ],
    "gap_px": 40
   }
  },
  "approach_pose_ab": {
   "params": {
-   "heading_deg": -5,
-   "back_m": 0.145,
+   "heading_deg": -90,
+   "back_m": 0.2225,
    "elbow": -1
   },
   "pose": {
    "q_rad": [
-    1.34149,
-    -3.06295,
-    1.6342
+    1.35327,
+    -1.10242,
+    -1.82165
    ],
    "joints_svg_px": [
     [
@@ -736,22 +749,28 @@
      520.0
     ],
     [
-     555.47,
-     110.99
+     550.64,
+     109.9
     ],
     [
-     504.43,
-     447.14
+     880.0,
+     25.5
     ],
     [
-     703.67,
-     464.57
+     880.0,
+     225.5
     ]
    ]
   },
   "overlaps": [],
   "min_x_m": -0.14,
-  "fingertip_gap_to_b3_m": 0.0238,
-  "note": "(a)/(b) robot reaches toward the target and halts short of b3; no link left of the base"
+  "fingertip_gap_to_c6_m": 0.0205,
+  "overhead_full_reach_hits_initial": [
+   "c6"
+  ],
+  "overhead_full_reach_hits_repaired": [
+   "c6"
+  ],
+  "note": "(a)/(b) robot descends toward the target from above and halts short of c6, the never-moved disc that blocks the overhead approach; no link left of the base"
  }
 }

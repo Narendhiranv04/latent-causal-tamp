@@ -32,8 +32,9 @@ VIEWBOX = f"0 0 {VW} {VH}"
 TARGET, GOAL = (4, 3), (2, 6)
 ORDER = ["b1", "b2", "b3", "b4"]                                             # relocation order
 BLOCK = {"b1": (5, 2), "b2": (3, 2), "b3": (4, 2), "b4": (2, 5)}            # NW, SW, W of target; W of goal
-PARK = {"b1": (7, 3), "b2": (1, 1), "b3": (6, 4), "b4": (0, 5)}            # outside the final elbow-up sweep
-CONTEXT = [(7, 6), (5, 6), (0, 0), (1, 3), (0, 7), (2, 0)]                   # discs that never matter
+PARK = {"b1": (5, 5), "b2": (1, 1), "b3": (3, 0), "b4": (0, 5)}            # outside the final elbow-up sweep
+CONTEXT = [(7, 6), (5, 6), (0, 0), (1, 3), (0, 7), (2, 0), (6, 3)]           # never moved; c6 = (6, 3) closes the overhead approach
+OVERHEAD = 6                                                                 # index of the context disc above the target
 ELBOW = -1                                                                   # elbow-up branch (keeps the arm above the lattice)
 TARGET_MODES = [0.0, math.pi / 4, -math.pi / 4]                              # declared side-grasp approach headings at the target
 GOAL_MODES = [0.0]                                                            # declared placement heading at the goal
@@ -308,7 +309,7 @@ def interp_clear(qa, qb, discs, n=120):
     return bad
 
 
-APPROACH = dict(heading_deg=-5, back_m=0.145, elbow=-1)                      # (a)/(b) robot: reaching for the target, stopped short of b3
+APPROACH = dict(heading_deg=-90, back_m=0.2225, elbow=-1)                     # (a)/(b) robot: descending onto the target, halted above c6
 
 
 def approach_pose():
@@ -348,7 +349,10 @@ def analyse():
     pa, aa = fk(qa)
     tip = pa[3] + GR["finger_length_m"] * np.array([math.cos(aa), math.sin(aa)])
     approach = dict(q=qa, overlaps=sorted(hits(qa, {**init, "target": tgt}, GR["open_gap_m"])),
-                    min_x_m=round(min(p[0] for p in pa), 4), fingertip_gap_to_b3_m=round(float(np.linalg.norm(tip - xy(BLOCK["b3"])) - R), 4))
+                    min_x_m=round(min(p[0] for p in pa), 4), fingertip_gap_to_c6_m=round(float(np.linalg.norm(tip - xy(CONTEXT[OVERHEAD])) - R), 4))
+    q_over = ik(tgt, -math.pi / 2, APPROACH["elbow"])
+    approach["overhead_full_reach_hits_initial"] = sorted(hits(q_over, init, GR["open_gap_m"]))
+    approach["overhead_full_reach_hits_repaired"] = sorted(hits(q_over, done, GR["open_gap_m"]))
     assert not approach["overlaps"] and approach["min_x_m"] >= BASE[0], approach
     return dict(blocked=blocked, steps=steps, q_grasp=qg, q_place=qp, grasp_hits=sorted(hg), place_hits=sorted(hp),
                 transfer_sweep_hits=sorted(sweep), home_hits=sorted(home_hits), approach=approach)
@@ -371,6 +375,8 @@ def build_layers(an):
     for k in ORDER:                                                          # one arc per blocker, on the side facing what it guards
         guard = xy(GOAL) if k == "b4" else xy(TARGET)
         arcs += contact_arc(xy(BLOCK[k]), guard, f"contact-{k}")
+    pa, _ = fk(an["approach"]["q"])
+    arcs += contact_arc(xy(CONTEXT[OVERHEAD]), pa[3], f"contact-c{OVERHEAD}")      # overhead approach: arc faces the halted gripper
     L["blocked-modes"] = group("blocked-modes", ghosts)
     L["blocked-contacts"] = group("blocked-contacts", arcs)
     L["relocation-arrows"] = group("relocation-arrows", "".join(arrow(xy(BLOCK[k]), xy(PARK[k]), f"move-{k}") for k in ORDER))
@@ -440,7 +446,7 @@ def preview(L):
 
 
 COLUMN = ["02_blocked_access", "04_relocation_arrows", "06_feasible_transfer"]   # (a) blocked, (b) relocations, (c) feasible transfer
-COL_CROP = (400, 60, 900, 820)                                                # svg px window: base plate to lattice edge (no dead space)
+COL_CROP = (400, 0, 900, 880)                                                # svg px window: base plate to lattice edge (no dead space)
 
 
 def right_column(L, gap=40):
@@ -514,7 +520,7 @@ def manifest(an, L):
                      "right_column_abc": {"svg": "svg/right_column_abc.svg", "png": "png/right_column_abc.png", "panels": COLUMN,
                                           "crop_viewBox_px": list(COL_CROP), "gap_px": 40}},
         "approach_pose_ab": {"params": APPROACH, "pose": pose(an["approach"]["q"]), **{k: v for k, v in an["approach"].items() if k != "q"},
-                             "note": "(a)/(b) robot reaches toward the target and halts short of b3; no link left of the base"},
+                             "note": "(a)/(b) robot descends toward the target from above and halts short of c6, the never-moved disc that blocks the overhead approach; no link left of the base"},
     }
     (HERE / "manifest.json").write_text(json.dumps(m, indent=1, default=lambda o: o.tolist() if hasattr(o, "tolist") else str(o)) + "\n")
     print(json.dumps(m["schematic_checks"], indent=1, default=str))
