@@ -1,0 +1,710 @@
+{
+ "budget": {
+  "per_query": {
+   "goal_plans": 3,
+   "motion_checks": 150,
+   "online_moves": 8,
+   "transit_plans": 6
+  }
+ },
+ "catalogue_v21": [
+  {
+   "f1_complete_ok": true,
+   "f1_x_ok": true,
+   "f1_y_ok": true,
+   "kind": "harmful_edit",
+   "seq": [
+    [
+     "o04",
+     5
+    ]
+   ],
+   "sig": "o04>5"
+  },
+  {
+   "f1_complete_ok": true,
+   "f1_x_ok": true,
+   "f1_y_ok": true,
+   "kind": "neutral_edit",
+   "seq": [
+    [
+     "o04",
+     0
+    ]
+   ],
+   "sig": "o04>0"
+  },
+  {
+   "f1_complete_ok": true,
+   "f1_x_ok": true,
+   "f1_y_ok": true,
+   "kind": "harmful_edit",
+   "seq": [
+    [
+     "o05",
+     5
+    ]
+   ],
+   "sig": "o05>5"
+  },
+  {
+   "f1_complete_ok": true,
+   "f1_x_ok": true,
+   "f1_y_ok": true,
+   "kind": "neutral_edit",
+   "seq": [
+    [
+     "o05",
+     0
+    ]
+   ],
+   "sig": "o05>0"
+  },
+  {
+   "f1_complete_ok": true,
+   "f1_x_ok": true,
+   "f1_y_ok": true,
+   "kind": "neutral_pair",
+   "seq": [
+    [
+     "o04",
+     0
+    ],
+    [
+     "o05",
+     1
+    ]
+   ],
+   "sig": "o04>0.o05>1"
+  },
+  {
+   "f1_complete_ok": true,
+   "f1_x_ok": true,
+   "f1_y_ok": true,
+   "kind": "neutral_pair_reversed",
+   "seq": [
+    [
+     "o05",
+     1
+    ],
+    [
+     "o04",
+     0
+    ]
+   ],
+   "sig": "o05>1.o04>0"
+  }
+ ],
+ "construction": {
+  "K_cert": 0,
+  "K_geom": 0,
+  "S0_open": {
+   "pick": 7,
+   "place": 16
+  },
+  "construction_cpu_s": 1.315,
+  "family": "v21b_near_closed",
+  "forced_order": false,
+  "harmful_cells": [
+   {
+    "cell": 5,
+    "closes": "pick"
+   }
+  ],
+  "harmful_cells_union": [
+   {
+    "cell": 5,
+    "closes": "pick"
+   }
+  ],
+  "layout_draw": 18,
+  "neutral_cells": [
+   0,
+   1,
+   4,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12,
+   13,
+   14,
+   15,
+   16,
+   17,
+   19,
+   20,
+   21,
+   22,
+   23,
+   24,
+   25,
+   26,
+   27,
+   28,
+   29,
+   30,
+   31,
+   32,
+   33,
+   34,
+   35,
+   36,
+   38,
+   39,
+   40,
+   41,
+   42,
+   43,
+   44,
+   45,
+   46,
+   47,
+   48,
+   54,
+   55,
+   58,
+   59,
+   60,
+   61,
+   62,
+   63
+  ],
+  "options": [
+   {
+    "order": [],
+    "pick": 2,
+    "place": 1,
+    "remove": []
+   }
+  ],
+  "q_ref_footprint": [],
+  "reference_planner_calls": 1,
+  "reference_sweep": {
+   "approach": [
+    5,
+    6,
+    13,
+    14,
+    21,
+    28,
+    36,
+    40,
+    41,
+    43,
+    49,
+    50,
+    58
+   ],
+   "carry": [
+    5,
+    6,
+    13,
+    14,
+    15,
+    21,
+    22,
+    23,
+    28,
+    29,
+    30,
+    36,
+    37,
+    38,
+    40,
+    41,
+    43,
+    44,
+    45,
+    46,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61
+   ],
+   "close_attach": [
+    5,
+    6,
+    13,
+    14,
+    21,
+    28,
+    36,
+    40,
+    41,
+    43,
+    50
+   ],
+   "pregrasp": [
+    5,
+    13,
+    14,
+    15,
+    21,
+    22,
+    23,
+    28,
+    29,
+    30,
+    31,
+    36,
+    37,
+    38,
+    39,
+    40,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63
+   ],
+   "release": [
+    52,
+    53,
+    59,
+    60,
+    61
+   ],
+   "retreat": [
+    52,
+    53,
+    59,
+    60,
+    61
+   ]
+  },
+  "reference_witness": "b9a731b4c072d82f0eec412f",
+  "rejects": {}
+ },
+ "design_v21": {
+  "f1_screened": {},
+  "queries": {
+   "X2:2d-bxyg34confirm-c34-s397:98bc346d6d6c:o04>0": {
+    "classes": [
+     "neutral_edit"
+    ],
+    "len": 1,
+    "parent_y_key": "Y2:2d-bxyg34confirm-c34-s397:98bc346d6d6c:o04>0",
+    "seq": [
+     [
+      "o04",
+      0
+     ]
+    ],
+    "side": "x"
+   },
+   "X2:2d-bxyg34confirm-c34-s397:98bc346d6d6c:o04>0.o05>1": {
+    "classes": [
+     "neutral_pair"
+    ],
+    "len": 2,
+    "parent_y_key": "Y2:2d-bxyg34confirm-c34-s397:98bc346d6d6c:o04>0.o05>1",
+    "seq": [
+     [
+      "o04",
+      0
+     ],
+     [
+      "o05",
+      1
+     ]
+    ],
+    "side": "x"
+   },
+   "X2:2d-bxyg34confirm-c34-s397:98bc346d6d6c:o04>5": {
+    "classes": [
+     "harmful_edit"
+    ],
+    "len": 1,
+    "parent_y_key": "Y2:2d-bxyg34confirm-c34-s397:98bc346d6d6c:o04>5",
+    "seq": [
+     [
+      "o04",
+      5
+     ]
+    ],
+    "side": "x"
+   },
+   "X2:2d-bxyg34confirm-c34-s397:98bc346d6d6c:o05>0": {
+    "classes": [
+     "neutral_edit"
+    ],
+    "len": 1,
+    "parent_y_key": "Y2:2d-bxyg34confirm-c34-s397:98bc346d6d6c:o05>0",
+    "seq": [
+     [
+      "o05",
+      0
+     ]
+    ],
+    "side": "x"
+   },
+   "X2:2d-bxyg34confirm-c34-s397:98bc346d6d6c:o05>1.o04>0": {
+    "classes": [
+     "neutral_pair_reversed"
+    ],
+    "len": 2,
+    "parent_y_key": "Y2:2d-bxyg34confirm-c34-s397:98bc346d6d6c:o04>0.o05>1",
+    "seq": [
+     [
+      "o05",
+      1
+     ],
+     [
+      "o04",
+      0
+     ]
+    ],
+    "side": "x"
+   },
+   "X2:2d-bxyg34confirm-c34-s397:98bc346d6d6c:o05>5": {
+    "classes": [
+     "harmful_edit"
+    ],
+    "len": 1,
+    "parent_y_key": "Y2:2d-bxyg34confirm-c34-s397:98bc346d6d6c:o05>5",
+    "seq": [
+     [
+      "o05",
+      5
+     ]
+    ],
+    "side": "x"
+   },
+   "Y2:2d-bxyg34confirm-c34-s397:98bc346d6d6c:empty": {
+    "classes": [
+     "y0"
+    ],
+    "edit": {},
+    "len": 0,
+    "seq": [],
+    "side": "y"
+   },
+   "Y2:2d-bxyg34confirm-c34-s397:98bc346d6d6c:o04>0": {
+    "classes": [
+     "neutral_edit"
+    ],
+    "edit": {
+     "o04": 0
+    },
+    "len": 1,
+    "seq": [
+     [
+      "o04",
+      0
+     ]
+    ],
+    "side": "y"
+   },
+   "Y2:2d-bxyg34confirm-c34-s397:98bc346d6d6c:o04>0.o05>1": {
+    "classes": [
+     "neutral_pair",
+     "neutral_pair_reversed"
+    ],
+    "edit": {
+     "o04": 0,
+     "o05": 1
+    },
+    "len": 2,
+    "seq": [
+     [
+      "o04",
+      0
+     ],
+     [
+      "o05",
+      1
+     ]
+    ],
+    "side": "y"
+   },
+   "Y2:2d-bxyg34confirm-c34-s397:98bc346d6d6c:o04>5": {
+    "classes": [
+     "harmful_edit"
+    ],
+    "edit": {
+     "o04": 5
+    },
+    "len": 1,
+    "seq": [
+     [
+      "o04",
+      5
+     ]
+    ],
+    "side": "y"
+   },
+   "Y2:2d-bxyg34confirm-c34-s397:98bc346d6d6c:o05>0": {
+    "classes": [
+     "neutral_edit"
+    ],
+    "edit": {
+     "o05": 0
+    },
+    "len": 1,
+    "seq": [
+     [
+      "o05",
+      0
+     ]
+    ],
+    "side": "y"
+   },
+   "Y2:2d-bxyg34confirm-c34-s397:98bc346d6d6c:o05>5": {
+    "classes": [
+     "harmful_edit"
+    ],
+    "edit": {
+     "o05": 5
+    },
+    "len": 1,
+    "seq": [
+     [
+      "o05",
+      5
+     ]
+    ],
+    "side": "y"
+   }
+  }
+ },
+ "domain": "2d",
+ "fixed_ids": [],
+ "generator": "BXY_GEN_K34",
+ "goal_cell": 53,
+ "ids": {
+  "config_hash": "90d3eb68e8a42108",
+  "construction_seed": 3678318754,
+  "generator_version": "BXY_GEN_K34C",
+  "label_protocol": "BD_BINARY_BUDGET_V1",
+  "namespace": "confirm",
+  "parent_family_id": "fam34c-f65d7c470b",
+  "robot_protocol": "PLANAR3R_SIDEGRASP_V1:sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+  "root_id": "2d-bxyg34confirm-c34-s397",
+  "teacher_version": "BD2D_TEACHER_V1:DetPhysics(P16_FAST,no-library)",
+  "variant_id": "orig",
+  "wave": "c34"
+ },
+ "intended_blockers": [],
+ "q0": [
+  1.5707963267948966,
+  1.5707963267948966,
+  1.5707963267948966
+ ],
+ "q_ref": [
+  1.5707963267948966,
+  1.5707963267948966,
+  1.5707963267948966
+ ],
+ "roles": {
+  "o00": "nonintended_ring",
+  "o01": "nonintended_ring",
+  "o02": "nonintended_ring",
+  "o03": "nonintended_ring",
+  "o04": "distractor",
+  "o05": "distractor"
+ },
+ "scene": {
+  "action_hash": null,
+  "domain_policy": "ALL_SUPPORTED",
+  "lattice": {
+   "cols": 8,
+   "pitch_m": 0.08,
+   "rows": 8
+  },
+  "legal_cells": [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12,
+   13,
+   14,
+   15,
+   16,
+   17,
+   18,
+   19,
+   20,
+   21,
+   22,
+   23,
+   24,
+   25,
+   26,
+   27,
+   28,
+   29,
+   30,
+   31,
+   32,
+   33,
+   34,
+   35,
+   36,
+   37,
+   38,
+   39,
+   40,
+   41,
+   42,
+   43,
+   44,
+   45,
+   46,
+   47,
+   48,
+   49,
+   50,
+   51,
+   52,
+   53,
+   54,
+   55,
+   56,
+   57,
+   58,
+   59,
+   60,
+   61,
+   62,
+   63
+  ],
+  "objects": [
+   {
+    "cell": 37,
+    "id": "o00",
+    "kind": "obstacle",
+    "radius_m": 0.024,
+    "support": "table",
+    "xy_m": [
+     0.44,
+     0.36
+    ]
+   },
+   {
+    "cell": 2,
+    "id": "o01",
+    "kind": "obstacle",
+    "radius_m": 0.024,
+    "support": "table",
+    "xy_m": [
+     0.2,
+     0.04
+    ]
+   },
+   {
+    "cell": 18,
+    "id": "o02",
+    "kind": "obstacle",
+    "radius_m": 0.024,
+    "support": "table",
+    "xy_m": [
+     0.2,
+     0.2
+    ]
+   },
+   {
+    "cell": 3,
+    "id": "o03",
+    "kind": "obstacle",
+    "radius_m": 0.024,
+    "support": "table",
+    "xy_m": [
+     0.28,
+     0.04
+    ]
+   },
+   {
+    "cell": 7,
+    "id": "o04",
+    "kind": "obstacle",
+    "radius_m": 0.024,
+    "support": "table",
+    "xy_m": [
+     0.6,
+     0.04
+    ]
+   },
+   {
+    "cell": 10,
+    "id": "o05",
+    "kind": "obstacle",
+    "radius_m": 0.024,
+    "support": "table",
+    "xy_m": [
+     0.2,
+     0.12
+    ]
+   },
+   {
+    "cell": 6,
+    "id": "t0",
+    "kind": "target",
+    "radius_m": 0.024,
+    "support": "table",
+    "xy_m": [
+     0.52,
+     0.04
+    ]
+   }
+  ],
+  "robot": {
+   "attached_id": null,
+   "attachment": "free",
+   "gripper_gap_m": 0.07,
+   "q_rad": [
+    1.5707963267948966,
+    1.5707963267948966,
+    1.5707963267948966
+   ]
+  },
+  "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+  "root_id": "2d-bxyg34confirm-c34-s397",
+  "variant_id": "orig"
+ },
+ "spec": {
+  "K_intent": 0,
+  "displacement": "long",
+  "distractors": true,
+  "family": "v21b_near_closed",
+  "mechanism": "v21b_near_closed",
+  "source": "far",
+  "start_pose": "home"
+ },
+ "start_stratum": "S0"
+}
