@@ -1,0 +1,6690 @@
+{
+ "K_geom_vs_verified": {
+  "0->0": 6,
+  "0->1": 1,
+  "0->None": 2,
+  "1->1": 3,
+  "1->None": 2,
+  "2->2": 2,
+  "2->None": 6,
+  "3->3": 2,
+  "3->None": 4,
+  "4->None": 3
+ },
+ "attempted_slots": 36,
+ "by_K_intent": {
+  "0": {
+   "0": 6,
+   "1": 1,
+   "None": 2
+  },
+  "1": {
+   "1": 3,
+   "None": 2
+  },
+  "2": {
+   "2": 2,
+   "None": 6
+  },
+  "3": {
+   "3": 2,
+   "None": 4
+  },
+  "4": {
+   "None": 3
+  }
+ },
+ "by_mechanism": {
+  "goal_occupant": {
+   "1": 2
+  },
+  "mixed": {
+   "2": 1,
+   "None": 2
+  },
+  "near_closed": {
+   "0": 4,
+   "None": 2
+  },
+  "nested": {
+   "2": 1,
+   "3": 2,
+   "None": 5
+  },
+  "open": {
+   "0": 2,
+   "1": 1
+  },
+  "pick": {
+   "None": 6
+  },
+  "place": {
+   "1": 1,
+   "None": 2
+  }
+ },
+ "rejected": [
+  {
+   "accepted": false,
+   "cpu_s": 0.561,
+   "family": "fam21-49a699d1a9",
+   "reject": "NO_ANALYTIC_LAYOUT:near_closed:K0",
+   "root_id": "2d-bxyg21dev-wA-s009",
+   "seed": 2949508067,
+   "slot": 9,
+   "spec": {
+    "K_intent": 0,
+    "displacement": "short",
+    "distractors": "1-2",
+    "mechanism": "near_closed",
+    "source": "mid",
+    "start_pose": "home"
+   }
+  },
+  {
+   "accepted": false,
+   "cpu_s": 0.03,
+   "family": "fam21-0b58095c3e",
+   "reject": "NO_ANALYTIC_LAYOUT:pick:K1",
+   "root_id": "2d-bxyg21dev-wA-s011",
+   "seed": 1501907222,
+   "slot": 11,
+   "spec": {
+    "K_intent": 1,
+    "displacement": "medium",
+    "distractors": "3-4",
+    "mechanism": "pick",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  },
+  {
+   "accepted": false,
+   "cpu_s": 0.039,
+   "family": "fam21-cc1b76212f",
+   "reject": "NO_ANALYTIC_LAYOUT:mixed:K3",
+   "root_id": "2d-bxyg21dev-wA-s029",
+   "seed": 765614322,
+   "slot": 29,
+   "spec": {
+    "K_intent": 3,
+    "displacement": "medium",
+    "distractors": "3-4",
+    "mechanism": "mixed",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "accepted": false,
+   "cpu_s": 0.538,
+   "family": "fam21-8b2b993079",
+   "reject": "NO_ANALYTIC_LAYOUT:pick:K4",
+   "root_id": "2d-bxyg21dev-wA-s032",
+   "seed": 108018937,
+   "slot": 32,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": "3-4",
+    "mechanism": "pick",
+    "source": "near",
+    "start_pose": "home"
+   }
+  },
+  {
+   "accepted": false,
+   "cpu_s": 0.448,
+   "family": "fam21-f00bd9f69b",
+   "reject": "NO_ANALYTIC_LAYOUT:mixed:K4",
+   "root_id": "2d-bxyg21dev-wA-s035",
+   "seed": 2002015095,
+   "slot": 35,
+   "spec": {
+    "K_intent": 4,
+    "displacement": "medium",
+    "distractors": "3-4",
+    "mechanism": "mixed",
+    "source": "near",
+    "start_pose": "nonhome"
+   }
+  }
+ ],
+ "roots": 31,
+ "rows": [
+  {
+   "K_geom": 0,
+   "cells": {
+    "00": 1,
+    "01": 1,
+    "11": 2
+   },
+   "censored": 0,
+   "connector_failures": 0,
+   "cpu_s": 15.8,
+   "discordant": [
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s000:c34a9e6c0d1d:o00>4.o02>3",
+     "orders": [
+      [
+       "o02>3.o00>4",
+       0,
+       "NO_PLAN_FOUND",
+       "relocation:0"
+      ],
+      [
+       "o00>4.o02>3",
+       1,
+       null,
+       null
+      ]
+     ]
+    }
+   ],
+   "forced_order": false,
+   "harmful": [],
+   "queries": 8,
+   "repair": null,
+   "results": 8,
+   "root": "2d-bxyg21dev-wA-s000",
+   "rows": [
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s000:c34a9e6c0d1d:o02>3",
+     "f1": true,
+     "kind": "neutral_edit",
+     "m": 1,
+     "sig": "o02>3",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "NO_PLAN_FOUND",
+     "y_status": "UNKNOWN_PLANNER"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s000:c34a9e6c0d1d:o00>3",
+     "f1": true,
+     "kind": "neutral_edit",
+     "m": 1,
+     "sig": "o00>3",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 1,
+     "y_neg": null,
+     "y_status": "VERIFIED"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s000:c34a9e6c0d1d:o00>4.o02>3",
+     "f1": true,
+     "kind": "neutral_pair",
+     "m": 2,
+     "sig": "o02>3.o00>4",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 1,
+     "y_neg": null,
+     "y_status": "VERIFIED"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s000:c34a9e6c0d1d:o00>4.o02>3",
+     "f1": true,
+     "kind": "neutral_pair_reversed",
+     "m": 2,
+     "sig": "o00>4.o02>3",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 1,
+     "y_neg": null,
+     "y_status": "VERIFIED"
+    }
+   ],
+   "spec": {
+    "K_intent": 0,
+    "displacement": "short",
+    "distractors": "1-2",
+    "mechanism": "open",
+    "source": "mid",
+    "start_pose": "home"
+   },
+   "statuses": {
+    "UNKNOWN_PLANNER": 4,
+    "VERIFIED": 4
+   },
+   "verified_K": 1,
+   "verified_kinds": [
+    "neutral_edit",
+    "neutral_pair_reversed"
+   ],
+   "verified_repairs": 2,
+   "x_neg": {
+    "NO_PLAN_FOUND": 2
+   },
+   "y0": 0,
+   "y_neg": {
+    "NO_PLAN_FOUND": 2
+   }
+  },
+  {
+   "K_geom": 0,
+   "cells": {
+    "11": 4
+   },
+   "censored": 0,
+   "connector_failures": 0,
+   "cpu_s": 46.1,
+   "discordant": [],
+   "forced_order": false,
+   "harmful": [],
+   "queries": 8,
+   "repair": null,
+   "results": 8,
+   "root": "2d-bxyg21dev-wA-s001",
+   "rows": [
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s001:914b6bb71236:o02>5",
+     "f1": true,
+     "kind": "neutral_edit",
+     "m": 1,
+     "sig": "o02>5",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 1,
+     "y_neg": null,
+     "y_status": "VERIFIED"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s001:914b6bb71236:o00>5",
+     "f1": true,
+     "kind": "neutral_edit",
+     "m": 1,
+     "sig": "o00>5",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 1,
+     "y_neg": null,
+     "y_status": "VERIFIED"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s001:914b6bb71236:o00>6.o02>5",
+     "f1": true,
+     "kind": "neutral_pair",
+     "m": 2,
+     "sig": "o02>5.o00>6",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 1,
+     "y_neg": null,
+     "y_status": "VERIFIED"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s001:914b6bb71236:o00>6.o02>5",
+     "f1": true,
+     "kind": "neutral_pair_reversed",
+     "m": 2,
+     "sig": "o00>6.o02>5",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 1,
+     "y_neg": null,
+     "y_status": "VERIFIED"
+    }
+   ],
+   "spec": {
+    "K_intent": 0,
+    "displacement": "long",
+    "distractors": "1-2",
+    "mechanism": "open",
+    "source": "far",
+    "start_pose": "home"
+   },
+   "statuses": {
+    "VERIFIED": 8
+   },
+   "verified_K": 0,
+   "verified_kinds": [
+    "neutral_edit",
+    "neutral_pair",
+    "neutral_pair_reversed"
+   ],
+   "verified_repairs": 4,
+   "x_neg": {},
+   "y0": 1,
+   "y_neg": {}
+  },
+  {
+   "K_geom": 0,
+   "cells": {
+    "01": 3,
+    "11": 2
+   },
+   "censored": 0,
+   "connector_failures": 0,
+   "cpu_s": 106.6,
+   "discordant": [],
+   "forced_order": false,
+   "harmful": [],
+   "queries": 10,
+   "repair": null,
+   "results": 10,
+   "root": "2d-bxyg21dev-wA-s002",
+   "rows": [
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s002:baf4c2a58e9a:o01>0",
+     "f1": true,
+     "kind": "neutral_edit",
+     "m": 1,
+     "sig": "o01>0",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 1,
+     "y_neg": null,
+     "y_status": "VERIFIED"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s002:baf4c2a58e9a:o02>0",
+     "f1": true,
+     "kind": "neutral_edit",
+     "m": 1,
+     "sig": "o02>0",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 1,
+     "y_neg": null,
+     "y_status": "VERIFIED"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s002:baf4c2a58e9a:o01>0.o02>3",
+     "f1": true,
+     "kind": "neutral_pair",
+     "m": 2,
+     "sig": "o01>0.o02>3",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:1",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 1,
+     "y_neg": null,
+     "y_status": "VERIFIED"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s002:baf4c2a58e9a:o01>0.o02>3",
+     "f1": true,
+     "kind": "neutral_pair_reversed",
+     "m": 2,
+     "sig": "o02>3.o01>0",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 1,
+     "y_neg": null,
+     "y_status": "VERIFIED"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s002:baf4c2a58e9a:o00>42",
+     "f1": true,
+     "kind": "qref_corridor_destination",
+     "m": 1,
+     "sig": "o00>42",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 1,
+     "y_neg": null,
+     "y_status": "VERIFIED"
+    }
+   ],
+   "spec": {
+    "K_intent": 0,
+    "displacement": "medium",
+    "distractors": "3-4",
+    "mechanism": "open",
+    "source": "near",
+    "start_pose": "nonhome"
+   },
+   "statuses": {
+    "UNKNOWN_PLANNER": 3,
+    "VERIFIED": 7
+   },
+   "verified_K": 0,
+   "verified_kinds": [
+    "neutral_edit",
+    "qref_corridor_destination"
+   ],
+   "verified_repairs": 2,
+   "x_neg": {
+    "NO_PLAN_FOUND": 3
+   },
+   "y0": 1,
+   "y_neg": {}
+  },
+  {
+   "K_geom": 0,
+   "cells": {
+    "11": 7
+   },
+   "censored": 0,
+   "connector_failures": 0,
+   "cpu_s": 28.1,
+   "discordant": [],
+   "forced_order": false,
+   "harmful": [],
+   "queries": 14,
+   "repair": null,
+   "results": 14,
+   "root": "2d-bxyg21dev-wA-s003",
+   "rows": [
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s003:8daae04427f0:o02>30",
+     "f1": true,
+     "kind": "harmful_edit",
+     "m": 1,
+     "sig": "o02>30",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 1,
+     "y_neg": null,
+     "y_status": "VERIFIED"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s003:8daae04427f0:o02>0",
+     "f1": true,
+     "kind": "neutral_edit",
+     "m": 1,
+     "sig": "o02>0",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 1,
+     "y_neg": null,
+     "y_status": "VERIFIED"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s003:8daae04427f0:o00>30",
+     "f1": true,
+     "kind": "harmful_edit",
+     "m": 1,
+     "sig": "o00>30",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 1,
+     "y_neg": null,
+     "y_status": "VERIFIED"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s003:8daae04427f0:o00>0",
+     "f1": true,
+     "kind": "neutral_edit",
+     "m": 1,
+     "sig": "o00>0",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 1,
+     "y_neg": null,
+     "y_status": "VERIFIED"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s003:8daae04427f0:o00>3.o02>0",
+     "f1": true,
+     "kind": "neutral_pair",
+     "m": 2,
+     "sig": "o02>0.o00>3",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 1,
+     "y_neg": null,
+     "y_status": "VERIFIED"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s003:8daae04427f0:o00>3.o02>0",
+     "f1": true,
+     "kind": "neutral_pair_reversed",
+     "m": 2,
+     "sig": "o00>3.o02>0",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 1,
+     "y_neg": null,
+     "y_status": "VERIFIED"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s003:8daae04427f0:o00>32",
+     "f1": true,
+     "kind": "qref_corridor_destination",
+     "m": 1,
+     "sig": "o00>32",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 1,
+     "y_neg": null,
+     "y_status": "VERIFIED"
+    }
+   ],
+   "spec": {
+    "K_intent": 0,
+    "displacement": "short",
+    "distractors": "1-2",
+    "mechanism": "near_closed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   },
+   "statuses": {
+    "VERIFIED": 14
+   },
+   "verified_K": 0,
+   "verified_kinds": [
+    "harmful_edit",
+    "neutral_edit",
+    "neutral_pair",
+    "neutral_pair_reversed",
+    "qref_corridor_destination"
+   ],
+   "verified_repairs": 7,
+   "x_neg": {},
+   "y0": 1,
+   "y_neg": {}
+  },
+  {
+   "K_geom": 0,
+   "cells": {
+    "00": 6
+   },
+   "censored": 0,
+   "connector_failures": 0,
+   "cpu_s": 19.0,
+   "discordant": [],
+   "forced_order": false,
+   "harmful": [],
+   "queries": 12,
+   "repair": null,
+   "results": 12,
+   "root": "2d-bxyg21dev-wA-s004",
+   "rows": [
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s004:18c84cca188a:o04>22",
+     "f1": true,
+     "kind": "harmful_edit",
+     "m": 1,
+     "sig": "o04>22",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s004:18c84cca188a:o04>3",
+     "f1": true,
+     "kind": "neutral_edit",
+     "m": 1,
+     "sig": "o04>3",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s004:18c84cca188a:o05>22",
+     "f1": true,
+     "kind": "harmful_edit",
+     "m": 1,
+     "sig": "o05>22",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s004:18c84cca188a:o05>3",
+     "f1": true,
+     "kind": "neutral_edit",
+     "m": 1,
+     "sig": "o05>3",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s004:18c84cca188a:o04>3.o05>5",
+     "f1": true,
+     "kind": "neutral_pair",
+     "m": 2,
+     "sig": "o04>3.o05>5",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s004:18c84cca188a:o04>3.o05>5",
+     "f1": true,
+     "kind": "neutral_pair_reversed",
+     "m": 2,
+     "sig": "o05>5.o04>3",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    }
+   ],
+   "spec": {
+    "K_intent": 0,
+    "displacement": "long",
+    "distractors": "1-2",
+    "mechanism": "near_closed",
+    "source": "far",
+    "start_pose": "home"
+   },
+   "statuses": {
+    "CERTIFIED_INFEASIBLE": 6,
+    "UNKNOWN_PLANNER": 6
+   },
+   "verified_K": null,
+   "verified_kinds": [],
+   "verified_repairs": 0,
+   "x_neg": {
+    "NO_PLAN_FOUND": 6
+   },
+   "y0": 0,
+   "y_neg": {
+    "CERTIFIED": 6
+   }
+  },
+  {
+   "K_geom": 0,
+   "cells": {
+    "10": 2,
+    "11": 4
+   },
+   "censored": 0,
+   "connector_failures": 0,
+   "cpu_s": 27.7,
+   "discordant": [],
+   "forced_order": false,
+   "harmful": [
+    [
+     "harmful_edit",
+     "o03>52",
+     "CERTIFIED"
+    ],
+    [
+     "harmful_edit",
+     "o04>52",
+     "CERTIFIED"
+    ]
+   ],
+   "queries": 12,
+   "repair": null,
+   "results": 12,
+   "root": "2d-bxyg21dev-wA-s005",
+   "rows": [
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s005:b2c5e682e46d:o03>52",
+     "f1": true,
+     "kind": "harmful_edit",
+     "m": 1,
+     "sig": "o03>52",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s005:b2c5e682e46d:o03>0",
+     "f1": true,
+     "kind": "neutral_edit",
+     "m": 1,
+     "sig": "o03>0",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 1,
+     "y_neg": null,
+     "y_status": "VERIFIED"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s005:b2c5e682e46d:o04>52",
+     "f1": true,
+     "kind": "harmful_edit",
+     "m": 1,
+     "sig": "o04>52",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s005:b2c5e682e46d:o04>0",
+     "f1": true,
+     "kind": "neutral_edit",
+     "m": 1,
+     "sig": "o04>0",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 1,
+     "y_neg": null,
+     "y_status": "VERIFIED"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s005:b2c5e682e46d:o03>0.o04>1",
+     "f1": true,
+     "kind": "neutral_pair",
+     "m": 2,
+     "sig": "o03>0.o04>1",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 1,
+     "y_neg": null,
+     "y_status": "VERIFIED"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s005:b2c5e682e46d:o03>0.o04>1",
+     "f1": true,
+     "kind": "neutral_pair_reversed",
+     "m": 2,
+     "sig": "o04>1.o03>0",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 1,
+     "y_neg": null,
+     "y_status": "VERIFIED"
+    }
+   ],
+   "spec": {
+    "K_intent": 0,
+    "displacement": "medium",
+    "distractors": "3-4",
+    "mechanism": "near_closed",
+    "source": "near",
+    "start_pose": "home"
+   },
+   "statuses": {
+    "CERTIFIED_INFEASIBLE": 2,
+    "VERIFIED": 10
+   },
+   "verified_K": 0,
+   "verified_kinds": [
+    "neutral_edit",
+    "neutral_pair",
+    "neutral_pair_reversed"
+   ],
+   "verified_repairs": 4,
+   "x_neg": {},
+   "y0": 1,
+   "y_neg": {
+    "CERTIFIED": 2
+   }
+  },
+  {
+   "K_geom": 0,
+   "cells": {
+    "00": 5,
+    "10": 1
+   },
+   "censored": 0,
+   "connector_failures": 0,
+   "cpu_s": 13.6,
+   "discordant": [],
+   "forced_order": false,
+   "harmful": [],
+   "queries": 12,
+   "repair": null,
+   "results": 12,
+   "root": "2d-bxyg21dev-wA-s006",
+   "rows": [
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s006:e32c9f553723:o04>0",
+     "f1": true,
+     "kind": "harmful_edit",
+     "m": 1,
+     "sig": "o04>0",
+     "x": 0,
+     "x_neg": "CERTIFIED",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "CERTIFIED_INFEASIBLE",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s006:e32c9f553723:o04>6",
+     "f1": true,
+     "kind": "neutral_edit",
+     "m": 1,
+     "sig": "o04>6",
+     "x": 0,
+     "x_neg": "CERTIFIED",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "CERTIFIED_INFEASIBLE",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s006:e32c9f553723:o05>0",
+     "f1": true,
+     "kind": "harmful_edit",
+     "m": 1,
+     "sig": "o05>0",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s006:e32c9f553723:o05>6",
+     "f1": true,
+     "kind": "neutral_edit",
+     "m": 1,
+     "sig": "o05>6",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s006:e32c9f553723:o04>6.o05>7",
+     "f1": true,
+     "kind": "neutral_pair",
+     "m": 2,
+     "sig": "o04>6.o05>7",
+     "x": 0,
+     "x_neg": "CERTIFIED",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "CERTIFIED_INFEASIBLE",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s006:e32c9f553723:o04>6.o05>7",
+     "f1": true,
+     "kind": "neutral_pair_reversed",
+     "m": 2,
+     "sig": "o05>7.o04>6",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    }
+   ],
+   "spec": {
+    "K_intent": 0,
+    "displacement": "short",
+    "distractors": "1-2",
+    "mechanism": "near_closed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   },
+   "statuses": {
+    "CERTIFIED_INFEASIBLE": 9,
+    "UNKNOWN_PLANNER": 2,
+    "VERIFIED": 1
+   },
+   "verified_K": null,
+   "verified_kinds": [],
+   "verified_repairs": 0,
+   "x_neg": {
+    "CERTIFIED": 3,
+    "NO_PLAN_FOUND": 2
+   },
+   "y0": 0,
+   "y_neg": {
+    "CERTIFIED": 6
+   }
+  },
+  {
+   "K_geom": 0,
+   "cells": {
+    "10": 2,
+    "11": 5
+   },
+   "censored": 0,
+   "connector_failures": 0,
+   "cpu_s": 36.2,
+   "discordant": [],
+   "forced_order": false,
+   "harmful": [
+    [
+     "harmful_edit",
+     "o03>5",
+     "CERTIFIED"
+    ],
+    [
+     "harmful_edit",
+     "o04>5",
+     "CERTIFIED"
+    ]
+   ],
+   "queries": 14,
+   "repair": null,
+   "results": 14,
+   "root": "2d-bxyg21dev-wA-s007",
+   "rows": [
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s007:48ba6df14c4f:o03>5",
+     "f1": true,
+     "kind": "harmful_edit",
+     "m": 1,
+     "sig": "o03>5",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s007:48ba6df14c4f:o03>0",
+     "f1": true,
+     "kind": "neutral_edit",
+     "m": 1,
+     "sig": "o03>0",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 1,
+     "y_neg": null,
+     "y_status": "VERIFIED"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s007:48ba6df14c4f:o04>5",
+     "f1": true,
+     "kind": "harmful_edit",
+     "m": 1,
+     "sig": "o04>5",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s007:48ba6df14c4f:o04>0",
+     "f1": true,
+     "kind": "neutral_edit",
+     "m": 1,
+     "sig": "o04>0",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 1,
+     "y_neg": null,
+     "y_status": "VERIFIED"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s007:48ba6df14c4f:o03>0.o04>1",
+     "f1": true,
+     "kind": "neutral_pair",
+     "m": 2,
+     "sig": "o03>0.o04>1",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 1,
+     "y_neg": null,
+     "y_status": "VERIFIED"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s007:48ba6df14c4f:o03>0.o04>1",
+     "f1": true,
+     "kind": "neutral_pair_reversed",
+     "m": 2,
+     "sig": "o04>1.o03>0",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 1,
+     "y_neg": null,
+     "y_status": "VERIFIED"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s007:48ba6df14c4f:o00>42",
+     "f1": true,
+     "kind": "qref_corridor_destination",
+     "m": 1,
+     "sig": "o00>42",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 1,
+     "y_neg": null,
+     "y_status": "VERIFIED"
+    }
+   ],
+   "spec": {
+    "K_intent": 0,
+    "displacement": "long",
+    "distractors": "1-2",
+    "mechanism": "near_closed",
+    "source": "far",
+    "start_pose": "nonhome"
+   },
+   "statuses": {
+    "CERTIFIED_INFEASIBLE": 2,
+    "VERIFIED": 12
+   },
+   "verified_K": 0,
+   "verified_kinds": [
+    "neutral_edit",
+    "neutral_pair",
+    "neutral_pair_reversed",
+    "qref_corridor_destination"
+   ],
+   "verified_repairs": 5,
+   "x_neg": {},
+   "y0": 1,
+   "y_neg": {
+    "CERTIFIED": 2
+   }
+  },
+  {
+   "K_geom": 0,
+   "cells": {
+    "10": 2,
+    "11": 4
+   },
+   "censored": 0,
+   "connector_failures": 0,
+   "cpu_s": 32.3,
+   "discordant": [],
+   "forced_order": false,
+   "harmful": [
+    [
+     "harmful_edit",
+     "o04>22",
+     "NO_PLAN_FOUND"
+    ],
+    [
+     "harmful_edit",
+     "o05>22",
+     "NO_PLAN_FOUND"
+    ]
+   ],
+   "queries": 12,
+   "repair": null,
+   "results": 12,
+   "root": "2d-bxyg21dev-wA-s008",
+   "rows": [
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s008:a8d5abfe2d23:o04>22",
+     "f1": true,
+     "kind": "harmful_edit",
+     "m": 1,
+     "sig": "o04>22",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "NO_PLAN_FOUND",
+     "y_status": "UNKNOWN_PLANNER"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s008:a8d5abfe2d23:o04>4",
+     "f1": true,
+     "kind": "neutral_edit",
+     "m": 1,
+     "sig": "o04>4",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 1,
+     "y_neg": null,
+     "y_status": "VERIFIED"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s008:a8d5abfe2d23:o05>22",
+     "f1": true,
+     "kind": "harmful_edit",
+     "m": 1,
+     "sig": "o05>22",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "NO_PLAN_FOUND",
+     "y_status": "UNKNOWN_PLANNER"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s008:a8d5abfe2d23:o05>4",
+     "f1": true,
+     "kind": "neutral_edit",
+     "m": 1,
+     "sig": "o05>4",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 1,
+     "y_neg": null,
+     "y_status": "VERIFIED"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s008:a8d5abfe2d23:o04>4.o05>5",
+     "f1": true,
+     "kind": "neutral_pair",
+     "m": 2,
+     "sig": "o04>4.o05>5",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 1,
+     "y_neg": null,
+     "y_status": "VERIFIED"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s008:a8d5abfe2d23:o04>4.o05>5",
+     "f1": true,
+     "kind": "neutral_pair_reversed",
+     "m": 2,
+     "sig": "o05>5.o04>4",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 1,
+     "y_neg": null,
+     "y_status": "VERIFIED"
+    }
+   ],
+   "spec": {
+    "K_intent": 0,
+    "displacement": "medium",
+    "distractors": "3-4",
+    "mechanism": "near_closed",
+    "source": "near",
+    "start_pose": "home"
+   },
+   "statuses": {
+    "UNKNOWN_PLANNER": 2,
+    "VERIFIED": 10
+   },
+   "verified_K": 0,
+   "verified_kinds": [
+    "neutral_edit",
+    "neutral_pair",
+    "neutral_pair_reversed"
+   ],
+   "verified_repairs": 4,
+   "x_neg": {},
+   "y0": 1,
+   "y_neg": {
+    "NO_PLAN_FOUND": 2
+   }
+  },
+  {
+   "K_geom": 1,
+   "cells": {
+    "00": 6,
+    "10": 1
+   },
+   "censored": 0,
+   "connector_failures": 0,
+   "cpu_s": 5.7,
+   "discordant": [],
+   "forced_order": false,
+   "harmful": [],
+   "queries": 14,
+   "repair": {
+    "m": 1,
+    "prefix_x": [],
+    "prefix_y": [],
+    "x": 0,
+    "y": 0
+   },
+   "results": 14,
+   "root": "2d-bxyg21dev-wA-s010",
+   "rows": [
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s010:184128628d6e:o05>12",
+     "f1": true,
+     "kind": "repair",
+     "m": 1,
+     "sig": "o05>12",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s010:184128628d6e:o05>5",
+     "f1": true,
+     "kind": "repair_wrong_destination",
+     "m": 1,
+     "sig": "o05>5",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s010:184128628d6e:o04>7",
+     "f1": true,
+     "kind": "alternative_repair",
+     "m": 1,
+     "sig": "o04>7",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s010:184128628d6e:o01>0",
+     "f1": true,
+     "kind": "neutral_edit",
+     "m": 1,
+     "sig": "o01>0",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s010:184128628d6e:o02>0",
+     "f1": true,
+     "kind": "neutral_edit",
+     "m": 1,
+     "sig": "o02>0",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s010:184128628d6e:o01>0.o02>7",
+     "f1": true,
+     "kind": "neutral_pair",
+     "m": 2,
+     "sig": "o01>0.o02>7",
+     "x": 0,
+     "x_neg": "CERTIFIED",
+     "x_ok": true,
+     "x_phase": "relocation:1",
+     "x_status": "CERTIFIED_INFEASIBLE",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s010:184128628d6e:o01>0.o02>7",
+     "f1": true,
+     "kind": "neutral_pair_reversed",
+     "m": 2,
+     "sig": "o02>7.o01>0",
+     "x": 0,
+     "x_neg": "CERTIFIED",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "CERTIFIED_INFEASIBLE",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    }
+   ],
+   "spec": {
+    "K_intent": 1,
+    "displacement": "long",
+    "distractors": "0",
+    "mechanism": "pick",
+    "source": "far",
+    "start_pose": "nonhome"
+   },
+   "statuses": {
+    "CERTIFIED_INFEASIBLE": 9,
+    "UNKNOWN_PLANNER": 4,
+    "VERIFIED": 1
+   },
+   "verified_K": null,
+   "verified_kinds": [],
+   "verified_repairs": 0,
+   "x_neg": {
+    "CERTIFIED": 2,
+    "NO_PLAN_FOUND": 4
+   },
+   "y0": 0,
+   "y_neg": {
+    "CERTIFIED": 7
+   }
+  },
+  {
+   "K_geom": 1,
+   "cells": {
+    "00": 4,
+    "10": 4
+   },
+   "censored": 0,
+   "connector_failures": 0,
+   "cpu_s": 23.4,
+   "discordant": [],
+   "forced_order": false,
+   "harmful": [],
+   "queries": 16,
+   "repair": {
+    "m": 1,
+    "prefix_x": [],
+    "prefix_y": [],
+    "x": 1,
+    "y": 0
+   },
+   "results": 16,
+   "root": "2d-bxyg21dev-wA-s012",
+   "rows": [
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s012:bd6c4944c810:o03>27",
+     "f1": true,
+     "kind": "repair",
+     "m": 1,
+     "sig": "o03>27",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s012:bd6c4944c810:o03>36",
+     "f1": true,
+     "kind": "repair_wrong_destination",
+     "m": 1,
+     "sig": "o03>36",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s012:bd6c4944c810:o03>27.o04>54",
+     "f1": true,
+     "kind": "repair_plus_unnecessary",
+     "m": 2,
+     "sig": "o03>27.o04>54",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s012:bd6c4944c810:o03>27.o04>36",
+     "f1": true,
+     "kind": "repair_then_harmful",
+     "m": 2,
+     "sig": "o03>27.o04>36",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s012:bd6c4944c810:o04>2",
+     "f1": true,
+     "kind": "neutral_edit",
+     "m": 1,
+     "sig": "o04>2",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s012:bd6c4944c810:o05>2",
+     "f1": true,
+     "kind": "neutral_edit",
+     "m": 1,
+     "sig": "o05>2",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s012:bd6c4944c810:o04>2.o05>3",
+     "f1": true,
+     "kind": "neutral_pair",
+     "m": 2,
+     "sig": "o04>2.o05>3",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s012:bd6c4944c810:o04>2.o05>3",
+     "f1": true,
+     "kind": "neutral_pair_reversed",
+     "m": 2,
+     "sig": "o05>3.o04>2",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    }
+   ],
+   "spec": {
+    "K_intent": 1,
+    "displacement": "short",
+    "distractors": "1-2",
+    "mechanism": "place",
+    "source": "mid",
+    "start_pose": "home"
+   },
+   "statuses": {
+    "CERTIFIED_INFEASIBLE": 8,
+    "UNKNOWN_PLANNER": 4,
+    "VERIFIED": 4
+   },
+   "verified_K": null,
+   "verified_kinds": [],
+   "verified_repairs": 0,
+   "x_neg": {
+    "NO_PLAN_FOUND": 4
+   },
+   "y0": 0,
+   "y_neg": {
+    "CERTIFIED": 8
+   }
+  },
+  {
+   "K_geom": 1,
+   "cells": {
+    "00": 3,
+    "10": 3,
+    "11": 1
+   },
+   "censored": 0,
+   "connector_failures": 0,
+   "cpu_s": 37.5,
+   "discordant": [
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s013:d7925282a709:o01>0.o02>1",
+     "orders": [
+      [
+       "o01>0.o02>1",
+       0,
+       "NO_PLAN_FOUND",
+       "relocation:0"
+      ],
+      [
+       "o02>1.o01>0",
+       1,
+       null,
+       null
+      ]
+     ]
+    }
+   ],
+   "forced_order": false,
+   "harmful": [],
+   "queries": 14,
+   "repair": {
+    "m": 1,
+    "prefix_x": [],
+    "prefix_y": [],
+    "x": 0,
+    "y": 0
+   },
+   "results": 14,
+   "root": "2d-bxyg21dev-wA-s013",
+   "rows": [
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s013:d7925282a709:o03>14",
+     "f1": true,
+     "kind": "repair",
+     "m": 1,
+     "sig": "o03>14",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "NO_PLAN_FOUND",
+     "y_status": "UNKNOWN_PLANNER"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s013:d7925282a709:o03>19",
+     "f1": true,
+     "kind": "repair_wrong_destination",
+     "m": 1,
+     "sig": "o03>19",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 1,
+     "y_neg": null,
+     "y_status": "VERIFIED"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s013:d7925282a709:o04>34",
+     "f1": true,
+     "kind": "alternative_repair",
+     "m": 1,
+     "sig": "o04>34",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "NO_PLAN_FOUND",
+     "y_status": "UNKNOWN_PLANNER"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s013:d7925282a709:o01>0",
+     "f1": true,
+     "kind": "neutral_edit",
+     "m": 1,
+     "sig": "o01>0",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "NO_PLAN_FOUND",
+     "y_status": "UNKNOWN_PLANNER"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s013:d7925282a709:o02>0",
+     "f1": true,
+     "kind": "neutral_edit",
+     "m": 1,
+     "sig": "o02>0",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "NO_PLAN_FOUND",
+     "y_status": "UNKNOWN_PLANNER"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s013:d7925282a709:o01>0.o02>1",
+     "f1": true,
+     "kind": "neutral_pair",
+     "m": 2,
+     "sig": "o01>0.o02>1",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "NO_PLAN_FOUND",
+     "y_status": "UNKNOWN_PLANNER"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s013:d7925282a709:o01>0.o02>1",
+     "f1": true,
+     "kind": "neutral_pair_reversed",
+     "m": 2,
+     "sig": "o02>1.o01>0",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "NO_PLAN_FOUND",
+     "y_status": "UNKNOWN_PLANNER"
+    }
+   ],
+   "spec": {
+    "K_intent": 1,
+    "displacement": "long",
+    "distractors": "0",
+    "mechanism": "place",
+    "source": "far",
+    "start_pose": "home"
+   },
+   "statuses": {
+    "UNKNOWN_PLANNER": 9,
+    "VERIFIED": 5
+   },
+   "verified_K": 1,
+   "verified_kinds": [
+    "repair_wrong_destination"
+   ],
+   "verified_repairs": 1,
+   "x_neg": {
+    "NO_PLAN_FOUND": 3
+   },
+   "y0": 0,
+   "y_neg": {
+    "NO_PLAN_FOUND": 6
+   }
+  },
+  {
+   "K_geom": 1,
+   "cells": {
+    "00": 4,
+    "01": 2,
+    "10": 1,
+    "11": 2
+   },
+   "censored": 0,
+   "connector_failures": 6,
+   "cpu_s": 89.0,
+   "discordant": [],
+   "forced_order": false,
+   "harmful": [],
+   "queries": 18,
+   "repair": {
+    "m": 1,
+    "prefix_x": [],
+    "prefix_y": [],
+    "x": 0,
+    "y": 1
+   },
+   "results": 18,
+   "root": "2d-bxyg21dev-wA-s014",
+   "rows": [
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s014:4e14f80df5e0:o00>47",
+     "f1": true,
+     "kind": "repair",
+     "m": 1,
+     "sig": "o00>47",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "connector",
+     "x_status": "UNKNOWN_TRANSIT",
+     "y": 1,
+     "y_neg": null,
+     "y_status": "VERIFIED"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s014:4e14f80df5e0:o00>38",
+     "f1": true,
+     "kind": "repair_wrong_destination",
+     "m": 1,
+     "sig": "o00>38",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 1,
+     "y_neg": null,
+     "y_status": "VERIFIED"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s014:4e14f80df5e0:o00>47.o01>44",
+     "f1": true,
+     "kind": "repair_plus_unnecessary",
+     "m": 2,
+     "sig": "o00>47.o01>44",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 1,
+     "y_neg": null,
+     "y_status": "VERIFIED"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s014:4e14f80df5e0:o00>47.o01>38",
+     "f1": true,
+     "kind": "repair_then_harmful",
+     "m": 2,
+     "sig": "o00>47.o01>38",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "NO_PLAN_FOUND",
+     "y_status": "UNKNOWN_PLANNER"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s014:4e14f80df5e0:o01>1",
+     "f1": false,
+     "kind": "neutral_edit",
+     "m": 1,
+     "sig": "o01>1",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "connector",
+     "x_status": "UNKNOWN_TRANSIT",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s014:4e14f80df5e0:o02>1",
+     "f1": false,
+     "kind": "neutral_edit",
+     "m": 1,
+     "sig": "o02>1",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "connector",
+     "x_status": "UNKNOWN_TRANSIT",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s014:4e14f80df5e0:o01>1.o02>3",
+     "f1": false,
+     "kind": "neutral_pair",
+     "m": 2,
+     "sig": "o01>1.o02>3",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "connector",
+     "x_status": "UNKNOWN_TRANSIT",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s014:4e14f80df5e0:o01>1.o02>3",
+     "f1": false,
+     "kind": "neutral_pair_reversed",
+     "m": 2,
+     "sig": "o02>3.o01>1",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "connector",
+     "x_status": "UNKNOWN_TRANSIT",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s014:4e14f80df5e0:o00>56",
+     "f1": true,
+     "kind": "qref_corridor_destination",
+     "m": 1,
+     "sig": "o00>56",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "connector",
+     "x_status": "UNKNOWN_TRANSIT",
+     "y": 1,
+     "y_neg": null,
+     "y_status": "VERIFIED"
+    }
+   ],
+   "spec": {
+    "K_intent": 1,
+    "displacement": "medium",
+    "distractors": "3-4",
+    "mechanism": "goal_occupant",
+    "source": "near",
+    "start_pose": "nonhome"
+   },
+   "statuses": {
+    "CERTIFIED_INFEASIBLE": 4,
+    "UNKNOWN_PLANNER": 1,
+    "UNKNOWN_TRANSIT": 6,
+    "VERIFIED": 7
+   },
+   "verified_K": 1,
+   "verified_kinds": [
+    "repair_plus_unnecessary",
+    "repair_wrong_destination"
+   ],
+   "verified_repairs": 2,
+   "x_neg": {
+    "NO_PLAN_FOUND": 6
+   },
+   "y0": 0,
+   "y_neg": {
+    "CERTIFIED": 4,
+    "NO_PLAN_FOUND": 1
+   }
+  },
+  {
+   "K_geom": 1,
+   "cells": {
+    "10": 1,
+    "11": 5
+   },
+   "censored": 0,
+   "connector_failures": 0,
+   "cpu_s": 27.3,
+   "discordant": [],
+   "forced_order": false,
+   "harmful": [],
+   "queries": 13,
+   "repair": {
+    "m": 1,
+    "prefix_x": [],
+    "prefix_y": [],
+    "x": 1,
+    "y": 1
+   },
+   "results": 13,
+   "root": "2d-bxyg21dev-wA-s015",
+   "rows": [
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s015:645c0d44d2bf:o00>23",
+     "f1": true,
+     "kind": "repair",
+     "m": 1,
+     "sig": "o00>23",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 1,
+     "y_neg": null,
+     "y_status": "VERIFIED"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s015:645c0d44d2bf:o00>21",
+     "f1": true,
+     "kind": "repair_wrong_destination",
+     "m": 1,
+     "sig": "o00>21",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 1,
+     "y_neg": null,
+     "y_status": "VERIFIED"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s015:645c0d44d2bf:o00>23.o01>61",
+     "f1": true,
+     "kind": "repair_plus_unnecessary",
+     "m": 2,
+     "sig": "o00>23.o01>61",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 1,
+     "y_neg": null,
+     "y_status": "VERIFIED"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s015:645c0d44d2bf:o00>23.o01>21",
+     "f1": true,
+     "kind": "repair_then_harmful",
+     "m": 2,
+     "sig": "o00>23.o01>21",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 1,
+     "y_neg": null,
+     "y_status": "VERIFIED"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s015:645c0d44d2bf:o01>6",
+     "f1": false,
+     "kind": "neutral_edit",
+     "m": 1,
+     "sig": "o01>6",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s015:645c0d44d2bf:o00>56",
+     "f1": true,
+     "kind": "qref_corridor_destination",
+     "m": 1,
+     "sig": "o00>56",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 1,
+     "y_neg": null,
+     "y_status": "VERIFIED"
+    }
+   ],
+   "spec": {
+    "K_intent": 1,
+    "displacement": "short",
+    "distractors": "1-2",
+    "mechanism": "goal_occupant",
+    "source": "mid",
+    "start_pose": "nonhome"
+   },
+   "statuses": {
+    "CERTIFIED_INFEASIBLE": 2,
+    "VERIFIED": 11
+   },
+   "verified_K": 1,
+   "verified_kinds": [
+    "qref_corridor_destination",
+    "repair",
+    "repair_plus_unnecessary",
+    "repair_then_harmful",
+    "repair_wrong_destination"
+   ],
+   "verified_repairs": 5,
+   "x_neg": {},
+   "y0": 0,
+   "y_neg": {
+    "CERTIFIED": 2
+   }
+  },
+  {
+   "K_geom": 2,
+   "cells": {
+    "00": 1,
+    "10": 7
+   },
+   "censored": 0,
+   "connector_failures": 1,
+   "cpu_s": 83.8,
+   "discordant": [],
+   "forced_order": false,
+   "harmful": [],
+   "queries": 15,
+   "repair": {
+    "m": 2,
+    "prefix_x": [
+     1
+    ],
+    "prefix_y": [
+     0
+    ],
+    "x": 1,
+    "y": 0
+   },
+   "results": 15,
+   "root": "2d-bxyg21dev-wA-s016",
+   "rows": [
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s016:e6fafa28f5fc:o01>33.o02>36",
+     "f1": true,
+     "kind": "repair",
+     "m": 2,
+     "sig": "o01>33.o02>36",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s016:e6fafa28f5fc:o01>33.o02>36",
+     "f1": true,
+     "kind": "repair_reversed",
+     "m": 2,
+     "sig": "o02>36.o01>33",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s016:e6fafa28f5fc:o01>33",
+     "f1": true,
+     "kind": "prefix_1",
+     "m": 1,
+     "sig": "o01>33",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s016:e6fafa28f5fc:o02>36",
+     "f1": true,
+     "kind": "omission_0",
+     "m": 1,
+     "sig": "o02>36",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s016:e6fafa28f5fc:o01>33.o02>28",
+     "f1": true,
+     "kind": "repair_wrong_destination",
+     "m": 2,
+     "sig": "o01>33.o02>28",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s016:e6fafa28f5fc:o01>32.o02>36",
+     "f1": true,
+     "kind": "interference_blocking_order",
+     "m": 2,
+     "sig": "o01>32.o02>36",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s016:e6fafa28f5fc:o01>32.o02>36",
+     "f1": true,
+     "kind": "interference_safe_order",
+     "m": 2,
+     "sig": "o02>36.o01>32",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s016:e6fafa28f5fc:o00>5",
+     "f1": true,
+     "kind": "neutral_edit",
+     "m": 1,
+     "sig": "o00>5",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "connector",
+     "x_status": "UNKNOWN_TRANSIT",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    }
+   ],
+   "spec": {
+    "K_intent": 2,
+    "displacement": "long",
+    "distractors": "0",
+    "mechanism": "pick",
+    "source": "far",
+    "start_pose": "home"
+   },
+   "statuses": {
+    "CERTIFIED_INFEASIBLE": 7,
+    "UNKNOWN_TRANSIT": 1,
+    "VERIFIED": 7
+   },
+   "verified_K": null,
+   "verified_kinds": [],
+   "verified_repairs": 0,
+   "x_neg": {
+    "NO_PLAN_FOUND": 1
+   },
+   "y0": 0,
+   "y_neg": {
+    "CERTIFIED": 7
+   }
+  },
+  {
+   "K_geom": 2,
+   "cells": {
+    "00": 2,
+    "10": 7
+   },
+   "censored": 0,
+   "connector_failures": 0,
+   "cpu_s": 29.2,
+   "discordant": [],
+   "forced_order": false,
+   "harmful": [],
+   "queries": 17,
+   "repair": {
+    "m": 2,
+    "prefix_x": [
+     1
+    ],
+    "prefix_y": [
+     0
+    ],
+    "x": 1,
+    "y": 0
+   },
+   "results": 17,
+   "root": "2d-bxyg21dev-wA-s017",
+   "rows": [
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s017:e540a7b8b2b1:o03>50.o04>40",
+     "f1": true,
+     "kind": "repair",
+     "m": 2,
+     "sig": "o04>40.o03>50",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "NO_PLAN_FOUND",
+     "y_status": "UNKNOWN_PLANNER"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s017:e540a7b8b2b1:o03>50.o04>40",
+     "f1": true,
+     "kind": "repair_reversed",
+     "m": 2,
+     "sig": "o03>50.o04>40",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "NO_PLAN_FOUND",
+     "y_status": "UNKNOWN_PLANNER"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s017:e540a7b8b2b1:o04>40",
+     "f1": true,
+     "kind": "prefix_1",
+     "m": 1,
+     "sig": "o04>40",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s017:e540a7b8b2b1:o03>50",
+     "f1": true,
+     "kind": "omission_0",
+     "m": 1,
+     "sig": "o03>50",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "NO_PLAN_FOUND",
+     "y_status": "UNKNOWN_PLANNER"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s017:e540a7b8b2b1:o03>57.o04>40",
+     "f1": true,
+     "kind": "repair_wrong_destination",
+     "m": 2,
+     "sig": "o04>40.o03>57",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "NO_PLAN_FOUND",
+     "y_status": "UNKNOWN_PLANNER"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s017:e540a7b8b2b1:o00>44.o05>26",
+     "f1": true,
+     "kind": "alternative_repair",
+     "m": 2,
+     "sig": "o00>44.o05>26",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:1",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "NO_PLAN_FOUND",
+     "y_status": "UNKNOWN_PLANNER"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s017:e540a7b8b2b1:o03>50.o04>41",
+     "f1": true,
+     "kind": "interference_blocking_order",
+     "m": 2,
+     "sig": "o04>41.o03>50",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "NO_PLAN_FOUND",
+     "y_status": "UNKNOWN_PLANNER"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s017:e540a7b8b2b1:o03>50.o04>41",
+     "f1": true,
+     "kind": "interference_safe_order",
+     "m": 2,
+     "sig": "o03>50.o04>41",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "NO_PLAN_FOUND",
+     "y_status": "UNKNOWN_PLANNER"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s017:e540a7b8b2b1:o01>5",
+     "f1": true,
+     "kind": "neutral_edit",
+     "m": 1,
+     "sig": "o01>5",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    }
+   ],
+   "spec": {
+    "K_intent": 2,
+    "displacement": "medium",
+    "distractors": "3-4",
+    "mechanism": "pick",
+    "source": "near",
+    "start_pose": "home"
+   },
+   "statuses": {
+    "CERTIFIED_INFEASIBLE": 3,
+    "UNKNOWN_PLANNER": 7,
+    "VERIFIED": 7
+   },
+   "verified_K": null,
+   "verified_kinds": [],
+   "verified_repairs": 0,
+   "x_neg": {
+    "NO_PLAN_FOUND": 2
+   },
+   "y0": 0,
+   "y_neg": {
+    "CERTIFIED": 3,
+    "NO_PLAN_FOUND": 5
+   }
+  },
+  {
+   "K_geom": 2,
+   "cells": {
+    "00": 7,
+    "10": 3
+   },
+   "censored": 0,
+   "connector_failures": 0,
+   "cpu_s": 21.7,
+   "discordant": [],
+   "forced_order": true,
+   "harmful": [],
+   "queries": 19,
+   "repair": {
+    "m": 2,
+    "prefix_x": [
+     0
+    ],
+    "prefix_y": [
+     0
+    ],
+    "x": 0,
+    "y": 0
+   },
+   "results": 19,
+   "root": "2d-bxyg21dev-wA-s018",
+   "rows": [
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s018:a09800a4ca31:o01>36.o04>19",
+     "f1": true,
+     "kind": "repair",
+     "m": 2,
+     "sig": "o04>19.o01>36",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s018:a09800a4ca31:o01>36.o04>19",
+     "f1": true,
+     "kind": "repair_reversed",
+     "m": 2,
+     "sig": "o01>36.o04>19",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:1",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s018:a09800a4ca31:o04>19",
+     "f1": true,
+     "kind": "prefix_1",
+     "m": 1,
+     "sig": "o04>19",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s018:a09800a4ca31:o01>36",
+     "f1": true,
+     "kind": "omission_0",
+     "m": 1,
+     "sig": "o01>36",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s018:a09800a4ca31:o01>43.o04>19",
+     "f1": true,
+     "kind": "repair_wrong_destination",
+     "m": 2,
+     "sig": "o04>19.o01>43",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s018:a09800a4ca31:o01>51.o03>40",
+     "f1": true,
+     "kind": "alternative_repair",
+     "m": 2,
+     "sig": "o03>40.o01>51",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "NO_PLAN_FOUND",
+     "y_status": "UNKNOWN_PLANNER"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s018:a09800a4ca31:o01>36.o04>11",
+     "f1": true,
+     "kind": "interference_blocking_order",
+     "m": 2,
+     "sig": "o04>11.o01>36",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s018:a09800a4ca31:o01>36.o04>11",
+     "f1": true,
+     "kind": "interference_safe_order",
+     "m": 2,
+     "sig": "o01>36.o04>11",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:1",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s018:a09800a4ca31:o00>3",
+     "f1": true,
+     "kind": "neutral_edit",
+     "m": 1,
+     "sig": "o00>3",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s018:a09800a4ca31:o00>59",
+     "f1": true,
+     "kind": "qref_corridor_destination",
+     "m": 1,
+     "sig": "o00>59",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    }
+   ],
+   "spec": {
+    "K_intent": 2,
+    "displacement": "short",
+    "distractors": "1-2",
+    "mechanism": "nested",
+    "source": "mid",
+    "start_pose": "nonhome"
+   },
+   "statuses": {
+    "CERTIFIED_INFEASIBLE": 8,
+    "UNKNOWN_PLANNER": 8,
+    "VERIFIED": 3
+   },
+   "verified_K": null,
+   "verified_kinds": [],
+   "verified_repairs": 0,
+   "x_neg": {
+    "NO_PLAN_FOUND": 7
+   },
+   "y0": 0,
+   "y_neg": {
+    "CERTIFIED": 8,
+    "NO_PLAN_FOUND": 1
+   }
+  },
+  {
+   "K_geom": 2,
+   "cells": {
+    "00": 4,
+    "01": 1,
+    "10": 6,
+    "11": 2
+   },
+   "censored": 0,
+   "connector_failures": 0,
+   "cpu_s": 89.2,
+   "discordant": [
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s019:70de5fbee7dd:o04>37.o05>30",
+     "orders": [
+      [
+       "o04>37.o05>30",
+       1,
+       null,
+       null
+      ],
+      [
+       "o05>30.o04>37",
+       0,
+       "NO_PLAN_FOUND",
+       "relocation:0"
+      ]
+     ]
+    }
+   ],
+   "forced_order": true,
+   "harmful": [],
+   "queries": 24,
+   "repair": {
+    "m": 2,
+    "prefix_x": [
+     1
+    ],
+    "prefix_y": [
+     0
+    ],
+    "x": 0,
+    "y": 0
+   },
+   "results": 24,
+   "root": "2d-bxyg21dev-wA-s019",
+   "rows": [
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s019:70de5fbee7dd:o04>54.o05>30",
+     "f1": true,
+     "kind": "repair",
+     "m": 2,
+     "sig": "o04>54.o05>30",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:1",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "NO_PLAN_FOUND",
+     "y_status": "UNKNOWN_PLANNER"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s019:70de5fbee7dd:o04>54.o05>30",
+     "f1": true,
+     "kind": "repair_reversed",
+     "m": 2,
+     "sig": "o05>30.o04>54",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "NO_PLAN_FOUND",
+     "y_status": "UNKNOWN_PLANNER"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s019:70de5fbee7dd:o04>54",
+     "f1": true,
+     "kind": "prefix_1",
+     "m": 1,
+     "sig": "o04>54",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "NO_PLAN_FOUND",
+     "y_status": "UNKNOWN_PLANNER"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s019:70de5fbee7dd:o05>30",
+     "f1": true,
+     "kind": "omission_0",
+     "m": 1,
+     "sig": "o05>30",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s019:70de5fbee7dd:o04>54.o05>31",
+     "f1": true,
+     "kind": "repair_wrong_destination",
+     "m": 2,
+     "sig": "o04>54.o05>31",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:1",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s019:70de5fbee7dd:o02>37.o04>47",
+     "f1": true,
+     "kind": "alternative_repair",
+     "m": 2,
+     "sig": "o04>47.o02>37",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 1,
+     "y_neg": null,
+     "y_status": "VERIFIED"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s019:70de5fbee7dd:o04>37.o05>30",
+     "f1": true,
+     "kind": "interference_blocking_order",
+     "m": 2,
+     "sig": "o04>37.o05>30",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 1,
+     "y_neg": null,
+     "y_status": "VERIFIED"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s019:70de5fbee7dd:o04>37.o05>30",
+     "f1": true,
+     "kind": "interference_safe_order",
+     "m": 2,
+     "sig": "o05>30.o04>37",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 1,
+     "y_neg": null,
+     "y_status": "VERIFIED"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s019:70de5fbee7dd:o00>0",
+     "f1": true,
+     "kind": "neutral_edit",
+     "m": 1,
+     "sig": "o00>0",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s019:70de5fbee7dd:o01>0",
+     "f1": true,
+     "kind": "neutral_edit",
+     "m": 1,
+     "sig": "o01>0",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s019:70de5fbee7dd:o00>0.o01>1",
+     "f1": true,
+     "kind": "neutral_pair",
+     "m": 2,
+     "sig": "o00>0.o01>1",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s019:70de5fbee7dd:o00>0.o01>1",
+     "f1": true,
+     "kind": "neutral_pair_reversed",
+     "m": 2,
+     "sig": "o01>1.o00>0",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s019:70de5fbee7dd:o00>24",
+     "f1": true,
+     "kind": "qref_corridor_destination",
+     "m": 1,
+     "sig": "o00>24",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    }
+   ],
+   "spec": {
+    "K_intent": 2,
+    "displacement": "long",
+    "distractors": "0",
+    "mechanism": "nested",
+    "source": "far",
+    "start_pose": "nonhome"
+   },
+   "statuses": {
+    "CERTIFIED_INFEASIBLE": 7,
+    "UNKNOWN_PLANNER": 7,
+    "VERIFIED": 10
+   },
+   "verified_K": 2,
+   "verified_kinds": [
+    "alternative_repair",
+    "interference_blocking_order"
+   ],
+   "verified_repairs": 2,
+   "x_neg": {
+    "NO_PLAN_FOUND": 5
+   },
+   "y0": 0,
+   "y_neg": {
+    "CERTIFIED": 7,
+    "NO_PLAN_FOUND": 2
+   }
+  },
+  {
+   "K_geom": 2,
+   "cells": {
+    "00": 7,
+    "10": 3
+   },
+   "censored": 0,
+   "connector_failures": 0,
+   "cpu_s": 150.3,
+   "discordant": [
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s020:a07c69196b55:o02>1.o05>24",
+     "orders": [
+      [
+       "o02>1.o05>24",
+       0,
+       "NO_PLAN_FOUND",
+       "relocation:0"
+      ],
+      [
+       "o05>24.o02>1",
+       1,
+       null,
+       null
+      ]
+     ]
+    }
+   ],
+   "forced_order": true,
+   "harmful": [],
+   "queries": 19,
+   "repair": {
+    "m": 2,
+    "prefix_x": [
+     0
+    ],
+    "prefix_y": [
+     0
+    ],
+    "x": 0,
+    "y": 0
+   },
+   "results": 19,
+   "root": "2d-bxyg21dev-wA-s020",
+   "rows": [
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s020:a07c69196b55:o02>1.o05>24",
+     "f1": true,
+     "kind": "repair",
+     "m": 2,
+     "sig": "o02>1.o05>24",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s020:a07c69196b55:o02>1.o05>24",
+     "f1": true,
+     "kind": "repair_reversed",
+     "m": 2,
+     "sig": "o05>24.o02>1",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s020:a07c69196b55:o02>1",
+     "f1": true,
+     "kind": "prefix_1",
+     "m": 1,
+     "sig": "o02>1",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s020:a07c69196b55:o05>24",
+     "f1": true,
+     "kind": "omission_0",
+     "m": 1,
+     "sig": "o05>24",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s020:a07c69196b55:o02>1.o05>17",
+     "f1": true,
+     "kind": "repair_wrong_destination",
+     "m": 2,
+     "sig": "o02>1.o05>17",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s020:a07c69196b55:o01>3.o02>17",
+     "f1": true,
+     "kind": "alternative_repair",
+     "m": 2,
+     "sig": "o02>17.o01>3",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s020:a07c69196b55:o02>10.o05>24",
+     "f1": true,
+     "kind": "interference_blocking_order",
+     "m": 2,
+     "sig": "o02>10.o05>24",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s020:a07c69196b55:o02>10.o05>24",
+     "f1": true,
+     "kind": "interference_safe_order",
+     "m": 2,
+     "sig": "o05>24.o02>10",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:1",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s020:a07c69196b55:o00>30",
+     "f1": true,
+     "kind": "harmful_edit",
+     "m": 1,
+     "sig": "o00>30",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s020:a07c69196b55:o00>3",
+     "f1": true,
+     "kind": "neutral_edit",
+     "m": 1,
+     "sig": "o00>3",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    }
+   ],
+   "spec": {
+    "K_intent": 2,
+    "displacement": "medium",
+    "distractors": "3-4",
+    "mechanism": "nested",
+    "source": "near",
+    "start_pose": "home"
+   },
+   "statuses": {
+    "CERTIFIED_INFEASIBLE": 9,
+    "UNKNOWN_PLANNER": 7,
+    "VERIFIED": 3
+   },
+   "verified_K": null,
+   "verified_kinds": [],
+   "verified_repairs": 0,
+   "x_neg": {
+    "NO_PLAN_FOUND": 7
+   },
+   "y0": 0,
+   "y_neg": {
+    "CERTIFIED": 9
+   }
+  },
+  {
+   "K_geom": 2,
+   "cells": {
+    "00": 1,
+    "10": 7,
+    "11": 5
+   },
+   "censored": 0,
+   "connector_failures": 1,
+   "cpu_s": 45.0,
+   "discordant": [
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s021:cd1302390a56:o03>1.o04>2",
+     "orders": [
+      [
+       "o03>1.o04>2",
+       0,
+       "NO_PLAN_FOUND",
+       "connector"
+      ],
+      [
+       "o04>2.o03>1",
+       1,
+       null,
+       null
+      ]
+     ]
+    }
+   ],
+   "forced_order": false,
+   "harmful": [],
+   "queries": 24,
+   "repair": {
+    "m": 2,
+    "prefix_x": [
+     1
+    ],
+    "prefix_y": [
+     0
+    ],
+    "x": 1,
+    "y": 1
+   },
+   "results": 24,
+   "root": "2d-bxyg21dev-wA-s021",
+   "rows": [
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s021:cd1302390a56:o00>20.o01>51",
+     "f1": true,
+     "kind": "repair",
+     "m": 2,
+     "sig": "o01>51.o00>20",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 1,
+     "y_neg": null,
+     "y_status": "VERIFIED"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s021:cd1302390a56:o00>20.o01>51",
+     "f1": true,
+     "kind": "repair_reversed",
+     "m": 2,
+     "sig": "o00>20.o01>51",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 1,
+     "y_neg": null,
+     "y_status": "VERIFIED"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s021:cd1302390a56:o01>51",
+     "f1": true,
+     "kind": "prefix_1",
+     "m": 1,
+     "sig": "o01>51",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "NO_PLAN_FOUND",
+     "y_status": "UNKNOWN_PLANNER"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s021:cd1302390a56:o00>20",
+     "f1": true,
+     "kind": "omission_0",
+     "m": 1,
+     "sig": "o00>20",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "NO_PLAN_FOUND",
+     "y_status": "UNKNOWN_PLANNER"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s021:cd1302390a56:o00>27.o01>51",
+     "f1": true,
+     "kind": "repair_wrong_destination",
+     "m": 2,
+     "sig": "o01>51.o00>27",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "NO_PLAN_FOUND",
+     "y_status": "UNKNOWN_PLANNER"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s021:cd1302390a56:o00>20.o01>51.o03>61",
+     "f1": true,
+     "kind": "repair_plus_unnecessary",
+     "m": 3,
+     "sig": "o01>51.o00>20.o03>61",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 1,
+     "y_neg": null,
+     "y_status": "VERIFIED"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s021:cd1302390a56:o00>20.o01>51.o03>27",
+     "f1": true,
+     "kind": "repair_then_harmful",
+     "m": 3,
+     "sig": "o01>51.o00>20.o03>27",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "NO_PLAN_FOUND",
+     "y_status": "UNKNOWN_PLANNER"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s021:cd1302390a56:o00>20.o01>52",
+     "f1": true,
+     "kind": "interference_blocking_order",
+     "m": 2,
+     "sig": "o01>52.o00>20",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 1,
+     "y_neg": null,
+     "y_status": "VERIFIED"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s021:cd1302390a56:o00>20.o01>52",
+     "f1": true,
+     "kind": "interference_safe_order",
+     "m": 2,
+     "sig": "o00>20.o01>52",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 1,
+     "y_neg": null,
+     "y_status": "VERIFIED"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s021:cd1302390a56:o03>1",
+     "f1": true,
+     "kind": "neutral_edit",
+     "m": 1,
+     "sig": "o03>1",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s021:cd1302390a56:o04>1",
+     "f1": true,
+     "kind": "neutral_edit",
+     "m": 1,
+     "sig": "o04>1",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s021:cd1302390a56:o03>1.o04>2",
+     "f1": true,
+     "kind": "neutral_pair",
+     "m": 2,
+     "sig": "o03>1.o04>2",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "connector",
+     "x_status": "UNKNOWN_TRANSIT",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s021:cd1302390a56:o03>1.o04>2",
+     "f1": true,
+     "kind": "neutral_pair_reversed",
+     "m": 2,
+     "sig": "o04>2.o03>1",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    }
+   ],
+   "spec": {
+    "K_intent": 2,
+    "displacement": "short",
+    "distractors": "1-2",
+    "mechanism": "mixed",
+    "source": "mid",
+    "start_pose": "home"
+   },
+   "statuses": {
+    "CERTIFIED_INFEASIBLE": 4,
+    "UNKNOWN_PLANNER": 4,
+    "UNKNOWN_TRANSIT": 1,
+    "VERIFIED": 15
+   },
+   "verified_K": 2,
+   "verified_kinds": [
+    "interference_blocking_order",
+    "interference_safe_order",
+    "repair",
+    "repair_plus_unnecessary",
+    "repair_reversed"
+   ],
+   "verified_repairs": 5,
+   "x_neg": {
+    "NO_PLAN_FOUND": 1
+   },
+   "y0": 0,
+   "y_neg": {
+    "CERTIFIED": 4,
+    "NO_PLAN_FOUND": 4
+   }
+  },
+  {
+   "K_geom": 2,
+   "cells": {
+    "00": 6,
+    "10": 7
+   },
+   "censored": 0,
+   "connector_failures": 0,
+   "cpu_s": 174.4,
+   "discordant": [
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s022:f8aec00bf76d:o00>58.o02>13",
+     "orders": [
+      [
+       "o00>58.o02>13",
+       0,
+       "NO_PLAN_FOUND",
+       "relocation:1"
+      ],
+      [
+       "o02>13.o00>58",
+       1,
+       null,
+       null
+      ]
+     ]
+    }
+   ],
+   "forced_order": false,
+   "harmful": [],
+   "queries": 24,
+   "repair": {
+    "m": 2,
+    "prefix_x": [
+     1
+    ],
+    "prefix_y": [
+     0
+    ],
+    "x": 1,
+    "y": 0
+   },
+   "results": 24,
+   "root": "2d-bxyg21dev-wA-s022",
+   "rows": [
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s022:f8aec00bf76d:o00>44.o02>13",
+     "f1": true,
+     "kind": "repair",
+     "m": 2,
+     "sig": "o00>44.o02>13",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s022:f8aec00bf76d:o00>44.o02>13",
+     "f1": true,
+     "kind": "repair_reversed",
+     "m": 2,
+     "sig": "o02>13.o00>44",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s022:f8aec00bf76d:o00>44",
+     "f1": true,
+     "kind": "prefix_1",
+     "m": 1,
+     "sig": "o00>44",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s022:f8aec00bf76d:o02>13",
+     "f1": true,
+     "kind": "omission_0",
+     "m": 1,
+     "sig": "o02>13",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s022:f8aec00bf76d:o00>44.o02>15",
+     "f1": true,
+     "kind": "repair_wrong_destination",
+     "m": 2,
+     "sig": "o00>44.o02>15",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:1",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s022:f8aec00bf76d:o02>13.o03>20",
+     "f1": true,
+     "kind": "alternative_repair",
+     "m": 2,
+     "sig": "o03>20.o02>13",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:1",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s022:f8aec00bf76d:o00>58.o02>13",
+     "f1": true,
+     "kind": "interference_blocking_order",
+     "m": 2,
+     "sig": "o00>58.o02>13",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:1",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s022:f8aec00bf76d:o00>58.o02>13",
+     "f1": true,
+     "kind": "interference_safe_order",
+     "m": 2,
+     "sig": "o02>13.o00>58",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s022:f8aec00bf76d:o01>2",
+     "f1": true,
+     "kind": "neutral_edit",
+     "m": 1,
+     "sig": "o01>2",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s022:f8aec00bf76d:o04>2",
+     "f1": true,
+     "kind": "neutral_edit",
+     "m": 1,
+     "sig": "o04>2",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s022:f8aec00bf76d:o01>2.o04>3",
+     "f1": true,
+     "kind": "neutral_pair",
+     "m": 2,
+     "sig": "o01>2.o04>3",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:1",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s022:f8aec00bf76d:o01>2.o04>3",
+     "f1": true,
+     "kind": "neutral_pair_reversed",
+     "m": 2,
+     "sig": "o04>3.o01>2",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s022:f8aec00bf76d:o00>42",
+     "f1": true,
+     "kind": "qref_corridor_destination",
+     "m": 1,
+     "sig": "o00>42",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    }
+   ],
+   "spec": {
+    "K_intent": 2,
+    "displacement": "long",
+    "distractors": "0",
+    "mechanism": "mixed",
+    "source": "far",
+    "start_pose": "nonhome"
+   },
+   "statuses": {
+    "CERTIFIED_INFEASIBLE": 11,
+    "UNKNOWN_PLANNER": 6,
+    "VERIFIED": 7
+   },
+   "verified_K": null,
+   "verified_kinds": [],
+   "verified_repairs": 0,
+   "x_neg": {
+    "NO_PLAN_FOUND": 6
+   },
+   "y0": 0,
+   "y_neg": {
+    "CERTIFIED": 11
+   }
+  },
+  {
+   "K_geom": 2,
+   "cells": {
+    "00": 10,
+    "01": 2,
+    "10": 1
+   },
+   "censored": 0,
+   "connector_failures": 0,
+   "cpu_s": 34.8,
+   "discordant": [],
+   "forced_order": false,
+   "harmful": [],
+   "queries": 24,
+   "repair": {
+    "m": 2,
+    "prefix_x": [
+     1
+    ],
+    "prefix_y": [
+     0
+    ],
+    "x": 0,
+    "y": 0
+   },
+   "results": 24,
+   "root": "2d-bxyg21dev-wA-s023",
+   "rows": [
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s023:de48aae25a7f:o01>48.o02>61",
+     "f1": true,
+     "kind": "repair",
+     "m": 2,
+     "sig": "o01>48.o02>61",
+     "x": 0,
+     "x_neg": "CERTIFIED",
+     "x_ok": true,
+     "x_phase": "relocation:1",
+     "x_status": "CERTIFIED_INFEASIBLE",
+     "y": 0,
+     "y_neg": "NO_PLAN_FOUND",
+     "y_status": "UNKNOWN_PLANNER"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s023:de48aae25a7f:o01>48.o02>61",
+     "f1": true,
+     "kind": "repair_reversed",
+     "m": 2,
+     "sig": "o02>61.o01>48",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "NO_PLAN_FOUND",
+     "y_status": "UNKNOWN_PLANNER"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s023:de48aae25a7f:o01>48",
+     "f1": true,
+     "kind": "prefix_1",
+     "m": 1,
+     "sig": "o01>48",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "NO_PLAN_FOUND",
+     "y_status": "UNKNOWN_PLANNER"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s023:de48aae25a7f:o02>61",
+     "f1": true,
+     "kind": "omission_0",
+     "m": 1,
+     "sig": "o02>61",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "NO_PLAN_FOUND",
+     "y_status": "UNKNOWN_PLANNER"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s023:de48aae25a7f:o01>48.o02>54",
+     "f1": true,
+     "kind": "repair_wrong_destination",
+     "m": 2,
+     "sig": "o01>48.o02>54",
+     "x": 0,
+     "x_neg": "CERTIFIED",
+     "x_ok": true,
+     "x_phase": "relocation:1",
+     "x_status": "CERTIFIED_INFEASIBLE",
+     "y": 0,
+     "y_neg": "NO_PLAN_FOUND",
+     "y_status": "UNKNOWN_PLANNER"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s023:de48aae25a7f:o01>48.o02>61.o03>20",
+     "f1": true,
+     "kind": "repair_plus_unnecessary",
+     "m": 3,
+     "sig": "o01>48.o02>61.o03>20",
+     "x": 0,
+     "x_neg": "CERTIFIED",
+     "x_ok": true,
+     "x_phase": "relocation:1",
+     "x_status": "CERTIFIED_INFEASIBLE",
+     "y": 0,
+     "y_neg": "NO_PLAN_FOUND",
+     "y_status": "UNKNOWN_PLANNER"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s023:de48aae25a7f:o01>48.o02>61.o03>54",
+     "f1": true,
+     "kind": "repair_then_harmful",
+     "m": 3,
+     "sig": "o01>48.o02>61.o03>54",
+     "x": 0,
+     "x_neg": "CERTIFIED",
+     "x_ok": true,
+     "x_phase": "relocation:1",
+     "x_status": "CERTIFIED_INFEASIBLE",
+     "y": 0,
+     "y_neg": "NO_PLAN_FOUND",
+     "y_status": "UNKNOWN_PLANNER"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s023:de48aae25a7f:o01>16.o02>61",
+     "f1": true,
+     "kind": "interference_blocking_order",
+     "m": 2,
+     "sig": "o01>16.o02>61",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:1",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 1,
+     "y_neg": null,
+     "y_status": "VERIFIED"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s023:de48aae25a7f:o01>16.o02>61",
+     "f1": true,
+     "kind": "interference_safe_order",
+     "m": 2,
+     "sig": "o02>61.o01>16",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 1,
+     "y_neg": null,
+     "y_status": "VERIFIED"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s023:de48aae25a7f:o03>0",
+     "f1": true,
+     "kind": "neutral_edit",
+     "m": 1,
+     "sig": "o03>0",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "NO_PLAN_FOUND",
+     "y_status": "UNKNOWN_PLANNER"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s023:de48aae25a7f:o04>0",
+     "f1": true,
+     "kind": "neutral_edit",
+     "m": 1,
+     "sig": "o04>0",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "NO_PLAN_FOUND",
+     "y_status": "UNKNOWN_PLANNER"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s023:de48aae25a7f:o03>0.o04>1",
+     "f1": true,
+     "kind": "neutral_pair",
+     "m": 2,
+     "sig": "o03>0.o04>1",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "NO_PLAN_FOUND",
+     "y_status": "UNKNOWN_PLANNER"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s023:de48aae25a7f:o03>0.o04>1",
+     "f1": true,
+     "kind": "neutral_pair_reversed",
+     "m": 2,
+     "sig": "o04>1.o03>0",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "NO_PLAN_FOUND",
+     "y_status": "UNKNOWN_PLANNER"
+    }
+   ],
+   "spec": {
+    "K_intent": 2,
+    "displacement": "medium",
+    "distractors": "3-4",
+    "mechanism": "place",
+    "source": "near",
+    "start_pose": "nonhome"
+   },
+   "statuses": {
+    "CERTIFIED_INFEASIBLE": 4,
+    "UNKNOWN_PLANNER": 18,
+    "VERIFIED": 2
+   },
+   "verified_K": null,
+   "verified_kinds": [],
+   "verified_repairs": 0,
+   "x_neg": {
+    "CERTIFIED": 4,
+    "NO_PLAN_FOUND": 8
+   },
+   "y0": 0,
+   "y_neg": {
+    "NO_PLAN_FOUND": 10
+   }
+  },
+  {
+   "K_geom": 3,
+   "cells": {
+    "00": 7,
+    "10": 9
+   },
+   "censored": 0,
+   "connector_failures": 0,
+   "cpu_s": 386.0,
+   "discordant": [
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s024:e6a28e1ed791:o02>42.o03>56.o04>51",
+     "orders": [
+      [
+       "o03>56.o04>51.o02>42",
+       1,
+       null,
+       null
+      ],
+      [
+       "o02>42.o04>51.o03>56",
+       0,
+       "NO_PLAN_FOUND",
+       "relocation:0"
+      ],
+      [
+       "o04>51.o03>56.o02>42",
+       1,
+       null,
+       null
+      ]
+     ]
+    }
+   ],
+   "forced_order": false,
+   "harmful": [],
+   "queries": 30,
+   "repair": {
+    "m": 3,
+    "prefix_x": [
+     1,
+     1
+    ],
+    "prefix_y": [
+     0,
+     0
+    ],
+    "x": 1,
+    "y": 0
+   },
+   "results": 30,
+   "root": "2d-bxyg21dev-wA-s024",
+   "rows": [
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s024:e6a28e1ed791:o02>42.o03>56.o04>51",
+     "f1": true,
+     "kind": "repair",
+     "m": 3,
+     "sig": "o03>56.o04>51.o02>42",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s024:e6a28e1ed791:o02>42.o03>56.o04>51",
+     "f1": true,
+     "kind": "repair_reversed",
+     "m": 3,
+     "sig": "o02>42.o04>51.o03>56",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s024:e6a28e1ed791:o03>56",
+     "f1": true,
+     "kind": "prefix_1",
+     "m": 1,
+     "sig": "o03>56",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s024:e6a28e1ed791:o03>56.o04>51",
+     "f1": true,
+     "kind": "prefix_2",
+     "m": 2,
+     "sig": "o03>56.o04>51",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s024:e6a28e1ed791:o02>42.o04>51",
+     "f1": true,
+     "kind": "omission_0",
+     "m": 2,
+     "sig": "o04>51.o02>42",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s024:e6a28e1ed791:o02>42.o03>56",
+     "f1": true,
+     "kind": "omission_1",
+     "m": 2,
+     "sig": "o03>56.o02>42",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:1",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s024:e6a28e1ed791:o02>42.o03>56.o04>51",
+     "f1": true,
+     "kind": "repair_swap12",
+     "m": 3,
+     "sig": "o04>51.o03>56.o02>42",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s024:e6a28e1ed791:o02>61.o03>56.o04>51",
+     "f1": true,
+     "kind": "repair_wrong_destination",
+     "m": 3,
+     "sig": "o03>56.o04>51.o02>61",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s024:e6a28e1ed791:o04>51",
+     "f1": true,
+     "kind": "single_partial",
+     "m": 1,
+     "sig": "o04>51",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s024:e6a28e1ed791:o02>42",
+     "f1": true,
+     "kind": "single_partial",
+     "m": 1,
+     "sig": "o02>42",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s024:e6a28e1ed791:o02>42.o03>56.o04>51.o05>0",
+     "f1": true,
+     "kind": "repair_plus_unnecessary",
+     "m": 4,
+     "sig": "o03>56.o04>51.o02>42.o05>0",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:3",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s024:e6a28e1ed791:o02>42.o03>56.o04>51.o05>61",
+     "f1": true,
+     "kind": "repair_then_harmful",
+     "m": 4,
+     "sig": "o03>56.o04>51.o02>42.o05>61",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:3",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s024:e6a28e1ed791:o03>57.o04>51",
+     "f1": true,
+     "kind": "interference_blocking_order",
+     "m": 2,
+     "sig": "o03>57.o04>51",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s024:e6a28e1ed791:o03>57.o04>51",
+     "f1": true,
+     "kind": "interference_safe_order",
+     "m": 2,
+     "sig": "o04>51.o03>57",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s024:e6a28e1ed791:o05>20",
+     "f1": true,
+     "kind": "harmful_edit",
+     "m": 1,
+     "sig": "o05>20",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s024:e6a28e1ed791:o05>0",
+     "f1": true,
+     "kind": "neutral_edit",
+     "m": 1,
+     "sig": "o05>0",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    }
+   ],
+   "spec": {
+    "K_intent": 3,
+    "displacement": "short",
+    "distractors": "1-2",
+    "mechanism": "pick",
+    "source": "mid",
+    "start_pose": "home"
+   },
+   "statuses": {
+    "CERTIFIED_INFEASIBLE": 14,
+    "UNKNOWN_PLANNER": 7,
+    "VERIFIED": 9
+   },
+   "verified_K": null,
+   "verified_kinds": [],
+   "verified_repairs": 0,
+   "x_neg": {
+    "NO_PLAN_FOUND": 7
+   },
+   "y0": 0,
+   "y_neg": {
+    "CERTIFIED": 14
+   }
+  },
+  {
+   "K_geom": 3,
+   "cells": {
+    "00": 7,
+    "01": 3,
+    "10": 4
+   },
+   "censored": 0,
+   "connector_failures": 0,
+   "cpu_s": 34.0,
+   "discordant": [],
+   "forced_order": false,
+   "harmful": [],
+   "queries": 26,
+   "repair": {
+    "m": 3,
+    "prefix_x": [
+     1,
+     0
+    ],
+    "prefix_y": [
+     0,
+     0
+    ],
+    "x": 0,
+    "y": 1
+   },
+   "results": 26,
+   "root": "2d-bxyg21dev-wA-s025",
+   "rows": [
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s025:949cda4f778d:o01>24.o02>23.o03>45",
+     "f1": true,
+     "kind": "repair",
+     "m": 3,
+     "sig": "o01>24.o02>23.o03>45",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:1",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 1,
+     "y_neg": null,
+     "y_status": "VERIFIED"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s025:949cda4f778d:o01>24.o02>23.o03>45",
+     "f1": true,
+     "kind": "repair_reversed",
+     "m": 3,
+     "sig": "o03>45.o02>23.o01>24",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:1",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 1,
+     "y_neg": null,
+     "y_status": "VERIFIED"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s025:949cda4f778d:o01>24",
+     "f1": true,
+     "kind": "prefix_1",
+     "m": 1,
+     "sig": "o01>24",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s025:949cda4f778d:o01>24.o02>23",
+     "f1": true,
+     "kind": "prefix_2",
+     "m": 2,
+     "sig": "o01>24.o02>23",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:1",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s025:949cda4f778d:o02>23.o03>45",
+     "f1": true,
+     "kind": "omission_0",
+     "m": 2,
+     "sig": "o02>23.o03>45",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s025:949cda4f778d:o01>24.o03>45",
+     "f1": true,
+     "kind": "omission_1",
+     "m": 2,
+     "sig": "o01>24.o03>45",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s025:949cda4f778d:o01>24.o02>23.o03>45",
+     "f1": true,
+     "kind": "repair_swap12",
+     "m": 3,
+     "sig": "o02>23.o01>24.o03>45",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 1,
+     "y_neg": null,
+     "y_status": "VERIFIED"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s025:949cda4f778d:o01>24.o02>23.o03>29",
+     "f1": true,
+     "kind": "repair_wrong_destination",
+     "m": 3,
+     "sig": "o01>24.o02>23.o03>29",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:1",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s025:949cda4f778d:o01>24.o03>38.o04>46",
+     "f1": true,
+     "kind": "alternative_repair",
+     "m": 3,
+     "sig": "o01>24.o03>38.o04>46",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:2",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "NO_PLAN_FOUND",
+     "y_status": "UNKNOWN_PLANNER"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s025:949cda4f778d:o02>23",
+     "f1": true,
+     "kind": "single_partial",
+     "m": 1,
+     "sig": "o02>23",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s025:949cda4f778d:o03>45",
+     "f1": true,
+     "kind": "single_partial",
+     "m": 1,
+     "sig": "o03>45",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s025:949cda4f778d:o01>33.o02>23",
+     "f1": true,
+     "kind": "interference_blocking_order",
+     "m": 2,
+     "sig": "o01>33.o02>23",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:1",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s025:949cda4f778d:o01>33.o02>23",
+     "f1": true,
+     "kind": "interference_safe_order",
+     "m": 2,
+     "sig": "o02>23.o01>33",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s025:949cda4f778d:o00>0",
+     "f1": true,
+     "kind": "neutral_edit",
+     "m": 1,
+     "sig": "o00>0",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    }
+   ],
+   "spec": {
+    "K_intent": 3,
+    "displacement": "long",
+    "distractors": "0",
+    "mechanism": "pick",
+    "source": "far",
+    "start_pose": "home"
+   },
+   "statuses": {
+    "CERTIFIED_INFEASIBLE": 10,
+    "UNKNOWN_PLANNER": 11,
+    "VERIFIED": 5
+   },
+   "verified_K": null,
+   "verified_kinds": [],
+   "verified_repairs": 0,
+   "x_neg": {
+    "NO_PLAN_FOUND": 10
+   },
+   "y0": 0,
+   "y_neg": {
+    "CERTIFIED": 10,
+    "NO_PLAN_FOUND": 1
+   }
+  },
+  {
+   "K_geom": 3,
+   "cells": {
+    "00": 6,
+    "01": 1,
+    "10": 7,
+    "11": 2
+   },
+   "censored": 0,
+   "connector_failures": 1,
+   "cpu_s": 230.3,
+   "discordant": [
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s026:df5baf1dd825:o03>50.o04>43.o05>37",
+     "orders": [
+      [
+       "o03>50.o04>43.o05>37",
+       1,
+       null,
+       null
+      ],
+      [
+       "o05>37.o04>43.o03>50",
+       0,
+       "CERTIFIED",
+       "relocation:0"
+      ],
+      [
+       "o04>43.o03>50.o05>37",
+       1,
+       null,
+       null
+      ]
+     ]
+    }
+   ],
+   "forced_order": true,
+   "harmful": [],
+   "queries": 30,
+   "repair": {
+    "m": 3,
+    "prefix_x": [
+     1,
+     1
+    ],
+    "prefix_y": [
+     0,
+     0
+    ],
+    "x": 1,
+    "y": 1
+   },
+   "results": 30,
+   "root": "2d-bxyg21dev-wA-s026",
+   "rows": [
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s026:df5baf1dd825:o03>50.o04>43.o05>37",
+     "f1": true,
+     "kind": "repair",
+     "m": 3,
+     "sig": "o03>50.o04>43.o05>37",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 1,
+     "y_neg": null,
+     "y_status": "VERIFIED"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s026:df5baf1dd825:o03>50.o04>43.o05>37",
+     "f1": true,
+     "kind": "repair_reversed",
+     "m": 3,
+     "sig": "o05>37.o04>43.o03>50",
+     "x": 0,
+     "x_neg": "CERTIFIED",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "CERTIFIED_INFEASIBLE",
+     "y": 1,
+     "y_neg": null,
+     "y_status": "VERIFIED"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s026:df5baf1dd825:o03>50",
+     "f1": true,
+     "kind": "prefix_1",
+     "m": 1,
+     "sig": "o03>50",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s026:df5baf1dd825:o03>50.o04>43",
+     "f1": true,
+     "kind": "prefix_2",
+     "m": 2,
+     "sig": "o03>50.o04>43",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s026:df5baf1dd825:o04>43.o05>37",
+     "f1": true,
+     "kind": "omission_0",
+     "m": 2,
+     "sig": "o04>43.o05>37",
+     "x": 0,
+     "x_neg": "CERTIFIED",
+     "x_ok": true,
+     "x_phase": "relocation:1",
+     "x_status": "CERTIFIED_INFEASIBLE",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s026:df5baf1dd825:o03>50.o05>37",
+     "f1": true,
+     "kind": "omission_1",
+     "m": 2,
+     "sig": "o03>50.o05>37",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s026:df5baf1dd825:o03>50.o04>43.o05>37",
+     "f1": true,
+     "kind": "repair_swap12",
+     "m": 3,
+     "sig": "o04>43.o03>50.o05>37",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 1,
+     "y_neg": null,
+     "y_status": "VERIFIED"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s026:df5baf1dd825:o03>50.o04>43.o05>36",
+     "f1": true,
+     "kind": "repair_wrong_destination",
+     "m": 3,
+     "sig": "o03>50.o04>43.o05>36",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s026:df5baf1dd825:o01>26.o03>59.o05>36",
+     "f1": true,
+     "kind": "alternative_repair",
+     "m": 3,
+     "sig": "o03>59.o01>26.o05>36",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "connector",
+     "x_status": "UNKNOWN_TRANSIT",
+     "y": 0,
+     "y_neg": "NO_PLAN_FOUND",
+     "y_status": "UNKNOWN_PLANNER"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s026:df5baf1dd825:o04>43",
+     "f1": true,
+     "kind": "single_partial",
+     "m": 1,
+     "sig": "o04>43",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s026:df5baf1dd825:o05>37",
+     "f1": true,
+     "kind": "single_partial",
+     "m": 1,
+     "sig": "o05>37",
+     "x": 0,
+     "x_neg": "CERTIFIED",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "CERTIFIED_INFEASIBLE",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s026:df5baf1dd825:o03>59.o04>43",
+     "f1": true,
+     "kind": "interference_blocking_order",
+     "m": 2,
+     "sig": "o03>59.o04>43",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s026:df5baf1dd825:o03>59.o04>43",
+     "f1": true,
+     "kind": "interference_safe_order",
+     "m": 2,
+     "sig": "o04>43.o03>59",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s026:df5baf1dd825:o00>53",
+     "f1": true,
+     "kind": "harmful_edit",
+     "m": 1,
+     "sig": "o00>53",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s026:df5baf1dd825:o00>0",
+     "f1": true,
+     "kind": "neutral_edit",
+     "m": 1,
+     "sig": "o00>0",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s026:df5baf1dd825:o02>53",
+     "f1": true,
+     "kind": "harmful_edit",
+     "m": 1,
+     "sig": "o02>53",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    }
+   ],
+   "spec": {
+    "K_intent": 3,
+    "displacement": "medium",
+    "distractors": "3-4",
+    "mechanism": "nested",
+    "source": "near",
+    "start_pose": "nonhome"
+   },
+   "statuses": {
+    "CERTIFIED_INFEASIBLE": 15,
+    "UNKNOWN_PLANNER": 4,
+    "UNKNOWN_TRANSIT": 1,
+    "VERIFIED": 10
+   },
+   "verified_K": 3,
+   "verified_kinds": [
+    "repair",
+    "repair_swap12"
+   ],
+   "verified_repairs": 2,
+   "x_neg": {
+    "CERTIFIED": 3,
+    "NO_PLAN_FOUND": 4
+   },
+   "y0": 0,
+   "y_neg": {
+    "CERTIFIED": 12,
+    "NO_PLAN_FOUND": 1
+   }
+  },
+  {
+   "K_geom": 3,
+   "cells": {
+    "00": 8,
+    "10": 6
+   },
+   "censored": 0,
+   "connector_failures": 0,
+   "cpu_s": 75.3,
+   "discordant": [],
+   "forced_order": true,
+   "harmful": [],
+   "queries": 26,
+   "repair": {
+    "m": 3,
+    "prefix_x": [
+     0,
+     0
+    ],
+    "prefix_y": [
+     0,
+     0
+    ],
+    "x": 0,
+    "y": 0
+   },
+   "results": 26,
+   "root": "2d-bxyg21dev-wA-s027",
+   "rows": [
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s027:23b23c9afda5:o01>10.o02>19.o04>17",
+     "f1": true,
+     "kind": "repair",
+     "m": 3,
+     "sig": "o01>10.o04>17.o02>19",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s027:23b23c9afda5:o01>10.o02>19.o04>17",
+     "f1": true,
+     "kind": "repair_reversed",
+     "m": 3,
+     "sig": "o02>19.o04>17.o01>10",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:2",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s027:23b23c9afda5:o01>10",
+     "f1": true,
+     "kind": "prefix_1",
+     "m": 1,
+     "sig": "o01>10",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s027:23b23c9afda5:o01>10.o04>17",
+     "f1": true,
+     "kind": "prefix_2",
+     "m": 2,
+     "sig": "o01>10.o04>17",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s027:23b23c9afda5:o02>19.o04>17",
+     "f1": true,
+     "kind": "omission_0",
+     "m": 2,
+     "sig": "o04>17.o02>19",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s027:23b23c9afda5:o01>10.o02>19",
+     "f1": true,
+     "kind": "omission_1",
+     "m": 2,
+     "sig": "o01>10.o02>19",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s027:23b23c9afda5:o01>10.o02>19.o04>17",
+     "f1": true,
+     "kind": "repair_swap12",
+     "m": 3,
+     "sig": "o04>17.o01>10.o02>19",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:1",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s027:23b23c9afda5:o01>10.o02>11.o04>17",
+     "f1": true,
+     "kind": "repair_wrong_destination",
+     "m": 3,
+     "sig": "o01>10.o04>17.o02>11",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s027:23b23c9afda5:o00>7.o02>19.o04>10",
+     "f1": true,
+     "kind": "alternative_repair",
+     "m": 3,
+     "sig": "o04>10.o00>7.o02>19",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s027:23b23c9afda5:o04>17",
+     "f1": true,
+     "kind": "single_partial",
+     "m": 1,
+     "sig": "o04>17",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s027:23b23c9afda5:o02>19",
+     "f1": true,
+     "kind": "single_partial",
+     "m": 1,
+     "sig": "o02>19",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s027:23b23c9afda5:o01>24.o04>17",
+     "f1": true,
+     "kind": "interference_blocking_order",
+     "m": 2,
+     "sig": "o01>24.o04>17",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s027:23b23c9afda5:o01>24.o04>17",
+     "f1": true,
+     "kind": "interference_safe_order",
+     "m": 2,
+     "sig": "o04>17.o01>24",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s027:23b23c9afda5:o00>42",
+     "f1": true,
+     "kind": "qref_corridor_destination",
+     "m": 1,
+     "sig": "o00>42",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    }
+   ],
+   "spec": {
+    "K_intent": 3,
+    "displacement": "short",
+    "distractors": "1-2",
+    "mechanism": "nested",
+    "source": "mid",
+    "start_pose": "nonhome"
+   },
+   "statuses": {
+    "CERTIFIED_INFEASIBLE": 12,
+    "UNKNOWN_PLANNER": 8,
+    "VERIFIED": 6
+   },
+   "verified_K": null,
+   "verified_kinds": [],
+   "verified_repairs": 0,
+   "x_neg": {
+    "NO_PLAN_FOUND": 8
+   },
+   "y0": 0,
+   "y_neg": {
+    "CERTIFIED": 12
+   }
+  },
+  {
+   "K_geom": 3,
+   "cells": {
+    "00": 3,
+    "01": 1,
+    "10": 10,
+    "11": 2
+   },
+   "censored": 0,
+   "connector_failures": 0,
+   "cpu_s": 44.5,
+   "discordant": [
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s028:8c79cc4dc40e:o01>45.o04>31.o05>53",
+     "orders": [
+      [
+       "o04>31.o01>45.o05>53",
+       1,
+       null,
+       null
+      ],
+      [
+       "o05>53.o01>45.o04>31",
+       0,
+       "CERTIFIED",
+       "relocation:0"
+      ],
+      [
+       "o01>45.o04>31.o05>53",
+       1,
+       null,
+       null
+      ]
+     ]
+    }
+   ],
+   "forced_order": true,
+   "harmful": [],
+   "queries": 29,
+   "repair": {
+    "m": 3,
+    "prefix_x": [
+     1,
+     1
+    ],
+    "prefix_y": [
+     0,
+     0
+    ],
+    "x": 1,
+    "y": 1
+   },
+   "results": 29,
+   "root": "2d-bxyg21dev-wA-s028",
+   "rows": [
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s028:8c79cc4dc40e:o01>45.o04>31.o05>53",
+     "f1": true,
+     "kind": "repair",
+     "m": 3,
+     "sig": "o04>31.o01>45.o05>53",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 1,
+     "y_neg": null,
+     "y_status": "VERIFIED"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s028:8c79cc4dc40e:o01>45.o04>31.o05>53",
+     "f1": true,
+     "kind": "repair_reversed",
+     "m": 3,
+     "sig": "o05>53.o01>45.o04>31",
+     "x": 0,
+     "x_neg": "CERTIFIED",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "CERTIFIED_INFEASIBLE",
+     "y": 1,
+     "y_neg": null,
+     "y_status": "VERIFIED"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s028:8c79cc4dc40e:o04>31",
+     "f1": true,
+     "kind": "prefix_1",
+     "m": 1,
+     "sig": "o04>31",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s028:8c79cc4dc40e:o01>45.o04>31",
+     "f1": true,
+     "kind": "prefix_2",
+     "m": 2,
+     "sig": "o04>31.o01>45",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s028:8c79cc4dc40e:o01>45.o05>53",
+     "f1": true,
+     "kind": "omission_0",
+     "m": 2,
+     "sig": "o01>45.o05>53",
+     "x": 0,
+     "x_neg": "CERTIFIED",
+     "x_ok": true,
+     "x_phase": "relocation:1",
+     "x_status": "CERTIFIED_INFEASIBLE",
+     "y": 0,
+     "y_neg": "NO_PLAN_FOUND",
+     "y_status": "UNKNOWN_PLANNER"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s028:8c79cc4dc40e:o04>31.o05>53",
+     "f1": true,
+     "kind": "omission_1",
+     "m": 2,
+     "sig": "o04>31.o05>53",
+     "x": 0,
+     "x_neg": "CERTIFIED",
+     "x_ok": true,
+     "x_phase": "relocation:1",
+     "x_status": "CERTIFIED_INFEASIBLE",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s028:8c79cc4dc40e:o01>45.o04>31.o05>53",
+     "f1": true,
+     "kind": "repair_swap12",
+     "m": 3,
+     "sig": "o01>45.o04>31.o05>53",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 1,
+     "y_neg": null,
+     "y_status": "VERIFIED"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s028:8c79cc4dc40e:o01>45.o04>31.o05>30",
+     "f1": true,
+     "kind": "repair_wrong_destination",
+     "m": 3,
+     "sig": "o04>31.o01>45.o05>30",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s028:8c79cc4dc40e:o01>45",
+     "f1": true,
+     "kind": "single_partial",
+     "m": 1,
+     "sig": "o01>45",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s028:8c79cc4dc40e:o05>53",
+     "f1": true,
+     "kind": "single_partial",
+     "m": 1,
+     "sig": "o05>53",
+     "x": 0,
+     "x_neg": "CERTIFIED",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "CERTIFIED_INFEASIBLE",
+     "y": 0,
+     "y_neg": "NO_PLAN_FOUND",
+     "y_status": "UNKNOWN_PLANNER"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s028:8c79cc4dc40e:o01>45.o04>23",
+     "f1": true,
+     "kind": "interference_blocking_order",
+     "m": 2,
+     "sig": "o04>23.o01>45",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s028:8c79cc4dc40e:o01>45.o04>23",
+     "f1": true,
+     "kind": "interference_safe_order",
+     "m": 2,
+     "sig": "o01>45.o04>23",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s028:8c79cc4dc40e:o00>4",
+     "f1": true,
+     "kind": "neutral_edit",
+     "m": 1,
+     "sig": "o00>4",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s028:8c79cc4dc40e:o02>4",
+     "f1": true,
+     "kind": "neutral_edit",
+     "m": 1,
+     "sig": "o02>4",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s028:8c79cc4dc40e:o00>4.o02>5",
+     "f1": true,
+     "kind": "neutral_pair",
+     "m": 2,
+     "sig": "o00>4.o02>5",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s028:8c79cc4dc40e:o00>4.o02>5",
+     "f1": true,
+     "kind": "neutral_pair_reversed",
+     "m": 2,
+     "sig": "o02>5.o00>4",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    }
+   ],
+   "spec": {
+    "K_intent": 3,
+    "displacement": "long",
+    "distractors": "0",
+    "mechanism": "nested",
+    "source": "far",
+    "start_pose": "home"
+   },
+   "statuses": {
+    "CERTIFIED_INFEASIBLE": 14,
+    "UNKNOWN_PLANNER": 2,
+    "VERIFIED": 13
+   },
+   "verified_K": 3,
+   "verified_kinds": [
+    "repair",
+    "repair_swap12"
+   ],
+   "verified_repairs": 2,
+   "x_neg": {
+    "CERTIFIED": 4
+   },
+   "y0": 0,
+   "y_neg": {
+    "CERTIFIED": 10,
+    "NO_PLAN_FOUND": 2
+   }
+  },
+  {
+   "K_geom": 3,
+   "cells": {
+    "00": 11,
+    "10": 3
+   },
+   "censored": 0,
+   "connector_failures": 0,
+   "cpu_s": 21.9,
+   "discordant": [],
+   "forced_order": false,
+   "harmful": [],
+   "queries": 26,
+   "repair": {
+    "m": 3,
+    "prefix_x": [
+     1,
+     0
+    ],
+    "prefix_y": [
+     0,
+     0
+    ],
+    "x": 0,
+    "y": 0
+   },
+   "results": 26,
+   "root": "2d-bxyg21dev-wA-s030",
+   "rows": [
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s030:819988e913d1:o00>3.o02>42.o05>17",
+     "f1": true,
+     "kind": "repair",
+     "m": 3,
+     "sig": "o05>17.o00>3.o02>42",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:1",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s030:819988e913d1:o00>3.o02>42.o05>17",
+     "f1": true,
+     "kind": "repair_reversed",
+     "m": 3,
+     "sig": "o02>42.o00>3.o05>17",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:1",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s030:819988e913d1:o05>17",
+     "f1": true,
+     "kind": "prefix_1",
+     "m": 1,
+     "sig": "o05>17",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s030:819988e913d1:o00>3.o05>17",
+     "f1": true,
+     "kind": "prefix_2",
+     "m": 2,
+     "sig": "o05>17.o00>3",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:1",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s030:819988e913d1:o00>3.o02>42",
+     "f1": true,
+     "kind": "omission_0",
+     "m": 2,
+     "sig": "o00>3.o02>42",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s030:819988e913d1:o02>42.o05>17",
+     "f1": true,
+     "kind": "omission_1",
+     "m": 2,
+     "sig": "o05>17.o02>42",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s030:819988e913d1:o00>3.o02>42.o05>17",
+     "f1": true,
+     "kind": "repair_swap12",
+     "m": 3,
+     "sig": "o00>3.o05>17.o02>42",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s030:819988e913d1:o00>3.o02>26.o05>17",
+     "f1": true,
+     "kind": "repair_wrong_destination",
+     "m": 3,
+     "sig": "o05>17.o00>3.o02>26",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:1",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s030:819988e913d1:o00>3.o03>38.o05>16",
+     "f1": true,
+     "kind": "alternative_repair",
+     "m": 3,
+     "sig": "o05>16.o00>3.o03>38",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:1",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s030:819988e913d1:o00>3",
+     "f1": true,
+     "kind": "single_partial",
+     "m": 1,
+     "sig": "o00>3",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s030:819988e913d1:o02>42",
+     "f1": true,
+     "kind": "single_partial",
+     "m": 1,
+     "sig": "o02>42",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s030:819988e913d1:o00>3.o05>24",
+     "f1": true,
+     "kind": "interference_blocking_order",
+     "m": 2,
+     "sig": "o05>24.o00>3",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:1",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s030:819988e913d1:o00>3.o05>24",
+     "f1": true,
+     "kind": "interference_safe_order",
+     "m": 2,
+     "sig": "o00>3.o05>24",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s030:819988e913d1:o00>42",
+     "f1": true,
+     "kind": "qref_corridor_destination",
+     "m": 1,
+     "sig": "o00>42",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    }
+   ],
+   "spec": {
+    "K_intent": 3,
+    "displacement": "short",
+    "distractors": "1-2",
+    "mechanism": "mixed",
+    "source": "mid",
+    "start_pose": "nonhome"
+   },
+   "statuses": {
+    "CERTIFIED_INFEASIBLE": 12,
+    "UNKNOWN_PLANNER": 11,
+    "VERIFIED": 3
+   },
+   "verified_K": null,
+   "verified_kinds": [],
+   "verified_repairs": 0,
+   "x_neg": {
+    "NO_PLAN_FOUND": 11
+   },
+   "y0": 0,
+   "y_neg": {
+    "CERTIFIED": 12
+   }
+  },
+  {
+   "K_geom": 4,
+   "cells": {
+    "00": 9,
+    "10": 7
+   },
+   "censored": 0,
+   "connector_failures": 0,
+   "cpu_s": 23.7,
+   "discordant": [],
+   "forced_order": false,
+   "harmful": [],
+   "queries": 30,
+   "repair": {
+    "m": 4,
+    "prefix_x": [
+     1,
+     1,
+     0
+    ],
+    "prefix_y": [
+     0,
+     0,
+     0
+    ],
+    "x": 0,
+    "y": 0
+   },
+   "results": 30,
+   "root": "2d-bxyg21dev-wA-s031",
+   "rows": [
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s031:b1f954925aaf:o00>38.o01>24.o02>53.o04>30",
+     "f1": true,
+     "kind": "repair",
+     "m": 4,
+     "sig": "o01>24.o02>53.o00>38.o04>30",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:2",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s031:b1f954925aaf:o00>38.o01>24.o02>53.o04>30",
+     "f1": true,
+     "kind": "repair_reversed",
+     "m": 4,
+     "sig": "o04>30.o00>38.o02>53.o01>24",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s031:b1f954925aaf:o01>24",
+     "f1": true,
+     "kind": "prefix_1",
+     "m": 1,
+     "sig": "o01>24",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s031:b1f954925aaf:o01>24.o02>53",
+     "f1": true,
+     "kind": "prefix_2",
+     "m": 2,
+     "sig": "o01>24.o02>53",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s031:b1f954925aaf:o00>38.o01>24.o02>53",
+     "f1": true,
+     "kind": "prefix_3",
+     "m": 3,
+     "sig": "o01>24.o02>53.o00>38",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:2",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s031:b1f954925aaf:o00>38.o02>53.o04>30",
+     "f1": true,
+     "kind": "omission_0",
+     "m": 3,
+     "sig": "o02>53.o00>38.o04>30",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:1",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s031:b1f954925aaf:o00>38.o01>24.o04>30",
+     "f1": true,
+     "kind": "omission_1",
+     "m": 3,
+     "sig": "o01>24.o00>38.o04>30",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:2",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s031:b1f954925aaf:o01>24.o02>53.o04>30",
+     "f1": true,
+     "kind": "omission_2",
+     "m": 3,
+     "sig": "o01>24.o02>53.o04>30",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:2",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s031:b1f954925aaf:o00>38.o01>24.o02>53.o04>30",
+     "f1": true,
+     "kind": "repair_swap12",
+     "m": 4,
+     "sig": "o02>53.o01>24.o00>38.o04>30",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:2",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s031:b1f954925aaf:o00>38.o01>24.o02>53.o04>31",
+     "f1": true,
+     "kind": "repair_wrong_destination",
+     "m": 4,
+     "sig": "o01>24.o02>53.o00>38.o04>31",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:2",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s031:b1f954925aaf:o00>47.o02>44.o03>35.o05>29",
+     "f1": true,
+     "kind": "alternative_repair",
+     "m": 4,
+     "sig": "o02>44.o03>35.o00>47.o05>29",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s031:b1f954925aaf:o02>53",
+     "f1": true,
+     "kind": "single_partial",
+     "m": 1,
+     "sig": "o02>53",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s031:b1f954925aaf:o00>38",
+     "f1": true,
+     "kind": "single_partial",
+     "m": 1,
+     "sig": "o00>38",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s031:b1f954925aaf:o04>30",
+     "f1": true,
+     "kind": "single_partial",
+     "m": 1,
+     "sig": "o04>30",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s031:b1f954925aaf:o01>25.o02>53",
+     "f1": true,
+     "kind": "interference_blocking_order",
+     "m": 2,
+     "sig": "o01>25.o02>53",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s031:b1f954925aaf:o01>25.o02>53",
+     "f1": true,
+     "kind": "interference_safe_order",
+     "m": 2,
+     "sig": "o02>53.o01>25",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    }
+   ],
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": "0",
+    "mechanism": "pick",
+    "source": "far",
+    "start_pose": "nonhome"
+   },
+   "statuses": {
+    "CERTIFIED_INFEASIBLE": 14,
+    "UNKNOWN_PLANNER": 9,
+    "VERIFIED": 7
+   },
+   "verified_K": null,
+   "verified_kinds": [],
+   "verified_repairs": 0,
+   "x_neg": {
+    "NO_PLAN_FOUND": 9
+   },
+   "y0": 0,
+   "y_neg": {
+    "CERTIFIED": 14
+   }
+  },
+  {
+   "K_geom": 4,
+   "cells": {
+    "00": 14,
+    "10": 2
+   },
+   "censored": 0,
+   "connector_failures": 0,
+   "cpu_s": 16.5,
+   "discordant": [],
+   "forced_order": true,
+   "harmful": [],
+   "queries": 31,
+   "repair": {
+    "m": 4,
+    "prefix_x": [
+     1,
+     0,
+     0
+    ],
+    "prefix_y": [
+     0,
+     0,
+     0
+    ],
+    "x": 0,
+    "y": 0
+   },
+   "results": 31,
+   "root": "2d-bxyg21dev-wA-s033",
+   "rows": [
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s033:9d906f05b6ca:o01>20.o02>12.o03>15.o04>10",
+     "f1": true,
+     "kind": "repair",
+     "m": 4,
+     "sig": "o04>10.o02>12.o01>20.o03>15",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:1",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s033:9d906f05b6ca:o01>20.o02>12.o03>15.o04>10",
+     "f1": true,
+     "kind": "repair_reversed",
+     "m": 4,
+     "sig": "o03>15.o01>20.o02>12.o04>10",
+     "x": 0,
+     "x_neg": "CERTIFIED",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "CERTIFIED_INFEASIBLE",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s033:9d906f05b6ca:o04>10",
+     "f1": true,
+     "kind": "prefix_1",
+     "m": 1,
+     "sig": "o04>10",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s033:9d906f05b6ca:o02>12.o04>10",
+     "f1": true,
+     "kind": "prefix_2",
+     "m": 2,
+     "sig": "o04>10.o02>12",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:1",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s033:9d906f05b6ca:o01>20.o02>12.o04>10",
+     "f1": true,
+     "kind": "prefix_3",
+     "m": 3,
+     "sig": "o04>10.o02>12.o01>20",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:1",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s033:9d906f05b6ca:o01>20.o02>12.o03>15",
+     "f1": true,
+     "kind": "omission_0",
+     "m": 3,
+     "sig": "o02>12.o01>20.o03>15",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s033:9d906f05b6ca:o01>20.o03>15.o04>10",
+     "f1": true,
+     "kind": "omission_1",
+     "m": 3,
+     "sig": "o04>10.o01>20.o03>15",
+     "x": 0,
+     "x_neg": "CERTIFIED",
+     "x_ok": true,
+     "x_phase": "relocation:2",
+     "x_status": "CERTIFIED_INFEASIBLE",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s033:9d906f05b6ca:o02>12.o03>15.o04>10",
+     "f1": true,
+     "kind": "omission_2",
+     "m": 3,
+     "sig": "o04>10.o02>12.o03>15",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:1",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s033:9d906f05b6ca:o01>20.o02>12.o03>15.o04>10",
+     "f1": true,
+     "kind": "repair_swap12",
+     "m": 4,
+     "sig": "o02>12.o04>10.o01>20.o03>15",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s033:9d906f05b6ca:o01>20.o02>12.o03>6.o04>10",
+     "f1": true,
+     "kind": "repair_wrong_destination",
+     "m": 4,
+     "sig": "o04>10.o02>12.o01>20.o03>6",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:1",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s033:9d906f05b6ca:o00>36.o01>20.o02>6.o03>3",
+     "f1": true,
+     "kind": "alternative_repair",
+     "m": 4,
+     "sig": "o00>36.o02>6.o01>20.o03>3",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:1",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s033:9d906f05b6ca:o02>12",
+     "f1": true,
+     "kind": "single_partial",
+     "m": 1,
+     "sig": "o02>12",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s033:9d906f05b6ca:o01>20",
+     "f1": true,
+     "kind": "single_partial",
+     "m": 1,
+     "sig": "o01>20",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s033:9d906f05b6ca:o03>15",
+     "f1": true,
+     "kind": "single_partial",
+     "m": 1,
+     "sig": "o03>15",
+     "x": 0,
+     "x_neg": "CERTIFIED",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "CERTIFIED_INFEASIBLE",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s033:9d906f05b6ca:o01>20.o02>12.o03>15.o04>10.o05>24",
+     "f1": true,
+     "kind": "repair_plus_unnecessary",
+     "m": 5,
+     "sig": "o04>10.o02>12.o01>20.o03>15.o05>24",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:1",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s033:9d906f05b6ca:o01>20.o02>12.o03>15.o04>10.o05>6",
+     "f1": true,
+     "kind": "repair_then_harmful",
+     "m": 5,
+     "sig": "o04>10.o02>12.o01>20.o03>15.o05>6",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:1",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    }
+   ],
+   "spec": {
+    "K_intent": 4,
+    "displacement": "short",
+    "distractors": "1-2",
+    "mechanism": "nested",
+    "source": "mid",
+    "start_pose": "home"
+   },
+   "statuses": {
+    "CERTIFIED_INFEASIBLE": 18,
+    "UNKNOWN_PLANNER": 11,
+    "VERIFIED": 2
+   },
+   "verified_K": null,
+   "verified_kinds": [],
+   "verified_repairs": 0,
+   "x_neg": {
+    "CERTIFIED": 3,
+    "NO_PLAN_FOUND": 11
+   },
+   "y0": 0,
+   "y_neg": {
+    "CERTIFIED": 15
+   }
+  },
+  {
+   "K_geom": 4,
+   "cells": {
+    "00": 9,
+    "10": 7
+   },
+   "censored": 0,
+   "connector_failures": 0,
+   "cpu_s": 20.9,
+   "discordant": [],
+   "forced_order": true,
+   "harmful": [],
+   "queries": 30,
+   "repair": {
+    "m": 4,
+    "prefix_x": [
+     1,
+     1,
+     1
+    ],
+    "prefix_y": [
+     0,
+     0,
+     0
+    ],
+    "x": 0,
+    "y": 0
+   },
+   "results": 30,
+   "root": "2d-bxyg21dev-wA-s034",
+   "rows": [
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s034:7962a17d1bcc:o00>37.o02>33.o04>13.o05>22",
+     "f1": true,
+     "kind": "repair",
+     "m": 4,
+     "sig": "o02>33.o00>37.o04>13.o05>22",
+     "x": 0,
+     "x_neg": "CERTIFIED",
+     "x_ok": true,
+     "x_phase": "relocation:3",
+     "x_status": "CERTIFIED_INFEASIBLE",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s034:7962a17d1bcc:o00>37.o02>33.o04>13.o05>22",
+     "f1": true,
+     "kind": "repair_reversed",
+     "m": 4,
+     "sig": "o05>22.o04>13.o00>37.o02>33",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s034:7962a17d1bcc:o02>33",
+     "f1": true,
+     "kind": "prefix_1",
+     "m": 1,
+     "sig": "o02>33",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s034:7962a17d1bcc:o00>37.o02>33",
+     "f1": true,
+     "kind": "prefix_2",
+     "m": 2,
+     "sig": "o02>33.o00>37",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s034:7962a17d1bcc:o00>37.o02>33.o04>13",
+     "f1": true,
+     "kind": "prefix_3",
+     "m": 3,
+     "sig": "o02>33.o00>37.o04>13",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s034:7962a17d1bcc:o00>37.o04>13.o05>22",
+     "f1": true,
+     "kind": "omission_0",
+     "m": 3,
+     "sig": "o00>37.o04>13.o05>22",
+     "x": 0,
+     "x_neg": "CERTIFIED",
+     "x_ok": true,
+     "x_phase": "relocation:2",
+     "x_status": "CERTIFIED_INFEASIBLE",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s034:7962a17d1bcc:o02>33.o04>13.o05>22",
+     "f1": true,
+     "kind": "omission_1",
+     "m": 3,
+     "sig": "o02>33.o04>13.o05>22",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:2",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s034:7962a17d1bcc:o00>37.o02>33.o05>22",
+     "f1": true,
+     "kind": "omission_2",
+     "m": 3,
+     "sig": "o02>33.o00>37.o05>22",
+     "x": 0,
+     "x_neg": "CERTIFIED",
+     "x_ok": true,
+     "x_phase": "relocation:2",
+     "x_status": "CERTIFIED_INFEASIBLE",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s034:7962a17d1bcc:o00>37.o02>33.o04>13.o05>22",
+     "f1": true,
+     "kind": "repair_swap12",
+     "m": 4,
+     "sig": "o00>37.o02>33.o04>13.o05>22",
+     "x": 0,
+     "x_neg": "CERTIFIED",
+     "x_ok": true,
+     "x_phase": "relocation:3",
+     "x_status": "CERTIFIED_INFEASIBLE",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s034:7962a17d1bcc:o00>37.o02>33.o04>13.o05>15",
+     "f1": true,
+     "kind": "repair_wrong_destination",
+     "m": 4,
+     "sig": "o02>33.o00>37.o04>13.o05>15",
+     "x": 0,
+     "x_neg": "CERTIFIED",
+     "x_ok": true,
+     "x_phase": "relocation:3",
+     "x_status": "CERTIFIED_INFEASIBLE",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s034:7962a17d1bcc:o00>37",
+     "f1": true,
+     "kind": "single_partial",
+     "m": 1,
+     "sig": "o00>37",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s034:7962a17d1bcc:o04>13",
+     "f1": true,
+     "kind": "single_partial",
+     "m": 1,
+     "sig": "o04>13",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s034:7962a17d1bcc:o05>22",
+     "f1": true,
+     "kind": "single_partial",
+     "m": 1,
+     "sig": "o05>22",
+     "x": 0,
+     "x_neg": "NO_PLAN_FOUND",
+     "x_ok": true,
+     "x_phase": "relocation:0",
+     "x_status": "UNKNOWN_PLANNER",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s034:7962a17d1bcc:o00>37.o02>32",
+     "f1": true,
+     "kind": "interference_blocking_order",
+     "m": 2,
+     "sig": "o02>32.o00>37",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s034:7962a17d1bcc:o00>37.o02>32",
+     "f1": true,
+     "kind": "interference_safe_order",
+     "m": 2,
+     "sig": "o00>37.o02>32",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    },
+    {
+     "endpoint": "Y2:2d-bxyg21dev-wA-s034:7962a17d1bcc:o01>3",
+     "f1": true,
+     "kind": "neutral_edit",
+     "m": 1,
+     "sig": "o01>3",
+     "x": 1,
+     "x_neg": null,
+     "x_ok": true,
+     "x_phase": null,
+     "x_status": "VERIFIED",
+     "y": 0,
+     "y_neg": "CERTIFIED",
+     "y_status": "CERTIFIED_INFEASIBLE"
+    }
+   ],
+   "spec": {
+    "K_intent": 4,
+    "displacement": "long",
+    "distractors": "0",
+    "mechanism": "nested",
+    "source": "far",
+    "start_pose": "nonhome"
+   },
+   "statuses": {
+    "CERTIFIED_INFEASIBLE": 19,
+    "UNKNOWN_PLANNER": 4,
+    "VERIFIED": 7
+   },
+   "verified_K": null,
+   "verified_kinds": [],
+   "verified_repairs": 0,
+   "x_neg": {
+    "CERTIFIED": 5,
+    "NO_PLAN_FOUND": 4
+   },
+   "y0": 0,
+   "y_neg": {
+    "CERTIFIED": 14
+   }
+  }
+ ],
+ "spent": {
+  "collection_cpu_s": 2024.6,
+  "collection_wall_s": 654.5,
+  "construction_cpu_s": 596.2,
+  "labelled_roots_started": 31,
+  "maps_cpu_s": 2169.8,
+  "maps_wall_s": 846,
+  "total_cpu_s": 4790.5,
+  "total_wall_s": 1500.5
+ },
+ "verified_K": {
+  "0": 6,
+  "1": 4,
+  "2": 2,
+  "3": 2,
+  "None": 17
+ },
+ "wave": "wA"
+}

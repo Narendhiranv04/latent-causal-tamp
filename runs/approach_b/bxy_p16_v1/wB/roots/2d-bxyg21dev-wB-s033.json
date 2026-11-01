@@ -1,0 +1,909 @@
+{
+ "budget": {
+  "per_query": {
+   "goal_plans": 3,
+   "motion_checks": 150,
+   "online_moves": 8,
+   "transit_plans": 6
+  }
+ },
+ "catalogue_v21": [
+  {
+   "f1_complete_ok": true,
+   "f1_x_ok": true,
+   "f1_y_ok": true,
+   "kind": "repair",
+   "seq": [
+    [
+     "o04",
+     42
+    ],
+    [
+     "o01",
+     62
+    ]
+   ],
+   "sig": "o04>42.o01>62"
+  },
+  {
+   "f1_complete_ok": true,
+   "f1_x_ok": true,
+   "f1_y_ok": true,
+   "kind": "repair_reversed",
+   "seq": [
+    [
+     "o01",
+     62
+    ],
+    [
+     "o04",
+     42
+    ]
+   ],
+   "sig": "o01>62.o04>42"
+  },
+  {
+   "f1_complete_ok": true,
+   "f1_x_ok": true,
+   "f1_y_ok": true,
+   "kind": "prefix_1",
+   "seq": [
+    [
+     "o04",
+     42
+    ]
+   ],
+   "sig": "o04>42"
+  },
+  {
+   "f1_complete_ok": true,
+   "f1_x_ok": true,
+   "f1_y_ok": true,
+   "kind": "omission_0",
+   "seq": [
+    [
+     "o01",
+     62
+    ]
+   ],
+   "sig": "o01>62"
+  },
+  {
+   "f1_complete_ok": true,
+   "f1_x_ok": true,
+   "f1_y_ok": true,
+   "kind": "repair_wrong_destination",
+   "seq": [
+    [
+     "o04",
+     42
+    ],
+    [
+     "o01",
+     45
+    ]
+   ],
+   "sig": "o04>42.o01>45"
+  },
+  {
+   "f1_complete_ok": true,
+   "f1_x_ok": true,
+   "f1_y_ok": true,
+   "kind": "alternative_repair",
+   "seq": [
+    [
+     "o05",
+     17
+    ],
+    [
+     "o03",
+     29
+    ]
+   ],
+   "sig": "o05>17.o03>29"
+  },
+  {
+   "f1_complete_ok": true,
+   "f1_x_ok": true,
+   "f1_y_ok": true,
+   "kind": "interference_blocking_order",
+   "seq": [
+    [
+     "o04",
+     49
+    ],
+    [
+     "o01",
+     62
+    ]
+   ],
+   "sig": "o04>49.o01>62"
+  },
+  {
+   "f1_complete_ok": true,
+   "f1_x_ok": true,
+   "f1_y_ok": true,
+   "kind": "interference_safe_order",
+   "seq": [
+    [
+     "o01",
+     62
+    ],
+    [
+     "o04",
+     49
+    ]
+   ],
+   "sig": "o01>62.o04>49"
+  }
+ ],
+ "construction": {
+  "K_geom": 2,
+  "S0_open": {
+   "pick": 0,
+   "place": 2
+  },
+  "construction_cpu_s": 0.985,
+  "forced_order": true,
+  "generator_revision": {
+   "harm_real_screen": true,
+   "k0_certificate": true,
+   "layouts": 25,
+   "min_reopen": 3,
+   "post_repair_certificate": true,
+   "step_certificate": true
+  },
+  "harmful_cells": [],
+  "layout_draw": 10,
+  "neutral_cells": [
+   3,
+   4,
+   5,
+   6,
+   7,
+   11,
+   12,
+   13,
+   14,
+   15,
+   20,
+   22,
+   23,
+   28,
+   29,
+   30,
+   31,
+   32,
+   33,
+   39,
+   40,
+   41,
+   47,
+   49,
+   55,
+   62,
+   63
+  ],
+  "options": [
+   {
+    "order": [
+     "o04",
+     "o01"
+    ],
+    "pick": 42,
+    "place": 1,
+    "remove": [
+     "o01",
+     "o04"
+    ]
+   },
+   {
+    "order": [
+     "o05",
+     "o03"
+    ],
+    "pick": 2,
+    "place": 10,
+    "remove": [
+     "o03",
+     "o05"
+    ]
+   },
+   {
+    "order": [
+     "o02",
+     "o03"
+    ],
+    "pick": 3,
+    "place": 11,
+    "remove": [
+     "o02",
+     "o03"
+    ]
+   },
+   {
+    "order": [
+     "o00",
+     "o03"
+    ],
+    "pick": 4,
+    "place": 37,
+    "remove": [
+     "o00",
+     "o03"
+    ]
+   },
+   {
+    "order": [
+     "o02",
+     "o01"
+    ],
+    "pick": 46,
+    "place": 11,
+    "remove": [
+     "o01",
+     "o02"
+    ]
+   }
+  ],
+  "q_ref_footprint": [],
+  "reference_planner_calls": 1,
+  "reference_sweep": {
+   "approach": [
+    1,
+    2,
+    8,
+    9,
+    10,
+    16,
+    18,
+    26,
+    27,
+    34,
+    35,
+    36,
+    37,
+    45,
+    46
+   ],
+   "carry": [
+    2,
+    9,
+    10,
+    16,
+    17,
+    18,
+    26,
+    27,
+    34,
+    35,
+    36,
+    42,
+    43,
+    44,
+    45,
+    46,
+    51,
+    52,
+    53,
+    54,
+    59,
+    60,
+    61
+   ],
+   "close_attach": [
+    2,
+    9,
+    10,
+    16,
+    18,
+    27,
+    35,
+    36,
+    45,
+    46
+   ],
+   "pregrasp": [
+    1,
+    2,
+    8,
+    9,
+    10,
+    16,
+    17,
+    18,
+    19,
+    24,
+    25,
+    26,
+    27,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61
+   ],
+   "release": [
+    9,
+    10,
+    16,
+    17,
+    18,
+    26,
+    34,
+    42,
+    51,
+    52,
+    59,
+    60
+   ],
+   "retreat": [
+    2,
+    8,
+    9,
+    10,
+    16,
+    17,
+    18,
+    26,
+    33,
+    34,
+    42,
+    51,
+    52,
+    59,
+    60
+   ]
+  },
+  "reference_witness": "ba9e23a655d2128932932953",
+  "validated_option": 3,
+  "validation_rejects": {
+   "REOPEN_TOO_NARROW": 13,
+   "STEP_PICK_CLOSED": 1
+  }
+ },
+ "design_v21": {
+  "f1_screened": {},
+  "queries": {
+   "X2:2d-bxyg21dev-wB-s033:2874d43a4fcd:o01>62": {
+    "classes": [
+     "omission_0"
+    ],
+    "len": 1,
+    "parent_y_key": "Y2:2d-bxyg21dev-wB-s033:2874d43a4fcd:o01>62",
+    "seq": [
+     [
+      "o01",
+      62
+     ]
+    ],
+    "side": "x"
+   },
+   "X2:2d-bxyg21dev-wB-s033:2874d43a4fcd:o01>62.o04>42": {
+    "classes": [
+     "repair_reversed"
+    ],
+    "len": 2,
+    "parent_y_key": "Y2:2d-bxyg21dev-wB-s033:2874d43a4fcd:o01>62.o04>42",
+    "seq": [
+     [
+      "o01",
+      62
+     ],
+     [
+      "o04",
+      42
+     ]
+    ],
+    "side": "x"
+   },
+   "X2:2d-bxyg21dev-wB-s033:2874d43a4fcd:o01>62.o04>49": {
+    "classes": [
+     "interference_safe_order"
+    ],
+    "len": 2,
+    "parent_y_key": "Y2:2d-bxyg21dev-wB-s033:2874d43a4fcd:o01>62.o04>49",
+    "seq": [
+     [
+      "o01",
+      62
+     ],
+     [
+      "o04",
+      49
+     ]
+    ],
+    "side": "x"
+   },
+   "X2:2d-bxyg21dev-wB-s033:2874d43a4fcd:o04>42": {
+    "classes": [
+     "prefix_1"
+    ],
+    "len": 1,
+    "parent_y_key": "Y2:2d-bxyg21dev-wB-s033:2874d43a4fcd:o04>42",
+    "seq": [
+     [
+      "o04",
+      42
+     ]
+    ],
+    "side": "x"
+   },
+   "X2:2d-bxyg21dev-wB-s033:2874d43a4fcd:o04>42.o01>45": {
+    "classes": [
+     "repair_wrong_destination"
+    ],
+    "len": 2,
+    "parent_y_key": "Y2:2d-bxyg21dev-wB-s033:2874d43a4fcd:o01>45.o04>42",
+    "seq": [
+     [
+      "o04",
+      42
+     ],
+     [
+      "o01",
+      45
+     ]
+    ],
+    "side": "x"
+   },
+   "X2:2d-bxyg21dev-wB-s033:2874d43a4fcd:o04>42.o01>62": {
+    "classes": [
+     "repair"
+    ],
+    "len": 2,
+    "parent_y_key": "Y2:2d-bxyg21dev-wB-s033:2874d43a4fcd:o01>62.o04>42",
+    "seq": [
+     [
+      "o04",
+      42
+     ],
+     [
+      "o01",
+      62
+     ]
+    ],
+    "side": "x"
+   },
+   "X2:2d-bxyg21dev-wB-s033:2874d43a4fcd:o04>49.o01>62": {
+    "classes": [
+     "interference_blocking_order"
+    ],
+    "len": 2,
+    "parent_y_key": "Y2:2d-bxyg21dev-wB-s033:2874d43a4fcd:o01>62.o04>49",
+    "seq": [
+     [
+      "o04",
+      49
+     ],
+     [
+      "o01",
+      62
+     ]
+    ],
+    "side": "x"
+   },
+   "X2:2d-bxyg21dev-wB-s033:2874d43a4fcd:o05>17.o03>29": {
+    "classes": [
+     "alternative_repair"
+    ],
+    "len": 2,
+    "parent_y_key": "Y2:2d-bxyg21dev-wB-s033:2874d43a4fcd:o03>29.o05>17",
+    "seq": [
+     [
+      "o05",
+      17
+     ],
+     [
+      "o03",
+      29
+     ]
+    ],
+    "side": "x"
+   },
+   "Y2:2d-bxyg21dev-wB-s033:2874d43a4fcd:empty": {
+    "classes": [
+     "y0"
+    ],
+    "edit": {},
+    "len": 0,
+    "seq": [],
+    "side": "y"
+   },
+   "Y2:2d-bxyg21dev-wB-s033:2874d43a4fcd:o01>45.o04>42": {
+    "classes": [
+     "repair_wrong_destination"
+    ],
+    "edit": {
+     "o01": 45,
+     "o04": 42
+    },
+    "len": 2,
+    "seq": [
+     [
+      "o04",
+      42
+     ],
+     [
+      "o01",
+      45
+     ]
+    ],
+    "side": "y"
+   },
+   "Y2:2d-bxyg21dev-wB-s033:2874d43a4fcd:o01>62": {
+    "classes": [
+     "omission_0"
+    ],
+    "edit": {
+     "o01": 62
+    },
+    "len": 1,
+    "seq": [
+     [
+      "o01",
+      62
+     ]
+    ],
+    "side": "y"
+   },
+   "Y2:2d-bxyg21dev-wB-s033:2874d43a4fcd:o01>62.o04>42": {
+    "classes": [
+     "repair",
+     "repair_reversed"
+    ],
+    "edit": {
+     "o01": 62,
+     "o04": 42
+    },
+    "len": 2,
+    "seq": [
+     [
+      "o04",
+      42
+     ],
+     [
+      "o01",
+      62
+     ]
+    ],
+    "side": "y"
+   },
+   "Y2:2d-bxyg21dev-wB-s033:2874d43a4fcd:o01>62.o04>49": {
+    "classes": [
+     "interference_blocking_order",
+     "interference_safe_order"
+    ],
+    "edit": {
+     "o01": 62,
+     "o04": 49
+    },
+    "len": 2,
+    "seq": [
+     [
+      "o04",
+      49
+     ],
+     [
+      "o01",
+      62
+     ]
+    ],
+    "side": "y"
+   },
+   "Y2:2d-bxyg21dev-wB-s033:2874d43a4fcd:o03>29.o05>17": {
+    "classes": [
+     "alternative_repair"
+    ],
+    "edit": {
+     "o03": 29,
+     "o05": 17
+    },
+    "len": 2,
+    "seq": [
+     [
+      "o05",
+      17
+     ],
+     [
+      "o03",
+      29
+     ]
+    ],
+    "side": "y"
+   },
+   "Y2:2d-bxyg21dev-wB-s033:2874d43a4fcd:o04>42": {
+    "classes": [
+     "prefix_1"
+    ],
+    "edit": {
+     "o04": 42
+    },
+    "len": 1,
+    "seq": [
+     [
+      "o04",
+      42
+     ]
+    ],
+    "side": "y"
+   }
+  }
+ },
+ "domain": "2d",
+ "fixed_ids": [
+  "o06",
+  "o07",
+  "o08"
+ ],
+ "generator": "BXY_GEN_V21",
+ "goal_cell": 60,
+ "ids": {
+  "config_hash": "90d3eb68e8a42108",
+  "construction_seed": 2027999725,
+  "generator_version": "BXY_GEN_V21B",
+  "label_protocol": "BD_BINARY_BUDGET_V1",
+  "namespace": "dev",
+  "parent_family_id": "fam21-930ad15abf",
+  "robot_protocol": "PLANAR3R_SIDEGRASP_V1:sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+  "root_id": "2d-bxyg21dev-wB-s033",
+  "teacher_version": "BD2D_TEACHER_V1:DetPhysics(P16_FAST,no-library)",
+  "variant_id": "orig",
+  "wave": "wB"
+ },
+ "intended_blockers": [
+  "o00",
+  "o01",
+  "o02",
+  "o03",
+  "o04",
+  "o05"
+ ],
+ "q0": [
+  1.5707963267948966,
+  1.5707963267948966,
+  1.5707963267948966
+ ],
+ "q_ref": [
+  1.5707963267948966,
+  1.5707963267948966,
+  1.5707963267948966
+ ],
+ "roles": {
+  "o00": "intended_blocker",
+  "o01": "intended_blocker",
+  "o02": "intended_blocker",
+  "o03": "intended_blocker",
+  "o04": "intended_blocker",
+  "o05": "intended_blocker"
+ },
+ "scene": {
+  "action_hash": null,
+  "domain_policy": "ALL_SUPPORTED",
+  "lattice": {
+   "cols": 8,
+   "pitch_m": 0.08,
+   "rows": 8
+  },
+  "legal_cells": [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12,
+   13,
+   14,
+   15,
+   16,
+   17,
+   18,
+   19,
+   20,
+   21,
+   22,
+   23,
+   24,
+   25,
+   26,
+   27,
+   28,
+   29,
+   30,
+   31,
+   32,
+   33,
+   34,
+   35,
+   36,
+   37,
+   38,
+   39,
+   40,
+   41,
+   42,
+   43,
+   44,
+   45,
+   46,
+   47,
+   48,
+   49,
+   50,
+   51,
+   52,
+   53,
+   54,
+   55,
+   56,
+   57,
+   58,
+   59,
+   60,
+   61,
+   62,
+   63
+  ],
+  "objects": [
+   {
+    "cell": 0,
+    "id": "o00",
+    "kind": "obstacle",
+    "radius_m": 0.024,
+    "support": "table",
+    "xy_m": [
+     0.04,
+     0.04
+    ]
+   },
+   {
+    "cell": 53,
+    "id": "o01",
+    "kind": "obstacle",
+    "radius_m": 0.024,
+    "support": "table",
+    "xy_m": [
+     0.44,
+     0.52
+    ]
+   },
+   {
+    "cell": 50,
+    "id": "o02",
+    "kind": "obstacle",
+    "radius_m": 0.024,
+    "support": "table",
+    "xy_m": [
+     0.2,
+     0.52
+    ]
+   },
+   {
+    "cell": 37,
+    "id": "o03",
+    "kind": "obstacle",
+    "radius_m": 0.024,
+    "support": "table",
+    "xy_m": [
+     0.44,
+     0.36
+    ]
+   },
+   {
+    "cell": 59,
+    "id": "o04",
+    "kind": "obstacle",
+    "radius_m": 0.024,
+    "support": "table",
+    "xy_m": [
+     0.28,
+     0.6
+    ]
+   },
+   {
+    "cell": 16,
+    "id": "o05",
+    "kind": "obstacle",
+    "radius_m": 0.024,
+    "support": "table",
+    "xy_m": [
+     0.04,
+     0.2
+    ]
+   },
+   {
+    "cell": 44,
+    "id": "o06",
+    "kind": "obstacle",
+    "radius_m": 0.024,
+    "support": "table",
+    "xy_m": [
+     0.36,
+     0.44
+    ]
+   },
+   {
+    "cell": 61,
+    "id": "o07",
+    "kind": "obstacle",
+    "radius_m": 0.024,
+    "support": "table",
+    "xy_m": [
+     0.44,
+     0.6
+    ]
+   },
+   {
+    "cell": 21,
+    "id": "o08",
+    "kind": "obstacle",
+    "radius_m": 0.024,
+    "support": "table",
+    "xy_m": [
+     0.44,
+     0.2
+    ]
+   },
+   {
+    "cell": 46,
+    "id": "t0",
+    "kind": "target",
+    "radius_m": 0.024,
+    "support": "table",
+    "xy_m": [
+     0.52,
+     0.44
+    ]
+   }
+  ],
+  "robot": {
+   "attached_id": null,
+   "attachment": "free",
+   "gripper_gap_m": 0.07,
+   "q_rad": [
+    1.5707963267948966,
+    1.5707963267948966,
+    1.5707963267948966
+   ]
+  },
+  "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+  "root_id": "2d-bxyg21dev-wB-s033",
+  "variant_id": "orig"
+ },
+ "spec": {
+  "K_intent": 2,
+  "displacement": "short",
+  "distractors": "1-2",
+  "mechanism": "nested",
+  "source": "mid",
+  "start_pose": "home"
+ },
+ "start_stratum": "S0"
+}

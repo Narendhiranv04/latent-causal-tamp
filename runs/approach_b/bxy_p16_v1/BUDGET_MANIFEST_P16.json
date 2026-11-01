@@ -1,0 +1,22 @@
+{
+ "authorized_by": "user execution contract BXY-P16..P18 (2026-11-01), section F",
+ "counts_against_ceiling": [
+  "access-map precompute CPU (ACCESS_MAPS.json per-map cpu_s)",
+  "construction CPU of every attempted slot (accepted or rejected)",
+  "teacher worker CPU (LEDGER finish events)"
+ ],
+ "created_at": 1793503397.408749,
+ "gate": "BXY-P16",
+ "limits": {
+  "aggregate_cpu_s": 24000.0,
+  "max_new_labelled_roots": 120,
+  "per_query_budget": "bd_2d.QB (exact P-min limits, no increase)",
+  "root_cpu_s": 800.0,
+  "wall_s": 14400.0,
+  "workers": 4
+ },
+ "note": "written while the access-map precompute (started a few minutes earlier in this session) was running; its CPU is recorded per map and counted",
+ "scope": "development-only hard-scene generation (BXY_GEN_V21, namespace bxyg21dev) and bounded teacher labelling; no confirmatory cohort",
+ "version": "BXY_P16_BUDGET_MANIFEST_V1",
+ "wall_accounting": "cumulative wall of every collection session (COLLECT_STATE / LEDGER) plus map precompute wall"
+}
