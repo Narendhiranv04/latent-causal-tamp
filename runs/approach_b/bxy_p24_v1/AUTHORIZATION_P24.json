@@ -1,0 +1,57 @@
+{
+ "approval_text": "I authorize BXY-P24: one-shot generation and labelling of the 440-slot bxyg34confirm cohort and one evaluation of the frozen D / E / DIRECT-GEO / G ensembles, with at most 90,000 aggregate CPU-seconds (including a 3,000 CPU-second evaluation reserve), 40,000 seconds wall time, four single-thread workers and 1,400 CPU-seconds per root; the per-query teacher budget remains unchanged. This approval is conditional on successful, read-back-verified independent Google Drive checkpoint custody and on the final versioned hashes being recorded before the first scene is generated.",
+ "approved": true,
+ "approved_by": "the user (repository owner), explicit authorization in the P23.1->P25 handoff BXY_P23_1_P25_DRIVE_CUSTODY_AND_CONFIRMATION_OPUS_PROMPT.md section 2 and the accompanying chat message of 2026-11-02 ('I explicitly authorize the single P24 confirmatory study ...')",
+ "authorized_at_commit": "e2c90cdedf6180d8043b0035967a0d491f9fb194",
+ "code_tree": {
+  "files": 226,
+  "sha256": "5821f83a7b478218a7a44d808a73134c322190b0c0106f576ae1f508f8f19c1a"
+ },
+ "condition_status": {
+  "p23_1_commit": "e2c90cdedf6180d8043b0035967a0d491f9fb194",
+  "remote_custody": "REMOTE_CUSTODY_VERIFIED",
+  "remote_custody_sha256": "9eeb354a41a923396d0b1c543d120cb1f3749597b79893499fb80fda64dbcea1"
+ },
+ "cost_basis": {
+  "construction_cpu_per_slot_k3": 75.3,
+  "construction_max_slot_k3": 218.8,
+  "freeze_inputs_predictions": "~2 CPU-s per root (DINOv2) + 60 member forward passes per root (~0.1-0.25 CPU-s each)",
+  "note": "construction has no per-slot RLIMIT (bounded by the fixed layout tries); labelling starts only if aggregate - reserve - spent > 0",
+  "teacher_cpu_per_accepted_root_k3": 154.0
+ },
+ "how_to_approve": "the user replies with explicit approval of these ceilings; the approved copy is written to runs/approach_b/bxy_p24_v1/AUTHORIZATION_P24.json with approved = true, approved_by and the verbatim approval text, committed before `python3 bxy_p24_confirm.py generate`",
+ "limits": {
+  "aggregate_cpu_s": 90000,
+  "evaluation_reserve_cpu_s": 3000,
+  "per_root_cpu_s": 1400,
+  "slots": 440,
+  "torch_threads": 1,
+  "wall_s": 40000,
+  "workers": 4
+ },
+ "locks_sha256": {
+  "analysis": "cb3d67ee3a6ede104f6240353a902169a9192a2b2134bbfc07f354e63e9744df",
+  "frozen_models": "7324ff5377e106f85657d2aeb3a83882ccf2ef30b3ee673317e5d3f87b04197d",
+  "plan": "2f442bf516086a54420b76e4a42224560b898acc2c1cbdf0ea32aeb91cc2ee05",
+  "remote_custody": "9eeb354a41a923396d0b1c543d120cb1f3749597b79893499fb80fda64dbcea1"
+ },
+ "parent": {
+  "file": "runs/approach_b/bxy_p23_1_v1/AUTHORIZATION_P24_PROPOSED_P23_1.json",
+  "sha256": "4af35a9ce696851eed3b5e1f3d7b350a2b590219451d2b476efbf64822f15f97"
+ },
+ "per_query_teacher_budget": {
+  "goal_plans": 3,
+  "motion_checks": 150,
+  "online_moves": 8,
+  "transit_plans": 6
+ },
+ "projection_cpu_s": {
+  "median": 70321.74108666666,
+  "q10": 70321.74108666666,
+  "q90": 70321.74108666666
+ },
+ "proposed_approval_text": "I authorize BXY-P24: one-shot generation and labelling of the 440-slot bxyg34confirm cohort and one evaluation of the frozen D / E / DIRECT-GEO / G ensembles, with at most 90,000 aggregate CPU-s (including a 3,000 CPU-s evaluation reserve), 40,000 s wall, 4 single-thread workers and 1,400 CPU-s per root; the per-query teacher budget unchanged.",
+ "scope": "one-shot generation, design freeze, labelling and evaluation of the 440-slot bxyg34confirm cohort; nothing else",
+ "teacher_hash": "sha256:4930754123e6905619b5e34ae450c8e78599643460c03e6cd0ce11393ea0a4fe",
+ "version": "BXY_P24_AUTHORIZATION_V1"
+}
