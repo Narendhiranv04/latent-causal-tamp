@@ -1,0 +1,128 @@
+[
+ {
+  "evidence": "tests/test_bxy_p17.py::test_six_step_prefix_features_and_encoding",
+  "implementation": "bd_core.check_sequence; F1 LENGTH; phi_x / F2 accept 6 actions",
+  "methodology": "\u00a71.1 ordered relocations r = (a1..am), m <= 6, one target action",
+  "status": "IMPLEMENTED; labelled lengths <= 5 only (P16 \u00a71)"
+ },
+ {
+  "evidence": "tests/test_bxy_teacher.py",
+  "implementation": "bxy_teacher.x_query / replay_x continuity",
+  "methodology": "\u00a71.1 achieved state carried, no reset between relocations",
+  "status": "IMPLEMENTED + EVIDENCE"
+ },
+ {
+  "evidence": "tests/test_bxy_teacher.py",
+  "implementation": "bxy_teacher.y_query",
+  "methodology": "\u00a72.1 / \u00a72.2 Y from fixed q_ref in the hypothetical edited scene",
+  "status": "IMPLEMENTED + EVIDENCE"
+ },
+ {
+  "evidence": "P16 \u00a71: 20 connector-phase negatives",
+  "implementation": "bxy_teacher.x_query connector + replay",
+  "methodology": "\u00a72.2.1 X includes the terminal connector to q_ref",
+  "status": "IMPLEMENTED + EVIDENCE"
+ },
+ {
+  "evidence": "P16 \u00a71: 66 / 28 / 68 / 42 roots",
+  "implementation": "P-min + V2.1 data",
+  "methodology": "\u00a72.3 all four X/Y cells",
+  "status": "EVIDENCE"
+ },
+ {
+  "evidence": "tests/test_bxy_p11.py; test_bxy_p17.py",
+  "implementation": "bxy_v2 / bxy_p17_data._obs",
+  "methodology": "\u00a72.3 attempted failure = 0, unattempted = absent, censored = absent",
+  "status": "IMPLEMENTED"
+ },
+ {
+  "evidence": "tests/test_bxy_p11.py",
+  "implementation": "bxy_f1 (BXY_F1_V1)",
+  "methodology": "\u00a73.1 F1 analytic screen only",
+  "status": "IMPLEMENTED"
+ },
+ {
+  "evidence": "P17 P5 contrast",
+  "implementation": "abc7 ModelBC7 order='pred'; G control order-invariant",
+  "methodology": "\u00a73.1 F2 predecessor-aware prefix unary",
+  "status": "IMPLEMENTED; benefit: see P17"
+ },
+ {
+  "evidence": "P17 representation metrics",
+  "implementation": "ModelXY2 scene head + geoY",
+  "methodology": "\u00a73.1 F3 hypothetical-scene unary",
+  "status": "IMPLEMENTED"
+ },
+ {
+  "evidence": "P17 omission sign",
+  "implementation": "query design + evaluation omission metric",
+  "methodology": "\u00a73.1 F4 omissions via the same networks, no pair head",
+  "status": "IMPLEMENTED"
+ },
+ {
+  "evidence": "P17 P3 contrast",
+  "implementation": "bxy_core.ModelXY xy head; E control w = 0",
+  "methodology": "\u00a73.1 F5 one quadratic XY coupling",
+  "status": "IMPLEMENTED; benefit: see P17"
+ },
+ {
+  "evidence": "tests: marginal invariant to appended X; brute-force microcases",
+  "implementation": "bxy_core.log_evidence / marginals",
+  "methodology": "\u00a73.2 / \u00a74.2 root-consistent normalization, shared Y",
+  "status": "IMPLEMENTED"
+ },
+ {
+  "evidence": "tests/test_bxy_p11.py",
+  "implementation": "bxy_p11.log_evidence",
+  "methodology": "\u00a75.3 exact marginalization of unobserved queries",
+  "status": "IMPLEMENTED"
+ },
+ {
+  "evidence": "P16 / P17",
+  "implementation": "bxy_p11.cd_cells; bxy_p17_data travel",
+  "methodology": "\u00a76.1 m, C_d exact; J full witness incl. connector and target",
+  "status": "IMPLEMENTED"
+ },
+ {
+  "evidence": "logged separately in history.json",
+  "implementation": "bxy_p11 / bxy_p17.batch_loss",
+  "methodology": "\u00a76.2 L_B = L_joint + lambda_J L_J; no J for failures",
+  "status": "IMPLEMENTED (+ separately stated CON / SYM auxiliaries)"
+ },
+ {
+  "evidence": "P17 inner rules",
+  "implementation": "bxy_p11.choose; bxy_p17.choose_rule",
+  "methodology": "\u00a76.3 F1 first, marginalize, no-op rule, frozen eta / cost rule, abstention",
+  "status": "IMPLEMENTED"
+ },
+ {
+  "evidence": "hash guard",
+  "implementation": "new bxy_p16* / bxy_p17* / bxy_p18* modules",
+  "methodology": "\u00a78.1 minimal code boundaries; historical modules frozen",
+  "status": "IMPLEMENTED"
+ },
+ {
+  "evidence": "EVALUATION_P17.json",
+  "implementation": "P17 arms + references",
+  "methodology": "\u00a78.2 matched XY-uncoupled, XY-quadratic, DIRECT, analytic / shortest, no-op, verify-first",
+  "status": "IMPLEMENTED"
+ },
+ {
+  "evidence": "0124",
+  "implementation": "P17 P3",
+  "methodology": "\u00a78.2 acceptance 6: coupling must beat uncoupled before attributing value",
+  "status": "TESTED (see verdict)"
+ },
+ {
+  "evidence": "CONFIRM_PLAN_V21.json",
+  "implementation": "confirmatory plan (not generated)",
+  "methodology": "\u00a78.2 acceptance 8: independent end-to-end evaluation",
+  "status": "PLANNED ONLY"
+ },
+ {
+  "evidence": "-",
+  "implementation": "reports 0123-0125",
+  "methodology": "\u00a79 no causal claim from w; budget-relative zeros; catalogue recall separate",
+  "status": "HONOURED"
+ }
+]

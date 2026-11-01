@@ -1,0 +1,45 @@
+{
+ "basis": "P16 development realization rates of BXY_GEN_V21B (waves wB, wC); no model output was used",
+ "construction_cpu_s_estimate": 25500.0,
+ "custody": "generated only after FROZEN_MODELS.json and CONFIRM_ANALYSIS.json are committed; disjoint from BD_GEN_V1, the 34 exposed test roots, bxyg2pilot, bxyg2confirm (P15 plan, superseded, never generated) and bxyg21dev",
+ "expected": {
+  "K_ge2": 40.628205128205124,
+  "feasible": 40.49999999999999,
+  "harmful_roots": 40.5,
+  "infeasible": 185.5128205128205,
+  "repairable": 84.12820512820514,
+  "roots": 226.0128205128205,
+  "teacher_cpu": 24320.38846153846
+ },
+ "generator": "BXY_GEN_V21B (bxy_p16 construct / validate, REV['wB'])",
+ "mix": {
+  "goal_occupant|1": 0.06,
+  "mixed|2": 0.22,
+  "mixed|3": 0.06,
+  "near_closed|0": 0.3,
+  "nested|2": 0.14,
+  "nested|3": 0.06,
+  "pick|2": 0.1,
+  "place|1": 0.06
+ },
+ "namespace": "bxyg21confirm",
+ "precision": {
+  "K_ge2_half_width_95_worst_case": 0.15374898501923906,
+  "paired_half_width_95_worst_case": 0.10684526093188484,
+  "primary_population": "initially infeasible roots WITH a verified repair (availability reported separately)"
+ },
+ "rules": {
+  "budget_failures": "certified vs fixed-budget negatives reported per stratum; no impossibility claim from budget failures",
+  "censored": "administrative kills are CENSORED (absent), never 0; attempted budget failures are operational 0",
+  "clustering": "each root is its own family; paired family bootstrap B = 10000",
+  "rejects": "a rejected slot is NOT replaced by a different spec; every construction attempt and validation reject is recorded",
+  "shortfall": "if realized repairable < 60 or K>=2 < 24 the confirmatory analysis is still run once on what exists and labelled UNDERPOWERED; no additional wave may be generated after any test-model look",
+  "stops": "fixed slot count; one collection; one evaluation; no interim look at labels or model outputs"
+ },
+ "slots": 300,
+ "supersedes": {
+  "runs/approach_b/bxy_p15_v1/CONFIRM_PLAN.json": "30fac794e4169dff164f40d87caf103f73d7d82159ec9706c469bfc9c0374f6b"
+ },
+ "teacher_cpu_s_estimate": 24320.38846153846,
+ "version": "BXY_P18_CONFIRM_PLAN_V21_V1"
+}
