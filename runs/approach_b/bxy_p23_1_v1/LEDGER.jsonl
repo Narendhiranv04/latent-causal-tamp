@@ -1,1 +1,4 @@
 {"cpu_s":45.0,"event":"charge","n":0,"note":"folder probe, custody module + gate + tests (9 tests, 8 s), staging x2; conservative","phase":"p23_1_prep","prev":null,"t":1793563421.14738,"wall_s":60.0}
+{"cpu_s":2.7,"event":"charge","n":1,"note":"rclone copy --checksum --immutable to Drive (127 objects, 266,963,085 bytes)","phase":"p23_1_upload","prev":"b0c68aee68f03d68cd064babc2c40ac01ed170ae81f983924ab10cdd3299752d","t":1793564996.0319614,"wall_s":1147.8}
+{"cpu_s":6.62,"event":"charge","n":2,"note":"Drive download + sha256 + 60-member load + predictions","phase":"p23_1_readback","prev":"5ec9e3d3beb62fba217ecc0504ca41964bdb54a9208a3ff1bd1b5b2e2a44e321","t":1793565178.681976,"wall_s":191.845}
+{"cpu_s":1019.09,"event":"charge","n":3,"note":"six replays + full pytest + hash guard (single-thread)","phase":"regression","prev":"b58689ca1de15f66b9cc2e36a829bf6681e76a8599d7ad123fa98d4f01abf5ff","t":1793566231.441524,"wall_s":1028.254}

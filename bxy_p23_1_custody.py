@@ -41,7 +41,7 @@ def git(*a) -> str:
 
 
 def rclone(*a, check=True) -> str:
-    exe = shutil.which("rclone") or str(Path.home() / ".local/bin/rclone")
+    exe = shutil.which("rclone") or next((x for x in (str(Path.home() / ".local/bin/rclone"), "/run/host/usr/bin/rclone") if Path(x).exists()), "rclone")   # host install seen from the flatpak sandbox
     if not Path(exe).exists():
         raise RuntimeError("RCLONE_NOT_INSTALLED")
     r = sp.run([exe, *a], capture_output=True, text=True)

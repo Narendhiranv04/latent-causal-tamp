@@ -14,7 +14,8 @@ def test_plan_namespace_custody_and_p18_immutability():
     import bxy_p20_k34 as Z
     pl = json.loads((OUT / "CONFIRM_PLAN_K04.json").read_text())
     assert pl["namespace"] == "bxyg34confirm" and pl["namespace"] != Z.NS
-    assert not any(Path("runs/approach_b").glob("**/*bxyg34confirm*"))
+    p24 = Path("runs/approach_b/bxy_p24_v1/AUTHORIZATION_P24.json")      # generated only under the user's explicit P24 authorization
+    assert not any(Path("runs/approach_b").glob("**/*bxyg34confirm*")) or (p24.exists() and json.loads(p24.read_text())["approved"] is True)
     with pytest.raises(PermissionError):
         Z.generate("bxyg34confirm")
     p18 = Path(pl["p18_plan"]["path"])

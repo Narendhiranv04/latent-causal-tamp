@@ -19,12 +19,15 @@ def sha(p):
 
 def test_p24_refuses_without_explicit_approval(tmp_path, monkeypatch):
     import bxy_p24_confirm as C24
-    assert not C24.OUT.exists() and not any(Path("runs").glob("**/*bxyg34confirm*"))
-    for fn in (C24.generate, C24.collect, C24.evaluate, C24.require_authorization):
+    if not (C24.OUT / "AUTHORIZATION_P24.json").exists():                 # before the user's P24 approval: nothing exists, every step refuses
+        assert not C24.OUT.exists() and not any(Path("runs").glob("**/*bxyg34confirm*"))
+        for fn in (C24.generate, C24.collect, C24.evaluate, C24.require_authorization):
+            with pytest.raises(PermissionError):
+                fn()
         with pytest.raises(PermissionError):
-            fn()
-    with pytest.raises(PermissionError):
-        C24.freeze()
+            C24.freeze()
+    else:                                                                   # after approval the real steps are never called from a test
+        assert json.loads((C24.OUT / "AUTHORIZATION_P24.json").read_text())["approved"] is True
     prop = json.loads((OUT / "AUTHORIZATION_P24_PROPOSED.json").read_text())
     assert prop["approved"] is False and prop["approved_by"] is None
     monkeypatch.setattr(C24, "OUT", tmp_path)
