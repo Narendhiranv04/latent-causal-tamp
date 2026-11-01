@@ -1,0 +1,16 @@
+{
+ "blockers": [
+  "the supplied Drive folder is link-viewable by anyone (anonymous HTTP GET returned the folder page 'rss-weights'): the handoff requires a warning and the user's decision before upload",
+  "no authenticated Google Drive client on this machine (no rclone / gcloud / Google API libraries / stored credentials); installing rclone from downloads.rclone.org was refused by the session's permission policy",
+  "Drive write access needs the user's one-time browser OAuth consent"
+ ],
+ "date": "2026-11-02",
+ "not_done": "no upload, no readback, no authorization, no P24 scene",
+ "prepared": [
+  "bxy_p23_1_custody.py (stage / upload / readback / verify_evidence / lock)",
+  "P24 gate: bxy_p24_confirm.require_authorization requires verified remote custody",
+  "MANIFEST_P23_1.json built before upload (60 checkpoints + RESULT.json + manifests, 266,933,672 bytes)"
+ ],
+ "status": "BLOCKED_REMOTE_AUTH",
+ "version": "BXY_P23_1_STATUS_V1"
+}

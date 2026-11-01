@@ -30,7 +30,9 @@ import bxy_p23_engine as EN
 OUT = Path("runs/approach_b/bxy_p24_v1")
 P23 = Path("runs/approach_b/bxy_p23_v1")
 NS, WAVE, GEN = "bxyg34confirm", "c34", "BXY_GEN_K34C"
-LOCKS = ("CONFIRM_PLAN_P23_LOCK.json", "CONFIRM_ANALYSIS_P23_LOCK.json", "FROZEN_MODELS_P23_APPEND.json")
+P231 = Path("runs/approach_b/bxy_p23_1_v1")
+LOCKS = {"plan": P23 / "CONFIRM_PLAN_P23_LOCK.json", "analysis": P231 / "CONFIRM_ANALYSIS_P23_1_LOCK.json", "frozen_models": P23 / "FROZEN_MODELS_P23_APPEND.json",
+         "remote_custody": P231 / "REMOTE_CUSTODY_P23_1.json"}         # P23.1: the analysis lock successor and the verified remote custody
 ARMS = ("D:XYQ-GEO-SYM", "E:XY-UNC-SA-GEO-SYM", "A:DIRECT-GEO", "G:XYQ-GEO-SYM-ORDINV")
 
 
@@ -46,7 +48,7 @@ def code_tree() -> dict:
 
 
 def locks_now() -> dict:
-    return {n: sha_file(P23 / n) for n in LOCKS}
+    return {n: sha_file(f) if f.exists() else None for n, f in LOCKS.items()}
 
 
 def require_authorization() -> dict:
@@ -60,6 +62,8 @@ def require_authorization() -> dict:
         raise PermissionError("P24 authorization lacks the user's explicit approval")
     if a["locks_sha256"] != locks_now() or a["code_tree"]["sha256"] != code_tree()["sha256"] or a["teacher_hash"] != T.teacher_hash():
         raise PermissionError("P24 authorization drift: locks, code tree or teacher changed after approval")
+    import bxy_p23_1_custody as RC
+    RC.verify_evidence(LOCKS["remote_custody"], frozen_models())              # P23.1: no generation without verified remote custody
     return a
 
 
