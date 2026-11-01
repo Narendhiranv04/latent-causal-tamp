@@ -771,5 +771,67 @@
     0
    ]
   }
+ },
+ "three_questions": {
+  "questions": [
+   "Q1 why is the target manipulation blocked?",
+   "Q2 which discs must move, where, in what order?",
+   "Q3 does the edited scene make the placement feasible?"
+  ],
+  "panels": {
+   "Q1_why_blocked": {
+    "svg": "svg/Q1_why_blocked.svg",
+    "layers": [
+     "lattice",
+     "goal",
+     "discs-context",
+     "blockers-initial",
+     "blocked-modes",
+     "blocked-contacts",
+     "target",
+     "robot-home"
+    ]
+   },
+   "Q2_what_to_change": {
+    "svg": "svg/Q2_what_to_change.svg",
+    "layers": [
+     "lattice",
+     "goal",
+     "discs-context",
+     "destinations-filled",
+     "blockers-highlight",
+     "target",
+     "robot-home",
+     "transit-chain",
+     "relocation-arrows"
+    ]
+   },
+   "Q3_feasible_execution": {
+    "svg": "svg/Q3_feasible_execution.svg",
+    "layers": [
+     "lattice",
+     "goal",
+     "discs-context",
+     "blockers-parked-muted",
+     "target-origin",
+     "execution-strobe",
+     "transfer-path-short",
+     "robot-executing",
+     "target-placed"
+    ]
+   }
+  },
+  "crop_viewBox_px": [
+   0,
+   100,
+   1280,
+   820
+  ],
+  "crop_note": "same coordinates as the shared viewBox, only the window is cropped",
+  "composites": {
+   "column": "svg/Q123_triptych_column.svg",
+   "row": "svg/Q123_triptych_row.svg"
+  },
+  "gap_px": 72
  }
 }

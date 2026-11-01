@@ -162,7 +162,9 @@ def lattice():
     lines += [path([np.array([0, i * H]), np.array([8 * H, i * H])]) for i in range(9)]
     inner = group("lattice-lines", "".join(lines), stroke=SLATE, stroke_width="0.9", stroke_opacity="0.13", fill="none")
     dots = "".join(circle(xy((r, c)), 0.0016, fill=SLATE, fill_opacity="0.16") for r in range(8) for c in range(8))
-    return group("lattice", inner + group("lattice-centres", dots))
+    (x0, y0), (x1, y1) = P(np.array([0, 8 * H])), P(np.array([8 * H, 0]))
+    frame = f'<rect x="{f(x0)}" y="{f(y0)}" width="{f(x1 - x0)}" height="{f(y1 - y0)}" stroke="{SLATE}" stroke-opacity="0.3" stroke-width="1.2"/>'
+    return group("lattice", inner + frame + group("lattice-centres", dots))
 
 
 def disc(cell, gid, kind):
@@ -376,6 +378,8 @@ def build_layers(an):
     stops = [tcp_home] + [p for k in ORDER for p in (xy(BLOCK[k]), xy(PARK[k]))] + [tcp_home]
     arrows = [(xy(BLOCK[k]), xy(PARK[k])) for k in ORDER]
     home_body = [(p0, p1) for p0, p1, _ in body(Q_HOME, GR["open_gap_m"])[0]]
+    corners = [np.array(c) * 8 * H for c in ((0, 0), (1, 0), (1, 1), (0, 1))]
+    home_body += [(corners[i], corners[(i + 1) % 4]) for i in range(4)]       # keep transits off the board edge too
     chain, drawn = "", []
     for j in range(5):
         a, b = stops[2 * j], stops[2 * j + 1]
@@ -448,6 +452,39 @@ PANELS = {
 }
 
 
+# Three-question sequence: why is it blocked? / what must change, where, in what order? / is it now feasible?
+TRIPTYCH = {
+    "Q1_why_blocked": ["lattice", "goal", "discs-context", "blockers-initial", "blocked-modes", "blocked-contacts", "target", "robot-home"],
+    "Q2_what_to_change": ["lattice", "goal", "discs-context", "destinations-filled", "blockers-highlight", "target", "robot-home",
+                          "transit-chain", "relocation-arrows"],
+    "Q3_feasible_execution": ["lattice", "goal", "discs-context", "blockers-parked-muted", "target-origin", "execution-strobe",
+                              "transfer-path-short", "robot-executing", "target-placed"],
+}
+CROP = (0, 100, 1280, 820)                                                    # svg px window shared by the three panels (same coordinates)
+GAP = 72
+
+
+def chevron_mark(cx, cy, down):
+    a = [(cx - 16, cy - 9), (cx, cy + 9), (cx + 16, cy - 9)] if down else [(cx - 9, cy - 16), (cx + 9, cy), (cx - 9, cy + 16)]
+    d = " ".join(("M" if i == 0 else "L") + f"{x:g},{y:g}" for i, (x, y) in enumerate(a))
+    return f'<path d="{d}" stroke="{SLATE}" stroke-opacity="0.7" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>'
+
+
+def triptych(L, down):
+    """Three cropped panels in one SVG, stacked (down=True) or in a row, joined by small chevrons."""
+    x0, y0, w, h = CROP
+    lx, ly = P(np.array([4 * H, 4 * H]))                                      # lattice centre, for chevron alignment
+    out = ""
+    for i, (name, keys) in enumerate(TRIPTYCH.items()):
+        ox, oy = (0, i * (h + GAP)) if down else (i * (w + GAP), 0)
+        out += (f'<svg id="{name}" x="{ox}" y="{oy}" width="{w}" height="{h}" viewBox="{x0} {y0} {w} {h}" overflow="hidden">'
+                + "".join(L[k] for k in keys) + "</svg>")
+        if i < 2:
+            out += chevron_mark(lx - x0, oy + h + GAP / 2, True) if down else chevron_mark(ox + w + GAP / 2, ly - y0, False)
+    W, Hh = (w, 3 * h + 2 * GAP) if down else (3 * w + 2 * GAP, h)
+    return out, f"0 0 {W} {Hh}", W, Hh
+
+
 def svg(inner, vb=VIEWBOX, w=None, h=None, bg=False):
     W, Hh = (w, h) if w else (VW, VH)
     back = f'<rect width="100%" height="100%" fill="{PAPER}"/>' if bg else ""
@@ -479,11 +516,18 @@ def main():
         files[f"svg/{name}.svg"] = svg("".join(L[k] for k in keys))
     inner, vb, pw = preview(L)
     files["svg/07_preview_blocked_repaired.svg"] = svg(inner, vb=vb, w=pw // 4, h=VH // 4)
+    crop_vb = " ".join(map(str, CROP))
+    for name, keys in TRIPTYCH.items():
+        files[f"svg/{name}.svg"] = svg("".join(L[k] for k in keys), vb=crop_vb, w=CROP[2], h=CROP[3])
+    for tag, down in (("column", True), ("row", False)):
+        t_inner, t_vb, tw, th = triptych(L, down)
+        files[f"svg/Q123_triptych_{tag}.svg"] = svg(t_inner, vb=t_vb, w=tw, h=th)
+        (HERE / "previews" / f"Q123_triptych_{tag}_on_paper.svg").write_text(svg(t_inner, vb=t_vb, w=tw, h=th, bg=True))
     for rel, txt in files.items():
         assert "<text" not in txt and "<title" not in txt and "<desc" not in txt and "font" not in txt, rel
         (HERE / rel).write_text(txt)
         png = HERE / rel.replace("svg/", "png/", 1).replace(".svg", ".png")
-        width = 2 * (pw if "07_" in rel else VW) if "07_" not in rel else pw
+        width = pw if "07_" in rel else 2 * (int(txt.split('width="')[1].split('"')[0]) if "Q" in rel else VW)
         subprocess.run(["rsvg-convert", "-w", str(width), "-o", str(png), str(HERE / rel)], check=True)
     # inspection sheets on paper (not assets)
     for name, keys in PANELS.items():
@@ -526,6 +570,11 @@ def manifest(an, L):
         "panels": {k: {"svg": f"svg/{k}.svg", "png": f"png/{k}.png", "layers": v} for k, v in PANELS.items()}
                   | {"07_preview_blocked_repaired": {"svg": "svg/07_preview_blocked_repaired.svg", "png": "png/07_preview_blocked_repaired.png",
                                                     "viewBox": f"0 0 {2 * VW + 120} {VH}", "right_half_translate_px": [VW + 120, 0]}},
+        "three_questions": {"questions": ["Q1 why is the target manipulation blocked?", "Q2 which discs must move, where, in what order?",
+                                          "Q3 does the edited scene make the placement feasible?"],
+                            "panels": {k: {"svg": f"svg/{k}.svg", "layers": v} for k, v in TRIPTYCH.items()},
+                            "crop_viewBox_px": list(CROP), "crop_note": "same coordinates as the shared viewBox, only the window is cropped",
+                            "composites": {"column": "svg/Q123_triptych_column.svg", "row": "svg/Q123_triptych_row.svg"}, "gap_px": GAP},
     }
     (HERE / "manifest.json").write_text(json.dumps(m, indent=1, default=lambda o: o.tolist() if hasattr(o, "tolist") else str(o)) + "\n")
     print(json.dumps(m["schematic_checks"], indent=1, default=str))
