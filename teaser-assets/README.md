@@ -2,21 +2,12 @@
 
 `python teaser-assets/build.py` regenerates everything here. Geometry (lattice pitch, disc radius, robot base, link lengths and widths, gripper, home q) is read from `config.toml`. This is a **conceptual** K4 example. It is not a verified dataset witness.
 
-- **Three-question sequence** (the main teaser asset):
-  - `svg/Q1_why_blocked.svg`: why the manipulation fails. Every declared grasp and placement approach runs into a disc (clay contact arcs).
-  - `svg/Q2_what_to_change.svg`: which four discs move, where they go, and in what order (the transit loop from home and back home).
-  - `svg/Q3_feasible_execution.svg`: the edited scene; the full robot carries the target to the goal.
-  - `svg/Q123_triptych_column.svg` / `svg/Q123_triptych_row.svg`: the three panels stacked or in a row, joined by chevrons. The panels use the shared coordinates, cropped to `viewBox="0 100 1280 820"`.
-  - `archive/v1_right_column/`: the earlier 02/04/06 right column, kept exactly as it was in the old contact sheet.
-- `svg/A_blocked_and_displacement_plan.svg`: **diagram A**. The target and goal are blocked: soft dashed approach rays and contact arcs, four highlighted blockers, relocation arrows to faint destination slots, and the transit loop that starts and ends at home.
-- `svg/B_target_placement_execution.svg`: **diagram B**. The repaired scene with the full robot executing the placement: three fine-line stroboscopic poses carrying the target, the transfer arrow, the final pose solid, and the target placed in the goal ring.
+- `svg/right_column_abc.svg` (+ `png/`, `previews/right_column_abc_on_paper.png`): **the main asset**, a stacked (a) blocked access / (b) relocations / (c) feasible transfer, cropped from the base plate to the board edge. In (a) and (b) the robot reaches toward the target (elbow up, as in (c)) and halts about 2 cm short of the disc west of the target; no link lies left of the base.
 - `svg/0N_*.svg`: panels 01–06 (and 04b with the transit chain). They are transparent and share `viewBox="0 0 1360 920"`.
 - `svg/07_preview_blocked_repaired.svg`: blocked | repaired side by side. The right half is the same frame shifted by +1480 px.
 - `svg/layers/*.svg`: every element group as its own transparent file, all in the same viewBox, ready for stacking in HTML.
 - `png/`: 2× transparent exports of the above.
 - `previews/*_on_paper.*`: inspection renders on `#F7F5F0`. These are not assets.
 - `manifest.json`: viewBox, world→px map, palette, every cell (world m and svg px), relocation order, robot poses, and the schematic overlap checks.
-
-The robot's drawn home pose is the `config.toml` home with joint 1 rotated by +90°, so the folded arm lies horizontally and faces right. This is an illustrative choice, recorded in the manifest.
 
 Element ids (`b1`…`b4`, `dest-b*`, `move-b*`, `contact-b*`, `target`, `goal`, `robot-*`) are stable, so CSS and JS can address them during composition.

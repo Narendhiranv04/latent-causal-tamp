@@ -60,32 +60,7 @@
    0.34,
    0.2
   ],
-  "home_figure_reference": {
-   "q_rad": [
-    3.14159,
-    1.5708,
-    1.5708
-   ],
-   "joints_svg_px": [
-    [
-     460.0,
-     520.0
-    ],
-    [
-     40.0,
-     520.0
-    ],
-    [
-     40.0,
-     860.0
-    ],
-    [
-     240.0,
-     860.0
-    ]
-   ]
-  },
-  "home_config_toml": {
+  "home": {
    "q_rad": [
     1.5708,
     1.5708,
@@ -110,12 +85,6 @@
     ]
    ]
   },
-  "home_note": "figure reference = config q_home with joint 1 rotated +90 deg so the folded arm faces right (illustrative choice)",
-  "execution_strobe_fractions": [
-   0.0,
-   0.3333333333333333,
-   0.6666666666666666
-  ],
   "grasp_at_target": {
    "q_rad": [
     1.13017,
@@ -610,6 +579,7 @@
   "goal": "svg/layers/goal.svg",
   "target": "svg/layers/target.svg",
   "robot-home": "svg/layers/robot-home.svg",
+  "robot-approach": "svg/layers/robot-approach.svg",
   "discs-context": "svg/layers/discs-context.svg",
   "blockers-initial": "svg/layers/blockers-initial.svg",
   "blockers-highlight": "svg/layers/blockers-highlight.svg",
@@ -624,15 +594,7 @@
   "target-at-goal": "svg/layers/target-at-goal.svg",
   "robot-grasp": "svg/layers/robot-grasp.svg",
   "robot-place": "svg/layers/robot-place.svg",
-  "tool-at-goal": "svg/layers/tool-at-goal.svg",
-  "blocked-rays": "svg/layers/blocked-rays.svg",
-  "destinations-filled": "svg/layers/destinations-filled.svg",
-  "execution-strobe": "svg/layers/execution-strobe.svg",
-  "target-origin": "svg/layers/target-origin.svg",
-  "blockers-parked-muted": "svg/layers/blockers-parked-muted.svg",
-  "robot-executing": "svg/layers/robot-executing.svg",
-  "transfer-path-short": "svg/layers/transfer-path-short.svg",
-  "target-placed": "svg/layers/target-placed.svg"
+  "tool-at-goal": "svg/layers/tool-at-goal.svg"
  },
  "panels": {
   "01_initial_scene": {
@@ -656,7 +618,7 @@
     "discs-context",
     "blockers-initial",
     "target",
-    "robot-home",
+    "robot-approach",
     "blocked-modes",
     "blocked-contacts"
    ]
@@ -683,7 +645,7 @@
     "blockers-highlight",
     "destinations",
     "target",
-    "robot-home",
+    "robot-approach",
     "relocation-arrows"
    ]
   },
@@ -724,42 +686,10 @@
     "discs-context",
     "blockers-parked",
     "target-at-goal",
-    "tool-at-goal",
+    "robot-place",
     "transfer-path",
     "target",
     "robot-grasp"
-   ]
-  },
-  "A_blocked_and_displacement_plan": {
-   "svg": "svg/A_blocked_and_displacement_plan.svg",
-   "png": "png/A_blocked_and_displacement_plan.png",
-   "layers": [
-    "lattice",
-    "goal",
-    "discs-context",
-    "destinations-filled",
-    "blocked-rays",
-    "blockers-highlight",
-    "blocked-contacts",
-    "target",
-    "robot-home",
-    "transit-chain",
-    "relocation-arrows"
-   ]
-  },
-  "B_target_placement_execution": {
-   "svg": "svg/B_target_placement_execution.svg",
-   "png": "png/B_target_placement_execution.png",
-   "layers": [
-    "lattice",
-    "goal",
-    "discs-context",
-    "blockers-parked-muted",
-    "target-origin",
-    "execution-strobe",
-    "transfer-path-short",
-    "robot-executing",
-    "target-placed"
    ]
   },
   "07_preview_blocked_repaired": {
@@ -770,68 +700,58 @@
     1480,
     0
    ]
+  },
+  "right_column_abc": {
+   "svg": "svg/right_column_abc.svg",
+   "png": "png/right_column_abc.png",
+   "panels": [
+    "02_blocked_access",
+    "04_relocation_arrows",
+    "06_feasible_transfer"
+   ],
+   "crop_viewBox_px": [
+    400,
+    60,
+    900,
+    820
+   ],
+   "gap_px": 40
   }
  },
- "three_questions": {
-  "questions": [
-   "Q1 why is the target manipulation blocked?",
-   "Q2 which discs must move, where, in what order?",
-   "Q3 does the edited scene make the placement feasible?"
-  ],
-  "panels": {
-   "Q1_why_blocked": {
-    "svg": "svg/Q1_why_blocked.svg",
-    "layers": [
-     "lattice",
-     "goal",
-     "discs-context",
-     "blockers-initial",
-     "blocked-modes",
-     "blocked-contacts",
-     "target",
-     "robot-home"
-    ]
-   },
-   "Q2_what_to_change": {
-    "svg": "svg/Q2_what_to_change.svg",
-    "layers": [
-     "lattice",
-     "goal",
-     "discs-context",
-     "destinations-filled",
-     "blockers-highlight",
-     "target",
-     "robot-home",
-     "transit-chain",
-     "relocation-arrows"
-    ]
-   },
-   "Q3_feasible_execution": {
-    "svg": "svg/Q3_feasible_execution.svg",
-    "layers": [
-     "lattice",
-     "goal",
-     "discs-context",
-     "blockers-parked-muted",
-     "target-origin",
-     "execution-strobe",
-     "transfer-path-short",
-     "robot-executing",
-     "target-placed"
-    ]
-   }
+ "approach_pose_ab": {
+  "params": {
+   "heading_deg": -5,
+   "back_m": 0.145,
+   "elbow": -1
   },
-  "crop_viewBox_px": [
-   0,
-   100,
-   1280,
-   820
-  ],
-  "crop_note": "same coordinates as the shared viewBox, only the window is cropped",
-  "composites": {
-   "column": "svg/Q123_triptych_column.svg",
-   "row": "svg/Q123_triptych_row.svg"
+  "pose": {
+   "q_rad": [
+    1.34149,
+    -3.06295,
+    1.6342
+   ],
+   "joints_svg_px": [
+    [
+     460.0,
+     520.0
+    ],
+    [
+     555.47,
+     110.99
+    ],
+    [
+     504.43,
+     447.14
+    ],
+    [
+     703.67,
+     464.57
+    ]
+   ]
   },
-  "gap_px": 72
+  "overlaps": [],
+  "min_x_m": -0.14,
+  "fingertip_gap_to_b3_m": 0.0238,
+  "note": "(a)/(b) robot reaches toward the target and halts short of b3; no link left of the base"
  }
 }

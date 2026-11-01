@@ -20,8 +20,7 @@ CFG = tomllib.loads((HERE.parent / "config.toml").read_text())
 SU, ARM, GR = CFG["suite"], CFG["arm2d"], CFG["gripper2d"]
 H, R = SU["pitch_m"], SU["obstacle_radius_m"]
 BASE, LL, LW = np.array(ARM["base_xy_m"]), ARM["link_lengths_m"], ARM["link_full_widths_m"]
-Q_CFG_HOME = ARM["q_home_rad"]
-Q_HOME = [math.pi, math.pi / 2, math.pi / 2]                                  # figure reference pose: config home rotated +90 deg about the base (faces right)
+Q_HOME = ARM["q_home_rad"]
 GC = GR["grasp_center_x_m"]
 
 PAPER, SLATE, CLAY = "#F7F5F0", "#263840", "#B56852"
@@ -162,9 +161,7 @@ def lattice():
     lines += [path([np.array([0, i * H]), np.array([8 * H, i * H])]) for i in range(9)]
     inner = group("lattice-lines", "".join(lines), stroke=SLATE, stroke_width="0.9", stroke_opacity="0.13", fill="none")
     dots = "".join(circle(xy((r, c)), 0.0016, fill=SLATE, fill_opacity="0.16") for r in range(8) for c in range(8))
-    (x0, y0), (x1, y1) = P(np.array([0, 8 * H])), P(np.array([8 * H, 0]))
-    frame = f'<rect x="{f(x0)}" y="{f(y0)}" width="{f(x1 - x0)}" height="{f(y1 - y0)}" stroke="{SLATE}" stroke-opacity="0.3" stroke-width="1.2"/>'
-    return group("lattice", inner + frame + group("lattice-centres", dots))
+    return group("lattice", inner + group("lattice-centres", dots))
 
 
 def disc(cell, gid, kind):
@@ -199,22 +196,12 @@ def robot(q, gid, gap=None, opacity=1.0, links=True):
     base = ""
     if links:
         b = BASE
-        base = (rect(b, 0, 0.052, 0.052, fill=PAPER, stroke=SLATE, stroke_width="1.4") +
+        base = (path([b + np.array([-0.034, -0.026]), b + np.array([0.034, -0.026])], stroke=SLATE, stroke_width="1.6") +
                 circle(b, ARM["base_radius_m"], fill=SLATE) + circle(b, 0.0055, fill=PAPER))
     return group(gid, base + seg + grip + joints, opacity=f"{opacity:g}")
 
 
-def robot_outline(q, gid, opacity, gap):
-    """Fine-line pose ghost: link centrelines, joint rings and gripper outline (for stroboscopic execution traces)."""
-    pts, a = fk(q)
-    st = dict(stroke=SLATE, stroke_width="1.2", stroke_linecap="round", stroke_linejoin="round", fill="none")
-    out = path(pts, **st)
-    out += "".join(rect(c, h, ln, wd, fill=PAPER, stroke=SLATE, stroke_width="1") for c, h, ln, wd in gripper_rects(pts[3], a, gap))
-    out += "".join(circle(pts[i], 0.0055, fill=PAPER, stroke=SLATE, stroke_width="1.1") for i in (1, 2))
-    return group(gid, out, opacity=f"{opacity:g}")
-
-
-def ghost_tool(q, gid, opacity=0.85, u_mark=True):
+def ghost_tool(q, gid):
     """Distal link (dashed) + an open-gripper U only: a restrained 'attempted mode' mark."""
     pts, a = fk(q)
     u, n = np.array([math.cos(a), math.sin(a)]), np.array([-math.sin(a), math.cos(a)])
@@ -223,9 +210,8 @@ def ghost_tool(q, gid, opacity=0.85, u_mark=True):
     u_shape = [tcp + fl * u + off * n, tcp + off * n, tcp - off * n, tcp + fl * u - off * n]
     out = path([pts[2], tcp - GR["palm_length_m"] * u], stroke=CLAY, stroke_width="1.2", stroke_dasharray="4 3.5", stroke_linecap="round")
     out += path([tcp - GR["palm_length_m"] * u, tcp], stroke=CLAY, stroke_width="1.6", stroke_linecap="round")
-    if u_mark:
-        out += path(u_shape, stroke=CLAY, stroke_width="1.6", stroke_linecap="round", stroke_linejoin="round", fill="none")
-    return group(gid, out, opacity=f"{opacity:g}")
+    out += path(u_shape, stroke=CLAY, stroke_width="1.6", stroke_linecap="round", stroke_linejoin="round", fill="none")
+    return group(gid, out, opacity="0.85")
 
 
 def distal_hits(q, discs, gap):
@@ -322,6 +308,15 @@ def interp_clear(qa, qb, discs, n=120):
     return bad
 
 
+APPROACH = dict(heading_deg=-5, back_m=0.145, elbow=-1)                      # (a)/(b) robot: reaching for the target, stopped short of b3
+
+
+def approach_pose():
+    """Elbow-up reach toward the target along its row, halted with the open gripper just short of the west blocker."""
+    a = math.radians(APPROACH["heading_deg"])
+    return ik(xy(TARGET) - APPROACH["back_m"] * np.array([math.cos(a), math.sin(a)]), a, APPROACH["elbow"])
+
+
 def analyse():
     init, done = scene_discs(set()), scene_discs(set(ORDER))
     tgt, gl = xy(TARGET), xy(GOAL)
@@ -349,8 +344,14 @@ def analyse():
     qp, hp, _ = best_ik(gl, 0.0, done, GR["closed_gap_m"], carried=True, elbows=(ELBOW,))
     sweep = interp_clear(qg, qp, done)
     home_hits = hits(Q_HOME, {**init, "target": tgt}, GR["open_gap_m"])
+    qa = approach_pose()
+    pa, aa = fk(qa)
+    tip = pa[3] + GR["finger_length_m"] * np.array([math.cos(aa), math.sin(aa)])
+    approach = dict(q=qa, overlaps=sorted(hits(qa, {**init, "target": tgt}, GR["open_gap_m"])),
+                    min_x_m=round(min(p[0] for p in pa), 4), fingertip_gap_to_b3_m=round(float(np.linalg.norm(tip - xy(BLOCK["b3"])) - R), 4))
+    assert not approach["overlaps"] and approach["min_x_m"] >= BASE[0], approach
     return dict(blocked=blocked, steps=steps, q_grasp=qg, q_place=qp, grasp_hits=sorted(hg), place_hits=sorted(hp),
-                transfer_sweep_hits=sorted(sweep), home_hits=sorted(home_hits))
+                transfer_sweep_hits=sorted(sweep), home_hits=sorted(home_hits), approach=approach)
 
 
 # ---- composition -----------------------------------------------------------------------------------------------------------------
@@ -360,6 +361,7 @@ def build_layers(an):
     L["goal"] = goal()
     L["target"] = target()
     L["robot-home"] = robot(Q_HOME, "robot-home")
+    L["robot-approach"] = robot(an["approach"]["q"], "robot-approach")
     L["discs-context"] = group("discs-context", "".join(disc(c, f"c{i}", "context") for i, c in enumerate(CONTEXT)))
     L["blockers-initial"] = group("blockers-initial", "".join(disc(BLOCK[k], k, "context") for k in ORDER))
     L["blockers-highlight"] = group("blockers-highlight", "".join(disc(BLOCK[k], f"{k}-hl", "highlight") for k in ORDER))
@@ -378,8 +380,6 @@ def build_layers(an):
     stops = [tcp_home] + [p for k in ORDER for p in (xy(BLOCK[k]), xy(PARK[k]))] + [tcp_home]
     arrows = [(xy(BLOCK[k]), xy(PARK[k])) for k in ORDER]
     home_body = [(p0, p1) for p0, p1, _ in body(Q_HOME, GR["open_gap_m"])[0]]
-    corners = [np.array(c) * 8 * H for c in ((0, 0), (1, 0), (1, 1), (0, 1))]
-    home_body += [(corners[i], corners[(i + 1) % 4]) for i in range(4)]       # keep transits off the board edge too
     chain, drawn = "", []
     for j in range(5):
         a, b = stops[2 * j], stops[2 * j + 1]
@@ -404,85 +404,21 @@ def build_layers(an):
     L["robot-grasp"] = robot(qg, "robot-grasp", gap=GR["closed_gap_m"])
     L["robot-place"] = robot(qp, "robot-place", gap=GR["closed_gap_m"], opacity=0.32)
     L["tool-at-goal"] = robot(qp, "tool-at-goal", gap=GR["closed_gap_m"], opacity=0.32, links=False)
-    # diagram A: blocked approaches as soft rays, destinations with a faint fill
-    L["blocked-rays"] = group("blocked-rays", "".join(ghost_tool(b["q"], f"ray-{b['where']}-{i}", opacity=0.55, u_mark=False)
-                                                      for i, b in enumerate(an["blocked"])))
-    L["destinations-filled"] = group("destinations-filled", "".join(
-        circle(xy(PARK[k]), R, id=f"slot-{k}", fill=CLAY, fill_opacity="0.07", stroke=CLAY, stroke_width="1.3", stroke_dasharray="3 3.5")
-        for k in ORDER))
-    # diagram B: executed placement - stroboscopic full-arm ghosts carrying the target, final pose solid
-    strobe = ""
-    for i, t in enumerate(STROBE):
-        q = [(1 - t) * x + t * y for x, y in zip(qg, qp)]
-        op = 0.30 + 0.16 * i
-        strobe += group(f"strobe-{i}", circle(carried_xy(q), R, fill=PAPER, stroke=SLATE, stroke_width="1.2", opacity=f"{op:g}")
-                        + robot_outline(q, f"strobe-arm-{i}", op, GR["closed_gap_m"]))
-    L["execution-strobe"] = group("execution-strobe", strobe)
-    L["target-origin"] = circle(xy(TARGET), R, id="target-origin", fill="none", stroke=SLATE, stroke_opacity="0.55", stroke_width="1.2",
-                                stroke_dasharray="3 3.5")
-    L["blockers-parked-muted"] = group("blockers-parked-muted", "".join(
-        circle(xy(PARK[k]), R, id=f"{k}-parked-muted", fill=CLAY, fill_opacity="0.14", stroke=CLAY, stroke_opacity="0.7", stroke_width="1.1")
-        for k in ORDER))
-    L["robot-executing"] = robot(qp, "robot-executing", gap=GR["closed_gap_m"])
-    tp2 = trim(np.array(path_pts), R + 0.010, R + 0.040)
-    L["transfer-path-short"] = group("transfer-path-short", path(tp2[:-3], stroke=SLATE, stroke_width="2.2", stroke_linecap="round", fill="none")
-                                     + arrowhead(tp2[-1], tp2[-1] - tp2[-2], 0.017, fill=SLATE))
-    L["target-placed"] = group("target-placed", target(xy(GOAL)))
     return L
-
-
-STROBE = [0.0, 1 / 3, 2 / 3]                                               # interpolation fractions drawn as ghosts (final pose solid)
 
 
 PANELS = {
     "01_initial_scene": ["lattice", "goal", "discs-context", "blockers-initial", "target", "robot-home"],
-    "02_blocked_access": ["lattice", "goal", "discs-context", "blockers-initial", "target", "robot-home", "blocked-modes", "blocked-contacts"],
+    "02_blocked_access": ["lattice", "goal", "discs-context", "blockers-initial", "target", "robot-approach", "blocked-modes", "blocked-contacts"],
     "03_obstacle_highlight": ["lattice", "goal", "discs-context", "blockers-highlight", "target", "robot-home"],
-    "04_relocation_arrows": ["lattice", "goal", "discs-context", "blockers-highlight", "destinations", "target", "robot-home",
+    "04_relocation_arrows": ["lattice", "goal", "discs-context", "blockers-highlight", "destinations", "target", "robot-approach",
                              "relocation-arrows"],
     "04b_relocation_with_transit": ["lattice", "goal", "discs-context", "blockers-highlight", "destinations", "target", "robot-home",
                                     "transit-chain", "relocation-arrows"],
     "05_repaired_scene": ["lattice", "goal", "discs-context", "blockers-vacated", "blockers-parked", "target", "robot-home"],
-    "06_feasible_transfer": ["lattice", "goal", "discs-context", "blockers-parked", "target-at-goal", "tool-at-goal", "transfer-path",
+    "06_feasible_transfer": ["lattice", "goal", "discs-context", "blockers-parked", "target-at-goal", "robot-place", "transfer-path",
                              "target", "robot-grasp"],
-    "A_blocked_and_displacement_plan": ["lattice", "goal", "discs-context", "destinations-filled", "blocked-rays", "blockers-highlight",
-                                        "blocked-contacts", "target", "robot-home", "transit-chain", "relocation-arrows"],
-    "B_target_placement_execution": ["lattice", "goal", "discs-context", "blockers-parked-muted", "target-origin", "execution-strobe",
-                                     "transfer-path-short", "robot-executing", "target-placed"],
 }
-
-
-# Three-question sequence: why is it blocked? / what must change, where, in what order? / is it now feasible?
-TRIPTYCH = {
-    "Q1_why_blocked": ["lattice", "goal", "discs-context", "blockers-initial", "blocked-modes", "blocked-contacts", "target", "robot-home"],
-    "Q2_what_to_change": ["lattice", "goal", "discs-context", "destinations-filled", "blockers-highlight", "target", "robot-home",
-                          "transit-chain", "relocation-arrows"],
-    "Q3_feasible_execution": ["lattice", "goal", "discs-context", "blockers-parked-muted", "target-origin", "execution-strobe",
-                              "transfer-path-short", "robot-executing", "target-placed"],
-}
-CROP = (0, 100, 1280, 820)                                                    # svg px window shared by the three panels (same coordinates)
-GAP = 72
-
-
-def chevron_mark(cx, cy, down):
-    a = [(cx - 16, cy - 9), (cx, cy + 9), (cx + 16, cy - 9)] if down else [(cx - 9, cy - 16), (cx + 9, cy), (cx - 9, cy + 16)]
-    d = " ".join(("M" if i == 0 else "L") + f"{x:g},{y:g}" for i, (x, y) in enumerate(a))
-    return f'<path d="{d}" stroke="{SLATE}" stroke-opacity="0.7" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>'
-
-
-def triptych(L, down):
-    """Three cropped panels in one SVG, stacked (down=True) or in a row, joined by small chevrons."""
-    x0, y0, w, h = CROP
-    lx, ly = P(np.array([4 * H, 4 * H]))                                      # lattice centre, for chevron alignment
-    out = ""
-    for i, (name, keys) in enumerate(TRIPTYCH.items()):
-        ox, oy = (0, i * (h + GAP)) if down else (i * (w + GAP), 0)
-        out += (f'<svg id="{name}" x="{ox}" y="{oy}" width="{w}" height="{h}" viewBox="{x0} {y0} {w} {h}" overflow="hidden">'
-                + "".join(L[k] for k in keys) + "</svg>")
-        if i < 2:
-            out += chevron_mark(lx - x0, oy + h + GAP / 2, True) if down else chevron_mark(ox + w + GAP / 2, ly - y0, False)
-    W, Hh = (w, 3 * h + 2 * GAP) if down else (3 * w + 2 * GAP, h)
-    return out, f"0 0 {W} {Hh}", W, Hh
 
 
 def svg(inner, vb=VIEWBOX, w=None, h=None, bg=False):
@@ -503,6 +439,17 @@ def preview(L):
     return inner, f"0 0 {2 * VW + gapx} {VH}", 2 * VW + gapx
 
 
+COLUMN = ["02_blocked_access", "04_relocation_arrows", "06_feasible_transfer"]   # (a) blocked, (b) relocations, (c) feasible transfer
+COL_CROP = (400, 60, 900, 820)                                                # svg px window: base plate to lattice edge (no dead space)
+
+
+def right_column(L, gap=40):
+    x0, y0, w, h = COL_CROP
+    out = "".join(f'<svg id="panel-{n}" x="0" y="{i * (h + gap)}" width="{w}" height="{h}" viewBox="{x0} {y0} {w} {h}" overflow="hidden">'
+                  + "".join(L[k] for k in PANELS[n]) + "</svg>" for i, n in enumerate(COLUMN))
+    return out, f"0 0 {w} {3 * h + 2 * gap}", w, 3 * h + 2 * gap
+
+
 def main():
     an = analyse()
     L = build_layers(an)
@@ -514,20 +461,16 @@ def main():
         files[f"svg/layers/{name}.svg"] = svg(body_)
     for name, keys in PANELS.items():
         files[f"svg/{name}.svg"] = svg("".join(L[k] for k in keys))
+    col, col_vb, cw, ch = right_column(L)
+    files["svg/right_column_abc.svg"] = svg(col, vb=col_vb, w=cw, h=ch)
+    (HERE / "previews" / "right_column_abc_on_paper.svg").write_text(svg(col, vb=col_vb, w=cw, h=ch, bg=True))
     inner, vb, pw = preview(L)
     files["svg/07_preview_blocked_repaired.svg"] = svg(inner, vb=vb, w=pw // 4, h=VH // 4)
-    crop_vb = " ".join(map(str, CROP))
-    for name, keys in TRIPTYCH.items():
-        files[f"svg/{name}.svg"] = svg("".join(L[k] for k in keys), vb=crop_vb, w=CROP[2], h=CROP[3])
-    for tag, down in (("column", True), ("row", False)):
-        t_inner, t_vb, tw, th = triptych(L, down)
-        files[f"svg/Q123_triptych_{tag}.svg"] = svg(t_inner, vb=t_vb, w=tw, h=th)
-        (HERE / "previews" / f"Q123_triptych_{tag}_on_paper.svg").write_text(svg(t_inner, vb=t_vb, w=tw, h=th, bg=True))
     for rel, txt in files.items():
         assert "<text" not in txt and "<title" not in txt and "<desc" not in txt and "font" not in txt, rel
         (HERE / rel).write_text(txt)
         png = HERE / rel.replace("svg/", "png/", 1).replace(".svg", ".png")
-        width = pw if "07_" in rel else 2 * (int(txt.split('width="')[1].split('"')[0]) if "Q" in rel else VW)
+        width = pw if "07_" in rel else 2 * (COL_CROP[2] if "right_column" in rel else VW)
         subprocess.run(["rsvg-convert", "-w", str(width), "-o", str(png), str(HERE / rel)], check=True)
     # inspection sheets on paper (not assets)
     for name, keys in PANELS.items():
@@ -553,9 +496,7 @@ def manifest(an, L):
                     "extent_svg_px": [list(map(lambda v: round(v, 2), P(np.array([0, 8 * H])))), list(map(lambda v: round(v, 2), P(np.array([8 * H, 0]))))]},
         "disc_radius_m": R, "disc_radius_px": R * S,
         "robot": {"base_world_m": BASE.tolist(), "base_svg_px": [round(v, 2) for v in P(BASE)], "link_lengths_m": LL,
-                  "home_figure_reference": pose(Q_HOME), "home_config_toml": pose(Q_CFG_HOME),
-                  "home_note": "figure reference = config q_home with joint 1 rotated +90 deg so the folded arm faces right (illustrative choice)",
-                  "execution_strobe_fractions": STROBE, "grasp_at_target": pose(an["q_grasp"]), "place_at_goal": pose(an["q_place"])},
+                  "home": pose(Q_HOME), "grasp_at_target": pose(an["q_grasp"]), "place_at_goal": pose(an["q_place"])},
         "target": cell(TARGET), "goal": cell(GOAL),
         "context_discs": {f"c{i}": cell(c) for i, c in enumerate(CONTEXT)},
         "relocations_in_order": [{"id": k, "role": r, "source": cell(BLOCK[k]), "destination": cell(PARK[k])}
@@ -569,12 +510,11 @@ def manifest(an, L):
         "layers": {k: f"svg/layers/{k}.svg" for k in L},
         "panels": {k: {"svg": f"svg/{k}.svg", "png": f"png/{k}.png", "layers": v} for k, v in PANELS.items()}
                   | {"07_preview_blocked_repaired": {"svg": "svg/07_preview_blocked_repaired.svg", "png": "png/07_preview_blocked_repaired.png",
-                                                    "viewBox": f"0 0 {2 * VW + 120} {VH}", "right_half_translate_px": [VW + 120, 0]}},
-        "three_questions": {"questions": ["Q1 why is the target manipulation blocked?", "Q2 which discs must move, where, in what order?",
-                                          "Q3 does the edited scene make the placement feasible?"],
-                            "panels": {k: {"svg": f"svg/{k}.svg", "layers": v} for k, v in TRIPTYCH.items()},
-                            "crop_viewBox_px": list(CROP), "crop_note": "same coordinates as the shared viewBox, only the window is cropped",
-                            "composites": {"column": "svg/Q123_triptych_column.svg", "row": "svg/Q123_triptych_row.svg"}, "gap_px": GAP},
+                                                    "viewBox": f"0 0 {2 * VW + 120} {VH}", "right_half_translate_px": [VW + 120, 0]},
+                     "right_column_abc": {"svg": "svg/right_column_abc.svg", "png": "png/right_column_abc.png", "panels": COLUMN,
+                                          "crop_viewBox_px": list(COL_CROP), "gap_px": 40}},
+        "approach_pose_ab": {"params": APPROACH, "pose": pose(an["approach"]["q"]), **{k: v for k, v in an["approach"].items() if k != "q"},
+                             "note": "(a)/(b) robot reaches toward the target and halts short of b3; no link left of the base"},
     }
     (HERE / "manifest.json").write_text(json.dumps(m, indent=1, default=lambda o: o.tolist() if hasattr(o, "tolist") else str(o)) + "\n")
     print(json.dumps(m["schematic_checks"], indent=1, default=str))
