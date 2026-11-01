@@ -1,0 +1,36 @@
+{
+ "basis": "P20 wave k3 realization per family x K_intent (development only; no model output)",
+ "custody": "generated only after FROZEN_MODELS_P22.json and CONFIRM_ANALYSIS_P22.json are committed; disjoint from every development and P18 namespace",
+ "expected": {
+  "K0": 39.6,
+  "K1": 13.200000000000001,
+  "K2": 7.333333333333333,
+  "K3": 49.5,
+  "K4": 41.36,
+  "KNone": 100.39333333333333,
+  "cpu": 70321.74108666666,
+  "half_width_K34": 0.06168661790832467,
+  "repairable_K34": 90.86
+ },
+ "generator": "BXY_GEN_K34C (bxy_p20_k34.construct, REV34['k3']) + P16 V21B controls",
+ "includes_distinct_family": "v21b controls (P16 construction logic) alongside the doorway family; a geometrically distinct K3/K4 family remains a gap (not available under the unchanged robot)",
+ "mix": {
+  "local_mixed|K2": 0.05,
+  "local_mixed|K3": 0.15,
+  "local_mixed|K4": 0.45,
+  "local_pick|K3": 0.1,
+  "local_pick|K4": 0.1,
+  "v21b_near_closed|K0": 0.15
+ },
+ "namespace": "bxyg34confirm",
+ "p18_plan": {
+  "path": "runs/approach_b/bxy_p18_v1/CONFIRM_PLAN_V21.json",
+  "sha256": "2ab2d5650d6820a043bcd63e7b87487d50eb1487fe22803220b4f4f8c9337f47",
+  "status": "immutable, not executed"
+ },
+ "paired_sd_assumption": 0.3,
+ "power_note": "half-width = 1.96 * s_D / sqrt(n_repairable) with s_D the P21 paired SD (D vs DIRECT-GEO, repairable K3/K4 OOF roots); a different true disagreement rate changes the width -- report the realized width",
+ "slots": 440,
+ "stops": "fixed slots, one collection, one evaluation, no interim look; shortfall -> labelled UNDERPOWERED, no extra wave",
+ "version": "BXY_P22_CONFIRM_PLAN_K04_V1"
+}

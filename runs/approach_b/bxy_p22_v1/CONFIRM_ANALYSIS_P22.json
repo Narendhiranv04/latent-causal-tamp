@@ -1,0 +1,88 @@
+{
+ "action_costs": "rule as frozen per arm (no re-tuning)",
+ "models": {
+  "A:DIRECT-GEO": [
+   "cv/f0/A/s0",
+   "cv/f0/A/s1",
+   "cv/f0/A/s2",
+   "cv/f1/A/s0",
+   "cv/f1/A/s1",
+   "cv/f1/A/s2",
+   "cv/f2/A/s0",
+   "cv/f2/A/s1",
+   "cv/f2/A/s2",
+   "cv/f3/A/s0",
+   "cv/f3/A/s1",
+   "cv/f3/A/s2",
+   "cv/f4/A/s0",
+   "cv/f4/A/s1",
+   "cv/f4/A/s2"
+  ],
+  "D:XYQ-GEO-SYM": [
+   "cv/f0/D/s0",
+   "cv/f0/D/s1",
+   "cv/f0/D/s2",
+   "cv/f1/D/s0",
+   "cv/f1/D/s1",
+   "cv/f1/D/s2",
+   "cv/f2/D/s0",
+   "cv/f2/D/s1",
+   "cv/f2/D/s2",
+   "cv/f3/D/s0",
+   "cv/f3/D/s1",
+   "cv/f3/D/s2",
+   "cv/f4/D/s0",
+   "cv/f4/D/s1",
+   "cv/f4/D/s2"
+  ],
+  "E:XY-UNC-SA-GEO-SYM": [
+   "cv/f0/E/s0",
+   "cv/f0/E/s1",
+   "cv/f0/E/s2",
+   "cv/f1/E/s0",
+   "cv/f1/E/s1",
+   "cv/f1/E/s2",
+   "cv/f2/E/s0",
+   "cv/f2/E/s1",
+   "cv/f2/E/s2",
+   "cv/f3/E/s0",
+   "cv/f3/E/s1",
+   "cv/f3/E/s2",
+   "cv/f4/E/s0",
+   "cv/f4/E/s1",
+   "cv/f4/E/s2"
+  ]
+ },
+ "primary": {
+  "comparisons": [
+   "D vs DIRECT-GEO",
+   "E vs DIRECT-GEO",
+   "D vs E"
+  ],
+  "endpoints": [
+   "unconditional repair success on initially infeasible roots",
+   "availability-conditioned repair success"
+  ],
+  "gate": "IMPROVES if CI lower > 0, point >= 0.10 and unnecessary-repair increase <= 0.05",
+  "strata": [
+   "K1",
+   "K2",
+   "K3",
+   "K4"
+  ],
+  "test": "paired family bootstrap B = 10000, two-sided 95% CI; Holm across the three comparisons per endpoint"
+ },
+ "secondary": [
+  "unnecessary repairs (harmful / harmless)",
+  "no-op correctness",
+  "strict order (all / certified)",
+  "omission sign",
+  "prefix Y patterns",
+  "witnessed J on matched successes",
+  "certified vs budget negatives",
+  "catalogue availability",
+  "references: no-op, shortest, analytic access, verify-first"
+ ],
+ "version": "BXY_P22_CONFIRM_ANALYSIS_V1",
+ "zero_test_look": true
+}
