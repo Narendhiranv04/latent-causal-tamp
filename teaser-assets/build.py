@@ -23,7 +23,7 @@ BASE, LL, LW = np.array(ARM["base_xy_m"]), ARM["link_lengths_m"], ARM["link_full
 Q_HOME = ARM["q_home_rad"]
 GC = GR["grasp_center_x_m"]
 
-PAPER, SLATE, CLAY = "#F7F5F0", "#263840", "#B56852"
+PAPER, SLATE, CLAY = "#FFFFFF", "#263840", "#B56852"                        # background: pure white
 X0, X1, Y0, Y1, S = -0.60, 0.76, -0.08, 0.84, 1000.0                       # world window [m] and px per metre
 VW, VH = round((X1 - X0) * S), round((Y1 - Y0) * S)
 VIEWBOX = f"0 0 {VW} {VH}"
@@ -447,13 +447,20 @@ def preview(L):
 
 COLUMN = ["02_blocked_access", "04_relocation_arrows", "06_feasible_transfer"]   # (a) blocked, (b) relocations, (c) feasible transfer
 COL_CROP = (400, 0, 900, 880)                                                # svg px window: base plate to lattice edge (no dead space)
+COL_Y = {"02_blocked_access": (2, 854), "04_relocation_arrows": (2, 854), "06_feasible_transfer": (112, 854)}   # per-panel content rows
+COL_GAP = 14
 
 
-def right_column(L, gap=40):
-    x0, y0, w, h = COL_CROP
-    out = "".join(f'<svg id="panel-{n}" x="0" y="{i * (h + gap)}" width="{w}" height="{h}" viewBox="{x0} {y0} {w} {h}" overflow="hidden">'
-                  + "".join(L[k] for k in PANELS[n]) + "</svg>" for i, n in enumerate(COLUMN))
-    return out, f"0 0 {w} {3 * h + 2 * gap}", w, 3 * h + 2 * gap
+def right_column(L, gap=COL_GAP):
+    """(a)/(b)/(c) stacked; each panel keeps the shared x window but is trimmed to its own content rows."""
+    x0, w = COL_CROP[0], COL_CROP[2]
+    out, y = "", 0
+    for n in COLUMN:
+        t, b = COL_Y[n]
+        out += (f'<svg id="panel-{n}" x="0" y="{y}" width="{w}" height="{b - t}" viewBox="{x0} {t} {w} {b - t}" overflow="hidden">'
+                + "".join(L[k] for k in PANELS[n]) + "</svg>")
+        y += b - t + gap
+    return out, f"0 0 {w} {y - gap}", w, y - gap
 
 
 def main():
@@ -518,7 +525,7 @@ def manifest(an, L):
                   | {"07_preview_blocked_repaired": {"svg": "svg/07_preview_blocked_repaired.svg", "png": "png/07_preview_blocked_repaired.png",
                                                     "viewBox": f"0 0 {2 * VW + 120} {VH}", "right_half_translate_px": [VW + 120, 0]},
                      "right_column_abc": {"svg": "svg/right_column_abc.svg", "png": "png/right_column_abc.png", "panels": COLUMN,
-                                          "crop_viewBox_px": list(COL_CROP), "gap_px": 40}},
+                                          "crop_x_px": [COL_CROP[0], COL_CROP[2]], "panel_rows_px": COL_Y, "gap_px": COL_GAP}},
         "approach_pose_ab": {"params": APPROACH, "pose": pose(an["approach"]["q"]), **{k: v for k, v in an["approach"].items() if k != "q"},
                              "note": "(a)/(b) robot descends toward the target from above and halts short of c6, the never-moved disc that blocks the overhead approach; no link left of the base"},
     }

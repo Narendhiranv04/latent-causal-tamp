@@ -7,7 +7,7 @@
 - `svg/07_preview_blocked_repaired.svg`: blocked | repaired side by side. The right half is the same frame shifted by +1480 px.
 - `svg/layers/*.svg`: every element group as its own transparent file, all in the same viewBox, ready for stacking in HTML.
 - `png/`: 2× transparent exports of the above.
-- `previews/*_on_paper.*`: inspection renders on `#F7F5F0`. These are not assets.
+- `previews/*_on_paper.*`: inspection renders on white `#FFFFFF`. These are not assets.
 - `manifest.json`: viewBox, world→px map, palette, every cell (world m and svg px), relocation order, robot poses, and the schematic overlap checks.
 
 Element ids (`b1`…`b4`, `dest-b*`, `move-b*`, `contact-b*`, `target`, `goal`, `robot-*`) are stable, so CSS and JS can address them during composition.
