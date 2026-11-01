@@ -1,0 +1,93 @@
+{
+ "version": "BXY_P20_PLAN_V1",
+ "frozen_before_any_P20_teacher_call": true,
+ "namespace": "bxyg34dev",
+ "generator": "BXY_GEN_K34 (bxy_p20_k34.py)",
+ "definitions": {
+  "K_intent": "construction request; never evidence",
+  "K_LB": "exact order-free lower bound over the declared finite pick x place modes under the union model (min movable discs in M_pick[i] u M_place[j])",
+  "K_cert": "sound certificate: for EVERY set of K-1 movable discs, the real populated-scene screen with that set removed is certified closed (all declared candidates fail definitely) for the target pick or place; by monotonicity no correction moving fewer than K movable objects (to any destinations) can make the target feasible within the declared grasp family -> K_necessary,cert >= K",
+  "K_catalogue": "fewest moves of a verified complete (X=1,Y=1, replayed) candidate in the frozen catalogue",
+  "K_verified_necessary": "K_cert == K_catalogue: necessity certified AND a K-move repair physically witnessed"
+ },
+ "construction_rules_from_P19": [
+  "blockers drawn from LOCAL pools (Chebyshev <= 2 of the target source for pick closure, of the goal for place closure)",
+  "K3 / K4 as distributed closure: pick-side Kp + place-side Kg with exact enumeration of the finite mode abstraction (no greedy certificate)",
+  "every accepted root must have K_cert == K_intent (real screens), S0 not certified-free (Y0 expected 0)",
+  "every intended relocation: blocker pick screen open (>= 2 modes) in its ideal predecessor scene, no analytic edge certificate, parking a short carry (Chebyshev 1-2 preferred) to a cell with >= 3 open place modes, off the reopened target modes' kill cells",
+  "after the full intended repair: >= 3 open target pick and >= 3 open place modes, no analytic certificate",
+  "task region preferring arm-comfortable cells (P19: success drops beyond 0.6 m from the base / columns 6-7)",
+  "no populated-scene motion planning during construction; no teacher call; no witness chasing"
+ ],
+ "caps": {
+  "max_candidates": 24,
+  "max_queries": 60,
+  "why": "K4 needs repair variants, 3 prefixes, 3 non-trivial omissions, 4 singles, order twins, controls; P16 caps (16/44) truncated only controls (P19 CAP_AUDIT) but leave no room for K4 variants"
+ },
+ "waves": {
+  "k1": {
+   "role": "physical feasibility probe",
+   "slots": 40,
+   "allocation": {
+    "K4 mixed_local 2+2": 12,
+    "K3 mixed_local 2+1/1+2": 10,
+    "K3 pick_local": 4,
+    "K2 mixed_local": 4,
+    "K1 local": 4,
+    "K0 near_closed (harmful/neutral controls)": 6
+   }
+  },
+  "k2": {
+   "role": "geometry revision if k1 identifies a justified bottleneck; frozen as a new version before its labels",
+   "slots": "<= 55"
+  },
+  "k3": {
+   "role": "coverage with the predeclared composition (>= 60% K3/K4, >= 15% K0 controls, >= 1 family not built by local closure)",
+   "slots": "<= 55"
+  }
+ },
+ "readiness": {
+  "K34_DATA_READY": {
+   "verified_K3": 20,
+   "verified_K4": 20,
+   "mechanisms_each": 2,
+   "strict_order_contrasts_K34": 10,
+   "harmful_controls": 10,
+   "neutral_controls": 10
+  },
+  "K34_LIMITED_DATA": {
+   "verified_K3": 12,
+   "verified_K4": 10
+  },
+  "K4_PHYSICAL_DATA_NOT_ESTABLISHED": "otherwise for K4",
+  "counting": "a root counts as verified K3 / K4 iff K_catalogue == K with complete replayed X+connector and Y witnesses AND every shorter F1-admissible catalogue candidate decided (no censored / unattempted); K_cert reported alongside (verified-necessary subset)"
+ },
+ "denominators": "all attempted slots, rejections and CPU charged; the K-conditioned curriculum subset reported separately from the all-attempted generator distribution",
+ "P21_analysis_plan": {
+  "arms": [
+   "A DIRECT-GEO",
+   "B XYQ-BASE",
+   "C XYQ-GEO-CON",
+   "D XYQ-GEO-SYM",
+   "E XY-UNC-SA-GEO-SYM",
+   "G XYQ-GEO-SYM-ORDINV"
+  ],
+  "primary_endpoints": [
+   "unconditional repair success on initially infeasible roots",
+   "availability-conditioned repair success (>= 1 verified candidate)"
+  ],
+  "strata": [
+   "overall",
+   "Y0=1",
+   "Y0=0",
+   "available",
+   "K1",
+   "K2",
+   "K3",
+   "K4",
+   "generator family (P-min / P15 / V21 / K34)"
+  ],
+  "K34_hypotheses": "to be frozen in the P21 design before training"
+ },
+ "created_at": 1793527979.4927363
+}
