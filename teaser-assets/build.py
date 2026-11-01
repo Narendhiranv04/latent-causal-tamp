@@ -20,7 +20,8 @@ CFG = tomllib.loads((HERE.parent / "config.toml").read_text())
 SU, ARM, GR = CFG["suite"], CFG["arm2d"], CFG["gripper2d"]
 H, R = SU["pitch_m"], SU["obstacle_radius_m"]
 BASE, LL, LW = np.array(ARM["base_xy_m"]), ARM["link_lengths_m"], ARM["link_full_widths_m"]
-Q_HOME = ARM["q_home_rad"]
+Q_CFG_HOME = ARM["q_home_rad"]
+Q_HOME = [math.pi, math.pi / 2, math.pi / 2]                                  # figure reference pose: config home rotated +90 deg about the base (faces right)
 GC = GR["grasp_center_x_m"]
 
 PAPER, SLATE, CLAY = "#F7F5F0", "#263840", "#B56852"
@@ -196,12 +197,22 @@ def robot(q, gid, gap=None, opacity=1.0, links=True):
     base = ""
     if links:
         b = BASE
-        base = (path([b + np.array([-0.034, -0.026]), b + np.array([0.034, -0.026])], stroke=SLATE, stroke_width="1.6") +
+        base = (rect(b, 0, 0.052, 0.052, fill=PAPER, stroke=SLATE, stroke_width="1.4") +
                 circle(b, ARM["base_radius_m"], fill=SLATE) + circle(b, 0.0055, fill=PAPER))
     return group(gid, base + seg + grip + joints, opacity=f"{opacity:g}")
 
 
-def ghost_tool(q, gid):
+def robot_outline(q, gid, opacity, gap):
+    """Fine-line pose ghost: link centrelines, joint rings and gripper outline (for stroboscopic execution traces)."""
+    pts, a = fk(q)
+    st = dict(stroke=SLATE, stroke_width="1.2", stroke_linecap="round", stroke_linejoin="round", fill="none")
+    out = path(pts, **st)
+    out += "".join(rect(c, h, ln, wd, fill=PAPER, stroke=SLATE, stroke_width="1") for c, h, ln, wd in gripper_rects(pts[3], a, gap))
+    out += "".join(circle(pts[i], 0.0055, fill=PAPER, stroke=SLATE, stroke_width="1.1") for i in (1, 2))
+    return group(gid, out, opacity=f"{opacity:g}")
+
+
+def ghost_tool(q, gid, opacity=0.85, u_mark=True):
     """Distal link (dashed) + an open-gripper U only: a restrained 'attempted mode' mark."""
     pts, a = fk(q)
     u, n = np.array([math.cos(a), math.sin(a)]), np.array([-math.sin(a), math.cos(a)])
@@ -210,8 +221,9 @@ def ghost_tool(q, gid):
     u_shape = [tcp + fl * u + off * n, tcp + off * n, tcp - off * n, tcp + fl * u - off * n]
     out = path([pts[2], tcp - GR["palm_length_m"] * u], stroke=CLAY, stroke_width="1.2", stroke_dasharray="4 3.5", stroke_linecap="round")
     out += path([tcp - GR["palm_length_m"] * u, tcp], stroke=CLAY, stroke_width="1.6", stroke_linecap="round")
-    out += path(u_shape, stroke=CLAY, stroke_width="1.6", stroke_linecap="round", stroke_linejoin="round", fill="none")
-    return group(gid, out, opacity="0.85")
+    if u_mark:
+        out += path(u_shape, stroke=CLAY, stroke_width="1.6", stroke_linecap="round", stroke_linejoin="round", fill="none")
+    return group(gid, out, opacity=f"{opacity:g}")
 
 
 def distal_hits(q, discs, gap):
@@ -388,7 +400,34 @@ def build_layers(an):
     L["robot-grasp"] = robot(qg, "robot-grasp", gap=GR["closed_gap_m"])
     L["robot-place"] = robot(qp, "robot-place", gap=GR["closed_gap_m"], opacity=0.32)
     L["tool-at-goal"] = robot(qp, "tool-at-goal", gap=GR["closed_gap_m"], opacity=0.32, links=False)
+    # diagram A: blocked approaches as soft rays, destinations with a faint fill
+    L["blocked-rays"] = group("blocked-rays", "".join(ghost_tool(b["q"], f"ray-{b['where']}-{i}", opacity=0.55, u_mark=False)
+                                                      for i, b in enumerate(an["blocked"])))
+    L["destinations-filled"] = group("destinations-filled", "".join(
+        circle(xy(PARK[k]), R, id=f"slot-{k}", fill=CLAY, fill_opacity="0.07", stroke=CLAY, stroke_width="1.3", stroke_dasharray="3 3.5")
+        for k in ORDER))
+    # diagram B: executed placement - stroboscopic full-arm ghosts carrying the target, final pose solid
+    strobe = ""
+    for i, t in enumerate(STROBE):
+        q = [(1 - t) * x + t * y for x, y in zip(qg, qp)]
+        op = 0.30 + 0.16 * i
+        strobe += group(f"strobe-{i}", circle(carried_xy(q), R, fill=PAPER, stroke=SLATE, stroke_width="1.2", opacity=f"{op:g}")
+                        + robot_outline(q, f"strobe-arm-{i}", op, GR["closed_gap_m"]))
+    L["execution-strobe"] = group("execution-strobe", strobe)
+    L["target-origin"] = circle(xy(TARGET), R, id="target-origin", fill="none", stroke=SLATE, stroke_opacity="0.55", stroke_width="1.2",
+                                stroke_dasharray="3 3.5")
+    L["blockers-parked-muted"] = group("blockers-parked-muted", "".join(
+        circle(xy(PARK[k]), R, id=f"{k}-parked-muted", fill=CLAY, fill_opacity="0.14", stroke=CLAY, stroke_opacity="0.7", stroke_width="1.1")
+        for k in ORDER))
+    L["robot-executing"] = robot(qp, "robot-executing", gap=GR["closed_gap_m"])
+    tp2 = trim(np.array(path_pts), R + 0.010, R + 0.040)
+    L["transfer-path-short"] = group("transfer-path-short", path(tp2[:-3], stroke=SLATE, stroke_width="2.2", stroke_linecap="round", fill="none")
+                                     + arrowhead(tp2[-1], tp2[-1] - tp2[-2], 0.017, fill=SLATE))
+    L["target-placed"] = group("target-placed", target(xy(GOAL)))
     return L
+
+
+STROBE = [0.0, 1 / 3, 2 / 3]                                               # interpolation fractions drawn as ghosts (final pose solid)
 
 
 PANELS = {
@@ -402,6 +441,10 @@ PANELS = {
     "05_repaired_scene": ["lattice", "goal", "discs-context", "blockers-vacated", "blockers-parked", "target", "robot-home"],
     "06_feasible_transfer": ["lattice", "goal", "discs-context", "blockers-parked", "target-at-goal", "tool-at-goal", "transfer-path",
                              "target", "robot-grasp"],
+    "A_blocked_and_displacement_plan": ["lattice", "goal", "discs-context", "destinations-filled", "blocked-rays", "blockers-highlight",
+                                        "blocked-contacts", "target", "robot-home", "transit-chain", "relocation-arrows"],
+    "B_target_placement_execution": ["lattice", "goal", "discs-context", "blockers-parked-muted", "target-origin", "execution-strobe",
+                                     "transfer-path-short", "robot-executing", "target-placed"],
 }
 
 
@@ -466,7 +509,9 @@ def manifest(an, L):
                     "extent_svg_px": [list(map(lambda v: round(v, 2), P(np.array([0, 8 * H])))), list(map(lambda v: round(v, 2), P(np.array([8 * H, 0]))))]},
         "disc_radius_m": R, "disc_radius_px": R * S,
         "robot": {"base_world_m": BASE.tolist(), "base_svg_px": [round(v, 2) for v in P(BASE)], "link_lengths_m": LL,
-                  "home": pose(Q_HOME), "grasp_at_target": pose(an["q_grasp"]), "place_at_goal": pose(an["q_place"])},
+                  "home_figure_reference": pose(Q_HOME), "home_config_toml": pose(Q_CFG_HOME),
+                  "home_note": "figure reference = config q_home with joint 1 rotated +90 deg so the folded arm faces right (illustrative choice)",
+                  "execution_strobe_fractions": STROBE, "grasp_at_target": pose(an["q_grasp"]), "place_at_goal": pose(an["q_place"])},
         "target": cell(TARGET), "goal": cell(GOAL),
         "context_discs": {f"c{i}": cell(c) for i, c in enumerate(CONTEXT)},
         "relocations_in_order": [{"id": k, "role": r, "source": cell(BLOCK[k]), "destination": cell(PARK[k])}

@@ -60,7 +60,32 @@
    0.34,
    0.2
   ],
-  "home": {
+  "home_figure_reference": {
+   "q_rad": [
+    3.14159,
+    1.5708,
+    1.5708
+   ],
+   "joints_svg_px": [
+    [
+     460.0,
+     520.0
+    ],
+    [
+     40.0,
+     520.0
+    ],
+    [
+     40.0,
+     860.0
+    ],
+    [
+     240.0,
+     860.0
+    ]
+   ]
+  },
+  "home_config_toml": {
    "q_rad": [
     1.5708,
     1.5708,
@@ -85,6 +110,12 @@
     ]
    ]
   },
+  "home_note": "figure reference = config q_home with joint 1 rotated +90 deg so the folded arm faces right (illustrative choice)",
+  "execution_strobe_fractions": [
+   0.0,
+   0.3333333333333333,
+   0.6666666666666666
+  ],
   "grasp_at_target": {
    "q_rad": [
     1.13017,
@@ -593,7 +624,15 @@
   "target-at-goal": "svg/layers/target-at-goal.svg",
   "robot-grasp": "svg/layers/robot-grasp.svg",
   "robot-place": "svg/layers/robot-place.svg",
-  "tool-at-goal": "svg/layers/tool-at-goal.svg"
+  "tool-at-goal": "svg/layers/tool-at-goal.svg",
+  "blocked-rays": "svg/layers/blocked-rays.svg",
+  "destinations-filled": "svg/layers/destinations-filled.svg",
+  "execution-strobe": "svg/layers/execution-strobe.svg",
+  "target-origin": "svg/layers/target-origin.svg",
+  "blockers-parked-muted": "svg/layers/blockers-parked-muted.svg",
+  "robot-executing": "svg/layers/robot-executing.svg",
+  "transfer-path-short": "svg/layers/transfer-path-short.svg",
+  "target-placed": "svg/layers/target-placed.svg"
  },
  "panels": {
   "01_initial_scene": {
@@ -689,6 +728,38 @@
     "transfer-path",
     "target",
     "robot-grasp"
+   ]
+  },
+  "A_blocked_and_displacement_plan": {
+   "svg": "svg/A_blocked_and_displacement_plan.svg",
+   "png": "png/A_blocked_and_displacement_plan.png",
+   "layers": [
+    "lattice",
+    "goal",
+    "discs-context",
+    "destinations-filled",
+    "blocked-rays",
+    "blockers-highlight",
+    "blocked-contacts",
+    "target",
+    "robot-home",
+    "transit-chain",
+    "relocation-arrows"
+   ]
+  },
+  "B_target_placement_execution": {
+   "svg": "svg/B_target_placement_execution.svg",
+   "png": "png/B_target_placement_execution.png",
+   "layers": [
+    "lattice",
+    "goal",
+    "discs-context",
+    "blockers-parked-muted",
+    "target-origin",
+    "execution-strobe",
+    "transfer-path-short",
+    "robot-executing",
+    "target-placed"
    ]
   },
   "07_preview_blocked_repaired": {
