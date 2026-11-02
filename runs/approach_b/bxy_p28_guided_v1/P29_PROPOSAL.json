@@ -1,0 +1,101 @@
+{
+ "estimate": {
+  "generation_cpu_s": "about 60-120 per accepted root (P24 rate)",
+  "model_scoring_cpu_s_per_root": "about 4 learned arms x 3000 x 18 ms = 220 s (+ D optional 55 s)",
+  "teacher_cpu_s_per_root": "<= 40 calls (5 policies x 8, fewer with reuse) x 5-30 s each, capped at 1400"
+ },
+ "forbidden": [
+  "P24 confirmation scenes, labels, results or witnesses",
+  "retraining",
+  "new teacher or skills",
+  "a second cohort"
+ ],
+ "gate": "P29",
+ "generators": "existing BXY_GEN_K34C doorway (local_mixed / local_pick) and P16 V21B (nested, near_closed) with new bxyfull_dev seeds; every attempt recorded, no replacement; K_intent / construction are never search inputs",
+ "limits": {
+  "aggregate_cpu_s": 12000,
+  "per_query_budget": "unchanged bd_2d.QB",
+  "single_thread": true,
+  "teacher_cpu_s_per_root": 1400,
+  "wall_s": 9000,
+  "workers": 2
+ },
+ "namespace": "bxyfull_dev",
+ "open_decisions": {
+  "D1_certified_closed_Y_screen": "OPTIONAL, needs approval: a sound label-free terminal screen computed from the scene at search time (bxy_p19_audit-style real-screen certificate: target pick or place certified closed in the edited scene -> the candidate is never selected; subtrees are NOT pruned). P28 shows the frozen learned guides select certified-impossible short sequences on 3-5 of 8 roots; without the screen P29 will spend teacher calls on them. It extends F1 (an addition, not a change to F1's existing rules) and would apply to every policy equally.",
+  "D2_common_rule": "COMMON = dev-selected DIRECT rule (gate 0.5, alpha 0.3, gamma 0) as primary; each arm's own P23 rule as secondary",
+  "D3_budget": "12 roots and 12,000 CPU-s as proposed, or smaller"
+ },
+ "order": [
+  "generate",
+  "freeze search inputs + run all searches + SEAL ranked lists and selections (sha256) before any teacher call",
+  "verify each policy's ranked list (Y of the endpoint first, then X) until FOUND_VERIFIED or 8 calls; a candidate already verified for another policy is reused (labels are policy-independent) but charged to each policy's budget",
+  "write-once rows, witnesses kept, one evaluation"
+ ],
+ "outcomes_reported": [
+  "FOUND_VERIFIED rate per policy at 8 calls",
+  "verified repairs absent from the catalogue",
+  "calls to first success",
+  "negative kinds (CERTIFIED vs NO_PLAN / TIMEOUT)",
+  "unnecessary repairs on K0 roots",
+  "model vs teacher CPU",
+  "statuses incl. VERIFY_BUDGET_EXHAUSTED_UNKNOWN (never 'no repair')"
+ ],
+ "per_policy_per_root": {
+  "K": 4,
+  "expansions": 16,
+  "fair": 4,
+  "search_scored_members": 3000,
+  "teacher_calls": 8
+ },
+ "policies": {
+  "matched": [
+   "DIRECT",
+   "G",
+   "GEOM",
+   "UNIFORM"
+  ],
+  "optional_if_budget": [
+   "D"
+  ],
+  "primary": "E (common rule)"
+ },
+ "primary_dev_question": "does universal guided search find teacher-verified repairs ABSENT from the historical P20-style catalogue (catalogue rebuilt post hoc for comparison only)?",
+ "purpose": "small NEW development-only physical validation of universal guided search; never a confirmation",
+ "requires": "the user's explicit approval text; a smaller budget is acceptable",
+ "roots": 12,
+ "slots": [
+  {
+   "K_intent": 4,
+   "family": "local_mixed",
+   "n": 4
+  },
+  {
+   "K_intent": 3,
+   "family": "local_mixed",
+   "n": 3
+  },
+  {
+   "K_intent": 3,
+   "family": "local_pick",
+   "n": 1
+  },
+  {
+   "K_intent": 2,
+   "family": "local_mixed",
+   "n": 1
+  },
+  {
+   "K_intent": 3,
+   "family": "v21b_nested",
+   "n": 1
+  },
+  {
+   "K_intent": 0,
+   "family": "v21b_near_closed",
+   "n": 2
+  }
+ ],
+ "status": "PROPOSED_NOT_AUTHORIZED",
+ "teacher": "unchanged bxy_teacher x_query / y_query, per-query budget bd_2d.QB, no reset between relocations, one connector to q_ref"
+}
