@@ -1,0 +1,57 @@
+{
+ "K_max": 6,
+ "code_sha256": "e248f7fafc6d7ab02d8da2372c926743440e6dd158f6e3e809be8da1ae86985e",
+ "members": {
+  "destinations": "legal cells empty at that step, other than the object's own cell (vacated cells reusable)",
+  "kept_negatives": [
+   "far cells",
+   "goal cell (GOAL_BLOCKED, success 0)",
+   "q_ref footprint",
+   "access-killing cells",
+   "reference corridor",
+   "pick-closed / unreachable placements",
+   "useless and harmful edits"
+  ],
+  "lengths": "0..K (no-op and every shorter stopping length)",
+  "objects": "every non-target object not in fixed_ids, each relocated at most once",
+  "orders": "all orders the grammar allows"
+ },
+ "never_reads": [
+  "construction (options, intended, K_intent, K_LB, K_cert, forced_order, neutral_cells, harmful_cells, q_ref_footprint)",
+  "roles values",
+  "spec",
+  "catalogue_v21 / design_v21",
+  "labels",
+  "results",
+  "witnesses"
+ ],
+ "out_of_domain": [
+  "UNKNOWN_OBJECT",
+  "TARGET_MOVED",
+  "FIXED_MOVED",
+  "DUPLICATE_OBJECT",
+  "NULL_RELOCATION",
+  "DEST_NOT_LEGAL",
+  "DEST_OCCUPIED",
+  "LENGTH"
+ ],
+ "reads": [
+  "scene",
+  "goal_cell",
+  "fixed_ids"
+ ],
+ "size": "1 + sum_m P(n, m) F^m, F = |legal cells| - |objects| when every object rests on a legal cell",
+ "sound_rules": {
+  "never_pruned": [
+   "Y(prefix) = 0",
+   "terminal connector failure of a prefix",
+   "low predicted probability",
+   "planner NO_PLAN_FOUND / TIMEOUT"
+  ],
+  "subtree_success": "relocated object on the goal -> every extension GOAL_BLOCKED (single-move contract)",
+  "terminal": "GOAL_BLOCKED -> success 0 (no teacher label is ever created from it)"
+ },
+ "version": "BXY_FULLSPACE_V1",
+ "x_node": "ordered sequence (xsig)",
+ "y_node": "edited endpoint (ysig)"
+}

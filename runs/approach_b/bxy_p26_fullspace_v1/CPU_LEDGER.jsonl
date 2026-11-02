@@ -1,0 +1,8 @@
+{"t": 0, "phase": "P26", "note": "pre-ledger estimate: source reading, map-coverage and env checks before the ledger existed (conservative)", "cmd": "-", "exit": 0, "cpu_s": 40.0, "wall_s": 60.0}
+{"cmd": "python3 -m pytest -q -x tests/test_bxy_fullspace.py", "cpu_s": 3.33, "exit": 0, "note": "fullspace unit tests v1", "phase": "P26", "t": 1793623945.1, "wall_s": 3.33}
+{"cmd": "python3 bxy_p26_report.py counts", "cpu_s": 1.11, "exit": 0, "note": "dev-root domain counts + catalogue audit + throughput", "phase": "P26", "t": 1793624003.4, "wall_s": 1.11}
+{"cmd": "python3 bxy_p26_report.py figures", "cpu_s": 0.9, "exit": 0, "note": "figures v1", "phase": "P26", "t": 1793624019.9, "wall_s": 0.91}
+{"cmd": "python3 bxy_p26_report.py figures", "cpu_s": 0.89, "exit": 0, "note": "figures v2", "phase": "P26", "t": 1793624046.9, "wall_s": 0.89}
+{"cmd": "python3 -m pytest -q -x -p no:cacheprovider tests/test_bxy_fullsearch.py", "cpu_s": 0.47, "exit": 0, "note": "fullsearch tests draft (charged to P26 ledger until P27 opens)", "phase": "P27-dev", "t": 1793624232.3, "wall_s": 0.48}
+{"t": 1793624889, "phase": "P26", "note": "uncharged quick checks (count/stat queries, base clearance, toy counts) - conservative estimate", "cmd": "-", "exit": 0, "cpu_s": 10.0, "wall_s": 10.0}
+{"cmd": "bash runs/approach_b/bxy_p26_fullspace_v1/regression/regression.sh runs/approach_b/bxy_p26_fullspace_v1/regression", "cpu_s": 1030.98, "exit": 0, "note": "full regression: pytest + 6 replays + hash guard", "phase": "P26", "t": 1793625097.7, "wall_s": 1040.04}
