@@ -1,5 +1,7 @@
 # BXY-P27: lazy universal enumerator and bounded search skeleton (no teacher, no model)
 
+**Note:** commit `2fd3c7d2` carried this report with the regression and CPU cells still unfilled; this follow-up commit fills them and changes no code or evidence.
+
 **Previous turn sync:** P26 was committed and pushed as `e81e52ad` on `approach-b-universal-search`. Report: [0133](0133_BXY_P26_FULLSPACE_DEFINITION.md).
 
 ## Verdict
@@ -63,7 +65,7 @@ The search is complete in principle and its coverage is accounted exactly:
 
 ### Tests
 
-[tests/test_bxy_fullsearch.py](../tests/test_bxy_fullsearch.py) has 12 tests, all passing.
+[tests/test_bxy_fullsearch.py](../tests/test_bxy_fullsearch.py) has 14 tests, all passing.
 
 | Requirement (instruction §7 and §9) | Evidence |
 |---|---|
@@ -75,6 +77,8 @@ The search is complete in principle and its coverage is accounted exactly:
 | 8: statuses | EXHAUSTED_DEFINED_SPACE (all CERTIFIED negatives), BUDGET_EXHAUSTED_UNKNOWN, TEACHER_CENSORED |
 | 8: resume | interrupt → save → load → resume equals the uninterrupted run (nodes, coverage); 30 verification calls in total with **no repeat**; a tampered state file is refused |
 | 6: only sound pruning | the blocked root is still expanded; every GOAL_DEAD node stays closed |
+| No silent truncation | one expansion of a development root examines 1 + n·F members (> 60, the old query cap) |
+| K ≤ 3 brute force | m = 3 enumeration equals the brute force (`bxy_f1` X screen + `bxy_teacher.eligible`) over every object, including the target and the fixed wall, and the 10 legal cells plus 2 illegal cells |
 
 ## (c) Numerical coverage on 12 development roots (40 expansions, non-learned priorities)
 
@@ -121,7 +125,9 @@ My first GEOM priority was a product of open-mode fractions. It is zero for ever
 
 | Item | CPU-s |
 |---|---|
-| P27 phase, per [CPU_LEDGER.jsonl](../runs/approach_b/bxy_p27_fullsearch_v1/CPU_LEDGER.jsonl), regression included | P27_CPU |
+| P27 phase, per [CPU_LEDGER.jsonl](../runs/approach_b/bxy_p27_fullsearch_v1/CPU_LEDGER.jsonl) | **1,343.2** (wall 1,337.7 s) |
+| of which the completed regression | 1,020.9 |
+| of which an **aborted** first regression (pytest killed by PID to add the K = 3 brute-force test; partial outputs in [regression/aborted_run1](../runs/approach_b/bxy_p27_fullsearch_v1/regression/aborted_run1/)) | 296.4 |
 | Synthetic test draft run during P26 (charged in the P26 ledger) | 0.5 |
 | Cap | 6,000 CPU-s, 7,200 s wall, 2 single-thread workers |
 
@@ -129,9 +135,9 @@ My first GEOM priority was a product of open-mode fractions. It is zero for ever
 
 | Check | Result |
 |---|---|
-| Full pytest | P27_PYTEST |
-| Six archived replays | P27_REPLAYS |
-| Hash guard over P-min…P25 | P27_GUARD |
+| Full pytest | **769 passed, 1 skipped** in 977 s (755 + 14 new); exit 0 |
+| Six archived replays | all exit 0 |
+| Hash guard over P-min…P26 (`bxy_p26_fullspace_v1` added) | `{"ok": true, "modified": [], "untracked_or_changed": []}` |
 
 ## (h) Open limitations and next gate
 
