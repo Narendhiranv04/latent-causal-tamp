@@ -1,0 +1,63 @@
+{
+ "answers": {
+  "K3_K4": "PHYSICALLY VERIFIED and certified necessary in 52 roots (31 K3, 21 K4); learned selection descriptive only",
+  "coupling_F5": "UNSUPPORTED (D - E U -0.010 [-0.031, 0.010])",
+  "ordering": "SUPPORTED (O2 D - G success on repairable K3/K4 +0.173, Holm CI [0.058, 0.308]); O1/O3 strict-order wins are structural",
+  "two_d_readiness": "the 2D pipeline is complete and reproducible; the X/Y advantage over a matched direct predictor is not established",
+  "whole_system_advantage_over_DIRECT": "NOT_ESTABLISHED (U +0.041 / +0.052, Holm-adjusted CIs include 0; below the +0.10 gain gate; unnecessary-repair guardrail would fail: +0.182)"
+ },
+ "confirmatory": {
+  "D_vs_DIRECT_U": "NOT_ESTABLISHED",
+  "D_vs_E_U": "NOT_ESTABLISHED",
+  "E_vs_DIRECT_U": "NOT_ESTABLISHED",
+  "order": {
+   "O1_D_vs_G_strict_order": "IMPROVES",
+   "O2_D_vs_G_REP34_success": "IMPROVES",
+   "O3_E_vs_G_strict_order": "IMPROVES"
+  },
+  "secondary_K34": {
+   "D_vs_DIRECT": "NOT_ESTABLISHED",
+   "D_vs_E_coupling": "NOT_ESTABLISHED",
+   "E_vs_DIRECT": "NOT_ESTABLISHED"
+  }
+ },
+ "deployment_preference": "E (uncoupled X/Y) over D, as preregistered if coupling stays unhelpful; not over DIRECT on this evidence",
+ "exploratory_ablations": "runs/approach_b/bxy_p25_v1/ABLATIONS_P25.json (not tests)",
+ "failure_breakdown_INF": {
+  "A:DIRECT-GEO": {
+   "X_fail_connector": 1,
+   "X_fail_relocation": 97,
+   "Y_fail": 32,
+   "noop": 20,
+   "success": 42,
+   "unverified": 1
+  },
+  "D:XYQ-GEO-SYM": {
+   "X_fail_connector": 1,
+   "X_fail_relocation": 86,
+   "Y_fail": 32,
+   "noop": 24,
+   "success": 50,
+   "unverified": 0
+  },
+  "E:XY-UNC-SA-GEO-SYM": {
+   "X_fail_connector": 1,
+   "X_fail_relocation": 81,
+   "Y_fail": 34,
+   "noop": 24,
+   "success": 52,
+   "unverified": 1
+  },
+  "G:XYQ-GEO-SYM-ORDINV": {
+   "X_fail_connector": 1,
+   "X_fail_relocation": 98,
+   "Y_fail": 26,
+   "noop": 26,
+   "success": 41,
+   "unverified": 1
+  }
+ },
+ "scope": "new seeds of the same 2D K34 doorway generator family; no cross-generator or 3D claim",
+ "source_evaluation_sha256": "d1f6644ceafa9f359a44d79559db1b3d11611b63cbd9cc4a2c6c7f7837c20738",
+ "version": "BXY_P25_DECISION_V1"
+}
