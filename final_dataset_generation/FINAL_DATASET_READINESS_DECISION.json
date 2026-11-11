@@ -1,0 +1,35 @@
+{
+ "decided_by": "user (pending review)",
+ "generated_utc": "2026-11-10T19:24:45Z",
+ "2D": {
+  "selection": "FINAL_DATASET_SELECTION_MANIFESTS/2D_SELECTION_V2.json",
+  "quota_complete": true,
+  "totals": {"K0": 1250, "K1": 800, "K2": 800, "K3": 1150, "NONE": 1000, "total": 5000},
+  "K2": {"dependent": 480, "independent": 320, "unresolved": 0, "dependent_pct": 60.0},
+  "K3": {"dependent": 690, "independent": 460, "unresolved": 0, "dependent_pct": 60.0},
+  "K3_strength": {"1/6": 37, "2/6": 79, "3/6": 221, "4/6": 139, "5/6": 214, "6/6": 460},
+  "preferred_strength_mix_met": false,
+  "legacy_labels_ready": true,
+  "finalized_XY_ready": false
+ },
+ "3D": {
+  "selection": "FINAL_DATASET_SELECTION_MANIFESTS/3D_SELECTION_V2.json",
+  "quota_complete": false,
+  "published": {"K0": 511, "K1": 357, "K2": 357, "K3": 357, "NONE": 408, "total": 1990},
+  "not_yet_uploaded": {"K2": 255, "K3": 255, "total": 510},
+  "source_commit": "8fe960750b0a2701d76c91d304e0c427cc808d74",
+  "K2_published": {"dependent": 250, "independent": 107, "unresolved": 0, "dependent_pct": 70.0},
+  "K3_published": {"dependent": 250, "independent": 107, "unresolved": 0, "dependent_pct": 70.0},
+  "K3_strength_published": {"1/6": 1, "2/6": 27, "3/6": 13, "4/6": 63, "5/6": 146, "6/6": 107},
+  "reserve_dependent_not_selected": {"K2": 88, "K3": 76},
+  "K4_archived_outside_main": 9,
+  "legacy_labels_ready": true,
+  "finalized_XY_ready": false
+ },
+ "blocking_for_training": [
+  "finalized connector-valid X and independent Y not measured for any new scene (Stage E not run)",
+  "3D main dataset waits for the teammate's 510 K2/K3 scenes",
+  "user decision: 3D ratio (70:30 chosen as a default with controls; up to ~91% dependent is available)"
+ ],
+ "training_started": false
+}

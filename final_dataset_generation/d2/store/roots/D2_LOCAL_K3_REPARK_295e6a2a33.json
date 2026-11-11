@@ -1,0 +1,789 @@
+{
+ "budget": {
+  "admin_cpu_s": 1500.0,
+  "per_query": {
+   "goal_plans": 3,
+   "motion_checks": 150,
+   "online_moves": 8,
+   "transit_plans": 6
+  }
+ },
+ "construction": {
+  "candidates_tried": 1,
+  "changed_destination": {
+   "from": 63,
+   "object": "o00",
+   "to": 59
+  },
+  "destinations_free_distinct_in_original": true,
+  "kind": "K3_REPARK",
+  "mechanism": "NEAR_OTHER_MOVER",
+  "method": "repark2d",
+  "parent_root_id": "2d-plus2d-srv-w0260-s008",
+  "parent_sha256": "6b3b28c5db95672a57b35c25ef78ccb2bd29eb3cd48c068435c66f847abef34b",
+  "same_layout_as_parent": true
+ },
+ "domain": "2d",
+ "empty_scene_T_swept": {
+  "approach": [
+   28,
+   29,
+   36,
+   37,
+   43,
+   50,
+   56,
+   57
+  ],
+  "carry": [
+   14,
+   15,
+   21,
+   22,
+   23,
+   28,
+   29,
+   30,
+   36,
+   37,
+   40,
+   41,
+   43,
+   44,
+   48,
+   49,
+   50,
+   51,
+   56,
+   57,
+   58
+  ],
+  "close_attach": [
+   28,
+   29,
+   36,
+   37,
+   43,
+   50,
+   56,
+   57
+  ],
+  "pregrasp": [
+   28,
+   36,
+   37,
+   43,
+   44,
+   45,
+   46,
+   50,
+   51,
+   52,
+   53,
+   54,
+   57,
+   58,
+   59,
+   60,
+   61,
+   62
+  ],
+  "release": [
+   14,
+   15,
+   22,
+   23,
+   29,
+   36,
+   40,
+   41,
+   43,
+   49,
+   50,
+   51
+  ],
+  "retreat": [
+   14,
+   15,
+   22,
+   23,
+   29,
+   36,
+   40,
+   41,
+   43,
+   48,
+   49,
+   50,
+   51,
+   58
+  ]
+ },
+ "empty_scene_T_witness": "4a310f9ec466137e5d9cc748",
+ "fixed_ids": [],
+ "generator_version_plus": "BD_GEN_V1+DEPSEEK2D_V1",
+ "geometry_impl": "fastgeom1",
+ "goal_cell": 15,
+ "ids": {
+  "config_hash": "90d3eb68e8a42108",
+  "construction_seed": 2117047810,
+  "generator_version": "BD_GEN_V1+DEPSEEK2D_V1",
+  "label_protocol": "BD_BINARY_BUDGET_V1",
+  "parent_family_id": "fam-a1b99d11ab",
+  "parent_root_id": "2d-plus2d-srv-w0260-s008",
+  "robot_protocol": "PLANAR3R_SIDEGRASP_V1:sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+  "root_id": "D2_LOCAL_K3_REPARK_295e6a2a33",
+  "teacher_version": "BD2D_TEACHER_V1:DetPhysics(P16_FAST,no-library)",
+  "variant_id": "orig"
+ },
+ "independent_moves": null,
+ "intended_blockers": [
+  "o00",
+  "o01",
+  "o02",
+  "o03",
+  "o04",
+  "o05",
+  "o06",
+  "o07",
+  "o08",
+  "o09",
+  "o10",
+  "o11"
+ ],
+ "labels": {
+  "B": [
+   {
+    "failed_step": null,
+    "n_actions": 4,
+    "negative_kind": null,
+    "reason": "VERIFIED",
+    "role": "minimal",
+    "sequence": [
+     [
+      "o00",
+      59
+     ],
+     [
+      "o01",
+      55
+     ],
+     [
+      "o02",
+      12
+     ]
+    ],
+    "travel": 6.498872611795984,
+    "witnesses": [
+     "7a3a979900f691dcbeac60a3",
+     "8ba5da8f8ee28dd1a516f661",
+     "25f31d10ce3d0268f3afce5e",
+     "53dea218e0b14dcfb9d1204c"
+    ],
+    "y": 1
+   },
+   {
+    "excess_actions": 0,
+    "failed_step": null,
+    "n_actions": 4,
+    "negative_kind": null,
+    "reason": "VERIFIED",
+    "role": "wrong_order",
+    "sequence": [
+     [
+      "o02",
+      12
+     ],
+     [
+      "o01",
+      55
+     ],
+     [
+      "o00",
+      59
+     ]
+    ],
+    "travel": 6.539532956919968,
+    "witnesses": [
+     "b722cf72c834ceb79d26cdc0",
+     "28cf65e043767a35d741f7cd",
+     "ff8f6a12d08e5c14685b8d00",
+     "87fc7c0716ec144b8ffce875"
+    ],
+    "y": 1
+   },
+   {
+    "excess_actions": null,
+    "failed_step": "target",
+    "n_actions": 3,
+    "negative_kind": "NO_PLAN_FOUND",
+    "reason": "UNKNOWN_PLANNER",
+    "role": "partial",
+    "sequence": [
+     [
+      "o00",
+      59
+     ],
+     [
+      "o01",
+      55
+     ]
+    ],
+    "travel": null,
+    "witnesses": [],
+    "y": 0
+   }
+  ],
+  "D": [
+   {
+    "edit": {
+     "o00": 59
+    },
+    "negative_kind": "NO_PLAN_FOUND",
+    "query_kind": "SCENE_TARGET_ONLY",
+    "reason": "UNKNOWN_PLANNER",
+    "y": 0
+   },
+   {
+    "edit": {
+     "o01": 55
+    },
+    "negative_kind": "NO_PLAN_FOUND",
+    "query_kind": "SCENE_TARGET_ONLY",
+    "reason": "UNKNOWN_PLANNER",
+    "y": 0
+   },
+   {
+    "edit": {
+     "o02": 12
+    },
+    "negative_kind": "NO_PLAN_FOUND",
+    "query_kind": "SCENE_TARGET_ONLY",
+    "reason": "UNKNOWN_PLANNER",
+    "y": 0
+   }
+  ],
+  "blocker": {
+   "audit_subset": false,
+   "blocker_supervision_valid": true,
+   "full_lattice": true,
+   "mask": {
+    "o00": 1,
+    "o01": 1,
+    "o02": 1
+   },
+   "minimal_sets": [
+    [
+     "o00",
+     "o01",
+     "o02"
+    ]
+   ],
+   "monotone": true,
+   "scope": [
+    "o00",
+    "o01",
+    "o02"
+   ],
+   "why_invalid": null
+  },
+  "edits_evaluated": 7,
+  "original": {
+   "negative_kind": "NO_PLAN_FOUND",
+   "reason": "UNKNOWN_PLANNER",
+   "y": 0
+  }
+ },
+ "n_movable": 14,
+ "n_orders": 6,
+ "n_success": 5,
+ "observed": 3,
+ "order_class": "ORDER_DEPENDENT",
+ "parking": {
+  "o00": [
+   {
+    "cell": 59,
+    "in_target_sweep": true
+   }
+  ],
+  "o01": [
+   {
+    "cell": 55,
+    "in_target_sweep": false
+   }
+  ],
+  "o02": [
+   {
+    "cell": 12,
+    "in_target_sweep": false
+   }
+  ]
+ },
+ "permutations": [
+  {
+   "failed_step": null,
+   "negative_kind": null,
+   "order": [
+    [
+     "o00",
+     59
+    ],
+    [
+     "o01",
+     55
+    ],
+    [
+     "o02",
+     12
+    ]
+   ],
+   "reason": "VERIFIED",
+   "role": "minimal",
+   "source": "teacher",
+   "witnesses": [
+    "7a3a979900f691dcbeac60a3",
+    "8ba5da8f8ee28dd1a516f661",
+    "25f31d10ce3d0268f3afce5e",
+    "53dea218e0b14dcfb9d1204c"
+   ],
+   "y": 1
+  },
+  {
+   "cpu_s": 0.058,
+   "error": null,
+   "failed_step": 1,
+   "negative_kind": "CERTIFIED",
+   "order": [
+    [
+     "o00",
+     59
+    ],
+    [
+     "o02",
+     12
+    ],
+    [
+     "o01",
+     55
+    ]
+   ],
+   "reason": "CERTIFIED_INFEASIBLE",
+   "resolution": "EVALUATED",
+   "source": "audit",
+   "witnesses": [],
+   "y": 0
+  },
+  {
+   "cpu_s": 5.029,
+   "error": null,
+   "failed_step": null,
+   "negative_kind": null,
+   "order": [
+    [
+     "o01",
+     55
+    ],
+    [
+     "o00",
+     59
+    ],
+    [
+     "o02",
+     12
+    ]
+   ],
+   "reason": "VERIFIED",
+   "resolution": "EVALUATED",
+   "source": "audit",
+   "witnesses": [
+    "6be0fd3d0fb70614c7f5e7a0",
+    "2d46beff166ed48f643699d7",
+    "2a288e21de75201717ac87df",
+    "53dea218e0b14dcfb9d1204c"
+   ],
+   "y": 1
+  },
+  {
+   "cpu_s": 10.29,
+   "error": null,
+   "failed_step": null,
+   "negative_kind": null,
+   "order": [
+    [
+     "o01",
+     55
+    ],
+    [
+     "o02",
+     12
+    ],
+    [
+     "o00",
+     59
+    ]
+   ],
+   "reason": "VERIFIED",
+   "resolution": "EVALUATED",
+   "source": "audit",
+   "witnesses": [
+    "6be0fd3d0fb70614c7f5e7a0",
+    "8f09a20eee1d1cb2265a51c0",
+    "25a6e245560afd1837314393",
+    "87fc7c0716ec144b8ffce875"
+   ],
+   "y": 1
+  },
+  {
+   "cpu_s": 7.249,
+   "error": null,
+   "failed_step": null,
+   "negative_kind": null,
+   "order": [
+    [
+     "o02",
+     12
+    ],
+    [
+     "o00",
+     59
+    ],
+    [
+     "o01",
+     55
+    ]
+   ],
+   "reason": "VERIFIED",
+   "resolution": "EVALUATED",
+   "source": "audit",
+   "witnesses": [
+    "b722cf72c834ceb79d26cdc0",
+    "aa63c2f655ee506d0d14b26b",
+    "7142508652b5db3dd0160376",
+    "160f0c358010f26ff175bf51"
+   ],
+   "y": 1
+  },
+  {
+   "failed_step": null,
+   "negative_kind": null,
+   "order": [
+    [
+     "o02",
+     12
+    ],
+    [
+     "o01",
+     55
+    ],
+    [
+     "o00",
+     59
+    ]
+   ],
+   "reason": "VERIFIED",
+   "role": "wrong_order",
+   "source": "teacher",
+   "witnesses": [
+    "b722cf72c834ceb79d26cdc0",
+    "28cf65e043767a35d741f7cd",
+    "ff8f6a12d08e5c14685b8d00",
+    "87fc7c0716ec144b8ffce875"
+   ],
+   "y": 1
+  }
+ ],
+ "q0": [
+  1.5707963267948966,
+  1.5707963267948966,
+  1.5707963267948966
+ ],
+ "roles": {
+  "o00": "intended_blocker",
+  "o01": "intended_blocker",
+  "o02": "intended_blocker",
+  "o03": "intended_blocker",
+  "o04": "intended_blocker",
+  "o05": "intended_blocker",
+  "o06": "intended_blocker",
+  "o07": "intended_blocker",
+  "o08": "intended_blocker",
+  "o09": "intended_blocker",
+  "o10": "intended_blocker",
+  "o11": "intended_blocker",
+  "o12": "distractor:near_T",
+  "o13": "distractor:near_T"
+ },
+ "scene": {
+  "action_hash": null,
+  "domain_policy": "ALL_SUPPORTED",
+  "lattice": {
+   "cols": 8,
+   "pitch_m": 0.08,
+   "rows": 8
+  },
+  "legal_cells": [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12,
+   13,
+   14,
+   15,
+   16,
+   17,
+   18,
+   19,
+   20,
+   21,
+   22,
+   23,
+   24,
+   25,
+   26,
+   27,
+   28,
+   29,
+   30,
+   31,
+   32,
+   33,
+   34,
+   35,
+   36,
+   37,
+   38,
+   39,
+   40,
+   41,
+   42,
+   43,
+   44,
+   45,
+   46,
+   47,
+   48,
+   49,
+   50,
+   51,
+   52,
+   53,
+   54,
+   55,
+   56,
+   57,
+   58,
+   59,
+   60,
+   61,
+   62,
+   63
+  ],
+  "objects": [
+   {
+    "cell": 23,
+    "id": "o00",
+    "kind": "obstacle",
+    "radius_m": 0.024,
+    "support": "table",
+    "xy_m": [
+     0.6,
+     0.2
+    ]
+   },
+   {
+    "cell": 44,
+    "id": "o01",
+    "kind": "obstacle",
+    "radius_m": 0.024,
+    "support": "table",
+    "xy_m": [
+     0.36,
+     0.44
+    ]
+   },
+   {
+    "cell": 47,
+    "id": "o02",
+    "kind": "obstacle",
+    "radius_m": 0.024,
+    "support": "table",
+    "xy_m": [
+     0.6,
+     0.44
+    ]
+   },
+   {
+    "cell": 20,
+    "id": "o03",
+    "kind": "obstacle",
+    "radius_m": 0.024,
+    "support": "table",
+    "xy_m": [
+     0.36,
+     0.2
+    ]
+   },
+   {
+    "cell": 14,
+    "id": "o04",
+    "kind": "obstacle",
+    "radius_m": 0.024,
+    "support": "table",
+    "xy_m": [
+     0.52,
+     0.12
+    ]
+   },
+   {
+    "cell": 6,
+    "id": "o05",
+    "kind": "obstacle",
+    "radius_m": 0.024,
+    "support": "table",
+    "xy_m": [
+     0.52,
+     0.04
+    ]
+   },
+   {
+    "cell": 7,
+    "id": "o06",
+    "kind": "obstacle",
+    "radius_m": 0.024,
+    "support": "table",
+    "xy_m": [
+     0.6,
+     0.04
+    ]
+   },
+   {
+    "cell": 21,
+    "id": "o07",
+    "kind": "obstacle",
+    "radius_m": 0.024,
+    "support": "table",
+    "xy_m": [
+     0.44,
+     0.2
+    ]
+   },
+   {
+    "cell": 13,
+    "id": "o08",
+    "kind": "obstacle",
+    "radius_m": 0.024,
+    "support": "table",
+    "xy_m": [
+     0.44,
+     0.12
+    ]
+   },
+   {
+    "cell": 3,
+    "id": "o09",
+    "kind": "obstacle",
+    "radius_m": 0.024,
+    "support": "table",
+    "xy_m": [
+     0.28,
+     0.04
+    ]
+   },
+   {
+    "cell": 28,
+    "id": "o10",
+    "kind": "obstacle",
+    "radius_m": 0.024,
+    "support": "table",
+    "xy_m": [
+     0.36,
+     0.28
+    ]
+   },
+   {
+    "cell": 22,
+    "id": "o11",
+    "kind": "obstacle",
+    "radius_m": 0.024,
+    "support": "table",
+    "xy_m": [
+     0.52,
+     0.2
+    ]
+   },
+   {
+    "cell": 4,
+    "id": "o12",
+    "kind": "obstacle",
+    "radius_m": 0.024,
+    "support": "table",
+    "xy_m": [
+     0.36,
+     0.04
+    ]
+   },
+   {
+    "cell": 5,
+    "id": "o13",
+    "kind": "obstacle",
+    "radius_m": 0.024,
+    "support": "table",
+    "xy_m": [
+     0.44,
+     0.04
+    ]
+   },
+   {
+    "cell": 29,
+    "id": "t0",
+    "kind": "target",
+    "radius_m": 0.024,
+    "support": "table",
+    "xy_m": [
+     0.44,
+     0.28
+    ]
+   }
+  ],
+  "robot": {
+   "attached_id": null,
+   "attachment": "free",
+   "gripper_gap_m": 0.07,
+   "q_rad": [
+    1.5707963267948966,
+    1.5707963267948966,
+    1.5707963267948966
+   ]
+  },
+  "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+  "root_id": "D2_LOCAL_K3_REPARK_295e6a2a33",
+  "variant_id": "orig"
+ },
+ "spec": {
+  "K": 3,
+  "displacement": "short",
+  "distractor_role": "near_T",
+  "distractors": "1-2",
+  "intent": "dependence_seeking",
+  "mechanism": "place",
+  "parking": "limited",
+  "source": "near",
+  "start_pose": "home"
+ },
+ "start_stratum": "S0",
+ "teacher_calls": {
+  "goal": 8,
+  "sequence": 3
+ },
+ "teacher_cpu_s": 21.114427739999883,
+ "verified_K": 3
+}

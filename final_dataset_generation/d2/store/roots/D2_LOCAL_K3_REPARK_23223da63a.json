@@ -1,0 +1,811 @@
+{
+ "budget": {
+  "admin_cpu_s": 1500.0,
+  "per_query": {
+   "goal_plans": 3,
+   "motion_checks": 150,
+   "online_moves": 8,
+   "transit_plans": 6
+  }
+ },
+ "construction": {
+  "candidates_tried": 2,
+  "changed_destination": {
+   "from": 28,
+   "object": "o01",
+   "to": 30
+  },
+  "destinations_free_distinct_in_original": true,
+  "kind": "K3_REPARK",
+  "mechanism": "NEAR_OTHER_MOVER",
+  "method": "repark2d",
+  "parent_root_id": "2d-plus2d-srv-w0309-s011",
+  "parent_sha256": "c9d36d1612a52fe0570115a3b27c6ebeb370bd1feb9a7bcc34f105d1ef3109c7",
+  "same_layout_as_parent": true
+ },
+ "domain": "2d",
+ "empty_scene_T_swept": {
+  "approach": [
+   14,
+   15,
+   21,
+   22,
+   23,
+   28,
+   35,
+   36,
+   40,
+   41,
+   43,
+   49,
+   50,
+   58
+  ],
+  "carry": [
+   14,
+   15,
+   21,
+   22,
+   23,
+   28,
+   29,
+   30,
+   31,
+   35,
+   36,
+   37,
+   38,
+   39,
+   40,
+   41,
+   43,
+   44,
+   45,
+   46,
+   48,
+   49,
+   50,
+   51,
+   52,
+   53,
+   54,
+   56,
+   57,
+   58
+  ],
+  "close_attach": [
+   14,
+   15,
+   21,
+   22,
+   23,
+   28,
+   35,
+   36,
+   40,
+   41,
+   43,
+   50
+  ],
+  "pregrasp": [
+   14,
+   15,
+   21,
+   22,
+   23,
+   28,
+   29,
+   30,
+   31,
+   35,
+   36,
+   37,
+   38,
+   39,
+   40,
+   43,
+   44,
+   45,
+   46,
+   47,
+   48,
+   49,
+   50,
+   51,
+   52,
+   53,
+   54,
+   55,
+   56,
+   57,
+   58,
+   59,
+   60,
+   61,
+   62,
+   63
+  ],
+  "release": [
+   50,
+   51,
+   52,
+   53,
+   57
+  ],
+  "retreat": [
+   49,
+   50,
+   51,
+   52,
+   53,
+   56,
+   57
+  ]
+ },
+ "empty_scene_T_witness": "221154c34b70cdb3839b2794",
+ "fixed_ids": [],
+ "generator_version_plus": "BD_GEN_V1+DEPSEEK2D_V1",
+ "geometry_impl": "fastgeom1",
+ "goal_cell": 53,
+ "ids": {
+  "config_hash": "90d3eb68e8a42108",
+  "construction_seed": 4183728027,
+  "generator_version": "BD_GEN_V1+DEPSEEK2D_V1",
+  "label_protocol": "BD_BINARY_BUDGET_V1",
+  "parent_family_id": "fam-16be1a4619",
+  "parent_root_id": "2d-plus2d-srv-w0309-s011",
+  "robot_protocol": "PLANAR3R_SIDEGRASP_V1:sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+  "root_id": "D2_LOCAL_K3_REPARK_23223da63a",
+  "teacher_version": "BD2D_TEACHER_V1:DetPhysics(P16_FAST,no-library)",
+  "variant_id": "orig"
+ },
+ "independent_moves": null,
+ "intended_blockers": [
+  "o00",
+  "o01",
+  "o02",
+  "o03",
+  "o04",
+  "o05",
+  "o06",
+  "o07",
+  "o08",
+  "o09",
+  "o10"
+ ],
+ "labels": {
+  "B": [
+   {
+    "failed_step": null,
+    "n_actions": 4,
+    "negative_kind": null,
+    "reason": "VERIFIED",
+    "role": "minimal",
+    "sequence": [
+     [
+      "o00",
+      29
+     ],
+     [
+      "o01",
+      30
+     ],
+     [
+      "o02",
+      36
+     ]
+    ],
+    "travel": 4.630055641331934,
+    "witnesses": [
+     "07dd3a4d53187f36491f2b76",
+     "9df8d7945cae4895b7b0e18b",
+     "b47fd4443ddb3272257e2b23",
+     "d8b4f3b81709bc207ac75b3f"
+    ],
+    "y": 1
+   },
+   {
+    "excess_actions": 0,
+    "failed_step": null,
+    "n_actions": 4,
+    "negative_kind": null,
+    "reason": "VERIFIED",
+    "role": "wrong_order",
+    "sequence": [
+     [
+      "o02",
+      36
+     ],
+     [
+      "o01",
+      30
+     ],
+     [
+      "o00",
+      29
+     ]
+    ],
+    "travel": 4.4633279946066935,
+    "witnesses": [
+     "b7c697e52b538de8422e9077",
+     "19a6fe860119a90ea49a5ce8",
+     "ae24dbaae8c1ba255658010c",
+     "5b47c9f89f7fd0d98201aa59"
+    ],
+    "y": 1
+   },
+   {
+    "excess_actions": null,
+    "failed_step": "target",
+    "n_actions": 3,
+    "negative_kind": "NO_PLAN_FOUND",
+    "reason": "UNKNOWN_PLANNER",
+    "role": "partial",
+    "sequence": [
+     [
+      "o00",
+      29
+     ],
+     [
+      "o01",
+      30
+     ]
+    ],
+    "travel": null,
+    "witnesses": [],
+    "y": 0
+   }
+  ],
+  "D": [
+   {
+    "edit": {
+     "o00": 29
+    },
+    "negative_kind": "CERTIFIED",
+    "query_kind": "SCENE_TARGET_ONLY",
+    "reason": "CERTIFIED_INFEASIBLE",
+    "y": 0
+   },
+   {
+    "edit": {
+     "o01": 30
+    },
+    "negative_kind": "CERTIFIED",
+    "query_kind": "SCENE_TARGET_ONLY",
+    "reason": "CERTIFIED_INFEASIBLE",
+    "y": 0
+   },
+   {
+    "edit": {
+     "o02": 36
+    },
+    "negative_kind": "CERTIFIED",
+    "query_kind": "SCENE_TARGET_ONLY",
+    "reason": "CERTIFIED_INFEASIBLE",
+    "y": 0
+   }
+  ],
+  "blocker": {
+   "audit_subset": false,
+   "blocker_supervision_valid": true,
+   "full_lattice": true,
+   "mask": {
+    "o00": 1,
+    "o01": 1,
+    "o02": 1
+   },
+   "minimal_sets": [
+    [
+     "o00",
+     "o01",
+     "o02"
+    ]
+   ],
+   "monotone": true,
+   "scope": [
+    "o00",
+    "o01",
+    "o02"
+   ],
+   "why_invalid": null
+  },
+  "edits_evaluated": 7,
+  "original": {
+   "negative_kind": "CERTIFIED",
+   "reason": "CERTIFIED_INFEASIBLE",
+   "y": 0
+  }
+ },
+ "n_movable": 14,
+ "n_orders": 6,
+ "n_success": 5,
+ "observed": 3,
+ "order_class": "ORDER_DEPENDENT",
+ "parking": {
+  "o00": [
+   {
+    "cell": 29,
+    "in_target_sweep": true
+   }
+  ],
+  "o01": [
+   {
+    "cell": 30,
+    "in_target_sweep": true
+   }
+  ],
+  "o02": [
+   {
+    "cell": 36,
+    "in_target_sweep": true
+   }
+  ]
+ },
+ "permutations": [
+  {
+   "failed_step": null,
+   "negative_kind": null,
+   "order": [
+    [
+     "o00",
+     29
+    ],
+    [
+     "o01",
+     30
+    ],
+    [
+     "o02",
+     36
+    ]
+   ],
+   "reason": "VERIFIED",
+   "role": "minimal",
+   "source": "teacher",
+   "witnesses": [
+    "07dd3a4d53187f36491f2b76",
+    "9df8d7945cae4895b7b0e18b",
+    "b47fd4443ddb3272257e2b23",
+    "d8b4f3b81709bc207ac75b3f"
+   ],
+   "y": 1
+  },
+  {
+   "cpu_s": 5.172,
+   "error": null,
+   "failed_step": null,
+   "negative_kind": null,
+   "order": [
+    [
+     "o00",
+     29
+    ],
+    [
+     "o02",
+     36
+    ],
+    [
+     "o01",
+     30
+    ]
+   ],
+   "reason": "VERIFIED",
+   "resolution": "EVALUATED",
+   "source": "audit",
+   "witnesses": [
+    "07dd3a4d53187f36491f2b76",
+    "70ddf9e8b6ac50765b41e8d1",
+    "1c2a0a37e8b6b55db2ed6583",
+    "135c8f274723f7e196aeab73"
+   ],
+   "y": 1
+  },
+  {
+   "cpu_s": 0.677,
+   "error": null,
+   "failed_step": 1,
+   "negative_kind": "CERTIFIED",
+   "order": [
+    [
+     "o01",
+     30
+    ],
+    [
+     "o00",
+     29
+    ],
+    [
+     "o02",
+     36
+    ]
+   ],
+   "reason": "CERTIFIED_INFEASIBLE",
+   "resolution": "EVALUATED",
+   "source": "audit",
+   "witnesses": [],
+   "y": 0
+  },
+  {
+   "cpu_s": 32.523,
+   "error": null,
+   "failed_step": null,
+   "negative_kind": null,
+   "order": [
+    [
+     "o01",
+     30
+    ],
+    [
+     "o02",
+     36
+    ],
+    [
+     "o00",
+     29
+    ]
+   ],
+   "reason": "VERIFIED",
+   "resolution": "EVALUATED",
+   "source": "audit",
+   "witnesses": [
+    "c9521e551245df3873543716",
+    "1d196404c9f7b5140a2eb12b",
+    "c40154e63be2f087cb7e1477",
+    "5b47c9f89f7fd0d98201aa59"
+   ],
+   "y": 1
+  },
+  {
+   "cpu_s": 6.069,
+   "error": null,
+   "failed_step": null,
+   "negative_kind": null,
+   "order": [
+    [
+     "o02",
+     36
+    ],
+    [
+     "o00",
+     29
+    ],
+    [
+     "o01",
+     30
+    ]
+   ],
+   "reason": "VERIFIED",
+   "resolution": "EVALUATED",
+   "source": "audit",
+   "witnesses": [
+    "b7c697e52b538de8422e9077",
+    "2dafc8468d59a483140a1ebd",
+    "52db23fd3cd06f8f88174090",
+    "135c8f274723f7e196aeab73"
+   ],
+   "y": 1
+  },
+  {
+   "failed_step": null,
+   "negative_kind": null,
+   "order": [
+    [
+     "o02",
+     36
+    ],
+    [
+     "o01",
+     30
+    ],
+    [
+     "o00",
+     29
+    ]
+   ],
+   "reason": "VERIFIED",
+   "role": "wrong_order",
+   "source": "teacher",
+   "witnesses": [
+    "b7c697e52b538de8422e9077",
+    "19a6fe860119a90ea49a5ce8",
+    "ae24dbaae8c1ba255658010c",
+    "5b47c9f89f7fd0d98201aa59"
+   ],
+   "y": 1
+  }
+ ],
+ "q0": [
+  1.5707963267948966,
+  1.5707963267948966,
+  1.5707963267948966
+ ],
+ "roles": {
+  "o00": "intended_blocker",
+  "o01": "intended_blocker",
+  "o02": "intended_blocker",
+  "o03": "intended_blocker",
+  "o04": "intended_blocker",
+  "o05": "intended_blocker",
+  "o06": "intended_blocker",
+  "o07": "intended_blocker",
+  "o08": "intended_blocker",
+  "o09": "intended_blocker",
+  "o10": "intended_blocker",
+  "o11": "distractor:near_T",
+  "o12": "distractor:near_T",
+  "o13": "distractor:near_T"
+ },
+ "scene": {
+  "action_hash": null,
+  "domain_policy": "ALL_SUPPORTED",
+  "lattice": {
+   "cols": 8,
+   "pitch_m": 0.08,
+   "rows": 8
+  },
+  "legal_cells": [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12,
+   13,
+   14,
+   15,
+   16,
+   17,
+   18,
+   19,
+   20,
+   21,
+   22,
+   23,
+   24,
+   25,
+   26,
+   27,
+   28,
+   29,
+   30,
+   31,
+   32,
+   33,
+   34,
+   35,
+   36,
+   37,
+   38,
+   39,
+   40,
+   41,
+   42,
+   43,
+   44,
+   45,
+   46,
+   47,
+   48,
+   49,
+   50,
+   51,
+   52,
+   53,
+   54,
+   55,
+   56,
+   57,
+   58,
+   59,
+   60,
+   61,
+   62,
+   63
+  ],
+  "objects": [
+   {
+    "cell": 23,
+    "id": "o00",
+    "kind": "obstacle",
+    "radius_m": 0.024,
+    "support": "table",
+    "xy_m": [
+     0.6,
+     0.2
+    ]
+   },
+   {
+    "cell": 37,
+    "id": "o01",
+    "kind": "obstacle",
+    "radius_m": 0.024,
+    "support": "table",
+    "xy_m": [
+     0.44,
+     0.36
+    ]
+   },
+   {
+    "cell": 47,
+    "id": "o02",
+    "kind": "obstacle",
+    "radius_m": 0.024,
+    "support": "table",
+    "xy_m": [
+     0.6,
+     0.44
+    ]
+   },
+   {
+    "cell": 14,
+    "id": "o03",
+    "kind": "obstacle",
+    "radius_m": 0.024,
+    "support": "table",
+    "xy_m": [
+     0.52,
+     0.12
+    ]
+   },
+   {
+    "cell": 20,
+    "id": "o04",
+    "kind": "obstacle",
+    "radius_m": 0.024,
+    "support": "table",
+    "xy_m": [
+     0.36,
+     0.2
+    ]
+   },
+   {
+    "cell": 6,
+    "id": "o05",
+    "kind": "obstacle",
+    "radius_m": 0.024,
+    "support": "table",
+    "xy_m": [
+     0.52,
+     0.04
+    ]
+   },
+   {
+    "cell": 7,
+    "id": "o06",
+    "kind": "obstacle",
+    "radius_m": 0.024,
+    "support": "table",
+    "xy_m": [
+     0.6,
+     0.04
+    ]
+   },
+   {
+    "cell": 21,
+    "id": "o07",
+    "kind": "obstacle",
+    "radius_m": 0.024,
+    "support": "table",
+    "xy_m": [
+     0.44,
+     0.2
+    ]
+   },
+   {
+    "cell": 3,
+    "id": "o08",
+    "kind": "obstacle",
+    "radius_m": 0.024,
+    "support": "table",
+    "xy_m": [
+     0.28,
+     0.04
+    ]
+   },
+   {
+    "cell": 12,
+    "id": "o09",
+    "kind": "obstacle",
+    "radius_m": 0.024,
+    "support": "table",
+    "xy_m": [
+     0.36,
+     0.12
+    ]
+   },
+   {
+    "cell": 22,
+    "id": "o10",
+    "kind": "obstacle",
+    "radius_m": 0.024,
+    "support": "table",
+    "xy_m": [
+     0.52,
+     0.2
+    ]
+   },
+   {
+    "cell": 5,
+    "id": "o11",
+    "kind": "obstacle",
+    "radius_m": 0.024,
+    "support": "table",
+    "xy_m": [
+     0.44,
+     0.04
+    ]
+   },
+   {
+    "cell": 13,
+    "id": "o12",
+    "kind": "obstacle",
+    "radius_m": 0.024,
+    "support": "table",
+    "xy_m": [
+     0.44,
+     0.12
+    ]
+   },
+   {
+    "cell": 4,
+    "id": "o13",
+    "kind": "obstacle",
+    "radius_m": 0.024,
+    "support": "table",
+    "xy_m": [
+     0.36,
+     0.04
+    ]
+   },
+   {
+    "cell": 15,
+    "id": "t0",
+    "kind": "target",
+    "radius_m": 0.024,
+    "support": "table",
+    "xy_m": [
+     0.6,
+     0.12
+    ]
+   }
+  ],
+  "robot": {
+   "attached_id": null,
+   "attachment": "free",
+   "gripper_gap_m": 0.07,
+   "q_rad": [
+    1.5707963267948966,
+    1.5707963267948966,
+    1.5707963267948966
+   ]
+  },
+  "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+  "root_id": "D2_LOCAL_K3_REPARK_23223da63a",
+  "variant_id": "orig"
+ },
+ "spec": {
+  "K": 3,
+  "displacement": "long",
+  "distractor_role": "near_T",
+  "distractors": "3-4",
+  "intent": "dependence_seeking",
+  "mechanism": "grasp",
+  "parking": "multiple",
+  "source": "far",
+  "start_pose": "home"
+ },
+ "start_stratum": "S0",
+ "teacher_calls": {
+  "goal": 8,
+  "sequence": 3
+ },
+ "teacher_cpu_s": 103.47889892700005,
+ "verified_K": 3
+}

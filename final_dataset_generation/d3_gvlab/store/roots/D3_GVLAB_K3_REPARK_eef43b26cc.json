@@ -1,0 +1,1995 @@
+{
+ "alt_parking": {
+  "o00": [
+   [
+    3,
+    4
+   ],
+   [
+    3,
+    5
+   ],
+   [
+    1,
+    4
+   ]
+  ],
+  "o01": [
+   [
+    1,
+    3
+   ],
+   [
+    1,
+    4
+   ],
+   [
+    2,
+    5
+   ],
+   [
+    3,
+    5
+   ],
+   [
+    4,
+    5
+   ]
+  ],
+  "o02": [
+   [
+    1,
+    5
+   ],
+   [
+    1,
+    4
+   ],
+   [
+    5,
+    0
+   ],
+   [
+    2,
+    5
+   ],
+   [
+    3,
+    5
+   ]
+  ],
+  "o03": [
+   [
+    5,
+    0
+   ],
+   [
+    5,
+    5
+   ],
+   [
+    4,
+    5
+   ],
+   [
+    1,
+    4
+   ]
+  ],
+  "o04": [
+   [
+    5,
+    5
+   ],
+   [
+    2,
+    5
+   ],
+   [
+    3,
+    5
+   ],
+   [
+    1,
+    4
+   ]
+  ]
+ },
+ "budget": {
+  "pool_cap": 6,
+  "rrt_max_iters": 5000,
+  "seq_tries": 8
+ },
+ "cell_convention": "shelf_scene confined shelf (row, col), 0-based, row 0 nearest the robot; centre = (x0 + (r-2.5)*pitch, (c-2.5)*pitch) on the 6 x 6 grid, on the shelf floor (table_z)",
+ "construction": {
+  "K_by_construction": 3,
+  "attempts": 2,
+  "blocking_cells": {
+   "0,0": [
+    112.5,
+    135.0,
+    157.5,
+    180.0,
+    202.5,
+    225.0,
+    247.5
+   ],
+   "0,1": [
+    112.5,
+    135.0,
+    157.5,
+    180.0,
+    202.5,
+    225.0,
+    247.5
+   ],
+   "1,1": [
+    112.5,
+    135.0,
+    157.5,
+    202.5,
+    225.0
+   ],
+   "1,2": [
+    112.5,
+    180.0,
+    202.5
+   ],
+   "2,0": [
+    225.0,
+    247.5
+   ],
+   "2,1": [
+    180.0,
+    202.5,
+    225.0
+   ],
+   "2,2": [
+    157.5,
+    180.0,
+    202.5
+   ],
+   "2,4": [
+    112.5,
+    135.0
+   ],
+   "3,1": [
+    180.0,
+    202.5,
+    225.0,
+    247.5
+   ],
+   "3,2": [
+    112.5,
+    135.0,
+    157.5,
+    180.0,
+    202.5,
+    225.0,
+    247.5
+   ],
+   "3,3": [
+    112.5,
+    135.0,
+    157.5,
+    180.0
+   ],
+   "4,0": [
+    247.5
+   ],
+   "4,1": [
+    202.5,
+    225.0,
+    247.5
+   ],
+   "4,3": [
+    112.5,
+    135.0,
+    157.5
+   ],
+   "4,4": [
+    112.5
+   ]
+  },
+  "candidates_tried": 1,
+  "changed_destination": {
+   "from": [
+    3,
+    4
+   ],
+   "object": "o00",
+   "to": [
+    3,
+    5
+   ]
+  },
+  "destinations_free_distinct_in_original": true,
+  "distractors": {
+   "areas": [
+    "near_T",
+    "near_T"
+   ],
+   "fallback": null,
+   "placed": 2,
+   "requested": 2,
+   "requested_area": "near_T"
+  },
+  "host": "GVLAB",
+  "kind": "K3_REPARK",
+  "mechanism": "ALT_PARKING",
+  "method": "depseek3d_repark",
+  "parent_root_id": "3ds66-srv3-w0059-s003",
+  "parent_sha256": "c24602222e4fa489e7cd656d276eb0de951b18264493a7411d54767557152fba",
+  "same_layout_as_parent": true,
+  "search": "greedy",
+  "source_commit": "8fe960750b0a2701d76c91d304e0c427cc808d74"
+ },
+ "domain": "3ds66",
+ "empty_table_T_solve": {
+  "feasible_azimuths": [
+   112.5,
+   135.0,
+   157.5,
+   180.0,
+   202.5,
+   225.0,
+   247.5
+  ]
+ },
+ "generator_version_plus": "BD_GEN_V1+ROUTE_V15+SHELF66V3+DEPSEEK3D_V1",
+ "geometry": {
+  "arm_ceiling": true,
+  "azimuths": [
+   0.0,
+   22.5,
+   45.0,
+   67.5,
+   90.0,
+   112.5,
+   135.0,
+   157.5,
+   180.0,
+   202.5,
+   225.0,
+   247.5,
+   270.0,
+   292.5,
+   315.0,
+   337.5
+  ],
+  "ceiling_margin": 0.1,
+  "clear_height": 0.6,
+  "cols": 6,
+  "grasp_at": "middle,top",
+  "lift": 0.025,
+  "no_overpass": true,
+  "pitch": 0.075,
+  "return_to_ready": false,
+  "rows": 6,
+  "scene": "confined",
+  "side_walls": false,
+  "table_z": 0.55,
+  "tilts": [
+   90.0
+  ],
+  "x0": 0.42
+ },
+ "goal": [
+  1,
+  0
+ ],
+ "grasp_azimuths": 16,
+ "greedy_blockers": [
+  {
+   "blocks_azimuths": [
+    112.5,
+    135.0,
+    157.5,
+    180.0,
+    202.5,
+    225.0,
+    247.5
+   ],
+   "cell": [
+    3,
+    2
+   ],
+   "necessary_by_construction": true
+  },
+  {
+   "blocks_azimuths": [
+    112.5,
+    135.0,
+    157.5,
+    180.0,
+    202.5,
+    225.0,
+    247.5
+   ],
+   "cell": [
+    0,
+    0
+   ],
+   "necessary_by_construction": true
+  },
+  {
+   "blocks_azimuths": [
+    112.5,
+    135.0,
+    157.5,
+    180.0,
+    202.5,
+    225.0,
+    247.5
+   ],
+   "cell": [
+    0,
+    1
+   ],
+   "necessary_by_construction": true
+  }
+ ],
+ "ids": {
+  "config_hash": "8d521b1f6d23db23",
+  "construction_seed": 2791242572,
+  "generator_version": "BD_GEN_V1",
+  "label_protocol": "BD_BINARY_BUDGET_V1",
+  "parent_family_id": "fam-e880f33362",
+  "parent_root_id": "3ds66-srv3-w0059-s003",
+  "robot_protocol": "XARM7_SHELF66_LEVELGRASP_V1:cd7f78f44022",
+  "root_id": "D3_GVLAB_K3_REPARK_eef43b26cc",
+  "teacher_version": "BD3DS66_TEACHER_V2:shelf_scene[confined].plan_pick_place(first feasible level grasp, fingers pre-shaped in every check, RRT max_iters=5000, no wall-clock)+MuJoCo run_plan, moves chained (no return to the ready pose between them)",
+  "variant_id": "orig"
+ },
+ "independent_moves": null,
+ "initial_cells": {
+  "o00": [
+   3,
+   2
+  ],
+  "o01": [
+   0,
+   0
+  ],
+  "o02": [
+   0,
+   1
+  ],
+  "o03": [
+   5,
+   2
+  ],
+  "o04": [
+   5,
+   4
+  ],
+  "t0": [
+   4,
+   2
+  ]
+ },
+ "intended_blockers": [
+  "o00",
+  "o01",
+  "o02"
+ ],
+ "labels": {
+  "B": [
+   {
+    "failed_step": null,
+    "final_cells": {
+     "o00": [
+      3,
+      5
+     ],
+     "o01": [
+      1,
+      3
+     ],
+     "o02": [
+      1,
+      5
+     ],
+     "o03": [
+      5,
+      2
+     ],
+     "o04": [
+      5,
+      4
+     ],
+     "t0": [
+      1,
+      0
+     ]
+    },
+    "n_actions": 4,
+    "negative_kind": null,
+    "reason": "executed",
+    "role": "minimal",
+    "sequence": [
+     [
+      "o00",
+      [
+       3,
+       5
+      ]
+     ],
+     [
+      "o01",
+      [
+       1,
+       3
+      ]
+     ],
+     [
+      "o02",
+      [
+       1,
+       5
+      ]
+     ]
+    ],
+    "steps": [
+     {
+      "azimuth": 157.5,
+      "dest": [
+       3,
+       5
+      ],
+      "end_cell": [
+       3,
+       5
+      ],
+      "grasp_id": 1,
+      "object": "o00",
+      "ok": true,
+      "pushed": [],
+      "tried": 2,
+      "z_err": -0.00010855998712168413
+     },
+     {
+      "azimuth": 180.0,
+      "dest": [
+       1,
+       3
+      ],
+      "end_cell": [
+       1,
+       3
+      ],
+      "grasp_id": 3,
+      "object": "o01",
+      "ok": true,
+      "pushed": [],
+      "tried": 4,
+      "z_err": -0.00010863231179769617
+     },
+     {
+      "azimuth": 157.5,
+      "dest": [
+       1,
+       5
+      ],
+      "end_cell": [
+       1,
+       5
+      ],
+      "grasp_id": 0,
+      "object": "o02",
+      "ok": true,
+      "pushed": [],
+      "tried": 1,
+      "z_err": -0.00010866651553183282
+     },
+     {
+      "azimuth": 202.5,
+      "dest": [
+       1,
+       0
+      ],
+      "end_cell": [
+       1,
+       0
+      ],
+      "grasp_id": 2,
+      "object": "t0",
+      "ok": true,
+      "pushed": [],
+      "tried": 3,
+      "z_err": -0.000108689633141687
+     }
+    ],
+    "witnesses": [
+     "6e0c20c1bd86ca1458733e97",
+     "e49c4e00b1af7558d45f9ebe",
+     "02ac18b4b774c809912a5a50",
+     "ef02feb48d24b9d7257ccc08"
+    ],
+    "y": 1
+   },
+   {
+    "excess_actions": null,
+    "failed_step": 0,
+    "grasp_reasons": {
+     "0": "the arm / hand would hit t0, o00, t0, o00 near [ 0.602 -0.038  0.6  ]",
+     "1": "the arm / hand would hit t0, o00, t0, o00 near [ 0.603 -0.036  0.6  ]",
+     "10": "grasp pose [ 0.607 -0.038  0.6  ] is out of reach (or the arm would hit the structure ther",
+     "11": "grasp pose [ 0.607 -0.038  0.6  ] is out of reach (or the arm would hit the structure ther",
+     "12": "grasp pose [ 0.607 -0.038  0.6  ] is out of reach (or the arm would hit the structure ther",
+     "13": "grasp pose [ 0.607 -0.038  0.6  ] is out of reach (or the arm would hit the structure ther",
+     "14": "grasp pose [ 0.607 -0.038  0.6  ] is out of reach (or the arm would hit the structure ther",
+     "15": "grasp pose [ 0.607 -0.038  0.6  ] is out of reach (or the arm would hit the structure ther",
+     "16": "the arm / hand would hit t0, o00, t0, o00 near [ 0.602 -0.038  0.638]",
+     "17": "the arm / hand would hit t0, o00, t0, o00 near [ 0.603 -0.036  0.638]",
+     "18": "the arm / hand would hit t0, o00, t0, o00 near [ 0.603 -0.04   0.638]",
+     "19": "the arm / hand would hit t0, t0 near [ 0.603 -0.033  0.638]",
+     "2": "the arm / hand would hit t0, o00, t0, o00 near [ 0.603 -0.04   0.6  ]",
+     "20": "the arm / hand would hit t0, o02, t0, o02 near [ 0.603 -0.042  0.638]",
+     "21": "the arm / hand would hit t0, o04, t0, o04 near [ 0.605 -0.033  0.638]",
+     "22": "the arm / hand would hit t0, o01, o02, t0, o01, o02 near [ 0.605 -0.042  0.638]",
+     "23": "grasp pose [ 0.607 -0.038  0.638] is out of reach (or the arm would hit the structure ther",
+     "24": "grasp pose [ 0.607 -0.038  0.638] is out of reach (or the arm would hit the structure ther",
+     "25": "grasp pose [ 0.607 -0.038  0.638] is out of reach (or the arm would hit the structure ther",
+     "26": "grasp pose [ 0.607 -0.038  0.638] is out of reach (or the arm would hit the structure ther",
+     "27": "grasp pose [ 0.607 -0.038  0.638] is out of reach (or the arm would hit the structure ther",
+     "28": "grasp pose [ 0.607 -0.038  0.638] is out of reach (or the arm would hit the structure ther",
+     "29": "grasp pose [ 0.607 -0.038  0.638] is out of reach (or the arm would hit the structure ther",
+     "3": "the arm / hand would hit t0, t0 near [ 0.603 -0.033  0.6  ]",
+     "30": "grasp pose [ 0.607 -0.038  0.638] is out of reach (or the arm would hit the structure ther",
+     "31": "grasp pose [ 0.607 -0.038  0.638] is out of reach (or the arm would hit the structure ther",
+     "4": "grasp pose [ 0.607 -0.038  0.6  ] is out of reach (or the arm would hit the structure ther",
+     "5": "the arm / hand would hit t0, o04, t0, o04 near [ 0.605 -0.033  0.6  ]",
+     "6": "grasp pose [ 0.607 -0.038  0.6  ] is out of reach (or the arm would hit the structure ther",
+     "7": "grasp pose [ 0.607 -0.038  0.6  ] is out of reach (or the arm would hit the structure ther",
+     "8": "grasp pose [ 0.607 -0.038  0.6  ] is out of reach (or the arm would hit the structure ther",
+     "9": "grasp pose [ 0.607 -0.038  0.6  ] is out of reach (or the arm would hit the structure ther"
+    },
+    "hit_objects": [
+     "t0, o00, t0, o00",
+     "t0, o01, o02, t0, o01, o02",
+     "t0, o02, t0, o02",
+     "t0, o04, t0, o04",
+     "t0, t0",
+     "the structure ther"
+    ],
+    "n_actions": 5,
+    "negative_kind": "CERTIFIED",
+    "reason": "no feasible side grasp",
+    "role": "redundant+1",
+    "sequence": [
+     [
+      "o03",
+      [
+       5,
+       0
+      ]
+     ],
+     [
+      "o00",
+      [
+       3,
+       5
+      ]
+     ],
+     [
+      "o01",
+      [
+       1,
+       3
+      ]
+     ],
+     [
+      "o02",
+      [
+       1,
+       5
+      ]
+     ]
+    ],
+    "steps": [
+     {
+      "dest": [
+       5,
+       0
+      ],
+      "grasp_reasons": {
+       "0": "the arm / hand would hit t0, o00, t0, o00 near [ 0.602 -0.038  0.6  ]",
+       "1": "the arm / hand would hit t0, o00, t0, o00 near [ 0.603 -0.036  0.6  ]",
+       "10": "grasp pose [ 0.607 -0.038  0.6  ] is out of reach (or the arm would hit the structure ther",
+       "11": "grasp pose [ 0.607 -0.038  0.6  ] is out of reach (or the arm would hit the structure ther",
+       "12": "grasp pose [ 0.607 -0.038  0.6  ] is out of reach (or the arm would hit the structure ther",
+       "13": "grasp pose [ 0.607 -0.038  0.6  ] is out of reach (or the arm would hit the structure ther",
+       "14": "grasp pose [ 0.607 -0.038  0.6  ] is out of reach (or the arm would hit the structure ther",
+       "15": "grasp pose [ 0.607 -0.038  0.6  ] is out of reach (or the arm would hit the structure ther",
+       "16": "the arm / hand would hit t0, o00, t0, o00 near [ 0.602 -0.038  0.638]",
+       "17": "the arm / hand would hit t0, o00, t0, o00 near [ 0.603 -0.036  0.638]",
+       "18": "the arm / hand would hit t0, o00, t0, o00 near [ 0.603 -0.04   0.638]",
+       "19": "the arm / hand would hit t0, t0 near [ 0.603 -0.033  0.638]",
+       "2": "the arm / hand would hit t0, o00, t0, o00 near [ 0.603 -0.04   0.6  ]",
+       "20": "the arm / hand would hit t0, o02, t0, o02 near [ 0.603 -0.042  0.638]",
+       "21": "the arm / hand would hit t0, o04, t0, o04 near [ 0.605 -0.033  0.638]",
+       "22": "the arm / hand would hit t0, o01, o02, t0, o01, o02 near [ 0.605 -0.042  0.638]",
+       "23": "grasp pose [ 0.607 -0.038  0.638] is out of reach (or the arm would hit the structure ther",
+       "24": "grasp pose [ 0.607 -0.038  0.638] is out of reach (or the arm would hit the structure ther",
+       "25": "grasp pose [ 0.607 -0.038  0.638] is out of reach (or the arm would hit the structure ther",
+       "26": "grasp pose [ 0.607 -0.038  0.638] is out of reach (or the arm would hit the structure ther",
+       "27": "grasp pose [ 0.607 -0.038  0.638] is out of reach (or the arm would hit the structure ther",
+       "28": "grasp pose [ 0.607 -0.038  0.638] is out of reach (or the arm would hit the structure ther",
+       "29": "grasp pose [ 0.607 -0.038  0.638] is out of reach (or the arm would hit the structure ther",
+       "3": "the arm / hand would hit t0, t0 near [ 0.603 -0.033  0.6  ]",
+       "30": "grasp pose [ 0.607 -0.038  0.638] is out of reach (or the arm would hit the structure ther",
+       "31": "grasp pose [ 0.607 -0.038  0.638] is out of reach (or the arm would hit the structure ther",
+       "4": "grasp pose [ 0.607 -0.038  0.6  ] is out of reach (or the arm would hit the structure ther",
+       "5": "the arm / hand would hit t0, o04, t0, o04 near [ 0.605 -0.033  0.6  ]",
+       "6": "grasp pose [ 0.607 -0.038  0.6  ] is out of reach (or the arm would hit the structure ther",
+       "7": "grasp pose [ 0.607 -0.038  0.6  ] is out of reach (or the arm would hit the structure ther",
+       "8": "grasp pose [ 0.607 -0.038  0.6  ] is out of reach (or the arm would hit the structure ther",
+       "9": "grasp pose [ 0.607 -0.038  0.6  ] is out of reach (or the arm would hit the structure ther"
+      },
+      "object": "o03",
+      "ok": false,
+      "tried": 32
+     }
+    ],
+    "tried": 32,
+    "witnesses": [],
+    "y": 0
+   },
+   {
+    "excess_actions": null,
+    "failed_step": 0,
+    "grasp_reasons": {
+     "0": "the arm / hand would hit t0, o00, t0, o00 near [ 0.602 -0.038  0.6  ]",
+     "1": "the arm / hand would hit t0, o00, t0, o00 near [ 0.603 -0.036  0.6  ]",
+     "10": "grasp pose [ 0.607 -0.038  0.6  ] is out of reach (or the arm would hit the structure ther",
+     "11": "grasp pose [ 0.607 -0.038  0.6  ] is out of reach (or the arm would hit the structure ther",
+     "12": "grasp pose [ 0.607 -0.038  0.6  ] is out of reach (or the arm would hit the structure ther",
+     "13": "grasp pose [ 0.607 -0.038  0.6  ] is out of reach (or the arm would hit the structure ther",
+     "14": "grasp pose [ 0.607 -0.038  0.6  ] is out of reach (or the arm would hit the structure ther",
+     "15": "grasp pose [ 0.607 -0.038  0.6  ] is out of reach (or the arm would hit the structure ther",
+     "16": "the arm / hand would hit t0, o00, t0, o00 near [ 0.602 -0.038  0.638]",
+     "17": "the arm / hand would hit t0, o00, t0, o00 near [ 0.603 -0.036  0.638]",
+     "18": "the arm / hand would hit t0, o00, t0, o00 near [ 0.603 -0.04   0.638]",
+     "19": "the arm / hand would hit t0, t0 near [ 0.603 -0.033  0.638]",
+     "2": "the arm / hand would hit t0, o00, t0, o00 near [ 0.603 -0.04   0.6  ]",
+     "20": "the arm / hand would hit t0, o02, t0, o02 near [ 0.603 -0.042  0.638]",
+     "21": "the arm / hand would hit t0, o04, t0, o04 near [ 0.605 -0.033  0.638]",
+     "22": "the arm / hand would hit t0, o01, o02, t0, o01, o02 near [ 0.605 -0.042  0.638]",
+     "23": "grasp pose [ 0.607 -0.038  0.638] is out of reach (or the arm would hit the structure ther",
+     "24": "grasp pose [ 0.607 -0.038  0.638] is out of reach (or the arm would hit the structure ther",
+     "25": "grasp pose [ 0.607 -0.038  0.638] is out of reach (or the arm would hit the structure ther",
+     "26": "grasp pose [ 0.607 -0.038  0.638] is out of reach (or the arm would hit the structure ther",
+     "27": "grasp pose [ 0.607 -0.038  0.638] is out of reach (or the arm would hit the structure ther",
+     "28": "grasp pose [ 0.607 -0.038  0.638] is out of reach (or the arm would hit the structure ther",
+     "29": "grasp pose [ 0.607 -0.038  0.638] is out of reach (or the arm would hit the structure ther",
+     "3": "the arm / hand would hit t0, t0 near [ 0.603 -0.033  0.6  ]",
+     "30": "grasp pose [ 0.607 -0.038  0.638] is out of reach (or the arm would hit the structure ther",
+     "31": "grasp pose [ 0.607 -0.038  0.638] is out of reach (or the arm would hit the structure ther",
+     "4": "grasp pose [ 0.607 -0.038  0.6  ] is out of reach (or the arm would hit the structure ther",
+     "5": "the arm / hand would hit t0, o04, t0, o04 near [ 0.605 -0.033  0.6  ]",
+     "6": "grasp pose [ 0.607 -0.038  0.6  ] is out of reach (or the arm would hit the structure ther",
+     "7": "grasp pose [ 0.607 -0.038  0.6  ] is out of reach (or the arm would hit the structure ther",
+     "8": "grasp pose [ 0.607 -0.038  0.6  ] is out of reach (or the arm would hit the structure ther",
+     "9": "grasp pose [ 0.607 -0.038  0.6  ] is out of reach (or the arm would hit the structure ther"
+    },
+    "hit_objects": [
+     "t0, o00, t0, o00",
+     "t0, o01, o02, t0, o01, o02",
+     "t0, o02, t0, o02",
+     "t0, o04, t0, o04",
+     "t0, t0",
+     "the structure ther"
+    ],
+    "n_actions": 2,
+    "negative_kind": "CERTIFIED",
+    "reason": "no feasible side grasp",
+    "role": "noop_irrelevant",
+    "sequence": [
+     [
+      "o03",
+      [
+       5,
+       0
+      ]
+     ]
+    ],
+    "steps": [
+     {
+      "dest": [
+       5,
+       0
+      ],
+      "grasp_reasons": {
+       "0": "the arm / hand would hit t0, o00, t0, o00 near [ 0.602 -0.038  0.6  ]",
+       "1": "the arm / hand would hit t0, o00, t0, o00 near [ 0.603 -0.036  0.6  ]",
+       "10": "grasp pose [ 0.607 -0.038  0.6  ] is out of reach (or the arm would hit the structure ther",
+       "11": "grasp pose [ 0.607 -0.038  0.6  ] is out of reach (or the arm would hit the structure ther",
+       "12": "grasp pose [ 0.607 -0.038  0.6  ] is out of reach (or the arm would hit the structure ther",
+       "13": "grasp pose [ 0.607 -0.038  0.6  ] is out of reach (or the arm would hit the structure ther",
+       "14": "grasp pose [ 0.607 -0.038  0.6  ] is out of reach (or the arm would hit the structure ther",
+       "15": "grasp pose [ 0.607 -0.038  0.6  ] is out of reach (or the arm would hit the structure ther",
+       "16": "the arm / hand would hit t0, o00, t0, o00 near [ 0.602 -0.038  0.638]",
+       "17": "the arm / hand would hit t0, o00, t0, o00 near [ 0.603 -0.036  0.638]",
+       "18": "the arm / hand would hit t0, o00, t0, o00 near [ 0.603 -0.04   0.638]",
+       "19": "the arm / hand would hit t0, t0 near [ 0.603 -0.033  0.638]",
+       "2": "the arm / hand would hit t0, o00, t0, o00 near [ 0.603 -0.04   0.6  ]",
+       "20": "the arm / hand would hit t0, o02, t0, o02 near [ 0.603 -0.042  0.638]",
+       "21": "the arm / hand would hit t0, o04, t0, o04 near [ 0.605 -0.033  0.638]",
+       "22": "the arm / hand would hit t0, o01, o02, t0, o01, o02 near [ 0.605 -0.042  0.638]",
+       "23": "grasp pose [ 0.607 -0.038  0.638] is out of reach (or the arm would hit the structure ther",
+       "24": "grasp pose [ 0.607 -0.038  0.638] is out of reach (or the arm would hit the structure ther",
+       "25": "grasp pose [ 0.607 -0.038  0.638] is out of reach (or the arm would hit the structure ther",
+       "26": "grasp pose [ 0.607 -0.038  0.638] is out of reach (or the arm would hit the structure ther",
+       "27": "grasp pose [ 0.607 -0.038  0.638] is out of reach (or the arm would hit the structure ther",
+       "28": "grasp pose [ 0.607 -0.038  0.638] is out of reach (or the arm would hit the structure ther",
+       "29": "grasp pose [ 0.607 -0.038  0.638] is out of reach (or the arm would hit the structure ther",
+       "3": "the arm / hand would hit t0, t0 near [ 0.603 -0.033  0.6  ]",
+       "30": "grasp pose [ 0.607 -0.038  0.638] is out of reach (or the arm would hit the structure ther",
+       "31": "grasp pose [ 0.607 -0.038  0.638] is out of reach (or the arm would hit the structure ther",
+       "4": "grasp pose [ 0.607 -0.038  0.6  ] is out of reach (or the arm would hit the structure ther",
+       "5": "the arm / hand would hit t0, o04, t0, o04 near [ 0.605 -0.033  0.6  ]",
+       "6": "grasp pose [ 0.607 -0.038  0.6  ] is out of reach (or the arm would hit the structure ther",
+       "7": "grasp pose [ 0.607 -0.038  0.6  ] is out of reach (or the arm would hit the structure ther",
+       "8": "grasp pose [ 0.607 -0.038  0.6  ] is out of reach (or the arm would hit the structure ther",
+       "9": "grasp pose [ 0.607 -0.038  0.6  ] is out of reach (or the arm would hit the structure ther"
+      },
+      "object": "o03",
+      "ok": false,
+      "tried": 32
+     }
+    ],
+    "tried": 32,
+    "witnesses": [],
+    "y": 0
+   },
+   {
+    "excess_actions": null,
+    "failed_step": "target",
+    "grasp_reasons": {
+     "0": "the arm / hand would hit o00, o01, o00, o01 near [ 0.527 -0.038  0.626]",
+     "1": "the arm / hand would hit o01, o01 near [ 0.528 -0.036  0.626]",
+     "10": "grasp pose [ 0.532 -0.038  0.626] is out of reach (or the arm would hit the structure ther",
+     "11": "grasp pose [ 0.532 -0.038  0.626] is out of reach (or the arm would hit the structure ther",
+     "12": "grasp pose [ 0.532 -0.038  0.626] is out of reach (or the arm would hit the structure ther",
+     "13": "grasp pose [ 0.532 -0.038  0.626] is out of reach (or the arm would hit the structure ther",
+     "14": "grasp pose [ 0.532 -0.038  0.626] is out of reach (or the arm would hit the structure ther",
+     "15": "grasp pose [ 0.532 -0.038  0.626] is out of reach (or the arm would hit the structure ther",
+     "16": "the arm / hand would hit o00, o01, o00, o01 near [ 0.527 -0.038  0.691]",
+     "17": "the arm / hand would hit o01, o02, o01, o02 near [ 0.528 -0.036  0.691]",
+     "18": "the arm / hand would hit o00, o00 near [ 0.528 -0.04   0.691]",
+     "19": "the arm / hand would hit o02, o02 near [ 0.528 -0.033  0.691]",
+     "2": "the arm / hand would hit o00, o00 near [ 0.528 -0.04   0.626]",
+     "20": "the arm / hand would hit o00, o00 near [ 0.528 -0.042  0.691]",
+     "21": "the arm / hand would hit o02, o02 near [ 0.53  -0.033  0.691]",
+     "22": "the arm / hand would hit o00, o00 near [ 0.53  -0.042  0.691]",
+     "23": "the arm / hand would hit o02, o02 near [ 0.532 -0.033  0.691]",
+     "24": "the arm / hand would hit o00, o00 near [ 0.532 -0.043  0.691]",
+     "25": "grasp pose [ 0.532 -0.038  0.691] is out of reach (or the arm would hit the structure ther",
+     "26": "grasp pose [ 0.532 -0.038  0.691] is out of reach (or the arm would hit the structure ther",
+     "27": "grasp pose [ 0.532 -0.038  0.691] is out of reach (or the arm would hit the structure ther",
+     "28": "grasp pose [ 0.532 -0.038  0.691] is out of reach (or the arm would hit the structure ther",
+     "29": "grasp pose [ 0.532 -0.038  0.691] is out of reach (or the arm would hit the structure ther",
+     "3": "the arm / hand would hit o01, o01 near [ 0.528 -0.033  0.626]",
+     "30": "grasp pose [ 0.532 -0.038  0.691] is out of reach (or the arm would hit the structure ther",
+     "31": "grasp pose [ 0.532 -0.038  0.691] is out of reach (or the arm would hit the structure ther",
+     "4": "the arm / hand would hit o00, o00 near [ 0.528 -0.042  0.626]",
+     "5": "the arm / hand would hit o02, o02 near [ 0.53  -0.033  0.626]",
+     "6": "the arm / hand would hit o00, o00 near [ 0.53  -0.042  0.626]",
+     "7": "the arm / hand would hit o01, o02, o01, o02 near [ 0.532 -0.033  0.626]",
+     "8": "the arm / hand would hit o00, o00 near [ 0.532 -0.043  0.626]",
+     "9": "grasp pose [ 0.532 -0.038  0.626] is out of reach (or the arm would hit the structure ther"
+    },
+    "hit_objects": [
+     "o00, o00",
+     "o00, o01, o00, o01",
+     "o01, o01",
+     "o01, o02, o01, o02",
+     "o02, o02",
+     "the structure ther"
+    ],
+    "n_actions": 4,
+    "negative_kind": "CERTIFIED",
+    "reason": "no feasible side grasp",
+    "role": "wrong_destination",
+    "sequence": [
+     [
+      "o00",
+      [
+       3,
+       1
+      ]
+     ],
+     [
+      "o01",
+      [
+       1,
+       3
+      ]
+     ],
+     [
+      "o02",
+      [
+       1,
+       5
+      ]
+     ]
+    ],
+    "steps": [
+     {
+      "azimuth": 135.0,
+      "dest": [
+       3,
+       1
+      ],
+      "end_cell": [
+       3,
+       1
+      ],
+      "grasp_id": 3,
+      "object": "o00",
+      "ok": true,
+      "pushed": [],
+      "tried": 4,
+      "z_err": -0.0001085960149484061
+     },
+     {
+      "azimuth": 180.0,
+      "dest": [
+       1,
+       3
+      ],
+      "end_cell": [
+       1,
+       3
+      ],
+      "grasp_id": 3,
+      "object": "o01",
+      "ok": true,
+      "pushed": [],
+      "tried": 4,
+      "z_err": -0.00010857335961123038
+     },
+     {
+      "azimuth": 157.5,
+      "dest": [
+       1,
+       5
+      ],
+      "end_cell": [
+       1,
+       5
+      ],
+      "grasp_id": 0,
+      "object": "o02",
+      "ok": true,
+      "pushed": [],
+      "tried": 1,
+      "z_err": -0.00010899128004145109
+     },
+     {
+      "dest": [
+       1,
+       0
+      ],
+      "grasp_reasons": {
+       "0": "the arm / hand would hit o00, o01, o00, o01 near [ 0.527 -0.038  0.626]",
+       "1": "the arm / hand would hit o01, o01 near [ 0.528 -0.036  0.626]",
+       "10": "grasp pose [ 0.532 -0.038  0.626] is out of reach (or the arm would hit the structure ther",
+       "11": "grasp pose [ 0.532 -0.038  0.626] is out of reach (or the arm would hit the structure ther",
+       "12": "grasp pose [ 0.532 -0.038  0.626] is out of reach (or the arm would hit the structure ther",
+       "13": "grasp pose [ 0.532 -0.038  0.626] is out of reach (or the arm would hit the structure ther",
+       "14": "grasp pose [ 0.532 -0.038  0.626] is out of reach (or the arm would hit the structure ther",
+       "15": "grasp pose [ 0.532 -0.038  0.626] is out of reach (or the arm would hit the structure ther",
+       "16": "the arm / hand would hit o00, o01, o00, o01 near [ 0.527 -0.038  0.691]",
+       "17": "the arm / hand would hit o01, o02, o01, o02 near [ 0.528 -0.036  0.691]",
+       "18": "the arm / hand would hit o00, o00 near [ 0.528 -0.04   0.691]",
+       "19": "the arm / hand would hit o02, o02 near [ 0.528 -0.033  0.691]",
+       "2": "the arm / hand would hit o00, o00 near [ 0.528 -0.04   0.626]",
+       "20": "the arm / hand would hit o00, o00 near [ 0.528 -0.042  0.691]",
+       "21": "the arm / hand would hit o02, o02 near [ 0.53  -0.033  0.691]",
+       "22": "the arm / hand would hit o00, o00 near [ 0.53  -0.042  0.691]",
+       "23": "the arm / hand would hit o02, o02 near [ 0.532 -0.033  0.691]",
+       "24": "the arm / hand would hit o00, o00 near [ 0.532 -0.043  0.691]",
+       "25": "grasp pose [ 0.532 -0.038  0.691] is out of reach (or the arm would hit the structure ther",
+       "26": "grasp pose [ 0.532 -0.038  0.691] is out of reach (or the arm would hit the structure ther",
+       "27": "grasp pose [ 0.532 -0.038  0.691] is out of reach (or the arm would hit the structure ther",
+       "28": "grasp pose [ 0.532 -0.038  0.691] is out of reach (or the arm would hit the structure ther",
+       "29": "grasp pose [ 0.532 -0.038  0.691] is out of reach (or the arm would hit the structure ther",
+       "3": "the arm / hand would hit o01, o01 near [ 0.528 -0.033  0.626]",
+       "30": "grasp pose [ 0.532 -0.038  0.691] is out of reach (or the arm would hit the structure ther",
+       "31": "grasp pose [ 0.532 -0.038  0.691] is out of reach (or the arm would hit the structure ther",
+       "4": "the arm / hand would hit o00, o00 near [ 0.528 -0.042  0.626]",
+       "5": "the arm / hand would hit o02, o02 near [ 0.53  -0.033  0.626]",
+       "6": "the arm / hand would hit o00, o00 near [ 0.53  -0.042  0.626]",
+       "7": "the arm / hand would hit o01, o02, o01, o02 near [ 0.532 -0.033  0.626]",
+       "8": "the arm / hand would hit o00, o00 near [ 0.532 -0.043  0.626]",
+       "9": "grasp pose [ 0.532 -0.038  0.626] is out of reach (or the arm would hit the structure ther"
+      },
+      "object": "t0",
+      "ok": false,
+      "tried": 32
+     }
+    ],
+    "tried": 32,
+    "witnesses": [
+     "5d083cb0e7ba6739ec5b65fe",
+     "2e972118e6a9a1fa1cef8a92",
+     "cdd4aea92aa983c33a7a02ef"
+    ],
+    "y": 0
+   },
+   {
+    "excess_actions": null,
+    "failed_step": 2,
+    "grasp_reasons": {
+     "0": "the arm / hand would hit o01, o01 near [ 0.437 -0.038  0.628]",
+     "1": "the arm / hand would hit o01, o01 near [ 0.453 -0.036  0.628]",
+     "10": "grasp pose [ 0.457 -0.038  0.628] is out of reach (or the arm would hit the structure ther",
+     "11": "grasp pose [ 0.457 -0.038  0.628] is out of reach (or the arm would hit the structure ther",
+     "12": "grasp pose [ 0.457 -0.038  0.628] is out of reach (or the arm would hit the structure ther",
+     "13": "grasp pose [ 0.457 -0.038  0.628] is out of reach (or the arm would hit the structure ther",
+     "14": "grasp pose [ 0.457 -0.038  0.628] is out of reach (or the arm would hit the structure ther",
+     "15": "grasp pose [ 0.457 -0.038  0.628] is out of reach (or the arm would hit the structure ther",
+     "16": "the arm / hand would hit o01, o01 near [ 0.437 -0.038  0.694]",
+     "17": "the arm / hand would hit o01, o01 near [ 0.453 -0.036  0.694]",
+     "18": "the hand (closing axis -68 deg) would overlap a neighbour at the goal",
+     "19": "the arm / hand would hit o01, o02, o01, o02 near [ 0.453 -0.033  0.694]",
+     "2": "the hand (closing axis -68 deg) would overlap a neighbour at the goal",
+     "20": "the arm / hand would hit the arm_ceiling near [ 0.457 -0.038  0.714]",
+     "21": "the arm / hand would hit o02, o02 near [ 0.455 -0.033  0.694]",
+     "22": "the hand (closing axis -22 deg) would overlap a neighbour at the goal",
+     "23": "the arm / hand would hit o02, o02 near [ 0.457 -0.033  0.694]",
+     "24": "the arm / hand would hit the floor_board near [ 0.457 -0.168  0.694]",
+     "25": "the arm / hand would hit t0, o02, t0, o02 near [ 0.459 -0.033  0.694]",
+     "26": "grasp pose [ 0.457 -0.038  0.694] is out of reach (or the arm would hit the structure ther",
+     "27": "grasp pose [ 0.457 -0.038  0.694] is out of reach (or the arm would hit the structure ther",
+     "28": "grasp pose [ 0.457 -0.038  0.694] is out of reach (or the arm would hit the structure ther",
+     "29": "grasp pose [ 0.457 -0.038  0.694] is out of reach (or the arm would hit the structure ther",
+     "3": "the arm / hand would hit o01, o02, o01, o02 near [ 0.453 -0.033  0.628]",
+     "30": "grasp pose [ 0.457 -0.038  0.694] is out of reach (or the arm would hit the structure ther",
+     "31": "grasp pose [ 0.457 -0.038  0.694] is out of reach (or the arm would hit the structure ther",
+     "4": "the hand (closing axis -45 deg) would overlap a neighbour at the goal",
+     "5": "the arm / hand would hit o02, o02 near [ 0.455 -0.033  0.628]",
+     "6": "the hand (closing axis -22 deg) would overlap a neighbour at the goal",
+     "7": "the arm / hand would hit o02, o02 near [ 0.457 -0.033  0.628]",
+     "8": "the hand (closing axis -0 deg) would overlap a neighbour at the goal",
+     "9": "the arm / hand would hit t0, o01, o02, t0, o01, o02 near [ 0.459 -0.033  0.628]"
+    },
+    "hit_objects": [
+     "o01, o01",
+     "o01, o02, o01, o02",
+     "o02, o02",
+     "t0, o01, o02, t0, o01, o02",
+     "t0, o02, t0, o02",
+     "the arm_ceiling",
+     "the floor_board",
+     "the structure ther"
+    ],
+    "n_actions": 4,
+    "negative_kind": "CERTIFIED",
+    "reason": "no feasible side grasp",
+    "role": "wrong_order",
+    "sequence": [
+     [
+      "o02",
+      [
+       1,
+       5
+      ]
+     ],
+     [
+      "o01",
+      [
+       1,
+       3
+      ]
+     ],
+     [
+      "o00",
+      [
+       3,
+       5
+      ]
+     ]
+    ],
+    "steps": [
+     {
+      "azimuth": 180.0,
+      "dest": [
+       1,
+       5
+      ],
+      "end_cell": [
+       1,
+       5
+      ],
+      "grasp_id": 2,
+      "object": "o02",
+      "ok": true,
+      "pushed": [],
+      "tried": 3,
+      "z_err": -0.00010866503872793143
+     },
+     {
+      "azimuth": 135.0,
+      "dest": [
+       1,
+       3
+      ],
+      "end_cell": [
+       1,
+       3
+      ],
+      "grasp_id": 0,
+      "object": "o01",
+      "ok": true,
+      "pushed": [],
+      "tried": 1,
+      "z_err": -0.00010879500319260771
+     },
+     {
+      "dest": [
+       3,
+       5
+      ],
+      "grasp_reasons": {
+       "0": "the arm / hand would hit o01, o01 near [ 0.437 -0.038  0.628]",
+       "1": "the arm / hand would hit o01, o01 near [ 0.453 -0.036  0.628]",
+       "10": "grasp pose [ 0.457 -0.038  0.628] is out of reach (or the arm would hit the structure ther",
+       "11": "grasp pose [ 0.457 -0.038  0.628] is out of reach (or the arm would hit the structure ther",
+       "12": "grasp pose [ 0.457 -0.038  0.628] is out of reach (or the arm would hit the structure ther",
+       "13": "grasp pose [ 0.457 -0.038  0.628] is out of reach (or the arm would hit the structure ther",
+       "14": "grasp pose [ 0.457 -0.038  0.628] is out of reach (or the arm would hit the structure ther",
+       "15": "grasp pose [ 0.457 -0.038  0.628] is out of reach (or the arm would hit the structure ther",
+       "16": "the arm / hand would hit o01, o01 near [ 0.437 -0.038  0.694]",
+       "17": "the arm / hand would hit o01, o01 near [ 0.453 -0.036  0.694]",
+       "18": "the hand (closing axis -68 deg) would overlap a neighbour at the goal",
+       "19": "the arm / hand would hit o01, o02, o01, o02 near [ 0.453 -0.033  0.694]",
+       "2": "the hand (closing axis -68 deg) would overlap a neighbour at the goal",
+       "20": "the arm / hand would hit the arm_ceiling near [ 0.457 -0.038  0.714]",
+       "21": "the arm / hand would hit o02, o02 near [ 0.455 -0.033  0.694]",
+       "22": "the hand (closing axis -22 deg) would overlap a neighbour at the goal",
+       "23": "the arm / hand would hit o02, o02 near [ 0.457 -0.033  0.694]",
+       "24": "the arm / hand would hit the floor_board near [ 0.457 -0.168  0.694]",
+       "25": "the arm / hand would hit t0, o02, t0, o02 near [ 0.459 -0.033  0.694]",
+       "26": "grasp pose [ 0.457 -0.038  0.694] is out of reach (or the arm would hit the structure ther",
+       "27": "grasp pose [ 0.457 -0.038  0.694] is out of reach (or the arm would hit the structure ther",
+       "28": "grasp pose [ 0.457 -0.038  0.694] is out of reach (or the arm would hit the structure ther",
+       "29": "grasp pose [ 0.457 -0.038  0.694] is out of reach (or the arm would hit the structure ther",
+       "3": "the arm / hand would hit o01, o02, o01, o02 near [ 0.453 -0.033  0.628]",
+       "30": "grasp pose [ 0.457 -0.038  0.694] is out of reach (or the arm would hit the structure ther",
+       "31": "grasp pose [ 0.457 -0.038  0.694] is out of reach (or the arm would hit the structure ther",
+       "4": "the hand (closing axis -45 deg) would overlap a neighbour at the goal",
+       "5": "the arm / hand would hit o02, o02 near [ 0.455 -0.033  0.628]",
+       "6": "the hand (closing axis -22 deg) would overlap a neighbour at the goal",
+       "7": "the arm / hand would hit o02, o02 near [ 0.457 -0.033  0.628]",
+       "8": "the hand (closing axis -0 deg) would overlap a neighbour at the goal",
+       "9": "the arm / hand would hit t0, o01, o02, t0, o01, o02 near [ 0.459 -0.033  0.628]"
+      },
+      "object": "o00",
+      "ok": false,
+      "tried": 32
+     }
+    ],
+    "tried": 32,
+    "witnesses": [
+     "4c43d315c91436820cf06144",
+     "cfce96a5ef54dbcc665e4cab"
+    ],
+    "y": 0
+   }
+  ],
+  "D": [
+   {
+    "edit": {
+     "o00": [
+      3,
+      5
+     ]
+    },
+    "grasp_reasons": {
+     "0": "the hand (closing axis -90 deg) would overlap a neighbour at the goal",
+     "1": "the hand (closing axis -113 deg) would overlap a neighbour at the goal",
+     "10": "grasp pose [ 0.532 -0.038  0.626] is out of reach (or the arm would hit the structure ther",
+     "11": "grasp pose [ 0.532 -0.038  0.626] is out of reach (or the arm would hit the structure ther",
+     "12": "grasp pose [ 0.532 -0.038  0.626] is out of reach (or the arm would hit the structure ther",
+     "13": "grasp pose [ 0.532 -0.038  0.626] is out of reach (or the arm would hit the structure ther",
+     "14": "grasp pose [ 0.532 -0.038  0.626] is out of reach (or the arm would hit the structure ther",
+     "15": "grasp pose [ 0.532 -0.038  0.626] is out of reach (or the arm would hit the structure ther",
+     "16": "the arm / hand would hit the arm_ceiling near [ 0.532 -0.038  0.708]",
+     "17": "IK jumps branch near [ 0.456 -0.006  0.691]",
+     "18": "the arm / hand would hit o02, o02 near [ 0.528 -0.04   0.691]",
+     "19": "the arm / hand would hit o00, o00 near [ 0.528 -0.033  0.691]",
+     "2": "the arm / hand would hit o02, o02 near [ 0.528 -0.04   0.626]",
+     "20": "the arm / hand would hit o01, o02, o01, o02 near [ 0.528 -0.042  0.691]",
+     "21": "the arm / hand would hit o00, o00 near [ 0.53  -0.033  0.691]",
+     "22": "the arm / hand would hit o01, o02, o01, o02 near [ 0.53  -0.042  0.691]",
+     "23": "the arm / hand would hit o00, o00 near [ 0.532 -0.033  0.691]",
+     "24": "the arm / hand would hit o01, o02, o01, o02 near [ 0.532 -0.043  0.691]",
+     "25": "grasp pose [ 0.532 -0.038  0.691] is out of reach (or the arm would hit the structure ther",
+     "26": "grasp pose [ 0.532 -0.038  0.691] is out of reach (or the arm would hit the structure ther",
+     "27": "grasp pose [ 0.532 -0.038  0.691] is out of reach (or the arm would hit the structure ther",
+     "28": "grasp pose [ 0.532 -0.038  0.691] is out of reach (or the arm would hit the structure ther",
+     "29": "grasp pose [ 0.532 -0.038  0.691] is out of reach (or the arm would hit the structure ther",
+     "3": "the hand (closing axis -135 deg) would overlap a neighbour at the goal",
+     "30": "grasp pose [ 0.532 -0.038  0.691] is out of reach (or the arm would hit the structure ther",
+     "31": "grasp pose [ 0.532 -0.038  0.691] is out of reach (or the arm would hit the structure ther",
+     "4": "the arm / hand would hit o01, o02, o01, o02 near [ 0.528 -0.042  0.626]",
+     "5": "the arm / hand would hit o00, o00 near [ 0.53  -0.033  0.626]",
+     "6": "the arm / hand would hit o01, o02, o01, o02 near [ 0.53  -0.042  0.626]",
+     "7": "the arm / hand would hit o00, o00 near [ 0.532 -0.033  0.626]",
+     "8": "the arm / hand would hit o01, o02, o01, o02 near [ 0.532 -0.043  0.626]",
+     "9": "grasp pose [ 0.532 -0.038  0.626] is out of reach (or the arm would hit the structure ther"
+    },
+    "hit_objects": [
+     "o00, o00",
+     "o01, o02, o01, o02",
+     "o02, o02",
+     "the arm_ceiling",
+     "the structure ther"
+    ],
+    "negative_kind": "NO_PLAN_FOUND",
+    "query_kind": "SCENE_TARGET_ONLY",
+    "reason": "no feasible side grasp",
+    "tried": 32,
+    "witness": null,
+    "y": 0
+   },
+   {
+    "edit": {
+     "o01": [
+      1,
+      3
+     ]
+    },
+    "grasp_reasons": {
+     "0": "the arm / hand would hit o00, o01, o00, o01 near [ 0.527 -0.038  0.626]",
+     "1": "the arm / hand would hit o00, o01, o00, o01 near [ 0.528 -0.036  0.626]",
+     "10": "grasp pose [ 0.532 -0.038  0.626] is out of reach (or the arm would hit the structure ther",
+     "11": "grasp pose [ 0.532 -0.038  0.626] is out of reach (or the arm would hit the structure ther",
+     "12": "grasp pose [ 0.532 -0.038  0.626] is out of reach (or the arm would hit the structure ther",
+     "13": "grasp pose [ 0.532 -0.038  0.626] is out of reach (or the arm would hit the structure ther",
+     "14": "grasp pose [ 0.532 -0.038  0.626] is out of reach (or the arm would hit the structure ther",
+     "15": "grasp pose [ 0.532 -0.038  0.626] is out of reach (or the arm would hit the structure ther",
+     "16": "the arm / hand would hit o00, o01, o00, o01 near [ 0.527 -0.038  0.691]",
+     "17": "the arm / hand would hit o00, o01, o00, o01 near [ 0.528 -0.036  0.691]",
+     "18": "the arm / hand would hit o00, o02, o00, o02 near [ 0.528 -0.04   0.691]",
+     "19": "the arm / hand would hit o00, o00 near [ 0.528 -0.033  0.691]",
+     "2": "the arm / hand would hit o00, o02, o00, o02 near [ 0.528 -0.04   0.626]",
+     "20": "the arm / hand would hit o00, o02, o00, o02 near [ 0.528 -0.042  0.691]",
+     "21": "the arm / hand would hit o00, o00 near [ 0.53  -0.033  0.691]",
+     "22": "the arm / hand would hit o00, o02, o00, o02 near [ 0.53  -0.042  0.691]",
+     "23": "the arm / hand would hit o01, o01 near [ 0.532 -0.033  0.691]",
+     "24": "the arm / hand would hit o02, o02 near [ 0.532 -0.043  0.691]",
+     "25": "grasp pose [ 0.532 -0.038  0.691] is out of reach (or the arm would hit the structure ther",
+     "26": "grasp pose [ 0.532 -0.038  0.691] is out of reach (or the arm would hit the structure ther",
+     "27": "grasp pose [ 0.532 -0.038  0.691] is out of reach (or the arm would hit the structure ther",
+     "28": "grasp pose [ 0.532 -0.038  0.691] is out of reach (or the arm would hit the structure ther",
+     "29": "grasp pose [ 0.532 -0.038  0.691] is out of reach (or the arm would hit the structure ther",
+     "3": "the arm / hand would hit o00, o01, o00, o01 near [ 0.528 -0.033  0.626]",
+     "30": "grasp pose [ 0.532 -0.038  0.691] is out of reach (or the arm would hit the structure ther",
+     "31": "grasp pose [ 0.532 -0.038  0.691] is out of reach (or the arm would hit the structure ther",
+     "4": "the arm / hand would hit o00, o02, o00, o02 near [ 0.528 -0.042  0.626]",
+     "5": "the arm / hand would hit o00, o00 near [ 0.53  -0.033  0.626]",
+     "6": "the arm / hand would hit o00, o02, o00, o02 near [ 0.53  -0.042  0.626]",
+     "7": "the arm / hand would hit o01, o01 near [ 0.532 -0.033  0.626]",
+     "8": "the arm / hand would hit o02, o02 near [ 0.532 -0.043  0.626]",
+     "9": "grasp pose [ 0.532 -0.038  0.626] is out of reach (or the arm would hit the structure ther"
+    },
+    "hit_objects": [
+     "o00, o00",
+     "o00, o01, o00, o01",
+     "o00, o02, o00, o02",
+     "o01, o01",
+     "o02, o02",
+     "the structure ther"
+    ],
+    "negative_kind": "CERTIFIED",
+    "query_kind": "SCENE_TARGET_ONLY",
+    "reason": "no feasible side grasp",
+    "tried": 32,
+    "witness": null,
+    "y": 0
+   },
+   {
+    "edit": {
+     "o02": [
+      1,
+      5
+     ]
+    },
+    "grasp_reasons": {
+     "0": "the arm / hand would hit o00, o00 near [ 0.527 -0.038  0.626]",
+     "1": "the arm / hand would hit o00, o00 near [ 0.528 -0.036  0.626]",
+     "10": "grasp pose [ 0.532 -0.038  0.626] is out of reach (or the arm would hit the structure ther",
+     "11": "grasp pose [ 0.532 -0.038  0.626] is out of reach (or the arm would hit the structure ther",
+     "12": "grasp pose [ 0.532 -0.038  0.626] is out of reach (or the arm would hit the structure ther",
+     "13": "grasp pose [ 0.532 -0.038  0.626] is out of reach (or the arm would hit the structure ther",
+     "14": "grasp pose [ 0.532 -0.038  0.626] is out of reach (or the arm would hit the structure ther",
+     "15": "grasp pose [ 0.532 -0.038  0.626] is out of reach (or the arm would hit the structure ther",
+     "16": "the arm / hand would hit o00, o00 near [ 0.527 -0.038  0.691]",
+     "17": "the arm / hand would hit o00, o02, o00, o02 near [ 0.528 -0.036  0.691]",
+     "18": "the arm / hand would hit o00, o00 near [ 0.528 -0.04   0.691]",
+     "19": "the arm / hand would hit o00, o02, o00, o02 near [ 0.528 -0.033  0.691]",
+     "2": "the arm / hand would hit o00, o00 near [ 0.528 -0.04   0.626]",
+     "20": "the arm / hand would hit o00, o01, o00, o01 near [ 0.528 -0.042  0.691]",
+     "21": "the arm / hand would hit o00, o02, o00, o02 near [ 0.53  -0.033  0.691]",
+     "22": "the arm / hand would hit o00, o01, o00, o01 near [ 0.53  -0.042  0.691]",
+     "23": "the arm / hand would hit o02, o02 near [ 0.532 -0.033  0.691]",
+     "24": "the arm / hand would hit o01, o01 near [ 0.532 -0.043  0.691]",
+     "25": "grasp pose [ 0.532 -0.038  0.691] is out of reach (or the arm would hit the structure ther",
+     "26": "grasp pose [ 0.532 -0.038  0.691] is out of reach (or the arm would hit the structure ther",
+     "27": "grasp pose [ 0.532 -0.038  0.691] is out of reach (or the arm would hit the structure ther",
+     "28": "grasp pose [ 0.532 -0.038  0.691] is out of reach (or the arm would hit the structure ther",
+     "29": "grasp pose [ 0.532 -0.038  0.691] is out of reach (or the arm would hit the structure ther",
+     "3": "the arm / hand would hit o00, o00 near [ 0.528 -0.033  0.626]",
+     "30": "grasp pose [ 0.532 -0.038  0.691] is out of reach (or the arm would hit the structure ther",
+     "31": "grasp pose [ 0.532 -0.038  0.691] is out of reach (or the arm would hit the structure ther",
+     "4": "the arm / hand would hit o00, o01, o00, o01 near [ 0.528 -0.042  0.626]",
+     "5": "the arm / hand would hit o00, o02, o00, o02 near [ 0.53  -0.033  0.626]",
+     "6": "the arm / hand would hit o00, o01, o00, o01 near [ 0.53  -0.042  0.626]",
+     "7": "the arm / hand would hit o02, o02 near [ 0.532 -0.033  0.626]",
+     "8": "the arm / hand would hit o01, o01 near [ 0.532 -0.043  0.626]",
+     "9": "grasp pose [ 0.532 -0.038  0.626] is out of reach (or the arm would hit the structure ther"
+    },
+    "hit_objects": [
+     "o00, o00",
+     "o00, o01, o00, o01",
+     "o00, o02, o00, o02",
+     "o01, o01",
+     "o02, o02",
+     "the structure ther"
+    ],
+    "negative_kind": "CERTIFIED",
+    "query_kind": "SCENE_TARGET_ONLY",
+    "reason": "no feasible side grasp",
+    "tried": 32,
+    "witness": null,
+    "y": 0
+   },
+   {
+    "edit": {
+     "o03": [
+      5,
+      0
+     ]
+    },
+    "grasp_reasons": {
+     "0": "the arm / hand would hit o00, o00 near [ 0.527 -0.038  0.626]",
+     "1": "the arm / hand would hit o00, o00 near [ 0.528 -0.036  0.626]",
+     "10": "grasp pose [ 0.532 -0.038  0.626] is out of reach (or the arm would hit the structure ther",
+     "11": "grasp pose [ 0.532 -0.038  0.626] is out of reach (or the arm would hit the structure ther",
+     "12": "grasp pose [ 0.532 -0.038  0.626] is out of reach (or the arm would hit the structure ther",
+     "13": "grasp pose [ 0.532 -0.038  0.626] is out of reach (or the arm would hit the structure ther",
+     "14": "grasp pose [ 0.532 -0.038  0.626] is out of reach (or the arm would hit the structure ther",
+     "15": "grasp pose [ 0.532 -0.038  0.626] is out of reach (or the arm would hit the structure ther",
+     "16": "the arm / hand would hit o00, o00 near [ 0.527 -0.038  0.691]",
+     "17": "the arm / hand would hit o00, o00 near [ 0.528 -0.036  0.691]",
+     "18": "the arm / hand would hit o00, o02, o00, o02 near [ 0.528 -0.04   0.691]",
+     "19": "the arm / hand would hit o00, o00 near [ 0.528 -0.033  0.691]",
+     "2": "the arm / hand would hit o00, o02, o00, o02 near [ 0.528 -0.04   0.626]",
+     "20": "the arm / hand would hit o00, o01, o02, o00, o01, o02 near [ 0.528 -0.042  0.691]",
+     "21": "the arm / hand would hit o00, o00 near [ 0.53  -0.033  0.691]",
+     "22": "the arm / hand would hit o00, o01, o02, o00, o01, o02 near [ 0.53  -0.042  0.691]",
+     "23": "the arm / hand would hit o04 near [0.532 0.037 0.691]",
+     "24": "the arm / hand would hit o01, o02, o01, o02 near [ 0.532 -0.043  0.691]",
+     "25": "grasp pose [ 0.532 -0.038  0.691] is out of reach (or the arm would hit the structure ther",
+     "26": "grasp pose [ 0.532 -0.038  0.691] is out of reach (or the arm would hit the structure ther",
+     "27": "grasp pose [ 0.532 -0.038  0.691] is out of reach (or the arm would hit the structure ther",
+     "28": "grasp pose [ 0.532 -0.038  0.691] is out of reach (or the arm would hit the structure ther",
+     "29": "grasp pose [ 0.532 -0.038  0.691] is out of reach (or the arm would hit the structure ther",
+     "3": "the arm / hand would hit o00, o00 near [ 0.528 -0.033  0.626]",
+     "30": "grasp pose [ 0.532 -0.038  0.691] is out of reach (or the arm would hit the structure ther",
+     "31": "grasp pose [ 0.532 -0.038  0.691] is out of reach (or the arm would hit the structure ther",
+     "4": "the arm / hand would hit o00, o01, o02, o00, o01, o02 near [ 0.528 -0.042  0.626]",
+     "5": "the arm / hand would hit o00, o00 near [ 0.53  -0.033  0.626]",
+     "6": "the arm / hand would hit o00, o01, o02, o00, o01, o02 near [ 0.53  -0.042  0.626]",
+     "7": "the arm / hand would hit o04, o04 near [0.532 0.037 0.626]",
+     "8": "the arm / hand would hit o01, o02, o01, o02 near [ 0.532 -0.043  0.626]",
+     "9": "grasp pose [ 0.532 -0.038  0.626] is out of reach (or the arm would hit the structure ther"
+    },
+    "hit_objects": [
+     "o00, o00",
+     "o00, o01, o02, o00, o01, o02",
+     "o00, o02, o00, o02",
+     "o01, o02, o01, o02",
+     "o04",
+     "o04, o04",
+     "the structure ther"
+    ],
+    "negative_kind": "CERTIFIED",
+    "query_kind": "SCENE_TARGET_ONLY",
+    "reason": "no feasible side grasp",
+    "tried": 32,
+    "witness": null,
+    "y": 0
+   },
+   {
+    "edit": {
+     "o04": [
+      5,
+      5
+     ]
+    },
+    "grasp_reasons": {
+     "0": "the arm / hand would hit o00, o00 near [ 0.527 -0.038  0.626]",
+     "1": "the arm / hand would hit o00, o00 near [ 0.528 -0.036  0.626]",
+     "10": "grasp pose [ 0.532 -0.038  0.626] is out of reach (or the arm would hit the structure ther",
+     "11": "grasp pose [ 0.532 -0.038  0.626] is out of reach (or the arm would hit the structure ther",
+     "12": "grasp pose [ 0.532 -0.038  0.626] is out of reach (or the arm would hit the structure ther",
+     "13": "grasp pose [ 0.532 -0.038  0.626] is out of reach (or the arm would hit the structure ther",
+     "14": "grasp pose [ 0.532 -0.038  0.626] is out of reach (or the arm would hit the structure ther",
+     "15": "grasp pose [ 0.532 -0.038  0.626] is out of reach (or the arm would hit the structure ther",
+     "16": "the arm / hand would hit o00, o00 near [ 0.527 -0.038  0.691]",
+     "17": "the arm / hand would hit o00, o00 near [ 0.528 -0.036  0.691]",
+     "18": "the arm / hand would hit o00, o02, o00, o02 near [ 0.528 -0.04   0.691]",
+     "19": "the arm / hand would hit o00, o00 near [ 0.528 -0.033  0.691]",
+     "2": "the arm / hand would hit o00, o02, o00, o02 near [ 0.528 -0.04   0.626]",
+     "20": "the arm / hand would hit o00, o01, o02, o00, o01, o02 near [ 0.528 -0.042  0.691]",
+     "21": "the arm / hand would hit o00, o00 near [ 0.53  -0.033  0.691]",
+     "22": "the arm / hand would hit o00, o01, o02, o00, o01, o02 near [ 0.53  -0.042  0.691]",
+     "23": "the arm / hand would hit the floor_board near [0.532 0.057 0.691]",
+     "24": "the arm / hand would hit o01, o02, o01, o02 near [ 0.532 -0.043  0.691]",
+     "25": "grasp pose [ 0.532 -0.038  0.691] is out of reach (or the arm would hit the structure ther",
+     "26": "grasp pose [ 0.532 -0.038  0.691] is out of reach (or the arm would hit the structure ther",
+     "27": "grasp pose [ 0.532 -0.038  0.691] is out of reach (or the arm would hit the structure ther",
+     "28": "grasp pose [ 0.532 -0.038  0.691] is out of reach (or the arm would hit the structure ther",
+     "29": "grasp pose [ 0.532 -0.038  0.691] is out of reach (or the arm would hit the structure ther",
+     "3": "the arm / hand would hit o00, o00 near [ 0.528 -0.033  0.626]",
+     "30": "grasp pose [ 0.532 -0.038  0.691] is out of reach (or the arm would hit the structure ther",
+     "31": "grasp pose [ 0.532 -0.038  0.691] is out of reach (or the arm would hit the structure ther",
+     "4": "the arm / hand would hit o00, o01, o02, o00, o01, o02 near [ 0.528 -0.042  0.626]",
+     "5": "the arm / hand would hit o00, o00 near [ 0.53  -0.033  0.626]",
+     "6": "the arm / hand would hit o00, o01, o02, o00, o01, o02 near [ 0.53  -0.042  0.626]",
+     "7": "the arm / hand would hit the floor_board near [0.532 0.062 0.626]",
+     "8": "the arm / hand would hit o01, o02, o01, o02 near [ 0.532 -0.043  0.626]",
+     "9": "grasp pose [ 0.532 -0.038  0.626] is out of reach (or the arm would hit the structure ther"
+    },
+    "hit_objects": [
+     "o00, o00",
+     "o00, o01, o02, o00, o01, o02",
+     "o00, o02, o00, o02",
+     "o01, o02, o01, o02",
+     "the floor_board",
+     "the structure ther"
+    ],
+    "negative_kind": "CERTIFIED",
+    "query_kind": "SCENE_TARGET_ONLY",
+    "reason": "no feasible side grasp",
+    "tried": 32,
+    "witness": null,
+    "y": 0
+   },
+   {
+    "azimuth": 202.5,
+    "edit": {
+     "o00": [
+      3,
+      5
+     ],
+     "o01": [
+      1,
+      3
+     ],
+     "o02": [
+      1,
+      5
+     ]
+    },
+    "grasp_id": 2,
+    "negative_kind": null,
+    "query_kind": "SCENE_TARGET_ONLY",
+    "reason": "grasp 2",
+    "tried": 3,
+    "witness": "2e0db12ee6d2ab39504a1ce3",
+    "y": 1
+   }
+  ],
+  "blocker": {
+   "blocker_supervision_valid": true,
+   "clearing_sets_reachable": {
+    "1": [],
+    "2": [],
+    "3": [
+     [
+      "o00",
+      "o01",
+      "o02"
+     ]
+    ]
+   },
+   "full_lattice": true,
+   "mask": {
+    "o00": 1,
+    "o01": 1,
+    "o02": 1,
+    "o03": 0,
+    "o04": 0
+   },
+   "minimal_sets": [
+    [
+     "o00",
+     "o01",
+     "o02"
+    ]
+   ],
+   "relocation_queries": {
+    "feasible": 14,
+    "queries": 30
+   },
+   "scope": [
+    "o00",
+    "o01",
+    "o02",
+    "o03",
+    "o04"
+   ],
+   "sequence_tries": 1,
+   "why_invalid": null
+  },
+  "edits_evaluated": 31,
+  "original": {
+   "grasp_reasons": {
+    "0": "the arm / hand would hit o00, o00 near [ 0.527 -0.038  0.626]",
+    "1": "the arm / hand would hit o00, o00 near [ 0.528 -0.036  0.626]",
+    "10": "grasp pose [ 0.532 -0.038  0.626] is out of reach (or the arm would hit the structure ther",
+    "11": "grasp pose [ 0.532 -0.038  0.626] is out of reach (or the arm would hit the structure ther",
+    "12": "grasp pose [ 0.532 -0.038  0.626] is out of reach (or the arm would hit the structure ther",
+    "13": "grasp pose [ 0.532 -0.038  0.626] is out of reach (or the arm would hit the structure ther",
+    "14": "grasp pose [ 0.532 -0.038  0.626] is out of reach (or the arm would hit the structure ther",
+    "15": "grasp pose [ 0.532 -0.038  0.626] is out of reach (or the arm would hit the structure ther",
+    "16": "the arm / hand would hit o00, o00 near [ 0.527 -0.038  0.691]",
+    "17": "the arm / hand would hit o00, o00 near [ 0.528 -0.036  0.691]",
+    "18": "the arm / hand would hit o00, o02, o00, o02 near [ 0.528 -0.04   0.691]",
+    "19": "the arm / hand would hit o00, o00 near [ 0.528 -0.033  0.691]",
+    "2": "the arm / hand would hit o00, o02, o00, o02 near [ 0.528 -0.04   0.626]",
+    "20": "the arm / hand would hit o00, o01, o02, o00, o01, o02 near [ 0.528 -0.042  0.691]",
+    "21": "the arm / hand would hit o00, o00 near [ 0.53  -0.033  0.691]",
+    "22": "the arm / hand would hit o00, o01, o02, o00, o01, o02 near [ 0.53  -0.042  0.691]",
+    "23": "the arm / hand would hit o04 near [0.532 0.037 0.691]",
+    "24": "the arm / hand would hit o01, o02, o01, o02 near [ 0.532 -0.043  0.691]",
+    "25": "grasp pose [ 0.532 -0.038  0.691] is out of reach (or the arm would hit the structure ther",
+    "26": "grasp pose [ 0.532 -0.038  0.691] is out of reach (or the arm would hit the structure ther",
+    "27": "grasp pose [ 0.532 -0.038  0.691] is out of reach (or the arm would hit the structure ther",
+    "28": "grasp pose [ 0.532 -0.038  0.691] is out of reach (or the arm would hit the structure ther",
+    "29": "grasp pose [ 0.532 -0.038  0.691] is out of reach (or the arm would hit the structure ther",
+    "3": "the arm / hand would hit o00, o00 near [ 0.528 -0.033  0.626]",
+    "30": "grasp pose [ 0.532 -0.038  0.691] is out of reach (or the arm would hit the structure ther",
+    "31": "grasp pose [ 0.532 -0.038  0.691] is out of reach (or the arm would hit the structure ther",
+    "4": "the arm / hand would hit o00, o01, o02, o00, o01, o02 near [ 0.528 -0.042  0.626]",
+    "5": "the arm / hand would hit o00, o00 near [ 0.53  -0.033  0.626]",
+    "6": "the arm / hand would hit o00, o01, o02, o00, o01, o02 near [ 0.53  -0.042  0.626]",
+    "7": "the arm / hand would hit o04, o04 near [0.532 0.037 0.626]",
+    "8": "the arm / hand would hit o01, o02, o01, o02 near [ 0.532 -0.043  0.626]",
+    "9": "grasp pose [ 0.532 -0.038  0.626] is out of reach (or the arm would hit the structure ther"
+   },
+   "hit_objects": [
+    "o00, o00",
+    "o00, o01, o02, o00, o01, o02",
+    "o00, o02, o00, o02",
+    "o01, o02, o01, o02",
+    "o04",
+    "o04, o04",
+    "the structure ther"
+   ],
+   "negative_kind": "CERTIFIED",
+   "reason": "no feasible side grasp",
+   "tried": 32,
+   "witness": null,
+   "y": 0
+  }
+ },
+ "ledger_observed": "3",
+ "mechanism_pools": {
+  "grasp": [
+   [
+    3,
+    2
+   ]
+  ],
+  "place": [
+   [
+    3,
+    2
+   ],
+   [
+    0,
+    0
+   ],
+   [
+    0,
+    1
+   ]
+  ],
+  "route": [
+   [
+    0,
+    0
+   ],
+   [
+    0,
+    1
+   ],
+   [
+    1,
+    1
+   ],
+   [
+    1,
+    2
+   ],
+   [
+    2,
+    0
+   ],
+   [
+    2,
+    1
+   ],
+   [
+    2,
+    2
+   ],
+   [
+    2,
+    4
+   ],
+   [
+    3,
+    1
+   ],
+   [
+    3,
+    2
+   ],
+   [
+    3,
+    3
+   ],
+   [
+    4,
+    0
+   ],
+   [
+    4,
+    1
+   ],
+   [
+    4,
+    3
+   ],
+   [
+    4,
+    4
+   ],
+   [
+    5,
+    1
+   ],
+   [
+    5,
+    2
+   ],
+   [
+    5,
+    3
+   ]
+  ],
+  "transfer": [
+   [
+    3,
+    2
+   ]
+  ]
+ },
+ "n_movable": 5,
+ "n_orders": 6,
+ "n_success": 3,
+ "objects": [
+  {
+   "color": "green",
+   "height": 0.15289171645465013,
+   "id": "t0",
+   "shape": "cylinder",
+   "size": 0.01885273994932531
+  },
+  {
+   "color": "red",
+   "height": 0.15566379249041631,
+   "id": "o00",
+   "shape": "cylinder",
+   "size": 0.013845305921518752
+  },
+  {
+   "color": "blue",
+   "height": 0.15516154693819928,
+   "id": "o01",
+   "shape": "cylinder",
+   "size": 0.017309894578626903
+  },
+  {
+   "color": "orange",
+   "height": 0.14461939341957755,
+   "id": "o02",
+   "shape": "cylinder",
+   "size": 0.015813068625240276
+  },
+  {
+   "color": "purple",
+   "height": 0.10016020760890046,
+   "id": "o03",
+   "shape": "cylinder",
+   "size": 0.015120795161983511
+  },
+  {
+   "color": "yellow",
+   "height": 0.1144906972507432,
+   "id": "o04",
+   "shape": "cylinder",
+   "size": 0.015824907056030013
+  }
+ ],
+ "observed": 3,
+ "order_class": "ORDER_DEPENDENT",
+ "parking": {
+  "o00": [
+   [
+    3,
+    5
+   ]
+  ],
+  "o01": [
+   [
+    1,
+    3
+   ],
+   [
+    1,
+    4
+   ]
+  ],
+  "o02": [
+   [
+    1,
+    5
+   ],
+   [
+    1,
+    4
+   ]
+  ],
+  "o03": [
+   [
+    5,
+    0
+   ],
+   [
+    5,
+    5
+   ]
+  ],
+  "o04": [
+   [
+    5,
+    5
+   ],
+   [
+    2,
+    5
+   ]
+  ]
+ },
+ "permutations": [
+  {
+   "failed_step": null,
+   "negative_kind": null,
+   "order": [
+    [
+     "o00",
+     [
+      3,
+      5
+     ]
+    ],
+    [
+     "o01",
+     [
+      1,
+      3
+     ]
+    ],
+    [
+     "o02",
+     [
+      1,
+      5
+     ]
+    ]
+   ],
+   "reason": "executed",
+   "role": "minimal",
+   "source": "teacher",
+   "witnesses": [
+    "6e0c20c1bd86ca1458733e97",
+    "e49c4e00b1af7558d45f9ebe",
+    "02ac18b4b774c809912a5a50",
+    "ef02feb48d24b9d7257ccc08"
+   ],
+   "y": 1
+  },
+  {
+   "cpu_s": 42.403,
+   "error": null,
+   "failed_step": null,
+   "final_cells": {
+    "o00": [
+     3,
+     5
+    ],
+    "o01": [
+     1,
+     3
+    ],
+    "o02": [
+     1,
+     5
+    ],
+    "o03": [
+     5,
+     2
+    ],
+    "o04": [
+     5,
+     4
+    ],
+    "t0": [
+     1,
+     0
+    ]
+   },
+   "negative_kind": null,
+   "order": [
+    [
+     "o00",
+     [
+      3,
+      5
+     ]
+    ],
+    [
+     "o02",
+     [
+      1,
+      5
+     ]
+    ],
+    [
+     "o01",
+     [
+      1,
+      3
+     ]
+    ]
+   ],
+   "reason": "executed",
+   "resolution": "EVALUATED",
+   "source": "audit",
+   "witnesses": [
+    "6e0c20c1bd86ca1458733e97",
+    "4fef04f660e8751794bc5b44",
+    "68b8377ecd368fb2a9f1858b",
+    "fb2ce7e7a48be033e2ec7916"
+   ],
+   "y": 1
+  },
+  {
+   "cpu_s": 67.131,
+   "error": null,
+   "failed_step": null,
+   "final_cells": {
+    "o00": [
+     3,
+     5
+    ],
+    "o01": [
+     1,
+     3
+    ],
+    "o02": [
+     1,
+     5
+    ],
+    "o03": [
+     5,
+     2
+    ],
+    "o04": [
+     5,
+     4
+    ],
+    "t0": [
+     1,
+     0
+    ]
+   },
+   "negative_kind": null,
+   "order": [
+    [
+     "o01",
+     [
+      1,
+      3
+     ]
+    ],
+    [
+     "o00",
+     [
+      3,
+      5
+     ]
+    ],
+    [
+     "o02",
+     [
+      1,
+      5
+     ]
+    ]
+   ],
+   "reason": "executed",
+   "resolution": "EVALUATED",
+   "source": "audit",
+   "witnesses": [
+    "86d403e5d0c7ec8f1b5d007a",
+    "f6c5969666fce112ca01da01",
+    "8f35966c6c38eca85f1711c6",
+    "69209b7cd8912762d86b4af5"
+   ],
+   "y": 1
+  },
+  {
+   "cpu_s": 110.784,
+   "error": null,
+   "failed_step": 2,
+   "final_cells": null,
+   "negative_kind": "CERTIFIED",
+   "order": [
+    [
+     "o01",
+     [
+      1,
+      3
+     ]
+    ],
+    [
+     "o02",
+     [
+      1,
+      5
+     ]
+    ],
+    [
+     "o00",
+     [
+      3,
+      5
+     ]
+    ]
+   ],
+   "reason": "no feasible side grasp",
+   "resolution": "EVALUATED",
+   "source": "audit",
+   "witnesses": [
+    "86d403e5d0c7ec8f1b5d007a",
+    "fa38030d79a43484706ee5b5"
+   ],
+   "y": 0
+  },
+  {
+   "cpu_s": 93.944,
+   "error": null,
+   "failed_step": 1,
+   "final_cells": null,
+   "negative_kind": "NO_PLAN_FOUND",
+   "order": [
+    [
+     "o02",
+     [
+      1,
+      5
+     ]
+    ],
+    [
+     "o00",
+     [
+      3,
+      5
+     ]
+    ],
+    [
+     "o01",
+     [
+      1,
+      3
+     ]
+    ]
+   ],
+   "reason": "no feasible side grasp",
+   "resolution": "EVALUATED",
+   "source": "audit",
+   "witnesses": [
+    "4c43d315c91436820cf06144"
+   ],
+   "y": 0
+  },
+  {
+   "failed_step": 2,
+   "negative_kind": "CERTIFIED",
+   "order": [
+    [
+     "o02",
+     [
+      1,
+      5
+     ]
+    ],
+    [
+     "o01",
+     [
+      1,
+      3
+     ]
+    ],
+    [
+     "o00",
+     [
+      3,
+      5
+     ]
+    ]
+   ],
+   "reason": "no feasible side grasp",
+   "role": "wrong_order",
+   "source": "teacher",
+   "witnesses": [
+    "4c43d315c91436820cf06144",
+    "cfce96a5ef54dbcc665e4cab"
+   ],
+   "y": 0
+  }
+ ],
+ "roles": {
+  "o00": "intended_blocker",
+  "o01": "intended_blocker",
+  "o02": "intended_blocker",
+  "o03": "distractor:near_T",
+  "o04": "distractor:near_T"
+ },
+ "source_files": {
+  "rrt_connect.py": "01972f63842d",
+  "rrt_star.py": "bc46b48d5e68",
+  "shelf_scene.py": "440ac53766f8"
+ },
+ "spec": {
+  "K": 3,
+  "displacement": "medium",
+  "distractor_role": "near_T",
+  "distractors": "1-2",
+  "intent": "dependence_seeking",
+  "mechanism": "place",
+  "parking": "limited",
+  "source": "far",
+  "start_pose": "home"
+ },
+ "target_src": [
+  4,
+  2
+ ],
+ "teacher_calls": {
+  "execute": 13,
+  "plan": 62
+ },
+ "teacher_wall_s": 1268.766232252121,
+ "verified_K": 3
+}

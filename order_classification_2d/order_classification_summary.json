@@ -1,0 +1,129 @@
+{
+ "dataset": "rss-ebm-infeasibility @ yadu/dataset-3d 8fe960750b0a2701d76c91d304e0c427cc808d74 : gh-yadu-iiith/planar_2d/dataset_bd_classquota",
+ "teacher": "BD2D_TEACHER_V1:DetPhysics(P16_FAST,no-library) via bd_2d.teach.seq semantics (carried robot state; T from achieved state; QB per sequence)",
+ "outcome_convention": "LEGACY combined target-task outcome; NOT connector-valid Approach B X / independent Y",
+ "table": {
+  "K0": {
+   "total": 1250,
+   "order_dependent": 0,
+   "order_independent": 0,
+   "unresolved": 0,
+   "not_applicable": 1250
+  },
+  "K1": {
+   "total": 800,
+   "order_dependent": 0,
+   "order_independent": 0,
+   "unresolved": 0,
+   "not_applicable": 800
+  },
+  "K2": {
+   "total": 800,
+   "order_dependent": 105,
+   "order_independent": 695,
+   "unresolved": 0,
+   "not_applicable": 0
+  },
+  "K3": {
+   "total": 1150,
+   "order_dependent": 498,
+   "order_independent": 652,
+   "unresolved": 0,
+   "not_applicable": 0
+  },
+  "NONE": {
+   "total": 1000,
+   "order_dependent": 0,
+   "order_independent": 0,
+   "unresolved": 0,
+   "not_applicable": 1000
+  }
+ },
+ "total": {
+  "total": 5000,
+  "order_dependent": 603,
+  "order_independent": 1347,
+  "unresolved": 0,
+  "not_applicable": 3050
+ },
+ "k2plus": {
+  "total": 1950,
+  "order_dependent": 603,
+  "order_dependent_pct": 30.92,
+  "order_independent": 1347,
+  "order_independent_pct": 69.08,
+  "unresolved": 0,
+  "dependent_strict_majority": false
+ },
+ "k3_success_count_distribution_fully_enumerated": {
+  "0/6": 0,
+  "1/6": 0,
+  "2/6": 0,
+  "3/6": 15,
+  "4/6": 74,
+  "5/6": 181,
+  "6/6": 652
+ },
+ "k3_fully_enumerated_scenes": 922,
+ "k3_not_fully_enumerated": {
+  "scenes": 228,
+  "why": "ORDER_DEPENDENT from historical minimal vs reverse contrast; remaining orders not needed and not evaluated"
+ },
+ "permutation_records": {
+  "historical_reused": 3900,
+  "new_evaluated": 3688,
+  "new_resolved": 3688,
+  "not_evaluated_not_needed": 912
+ },
+ "failures": {
+  "total": 707,
+  "certified": 127,
+  "budget_limited": 580,
+  "kinds": {
+   "NO_PLAN_FOUND": 580,
+   "CERTIFIED": 127
+  },
+  "relocation_step": 646,
+  "target_step": 61,
+  "new_only": {
+   "certified": 65,
+   "budget_limited": 309,
+   "relocation_step": 340,
+   "target_step": 34
+  }
+ },
+ "dependent_contrast_location": {
+  "K2": {
+   "target_only": 9,
+   "relocation": 96
+  },
+  "K3": {
+   "relocation": 463,
+   "target_only": 35
+  }
+ },
+ "unresolved_scenes": [],
+ "new_eval_errors": [],
+ "none": {
+  "CERTIFIED_CONSTRUCTION": 974,
+  "NO_REPAIR_FOUND": 26
+ },
+ "not_applicable_total": 3050,
+ "implied_attempt_consistency": {
+  "scenes": 98,
+  "implied_perms": 106,
+  "new_confirms_failure": 106,
+  "new_success_contradicts": 0,
+  "unresolved": 0
+ },
+ "reproduction_audit": {
+  "sequences": 24,
+  "label_status_failedstep_kind_match": 24,
+  "witness_bitwise_match_successes": "0/10",
+  "standard": "LABEL_EQUIVALENT_NOT_BITWISE (trajectory float diffs <= 2.2e-15; one segment differs by one waypoint)"
+ },
+ "new_cpu_s": 68013.8,
+ "sidecar_lines": 922,
+ "sidecar_unique_roots": 922,
+ "x_y_status": "every permutation outcome here (historical and new) is legacy; each needs a q_ref connector check after its relocations and an independent Y replay from q_ref before use as finalized Approach B X/Y"
+}

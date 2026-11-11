@@ -1,0 +1,654 @@
+{
+ "budget": {
+  "admin_cpu_s": 1200.0,
+  "per_query": {
+   "goal_plans": 3,
+   "motion_checks": 150,
+   "online_moves": 8,
+   "transit_plans": 6
+  }
+ },
+ "construction": {
+  "added": [
+   {
+    "cell": 59,
+    "id": "o04",
+    "parking": 44
+   }
+  ],
+  "destinations_free_distinct_in_original": true,
+  "edge_queries": 2,
+  "kind": "K2_CHAIN",
+  "method": "depseek2d",
+  "parent_root_id": "2d-plus2d-srv-w0294-s015",
+  "parent_sha256": "10fe7f2f4dcc6101fb53f041b2ef714a53a51ec848b88fb254b75ebf5dea73d6",
+  "pool": [
+   "o03",
+   "o04"
+  ]
+ },
+ "domain": "2d",
+ "empty_scene_T_swept": {
+  "approach": [
+   56,
+   62,
+   63
+  ],
+  "carry": [
+   4,
+   5,
+   12,
+   13,
+   14,
+   21,
+   22,
+   28,
+   29,
+   30,
+   31,
+   36,
+   37,
+   38,
+   39,
+   40,
+   41,
+   43,
+   44,
+   45,
+   46,
+   47,
+   48,
+   49,
+   50,
+   51,
+   52,
+   53,
+   54,
+   55,
+   56,
+   57,
+   58,
+   59,
+   60,
+   61,
+   62,
+   63
+  ],
+  "close_attach": [
+   56,
+   62,
+   63
+  ],
+  "pregrasp": [
+   62
+  ],
+  "release": [
+   4,
+   12,
+   21,
+   28,
+   29,
+   36,
+   40,
+   41,
+   43,
+   49,
+   50,
+   51
+  ],
+  "retreat": [
+   4,
+   12,
+   13,
+   21,
+   28,
+   29,
+   36,
+   37,
+   40,
+   41,
+   43,
+   44,
+   49,
+   50,
+   51,
+   58
+  ]
+ },
+ "empty_scene_T_witness": "1425b034e09e10643bd8cfdc",
+ "fixed_ids": [],
+ "generator_version_plus": "BD_GEN_V1+DEPSEEK2D_V1",
+ "geometry_impl": "fastgeom1",
+ "goal_cell": 4,
+ "ids": {
+  "config_hash": "90d3eb68e8a42108",
+  "construction_seed": 3967228868,
+  "generator_version": "BD_GEN_V1+DEPSEEK2D_V1",
+  "label_protocol": "BD_BINARY_BUDGET_V1",
+  "parent_family_id": "fam-fad4c76e62",
+  "parent_root_id": "2d-plus2d-srv-w0294-s015",
+  "robot_protocol": "PLANAR3R_SIDEGRASP_V1:sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+  "root_id": "D2_LOCAL_K2_CHAIN_8cdd27c606",
+  "teacher_version": "BD2D_TEACHER_V1:DetPhysics(P16_FAST,no-library)",
+  "variant_id": "orig"
+ },
+ "independent_moves": null,
+ "intended_blockers": [
+  "o03",
+  "o04"
+ ],
+ "labels": {
+  "B": [
+   {
+    "failed_step": null,
+    "n_actions": 3,
+    "negative_kind": null,
+    "reason": "VERIFIED",
+    "role": "minimal",
+    "sequence": [
+     [
+      "o04",
+      44
+     ],
+     [
+      "o03",
+      7
+     ]
+    ],
+    "travel": 5.452980195656661,
+    "witnesses": [
+     "693669360c6910d93c3a5df0",
+     "d8e6ba72b9251cd027eb245e",
+     "7ed7181f657b6eba705c8b35"
+    ],
+    "y": 1
+   },
+   {
+    "excess_actions": null,
+    "failed_step": 0,
+    "n_actions": 3,
+    "negative_kind": "NO_PLAN_FOUND",
+    "reason": "UNKNOWN_PLANNER",
+    "role": "wrong_order",
+    "sequence": [
+     [
+      "o03",
+      7
+     ],
+     [
+      "o04",
+      44
+     ]
+    ],
+    "travel": null,
+    "witnesses": [],
+    "y": 0
+   },
+   {
+    "excess_actions": null,
+    "failed_step": "target",
+    "n_actions": 2,
+    "negative_kind": "NO_PLAN_FOUND",
+    "reason": "UNKNOWN_PLANNER",
+    "role": "partial",
+    "sequence": [
+     [
+      "o04",
+      44
+     ]
+    ],
+    "travel": null,
+    "witnesses": [],
+    "y": 0
+   },
+   {
+    "excess_actions": 1,
+    "failed_step": null,
+    "n_actions": 4,
+    "negative_kind": null,
+    "reason": "VERIFIED",
+    "role": "redundant+1",
+    "sequence": [
+     [
+      "o00",
+      23
+     ],
+     [
+      "o04",
+      44
+     ],
+     [
+      "o03",
+      7
+     ]
+    ],
+    "travel": 8.382668318153815,
+    "witnesses": [
+     "5271fe15ef5532ac4369cd9b",
+     "a084028fb896003c0721c092",
+     "a95572afdfd9d5b4c79ed2bb",
+     "a8f746fb010fa817491f891f"
+    ],
+    "y": 1
+   },
+   {
+    "excess_actions": -1,
+    "failed_step": null,
+    "n_actions": 2,
+    "negative_kind": null,
+    "reason": "VERIFIED",
+    "role": "noop_irrelevant",
+    "sequence": [
+     [
+      "o00",
+      23
+     ]
+    ],
+    "travel": 6.745508738668401,
+    "witnesses": [
+     "5271fe15ef5532ac4369cd9b",
+     "a04cee17bc2637fe66e7b9af"
+    ],
+    "y": 1
+   },
+   {
+    "excess_actions": 2,
+    "failed_step": null,
+    "n_actions": 5,
+    "negative_kind": null,
+    "reason": "VERIFIED",
+    "role": "redundant+2",
+    "sequence": [
+     [
+      "o00",
+      23
+     ],
+     [
+      "o01",
+      6
+     ],
+     [
+      "o04",
+      44
+     ],
+     [
+      "o03",
+      7
+     ]
+    ],
+    "travel": 13.427643660325966,
+    "witnesses": [
+     "5271fe15ef5532ac4369cd9b",
+     "3c7a8ea1c501b4421d201a4e",
+     "c80e294cb338f48e6ac97d8f",
+     "6c35c532f56d4fad9d249681",
+     "20f70db941b1589fea4a9b5c"
+    ],
+    "y": 1
+   }
+  ],
+  "D": [
+   {
+    "edit": {
+     "o00": 23
+    },
+    "negative_kind": "NO_PLAN_FOUND",
+    "query_kind": "SCENE_TARGET_ONLY",
+    "reason": "UNKNOWN_PLANNER",
+    "y": 0
+   },
+   {
+    "edit": {
+     "o01": 6
+    },
+    "negative_kind": "NO_PLAN_FOUND",
+    "query_kind": "SCENE_TARGET_ONLY",
+    "reason": "UNKNOWN_PLANNER",
+    "y": 0
+   },
+   {
+    "edit": {
+     "o02": 15
+    },
+    "negative_kind": "NO_PLAN_FOUND",
+    "query_kind": "SCENE_TARGET_ONLY",
+    "reason": "UNKNOWN_PLANNER",
+    "y": 0
+   },
+   {
+    "edit": {
+     "o03": 7
+    },
+    "negative_kind": "NO_PLAN_FOUND",
+    "query_kind": "SCENE_TARGET_ONLY",
+    "reason": "UNKNOWN_PLANNER",
+    "y": 0
+   },
+   {
+    "edit": {
+     "o04": 44
+    },
+    "negative_kind": "NO_PLAN_FOUND",
+    "query_kind": "SCENE_TARGET_ONLY",
+    "reason": "UNKNOWN_PLANNER",
+    "y": 0
+   },
+   {
+    "edit": {
+     "o03": 7,
+     "o04": 44
+    },
+    "negative_kind": null,
+    "query_kind": "SCENE_TARGET_ONLY",
+    "reason": "VERIFIED",
+    "y": 1
+   }
+  ],
+  "blocker": {
+   "audit_subset": false,
+   "blocker_supervision_valid": true,
+   "full_lattice": true,
+   "mask": {
+    "o03": 1,
+    "o04": 1
+   },
+   "minimal_sets": [
+    [
+     "o03",
+     "o04"
+    ]
+   ],
+   "monotone": true,
+   "scope": [
+    "o03",
+    "o04"
+   ],
+   "why_invalid": null
+  },
+  "edits_evaluated": 6,
+  "original": {
+   "negative_kind": "NO_PLAN_FOUND",
+   "reason": "UNKNOWN_PLANNER",
+   "y": 0
+  }
+ },
+ "n_movable": 5,
+ "n_orders": 2,
+ "n_success": 1,
+ "observed": 2,
+ "order_class": "ORDER_DEPENDENT",
+ "parking": {
+  "o00": [
+   {
+    "cell": 23,
+    "in_target_sweep": false
+   },
+   {
+    "cell": 15,
+    "in_target_sweep": false
+   }
+  ],
+  "o01": [
+   {
+    "cell": 6,
+    "in_target_sweep": false
+   },
+   {
+    "cell": 7,
+    "in_target_sweep": false
+   }
+  ],
+  "o02": [
+   {
+    "cell": 15,
+    "in_target_sweep": false
+   },
+   {
+    "cell": 7,
+    "in_target_sweep": false
+   }
+  ],
+  "o03": [
+   {
+    "cell": 7,
+    "in_target_sweep": false
+   }
+  ],
+  "o04": [
+   {
+    "cell": 44,
+    "in_target_sweep": true
+   }
+  ]
+ },
+ "permutations": [
+  {
+   "failed_step": null,
+   "negative_kind": null,
+   "order": [
+    [
+     "o04",
+     44
+    ],
+    [
+     "o03",
+     7
+    ]
+   ],
+   "reason": "VERIFIED",
+   "role": "minimal",
+   "source": "teacher",
+   "witnesses": [
+    "693669360c6910d93c3a5df0",
+    "d8e6ba72b9251cd027eb245e",
+    "7ed7181f657b6eba705c8b35"
+   ],
+   "y": 1
+  },
+  {
+   "failed_step": 0,
+   "negative_kind": "NO_PLAN_FOUND",
+   "order": [
+    [
+     "o03",
+     7
+    ],
+    [
+     "o04",
+     44
+    ]
+   ],
+   "reason": "UNKNOWN_PLANNER",
+   "role": "wrong_order",
+   "source": "teacher",
+   "witnesses": [],
+   "y": 0
+  }
+ ],
+ "q0": [
+  2.356194490192345,
+  -1.5707963267948966,
+  -1.5707963267948966
+ ],
+ "roles": {
+  "o00": "intended_blocker",
+  "o01": "intended_blocker",
+  "o02": "intended_blocker",
+  "o03": "intended_blocker",
+  "o04": "intended_blocker"
+ },
+ "scene": {
+  "action_hash": null,
+  "domain_policy": "ALL_SUPPORTED",
+  "lattice": {
+   "cols": 8,
+   "pitch_m": 0.08,
+   "rows": 8
+  },
+  "legal_cells": [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12,
+   13,
+   14,
+   15,
+   16,
+   17,
+   18,
+   19,
+   20,
+   21,
+   22,
+   23,
+   24,
+   25,
+   26,
+   27,
+   28,
+   29,
+   30,
+   31,
+   32,
+   33,
+   34,
+   35,
+   36,
+   37,
+   38,
+   39,
+   40,
+   41,
+   42,
+   43,
+   44,
+   45,
+   46,
+   47,
+   48,
+   49,
+   50,
+   51,
+   52,
+   53,
+   54,
+   55,
+   56,
+   57,
+   58,
+   59,
+   60,
+   61,
+   62,
+   63
+  ],
+  "objects": [
+   {
+    "cell": 53,
+    "id": "o00",
+    "kind": "obstacle",
+    "radius_m": 0.024,
+    "support": "table",
+    "xy_m": [
+     0.44,
+     0.52
+    ]
+   },
+   {
+    "cell": 28,
+    "id": "o01",
+    "kind": "obstacle",
+    "radius_m": 0.024,
+    "support": "table",
+    "xy_m": [
+     0.36,
+     0.28
+    ]
+   },
+   {
+    "cell": 52,
+    "id": "o02",
+    "kind": "obstacle",
+    "radius_m": 0.024,
+    "support": "table",
+    "xy_m": [
+     0.36,
+     0.52
+    ]
+   },
+   {
+    "cell": 60,
+    "id": "o03",
+    "kind": "obstacle",
+    "radius_m": 0.024,
+    "support": "table",
+    "xy_m": [
+     0.36,
+     0.6
+    ]
+   },
+   {
+    "cell": 59,
+    "id": "o04",
+    "kind": "obstacle",
+    "radius_m": 0.024,
+    "support": "table",
+    "xy_m": [
+     0.28,
+     0.6
+    ]
+   },
+   {
+    "cell": 63,
+    "id": "t0",
+    "kind": "target",
+    "radius_m": 0.024,
+    "support": "table",
+    "xy_m": [
+     0.6,
+     0.6
+    ]
+   }
+  ],
+  "robot": {
+   "attached_id": null,
+   "attachment": "free",
+   "gripper_gap_m": 0.07,
+   "q_rad": [
+    2.356194490192345,
+    -1.5707963267948966,
+    -1.5707963267948966
+   ]
+  },
+  "robot_profile_hash": "sha256:2d7986761356f926f132f3b7045199a7e2b38a46d1c1516584a1929c3e1ae858",
+  "root_id": "D2_LOCAL_K2_CHAIN_8cdd27c606",
+  "variant_id": "orig"
+ },
+ "spec": {
+  "K": 2,
+  "displacement": "long",
+  "distractor_role": "far",
+  "distractors": "0",
+  "intent": "dependence_seeking",
+  "mechanism": "transfer",
+  "parking": "limited",
+  "source": "far",
+  "start_pose": "nonhome"
+ },
+ "start_stratum": "S3",
+ "teacher_calls": {
+  "goal": 7,
+  "sequence": 7
+ },
+ "teacher_cpu_s": 277.048752018,
+ "verified_K": 2
+}

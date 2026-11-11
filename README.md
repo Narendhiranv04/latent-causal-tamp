@@ -1,5 +1,38 @@
 # Latent Causal Infeasibility for Long-Horizon TAMP
 
+> **Branch `naren/dataset-done`** — full workspace snapshot taken 2026-11-11 after the Approach B 2D + 3D dataset
+> generation (including the K3 hard-order sidecar). It contains code, reports, run outputs and the generated data.
+> Nothing was trained after the K3 hard-order generation.
+
+## Where things are (this branch)
+
+| Path | Contents |
+|---|---|
+| `*.py`, `*.toml`, `fixtures.json`, `requirements.lock` (root) | Core code and configs. The scripts import each other by plain name and read configs from the root, so they stay here. |
+| `tests/` | Test suite. |
+| `docs/methodology/`, `docs/methodology_pdfs/` | Methodology and implementation guides (Markdown and PDF). |
+| `docs/audits/`, `docs/status/`, `docs/archives/`, `docs/addenda/`, `docs/archive/` | Audits, status notes, archived guides and contract addenda. |
+| `instruction-phase-md/` | Instruction contracts, grouped: `numbered_contracts/`, `approach_b/`, `approach_d/`, `general/`. |
+| `responses-phases/` | Numbered stage reports, grouped in blocks of 25 (`0001-0025/`, ...) plus `misc/`. |
+| `runs/` | Run outputs per stage (G0–G4, P6–P17, Approach D). |
+| `visualizations/`, `teaser-assets/`, `slides-a-b-c/`, `PoC-takeaway/` | Figures, teaser images, slides. |
+| `order_classification_2d/`, `order_classification_3d/` | Six-permutation order classification of the 2D and 3D target tasks (code, per-scene outcomes, source snapshot). |
+| `approach_b_reuse_audit/` | Approach B existing-data reuse audit. |
+| `final_dataset_generation/` | Final 2D + 3D dataset generation: dependence-seeking generators, stores (`d2/`, `d3_*/`), selection manifests V2, final reports. |
+| `final_dataset_generation/k3_hard/` | K3 hard-order generation: generators, ledgers, stores, consistency and X/Y checks. |
+| `final_dataset_generation/k3_hard/K3_HARD_ORDER_V1/` | The K3 hard-order deliverables: generation report, V3 strength selection manifest, X/Y validation, resource report, readiness JSON, SHA256SUMS. |
+| `ST_dummy/` | Dummy ST run outputs. |
+
+Notes for this snapshot:
+
+- Compared with the working tree, only loose documents were moved (root PDFs/Markdown/zip into `docs/`, and the two
+  phase folders into sub-folders). Links below that point at root-level PDFs or flat `responses-phases/` files refer
+  to the old locations.
+- Some manifests record absolute local paths (for example `host_store`); they are provenance only.
+- Not included: Python caches, virtual environments and nested git worktrees.
+
+---
+
 Intervention-supervised joint relocation for a prescribed, frozen target motion.
 
 - Scientific semantics: `latent_causal_tamp_specification_v1_5.pdf` (Methodology v1.5, initial-scene repair

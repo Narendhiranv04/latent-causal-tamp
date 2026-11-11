@@ -1,0 +1,27 @@
+# Claude Opus 5.5 High — Prepare Full 2D Placement Extension for Future Launch (DO NOT LAUNCH)
+
+Read **`Approach_B_Full_2D_Placement_Extension_Launch_Readiness_v1.md`** completely. Use **`final-fixed-methodology-1.pdf`** (5 Nov 2026) as scientific authority and the prior smoke repair instruction/report as implementation history. The detailed Markdown is the execution contract for this task.
+
+Work in the **existing local worktree**, reported as `/home/naren/Desktop/rss-placement-smoke`, branch `naren/placement-smoke-2d`. Inspect the actual source, dirty diff, repaired-smoke scripts, `smoke_repro_v2` report/artifacts, original 5,000-root 2D dataset and pinned 3R physical teacher **before making changes**. These paths and reported results are leads to verify, not assumptions.
+
+**Goal:** Make the entire 2D individual-placement-sidecar extension ready for an explicit later launch, with all code, config, split manifests, storage, scripts, guards, resource forecast and runbook prepared. **Do not start the full 5,000-scene physical labeling run now.**
+
+## Execute now — only preparation and bounded validation
+
+1. Audit and preserve the original dataset, historical failed smoke and repaired `SMOKE_PASS` artifacts. Verify scientific semantics and existing code; reuse the working post-grasp placement teacher and deterministic work budgets rather than rewriting the low-level 3R planner.
+2. Create frozen, root-grouped 70/15/15 train/validation/test splits (respect actual shared ancestry and split contamination risks); keep each root's hypothetical descendants in one split. Do not use the test split to choose policies.
+3. Prepare a reproducible **stratified object–destination and intermediate-scene query plan** on the *same* original 5,000 selected roots. The query-plan dry-run may read all root metadata but must not invoke a teacher for all 5,000 roots. Never use intended repair or oracle blocker metadata to choose the sampler's training candidates.
+4. Run a **small, predeclared 25-root development-only readiness pilot**, comparing fixed nested per-query grasp-pair budgets of **8, 16, 32 and 64**. Freeze deterministic search effort and mode order; record every valid certified carry→release→retreat witness, policy-limited binary outcomes and unattempted-mode coverage. Include initial and selected hypothetical intermediate scenes and real replay/visualization. Select a defensible production pair budget using the document's predeclared decision rule, accounting for coverage, uncertainty, CPU cost and negative diversity. **Do not call 64 pairs exhaustive physics truth.**
+5. Configure the local laptop for **25 worker processes out of 32 reported logical CPUs**, with **seven logical CPUs reserved** for host/UI/monitoring. Discover actual online/allowed IDs and SMT topology; pin each worker to a selected CPU, enforce BLAS/OMP=1, apply a hard CPU quota only if actually available. Do not claim affinity is a quota. Use fail-safe thermal policy: pause at 88°C, resume at 80°C, immediate cancel at 95°C or a lower validated hardware threshold; aborted queries remain unlabeled. Stress-test the **bounded pilot** at 25 workers only if safe. If not safe, report a blocker rather than overruling the guard.
+6. Build minimal launch-ready configuration, real CLI/runner, atomic JSON+compressed NPZ sidecar storage, content-hashed/reverified trajectory reuse, root/query resume, monitoring/cleanup, full-manifest metadata-only preflight, and a **guarded full launch script disabled unless the user explicitly enters the frozen manifest/policy confirmation**. Produce an exact `RUNBOOK.md` with later launch, pause, resume, stop, status and audit commands; **do not execute the launch command**.
+7. Validate deterministic canonical labels and trajectory hashes across serial/25-worker repeat pilot runs; verify no baseline regressions, no cross-split leakage, no source-data changes, no accidental training, safe resource envelope and a conservative full-run CPU-hour/disk estimate.
+
+## Absolute restrictions
+
+- **NO full 5,000-root physical label collection**; not even a partial “first batch” of the production job. Only the bounded pilot may call the physical teacher now.
+- No new scene generation, 3D, cVAE/flow training, X/Y retraining or formula changes, remote machines, unapproved push/merge/commit, or rewriting preserved smoke/archive data.
+- A query that exhausts its **completed deterministic work budget** is operational label `0`. Emergency time/thermal interruption is **incomplete and unlabeled**, never a fabricated zero. Success requires verified held-object carry, release and local retreat, not pick approach.
+- Never infer physical impossibility from a finite budget or treat cVAE/flow density as calibrated confidence. All recorded trajectories must be genuine and independently replayable.
+- Do not accidentally start the full launcher during tests; prove the launch guard works by checking that it refuses incomplete/missing confirmation *without running the teacher*.
+
+**Finish with:** a concise `readiness_report.md`, an inventory of actual changed files, pilot tables and visualizations, frozen configurations and checksums, the verified 25-worker resource results, full-run time/storage forecast, the exact *future* manual launch command, and the verdict **`READY_TO_LAUNCH`** or **`NOT_READY_TO_LAUNCH`** with evidence. Then **STOP**. The user will explicitly approve production launch later.

@@ -1,0 +1,223 @@
+{
+ "K2": {
+  "dependent_scenes": 105,
+  "tier": {
+   "T3_TARGET_STEP_ONLY": 9,
+   "T2_RELOCATION_BUDGET_ONLY": 72,
+   "T1_CERTIFIED_RELOCATION": 24
+  },
+  "scenes_with_any_certified_failure": 24,
+  "scenes_budget_limited_failures_only": 81,
+  "scenes_with_relocation_and_target_failures": 0,
+  "failing_orders": 105,
+  "failing_orders_by_step_and_kind": {
+   "1|CERTIFIED": 24,
+   "1|NO_PLAN_FOUND": 72,
+   "target|NO_PLAN_FOUND": 9
+  },
+  "failing_orders_first_relocation": 0,
+  "scenes_with_a_first_relocation_failure": 0,
+  "exactly_one_order": null,
+  "tier_by_success_count": {
+   "1/2": {
+    "T3_TARGET_STEP_ONLY": 9,
+    "T2_RELOCATION_BUDGET_ONLY": 72,
+    "T1_CERTIFIED_RELOCATION": 24
+   }
+  },
+  "by_split": {
+   "train": {
+    "dependent": 68,
+    "independent": 492
+   },
+   "val": {
+    "dependent": 21,
+    "independent": 99
+   },
+   "test": {
+    "dependent": 16,
+    "independent": 104
+   }
+  },
+  "split_by_tier_and_count": {
+   "train": {
+    "1/2": 68
+   },
+   "val": {
+    "1/2": 21
+   },
+   "test": {
+    "1/2": 16
+   }
+  },
+  "lineage_groups": {
+   "dependent": 97,
+   "independent": 471,
+   "groups_with_both": 47
+  },
+  "mechanism": {
+   "grasp": {
+    "dependent": 19,
+    "independent": 168
+   },
+   "mixed": {
+    "dependent": 42,
+    "independent": 233
+   },
+   "place": {
+    "dependent": 37,
+    "independent": 282
+   },
+   "transfer": {
+    "dependent": 7,
+    "independent": 12
+   }
+  },
+  "home_start": {
+   "dependent": "67/105",
+   "independent": "360/695"
+  },
+  "n_obstacles_median": {
+   "dependent": 9,
+   "independent": 8
+  }
+ },
+ "K3": {
+  "dependent_scenes": 498,
+  "tier": {
+   "T1_CERTIFIED_RELOCATION": 119,
+   "T2_RELOCATION_BUDGET_ONLY": 353,
+   "T3_TARGET_STEP_ONLY": 26
+  },
+  "scenes_with_any_certified_failure": 119,
+  "scenes_budget_limited_failures_only": 379,
+  "scenes_with_relocation_and_target_failures": 30,
+  "failing_orders": 1045,
+  "failing_orders_by_step_and_kind": {
+   "1|CERTIFIED": 122,
+   "1|NO_PLAN_FOUND": 507,
+   "2|CERTIFIED": 49,
+   "2|NO_PLAN_FOUND": 273,
+   "target|NO_PLAN_FOUND": 94
+  },
+  "failing_orders_first_relocation": 0,
+  "scenes_with_a_first_relocation_failure": 0,
+  "exactly_one_order": {
+   "scenes": 26,
+   "tier": {
+    "T2_RELOCATION_BUDGET_ONLY": 18,
+    "T1_CERTIFIED_RELOCATION": 8
+   },
+   "all_failures_at_relocation": 16,
+   "all_failures_certified": 0
+  },
+  "tier_by_success_count": {
+   "1/6": {
+    "T2_RELOCATION_BUDGET_ONLY": 18,
+    "T1_CERTIFIED_RELOCATION": 8
+   },
+   "2/6": {
+    "T1_CERTIFIED_RELOCATION": 9,
+    "T2_RELOCATION_BUDGET_ONLY": 26,
+    "T3_TARGET_STEP_ONLY": 1
+   },
+   "3/6": {
+    "T1_CERTIFIED_RELOCATION": 36,
+    "T2_RELOCATION_BUDGET_ONLY": 74,
+    "T3_TARGET_STEP_ONLY": 3
+   },
+   "4/6": {
+    "T2_RELOCATION_BUDGET_ONLY": 78,
+    "T3_TARGET_STEP_ONLY": 15,
+    "T1_CERTIFIED_RELOCATION": 16
+   },
+   "5/6": {
+    "T1_CERTIFIED_RELOCATION": 50,
+    "T2_RELOCATION_BUDGET_ONLY": 157,
+    "T3_TARGET_STEP_ONLY": 7
+   }
+  },
+  "by_split": {
+   "train": {
+    "dependent": 341,
+    "independent": 464
+   },
+   "val": {
+    "dependent": 84,
+    "independent": 89
+   },
+   "test": {
+    "dependent": 73,
+    "independent": 99
+   }
+  },
+  "split_by_tier_and_count": {
+   "train": {
+    "5/6": 152,
+    "4/6": 75,
+    "3/6": 79,
+    "1/6": 13,
+    "2/6": 22
+   },
+   "val": {
+    "1/6": 7,
+    "4/6": 19,
+    "5/6": 28,
+    "2/6": 7,
+    "3/6": 23
+   },
+   "test": {
+    "5/6": 34,
+    "4/6": 15,
+    "2/6": 7,
+    "1/6": 6,
+    "3/6": 11
+   }
+  },
+  "lineage_groups": {
+   "dependent": 287,
+   "independent": 303,
+   "groups_with_both": 156
+  },
+  "mechanism": {
+   "grasp": {
+    "dependent": 25,
+    "independent": 47
+   },
+   "mixed": {
+    "dependent": 300,
+    "independent": 443
+   },
+   "place": {
+    "dependent": 172,
+    "independent": 162
+   },
+   "transfer": {
+    "dependent": 1,
+    "independent": 0
+   }
+  },
+  "home_start": {
+   "dependent": "263/498",
+   "independent": "304/652"
+  },
+  "n_obstacles_median": {
+   "dependent": 12,
+   "independent": 12
+  }
+ },
+ "all": {
+  "dependent": 603,
+  "tier": {
+   "T3_TARGET_STEP_ONLY": 35,
+   "T2_RELOCATION_BUDGET_ONLY": 425,
+   "T1_CERTIFIED_RELOCATION": 143
+  },
+  "possibly_confounded_by_achieved_robot_configuration": 460,
+  "need_qref_connector_and_independent_Y_before_final_XY": {
+   "dependent_scenes": 603,
+   "independent_scenes": 1347,
+   "all_K2plus": 1950
+  }
+ }
+}
