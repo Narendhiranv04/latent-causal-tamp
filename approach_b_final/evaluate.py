@@ -33,7 +33,15 @@ GRID = [{"noop_gate": ng, "eta": e, "alpha": a, "beta": b, "gamma": g} for ng in
 
 
 def rows_of(dom, split):
-    return [json.loads(l) for l in open(SNAP / f"data{dom.lower()}.jsonl") if json.loads(l)["split"] == split]
+    """split 'valsub' = deterministic stratified tuning subset of VALIDATION: 60 roots per legacy class (K0, K1, K2, K3, NONE), sha256 order."""
+    import hashlib
+    rows = [r for r in map(json.loads, open(SNAP / f"data{dom.lower()}.jsonl")) if r["split"] == ("val" if split == "valsub" else split)]
+    if split != "valsub":
+        return rows
+    out = []
+    for K in ("0", "1", "2", "3", "NONE"):
+        out += sorted((r for r in rows if r["K_legacy"] == K), key=lambda r: hashlib.sha256(r["root_id"].encode()).hexdigest())[:60]
+    return out
 
 
 def jl(p):
@@ -60,9 +68,29 @@ def select_runs(dom, arm, seed, split, limit=None):
     print(json.dumps({"arm": arm, "seed": seed, "split": split, "searched": len(rows), "gpu_peak_mib": round(torch.cuda.max_memory_allocated() / 2 ** 20, 1)}))
 
 
+def choose(rows, rule):
+    """Torch-free copy of xy.choose (bxy_p11.choose semantics; equality tested in tests/test_core.py): no-op gate, admission eta,
+    argmin -log p + alpha m + beta C_d + gamma J_hat, ties by (m, C_d, signature)."""
+    adm = [i for i, r in enumerate(rows) if r["admissible"]]
+    e = next(i for i in adm if rows[i]["m"] == 0)
+    if rule.get("noop_gate") is not None and rows[e]["p"] >= rule["noop_gate"]:
+        return e
+    pool = [i for i in adm if rows[i]["p"] >= rule["eta"]]
+    if not pool:
+        return None
+    cost = lambda r: -math.log(max(r["p"], 1e-12)) + rule["alpha"] * r["m"] + rule["beta"] * r["cd"] + rule["gamma"] * (r.get("J_hat") or 0.0)  # noqa: E731
+    return min(pool, key=lambda i: (round(cost(rows[i]), 12), rows[i]["m"], rows[i]["cd"], rows[i]["sig"]))
+
+
+def select(cands, rule):
+    rows = [{"admissible": True, "m": c["m"], "p": c["p11"], "cd": c["D"], "J_hat": c["J"], "sig": json.dumps(c["seq"])} for c in cands]
+    pick = choose(rows, rule)
+    return None if pick is None else json.loads(rows[pick]["sig"])
+
+
 def choose_all(dom, split, rule, arms=None):
     """-> {(arm, seed, root): selected seq | None}; 'notravel' derived from 'full' with gamma = 0."""
-    import search as S
+    S = sys.modules[__name__]
     sel = {}
     for f in sorted((ABF / "runs" / f"p5_{dom.lower()}" / "search").glob(f"*_{split}.jsonl")):
         for r in jl(f):
@@ -86,6 +114,8 @@ def _boot(dom, geom):
         _W["T"] = T
     else:
         os.environ.setdefault("FIN3D_STORE", str(ABF / "runs/p5_3d/verify_store"))
+        os.environ.setdefault("FIN3D_SRC", str(Path.home() / "approachb_final_gen/final3d_v4/src/dataset_bd_classquota_without_home_position_no_overpass"))
+        os.environ.setdefault("MUJOCO_GL", "disable")
         sys.path.insert(0, str(Path.home() / "approachb_final_gen/final3d_v4/code"))
         import fin3d as F
         F.boot()

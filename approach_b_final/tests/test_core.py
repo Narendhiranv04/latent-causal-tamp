@@ -115,3 +115,16 @@ def test_search_legality_and_requery():
     fs1 = FakeSampler()
     S.search(root, fs1, FakeScorer(), {"M": 2, "max_expansions": 30, "fair": 3, "seed": 0}, mode="oneshot")
     assert set(fs1.seen) == {tuple(root.cells0)}                   # one-shot samples from S0 only
+
+
+def test_evaluate_choose_matches_xy_choose():
+    import random
+    import evaluate as EV
+    rng = random.Random(0)
+    for t in range(200):
+        rows = [{"admissible": True, "m": 0, "p": rng.random(), "cd": 0.0, "J_hat": 0.0, "sig": "[]"}]
+        rows += [{"admissible": True, "m": rng.randint(1, 3), "p": rng.random(), "cd": rng.random() * 4, "J_hat": rng.random() * 9, "sig": f"[{k}]"}
+                 for k in range(rng.randint(0, 12))]
+        rule = {"noop_gate": rng.choice([None, 0.5, 0.8]), "eta": rng.choice([0.0, 0.1, 0.3]), "alpha": rng.random(), "beta": rng.random(),
+                "gamma": rng.random()}
+        assert EV.choose(rows, rule) == XY.choose(rows, rule)
