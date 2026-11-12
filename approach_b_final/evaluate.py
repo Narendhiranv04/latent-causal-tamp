@@ -28,6 +28,8 @@ ARMS = {"full": {"sampler": "cvae", "xy": "D", "mode": "iterative"},
         "oneshot": {"sampler": "cvae", "xy": "D", "mode": "oneshot"}}
 # "notravel" = the full arm's own searches with gamma = 0 in the frozen stopping rule (plan 5.3)
 SEARCH = {"M": 4, "max_expansions": 12, "fair": 4, "alpha_exp": 0.0}
+GRID = [{"noop_gate": ng, "eta": e, "alpha": a, "beta": b, "gamma": g} for ng in (0.5, 0.8) for e in (0.0, 0.1, 0.3) for a in (0.0, 0.5)
+        for b in (0.0, 0.1) for g in (0.0, 0.5, 2.0)]
 
 
 def rows_of(dom, split):
@@ -221,10 +223,8 @@ def summarize(outs, arms):
 def tune(dom, split="val"):
     """Stopping-rule grid on VALIDATION roots with the full arm (D + cVAE + iterative); objective (declared before any test run): mean of
     Task success (K1-K3), correct no-op (K0) and correct abstention (NONE); ties -> lower mean executed travel."""
-    grid = [{"noop_gate": ng, "eta": e, "alpha": a, "beta": b, "gamma": g} for ng in (0.5, 0.8) for e in (0.0, 0.1, 0.3) for a in (0.0, 0.5)
-            for b in (0.0, 0.1) for g in (0.0, 0.5, 2.0)]
     scored = []
-    for rule in grid:
+    for rule in GRID:
         s = summarize(outcomes(dom, split, rule), ["full"]).get("full")
         if not s:
             continue
@@ -275,6 +275,10 @@ if __name__ == "__main__":
         verify(sys.argv[2], sys.argv[3], sys.argv[4], int(sys.argv[5]))
     elif c == "tune":
         tune(sys.argv[2], sys.argv[3] if len(sys.argv) > 3 else "val")
+    elif c == "grid":
+        p = ABF / "runs" / f"p5_{sys.argv[2].lower()}" / "grid.json"
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_text(json.dumps(GRID)); print(p, len(GRID))
     elif c == "table":
         table(sys.argv[2], sys.argv[3])
     else:

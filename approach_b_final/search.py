@@ -61,6 +61,25 @@ class Sampler:
         self.m, self.dom, self.dev, self.raw_mult, self.kind = PL.load(dom, kind, seed, device), dom, device, raw_mult, kind
         self.calls = self.raw = 0
 
+    def propose_many(self, root, cells, objs, M, gen):
+        """One batched call: the same hypothetical scene `cells`, every queried object of `objs` -> {obj: unique legal destinations}."""
+        cd = {root.ids[i]: c for i, c in enumerate(cells)}
+        legal = root.legal_dests(cells)
+        if not legal or not objs:
+            return {o: [] for o in objs}
+        Fs, Ms, Os, Ls = [], [], [], []
+        for o in objs:
+            F, Mk, occ, _ = PL.scene_features(self.dom, root.pattr, cd, root.ids[o], root.legal)
+            lg = np.zeros(len(occ), bool)
+            lg[legal] = True
+            Fs.append((F - self.mu) / self.sd * Mk[:, None]); Ms.append(Mk); Os.append(occ); Ls.append(lg)
+        T = lambda a, dt: torch.as_tensor(np.stack(a), dtype=dt, device=self.dev)  # noqa: E731
+        out, raw, _ = PL.propose(self.m, T(Fs, torch.float32), T(Ms, torch.bool), T(Os, torch.float32), T(Ls, torch.bool),
+                                 torch.tensor([cells[o] for o in objs], device=self.dev), M, gen, self.raw_mult)
+        self.calls += len(objs)
+        self.raw += raw * len(objs)
+        return dict(zip(objs, out))
+
     def propose(self, root, cells, obj, M, gen):
         cd = {root.ids[i]: c for i, c in enumerate(cells)}
         F, Mk, occ, _ = PL.scene_features(self.dom, root.pattr, cd, root.ids[obj], root.legal)
@@ -126,8 +145,7 @@ def search(root, sampler, scorer, cfg, mode="iterative"):
     nodes = {(): {"seq": [], **noop, "m": 0, "D": 0.0}}
     oneshot = {}
     if mode == "oneshot":                                                  # proposals from S0 only, once per object
-        for o in root.movable:
-            oneshot[o] = sampler.propose(root, root.cells0, o, cfg["M"], gen)
+        oneshot = sampler.propose_many(root, root.cells0, list(root.movable), cfg["M"], gen)
     cost = lambda n: -math.log(max(n["p11"], 1e-12)) + cfg.get("alpha_exp", 0.0) * n["m"]  # noqa: E731
     heap, fifo, order, exp, pops = [(cost(nodes[()]), 0, ())], [()], itertools.count(1), set(), 0
     while (heap or fifo) and len(exp) < cfg["max_expansions"]:
@@ -143,12 +161,11 @@ def search(root, sampler, scorer, cfg, mode="iterative"):
         cells = root.cells(seq)
         moved = {i for i, _ in seq}
         kids = []
-        for o in root.movable:
-            if o in moved:
-                continue
-            ok = set(root.legal_dests(cells))
-            props = sampler.propose(root, cells, o, cfg["M"], gen) if mode == "iterative" else [d for d in oneshot[o] if d in ok]
-            for d in props:
+        todo = [o for o in root.movable if o not in moved]
+        ok = set(root.legal_dests(cells))
+        batch = sampler.propose_many(root, cells, todo, cfg["M"], gen) if mode == "iterative" else {o: [d for d in oneshot[o] if d in ok] for o in todo}
+        for o in todo:
+            for d in batch[o]:
                 ck = key(seq + [(o, int(d))])
                 if ck not in nodes:
                     kids.append(ck)

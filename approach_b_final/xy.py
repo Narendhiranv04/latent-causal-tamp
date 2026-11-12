@@ -476,26 +476,32 @@ def run_loss(net, chunk, dev, dt):
 
 
 def fit(snap, dom, arm, seed, epochs=60, batch=64, lr=1e-3, patience=10, out=None):
-    dev, dt = "cuda", torch.float32
+    dev, dt = os.environ.get("XY_DEV", "cuda"), torch.float32
     torch.manual_seed(seed)
     rng = np.random.default_rng(seed)
     data = load_domain(snap, dom)
+    if os.environ.get("XY_SMOKE"):
+        data = {k: [x for x in v if x["v"]["x_seqs"]][:int(os.environ["XY_SMOKE"])] for k, v in data.items()}
     v0 = data["train"][0]["v"]
     net = XYNet(arm, len(v0["attrs"][0]), len(v0["ctx"])).to(dev).to(dt)
     opt = torch.optim.AdamW(net.parameters(), lr=lr, weight_decay=1e-4)
     out = Path(out or ABF / "runs" / f"p2_{dom.lower()}" / f"{arm}_s{seed}")
     out.mkdir(parents=True, exist_ok=True)
+    # batches are collated ONCE (fixed seeded partition, cached on the device); the batch order is reshuffled every epoch
+    trb = [collate([c["v"] for c in ch], [c["lab"] for c in ch], device=dev, dtype=dt) for ch in batches(data["train"], batch, rng)]
+    vab = [collate([c["v"] for c in ch], [c["lab"] for c in ch], device=dev, dtype=dt) for ch in batches(data["val"], 256)]
+    vn = [len(ch) for ch in batches(data["val"], 256)]
     curve, best, bad, t0 = [], (math.inf, -1), 0, time.time()
     for ep in range(epochs):
         net.train()
         tl = []
-        for chunk in batches(data["train"], batch, rng):
-            l, parts = run_loss(net, chunk, dev, dt)
+        for k in rng.permutation(len(trb)):
+            l, parts = net.loss(*trb[k])
             opt.zero_grad(); l.backward(); torch.nn.utils.clip_grad_norm_(net.parameters(), 10.0); opt.step()
             tl.append(parts["nll"])
         net.eval()
         with torch.no_grad():
-            vl = float(np.mean([run_loss(net, c, dev, dt)[1]["nll"] for c in batches(data["val"], 256)]))
+            vl = float(np.average([net.loss(*b_)[1]["nll"] for b_ in vab], weights=vn))
         curve.append({"epoch": ep, "train_nll": float(np.mean(tl)), "val_nll": vl, "s": round(time.time() - t0, 1)})
         if vl < best[0] - 1e-5:
             best, bad = (vl, ep), 0
@@ -508,12 +514,13 @@ def fit(snap, dom, arm, seed, epochs=60, batch=64, lr=1e-3, patience=10, out=Non
                 break
     (out / "curve.json").write_text(json.dumps({"curve": curve, "best_val_nll": best[0], "best_epoch": best[1], "arm": arm, "seed": seed,
                                                 "objective": "exact root-marginal X/Y NLL" if ARMS[arm]["family"] == "xy" else "binary Z BCE (root sum)",
-                                                "wall_s": round(time.time() - t0, 1), "gpu_peak_mib": round(torch.cuda.max_memory_allocated() / 2 ** 20, 1),
+                                                "wall_s": round(time.time() - t0, 1), "gpu_peak_mib": round(torch.cuda.max_memory_allocated() / 2 ** 20, 1) if dev == "cuda" else None,
                                                 "n_train_roots": len(data["train"])}, indent=1))
     print(json.dumps({"dom": dom, "arm": arm, "seed": seed, "best_val": round(best[0], 4), "best_epoch": best[1], "s": round(time.time() - t0, 1)}))
 
 
-def load_model(path, dev="cuda"):
+def load_model(path, dev=None):
+    dev = dev or os.environ.get("XY_DEV", "cuda")
     ck = torch.load(path, map_location=dev, weights_only=False)
     net = XYNet(ck["arm"], ck["attr_dim"], ck["ctx_dim"]).to(dev).float()
     net.load_state_dict(ck["state"])
@@ -549,8 +556,9 @@ def ece(y, p, n=10):
 
 
 @torch.no_grad()
-def predict_split(net, items, dev="cuda"):
+def predict_split(net, items, dev=None):
     """Per-X-node rows: root, kind, seq, x, y, z, p11, px, py (xy arms), K, strength; plus per-root no-op rows."""
+    dev = dev or os.environ.get("XY_DEV", "cuda")
     rows, noop = [], []
     for chunk in batches(items, 256):
         b, lab = collate([c["v"] for c in chunk], [c["lab"] for c in chunk], device=dev, dtype=torch.float32)
@@ -619,12 +627,62 @@ def evaluate(snap, dom, split="val"):
     print(json.dumps({k: {m: (round(v[m], 4) if isinstance(v[m], float) else v[m]) for m in ("nll_z", "auroc_z", "order_acc", "order_pairs")} for k, v in res.items()}))
 
 
+def report(dom, split):
+    """Seed-aggregated held-out metrics per arm + paired root-cluster bootstrap of (other arm - D) for binary-Z NLL and order accuracy."""
+    run = ABF / "runs" / f"p2_{dom.lower()}"
+    ev = json.loads((run / f"eval_{split}.json").read_text())
+    arms = sorted({k.rsplit("_s", 1)[0] for k in ev})
+    keys = ("nll_z", "auroc_z", "auprc_z", "brier_z", "ece_z", "order_acc", "auroc_y", "auroc_x", "auroc_noop_y0")
+    agg = {a: {k: [ev[n][k] for n in ev if n.rsplit("_s", 1)[0] == a and ev[n].get(k) is not None] for k in keys} for a in arms}
+    out = {"split": split, "arms": {a: {k: {"mean": float(np.mean(v)), "sd": float(np.std(v)), "n_seeds": len(v)} for k, v in d.items() if v} for a, d in agg.items()},
+           "n_candidates": next(iter(ev.values()))["n_candidates"], "order_pairs": next(iter(ev.values()))["order_pairs"]}
+    def per_root(arm):
+        nll, ordr = collections.defaultdict(list), collections.defaultdict(list)
+        for f in sorted(run.glob(f"{arm}_s*/pred_{split}.jsonl")):
+            rows = [json.loads(l) for l in open(f)]
+            for r in rows:
+                if r["z"] is not None:
+                    p = min(max(r["p11"], 1e-6), 1 - 1e-6)
+                    nll[r["root"]].append(-(r["z"] * math.log(p) + (1 - r["z"]) * math.log(1 - p)))
+            g = collections.defaultdict(list)
+            for r in rows:
+                if r["y"] == 1 and r["x"] in (0, 1):
+                    g[(r["root"], r["parent"])].append(r)
+            for (root, _), rs in g.items():
+                for a in rs:
+                    for b_ in rs:
+                        if a["x"] == 1 and b_["x"] == 0:
+                            ordr[root].append(1.0 if a["p11"] > b_["p11"] else 0.5 if a["p11"] == b_["p11"] else 0.0)
+        return {r: np.mean(v) for r, v in nll.items()}, {r: np.mean(v) for r, v in ordr.items()}
+    ref = per_root("D")
+    rng = np.random.default_rng(0)
+    out["paired_vs_D"] = {}
+    for a in arms:
+        if a == "D":
+            continue
+        cur = per_root(a)
+        res = {}
+        for i, name in enumerate(("nll_z", "order_acc")):
+            rs = sorted(set(cur[i]) & set(ref[i]))
+            if not rs:
+                continue
+            d = np.array([cur[i][r] - ref[i][r] for r in rs])
+            bs = [d[rng.integers(0, len(d), len(d))].mean() for _ in range(2000)]
+            res[name] = {"delta": float(d.mean()), "ci95": [float(np.percentile(bs, 2.5)), float(np.percentile(bs, 97.5))], "roots": len(rs)}
+        out["paired_vs_D"][a] = res
+    (run / f"report_{split}.json").write_text(json.dumps(out, indent=1))
+    print(json.dumps({a: {k: round(v["mean"], 4) for k, v in d.items()} for a, d in out["arms"].items()}, indent=1))
+    print(json.dumps(out["paired_vs_D"], indent=1))
+
+
 if __name__ == "__main__":
     cmd = sys.argv[1:2]
     if cmd == ["selftest"]:
         print(json.dumps(selftest(), indent=1))
     elif cmd == ["fit"]:
         fit(sys.argv[2], sys.argv[3], sys.argv[4], int(sys.argv[5]), epochs=int(os.environ.get("XY_EPOCHS", 60)))
+    elif cmd == ["report"]:
+        report(sys.argv[2], sys.argv[3])
     elif cmd == ["eval"]:
         evaluate(sys.argv[2], sys.argv[3], sys.argv[4] if len(sys.argv) > 4 else "val")
     else:

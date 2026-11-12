@@ -411,7 +411,9 @@ def evaluate(dom, data_dir, split, seeds=(0, 1, 2), eval_seeds=(0, 1, 2), Ms=(1,
                 props, raw, ill = propose(m, obj, mask, occ, legal, src, max(Ms), g)
                 torch.cuda.synchronize()
                 lat = (time.time() - t0) / len(cs) * 1000
-                per = {}
+                per, hit4 = {}, []
+                for i, p in enumerate(props):
+                    hit4.append(float(any(pos[i, c] for c in p[:4])) if pos[i].any() else np.nan)
                 for M in Ms:
                     hit, known, kpos, uniq, regions = [], [], [], [], []
                     for i, p in enumerate(props):
@@ -424,11 +426,33 @@ def evaluate(dom, data_dir, split, seeds=(0, 1, 2), eval_seeds=(0, 1, 2), Ms=(1,
                         uniq.append(len(p))
                     per[M] = {"hit": float(np.mean(hit)), "known_label_precision": float(np.mean(kpos)) if kpos else None,
                               "known_fraction": float(np.mean(known)), "unique_mean": float(np.mean(uniq))}
-                runs.append({"seed": s, "eval_seed": es, "per_M": per, "raw_illegal_rate": ill, "latency_ms_per_context": lat})
+                runs.append({"seed": s, "eval_seed": es, "per_M": per, "raw_illegal_rate": ill, "latency_ms_per_context": lat, "_hit4": hit4})
         agg = {M: {k: float(np.mean([r["per_M"][M][k] for r in runs if r["per_M"][M][k] is not None])) for k in runs[0]["per_M"][M]} for M in Ms}
         res["arms"][kind] = {"runs": runs, "mean": agg, "latency_ms": float(np.mean([r["latency_ms_per_context"] for r in runs])),
                              "raw_illegal_rate": float(np.mean([r["raw_illegal_rate"] for r in runs]))}
-    # root-cluster bootstrap 95% CI of hit@4 differences vs cvae (paired by context, mean over runs)
+    # root-cluster bootstrap 95% CI of hit@4 differences vs cvae (per-context mean over runs, then per-root mean; 2,000 resamples of roots)
+    per_ctx = {k: np.nanmean(np.array([r.pop("_hit4") for r in v["runs"]]), 0) for k, v in res["arms"].items()}
+    ok = ~np.isnan(per_ctx["cvae"])
+    uroots = sorted(set(roots[ok]))
+    ridx = {r: i for i, r in enumerate(uroots)}
+    def by_root(x):
+        s_, n_ = np.zeros(len(uroots)), np.zeros(len(uroots))
+        for r, v in zip(roots[ok], x[ok]):
+            s_[ridx[r]] += v; n_[ridx[r]] += 1
+        return s_ / np.maximum(n_, 1)
+    base = by_root(per_ctx["cvae"])
+    g = np.random.default_rng(0)
+    res["paired_hit4_vs_cvae"] = {}
+    for k, x in per_ctx.items():
+        if k == "cvae":
+            continue
+        d = by_root(x) - base
+        bs = [d[g.integers(0, len(d), len(d))].mean() for _ in range(2000)]
+        res["paired_hit4_vs_cvae"][k] = {"delta": float(d.mean()), "ci95": [float(np.percentile(bs, 2.5)), float(np.percentile(bs, 97.5))], "roots": len(d)}
+    if split == "val":
+        best = max(("uniform", "stratified"), key=lambda k: res["arms"][k]["mean"][4]["hit"])
+        (ROOT / "runs" / f"p1_{dom}" / "analytic_choice.json").write_text(json.dumps({"kind": best, "rule": "higher VAL hit@4 of uniform vs stratified",
+                                                                                      "val_hit4": {k: res["arms"][k]["mean"][4]["hit"] for k in ("uniform", "stratified")}}))
     out = ROOT / "runs" / f"p1_{dom}" / f"eval_{split}.json"
     out.write_text(json.dumps(res, indent=1, default=str))
     print(json.dumps({k: {M: round(v["mean"][M]["hit"], 3) for M in Ms} for k, v in res["arms"].items()}))
