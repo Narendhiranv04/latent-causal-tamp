@@ -25,7 +25,7 @@ DS2 = MIR / "rss-placement-ready-v2/gh-yadu-iiith/planar_2d/dataset_bd_classquot
 SRC3 = MIR / "rss3d_final_src/gh-yadu-iiith/shelf_6x6_open_sides/dataset_bd_classquota_without_home_position_no_overpass/raw/roots"
 GRID = {"2d": (8, 8), "3d": (6, 6)}
 SPLITS = ["train", "val", "test"]
-MAXOBJ = {"2d": 20, "3d": 8}
+MAXOBJ = {"2d": 20, "3d": 12}               # padding only (masked, permutation-invariant encoder); 3D Q2 training scenes have <= 8 objects, 3D NONE scenes more
 NORM = [2, 3, 6, 7, 8]
 
 
