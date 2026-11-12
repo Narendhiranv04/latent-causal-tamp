@@ -485,7 +485,7 @@ def fit(snap, dom, arm, seed, epochs=60, batch=64, lr=1e-3, patience=10, out=Non
     v0 = data["train"][0]["v"]
     net = XYNet(arm, len(v0["attrs"][0]), len(v0["ctx"])).to(dev).to(dt)
     opt = torch.optim.AdamW(net.parameters(), lr=lr, weight_decay=1e-4)
-    out = Path(out or ABF / "runs" / f"p2_{dom.lower()}" / f"{arm}_s{seed}")
+    out = Path(out or Path(os.environ.get("XY_RUNS", str(ABF / "runs"))) / f"p2_{dom.lower()}" / f"{arm}_s{seed}")
     out.mkdir(parents=True, exist_ok=True)
     # batches are collated ONCE (fixed seeded partition, cached on the device); the batch order is reshuffled every epoch
     trb = [collate([c["v"] for c in ch], [c["lab"] for c in ch], device=dev, dtype=dt) for ch in batches(data["train"], batch, rng)]
@@ -616,20 +616,21 @@ def metrics(rows, noop):
 def evaluate(snap, dom, split="val"):
     data = load_domain(snap, dom)
     res = {}
-    for d in sorted((ABF / "runs" / f"p2_{dom.lower()}").glob("*_s*/model.pt")):
+    base = Path(os.environ.get("XY_RUNS", str(ABF / "runs"))) / f"p2_{dom.lower()}"
+    for d in sorted(base.glob("*_s*/model.pt")):
         net = load_model(d)
         rows, noop = predict_split(net, data[split])
         res[d.parent.name] = metrics(rows, noop)
         with open(d.parent / f"pred_{split}.jsonl", "w") as f:
             for r in rows:
                 f.write(json.dumps(r) + "\n")
-    (ABF / "runs" / f"p2_{dom.lower()}" / f"eval_{split}.json").write_text(json.dumps(res, indent=1))
+    (base / f"eval_{split}.json").write_text(json.dumps(res, indent=1))
     print(json.dumps({k: {m: (round(v[m], 4) if isinstance(v[m], float) else v[m]) for m in ("nll_z", "auroc_z", "order_acc", "order_pairs")} for k, v in res.items()}))
 
 
 def report(dom, split):
     """Seed-aggregated held-out metrics per arm + paired root-cluster bootstrap of (other arm - D) for binary-Z NLL and order accuracy."""
-    run = ABF / "runs" / f"p2_{dom.lower()}"
+    run = Path(os.environ.get("XY_RUNS", str(ABF / "runs"))) / f"p2_{dom.lower()}"
     ev = json.loads((run / f"eval_{split}.json").read_text())
     arms = sorted({k.rsplit("_s", 1)[0] for k in ev})
     keys = ("nll_z", "auroc_z", "auprc_z", "brier_z", "ece_z", "order_acc", "auroc_y", "auroc_x", "auroc_noop_y0")
