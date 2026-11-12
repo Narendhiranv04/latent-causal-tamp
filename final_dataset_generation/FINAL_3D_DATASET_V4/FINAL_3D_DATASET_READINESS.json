@@ -1,0 +1,120 @@
+{
+ "stage": "FINAL 3D V4 dataset package; STOPPED BEFORE TRAINING",
+ "training_started": false,
+ "status": "TRAINING_READY_PENDING_APPROVAL",
+ "main_count": 2500,
+ "class_counts": {
+  "NONE": 408,
+  "0": 511,
+  "1": 357,
+  "2": 612,
+  "3": 612
+ },
+ "k4_archived": 9,
+ "k3_strength_selected_legacy": {
+  "1/6": 210,
+  "2/6": 112,
+  "3/6": 53,
+  "4/6": 46,
+  "5/6": 121,
+  "6/6": 70
+ },
+ "k3_strength_targets": {
+  "1/6": 214,
+  "2/6": 184,
+  "3/6": 92,
+  "4/6": 61,
+  "5/6": 31,
+  "6/6": 30
+ },
+ "k3_strength_deficits": {
+  "1/6": 4,
+  "2/6": 72,
+  "3/6": 39,
+  "4/6": 15
+ },
+ "k3_strength_finalized_x": {
+  "0/6": 0,
+  "1/6": 203,
+  "2/6": 114,
+  "3/6": 57,
+  "4/6": 54,
+  "5/6": 116,
+  "6/6": 68
+ },
+ "k2_k3_rows_fully_finalized_xy": 1224,
+ "k2_k3_rows_total": 1224,
+ "rows_legacy_only": {
+  "K0": 511,
+  "K1": 357,
+  "NONE": 408,
+  "K2_K3_incomplete": 0
+ },
+ "y_negative_labels": {
+  "SELECTED_ASSIGNMENT_ORDER": 8,
+  "OMISSION_YNEG": 1812,
+  "EMPTY_SEQUENCE_YNEG": 1989
+ },
+ "xy_combinations": {
+  "SELECTED_ASSIGNMENT_ORDER": {
+   "X=0,Y=0": 5,
+   "X=0,Y=1": 1882,
+   "X=1,Y=0": 3,
+   "X=1,Y=1": 3006,
+   "missing": 0
+  },
+  "OMISSION_YNEG": {
+   "X=0,Y=0": 444,
+   "X=0,Y=1": 14,
+   "X=1,Y=0": 1368,
+   "X=1,Y=1": 10,
+   "missing": 0
+  },
+  "EMPTY_SEQUENCE_YNEG": {
+   "X=0,Y=0": 0,
+   "X=0,Y=1": 0,
+   "X=1,Y=0": 1989,
+   "X=1,Y=1": 0,
+   "missing": 0
+  }
+ },
+ "integrity_ok": true,
+ "integrity": {
+  "n_rows": 2500,
+  "class_counts": {
+   "NONE": 408,
+   "0": 511,
+   "1": 357,
+   "2": 612,
+   "3": 612
+  },
+  "class_counts_ok": true,
+  "root_ids_unique": true,
+  "k3_layouts_unique": true,
+  "frozen_classes_equal_published": true,
+  "published_k3_layouts_all_present": true,
+  "k4_not_in_main": true,
+  "row_file_and_lineage_failures": {},
+  "split_conflicts_with_frozen_manifest": 0,
+  "witness_check": {
+   "root:ok": 4513,
+   "xy:ok": 11407
+  },
+  "2d_and_v2_selection_files_unchanged": true,
+  "v3_k3_package_unchanged": true,
+  "training_started": false
+ },
+ "shortcut_audit": {
+  "agree": 52
+ },
+ "caveats": [
+  "50 K3 layouts are published-run DEPENDENT scenes (excluded by the published independent-moves rule; admitted under the order-dependence contract); 45 K3 layouts were generated locally with the unmodified published generator (namespaces lap4 / lap5 / srv5)",
+  "K3 hard-order view: 1/6 is near target but 2/6 and 3/6 are short; 5/6 and 6/6 exceed target because many layouts have no stronger verified assignment",
+  "the K3 selection uses re-parked (hard-order / dependence-seeking) assignments for many layouts; the natural (original) assignment of every layout is kept for the natural-distribution view",
+  "3D X/Y labels are teacher passes (fresh env) without an independent replay process",
+  "EMPTY_SEQUENCE Y-negatives reuse the teacher's original T-direct check (fresh-verified on a sample)",
+  "the gvlab hard-order pass was time-boxed (05:45 IST); 2 in-flight jobs were stopped (MISSING, not failure)",
+  "13 selected rows have an omission endpoint with Y = 1 (a shorter repair is feasible from q_ref, i.e. minimal K under the finalized protocol may be lower); listed in the Y-negative report",
+  "2 selected K2/K3 rows have endpoint Y = 0 from q_ref although their legacy full-task label succeeds (target only feasible from the carried arm pose); kept with their finalized labels"
+ ]
+}

@@ -1,8 +1,8 @@
 # Latent Causal Infeasibility for Long-Horizon TAMP
 
 > **Branch `naren/dataset-done`** — full workspace snapshot taken 2026-11-11 after the Approach B 2D + 3D dataset
-> generation (including the K3 hard-order sidecar). It contains code, reports, run outputs and the generated data.
-> Nothing was trained after the K3 hard-order generation.
+> generation (including the K3 hard-order sidecar), updated 2026-11-12 with the final 3D dataset (V4, 2,500 scenes) and
+> the final readiness gate. It contains code, reports, run outputs and the generated data. Nothing has been trained.
 
 ## Where things are (this branch)
 
@@ -12,7 +12,7 @@
 | `tests/` | Test suite. |
 | `docs/methodology/`, `docs/methodology_pdfs/` | Methodology and implementation guides (Markdown and PDF). |
 | `docs/audits/`, `docs/status/`, `docs/archives/`, `docs/addenda/`, `docs/archive/` | Audits, status notes, archived guides and contract addenda. |
-| `instruction-phase-md/` | Instruction contracts, grouped: `numbered_contracts/`, `approach_b/`, `approach_d/`, `general/`. |
+| `instruction-phase-md/` | Instruction contracts, grouped: `numbered_contracts/`, `approach_b/` (incl. `plan.md`, the Approach B final implementation plan), `approach_d/`, `general/`. |
 | `responses-phases/` | Numbered stage reports, grouped in blocks of 25 (`0001-0025/`, ...) plus `misc/`. |
 | `runs/` | Run outputs per stage (G0–G4, P6–P17, Approach D). |
 | `visualizations/`, `teaser-assets/`, `slides-a-b-c/`, `PoC-takeaway/` | Figures, teaser images, slides. |
@@ -21,6 +21,10 @@
 | `final_dataset_generation/` | Final 2D + 3D dataset generation: dependence-seeking generators, stores (`d2/`, `d3_*/`), selection manifests V2, final reports. |
 | `final_dataset_generation/k3_hard/` | K3 hard-order generation: generators, ledgers, stores, consistency and X/Y checks. |
 | `final_dataset_generation/k3_hard/K3_HARD_ORDER_V1/` | The K3 hard-order deliverables: generation report, V3 strength selection manifest, X/Y validation, resource report, readiness JSON, SHA256SUMS. |
+| `final_dataset_generation/final3d_v4/` | Final 3D V4 work: K3 completion (fresh-env legacy checks, generated layouts `gen_k3*`, hard-order stores `hard*`), finalized X/Y runs, witness stores, code. The local symlink view `ds_view/` is not included. |
+| `final_dataset_generation/FINAL_3D_DATASET_V4/` | The 3D V4 deliverables: 2,500-scene selection (NONE 408, K0 511, K1 357, K2 612, K3 612), X/Y label manifest, reports, readiness JSON, new root files, SHA256SUMS. |
+| `final_dataset_generation/FINAL_READINESS_GATE/` | Final readiness gate for 2D (5,000) and 3D (2,500): the 13 omission verdicts, independent 3D replay audit, complete 2D finalized X/Y, label distributions, integrity gates, `FINAL_TRAINING_READINESS.json`, proposed corrections (not applied), code, raw results and witnesses, SHA256SUMS. |
+| `visualizations/3d_x022/` | 3D renders of scene s1 X-022: side-grasp approach and top views after each placement. |
 | `ST_dummy/` | Dummy ST run outputs. |
 
 Notes for this snapshot:
