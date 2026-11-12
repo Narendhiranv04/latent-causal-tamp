@@ -19,6 +19,12 @@ import numpy as np
 
 ABF = Path(os.environ.get("ABF_ROOT", "/scratch/nav/approachb_final"))
 SNAP = Path(os.environ.get("ABF_SNAPSHOT", ""))
+P5 = os.environ.get("ABF_P5DIR")                      # V2: runs/v2 (default: runs, i.e. V1)
+P2RUNS = Path(os.environ.get("ABF_P2RUNS", str(ABF / "runs")))
+
+
+def p5dir(dom):
+    return (Path(P5) if P5 else ABF / "runs") / f"p5_{dom.lower()}"
 ARMS = {"full": {"sampler": "cvae", "xy": "D", "mode": "iterative"},
         "uncoupled": {"sampler": "cvae", "xy": "E", "mode": "iterative"},
         "orderinv": {"sampler": "cvae", "xy": "G", "mode": "iterative"},
@@ -52,13 +58,13 @@ def select_runs(dom, arm, seed, split, limit=None):
     import torch
     import search as S
     a = ARMS[arm]
-    out = ABF / "runs" / f"p5_{dom.lower()}" / "search" / f"{arm}_s{seed}_{split}.jsonl"
+    out = p5dir(dom) / "search" / f"{arm}_s{seed}_{split}.jsonl"
     out.parent.mkdir(parents=True, exist_ok=True)
     done = {r["root"] for r in jl(out)}
     kind = json.loads((ABF / "runs" / f"p1_{dom.lower()}" / "analytic_choice.json").read_text())["kind"] if a["sampler"] == "ANALYTIC" else a["sampler"]
     samp = S.Sampler(dom.lower(), kind, seed, ABF / "data" / f"q2_{dom.lower()}")
     cost = ABF / "runs" / f"p3_{dom.lower()}" / f"cost_s{seed}" / "model.pt"
-    scor = S.Scorer(ABF / "runs" / f"p2_{dom.lower()}" / f"{a['xy']}_s{seed}" / "model.pt", cost if cost.exists() else None)
+    scor = S.Scorer(P2RUNS / f"p2_{dom.lower()}" / f"{a['xy']}_s{seed}" / "model.pt", cost if cost.exists() else None)
     rows = [r for r in rows_of(dom, split) if r["root_id"] not in done][:limit]
     with open(out, "a") as f:
         for r in rows:
@@ -92,7 +98,7 @@ def choose_all(dom, split, rule, arms=None):
     """-> {(arm, seed, root): selected seq | None}; 'notravel' derived from 'full' with gamma = 0."""
     S = sys.modules[__name__]
     sel = {}
-    for f in sorted((ABF / "runs" / f"p5_{dom.lower()}" / "search").glob(f"*_{split}.jsonl")):
+    for f in sorted((p5dir(dom) / "search").glob(f"*_{split}.jsonl")):
         for r in jl(f):
             if arms and r["arm"] not in arms:
                 continue
@@ -154,7 +160,7 @@ def verify(dom, split, rule_file, workers):
         for (arm, seed, root), seq in choose_all(dom, split, r).items():
             if seq is not None:
                 want[root].add(json.dumps(seq))
-    cache_f = ABF / "runs" / f"p5_{dom.lower()}" / "verify.jsonl"
+    cache_f = p5dir(dom) / "verify.jsonl"
     have = collections.defaultdict(set)
     for v in jl(cache_f):
         for r in v["results"]:
@@ -170,7 +176,8 @@ def verify(dom, split, rule_file, workers):
         jobs.append({"dom": dom, "path": str(path_of(dom, rows[root])), "geom": geom,
                      "seqs": [[(ids[i], c) for i, c in json.loads(s)] for s in todo]})
     print(json.dumps({"roots": len(want), "jobs": len(jobs), "queries": sum(len(j["seqs"]) for j in jobs)}), flush=True)
-    os.sched_setaffinity(0, set(range(24 - workers, 24)))
+    lo = 6 if P5 else 24 - workers                    # V2 verification on CPUs 6.. (V1 keeps the top CPUs)
+    os.sched_setaffinity(0, set(range(lo, lo + workers)))
     with open(cache_f, "a") as f:
         for geom in sorted({j["geom"] for j in jobs}):
             js = [j for j in jobs if j["geom"] == geom]
@@ -201,7 +208,7 @@ def outcomes(dom, split, rule):
     import cost as CO
     rows = {r["root_id"]: r for r in rows_of(dom, split)}
     ver = {}
-    for v in jl(ABF / "runs" / f"p5_{dom.lower()}" / "verify.jsonl"):
+    for v in jl(p5dir(dom) / "verify.jsonl"):
         for r in v["results"]:
             ver[(v["root"], json.dumps(r["seq"]))] = r
     rng = np.full(3, 2 * math.pi) if dom == "2D" else np.array(json.loads((ABF / "runs/p3/ranges3d.json").read_text())["arm_joint_ranges"])
@@ -262,7 +269,7 @@ def tune(dom, split="val"):
         scored.append((float(np.mean(parts)), -(s["travel_success_mean"] or 0.0), rule, s))
     scored.sort(key=lambda t: (t[0], t[1]), reverse=True)
     best = scored[0]
-    out = ABF / "runs" / f"p5_{dom.lower()}" / "rule.json"
+    out = p5dir(dom) / "rule.json"
     out.write_text(json.dumps(best[2], indent=1))
     (out.parent / "tune_val.json").write_text(json.dumps([{"objective": s[0], "rule": s[2], "summary": s[3]} for s in scored], indent=1))
     print(json.dumps({"best_rule": best[2], "objective": best[0], "summary": best[3]}))
@@ -288,12 +295,12 @@ def bootstrap(outs, arm, ref="full", key="task", B=2000, seed=0):
 
 
 def table(dom, split):
-    rule = json.loads((ABF / "runs" / f"p5_{dom.lower()}" / "rule.json").read_text())
+    rule = json.loads((p5dir(dom) / "rule.json").read_text())
     outs = outcomes(dom, split, rule)
     arms = list(ARMS) + ["notravel"]
     res = {"rule": rule, "split": split, "summary": summarize(outs, arms),
            "paired_vs_full": {a: {"task": bootstrap(outs, a, key="task"), "repair": bootstrap(outs, a, key="repair")} for a in arms if a != "full"}}
-    (ABF / "runs" / f"p5_{dom.lower()}" / f"table_{split}.json").write_text(json.dumps(res, indent=1))
+    (p5dir(dom) / f"table_{split}.json").write_text(json.dumps(res, indent=1))
     print(json.dumps(res["summary"], indent=1))
 
 
@@ -306,7 +313,7 @@ if __name__ == "__main__":
     elif c == "tune":
         tune(sys.argv[2], sys.argv[3] if len(sys.argv) > 3 else "val")
     elif c == "grid":
-        p = ABF / "runs" / f"p5_{sys.argv[2].lower()}" / "grid.json"
+        p = p5dir(sys.argv[2]) / "grid.json"
         p.parent.mkdir(parents=True, exist_ok=True)
         p.write_text(json.dumps(GRID)); print(p, len(GRID))
     elif c == "table":

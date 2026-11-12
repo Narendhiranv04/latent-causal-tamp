@@ -59,14 +59,24 @@ def items(dom, kind):
     rows = {r["root_id"]: r for r in map(json.loads, open(SNAP / f"data{dom.lower()}.jsonl"))}
     out = []
     if kind == "coverage":
+        # 10 roots per K; per root the top-T candidates by predicted p11 + R random others (2D T=100 R=50, 3D T=50 R=30)
+        T, R = (100, 50) if dom == "2D" else (30, 15)
+        nper = 10 if dom == "2D" else 5
         per = collections.Counter()
         for s in srch:
-            if per[s["K"]] >= 15:
+            if per[s["K"]] >= nper:
                 continue
             per[s["K"]] += 1
-            out.append({"root": s["root"], "cands": [c["seq"] for c in s["cands"] if c["seq"]], "mode": "coverage"})
+            cs = sorted((c for c in s["cands"] if c["seq"]), key=lambda c: -c["p11"])
+            rest = cs[T:]
+            pick = cs[:T] + random.Random("v2cov|" + s["root"]).sample(rest, min(R, len(rest)))
+            out.append({"root": s["root"], "cands": [c["seq"] for c in pick], "mode": "coverage", "n_all": len(cs)})
     else:
+        nper, per = (300 if dom == "2D" else 90), collections.Counter()           # speed-up (user, 2026-11-13): 900 2D / 270 3D roots
         for s in srch:
+            if per[s["K"]] >= nper:
+                continue
+            per[s["K"]] += 1
             rng = random.Random("v2collect|" + s["root"])
             cs = sorted((c for c in s["cands"] if c["seq"]), key=lambda c: -c["p11"])
             pick = cs[:3]
@@ -160,6 +170,33 @@ def label(dom, kind, workers, lo):
 
 
 def supervise(kinds):
+    """Fixed allocation read from runs/v2/ALLOC ({"workers": N, "lo": L}); a change restarts the pool (finished roots stay on disk)."""
+    import subprocess
+    py = str(ABF / "venv/bin/python")
+    teach = {"2D": str(Path.home() / "approachb3d_v3/2d_q2_spillover/venv313/bin/python"), "3D": str(Path.home() / "approachb3d_mock/env/bin/python")}
+    alloc = lambda: json.loads((V2 / "ALLOC").read_text())  # noqa: E731
+    for dk in kinds:
+        dom, kind = dk.split(":")
+        while True:
+            its = {i["root"] for i in json.loads((V2 / dom.lower() / f"items_{kind}.json").read_text())}
+            if its <= {r["root"] for r in jl(V2 / dom.lower() / f"labels_{kind}.jsonl")}:
+                break
+            a = alloc()
+            p = subprocess.Popen([teach[dom], str(ABF / "code/onpolicy.py"), "label", dom, kind, str(a["workers"]), str(a["lo"])],
+                                 stdout=open(ABF / "logs/v2_label.log", "a"), stderr=subprocess.STDOUT, cwd=str(ABF / "code"))
+            while p.poll() is None:
+                time.sleep(30)
+                if alloc() != a:
+                    kids = subprocess.run(["pgrep", "-P", str(p.pid)], capture_output=True, text=True).stdout.split()
+                    p.terminate()
+                    for k in kids:
+                        subprocess.run(["kill", k], capture_output=True)
+                    break
+            p.wait()
+        print(f"{time.strftime('%H:%M:%S')} labelled {dom} {kind}", flush=True)
+
+
+def supervise_old(kinds):
     """Run every (dom, kind) labelling to completion; 14 workers on CPUs 10-23 while no V1 verification runs, else 4 workers on CPUs 6-9.
     Switches by an in-band YIELD flag (the label pool exits after the current root and resumes from its file)."""
     import subprocess
@@ -178,8 +215,12 @@ def supervise(kinds):
                                  stdout=open(ABF / "logs/v2_label.log", "a"), stderr=subprocess.STDOUT, cwd=str(ABF / "code"))
             while p.poll() is None:
                 time.sleep(30)
-                if lo == 10 and v1():
-                    (V2 / "YIELD_10").touch()
+                if lo == 10 and v1():                               # yield NOW: stop the pool (finished roots are on disk; resumable)
+                    kids = subprocess.run(["pgrep", "-P", str(p.pid)], capture_output=True, text=True).stdout.split()
+                    p.terminate()
+                    for k in kids:
+                        subprocess.run(["kill", k], capture_output=True)
+                    break
             p.wait()
             (V2 / f"YIELD_{lo}").unlink(missing_ok=True)
         print(f"{time.strftime('%H:%M:%S')} labelled {dom} {kind}", flush=True)
