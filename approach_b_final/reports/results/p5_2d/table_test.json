@@ -1,0 +1,244 @@
+{
+ "rule": {
+  "noop_gate": 0.5,
+  "eta": 0.3,
+  "alpha": 0.5,
+  "beta": 0.0,
+  "gamma": 0.5
+ },
+ "split": "test",
+ "summary": {
+  "full": {
+   "task_success": 0.11488673139158576,
+   "n_task": 1236,
+   "repair_success": 0.11358024691358025,
+   "n_repair": 1215,
+   "shorter_than_K": 2,
+   "noop_correct": 0.9269162210338681,
+   "n_k0": 561,
+   "abstain_correct": 0.78,
+   "n_none": 450,
+   "unverified": 0,
+   "travel_success_mean": 3.269546595084432
+  },
+  "uncoupled": {
+   "task_success": 0.10355987055016182,
+   "n_task": 1236,
+   "repair_success": 0.10041152263374485,
+   "n_repair": 1215,
+   "shorter_than_K": 2,
+   "noop_correct": 0.9340463458110517,
+   "n_k0": 561,
+   "abstain_correct": 0.7822222222222223,
+   "n_none": 450,
+   "unverified": 0,
+   "travel_success_mean": 3.2019309142199956
+  },
+  "orderinv": {
+   "task_success": 0.10679611650485436,
+   "n_task": 1236,
+   "repair_success": 0.10617283950617284,
+   "n_repair": 1215,
+   "shorter_than_K": 3,
+   "noop_correct": 0.928698752228164,
+   "n_k0": 561,
+   "abstain_correct": 0.6288888888888889,
+   "n_none": 450,
+   "unverified": 0,
+   "travel_success_mean": 2.921202913878285
+  },
+  "direct": {
+   "task_success": 0.1156957928802589,
+   "n_task": 1236,
+   "repair_success": 0.11358024691358025,
+   "n_repair": 1215,
+   "shorter_than_K": 4,
+   "noop_correct": 0.8894830659536542,
+   "n_k0": 561,
+   "abstain_correct": 0.12666666666666668,
+   "n_none": 450,
+   "unverified": 0,
+   "travel_success_mean": 3.099461763442092
+  },
+  "analytic": {
+   "task_success": 0.11084142394822007,
+   "n_task": 1236,
+   "repair_success": 0.1094650205761317,
+   "n_repair": 1215,
+   "shorter_than_K": 3,
+   "noop_correct": 0.9269162210338681,
+   "n_k0": 561,
+   "abstain_correct": 0.7688888888888888,
+   "n_none": 450,
+   "unverified": 0,
+   "travel_success_mean": 3.1477722783978175
+  },
+  "flow": {
+   "task_success": 0.1011326860841424,
+   "n_task": 1236,
+   "repair_success": 0.09794238683127572,
+   "n_repair": 1215,
+   "shorter_than_K": 4,
+   "noop_correct": 0.9269162210338681,
+   "n_k0": 561,
+   "abstain_correct": 0.7711111111111111,
+   "n_none": 450,
+   "unverified": 0,
+   "travel_success_mean": 3.0289952929436836
+  },
+  "oneshot": {
+   "task_success": 0.11245954692556634,
+   "n_task": 1236,
+   "repair_success": 0.1111111111111111,
+   "n_repair": 1215,
+   "shorter_than_K": 2,
+   "noop_correct": 0.9269162210338681,
+   "n_k0": 561,
+   "abstain_correct": 0.8133333333333334,
+   "n_none": 450,
+   "unverified": 0,
+   "travel_success_mean": 3.2388276076264804
+  },
+  "notravel": {
+   "task_success": 0.09466019417475728,
+   "n_task": 1236,
+   "repair_success": 0.0897119341563786,
+   "n_repair": 1215,
+   "shorter_than_K": 2,
+   "noop_correct": 0.8983957219251337,
+   "n_k0": 561,
+   "abstain_correct": 0.78,
+   "n_none": 450,
+   "unverified": 0,
+   "travel_success_mean": 3.82140241233895
+  }
+ },
+ "paired_vs_full": {
+  "uncoupled": {
+   "task": {
+    "delta": -0.011326860841423947,
+    "ci95": [
+     -0.025889967637540454,
+     0.003236245954692556
+    ],
+    "roots": 412
+   },
+   "repair": {
+    "delta": -0.013168724279835392,
+    "ci95": [
+     -0.027983539094650203,
+     0.001646090534979423
+    ],
+    "roots": 405
+   }
+  },
+  "orderinv": {
+   "task": {
+    "delta": -0.008090614886731394,
+    "ci95": [
+     -0.02508090614886731,
+     0.008899676375404527
+    ],
+    "roots": 412
+   },
+   "repair": {
+    "delta": -0.007407407407407408,
+    "ci95": [
+     -0.023868312757201648,
+     0.009074074074073964
+    ],
+    "roots": 405
+   }
+  },
+  "direct": {
+   "task": {
+    "delta": 0.0008090614886731403,
+    "ci95": [
+     -0.01699029126213592,
+     0.01779935275080906
+    ],
+    "roots": 412
+   },
+   "repair": {
+    "delta": 5.482582837655094e-19,
+    "ci95": [
+     -0.015637860082304528,
+     0.01728395061728395
+    ],
+    "roots": 405
+   }
+  },
+  "analytic": {
+   "task": {
+    "delta": -0.0040453074433656954,
+    "ci95": [
+     -0.02103559870550162,
+     0.012944983818770227
+    ],
+    "roots": 412
+   },
+   "repair": {
+    "delta": -0.004115226337448559,
+    "ci95": [
+     -0.020576131687242795,
+     0.014814814814814815
+    ],
+    "roots": 405
+   }
+  },
+  "flow": {
+   "task": {
+    "delta": -0.013754045307443364,
+    "ci95": [
+     -0.032362459546925564,
+     0.0032362459546925585
+    ],
+    "roots": 412
+   },
+   "repair": {
+    "delta": -0.015637860082304528,
+    "ci95": [
+     -0.03292181069958848,
+     0.0016460905349794247
+    ],
+    "roots": 405
+   }
+  },
+  "oneshot": {
+   "task": {
+    "delta": -0.0024271844660194173,
+    "ci95": [
+     -0.011326860841423949,
+     0.007281553398058253
+    ],
+    "roots": 412
+   },
+   "repair": {
+    "delta": -0.0024691358024691358,
+    "ci95": [
+     -0.012345679012345678,
+     0.006584362139917695
+    ],
+    "roots": 405
+   }
+  },
+  "notravel": {
+   "task": {
+    "delta": -0.02022653721682848,
+    "ci95": [
+     -0.0412621359223301,
+     -0.0008090614886731417
+    ],
+    "roots": 412
+   },
+   "repair": {
+    "delta": -0.023868312757201648,
+    "ci95": [
+     -0.04446502057613169,
+     -0.00411522633744856
+    ],
+    "roots": 405
+   }
+  }
+ }
+}
