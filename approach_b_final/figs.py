@@ -66,5 +66,78 @@ def p1(dom, split):
     print(out)
 
 
+OKABE = ["#0072B2", "#E69F00", "#009E73", "#CC79A7", "#56B4E9"]
+
+
+def draw_root(a, inp, arrows=(), title="", heat=None):
+    """Grid view of a root from learner inputs (2D 8x8 lattice / 3D 6x6 shelf, top view): objects, target (T), goal (G), optional proposal heat,
+    arrows [(obj idx, dest cell, colour, label)].  Recorded labels only; no robot motion is drawn."""
+    R, C = inp["grid"]
+    rc = lambda c: divmod(int(c), C)  # noqa: E731
+    g = np.full((R, C), 0.92)
+    for c in inp["legal_cells"]:
+        g[rc(c)] = 1.0
+    a.imshow(g, cmap="gray", vmin=0, vmax=1)
+    if heat is not None:
+        a.imshow(np.ma.masked_less_equal(np.asarray(heat, float).reshape(R, C), 0), cmap="Blues", alpha=0.75, vmin=0)
+    gr, gc = rc(inp["goal_cell"])
+    a.add_patch(plt.Rectangle((gc - 0.45, gr - 0.45), 0.9, 0.9, fill=False, ec="#d62728", lw=2, ls="--"))
+    a.text(gc, gr + 0.38, "G", ha="center", va="center", fontsize=7, color="#d62728")
+    for i, c in enumerate(inp["cells0"]):
+        r, k = rc(c)
+        fixed = len(inp["attrs"][i]) == 4 and inp["attrs"][i][3] and i != inp["tid"]
+        a.add_patch(plt.Circle((k, r), 0.3, color="#d62728" if i == inp["tid"] else ("#222" if fixed else "#777")))
+        a.text(k, r, "T" if i == inp["tid"] else str(inp["ids"][i])[-2:], ha="center", va="center", fontsize=6, color="white")
+    for j, (o, d, col, lab) in enumerate(arrows):
+        (r0, k0), (r1, k1) = rc(inp["cells0"][o]), rc(d)
+        a.annotate("", (k1, r1), (k0, r0), arrowprops=dict(arrowstyle="-|>", color=col, lw=1.8, shrinkA=6, shrinkB=4))
+        a.add_patch(plt.Rectangle((k1 - 0.4, r1 - 0.4), 0.8, 0.8, fill=False, ec=col, lw=1.8))
+    a.set_xticks([]); a.set_yticks([]); a.set_title(title, fontsize=8)
+
+
+def v3_0(audit_dir, snap, examples):
+    """V3-0: distinct verified Z = 1 assignments per TRAIN root (base vs V2) + one 2D / one 3D root with its assignments and orders."""
+    audit_dir = Path(audit_dir)
+    A = json.loads((audit_dir / "V3_0_AUDIT.json").read_text())
+    fig, axes = plt.subplots(1, 2, figsize=(9, 3.2))
+    for a, dom in zip(axes, ("2d", "3d")):
+        w, x = 0.38, np.arange(3)
+        for j, name in enumerate(("base", "v2")):
+            n = A["domains"][dom][name]["n_v3_legal_assignments_per_root"]
+            bottom = np.zeros(3)
+            for b, shade in zip(range(5), ("#bbbbbb", "#0072B2", "#56B4E9", "#E69F00", "#CC79A7")):
+                tot = np.array([sum(v for k, v in n.items() if k.startswith(f"train|{K}|")) for K in "123"], float)
+                h = np.array([n.get(f"train|{K}|{b}", 0) for K in "123"]) / np.maximum(tot, 1)
+                a.bar(x + (j - 0.5) * w, h, w * 0.92, bottom=bottom, color=shade, edgecolor="white", lw=0.8,
+                      label=(["0", "1", "2", "3", ">=4"][b] if j == 0 else None))
+                bottom += h
+            for xi in x:
+                a.text(xi + (j - 0.5) * w, 1.02, name, ha="center", fontsize=7)
+        a.set_xticks(x, [f"K{K}" for K in "123"]); a.set_ylim(0, 1.1); a.set_ylabel("fraction of TRAIN roots")
+        a.set_title(f"{dom.upper()}: distinct verified Z=1 assignments per root", fontsize=9)
+    axes[1].legend(title="# assignments", frameon=False, fontsize=7, title_fontsize=7, loc="center left", bbox_to_anchor=(1.0, 0.5))
+    fig.tight_layout(); fig.savefig(audit_dir / "assignments_per_root.png", dpi=160); plt.close(fig)
+    fig, axes = plt.subplots(1, 2, figsize=(9, 4.4))
+    for a, (dom, rid) in zip(axes, examples):
+        row = next(r for r in map(json.loads, open(Path(snap) / f"data{dom}.jsonl")) if r["root_id"] == rid)
+        led = next(r for r in map(json.loads, open(audit_dir / f"assignments_{dom}.jsonl")) if r["root_id"] == rid)
+        arrows, lines = [], []
+        for j, asg in enumerate(led["assignments"][:4]):
+            col = OKABE[j]
+            arrows += [(o, d, col, "") for o, d in asg["assignment"]]
+            ids = row["inputs"]["ids"]
+            okey = lambda s: " > ".join(f"{str(ids[o])[-2:]}->{d}" for o, d in s)  # noqa: E731
+            lines.append((col, f"A{j + 1} [{asg['source']}]: {asg['n_success_orders']} X=1 order(s), {asg['n_failed_orders']} X=0"))
+            lines += [(col, "   ok  " + okey(s)) for s in asg["orders"][:3]]
+        draw_root(a, row["inputs"], arrows, f"{dom.upper()} TRAIN {rid} (legacy K{row['K_legacy']})")
+        for i, (col, t) in enumerate(lines[:12]):
+            a.text(0.0, -0.08 - 0.055 * i, t, transform=a.transAxes, fontsize=6, color=col, va="top", family="monospace")
+    fig.suptitle("Each colour = one verified unordered assignment (ONE cVAE target set); its X=1 orders are separate Boltzmann observations "
+                 "(recorded labels only)", fontsize=8)
+    fig.subplots_adjust(bottom=0.36, top=0.9, wspace=0.15); fig.savefig(audit_dir / "assignment_vs_order_examples.png", dpi=160); plt.close(fig)
+    print(audit_dir)
+
+
 if __name__ == "__main__":
-    {"p1": lambda: p1(sys.argv[2], sys.argv[3])}[sys.argv[1]]()
+    {"p1": lambda: p1(sys.argv[2], sys.argv[3]),
+     "v3_0": lambda: v3_0(sys.argv[2], sys.argv[3], [("2d", sys.argv[4]), ("3d", sys.argv[5])])}[sys.argv[1]]()

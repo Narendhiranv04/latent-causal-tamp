@@ -289,10 +289,150 @@ def check(snap):
     return rep
 
 
+# ------------------------------------------------------------------------------------------------ V3-0: successful-assignment audit (read-only)
+def ekey(seq):
+    """Endpoint (= unordered assignment) key in snapshot index form; Y is shared by every order of one endpoint."""
+    return json.dumps(sorted(map(tuple, seq)))
+
+
+def v3_grammar(inp, assignment):
+    """V3 static initial-scene grammar (plan V3 0.1.8 / 4.1) for an assignment [(obj idx, cell)] -> list of violated rules ([] = legal)."""
+    bad, objs, dests = [], [o for o, _ in assignment], [int(d) for _, d in assignment]
+    fixed = {i for i, a in enumerate(inp["attrs"]) if len(a) == 4 and a[3]}            # 2D attrs[3] = is_fixed; 3D has no fixed objects
+    occ0, legal = {int(c) for c in inp["cells0"]}, {int(c) for c in inp["legal_cells"]}
+    if not 1 <= len(assignment) <= 3: bad.append("length")
+    if len(set(objs)) != len(objs): bad.append("object_twice")
+    if inp["tid"] in objs: bad.append("target_moved")
+    if fixed & set(objs): bad.append("fixed_moved")
+    if len(set(dests)) != len(dests): bad.append("shared_destination")
+    if any(d not in legal for d in dests): bad.append("not_support_cell")
+    if any(d in occ0 for d in dests): bad.append("initially_occupied")
+    if int(inp["goal_cell"]) in dests: bad.append("goal_cell")
+    return bad
+
+
+def positive_assignments(row):
+    """-> {assignment key: {"assignment": [[obj idx, cell]], "orders": [ordered seq with X = 1], "failed_orders": [...], "kinds": set}} for every
+    endpoint with Y = 1 and at least one X = 1 order (Z = 1).  Six successful orders of one assignment are ONE entry."""
+    Y = {ekey(y["edit"]): y["y"] for y in row["labels"]["Y"]}
+    out = {}
+    for q in row["labels"]["X"]:
+        k = ekey(q["seq"])
+        if Y.get(k) != 1 or not q["seq"]:
+            continue
+        a = out.setdefault(k, {"assignment": sorted(map(list, q["seq"])), "orders": [], "failed_orders": [], "kinds": set()})
+        (a["orders"] if q["x"] == 1 else a["failed_orders"]).append(q["seq"])
+        a["kinds"].add(q["kind"])
+    return {k: v for k, v in out.items() if v["orders"]}
+
+
+def v3audit(base, v2, q2root, out):
+    """Per domain: successful X = 1 / Y = 1 evidence by root, canonical assignment and order; V3 grammar admissibility; label resolution; legacy-K
+    agreement; base vs V2 split hygiene; Q2 overlap.  Writes a versioned additive ledger (assignments_<dom>.jsonl) + V3_0_AUDIT.json."""
+    base, v2, out = Path(base), Path(v2), Path(out)
+    out.mkdir(parents=True, exist_ok=True)
+    C, rep = collections.Counter, {"base_snapshot": base.name, "v2_snapshot": v2.name, "domains": {}}
+    rep["snapshot_files_ok"] = {s.name: {n: sha(s / n) == h for n, h in json.loads((s / "data_snapshot.lock.json").read_text())["files"].items()} for s in (base, v2)}
+    for dom in ("2d", "3d"):
+        rb = {r["root_id"]: r for r in map(json.loads, open(base / f"data{dom}.jsonl"))}
+        rv = {r["root_id"]: r for r in map(json.loads, open(v2 / f"data{dom}.jsonl"))}
+        lines_b = {json.loads(l)["root_id"]: l for l in open(base / f"data{dom}.jsonl")}
+        lines_v = {json.loads(l)["root_id"]: l for l in open(v2 / f"data{dom}.jsonl")}
+        hyg = {"same_roots": set(rb) == set(rv), "v2_changed_nontrain": sum(lines_b[k] != lines_v[k] for k in rb if rb[k]["split"] != "train"),
+               "v2_changed_train": sum(lines_b[k] != lines_v[k] for k in rb if rb[k]["split"] == "train"),
+               "split_changed": sum(rb[k]["split"] != rv[k]["split"] for k in rb)}
+        fam, lay = collections.defaultdict(set), collections.defaultdict(set)
+        for r in rb.values():
+            fam[r["parent_family_id"]].add(r["split"]); lay[r["layout_root_id"]].add(r["split"])
+        hyg["family_split_conflicts"], hyg["layout_split_conflicts"] = sum(len(v) > 1 for v in fam.values()), sum(len(v) > 1 for v in lay.values())
+        D = {"hygiene": hyg}
+        ledger = open(out / f"assignments_{dom}.jsonl", "w")
+        for name, rows in (("base", rb), ("v2", rv)):
+            st, ndist, viol, lab, kagree, dpo, size = C(), C(), C(), C(), C(), [], C()
+            for rid, r in rows.items():
+                sp, K, inp = r["split"], r["K_legacy"], r["inputs"]
+                Y = {ekey(y["edit"]): y["y"] for y in r["labels"]["Y"]}
+                for q in r["labels"]["X"]:
+                    yv = Y.get(ekey(q["seq"]))
+                    lab[(sp, f"X={q['x']}", f"Y={'MISSING' if yv is None else yv}", q["kind"])] += 1
+                lab[(sp, "Y_endpoints", "", "")] += len(Y)
+                pa = positive_assignments(r)
+                for a in pa.values():
+                    a["v3_violations"] = v3_grammar(inp, a["assignment"])
+                legal_pa = {k: a for k, a in pa.items() if not a["v3_violations"]}
+                for a in pa.values():
+                    for v in a["v3_violations"] or ["ok"]:
+                        viol[(sp, v)] += 1
+                ndist[(sp, K, min(len(legal_pa), 4))] += 1
+                st[(sp, K, "roots")] += 1
+                st[(sp, K, "roots_with_Z1_assignment")] += bool(pa)
+                st[(sp, K, "roots_with_v3_legal_Z1_assignment")] += bool(legal_pa)
+                st[(sp, K, "Z1_assignments")] += len(pa)
+                st[(sp, K, "v3_legal_Z1_assignments")] += len(legal_pa)
+                st[(sp, K, "Z1_ordered_rows")] += sum(len(a["orders"]) for a in pa.values())
+                st[(sp, K, "selected_kind_Z1_ordered_rows")] += sum(1 for q in r["labels"]["X"] if q["kind"] == "SELECTED_ASSIGNMENT_ORDER" and q["x"] == 1 and Y.get(ekey(q["seq"])) == 1)
+                for a in legal_pa.values():
+                    size[(sp, len(a["assignment"]))] += 1
+                if K in ("1", "2", "3"):
+                    mins = min((len(a["assignment"]) for a in pa.values()), default=None)
+                    kagree[(sp, K, "no_Z1" if mins is None else "min_lt_K" if mins < int(K) else "min_eq_K" if mins == int(K) else "min_gt_K")] += 1
+                elif pa:
+                    kagree[(sp, K, "Z1_assignment_on_" + K)] += 1
+                if sp == "train" and legal_pa:
+                    per = collections.defaultdict(set)
+                    for a in legal_pa.values():
+                        for o, d in a["assignment"]:
+                            per[o].add(d)
+                    dpo += [len(v) for v in per.values()]
+                if name == "v2":
+                    ids = inp["ids"]
+                    prim = min(legal_pa, key=lambda k: hashlib.sha256(f"v3primary|{rid}|{k}".encode()).hexdigest()) if legal_pa else None
+                    base_keys = set(positive_assignments(rb[rid]))
+                    ledger.write(json.dumps({"root_id": rid, "domain": dom, "split": sp, "K_legacy": K, "parent_family_id": r["parent_family_id"],
+                                             "root_sha256": r["root_sha256"], "primary_assignment_id": prim, "assignments": [
+                        {"assignment_id": k, "assignment": a["assignment"], "assignment_obj_ids": [[ids[o], d] for o, d in a["assignment"]],
+                         "n_success_orders": len(a["orders"]), "n_failed_orders": len(a["failed_orders"]), "orders": a["orders"],
+                         "source": "base" if k in base_keys else "v2_onpolicy", "kinds": sorted(a["kinds"]),
+                         "v3_grammar": "ok" if not a["v3_violations"] else "outside_v3_grammar", "v3_violations": a["v3_violations"]}
+                        for k, a in sorted(pa.items())]}) + "\n")
+            D[name] = {"by_split_K": {"|".join(map(str, k)): v for k, v in sorted(st.items())},
+                       "n_v3_legal_assignments_per_root": {"|".join(map(str, k)): v for k, v in sorted(ndist.items())},
+                       "v3_grammar": {"|".join(k): v for k, v in sorted(viol.items())},
+                       "legal_assignment_size": {"|".join(map(str, k)): v for k, v in sorted(size.items())},
+                       "legacy_K_vs_finalized": {"|".join(k): v for k, v in sorted(kagree.items())},
+                       "train_distinct_positive_dests_per_moved_object": dict(sorted(C(dpo).items())),
+                       "labels": {"|".join(k): v for k, v in sorted(lab.items())}}
+        ledger.close()
+        # Q2 placement data: roots, splits and overlap with the X/Y roots (goal context available only through the root record)
+        q2 = json.loads((Path(q2root) / f"q2_{dom}" / "scalers.json").read_text())
+        q2roots = json.loads((Path(q2root) / f"q2_{dom}" / "rows.json").read_text())["roots"]
+        try:
+            import numpy as np
+            sp_q = np.load(Path(q2root) / f"q2_{dom}" / "features.npz")["split"]
+            q2split = {}
+            for rr, s in zip(q2roots, sp_q.tolist()):
+                q2split.setdefault(rr, set()).add(["train", "val", "test"][s])
+            ov = [rr for rr in q2split if rr in rb]
+            D["q2"] = {"queries": q2["n"], "by_split": q2["by_split"], "roots": len(q2split), "roots_in_xy_snapshot": len(ov),
+                       "overlap_split_disagree": sum(q2split[rr] != {rb[rr]["split"]} for rr in ov),
+                       "q2_train_roots_that_are_xy_val_or_test": sum("train" in q2split[rr] and rb[rr]["split"] != "train" for rr in ov),
+                       "q2_valtest_roots_that_are_xy_train": sum(bool(q2split[rr] & {"val", "test"}) and rb[rr]["split"] == "train" for rr in ov)}
+        except Exception as e:  # pragma: no cover
+            D["q2"] = {"error": repr(e)}
+        rep["domains"][dom] = D
+    (out / "V3_0_AUDIT.json").write_text(json.dumps(rep, indent=1))
+    rep["ledger_sha256"] = {d: sha(out / f"assignments_{d}.jsonl") for d in ("2d", "3d")}
+    (out / "V3_0_AUDIT.json").write_text(json.dumps(rep, indent=1))
+    print(json.dumps({"files_ok": rep["snapshot_files_ok"], "hygiene": {d: rep["domains"][d]["hygiene"] for d in rep["domains"]}}))
+    return rep
+
+
 if __name__ == "__main__":
     if sys.argv[1:2] == ["handoff"]:
         check(handoff())
     elif sys.argv[1:2] == ["check"]:
         check(sys.argv[2])
+    elif sys.argv[1:2] == ["v3audit"]:
+        v3audit(*sys.argv[2:6])
     else:
         raise SystemExit(__doc__)
