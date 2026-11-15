@@ -138,6 +138,45 @@ def v3_0(audit_dir, snap, examples):
     print(audit_dir)
 
 
+def v3_1(dom, rec_file, caches, roots, out):
+    """V3-1 examples: per root the ONE-pass proposal set D (all objects, from S0), top-5 complete candidates by p11 and the selected repair with
+    its physical outcome from the verification caches ('unverified' if absent).  Recorded outputs only."""
+    snap = ABF / "snapshot/abf_9de85710c2a7103f"
+    rows = {r["root_id"]: r for r in map(json.loads, open(snap / f"data{dom}.jsonl"))}
+    recs = {r["root_id"]: r for r in map(json.loads, open(rec_file))}
+    ver = {}
+    for p in caches:
+        if Path(p).exists():
+            for v in map(json.loads, open(p)):
+                for x in v["results"]:
+                    ver[(v["root"], json.dumps(x["seq"]))] = ((x["x"] or {}).get("x"), (x["y"] or {}).get("y"))
+    fig, axes = plt.subplots(1, len(roots), figsize=(4.6 * len(roots), 5.2))
+    for a, rid in zip(np.atleast_1d(axes), roots):
+        r, row = recs[rid], rows[rid]
+        inp = row["inputs"]
+        R, C = inp["grid"]
+        heat = np.zeros(R * C)
+        for o, d in r["proposal_actions"]:
+            heat[d] += 1
+        sel = r["selected_ordered_seq"]
+        arrows = [(o, d, "#E69F00", "") for o, d in (sel or [])]
+        xy_ = ver.get((rid, json.dumps(sel))) if sel else None
+        outcome = "no repair" if not sel else ("unverified" if xy_ is None else f"physical X={xy_[0]} Y={xy_[1]}")
+        draw_root(a, inp, arrows, f"{dom.upper()} {rid} (legacy K{r['K']})\n{r['decision']}: {outcome}", heat=heat)
+        ids = inp["ids"]
+        top = sorted((c for c in r["cands"] if c["seq"]), key=lambda c: -c["p11"])[:5]
+        b = r["candidate_budget"]
+        lines = [f"D: {b['unique_actions']} actions over {len(r['M_by_object'])} objects (1 sampler pass); valid {b['valid_by_len']}",
+                 f"scored {b['n_scored']} ({b['mode']}, B={b['B_score']}); p_noop={r['p_noop']:.2f}"]
+        lines += [f"p11={c['p11']:.2f}  " + " > ".join(f"{str(ids[o])[-2:]}->{d}" for o, d in c["seq"]) + ("  <- selected" if c["seq"] == sel else "") for c in top]
+        for i, t in enumerate(lines):
+            a.text(0.0, -0.04 - 0.06 * i, t, transform=a.transAxes, fontsize=6.5, va="top", family="monospace")
+    fig.suptitle("Direct one-shot construction (frozen V2 models): blue = number of proposals per cell, orange = selected ordered repair", fontsize=8)
+    fig.subplots_adjust(bottom=0.33, top=0.86); fig.savefig(out, dpi=160); plt.close(fig)
+    print(out)
+
+
 if __name__ == "__main__":
     {"p1": lambda: p1(sys.argv[2], sys.argv[3]),
-     "v3_0": lambda: v3_0(sys.argv[2], sys.argv[3], [("2d", sys.argv[4]), ("3d", sys.argv[5])])}[sys.argv[1]]()
+     "v3_0": lambda: v3_0(sys.argv[2], sys.argv[3], [("2d", sys.argv[4]), ("3d", sys.argv[5])]),
+     "v3_1": lambda: v3_1(sys.argv[2], sys.argv[3], sys.argv[4].split(","), sys.argv[5].split(","), sys.argv[6])}[sys.argv[1]]()

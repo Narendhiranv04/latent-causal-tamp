@@ -41,7 +41,10 @@ GRID = [{"noop_gate": ng, "eta": e, "alpha": a, "beta": b, "gamma": g} for ng in
 def rows_of(dom, split):
     """split 'valsub' = deterministic stratified tuning subset of VALIDATION: 60 roots per legacy class (K0, K1, K2, K3, NONE), sha256 order."""
     import hashlib
-    rows = [r for r in map(json.loads, open(SNAP / f"data{dom.lower()}.jsonl")) if r["split"] == ("val" if split == "valsub" else split)]
+    rows = [r for r in map(json.loads, open(SNAP / f"data{dom.lower()}.jsonl")) if r["split"] == ("val" if split in ("valsub", "valrest") else split)]
+    if split == "valrest":                            # V3: validation roots NOT in valsub (held out from every V1/V2 stopping-rule tuning)
+        sub = {r["root_id"] for r in rows_of(dom, "valsub")}
+        return [r for r in rows if r["root_id"] not in sub]
     if split != "valsub":
         return rows
     out = []
