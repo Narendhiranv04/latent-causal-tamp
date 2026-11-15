@@ -125,7 +125,7 @@ def _boot(dom, geom):
         os.environ.setdefault("FIN3D_STORE", str(ABF / "runs/p5_3d/verify_store"))
         os.environ.setdefault("FIN3D_SRC", str(Path.home() / "approachb_final_gen/final3d_v4/src/dataset_bd_classquota_without_home_position_no_overpass"))
         os.environ.setdefault("MUJOCO_GL", "disable")
-        sys.path.insert(0, str(Path.home() / "approachb_final_gen/final3d_v4/code"))
+        sys.path.insert(0, os.environ.get("FIN3D_CODE", str(Path.home() / "approachb_final_gen/final3d_v4/code")))
         import fin3d as F
         F.boot()
         _W["F"] = F

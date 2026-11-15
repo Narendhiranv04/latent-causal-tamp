@@ -104,3 +104,26 @@ Proposal-side diagnostics (task roots):
 - M ∈ {4, 8, 12, 16} at matched scored budgets;
 - sampling rules S1–S4 on frozen models: true top-M of the MC-estimated marginal, Gumbel-top-k without replacement, temperature, and a legal-uniform or band mixture;
 - teacher-free ingredient recall over all validation roots, with top-1 physical verification only on the selected configurations.
+
+## Addendum (2026-11-16 04:40 IST): held-out `valrest` comparison
+
+`valrest` = the validation roots outside valsub: 451 in 2D and 73 in 3D. No V1, V2 or V3 stopping rule was ever tuned on them. Setup:
+- the same four arms, seed 0, with the frozen V2 models and rule;
+- every selected repair physically verified (0 unverified);
+- 2D teacher queries: 729; 3D: 152.
+
+Sources: `v3_1/SUMMARY_{2d,3d}_valrest.json`.
+
+| valrest | 2D task (n = 233) | 2D K1 / K2 / K3 | Δ vs iterative [95 % CI] | 3D task (n = 47) | Δ vs iterative [95 % CI] | Latency 2D / 3D |
+|---|---:|---|---|---:|---|---|
+| V2 iterative | 25.3 | 56.7 / 36.7 / 2.7 | — | 51.1 | — | 0.25 / 0.33 s |
+| V2 bounded oneshot | 21.5 | 56.7 / 21.7 / 2.7 | −3.9 [−9.0, +1.3] | 53.2 | +2.1 [−12.8, +17.0] | 0.22 / 0.29 s |
+| Direct M4 B512 | 17.6 | 55.0 / 11.7 / 0.9 | −7.7 [−12.4, −3.0] | 53.2 | +2.1 [−12.8, +14.9] | 0.07 / 0.07 s |
+| Direct M4 B4096 | 18.0 | 51.7 / 16.7 / 0.9 | −7.3 [−12.4, −2.6] | 61.7 | +10.6 [−6.4, +27.7] | 0.28 / 0.07 s |
+
+Findings:
+- **Iterative was inflated in-sample.** Its in-sample valsub advantage shrinks on held-out roots, from 33.9 % to 25.3 % in 2D.
+- **2D conclusion unchanged.** With the goal-blind Q2 sampler, one-pass direct construction remains significantly worse than iterative (about −7 points), almost entirely at K2 / K3. Known-assignment ingredient recall is 2.6 % vs 22.9 %.
+- **3D conclusion unchanged.** Direct construction matches or exceeds iterative at about a fifth of the latency.
+- **3D valrest is small.** It has only 47 task roots, no K1 and no NONE roots, so its CIs are wide.
+- **Conditional selection is high.** Given a known or verified success in the scored set, the scorer picks a verified success 71–96 % of the time in 2D. The 2D deficit is a **proposal-coverage** problem, which motivates V3-3.

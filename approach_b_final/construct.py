@@ -127,18 +127,34 @@ def run_root(root, sampler, scorer, M, B, rule, seed, store_top=2048, chunk=8192
 
 
 ARMS = {"v2frozen": {"sampler": ("v1", "cvae"), "xy": ("v2", "D")}}           # frozen V2 = V1 Q2 cVAE (unchanged in V2) + V2-retrained coupled D
+RULES = {"S0": {"name": "S0"}, "S1": {"name": "S1"}, "S2": {"name": "S2"},
+         **{f"S3t{t}": {"name": "S3", "tau": t} for t in (1.5, 2, 3)},
+         **{f"S4{b[0]}{e}": {"name": "S4", "broad": b, "eps": e} for b in ("uniform", "band") for e in (0.25, 0.5)}}
 
 
-def run(dom, split, arm, seed, M=4, B=4096):
+def make_sampler(dom, kind, seed, rule):
+    """kind: cvae / fm / uniform / stratified (frozen P1) or 'task:<variant>' (V3-3 task-conditioned cVAE, same seed)."""
+    import placement as PL
+    import search as S
+    model = PL.load_task(dom, kind[5:], seed) if kind.startswith("task:") else None
+    return S.Sampler(dom, kind, seed, ABF / "data" / f"q2_{dom}", rule=rule, model=model)
+
+
+def rule_tag(rule_name, kind):
+    return ("" if kind == "cvae" else kind + "-") + rule_name
+
+
+def run(dom, split, arm, seed, M=4, B=4096, rule_name="S0", kind="cvae"):
     import torch
     import evaluate as EV
     import search as S
     EV.SNAP = ABF / "snapshot/abf_9de85710c2a7103f"
     a = ARMS[arm]
-    out = V3OUT / "v3_1" / dom.lower() / f"{arm}_M{M}_B{B}_s{seed}_{split}.jsonl"
+    tag = "" if (rule_name, kind) == ("S0", "cvae") else "_" + rule_tag(rule_name, kind)
+    out = V3OUT / ("v3_1" if not tag else "v3_2") / dom.lower() / f"{arm}{tag}_M{M}_B{B}_s{seed}_{split}.jsonl"
     out.parent.mkdir(parents=True, exist_ok=True)
     done = {json.loads(l)["root_id"] for l in open(out)} if out.exists() else set()
-    samp = S.Sampler(dom.lower(), a["sampler"][1], seed, ABF / "data" / f"q2_{dom.lower()}")
+    samp = make_sampler(dom.lower(), kind if kind != "cvae" else a["sampler"][1], seed, RULES[rule_name])
     p2 = ABF / "runs" / ("v2" if a["xy"][0] == "v2" else "") / f"p2_{dom.lower()}" / f"{a['xy'][1]}_s{seed}" / "model.pt"
     scor = S.Scorer(p2, ABF / "runs" / f"p3_{dom.lower()}" / f"cost_s{seed}" / "model.pt")
     rule = json.loads((ABF / "runs/v2" / f"p5_{dom.lower()}" / "rule.json").read_text())
@@ -149,9 +165,52 @@ def run(dom, split, arm, seed, M=4, B=4096):
                 continue
             rec = run_root(S.Root(r, dom.lower()), samp, scor, M, B, rule, seed)
             rec.update(arm=arm, seed=seed, sampler_version=f"{a['sampler'][0]}:{a['sampler'][1]}_s{seed}", scorer_version=f"{a['xy'][0]}:{a['xy'][1]}_s{seed}",
-                       sampling_rule="S0_repeat_dedup_raw_mult8", rule=rule, gpu_peak_mib=round(torch.cuda.max_memory_allocated() / 2 ** 20, 1))
+                       sampling_rule=rule_tag(rule_name, kind) + ("_repeat_dedup_raw_mult8" if rule_name == "S0" else ""), rule=rule, gpu_peak_mib=round(torch.cuda.max_memory_allocated() / 2 ** 20, 1))
             f.write(json.dumps(rec) + "\n"); f.flush()
     print(json.dumps({"out": str(out), "roots": sum(1 for _ in open(out))}))
+
+
+def sweep(dom, split, seeds=(0, 1, 2), Ms=(4, 8, 12, 16), configs=None, tag=""):
+    """Teacher-free proposal sweep (no scorer, no teacher): per (sampler kind, rule, M) and seed, ONE pass on S0 per root ->
+    known-assignment ingredient recall (all actions of >= 1 verified Z=1 assignment in D) by K, known action recall, unique actions, exact |R(D)|."""
+    import numpy as np
+    import torch
+    import contracts as CT
+    import evaluate as EV
+    import search as S
+    EV.SNAP = ABF / "snapshot/abf_9de85710c2a7103f"
+    rows = EV.rows_of(dom.upper(), split)
+    roots = [(S.Root(r, dom.lower()), r) for r in rows]
+    pos = {r["root_id"]: [a["assignment"] for a in CT.positive_assignments(r).values()] for r in rows}
+    configs = configs or [("cvae", k) for k in RULES] + [("uniform", "S2"), ("stratified", "S0"), ("stratified", "S2")]
+    out_dir = V3OUT / "v3_2" / dom.lower()
+    out_dir.mkdir(parents=True, exist_ok=True)
+    res = {}
+    for kind, rn in configs:
+        for M in Ms:
+            per_seed = []
+            for seed in seeds:
+                samp = make_sampler(dom.lower(), kind, seed if kind in ("cvae",) or kind.startswith("task:") else 0, RULES[rn])
+                gen = torch.Generator(device=samp.dev).manual_seed(1000 * seed + M)
+                st = collections.defaultdict(list)
+                t0 = time.time()
+                for root, r in roots:
+                    D = samp.propose_many(root, root.cells0, list(root.movable), M, gen) if root.movable else {}
+                    acts = {(o, int(d)) for o, v in D.items() for d in v}
+                    st["unique_actions"].append(len(acts)); st["R_total"].append(sum(counts(D)))
+                    if r["masks"]["eval_task"] and pos[r["root_id"]]:
+                        A = pos[r["root_id"]]
+                        hit = any(all(tuple(a) in acts for a in x) for x in A)
+                        st["recall"].append(hit); st["recall_K" + r["K_legacy"]].append(hit)
+                        st["action_recall"].append(max(np.mean([tuple(a) in acts for a in x]) for x in A))
+                per_seed.append({"recall": float(np.mean(st["recall"])), **{f"recall_K{K}": float(np.mean(st[f"recall_K{K}"])) for K in "123" if st[f"recall_K{K}"]},
+                                 "action_recall": float(np.mean(st["action_recall"])), "unique_actions": float(np.mean(st["unique_actions"])),
+                                 "R_total_median": float(np.median(st["R_total"])), "R_total_p90": float(np.percentile(st["R_total"], 90)),
+                                 "model_evals_per_root": samp.raw / max(1, len(roots)), "wall_s": round(time.time() - t0, 2), "n_task_roots_with_known": len(st["recall"])})
+            key = f"{rule_tag(rn, kind)}|M{M}"
+            res[key] = {k: {"mean": float(np.mean([p[k] for p in per_seed])), "sd": float(np.std([p[k] for p in per_seed]))} for k in per_seed[0]}
+            print(key, json.dumps({k: round(v["mean"], 3) for k, v in res[key].items()}), flush=True)
+    (out_dir / f"SWEEP{tag}_{split}.json").write_text(json.dumps(res, indent=1))
 
 
 # --------------------------------------------------------------------------------------------- independent physical verification of the ONE selection
@@ -172,6 +231,11 @@ def verify(dom, files, workers, cpu0, cache_in=()):
         for r in EV.jl(fn):
             if r["selected_ordered_seq"] and (r["root_id"], json.dumps(r["selected_ordered_seq"])) not in have:   # REPAIRs (NOOP/ABSTAIN need no teacher)
                 want[r["root_id"]].add(json.dumps(r["selected_ordered_seq"]))
+    part = os.environ.get("V3_PART")                  # 'a,b/n': this host verifies roots with sha256(root) % n in {a, b} (disjoint hosts, same cache keys)
+    if part:
+        keep, n = part.split("/")
+        keep = {int(x) for x in keep.split(",")}
+        want = {k: v for k, v in want.items() if int(hashlib.sha256(k.encode()).hexdigest(), 16) % int(n) in keep}
     rows = {r["root_id"]: r for split in ("val", "train") for r in EV.rows_of(dom.upper(), split)}
     jobs = []
     for root, seqs in sorted(want.items()):
@@ -181,18 +245,32 @@ def verify(dom, files, workers, cpu0, cache_in=()):
         jobs.append({"dom": dom.upper(), "path": str(path), "geom": geom, "seqs": [[(ids[i], c) for i, c in json.loads(s)] for s in sorted(seqs)]})
     print(json.dumps({"roots": len(want), "queries": sum(len(j["seqs"]) for j in jobs)}), flush=True)
     os.sched_setaffinity(0, set(range(cpu0, cpu0 + workers)))
+    geoms = sorted({j["geom"] for j in jobs})
+    share = {g: max(1, round(workers * sum(j["geom"] == g for j in jobs) / max(1, len(jobs)))) for g in geoms}   # concurrent pools: no group barrier
+    ctx = mp.get_context("spawn")
+    pools = {g: ctx.Pool(share[g], initializer=_boot, initargs=(dom.upper(), g), maxtasksperchild=50) for g in geoms}
+    its = [pools[g].imap_unordered(EV._verify_job, [j for j in jobs if j["geom"] == g]) for g in geoms]
+    import queue, threading
+    q = queue.Queue()
+    for it in its:
+        threading.Thread(target=lambda it=it: [q.put(r) for r in it] and None or q.put(None), daemon=True).start()
     with open(cache_out, "a") as f:
-        for geom in sorted({j["geom"] for j in jobs}):
-            js = [j for j in jobs if j["geom"] == geom]
-            with mp.get_context("spawn").Pool(workers, initializer=_boot, initargs=(dom.upper(), geom), maxtasksperchild=50) as pool:
-                for i, r in enumerate(pool.imap_unordered(EV._verify_job, js), 1):
-                    ids = rows[r["root"]]["inputs"]["ids"]
-                    for x in r["results"]:
-                        x["seq"] = [[ids.index(o), c] for o, c in x["seq"]]
-                    r["teacher_provenance"] = "unchanged finalized teacher (evaluate._verify_job), V3 run"
-                    f.write(json.dumps(r) + "\n"); f.flush()
-                    if i % 25 == 0:
-                        print(f"{time.strftime('%H:%M:%S')} {geom} {i}/{len(js)}", flush=True)
+        done = ended = 0
+        while ended < len(its):
+            r = q.get()
+            if r is None:
+                ended += 1
+                continue
+            ids = rows[r["root"]]["inputs"]["ids"]
+            for x in r["results"]:
+                x["seq"] = [[ids.index(o), c] for o, c in x["seq"]]
+            r["teacher_provenance"] = "unchanged finalized teacher (evaluate._verify_job), V3 run"
+            f.write(json.dumps(r) + "\n"); f.flush()
+            done += 1
+            if done % 25 == 0:
+                print(f"{time.strftime('%H:%M:%S')} {done}/{len(jobs)}", flush=True)
+    for p_ in pools.values():
+        p_.close(); p_.join()
 
 
 def legacy(search_file, rule_file, out, label):
@@ -317,7 +395,10 @@ def _boot(dom, geom):
 if __name__ == "__main__":
     c = sys.argv[1]
     if c == "run":
-        run(sys.argv[2], sys.argv[3], sys.argv[4], int(sys.argv[5]), *(int(x) for x in sys.argv[6:8]))
+        run(sys.argv[2], sys.argv[3], sys.argv[4], int(sys.argv[5]), *(int(x) for x in sys.argv[6:8]), *sys.argv[8:10])
+    elif c == "sweep":
+        cf = [tuple(x.split("@")) for x in sys.argv[4].split(",")] if len(sys.argv) > 4 else None     # e.g. task:scratch_one@S2,cvae@S2
+        sweep(sys.argv[2], sys.argv[3], configs=cf, tag=sys.argv[5] if len(sys.argv) > 5 else "")
     elif c == "verify":
         verify(sys.argv[2], sys.argv[3].split(","), int(sys.argv[4]), int(sys.argv[5]), sys.argv[6].split(",") if len(sys.argv) > 6 else ())
     elif c == "legacy":
