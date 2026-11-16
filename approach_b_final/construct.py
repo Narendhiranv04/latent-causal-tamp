@@ -126,7 +126,8 @@ def run_root(root, sampler, scorer, M, B, rule, seed, store_top=2048, chunk=8192
             "cands": [{"seq": c["seq"], "p11": round(c["p11"], 6), "J": round(c["J"], 5), "m": c["m"], "D": round(c["D"], 4)} for c in keep]}
 
 
-ARMS = {"v2frozen": {"sampler": ("v1", "cvae"), "xy": ("v2", "D")}}           # frozen V2 = V1 Q2 cVAE (unchanged in V2) + V2-retrained coupled D
+ARMS = {"v2frozen": {"sampler": ("v1", "cvae"), "xy": ("v2", "D")},           # frozen V2 = V1 Q2 cVAE (unchanged in V2) + V2-retrained coupled D
+        **{f"v3{a}": {"sampler": ("v1", "cvae"), "xy": ("v3", a)} for a in ("D", "E", "G", "DIRECT")}}   # V3-5 scorers (sampler set per run)
 RULES = {"S0": {"name": "S0"}, "S1": {"name": "S1"}, "S2": {"name": "S2"},
          **{f"S3t{t}": {"name": "S3", "tau": t} for t in (1.5, 2, 3)},
          **{f"S4{b[0]}{e}": {"name": "S4", "broad": b, "eps": e} for b in ("uniform", "band") for e in (0.25, 0.5)}}
@@ -151,13 +152,15 @@ def run(dom, split, arm, seed, M=4, B=4096, rule_name="S0", kind="cvae"):
     EV.SNAP = ABF / "snapshot/abf_9de85710c2a7103f"
     a = ARMS[arm]
     tag = "" if (rule_name, kind) == ("S0", "cvae") else "_" + rule_tag(rule_name, kind)
-    out = V3OUT / ("v3_1" if not tag else "v3_2") / dom.lower() / f"{arm}{tag}_M{M}_B{B}_s{seed}_{split}.jsonl"
+    stage = os.environ.get("V3_STAGE") or ("v3_1" if not tag else "v3_2")
+    out = V3OUT / stage / dom.lower() / f"{arm}{tag}_M{M}_B{B}_s{seed}_{split}.jsonl"
     out.parent.mkdir(parents=True, exist_ok=True)
     done = {json.loads(l)["root_id"] for l in open(out)} if out.exists() else set()
     samp = make_sampler(dom.lower(), kind if kind != "cvae" else a["sampler"][1], seed, RULES[rule_name])
-    p2 = ABF / "runs" / ("v2" if a["xy"][0] == "v2" else "") / f"p2_{dom.lower()}" / f"{a['xy'][1]}_s{seed}" / "model.pt"
+    p2 = (V3OUT / "v3_5" if a["xy"][0] == "v3" else ABF / "runs" / ("v2" if a["xy"][0] == "v2" else "")) / f"p2_{dom.lower()}" / f"{a['xy'][1]}_s{seed}" / "model.pt"
     scor = S.Scorer(p2, ABF / "runs" / f"p3_{dom.lower()}" / f"cost_s{seed}" / "model.pt")
-    rule = json.loads((ABF / "runs/v2" / f"p5_{dom.lower()}" / "rule.json").read_text())
+    rf = os.environ.get("V3_RULE") or str(ABF / "runs/v2" / f"p5_{dom.lower()}" / "rule.json")   # V3-5 tuned rule via V3_RULE
+    rule = json.loads(Path(rf).read_text())
     torch.cuda.reset_peak_memory_stats()
     with open(out, "a") as f:
         for r in EV.rows_of(dom.upper(), split):
@@ -384,6 +387,54 @@ def summary(dom, files, caches, out, ref=None, B=2000):
     print(json.dumps(res, indent=1))
 
 
+def gridslim(rec_file, grid_file, out):
+    """Union over all grid rules of the selections re-made from each root's stored candidates (torch-free evaluate.select) -> slim file
+    (one line per (root, sequence)) for physical verification of every rule's choice."""
+    import evaluate as EV
+    grid = json.loads(Path(grid_file).read_text())
+    n = 0
+    with open(out, "w") as f:
+        for r in EV.jl(rec_file):
+            seen = set()
+            for rule in grid:
+                sel = EV.select(r["cands"], rule)
+                if sel and json.dumps(sel) not in seen:
+                    seen.add(json.dumps(sel)); n += 1
+                    f.write(json.dumps({"root_id": r["root_id"], "selected_ordered_seq": sel, "decision": "REPAIR"}) + "\n")
+    print(json.dumps({"out": out, "sequences": n}))
+
+
+def tune(dom, rec_file, grid_file, caches, out):
+    """Stopping-rule grid on validation (V2 objective, declared before use): mean of task success (K1-K3), correct no-op (K0) and correct
+    abstention (NONE) of the re-selected repair; ties -> smaller mean move count.  Unverified selections count as failures and are reported."""
+    import numpy as np
+    import evaluate as EV
+    rows = {r["root_id"]: r for r in map(json.loads, open(ABF / "snapshot/abf_9de85710c2a7103f" / f"data{dom.lower()}.jsonl"))}
+    ver = {}
+    for p in caches:
+        for v in EV.jl(p):
+            for x in v["results"]:
+                xv, yv = (x["x"] or {}).get("x"), (x["y"] or {}).get("y")
+                ver[(v["root"], json.dumps(x["seq"]))] = int(xv == 1 and yv == 1) if xv in (0, 1) and yv in (0, 1) else None
+    recs, res = EV.jl(rec_file), []
+    for rule in json.loads(Path(grid_file).read_text()):
+        S = collections.defaultdict(list)
+        for r in recs:
+            mk, sel = rows[r["root_id"]]["masks"], EV.select(r["cands"], rule)
+            v = ver.get((r["root_id"], json.dumps(sel))) if sel else None
+            if mk["eval_task"]:
+                S["task"].append(bool(sel) and v == 1); S["unverified"].append(bool(sel) and v is None); S["m"].append(len(sel) if sel else 0)
+            if mk["eval_noop"]:
+                S["noop"].append(sel == [])
+            if mk["eval_abstain"]:
+                S["abstain"].append(sel is None)
+        parts = {k: float(np.mean(S[k])) for k in ("task", "noop", "abstain") if S[k]}
+        res.append({"rule": rule, "objective": float(np.mean(list(parts.values()))), **parts, "unverified": int(sum(S["unverified"])), "mean_m": float(np.mean(S["m"]))})
+    res.sort(key=lambda t: (-t["objective"], t["mean_m"]))
+    Path(out).write_text(json.dumps({"best_rule": res[0]["rule"], "table": res}, indent=1))
+    print(json.dumps({"best": res[0], "second": res[1]}))
+
+
 def _boot(dom, geom):
     import evaluate as EV
     EV._boot(dom, geom)
@@ -401,6 +452,10 @@ if __name__ == "__main__":
         sweep(sys.argv[2], sys.argv[3], configs=cf, tag=sys.argv[5] if len(sys.argv) > 5 else "")
     elif c == "verify":
         verify(sys.argv[2], sys.argv[3].split(","), int(sys.argv[4]), int(sys.argv[5]), sys.argv[6].split(",") if len(sys.argv) > 6 else ())
+    elif c == "gridslim":
+        gridslim(*sys.argv[2:5])
+    elif c == "tune":
+        tune(sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5].split(","), sys.argv[6])
     elif c == "legacy":
         legacy(*sys.argv[2:6])
     elif c == "summary":
