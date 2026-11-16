@@ -419,6 +419,8 @@ class DISCOMCTS:
         cpu0 = time.process_time()
         accounted_wall, accounted_cpu = t0, cpu0
         self.save_dir = Path(save_dir) if save_dir is not None else None
+        if self.save_dir and not self.nodes and any((self.save_dir/name).exists() for name in ("queries.jsonl","checkpoint.pkl","IN_FLIGHT","tree.json")):
+            raise FileExistsError("Existing physical tree requires explicit certified resume")
         def model_hash(model):
             if model is None: return None
             h = hashlib.sha256()

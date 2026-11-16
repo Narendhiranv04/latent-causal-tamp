@@ -214,6 +214,7 @@ def extract_distillation_data_from_tree(
         "policy_obj_rows": policy_obj_rows,
         "value_rows": value_rows,
         "leaf_stats": stats,
+        "domain":dom_l,
         "observation_schema": observation_schema,
     }
 
@@ -227,6 +228,7 @@ def extract_dataset_from_tree_dirs(
     observation_schema: str = P.O0,
 ) -> dict[str, Any]:
     all_dst, all_obj, all_val = [], [], []
+    tree_sources=[]
     summaries = []
     # The locked source snapshot supplies authoritative family lineage.
     if len({Path(p).resolve() for p in tree_dirs})!=len(tree_dirs):raise ValueError("Duplicate physical tree evidence")
@@ -236,6 +238,9 @@ def extract_dataset_from_tree_dirs(
         if not (Path(td) / "nodes.pkl").exists():
             raise FileNotFoundError(f"Missing declared tree: {td}")
         nodes, meta = M.load_saved_tree_nodes(td)
+        tree_hash=D.sha256_file(Path(td)/("checkpoint.pkl" if (Path(td)/"checkpoint.pkl").exists() else "nodes.pkl"))
+        if tree_hash in tree_sources:raise ValueError("Duplicate physical tree evidence")
+        tree_sources.append(tree_hash)
         for node in nodes:
             row = snapshot_rows[node.obs.root_id]
             if row["split"] != "train":
@@ -261,6 +266,7 @@ def extract_dataset_from_tree_dirs(
         "policy_obj_rows": all_obj,
         "value_rows": all_val,
         "tree_summaries": summaries,
+        "tree_sources":tree_sources,
         "root_families": {s["root_id"]:groups[s["root_id"]] for s in summaries},
     }
 
@@ -439,6 +445,9 @@ def load_value_checkpoint(ckpt_path: Path | str, device: str = "cuda") -> tuple[
 
 def merge_extracted_datasets(d_list: list[dict[str, Any]]) -> dict[str, Any]:
     """Combine extracted policy/value rows across rounds (`r0 + r1`) for cumulative distillation."""
+    if not d_list or len({d["domain"] for d in d_list})!=1:raise ValueError("Mixed-domain or empty dataset merge")
+    sources=[s for d in d_list for s in d.get("tree_sources",[])]
+    if len(sources)!=len(set(sources)):raise ValueError("Repeated physical tree evidence across streams")
     schemas = {d.get("observation_schema", P.O0) for d in d_list}
     if len(schemas) != 1:
         raise ValueError("Cannot merge mixed observation schemas")
@@ -460,6 +469,7 @@ def merge_extracted_datasets(d_list: list[dict[str, Any]]) -> dict[str, Any]:
         "policy_obj_rows": obj_all,
         "value_rows": val_all,
         "tree_summaries": sum_all,
+        "tree_sources":sources,
         "root_families": {k:v for d in d_list for k,v in d.get("root_families", {}).items()},
     }
 

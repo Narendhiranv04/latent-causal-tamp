@@ -13,10 +13,14 @@ ledger={'root_id':'D3H_GVLAB_366ce85b50','status':'QUARANTINED_UNRECOVERABLE','i
 audit={'utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'source_sha256':{p.name:digest(p) for p in HERE.glob('*.py')},'snapshots':{str(s):D.verify_snapshot_lock(s) for s in [D.BASE_SNAP,D.V2_SNAP]},'domains':{}}
 for dom in ['2d','3d']:
  rows=D.load_snapshot_rows(dom); counts=collections.Counter((r['split'],str(r['K_legacy'])) for r in rows)
- audit['domains'][dom]={'n_roots':len(rows),'split_K':{'|'.join(k):v for k,v in counts.items()},'families':dict(collections.Counter(r['split'] for r in {D.root_family_key(r):r for r in rows}.values())),'hygiene':D.check_split_hygiene(rows),'data_sha256':digest(D.BASE_SNAP/f'data{dom}.jsonl'),'teacher_sources':C.teacher_sources(dom),'task_dims':{s:P.task_dim(dom,s) for s in [P.O0,P.O1]}}
+ audit['domains'][dom]={'n_roots':len(rows),'split_K':{'|'.join(k):v for k,v in counts.items()},'families':dict(collections.Counter(r['split'] for r in {D.root_family_key(r):r for r in rows}.values())),'connected_source_components':len(set(D.independence_groups(rows).values())),'hygiene':D.check_split_hygiene(rows),'data_sha256':digest(D.BASE_SNAP/f'data{dom}.jsonl'),'teacher_sources':C.teacher_sources(dom),'task_dims':{s:P.task_dim(dom,s) for s in [P.O0,P.O1]}}
 ref=json.loads((HERE/'reports/validation_v2/archive_replay.json').read_text()); teachers=json.loads((HERE/'reports/validation_v2/teacher_sources.json').read_text()); hashes={}
 for d in ref.values():hashes.update(d['checkpoint_sha256'])
 for d in teachers.values():hashes.update(d)
+for runs in json.loads((HERE/'reports/validation_v2/new_training.json').read_text()).values():
+ for run in runs['runs']:
+  for kind in ['policy','value']:
+   if run.get(kind+'_ckpt'):hashes[run[kind+'_ckpt']]=run[kind+'_sha256']
 audit['preservation']={p:digest(p)==sha for p,sha in hashes.items()}
 assert all(audit['preservation'].values())
 assert all(s['all_ok'] for s in audit['snapshots'].values())

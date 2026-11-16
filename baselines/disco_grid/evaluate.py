@@ -888,6 +888,7 @@ def tune_stopping_rule_on_val(
     workers: int = 12,
 ) -> dict[str, Any]:
     """Tune `noop_q_gate`, `stop_q_margin`, `abstain_eta` on VALIDATION (`val_rows`) ONLY (`DISCO_plan.md` Section 11.1)."""
+    if any(r["split"]!="val" for r in val_rows):raise ValueError("Stopping-rule selection requires benchmark VAL only")
     dom_l = dom.lower()
     pol_model, _ = P.load_policy_checkpoint(pol_ckpt, device=device)
     val_model, _ = DS.load_value_checkpoint(val_ckpt, device=device)
@@ -914,7 +915,7 @@ def tune_stopping_rule_on_val(
     scored = []
     for rule, r_preds in preds_by_rule:
         m = compute_benchmark_metrics(r_preds)
-        parts = [v for v in (m["task_success"], m["noop_accuracy_K0"], m["abstain_rate_NONE"]) if v is not None]
+        parts = [v for v in (m["task_success"], m["noop_accuracy_K0"], m["none_explicit_abstain_rate"]) if v is not None]
         obj = float(np.mean(parts)) if parts else 0.0
         scored.append((obj, m["task_success"] or 0.0, rule, m))
     scored.sort(key=lambda t: (t[0], t[1]), reverse=True)

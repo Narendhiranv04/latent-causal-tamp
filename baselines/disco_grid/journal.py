@@ -50,6 +50,7 @@ class QueryJournal:
         if (self.directory/'ACTIVE_QUERY.json').exists():
             raise ValueError('Unreconciled query; dispatch refused')
         parent_name = f'query_{qid:06d}_parent.pkl'
+        if (self.directory/parent_name).exists():raise FileExistsError('Query identity already exists; reconciliation required')
         atomic_bytes(self.directory/parent_name, state_blob)
         rec = dict(metadata, event='started', kind=kind, query_id=qid,
                    identity=process_identity(), parent_identity=process_identity(os.getppid()),
@@ -118,10 +119,12 @@ def wait_for_child(proc, seconds, grace_s=5., directory=None, query_wall_s=None,
     """
     start=time.monotonic(); identity=process_identity(proc.pid)
     before=resource.getrusage(resource.RUSAGE_CHILDREN)
-    reason=None; peak=0; observed_cpu=None; last_check=start
+    reason=None; peak=0; observed_cpu=None; last_check=start; owned_group=None
     monitor_error=None
     try:
         while proc.is_alive():
+            current_identity=process_identity(proc.pid)
+            if current_identity and current_identity["start_ticks"]==identity["start_ticks"] and current_identity["pgid"]==proc.pid:owned_group=proc.pid
             elapsed=time.monotonic()-start
             if elapsed>=seconds: reason='RUN_WALL_LIMIT'
             if directory:
@@ -155,11 +158,26 @@ def wait_for_child(proc, seconds, grace_s=5., directory=None, query_wall_s=None,
                 if current['pgid']==proc.pid: os.killpg(proc.pid,signal.SIGKILL)
                 else: proc.kill()
             proc.join(timeout=grace_s)
+    # A cooperative parent may exit while one of its descendants ignores TERM.
+    # Linux reserves the group ID while members survive; verify our recorded session.
+    if reason and owned_group:
+        members=[]
+        for item in Path('/proc').iterdir():
+            if not item.name.isdigit():continue
+            try:
+                f=(item/'stat').read_text().rsplit(')',1)[1].split()
+                if int(f[2])==owned_group and int(f[3])==owned_group:members.append(int(item.name))
+            except (FileNotFoundError,PermissionError,ProcessLookupError):pass
+        if members:
+            try:os.killpg(owned_group,signal.SIGKILL)
+            except ProcessLookupError:pass
     proc.join()
     after=resource.getrusage(resource.RUSAGE_CHILDREN)
     if directory:
         atomic_json(Path(directory)/'WATCHDOG_ACCOUNTING.json',{
-            'reason':reason,'child_identity':identity,'wall_s':time.monotonic()-start,
+            'reason':reason,'child_identity':identity,'owned_process_group':owned_group,
+            'wall_time_start':time.time()-(time.monotonic()-start),'wall_time_end':time.time(),
+            'wall_s':time.monotonic()-start,
             'limit_s':seconds,'grace_s':grace_s,'query_wall_s':query_wall_s,
             'reaped_child_cpu_s':after.ru_utime+after.ru_stime-before.ru_utime-before.ru_stime,
             'observed_cpu_s_lower_bound':observed_cpu,'sampled_peak_rss_kib':peak or None,

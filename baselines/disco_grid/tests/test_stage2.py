@@ -162,3 +162,29 @@ def test_verified_stop_absorbs_without_extra_relocations():
     assert out['total_sim_calls']==1 and out['feasible_relocation_edges']==0
     ext=DS.extract_distillation_data_from_tree(t.nodes,'2d',SCALERS)
     assert len(ext['value_rows'])==1 and ext['value_rows'][0]['n_visited_leaves']==1
+
+
+def test_no_duplicate_physical_dispatch_or_artifact_overwrite(tmp_path):
+    t=tree();t.run_search('fixture',iterations=2,max_sim_calls=12,save_dir=tmp_path)
+    before={p.name:p.read_bytes() for p in tmp_path.iterdir() if p.is_file()}
+    with pytest.raises(FileExistsError):tree().run_search('fixture',iterations=2,max_sim_calls=12,save_dir=tmp_path)
+    assert before=={p.name:p.read_bytes() for p in tmp_path.iterdir() if p.is_file()}
+
+
+def test_watchdog_cleans_own_descendant_after_parent_exits(tmp_path):
+    import multiprocessing as mp
+    ctx=mp.get_context('fork');ready=ctx.Event()
+    def worker():
+        os.setsid()
+        pid=os.fork()
+        if pid==0:
+            signal.signal(signal.SIGTERM,signal.SIG_IGN);time.sleep(10);os._exit(0)
+        (tmp_path/'grandchild').write_text(str(pid));ready.set();time.sleep(10)
+    child=ctx.Process(target=worker);child.start();assert ready.wait(2)
+    assert J.wait_for_child(child,.1,grace_s=.05,directory=tmp_path)
+    pid=int((tmp_path/'grandchild').read_text())
+    # Killed grandchildren may remain zombies briefly until the host init reaps them.
+    path=Path(f'/proc/{pid}/stat')
+    deadline=time.monotonic()+1
+    while path.exists() and path.read_text().rsplit(')',1)[1].split()[0]!='Z' and time.monotonic()<deadline:time.sleep(.01)
+    assert not path.exists() or path.read_text().rsplit(')',1)[1].split()[0]=='Z'
