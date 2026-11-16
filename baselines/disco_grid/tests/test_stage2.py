@@ -115,3 +115,17 @@ def test_mixed_domain_and_bad_value_evidence_refused():
         net.forward_logits(*args,torch.tensor([1]),torch.tensor([64]))
     loss,_=net.weighted_bce_loss(*args,torch.tensor([20]),torch.tensor([64]),torch.tensor([1.]),torch.tensor([1.]))
     loss.backward();assert torch.isfinite(net.q_head[-1].weight.grad).all() and net.q_head[-1].weight.grad.abs().sum()>0
+
+
+def test_watchdog_monitor_error_cancels_only_own_child(tmp_path):
+    import multiprocessing as mp
+    ctx=mp.get_context('fork');ready=ctx.Event()
+    def worker():
+        os.setsid();signal.signal(signal.SIGTERM,signal.SIG_IGN);ready.set();time.sleep(10)
+    child=ctx.Process(target=worker);child.start();assert ready.wait(2)
+    # Malformed active metadata deterministically emulates a parent-monitor failure.
+    (tmp_path/'ACTIVE_QUERY.json').write_text('{bad')
+    with pytest.raises(RuntimeError,match='cancelled and charged'):
+        J.wait_for_child(child,3,grace_s=.05,directory=tmp_path,query_wall_s=.1)
+    assert not child.is_alive()
+    assert json.loads((tmp_path/'WATCHDOG_ACCOUNTING.json').read_text())['reason']=='MONITOR_ERROR'

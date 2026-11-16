@@ -119,27 +119,31 @@ def wait_for_child(proc, seconds, grace_s=5., directory=None, query_wall_s=None,
     start=time.monotonic(); identity=process_identity(proc.pid)
     before=resource.getrusage(resource.RUSAGE_CHILDREN)
     reason=None; peak=0; observed_cpu=None; last_check=start
-    while proc.is_alive():
-        elapsed=time.monotonic()-start
-        if elapsed>=seconds: reason='RUN_WALL_LIMIT'
-        if directory:
-            for path in Path(directory).rglob('ACTIVE_QUERY.json'):
-                try: active=json.loads(path.read_text())
-                except FileNotFoundError: active=None
-                if active and query_wall_s and time.monotonic()-active['monotonic_s']>=query_wall_s:
-                    reason='SINGLE_QUERY_WALL_LIMIT'
-        try:
-            st=Path(f'/proc/{proc.pid}/status').read_text().splitlines()
-            peak=max(peak,*(int(x.split()[1]) for x in st if x.startswith(('VmRSS:','VmHWM:'))))
-            fields=Path(f'/proc/{proc.pid}/stat').read_text().rsplit(')',1)[1].split()
-            observed_cpu=(int(fields[11])+int(fields[12]))/os.sysconf('SC_CLK_TCK')
-        except (FileNotFoundError,ProcessLookupError): pass
-        if resource_check and time.monotonic()-last_check>=5:
-            try: resource_check()
-            except RuntimeError: reason='RESOURCE_HEADROOM_LOST'
-            last_check=time.monotonic()
-        if reason: break
-        proc.join(timeout=min(.1,max(0.,seconds-elapsed)))
+    monitor_error=None
+    try:
+        while proc.is_alive():
+            elapsed=time.monotonic()-start
+            if elapsed>=seconds: reason='RUN_WALL_LIMIT'
+            if directory:
+                for path in Path(directory).rglob('ACTIVE_QUERY.json'):
+                    try: active=json.loads(path.read_text())
+                    except FileNotFoundError: active=None
+                    if active and query_wall_s and time.monotonic()-active['monotonic_s']>=query_wall_s:
+                        reason='SINGLE_QUERY_WALL_LIMIT'
+            try:
+                st=Path(f'/proc/{proc.pid}/status').read_text().splitlines()
+                peak=max([peak]+[int(x.split()[1]) for x in st if x.startswith(('VmRSS:','VmHWM:'))])
+                fields=Path(f'/proc/{proc.pid}/stat').read_text().rsplit(')',1)[1].split()
+                observed_cpu=(int(fields[11])+int(fields[12]))/os.sysconf('SC_CLK_TCK')
+            except (FileNotFoundError,ProcessLookupError): pass
+            if resource_check and time.monotonic()-last_check>=5:
+                try: resource_check()
+                except RuntimeError: reason='RESOURCE_HEADROOM_LOST'
+                last_check=time.monotonic()
+            if reason: break
+            proc.join(timeout=min(.1,max(0.,seconds-elapsed)))
+    except BaseException as error:
+        reason='MONITOR_ERROR';monitor_error=error
     if reason and proc.is_alive():
         current=process_identity(proc.pid)
         if current is None or current["start_ticks"] != identity["start_ticks"]:
@@ -160,4 +164,5 @@ def wait_for_child(proc, seconds, grace_s=5., directory=None, query_wall_s=None,
             'reaped_child_cpu_s':after.ru_utime+after.ru_stime-before.ru_utime-before.ru_stime,
             'observed_cpu_s_lower_bound':observed_cpu,'sampled_peak_rss_kib':peak or None,
             'exitcode':proc.exitcode,'gpu_allocation':False})
+    if monitor_error is not None:raise RuntimeError("Parent monitor failed; own child was cancelled and charged") from monitor_error
     return reason is not None

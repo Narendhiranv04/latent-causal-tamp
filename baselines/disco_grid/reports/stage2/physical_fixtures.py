@@ -37,12 +37,13 @@ def worker(case,out):
         adapter_invocations=env.qid,wall_s=time.monotonic()-start,cpu_s=time.process_time()-cpu,peak_rss_kib=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss)
     J.atomic_json(out/'result.json',compact);(out/'IN_FLIGHT').unlink()
 
-def run(out):
+def run(out, indices=None):
     C.require_headroom()
     if os.environ.get('CUDA_VISIBLE_DEVICES')!='':raise ValueError('CPU only')
     out.mkdir(parents=True,exist_ok=False)
     prior=json.loads((HERE/'reports/validation_v2/physical_parity.json').read_text())
     cases=[dict(domain=r['domain'],root_id=r['case']['root_id'],seq=r['case']['seq'],expected_x=r['case']['expected_x'],expected_y=r['case']['expected_y']) for r in prior['records']]
+    if indices is not None:cases=[cases[i] for i in indices]
     J.atomic_json(out/'manifest.json',dict(cases=cases,source_commit=os.environ['DISCO_SOURCE_COMMIT'],
         source_sha256={p.name:D.sha256_file(p) for p in HERE.glob('*.py')},teacher_sources={dom:C.teacher_sources(dom) for dom in ['2d','3d']},
         root_wall_s=600,query_wall_s=240,aggregate_wall_s=1500,max_adapter_calls=12,scope='TRAIN parity, not task evaluation'))
@@ -59,4 +60,4 @@ def run(out):
             if not res['agree']:raise RuntimeError('Physical source parity contradiction')
     return results
 if __name__=='__main__':
-    a=argparse.ArgumentParser();a.add_argument('--out',type=Path,required=True);args=a.parse_args();print(json.dumps(run(args.out),indent=2))
+    a=argparse.ArgumentParser();a.add_argument('--out',type=Path,required=True);a.add_argument('--case-indices',type=int,nargs='+');args=a.parse_args();print(json.dumps(run(args.out,args.case_indices),indent=2))
