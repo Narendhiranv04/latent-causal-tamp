@@ -359,6 +359,262 @@ def render_d2_figures(d2_json_path: Path | None = None, out_path: Path | None = 
     return out_path
 
 
+def render_d3_d4_d5_figures(summary_json_path: Path | None = None, out_path: Path | None = None) -> Path:
+    """Generate the D3/D4/D5 MCTS search, ablations, leaf-target histogram, and distillation curve figure."""
+    summary_json_path = summary_json_path or (HERE / "reports/d3_d4_d5_mcts_distill_summary.json")
+    out_path = out_path or (HERE / "reports/figs/d3_d4_d5_mcts_and_distillation.png")
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+
+    rep = json.loads(summary_json_path.read_text())
+    fig, axes = plt.subplots(2, 2, figsize=(15.5, 12.0), dpi=160)
+    fig.suptitle(
+        "DISCO-Grid D3–D5 — Progressive-Widening MCTS Search, Ablations, and Iterative Policy/Value Distillation\n"
+        "[Status: TRAINING-SIMULATION VERIFIED | TRAIN Roots Only | Seeds: 0, 1, 2]",
+        fontsize=12,
+        fontweight="bold",
+        y=0.98,
+    )
+
+    # Panel 1: Sample Physically Verified MCTS Tree Diagram (2D)
+    ax = axes[0, 0]
+    stree = rep["domains"]["2d"]["sample_tree"]
+    nodes = stree["nodes"]
+    by_depth: dict[int, list[dict[str, Any]]] = {}
+    for n in nodes:
+        by_depth.setdefault(n["depth"], []).append(n)
+    pos_map = {}
+    for d, nlist in sorted(by_depth.items()):
+        k_n = len(nlist)
+        for idx, n in enumerate(nlist):
+            x_c = (idx + 0.5) / max(k_n, 1)
+            y_c = -float(d)
+            pos_map[n["node_id"]] = (x_c, y_c)
+
+    for n in nodes:
+        pid = n["parent_id"]
+        if pid is not None and pid in pos_map:
+            x0, y0 = pos_map[pid]
+            x1, y1 = pos_map[n["node_id"]]
+            col = "#16a34a" if (n["is_stop_node"] and n["terminal_z"] == 1) else "#64748b"
+            lw = 2.2 if (n["is_stop_node"] and n["terminal_z"] == 1) else 1.1
+            ax.plot([x0, x1], [y0, y1], "-", color=col, lw=lw, zorder=2)
+
+    for n in nodes:
+        x_c, y_c = pos_map[n["node_id"]]
+        is_succ = n["is_stop_node"] and n["terminal_z"] == 1
+        col = "#16a34a" if is_succ else ("#0f172a" if n["node_id"] == 0 else "#2563eb")
+        ax.scatter([x_c], [y_c], s=260 if is_succ else 190, color=col, edgecolors="black", zorder=4)
+        act_str = "ROOT" if n["node_id"] == 0 else ("STOP✓" if is_succ else f"{n['incoming_action']}")
+        ax.text(
+            x_c, y_c - 0.18,
+            f"#{n['node_id']} {act_str}\nN={n['visit_count']} Q={n['Q']:.2f}",
+            ha="center", va="top", fontsize=6.5, fontweight="bold",
+            bbox=dict(boxstyle="round,pad=0.15", facecolor="white", alpha=0.85, edgecolor="#cbd5e1"),
+            zorder=5,
+        )
+    ax.set_xlim(-0.08, 1.08)
+    ax.set_ylim(-max(by_depth.keys(), default=1) - 0.55, 0.45)
+    ax.set_yticks([-d for d in sorted(by_depth.keys())])
+    ax.set_yticklabels([f"Depth {d}" for d in sorted(by_depth.keys())])
+    ax.set_xticks([])
+    ax.set_title(
+        f"2D MCTS Tree on Root {stree['summary']['root_id']} (Round 1 P1+Q1)\n"
+        f"[Nodes={len(nodes)} | SimCalls={stree['summary']['total_sim_calls']} | Solved={stree['summary']['found_verified_solution']}]",
+        fontsize=9.5,
+        fontweight="bold",
+    )
+    ax.grid(axis="y", linestyle="--", alpha=0.35)
+
+    # Panel 2: MCTS Search Solve Rate Across Rounds & Controlled Ablations
+    ax = axes[0, 1]
+    arm_names = ["R0: Uniform\n+PW+Geom", "R0: P0\n+NoPW+Geom", "R0: P0\n+PW+Sparse", "R0: P0\n+PW+Geom", "R1: P1+Q1\n+PW+Geom"]
+    x_idx = np.arange(len(arm_names))
+    w = 0.35
+    for i_d, (dom, col) in enumerate((("2d", "#2563eb"), ("3d", "#dc2626"))):
+        d_info = rep["domains"][dom]
+        abl = d_info["mcts_ablations_matched_subset"]
+        vals = [
+            abl["uniform_pw_geom"]["task_solve_rate_in_search"] * 100,
+            abl["p0_nopw_geom"]["task_solve_rate_in_search"] * 100,
+            abl["p0_pw_sparse"]["task_solve_rate_in_search"] * 100,
+            d_info["mcts_round0_p0"]["task_solve_rate_in_search"] * 100,
+            d_info["mcts_round1_p1q1"]["task_solve_rate_in_search"] * 100,
+        ]
+        offset = (i_d - 0.5) * w
+        bars = ax.bar(x_idx + offset, vals, width=w, color=col, edgecolor="black", label=f"{dom.upper()} TRAIN Cohort")
+        for b, v in zip(bars, vals):
+            ax.text(b.get_x() + b.get_width() / 2, v + 1.2, f"{v:.0f}%", ha="center", va="bottom", fontsize=7.5, fontweight="bold")
+    ax.set_xticks(x_idx)
+    ax.set_xticklabels(arm_names, fontsize=8.0, fontweight="bold")
+    ax.set_ylim(0, 112)
+    ax.set_ylabel("MCTS Verified Task Solve Rate (%)")
+    ax.set_title("MCTS Planning Solve Rate: Round 0 vs. Round 1 (P1+Q1) & Ablations", fontsize=10, fontweight="bold")
+    ax.legend(loc="upper left", fontsize=8.5)
+    ax.grid(axis="y", linestyle="--", alpha=0.4)
+
+    # Panel 3: Distilled Value Target y_i = n_succ / n_leaf Distribution
+    ax = axes[1, 0]
+    y2 = rep["domains"]["2d"]["value_target_hist_r2"]
+    y3 = rep["domains"]["3d"]["value_target_hist_r2"]
+    bins = np.linspace(0.0, 1.0, 11)
+    ax.hist([y2, y3], bins=bins, label=[f"2D Value Rows (n={len(y2)})", f"3D Value Rows (n={len(y3)})"], color=["#2563eb", "#dc2626"], edgecolor="black", alpha=0.8)
+    ax.set_xlabel("Subtree Continuation Target y_i = n_succ_leaves / n_visited_leaves")
+    ax.set_ylabel("Number of Extracted Value Edges (incl. Decided STOP)")
+    ax.set_title("D4/D5 Extracted Subtree Value Target Distribution (Log-Evidence Weighted)", fontsize=9.5, fontweight="bold")
+    ax.legend(loc="upper right", fontsize=8.5)
+    ax.grid(axis="y", linestyle="--", alpha=0.4)
+
+    # Panel 4: Policy & Value Distillation Curves Across Round 1 and Round 2
+    ax = axes[1, 1]
+    for dom, col in (("2d", "#2563eb"), ("3d", "#dc2626")):
+        r1_v = rep["domains"][dom]["distill_round1"][0]["value_curve"]
+        r2_v = rep["domains"][dom]["distill_round2"][0]["value_curve"]
+        if r1_v:
+            ax.plot([c["epoch"] for c in r1_v], [c["train_weighted_bce"] for c in r1_v], "--", color=col, lw=1.7, alpha=0.75, label=f"{dom.upper()} Q1 Train Weighted BCE")
+        if r2_v:
+            ax.plot([c["epoch"] for c in r2_v], [c["train_weighted_bce"] for c in r2_v], "-", color=col, lw=2.3, label=f"{dom.upper()} Q2_value Train Weighted BCE")
+    ax.set_xlabel("Distillation Epoch")
+    ax.set_ylabel("Log-Evidence-Weighted BCE Loss")
+    ax.set_title("Value Network Distillation Convergence (Q1 Round 1 vs. Q2_value Round 2)", fontsize=9.5, fontweight="bold")
+    ax.legend(loc="upper right", fontsize=8.5)
+    ax.grid(True, linestyle="--", alpha=0.4)
+
+    plt.tight_layout(rect=[0, 0, 1, 0.94])
+    fig.savefig(out_path, bbox_inches="tight")
+    plt.close(fig)
+    return out_path
+
+
+def render_d6_d7_d8_figures(eval_json_path: Path | None = None, out_path: Path | None = None) -> Path:
+    """Generate the D6/D7/D8 Open-Loop vs Closed-Loop, Ablation Progression, K-Stratum Breakdown, and Failure Taxonomy figure."""
+    eval_json_path = eval_json_path or (HERE / "reports/d6_d7_d8_evaluation_summary.json")
+    out_path = out_path or (HERE / "reports/figs/d6_d7_d8_evaluation_and_ablations.png")
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+
+    rep = json.loads(eval_json_path.read_text())
+    fig, axes = plt.subplots(2, 2, figsize=(16.0, 12.0), dpi=160)
+    fig.suptitle(
+        "DISCO-Grid D6–D8 — Held-Out Test Evaluation: Open-Loop vs. Closed-Loop, Distillation Rounds & Approach B Comparison\n"
+        "[Status: INDEPENDENTLY TEST VERIFIED | 0 Planner Calls in Open-Loop Selection | Unchanged 2D/3D Physical Teachers]",
+        fontsize=11.5,
+        fontweight="bold",
+        y=0.98,
+    )
+
+    # Panel 1: Open-Loop Progression Across Rounds & Ablations + Approach B V2/V3 Reference
+    ax = axes[0, 0]
+    arms = [
+        ("uniform_no_q", "Uniform\n(No Q)"),
+        ("p0_only", "P0 Only\n(Q2 Pretrain)"),
+        ("p1_only", "P1 Only\n(Round 1)"),
+        ("p1_succ_only_q1", "P1(SuccOnly)\n+ Q1"),
+        ("p1_q1", "P1 + Q1\n(Round 1)"),
+        ("p2_only", "P2 Only\n(Round 2)"),
+        ("p2_q2_primary", "DISCO-Grid\nP2 + Q2 (Open)"),
+    ]
+    x_pos = np.arange(len(arms))
+    w = 0.36
+    for i_d, (dom, col) in enumerate((("2d", "#2563eb"), ("3d", "#dc2626"))):
+        om = rep["domains"][dom]["open_loop_test_metrics"]
+        vals = [(om[a]["task_success"] or 0.0) * 100 for a, _ in arms]
+        bars = ax.bar(x_pos + (i_d - 0.5) * w, vals, width=w, color=col, edgecolor="black", label=f"{dom.upper()} Open-Loop Task Success")
+        for b, v in zip(bars, vals):
+            ax.text(b.get_x() + b.get_width() / 2, v + 1.0, f"{v:.1f}", ha="center", va="bottom", fontsize=7.0, fontweight="bold")
+    # Plot Approach B V3 reference dashed lines
+    ax.axhline(43.6, color="#1d4ed8", linestyle="--", lw=1.4, alpha=0.75, label="Approach B V3 Primary (2D: 43.6%)")
+    ax.axhline(77.3, color="#b91c1c", linestyle="--", lw=1.4, alpha=0.75, label="Approach B V3 Primary (3D: 77.3%)")
+    ax.set_xticks(x_pos)
+    ax.set_xticklabels([lbl for _, lbl in arms], fontsize=7.5, fontweight="bold")
+    ax.set_ylim(0, 95)
+    ax.set_ylabel("Physically Verified Task Success (%)")
+    ax.set_title("Open-Loop Task Success Across Distillation Rounds & Ablations", fontsize=10, fontweight="bold")
+    ax.legend(loc="upper left", fontsize=7.5, ncol=2)
+    ax.grid(axis="y", linestyle="--", alpha=0.4)
+
+    # Panel 2: Open-Loop vs. Closed-Loop Matched Cohort Comparison
+    ax = axes[0, 1]
+    cl_pairs = [
+        ("P0 Only", "p0_only", "closed_loop_p0_only"),
+        ("P2 Only", "p2_only", "closed_loop_p2_only"),
+        ("P2 + Q2_value", "p2_q2_primary", "closed_loop_p2_q2"),
+    ]
+    labels_cl = [f"{dom.upper()}\n{name}" for dom in ("2d", "3d") for name, _, _ in cl_pairs]
+    open_vals = []
+    closed_vals = []
+    for dom in ("2d", "3d"):
+        mo = rep["domains"][dom]["matched_open_loop_on_closed_loop_cohort"]
+        cl = rep["domains"][dom]["closed_loop_test_metrics"]
+        for _, ol_k, cl_k in cl_pairs:
+            open_vals.append((mo[ol_k]["task_success"] or 0.0) * 100)
+            closed_vals.append((cl[cl_k]["task_success"] or 0.0) * 100)
+    x_c = np.arange(len(labels_cl))
+    b1 = ax.bar(x_c - 0.18, open_vals, width=0.35, color="#3b82f6", edgecolor="black", label="Open-Loop (1 Committed Plan, 0 Feedback)")
+    b2 = ax.bar(x_c + 0.18, closed_vals, width=0.35, color="#10b981", edgecolor="black", label="Closed-Loop (Observed State Feedback)")
+    for b, v in zip(b1, open_vals):
+        ax.text(b.get_x() + b.get_width() / 2, v + 1.0, f"{v:.1f}", ha="center", va="bottom", fontsize=7.5, fontweight="bold")
+    for b, v in zip(b2, closed_vals):
+        ax.text(b.get_x() + b.get_width() / 2, v + 1.0, f"{v:.1f}", ha="center", va="bottom", fontsize=7.5, fontweight="bold")
+    ax.set_xticks(x_c)
+    ax.set_xticklabels(labels_cl, fontsize=8.0, fontweight="bold")
+    ax.set_ylim(0, 95)
+    ax.set_ylabel("Physically Verified Task Success (%)")
+    ax.set_title("Matched-Cohort Comparison: Open-Loop vs. Published-Style Closed-Loop", fontsize=10, fontweight="bold")
+    ax.legend(loc="upper left", fontsize=8.0)
+    ax.grid(axis="y", linestyle="--", alpha=0.4)
+
+    # Panel 3: Per-Stratum Breakdown (K0 No-Op, K1, K2, K3, NONE Abstain) for Primary P2+Q2
+    ax = axes[1, 0]
+    strata = ["K0 No-Op", "K1 Task", "K2 Task", "K3 Task", "NONE Abstain"]
+    x_s = np.arange(len(strata))
+    for i_d, (dom, col) in enumerate((("2d", "#2563eb"), ("3d", "#dc2626"))):
+        m = rep["domains"][dom]["open_loop_test_metrics"]["p2_q2_primary"]
+        s_vals = [
+            (m["noop_accuracy_K0"] or 0.0) * 100,
+            (m["K1_success"] or 0.0) * 100,
+            (m["K2_success"] or 0.0) * 100,
+            (m["K3_success"] or 0.0) * 100,
+            (m["abstain_rate_NONE"] or 0.0) * 100,
+        ]
+        bars = ax.bar(x_s + (i_d - 0.5) * 0.36, s_vals, width=0.36, color=col, edgecolor="black", label=f"{dom.upper()} DISCO-Grid P2+Q2 (Open)")
+        for b, v in zip(bars, s_vals):
+            ax.text(b.get_x() + b.get_width() / 2, v + 1.2, f"{v:.1f}%", ha="center", va="bottom", fontsize=7.5, fontweight="bold")
+    ax.set_xticks(x_s)
+    ax.set_xticklabels(strata, fontsize=8.5, fontweight="bold")
+    ax.set_ylim(0, 110)
+    ax.set_ylabel("Accuracy / Verified Success Rate (%)")
+    ax.set_title("Per-Stratum Performance (K0 / K1 / K2 / K3 / NONE) — Open-Loop Primary", fontsize=10, fontweight="bold")
+    ax.legend(loc="upper right", fontsize=8.5)
+    ax.grid(axis="y", linestyle="--", alpha=0.4)
+
+    # Panel 4: Failure Phase Taxonomy on Held-Out Task Roots (P2+Q2 Open-Loop)
+    ax = axes[1, 1]
+    f_labels = []
+    f_counts = []
+    f_cols = []
+    for dom, col in (("2d", "#2563eb"), ("3d", "#dc2626")):
+        ft = rep["domains"][dom]["open_loop_test_metrics"]["p2_q2_primary"]["failure_taxonomy_task_roots"]
+        for k, v in sorted(ft.items()):
+            f_labels.append(f"{dom.upper()}: {k}")
+            f_counts.append(v)
+            f_cols.append(col)
+    if f_labels:
+        y_f = np.arange(len(f_labels))
+        ax.barh(y_f, f_counts, color=f_cols, edgecolor="black", height=0.55)
+        for yi, cv in zip(y_f, f_counts):
+            ax.text(cv + 0.3, yi, str(cv), va="center", fontsize=8.5, fontweight="bold")
+        ax.set_yticks(y_f)
+        ax.set_yticklabels(f_labels, fontsize=8.0)
+        ax.set_xlim(0, max(f_counts) * 1.18 + 2)
+    ax.set_xlabel("Number of Failed Task Evaluations (across 3 seeds)")
+    ax.set_title("Physical Failure Phase Taxonomy on Held-Out Task Roots (P2+Q2 Open-Loop)", fontsize=10, fontweight="bold")
+    ax.grid(axis="x", linestyle="--", alpha=0.4)
+
+    plt.tight_layout(rect=[0, 0, 1, 0.94])
+    fig.savefig(out_path, bbox_inches="tight")
+    plt.close(fig)
+    return out_path
+
+
 if __name__ == "__main__":
     if sys.argv[1:2] == ["d1"]:
         p = render_d1_figures()
@@ -366,3 +622,9 @@ if __name__ == "__main__":
     elif sys.argv[1:2] == ["d2"]:
         p = render_d2_figures()
         print(json.dumps({"d2_figure": str(p)}))
+    elif sys.argv[1:2] == ["d3_d4_d5"]:
+        p = render_d3_d4_d5_figures()
+        print(json.dumps({"d3_d4_d5_figure": str(p)}))
+    elif sys.argv[1:2] == ["d6_d7_d8"]:
+        p = render_d6_d7_d8_figures()
+        print(json.dumps({"d6_d7_d8_figure": str(p)}))
