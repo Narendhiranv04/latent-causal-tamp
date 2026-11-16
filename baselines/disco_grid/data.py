@@ -268,3 +268,34 @@ def load_q2_dataset(dom: str, q2_root: Path | None = None) -> dict[str, Any]:
 def root_family_key(row: dict[str, Any]) -> str:
     """Source lineage first; row counts/descendants are never independent roots."""
     return str(row.get("parent_family_id") or row.get("layout_root_id") or row.get("root_sha256") or row["root_id"])
+
+
+def independence_groups(rows):
+    """Connected source lineage: any shared family/layout/raw/input ID links rows.
+
+    A single preferred lineage key is insufficient when descendant registries
+    carry different parent keys but a shared source layout. Offline audit only.
+    """
+    parent={r['root_id']:r['root_id'] for r in rows}; seen={}
+    if len(parent)!=len(rows):raise ValueError('Duplicate root ID')
+    def find(x):
+        while parent[x]!=x:
+            parent[x]=parent[parent[x]];x=parent[x]
+        return x
+    for row in rows:
+        rid=row['root_id'];identifiers=[]
+        for field in ['parent_family_id','layout_root_id','root_sha256']:
+            if row.get(field):identifiers.append((field,str(row[field])))
+        if row.get('inputs'):
+            identifiers.append(('input_hash',hashlib.sha256(json.dumps(row['inputs'],sort_keys=True,separators=(',',':')).encode()).hexdigest()))
+        for key in identifiers:
+            if key in seen:parent[find(rid)]=find(seen[key])
+            else:seen[key]=rid
+    members=collections.defaultdict(list)
+    for rid in parent:members[find(rid)].append(rid)
+    canonical={k:'source-'+hashlib.sha256(json.dumps(sorted(v)).encode()).hexdigest()[:24] for k,v in members.items()}
+    groups={rid:canonical[find(rid)] for rid in parent}
+    splits=collections.defaultdict(set)
+    for row in rows:splits[groups[row['root_id']]].add(row['split'])
+    if any(len(v)>1 for v in splits.values()):raise ValueError('Connected source lineage crosses dataset splits')
+    return groups

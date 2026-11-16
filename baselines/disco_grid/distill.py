@@ -229,7 +229,9 @@ def extract_dataset_from_tree_dirs(
     all_dst, all_obj, all_val = [], [], []
     summaries = []
     # The locked source snapshot supplies authoritative family lineage.
+    if len({Path(p).resolve() for p in tree_dirs})!=len(tree_dirs):raise ValueError("Duplicate physical tree evidence")
     snapshot_rows = {r["root_id"]: r for r in D.load_snapshot_rows(dom)}
+    groups=D.independence_groups(list(snapshot_rows.values()))
     for td in tree_dirs:
         if not (Path(td) / "nodes.pkl").exists():
             raise FileNotFoundError(f"Missing declared tree: {td}")
@@ -259,7 +261,7 @@ def extract_dataset_from_tree_dirs(
         "policy_obj_rows": all_obj,
         "value_rows": all_val,
         "tree_summaries": summaries,
-        "root_families": {s["root_id"]:D.root_family_key(snapshot_rows[s["root_id"]]) for s in summaries},
+        "root_families": {s["root_id"]:groups[s["root_id"]] for s in summaries},
     }
 
 

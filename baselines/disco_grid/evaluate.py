@@ -1174,3 +1174,48 @@ def fit_root_stop_calibration(examples: list[dict[str, Any]]) -> dict[str, Any]:
             "audit_family_ids":sorted({r.get("family_id",r["root_id"]) for r in audit}),
             "audit_raw":metrics(hx),"audit_calibrated":metrics(scale*hx+bias),
             "task_success_claim":"NOT_EVALUATED; no TEST selection or performance inferred"}
+
+
+def root_level_metrics(outcomes, root_manifest, seeds=(0,1,2), bootstrap=10000, seed=20261117):
+    """Frozen-root intention-to-evaluate metrics; missing seeds stay in denominator.
+
+    One domain/protocol/arm at a time. Resample source families as clusters and
+    retain all fixed model seeds per root. No observed rows means NOT_RUN, not 0%.
+    """
+    roots={r['root_id']:r for r in root_manifest}
+    if len(roots)!=len(root_manifest) or not seeds or len(set(seeds))!=len(seeds):raise ValueError('Duplicate/empty roots or seeds')
+    lookup={}
+    for row in outcomes:
+        key=(row['root_id'],row['seed'])
+        if key in lookup or key[0] not in roots or key[1] not in seeds:raise ValueError('Unexpected or duplicate root/seed')
+        lookup[key]=row
+    if len({r.get('domain') for r in outcomes})>1:raise ValueError('Report domains separately')
+    def metrics(ids):
+        if not ids:return {'status':'NOT_RUN','n_roots':0,'success_rate':None,'ci95':None}
+        means=[];upper=[];decided=[];families=[];trials=succ=unknown=abstain=notrun=0;perseed={s:0 for s in seeds}
+        for rid in ids:
+            vals=[];ups=[]
+            for s in seeds:
+                row=lookup.get((rid,s));trials+=1
+                if row is None:unknown+=1;notrun+=1;vals.append(0);ups.append(1);continue
+                ok=int(row.get('verified')==1);succ+=ok;perseed[s]+=ok
+                is_abstain=row.get('status')=='ABSTAIN';abstain+=is_abstain
+                unres=row.get('verified') is None and not is_abstain
+                unknown+=unres;vals.append(ok);ups.append(int(ok or unres))
+                if row.get('verified') in (0,1):decided.append(ok)
+            means.append(np.mean(vals));upper.append(np.mean(ups));families.append(roots[rid].get('family_id',rid))
+        distinct=sorted(set(families));rng=np.random.default_rng(seed)
+        values=np.asarray(means);groups=[np.flatnonzero(np.array(families)==f) for f in distinct]
+        boots=[]
+        for _ in range(bootstrap):
+            ix=np.concatenate([groups[i] for i in rng.integers(len(groups),size=len(groups))]);boots.append(float(values[ix].mean()))
+        observed=trials-notrun
+        return dict(status='NOT_RUN' if not observed else 'PARTIAL' if unknown else 'MEASURED',n_roots=len(ids),n_families=len(groups),
+            n_expected_predictions=trials,n_observed_predictions=observed,n_verified_success=succ,n_physically_decided=len(decided),
+            n_unresolved_or_unexecuted=unknown,n_not_run=notrun,n_abstentions=abstain,
+            success_rate=float(values.mean()) if observed else None,ci95=list(np.percentile(boots,[2.5,97.5])) if observed else None,
+            pessimistic=float(values.mean()) if observed else None,optimistic=float(np.mean(upper)) if observed else None,
+            decided_only=float(np.mean(decided)) if decided else None,per_seed_success=perseed,
+            resampling_unit='source-family cluster, fixed model seeds within root',bootstrap_replicates=bootstrap,bootstrap_seed=seed)
+    return {'overall':metrics(list(roots)), 'tasks_K1_K2_K3':metrics([r for r,x in roots.items() if str(x['K_legacy']) in ('1','2','3')]),
+            'by_K':{k:metrics([r for r,x in roots.items() if str(x['K_legacy'])==k]) for k in ('0','1','2','3','NONE')}}

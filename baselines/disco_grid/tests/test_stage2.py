@@ -129,3 +129,36 @@ def test_watchdog_monitor_error_cancels_only_own_child(tmp_path):
         J.wait_for_child(child,3,grace_s=.05,directory=tmp_path,query_wall_s=.1)
     assert not child.is_alive()
     assert json.loads((tmp_path/'WATCHDOG_ACCOUNTING.json').read_text())['reason']=='MONITOR_ERROR'
+
+
+def test_transitive_source_lineage():
+    rows=[dict(root_id='a',split='train',parent_family_id='p',layout_root_id='l'),
+          dict(root_id='b',split='train',parent_family_id='p2',layout_root_id='l'),
+          dict(root_id='c',split='train',parent_family_id='p2',layout_root_id='l2')]
+    groups=D.independence_groups(rows);assert len(set(groups.values()))==1
+    rows[2]['split']='test'
+    with pytest.raises(ValueError,match='lineage'):D.independence_groups(rows)
+
+
+def test_frozen_denominators_and_family_ci():
+    roots=[dict(root_id='a',family_id='f1',K_legacy='1'),dict(root_id='b',family_id='f2',K_legacy='3')]
+    outcomes=[dict(root_id='a',seed=0,domain='2d',status='REPAIR',verified=1),
+              dict(root_id='a',seed=1,domain='2d',status='ABSTAIN',verified=None),
+              dict(root_id='b',seed=0,domain='2d',status='REPAIR',verified=None)]
+    met=EV.root_level_metrics(outcomes,roots,seeds=(0,1),bootstrap=100)['overall']
+    assert met['n_expected_predictions']==4 and met['n_not_run']==1 and met['success_rate']==.25
+    assert met['n_unresolved_or_unexecuted']==2 and met['optimistic']==.75 and met['decided_only']==1
+    assert EV.root_level_metrics([],roots,bootstrap=10)['overall']['success_rate'] is None
+    with pytest.raises(ValueError,match='duplicate'):EV.root_level_metrics(outcomes+outcomes[:1],roots,seeds=(0,1))
+
+
+def test_verified_stop_absorbs_without_extra_relocations():
+    t=tree()
+    def solved(state,**kw):
+        t.env.calls+=1
+        return E.StopResult('DECIDED',True,1,1,1,None,None,'VERIFIED','VERIFIED')
+    t.env.terminal_query=solved
+    out=t.run_search('fixture',iterations=8,max_sim_calls=20)
+    assert out['total_sim_calls']==1 and out['feasible_relocation_edges']==0
+    ext=DS.extract_distillation_data_from_tree(t.nodes,'2d',SCALERS)
+    assert len(ext['value_rows'])==1 and ext['value_rows'][0]['n_visited_leaves']==1

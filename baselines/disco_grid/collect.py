@@ -70,6 +70,7 @@ def freeze_manifest(dom, counts, seed, calls, iterations, wall_s, out, query_wal
     if any(not isinstance(n,int) or n<=0 for n in counts.values()):
         raise ValueError("Every requested stratum must have a positive integer count")
     rows = D.load_snapshot_rows(dom)
+    groups=D.independence_groups(rows)
     hygiene = D.check_split_hygiene(rows)
     if any(v for k,v in hygiene.items() if k.endswith("conflicts")):
         raise ValueError("Split overlap: " + json.dumps(hygiene))
@@ -79,20 +80,22 @@ def freeze_manifest(dom, counts, seed, calls, iterations, wall_s, out, query_wal
     if any(len(s)>1 for s in families_by_split.values()):
         raise ValueError("Cross-split source families")
     historic_ids = {p.name for p in (D.DISCO_ROOT/"trees"/dom).glob("*/*") if p.is_dir()}
-    excluded_families = {D.root_family_key(r) for r in rows if r["root_id"] in historic_ids}
+    for path in (D.DISCO_ROOT/"stage2/trees").glob("*/manifest.json"):
+        historic_ids.update(r["root_id"] for r in json.loads(path.read_text()).get("roots",[]))
+    excluded_families = {groups[r["root_id"]] for r in rows if r["root_id"] in historic_ids}
     # Prior pilots are exposure, not fresh independent coverage.
     for path in (D.DISCO_ROOT/"validation_v2").glob("pilot_*/manifest.json"):
         for root in json.loads(path.read_text()).get("roots",[]):
-            excluded_families.add(root["family_id"])
+            if root["root_id"] in groups:excluded_families.add(groups[root["root_id"]])
     selected, seen = [], set(excluded_families)
     for k, count in counts.items():
         candidates = [r for r in rows if r["split"] == "train" and str(r["K_legacy"]) == k]
         candidates.sort(key=lambda r: hashlib.sha256(f"validation_v2|{seed}|{r['root_id']}".encode()).hexdigest())
         stratum = []
         for row in candidates:
-            family = D.root_family_key(row)
+            family = groups[row["root_id"]]
             if family not in seen:
-                stratum.append({"root_id":row["root_id"], "family_id":family, "root_sha256":row["root_sha256"],
+                stratum.append({"root_id":row["root_id"], "family_id":family, "legacy_family_id":D.root_family_key(row), "root_sha256":row["root_sha256"],
                                 "input_sha256":input_hash(row), "K_legacy":k, "split":"train"})
                 seen.add(family)
                 if len(stratum)==count: break
@@ -113,6 +116,7 @@ def freeze_manifest(dom, counts, seed, calls, iterations, wall_s, out, query_wal
          "source_sha256":{p.name:D.sha256_file(p) for p in HERE.glob("*.py")},
          "teacher_source_sha256":teacher_sources(dom),
          "host_allowlist":["gvlab"], "workers":1, "threads":1, "gpu":False,
+         "runtime_versions":{n:__import__("importlib.metadata",fromlist=["version"]).version(n) for n in ("torch","numpy","mujoco")},
          "source_commit":os.environ.get("DISCO_SOURCE_COMMIT","UNRECORDED"),
          "query_wall_s":query_wall_s,
          "wall_envelope_s":wall_s, "aggregate_adapter_call_ceiling":len(selected)*calls,

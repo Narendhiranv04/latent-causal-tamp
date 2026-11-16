@@ -490,6 +490,13 @@ class DISCOMCTS:
                         self._increment_visit(cur)
                         break
 
+                # A verified successful STOP is an absorbing solved prefix.
+                # Revisit the cached observation without spending physics on extra moves.
+                if cur.stop_child_id is not None:
+                    cur=self.nodes[cur.stop_child_id]
+                    self._increment_visit(cur)
+                    break
+
                 # 2. Check progressive widening for relocation actions
                 if self.widening_condition(cur):
                     rem = None if max_sim_calls is None else (max_sim_calls - (self.sim_transition_calls + self.sim_terminal_calls))
