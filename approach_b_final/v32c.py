@@ -115,11 +115,14 @@ def items(dom):
     """Label-blind item selection from mine.jsonl (seeded per root); exact duplicates of an existing snapshot X label are dropped."""
     import contracts as CT
     rows = {r["root_id"]: r for r in EX.rows_of(dom, "train")}
+    lab_rows = rows
+    if os.environ.get("V32_DEDUP_SNAPSHOT"):                                  # dedupe against the training snapshot (V2 + V3-4 TRAIN labels)
+        lab_rows = {r["root_id"]: r for r in map(json.loads, open(Path(os.environ["V32_DEDUP_SNAPSHOT"]) / f"data{dom}.jsonl")) if r["split"] == "train"}
     out, n_drop = [], 0
     for c in map(json.loads, open(OUT / dom / "mine.jsonl")):
         row = rows[c["root_id"]]
         rng = random.Random("v32items|" + c["root_id"])
-        have_x = {json.dumps(q["seq"]) for q in row["labels"]["X"]}
+        have_x = {json.dumps(q["seq"]) for q in lab_rows[c["root_id"]]["labels"]["X"]}
         pick, why, meta = [], [], []
 
         def add(x, w):

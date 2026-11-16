@@ -681,7 +681,8 @@ if __name__ == "__main__":
     if cmd == ["selftest"]:
         print(json.dumps(selftest(), indent=1))
     elif cmd == ["fit"]:
-        fit(sys.argv[2], sys.argv[3], sys.argv[4], int(sys.argv[5]), epochs=int(os.environ.get("XY_EPOCHS", 60)))
+        fit(sys.argv[2], sys.argv[3], sys.argv[4], int(sys.argv[5]), epochs=int(os.environ.get("XY_EPOCHS", 60)),
+            patience=int(os.environ.get("XY_PATIENCE", 10)))                    # V3.2 matched arms: XY_PATIENCE=60 (fixed 60 epochs)
     elif cmd == ["report"]:
         report(sys.argv[2], sys.argv[3])
     elif cmd == ["eval"]:
