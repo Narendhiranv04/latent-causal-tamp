@@ -451,20 +451,31 @@ def task_dim(dom):
     return 2 * N + 4 + {"2d": 9, "3d": 19}[dom] + 1
 
 
+CTX_GOAL = {"2d": (6, 7), "3d": (14, 15)}      # goal (x, y) inside the contracts view ctx (2D: sin q x3, cos q x3, goal xy, gap; 3D: x7, x7, goal xy, size, height, box)
+
+
 def task_features(dom, inp, cells, q, on=True):
     """Inference-time task context for query object index q in scene `cells` (learner-visible only): goal one-hot, target-cell one-hot,
     query-relative goal / target offsets, the root's robot / target context vector (contracts view ctx) and task_on.  No labels, no K, no
-    blocker identities.  on=False -> zeros (the goal-masked branch used for Q2 rows and the goal-ablated control)."""
+    blocker identities.  on=True -> full; on=False -> zeros (entire task-context ablation, also the goal-masked Q2 branch);
+    on="nogoal" -> goal-only ablation (V3.1-A): goal one-hot, query-to-goal offset and the goal (x, y) in ctx are zeroed, everything else kept."""
     R, C = GRID[dom]
     t = np.zeros(task_dim(dom), np.float32)
-    if not on:
+    if on is False or on is None:
         return t
+    if on not in (True, "nogoal"):
+        raise ValueError(f"task mode {on!r}")
     g, tc, qc = int(inp["goal_cell"]), int(cells[inp["tid"]]), int(cells[q])
     t[g], t[R * C + tc] = 1.0, 1.0
     qr, qk = divmod(qc, C)
     t[2 * R * C:2 * R * C + 4] = [(g // C - qr) / (R - 1), (g % C - qk) / (C - 1), (tc // C - qr) / (R - 1), (tc % C - qk) / (C - 1)]
     t[2 * R * C + 4:-1] = inp["ctx"]
     t[-1] = 1.0
+    if on == "nogoal":
+        t[g] = 0.0
+        t[2 * R * C:2 * R * C + 2] = 0.0
+        for j in CTX_GOAL[dom]:
+            t[2 * R * C + 4 + j] = 0.0
     return t
 
 
@@ -513,7 +524,9 @@ VARIANTS = {"scratch_one": dict(init="scratch", assign="one", task=True, q2aux=F
             "q2init_one": dict(init="q2", assign="one", task=True, q2aux=False),
             "q2init_all": dict(init="q2", assign="all", task=True, q2aux=False),
             "combined_one": dict(init="scratch", assign="one", task=True, q2aux=True),
-            "goalablated_one": dict(init="scratch", assign="one", task=False, q2aux=False)}
+            "goalablated_one": dict(init="scratch", assign="one", task=False, q2aux=False),   # historical, CONFOUNDED (init + assign + task)
+            "q2init_all_nogoal": dict(init="q2", assign="all", task="nogoal", q2aux=False),    # V3.1-A matched goal-only ablation of q2init_all
+            "q2init_all_notask": dict(init="q2", assign="all", task=False, q2aux=False)}       # V3.1-A matched entire-task-context ablation
 
 
 def repair_data(dom, snap, split, assign, task_on, device="cuda"):
@@ -572,7 +585,7 @@ def fit_task(dom, variant, seed, cfg=None):
         D = Data(ROOT / "data" / f"q2_{dom}", dev)
         q2 = (D, torch.nonzero((D.split == 0) & (D.label == 1)).squeeze(1))
     opt = torch.optim.AdamW(m.parameters(), lr=cfg["lr"], weight_decay=1e-4)
-    out = V3 / "v3_3" / dom / f"{variant}_s{seed}"
+    out = V3 / os.environ.get("V3_TASK_STAGE", "v3_3") / dom / f"{variant}_s{seed}"
     out.mkdir(parents=True, exist_ok=True)
     g = torch.Generator(device=dev).manual_seed(seed)
     n, curve, best, t0, bad = len(tr["dest"]), [], (math.inf, None), time.time(), 0
@@ -612,7 +625,7 @@ def fit_task(dom, variant, seed, cfg=None):
 
 def load_task(dom, variant, seed, device="cuda"):
     V3 = Path(os.environ.get("V3OUT", str(ROOT.parent / "runs")))
-    ck = torch.load(V3 / "v3_3" / dom / f"{variant}_s{seed}" / "model.pt", map_location=device, weights_only=False)
+    ck = torch.load(V3 / os.environ.get("V3_TASK_STAGE", "v3_3") / dom / f"{variant}_s{seed}" / "model.pt", map_location=device, weights_only=False)
     m = TaskCVAE(*ck["grid"], ck["tdim"], ck["cfg"]["hidden"], ck["cfg"]["zdim"]).to(device)
     m.load_state_dict(ck["state"])
     m.task_on = ck["v"]["task"]

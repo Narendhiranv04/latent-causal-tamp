@@ -89,8 +89,11 @@ def build(D, B, seed_key):
 
 
 # --------------------------------------------------------------------------------------------- one root end-to-end (GPU models)
-def run_root(root, sampler, scorer, M, B, rule, seed, store_top=2048, chunk=8192):
-    """-> per-root audit record (plan V3 8.2).  The sampler is called exactly once (one batched call over all movable objects on S0)."""
+def run_root(root, sampler, scorer, M, B, rule, seed, store_top=2048, chunk=8192, store=None):
+    """-> per-root audit record (plan V3 8.2).  The sampler is called exactly once (one batched call over all movable objects on S0).
+    store="all" (V3.1, or env V3_STORE_ALL=1): EVERY scored candidate is kept at full precision with its endpoint id, p11, py, px, m, D and
+    J_hat (all terms of the selection cost) for unrestricted rule tuning; default "top" keeps the V3 compact record (no-op + top store_top by
+    p11 + the selection).  Storage happens after selection: candidates, scores, RNG and the decision are identical in both modes."""
     import torch
     import search as S
     t0 = time.time()
@@ -107,12 +110,20 @@ def run_root(root, sampler, scorer, M, B, rule, seed, store_top=2048, chunk=8192
     if torch.cuda.is_available():
         torch.cuda.synchronize()
     t3 = time.time()
-    cands = [{"seq": [list(a) for a in s], "p11": c["p11"], "J": c["J"], "m": len(s), "D": root.displacement(s) if s else 0.0}
-             for s, c in zip([[]] + seqs, sc)]
+    cands = [{"seq": [list(a) for a in s], "p11": c["p11"], "J": c["J"], "m": len(s), "D": root.displacement(s) if s else 0.0,
+              "py": c.get("py"), "px": c.get("px")} for s, c in zip([[]] + seqs, sc)]
     pick = S.select(cands, rule)
     sel = None if pick is None else next(c for c in cands if c["seq"] == pick)
+    full = (store or ("all" if os.environ.get("V3_STORE_ALL") else "top")) == "all"
     keep = cands
-    if len(cands) > store_top:
+    if full:
+        eids, endpoints = {}, []
+        for c in cands:
+            k = json.dumps(sorted(map(tuple, c["seq"])))
+            if k not in eids:
+                eids[k] = len(endpoints); endpoints.append(json.loads(k))
+            c["eid"] = eids[k]
+    elif len(cands) > store_top:
         top = sorted(cands[1:], key=lambda c: -c["p11"])[:store_top]
         keep = [cands[0]] + top + ([sel] if sel is not None and sel["m"] and all(c is not sel for c in top) else [])
     return {"root_id": root.id, "domain": root.dom, "split": root.row["split"], "K": root.row["K_legacy"],
@@ -122,8 +133,11 @@ def run_root(root, sampler, scorer, M, B, rule, seed, store_top=2048, chunk=8192
             "selected_ordered_seq": pick, "p11": None if sel is None else round(sel["p11"], 6), "decision": "ABSTAIN" if pick is None else ("NOOP" if not pick else "REPAIR"),
             "p_noop": round(cands[0]["p11"], 6), "planner_calls": 0,
             "wall_s": {"propose": round(t1 - t0, 4), "construct": round(t2 - t1, 4), "score": round(t3 - t2, 4), "total": round(t3 - t0, 4)},
-            "stored": "all" if len(cands) <= store_top else f"noop+top{store_top}_by_p11+selected",
-            "cands": [{"seq": c["seq"], "p11": round(c["p11"], 6), "J": round(c["J"], 5), "m": c["m"], "D": round(c["D"], 4)} for c in keep]}
+            "stored": "all" if (full or len(cands) <= store_top) else f"noop+top{store_top}_by_p11+selected",
+            **({"store_mode": "full_precision_all", "endpoints": endpoints,
+                "cands": [{"seq": c["seq"], "eid": c["eid"], "p11": c["p11"], "py": c["py"], "px": c["px"], "J": c["J"], "m": c["m"], "D": c["D"]} for c in cands]}
+               if full else
+               {"cands": [{"seq": c["seq"], "p11": round(c["p11"], 6), "J": round(c["J"], 5), "m": c["m"], "D": round(c["D"], 4)} for c in keep]})}
 
 
 ARMS = {"v2frozen": {"sampler": ("v1", "cvae"), "xy": ("v2", "D")},           # frozen V2 = V1 Q2 cVAE (unchanged in V2) + V2-retrained coupled D
@@ -387,14 +401,25 @@ def summary(dom, files, caches, out, ref=None, B=2000):
     print(json.dumps(res, indent=1))
 
 
+def require_full(recs, name, allow_truncated=None):
+    """V3.1-B: rule tuning must see the COMPLETE scored candidate pool (records written with store="all").  A truncated pool is accepted only
+    when explicitly allowed (V3_ALLOW_TRUNCATED=1), i.e. when the tested hypothesis is restricted to the stored subset."""
+    allow = bool(os.environ.get("V3_ALLOW_TRUNCATED")) if allow_truncated is None else allow_truncated
+    bad = [r["root_id"] for r in recs if r.get("stored") != "all"]
+    if bad and not allow:
+        raise SystemExit(f"REFUSED: {name}: {len(bad)} records store a truncated candidate pool (e.g. {bad[0]}); re-run with store=all")
+
+
 def gridslim(rec_file, grid_file, out):
     """Union over all grid rules of the selections re-made from each root's stored candidates (torch-free evaluate.select) -> slim file
     (one line per (root, sequence)) for physical verification of every rule's choice."""
     import evaluate as EV
     grid = json.loads(Path(grid_file).read_text())
     n = 0
+    recs = EV.jl(rec_file)
+    require_full(recs, rec_file)
     with open(out, "w") as f:
-        for r in EV.jl(rec_file):
+        for r in recs:
             seen = set()
             for rule in grid:
                 sel = EV.select(r["cands"], rule)
@@ -417,6 +442,7 @@ def tune(dom, rec_file, grid_file, caches, out):
                 xv, yv = (x["x"] or {}).get("x"), (x["y"] or {}).get("y")
                 ver[(v["root"], json.dumps(x["seq"]))] = int(xv == 1 and yv == 1) if xv in (0, 1) and yv in (0, 1) else None
     recs, res = EV.jl(rec_file), []
+    require_full(recs, rec_file)
     for rule in json.loads(Path(grid_file).read_text()):
         S = collections.defaultdict(list)
         for r in recs:
@@ -429,10 +455,14 @@ def tune(dom, rec_file, grid_file, caches, out):
             if mk["eval_abstain"]:
                 S["abstain"].append(sel is None)
         parts = {k: float(np.mean(S[k])) for k in ("task", "noop", "abstain") if S[k]}
-        res.append({"rule": rule, "objective": float(np.mean(list(parts.values()))), **parts, "unverified": int(sum(S["unverified"])), "mean_m": float(np.mean(S["m"]))})
-    res.sort(key=lambda t: (-t["objective"], t["mean_m"]))
-    Path(out).write_text(json.dumps({"best_rule": res[0]["rule"], "table": res}, indent=1))
-    print(json.dumps({"best": res[0], "second": res[1]}))
+        unv = int(sum(S["unverified"]))
+        res.append({"rule": rule, "objective": None if unv else float(np.mean(list(parts.values()))), **parts, "unverified": unv,
+                    "status": "UNRESOLVED" if unv else "resolved", "mean_m": float(np.mean(S["m"]))})
+    ok = sorted((t for t in res if t["status"] == "resolved"), key=lambda t: (-t["objective"], t["mean_m"]))
+    bad = [t for t in res if t["status"] != "resolved"]
+    Path(out).write_text(json.dumps({"best_rule": ok[0]["rule"] if ok else None, "unresolved_rules": len(bad),
+                                     "candidate_pool": "full", "table": ok + bad}, indent=1))
+    print(json.dumps({"best": ok[0] if ok else None, "unresolved_rules": len(bad)}))
 
 
 def _boot(dom, geom):
