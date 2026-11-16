@@ -9,7 +9,8 @@ declared support cells free in that scene.  Supervision: Q2 isolated placement t
 
     python placement.py build  {2d,3d} OUT_DIR            Q2 records -> features.npz + rows.json (+ train-split scalers)
     python placement.py fit    {2d,3d} DATA_DIR KIND SEED  -> runs/p1_<dom>/<kind>_s<seed>/{model.pt,curve.json}
-    python placement.py eval   {2d,3d} DATA_DIR SPLIT      every arm x seeds x M -> runs/p1_<dom>/eval_<split>.json"""
+    python placement.py eval   {2d,3d} DATA_DIR SPLIT      every arm x seeds x M -> runs/p1_<dom>/eval_<split>.json
+    python placement.py fit_task {2d,3d} VARIANT SEED     V3-3 task-conditioned cVAE -> $V3OUT/v3_3/<dom>/<variant>_s<seed>/"""
 from __future__ import annotations
 
 import collections, gzip, hashlib, json, math, os, sys, time
@@ -25,7 +26,7 @@ DS2 = MIR / "rss-placement-ready-v2/gh-yadu-iiith/planar_2d/dataset_bd_classquot
 SRC3 = MIR / "rss3d_final_src/gh-yadu-iiith/shelf_6x6_open_sides/dataset_bd_classquota_without_home_position_no_overpass/raw/roots"
 GRID = {"2d": (8, 8), "3d": (6, 6)}
 SPLITS = ["train", "val", "test"]
-MAXOBJ = {"2d": 20, "3d": 12}               # padding only (masked, permutation-invariant encoder); 3D Q2 training scenes have <= 8 objects, 3D NONE scenes more
+MAXOBJ = {"2d": 20, "3d": 16}               # padding only (masked, permutation-invariant encoder); 3D TRAIN NONE scenes have up to 13 objects
 NORM = [2, 3, 6, 7, 8]
 
 
@@ -390,6 +391,238 @@ def propose(m, obj, mask, occ, legal, src, M, gen, raw_mult=8):
     return out, d.shape[1], ill.float().mean().item()
 
 
+# --------------------------------------------------------------------------------------------- V3 sampling rules (plan V3 4.3, S0-S4)
+def band_dist(legal, src, C):
+    """Exact distribution of the band-stratified control: equal mass per non-empty Chebyshev band (1 / 2-3 / >=4 from src), uniform inside."""
+    N = legal.shape[1]
+    r, c = torch.arange(N, device=legal.device) // C, torch.arange(N, device=legal.device) % C
+    ch = torch.maximum((r[None] - (src // C)[:, None]).abs(), (c[None] - (src % C)[:, None]).abs())
+    p = torch.zeros(legal.shape, device=legal.device)
+    nb = torch.zeros(legal.shape[0], 1, device=legal.device)
+    for m in ((ch == 1), (ch >= 2) & (ch <= 3), (ch >= 4)):
+        m = (m & legal).float()
+        k = m.sum(1, keepdim=True)
+        p += torch.where(k > 0, m / k.clamp(min=1), m)
+        nb += (k > 0).float()
+    return p / nb.clamp(min=1)
+
+
+@torch.no_grad()
+def marginal(m, obj, mask, occ, legal, src, n_z, gen):
+    """Proposal marginal over destinations.  cVAE: Monte-Carlo estimate E_z softmax(masked decoder(c, z)) with n_z prior draws (z ~ N(0, I));
+    uniform / band controls: their exact sampling distributions.  -> [B, N] (0 on illegal cells), decoder evaluations per context."""
+    if isinstance(m, CVAE):
+        c = m.enc(obj, mask, occ)
+        B = c.shape[0]
+        z = torch.randn(B, n_z, m.zdim, device=c.device, generator=gen)
+        p = masked(m.dec(torch.cat([c[:, None].expand(B, n_z, -1), z], -1)), legal[:, None]).softmax(-1).mean(1)
+        return p * legal, n_z
+    if isinstance(m, BandStratified):
+        return band_dist(legal, src, m.C), 0
+    return legal.float() / legal.float().sum(1, keepdim=True).clamp(min=1), 0
+
+
+@torch.no_grad()
+def propose_rule(m, obj, mask, occ, legal, src, M, gen, rule, raw_mult=8, broad=None):
+    """V3 sampling rules -> (unique legal destinations per context, model draws / decoder evaluations per context).
+    S0 = propose() (repeat-and-dedup, raw_mult * M draws; NOT top-k); S1 = top-M of the MC marginal; S2 = Gumbel-top-M without replacement from
+    the MC marginal; S3 = S2 on p^(1/tau); S4 = S2 on (1 - eps) p + eps q_broad (q_broad: 'uniform' legal or 'band' = exact band distribution)."""
+    name = rule["name"]
+    if name == "S0":
+        out, raw, _ = propose(m, obj, mask, occ, legal, src, M, gen, raw_mult)
+        return out, raw
+    p, ev = marginal(m, obj, mask, occ, legal, src, rule.get("n_z", 64), gen)
+    if name == "S4":
+        R, C = GRID_RC(legal.shape[1], m)
+        q = band_dist(legal, src, C) if rule["broad"] == "band" else legal.float() / legal.float().sum(1, keepdim=True).clamp(min=1)
+        p = (1 - rule["eps"]) * p + rule["eps"] * q
+    lg = torch.where(legal & (p > 0), p.clamp(min=1e-30).log() / rule.get("tau", 1.0), torch.full_like(p, -float("inf")))
+    if name in ("S2", "S3", "S4"):
+        u = torch.rand(lg.shape, device=lg.device, generator=gen).clamp(1e-9, 1 - 1e-9)
+        lg = lg - (-u.log()).log()
+    k = min(M, lg.shape[1])
+    val, idx = lg.topk(k, -1)
+    return [[int(d) for d, v in zip(ix, vv) if v > -float("inf")] for ix, vv in zip(idx.tolist(), val.tolist())], ev
+
+
+# --------------------------------------------------------------------------------------------- V3-3 task-conditioned cVAE (same family)
+def task_dim(dom):
+    N = GRID[dom][0] * GRID[dom][1]
+    return 2 * N + 4 + {"2d": 9, "3d": 19}[dom] + 1
+
+
+def task_features(dom, inp, cells, q, on=True):
+    """Inference-time task context for query object index q in scene `cells` (learner-visible only): goal one-hot, target-cell one-hot,
+    query-relative goal / target offsets, the root's robot / target context vector (contracts view ctx) and task_on.  No labels, no K, no
+    blocker identities.  on=False -> zeros (the goal-masked branch used for Q2 rows and the goal-ablated control)."""
+    R, C = GRID[dom]
+    t = np.zeros(task_dim(dom), np.float32)
+    if not on:
+        return t
+    g, tc, qc = int(inp["goal_cell"]), int(cells[inp["tid"]]), int(cells[q])
+    t[g], t[R * C + tc] = 1.0, 1.0
+    qr, qk = divmod(qc, C)
+    t[2 * R * C:2 * R * C + 4] = [(g // C - qr) / (R - 1), (g % C - qk) / (C - 1), (tc // C - qr) / (R - 1), (tc % C - qk) / (C - 1)]
+    t[2 * R * C + 4:-1] = inp["ctx"]
+    t[-1] = 1.0
+    return t
+
+
+class TaskEncoder(nn.Module):
+    """Q2 SceneEncoder (unchanged) + additive task branch; input occx = [occ (N) | task features].  The task branch's last layer starts at
+    zero, so a Q2-initialized TaskCVAE equals the Q2 cVAE before fine-tuning."""
+
+    def __init__(self, N, tdim, h=128):
+        super().__init__()
+        self.N, self.base, self.task = N, SceneEncoder(N, 14, h), mlp(tdim, h, h, 2)
+        nn.init.zeros_(self.task[-1].weight); nn.init.zeros_(self.task[-1].bias)
+
+    def forward(self, obj, mask, occx):
+        return self.base(obj, mask, occx[:, :self.N]) + self.task(occx[:, self.N:])
+
+
+class TaskCVAE(CVAE):
+    kind = "taskcvae"
+
+    def __init__(self, R, C, tdim, h=128, z=8):
+        super().__init__(R, C, h, z)
+        self.enc, self.tdim = TaskEncoder(R * C, tdim, h), tdim
+
+    def loss_w(self, obj, mask, occx, legal, dest, beta, w):
+        """Weighted negative conditional ELBO: sum_i w_i [ -log p(d_i | z_i, c_i) + beta KL(q(z | c_i, d_i) || N(0, I)) ] / sum_i w_i."""
+        c = self.enc(obj, mask, occx)
+        mu, lv = self.post(torch.cat([c, Fn.one_hot(dest, self.N).float()], -1)).chunk(2, -1)
+        z = mu + torch.randn_like(mu) * (0.5 * lv).exp()
+        rec = Fn.cross_entropy(masked(self.dec(torch.cat([c, z], -1)), legal), dest, reduction="none")
+        kl = 0.5 * (mu.pow(2) + lv.exp() - 1 - lv).sum(-1)
+        ws = w.sum().clamp(min=1e-9)
+        return ((rec + beta * kl) * w).sum() / ws, {"rec": float((rec * w).sum() / ws), "kl": float((kl * w).sum() / ws)}
+
+
+def init_from_q2(tm, q2):
+    """Copy the Q2 cVAE into a TaskCVAE (encoder -> enc.base, posterior, decoder); the zero-initialized task branch is left as is."""
+    sd = q2.state_dict()
+    tm.enc.base.load_state_dict({k[4:]: v for k, v in sd.items() if k.startswith("enc.")})
+    tm.post.load_state_dict({k[5:]: v for k, v in sd.items() if k.startswith("post.")})
+    tm.dec.load_state_dict({k[4:]: v for k, v in sd.items() if k.startswith("dec.")})
+    return tm
+
+
+VARIANTS = {"scratch_one": dict(init="scratch", assign="one", task=True, q2aux=False),
+            "scratch_all": dict(init="scratch", assign="all", task=True, q2aux=False),
+            "q2init_one": dict(init="q2", assign="one", task=True, q2aux=False),
+            "q2init_all": dict(init="q2", assign="all", task=True, q2aux=False),
+            "combined_one": dict(init="scratch", assign="one", task=True, q2aux=True),
+            "goalablated_one": dict(init="scratch", assign="one", task=False, q2aux=False)}
+
+
+def repair_data(dom, snap, split, assign, task_on, device="cuda"):
+    """Repair-destination supervision (plan V3 3.2-3.3): per root the V3-legal verified Z=1 assignments (contracts.positive_assignments,
+    v3_grammar) -> 'one' = the frozen primary assignment (argmin sha256('v3primary|root|key')), 'all' = every distinct assignment; one example per
+    (object, destination) action with context = ORIGINAL scene S0 + task features; weight = 1 / |A_i| * 1 / |A| (six orders of one assignment
+    are one target; roots without a positive give no examples, never negatives).  Static legal mask = declared support, not initially
+    occupied, not the goal cell."""
+    import hashlib
+    import contracts as CT
+    import search as S
+    sc = json.loads((ROOT / "data" / f"q2_{dom}" / "scalers.json").read_text())
+    mu, sd = np.array(sc["mean"], np.float32), np.array(sc["std"], np.float32)
+    F, Mk, O, L, Dd, W, rid = [], [], [], [], [], [], []
+    for r in map(json.loads, open(Path(snap) / f"data{dom}.jsonl")):
+        if r["split"] != split:
+            continue
+        pa = {k: a for k, a in CT.positive_assignments(r).items() if not CT.v3_grammar(r["inputs"], a["assignment"])}
+        if not pa:
+            continue
+        keys = sorted(pa) if assign == "all" else [min(pa, key=lambda k: hashlib.sha256(f"v3primary|{r['root_id']}|{k}".encode()).hexdigest())]
+        root = S.Root(r, dom)
+        cd = {root.ids[i]: c for i, c in enumerate(root.cells0)}
+        lg = np.zeros(GRID[dom][0] * GRID[dom][1], bool)
+        lg[root.legal_dests(root.cells0)] = True
+        for k in keys:
+            A = pa[k]["assignment"]
+            for o, d in A:
+                f, m, occ, _ = scene_features(dom, root.pattr, cd, root.ids[o], root.legal)
+                assert lg[d], (r["root_id"], o, d)
+                F.append((f - mu) / sd * m[:, None]); Mk.append(m); L.append(lg)
+                O.append(np.concatenate([occ, task_features(dom, r["inputs"], root.cells0, o, task_on)])); Dd.append(d)
+                W.append(1.0 / len(keys) / len(A)); rid.append(r["root_id"])
+    T = lambda a, dt: torch.as_tensor(np.stack(a), dtype=dt, device=device)  # noqa: E731
+    w = np.array(W, np.float32)
+    return {"obj": T(F, torch.float32), "mask": T(Mk, torch.bool), "occx": T(O, torch.float32), "legal": T(L, torch.bool),
+            "dest": torch.as_tensor(Dd, dtype=torch.long, device=device), "w": torch.as_tensor(w / w.mean(), device=device), "roots": rid}
+
+
+def fit_task(dom, variant, seed, cfg=None):
+    """Train one task-conditioned cVAE variant (TRAIN = V2 snapshot train roots; model selection = weighted negative ELBO on VALIDATION repair
+    targets of the base snapshot).  Identical architecture / optimizer / epochs for every variant; only init, supervision and task input differ."""
+    v = VARIANTS[variant]
+    cfg = {"epochs": 80, "batch": 256, "lr": 1e-3, "beta_max": 1.0, "warm": 10, "hidden": 128, "zdim": 8, "patience": 15, **(cfg or {})}
+    dev = "cuda"
+    torch.manual_seed(seed)
+    V3 = Path(os.environ.get("V3OUT", str(ROOT.parent / "runs")))
+    tr = repair_data(dom, ROOT / "snapshot/abf_v2_7d146b53e4b92fe4", "train", v["assign"], v["task"], dev)
+    va = repair_data(dom, ROOT / "snapshot/abf_9de85710c2a7103f", "val", "all", v["task"], dev)
+    R, C = GRID[dom]
+    m = TaskCVAE(R, C, task_dim(dom), cfg["hidden"], cfg["zdim"]).to(dev)
+    if v["init"] == "q2":
+        init_from_q2(m, load(dom, "cvae", seed, dev))
+    q2 = None
+    if v["q2aux"]:
+        D = Data(ROOT / "data" / f"q2_{dom}", dev)
+        q2 = (D, torch.nonzero((D.split == 0) & (D.label == 1)).squeeze(1))
+    opt = torch.optim.AdamW(m.parameters(), lr=cfg["lr"], weight_decay=1e-4)
+    out = V3 / "v3_3" / dom / f"{variant}_s{seed}"
+    out.mkdir(parents=True, exist_ok=True)
+    g = torch.Generator(device=dev).manual_seed(seed)
+    n, curve, best, t0, bad = len(tr["dest"]), [], (math.inf, None), time.time(), 0
+    pick = lambda d, ix: (d["obj"][ix], d["mask"][ix], d["occx"][ix], d["legal"][ix], d["dest"][ix])  # noqa: E731
+    for ep in range(cfg["epochs"]):
+        m.train()
+        beta = cfg["beta_max"] * min(1.0, (ep + 1) / cfg["warm"])
+        perm, tl = torch.randperm(n, device=dev, generator=g), []
+        for i in range(0, n, cfg["batch"]):
+            ix = perm[i:i + cfg["batch"]]
+            l, _ = m.loss_w(*pick(tr, ix), beta, tr["w"][ix])
+            if q2 is not None:                                      # goal-masked Q2 branch: task features = 0 (task_on = 0), equal-size batch
+                D, pos = q2
+                jx = pos[torch.randint(len(pos), (len(ix),), device=dev, generator=g)]
+                occx = torch.cat([D.occ[jx], torch.zeros(len(jx), m.tdim, device=dev)], 1)
+                lq, _ = m.loss_w(D.obj[jx], D.mask[jx], occx, D.legal[jx], D.dest[jx], beta, torch.ones(len(jx), device=dev))
+                l = l + lq
+            opt.zero_grad(); l.backward(); opt.step()
+            tl.append(l.item())
+        m.eval()
+        with torch.no_grad():
+            vl, parts = m.loss_w(*pick(va, slice(None)), cfg["beta_max"], va["w"])
+        curve.append({"epoch": ep, "train": float(np.mean(tl)), "val": float(vl), **{f"val_{k}": x for k, x in parts.items()}, "beta": beta})
+        if float(vl) < best[0]:
+            best, bad = (float(vl), ep), 0
+            torch.save({"state": m.state_dict(), "cfg": cfg, "variant": variant, "v": v, "grid": [R, C], "tdim": m.tdim, "epoch": ep}, out / "model.pt.tmp")
+            os.replace(out / "model.pt.tmp", out / "model.pt")
+        else:
+            bad += 1
+            if bad >= cfg["patience"]:
+                break
+    (out / "curve.json").write_text(json.dumps({"curve": curve, "best_val": best[0], "best_epoch": best[1], "cfg": cfg, "variant": v, "seed": seed,
+                                                "train_examples": n, "train_roots": len(set(tr["roots"])), "val_examples": len(va["dest"]),
+                                                "wall_s": round(time.time() - t0, 1), "gpu_peak_mib": round(torch.cuda.max_memory_allocated() / 2 ** 20, 1)}, indent=1))
+    print(json.dumps({"dom": dom, "variant": variant, "seed": seed, "best_val": best[0], "best_epoch": best[1], "n": n, "wall_s": round(time.time() - t0, 1)}))
+
+
+def load_task(dom, variant, seed, device="cuda"):
+    V3 = Path(os.environ.get("V3OUT", str(ROOT.parent / "runs")))
+    ck = torch.load(V3 / "v3_3" / dom / f"{variant}_s{seed}" / "model.pt", map_location=device, weights_only=False)
+    m = TaskCVAE(*ck["grid"], ck["tdim"], ck["cfg"]["hidden"], ck["cfg"]["zdim"]).to(device)
+    m.load_state_dict(ck["state"])
+    m.task_on = ck["v"]["task"]
+    return m.eval()
+
+
+def GRID_RC(N, m):
+    return (m.R, m.C) if hasattr(m, "C") else {64: (8, 8), 36: (6, 6)}[N]
+
+
 def evaluate(dom, data_dir, split, seeds=(0, 1, 2), eval_seeds=(0, 1, 2), Ms=(1, 2, 4, 8, 16)):
     dev = "cuda"
     D = Data(data_dir, dev)
@@ -466,5 +699,7 @@ if __name__ == "__main__":
         fit(dom, sys.argv[3], sys.argv[4], int(sys.argv[5]))
     elif cmd == "eval":
         evaluate(dom, sys.argv[3], sys.argv[4])
+    elif cmd == "fit_task":
+        fit_task(dom, sys.argv[3], int(sys.argv[4]))
     else:
         raise SystemExit(__doc__)

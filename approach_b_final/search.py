@@ -55,10 +55,12 @@ class Root:
 class Sampler:
     """Frozen placement sampler (P1 checkpoint or analytical control) behind one call: propose(root, cells, obj, M, gen)."""
 
-    def __init__(self, dom, kind, seed, data_dir, device="cuda", raw_mult=8):
+    def __init__(self, dom, kind, seed, data_dir, device="cuda", raw_mult=8, rule=None, model=None):
         sc = json.loads((Path(data_dir) / "scalers.json").read_text())
         self.mu, self.sd = np.array(sc["mean"], np.float32), np.array(sc["std"], np.float32)
-        self.m, self.dom, self.dev, self.raw_mult, self.kind = PL.load(dom, kind, seed, device), dom, device, raw_mult, kind
+        self.m = model if model is not None else PL.load(dom, kind, seed, device)
+        self.dom, self.dev, self.raw_mult, self.kind = dom, device, raw_mult, kind
+        self.rule = rule or {"name": "S0"}                    # V3 sampling rule (placement.propose_rule); S0 = the V1/V2 rule, unchanged
         self.calls = self.raw = 0
 
     def propose_many(self, root, cells, objs, M, gen):
@@ -72,10 +74,15 @@ class Sampler:
             F, Mk, occ, _ = PL.scene_features(self.dom, root.pattr, cd, root.ids[o], root.legal)
             lg = np.zeros(len(occ), bool)
             lg[legal] = True
+            if isinstance(self.m, PL.TaskCVAE):                   # V3-3: task context rides in the extended occupancy input
+                occ = np.concatenate([occ, PL.task_features(self.dom, root.row["inputs"], cells, o, getattr(self.m, "task_on", True))])
             Fs.append((F - self.mu) / self.sd * Mk[:, None]); Ms.append(Mk); Os.append(occ); Ls.append(lg)
         T = lambda a, dt: torch.as_tensor(np.stack(a), dtype=dt, device=self.dev)  # noqa: E731
-        out, raw, _ = PL.propose(self.m, T(Fs, torch.float32), T(Ms, torch.bool), T(Os, torch.float32), T(Ls, torch.bool),
-                                 torch.tensor([cells[o] for o in objs], device=self.dev), M, gen, self.raw_mult)
+        args = (self.m, T(Fs, torch.float32), T(Ms, torch.bool), T(Os, torch.float32), T(Ls, torch.bool), torch.tensor([cells[o] for o in objs], device=self.dev))
+        if self.rule["name"] == "S0":
+            out, raw, _ = PL.propose(*args, M, gen, self.raw_mult)
+        else:
+            out, raw = PL.propose_rule(*args, M, gen, self.rule, self.raw_mult)
         self.calls += len(objs)
         self.raw += raw * len(objs)
         return dict(zip(objs, out))

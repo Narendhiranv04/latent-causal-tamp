@@ -306,6 +306,230 @@ def coverage(dom):
     print(json.dumps({k: out[k] for k in ("summary", "by_K")}, indent=1))
 
 
+# --------------------------------------------------------------------------------------------- V3-4: candidate-matched X/Y evidence (plan V3 5.5)
+V3OUT = Path(os.environ.get("V3OUT", str(ABF.parent / "runs")))
+V34 = V3OUT / "v3_4"
+V3_ROOTS = {"2D": {"1": 120, "2": 120, "3": 120, "0": 40, "NONE": 60}, "3D": {"1": 70, "2": 70, "3": 70, "0": 25, "NONE": 40}}
+
+
+def v3_roots(dom):
+    """TRAIN roots stratified by legacy class (K0 and NONE included: their false positives drive no-op / abstention errors), sha256 order."""
+    rows = [r for r in map(json.loads, open(ABF / "snapshot/abf_9de85710c2a7103f" / f"data{dom.lower()}.jsonl")) if r["split"] == "train"]
+    out = []
+    for K, n in V3_ROOTS[dom].items():
+        out += sorted((r for r in rows if r["K_legacy"] == K), key=lambda r: hashlib.sha256(("v3|" + r["root_id"]).encode()).hexdigest())[:n]
+    return out
+
+
+def v3_candidates(dom, kind, rule_name, M, B, seed=0):
+    """Direct-construction candidates (the deployment distribution) of the chosen sampler on the V3 TRAIN roots, scored by the frozen V2 D."""
+    import torch
+    import construct as CO
+    import search as S
+    tag = f"{CO.rule_tag(rule_name, kind)}_M{M}_B{B}_s{seed}"
+    out = V34 / dom.lower() / f"cands_{tag}.jsonl"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    done = {json.loads(l)["root_id"] for l in open(out)} if out.exists() else set()
+    samp = CO.make_sampler(dom.lower(), kind, seed, CO.RULES[rule_name])
+    scor = S.Scorer(ABF / "runs/v2" / f"p2_{dom.lower()}" / f"D_s{seed}" / "model.pt", ABF / "runs" / f"p3_{dom.lower()}" / f"cost_s{seed}" / "model.pt")
+    rule = json.loads((ABF / "runs/v2" / f"p5_{dom.lower()}" / "rule.json").read_text())
+    with open(out, "a") as f:
+        for r in v3_roots(dom):
+            if r["root_id"] not in done:
+                rec = CO.run_root(S.Root(r, dom.lower()), samp, scor, M, B, rule, seed)
+                rec.update(sampler=tag, scorer="v2:D_s%d" % seed, rule=rule)
+                f.write(json.dumps(rec) + "\n"); f.flush()
+    print(json.dumps({"out": str(out), "roots": sum(1 for _ in open(out))}))
+
+
+def v3_items(dom, tag):
+    """Per root (seeded, label-blind): top-2 by p11, 1 from [0.3, 0.9), 1 from [0.1, 0.3), 1 below 0.1, 1 uniform random, and every
+    constructed order of the selected repair's assignment (same-endpoint order contrasts).  X is queried where Y = 1, and where Y = 0 only for
+    items flagged x_on_y0 (a seeded third), so the X | Y = 0 factor keeps observations; unqueried X stays MISSING (marginalized)."""
+    import contracts as CT
+    rows = {r["root_id"]: r for r in map(json.loads, open(ABF / "snapshot/abf_9de85710c2a7103f" / f"data{dom.lower()}.jsonl"))}
+    out = []
+    for c in jl(V34 / dom.lower() / f"cands_{tag}.jsonl"):
+        rng = random.Random("v3items|" + c["root_id"])
+        cs = sorted((x for x in c["cands"] if x["seq"]), key=lambda x: -x["p11"])
+        pick, why = [], []
+        def add(x, w):
+            if x is not None and x["seq"] not in pick:
+                pick.append(x["seq"]); why.append(w)
+        for x in cs[:2]:
+            add(x, "top")
+        for lo, hi, w in ((0.3, 0.9, "band_0.3_0.9"), (0.1, 0.3, "band_0.1_0.3"), (0.0, 0.1, "band_lt_0.1")):
+            band = [x for x in cs if lo <= x["p11"] < hi and x["seq"] not in pick]
+            add(rng.choice(band) if band else None, w)
+        rest = [x for x in cs if x["seq"] not in pick]
+        add(rng.choice(rest) if rest else None, "random")
+        sel = c["selected_ordered_seq"]
+        if sel:
+            k = CT.ekey(sel)
+            for x in cs:
+                if CT.ekey(x["seq"]) == k:
+                    add(x, "selected_assignment_order")
+        ids = rows[c["root_id"]]["inputs"]["ids"]
+        out.append({"root": c["root_id"], "K": c["K"], "cands": pick, "why": why, "p11": [next(x["p11"] for x in cs if x["seq"] == q) for q in pick],
+                    "x_on_y0": [rng.random() < 1 / 3 for _ in pick], "seqs": [[(ids[i], d) for i, d in q] for q in pick], "mode": "v3"})
+    p = V34 / dom.lower() / f"items_{tag}.json"
+    p.write_text(json.dumps(out))
+    print(json.dumps({"dom": dom, "roots": len(out), "candidates": sum(len(i["cands"]) for i in out)}))
+
+
+def _v3_boot(dom, geom):
+    import construct as CO
+    import evaluate as EV
+    os.environ["FIN3D_STORE"] = str(V34 / "store_3d")
+    CO._boot(dom, geom)
+    _W.update(EV._W)
+    if dom == "2D":
+        (V34 / "witnesses_2d").mkdir(parents=True, exist_ok=True)
+        _W["T"]._M["wout"] = str(V34 / "witnesses_2d")
+
+
+def _v3_job(job):
+    """Unchanged teachers (same calls as evaluate._verify_job / V2 _job): Y once per endpoint, X per order (where Y = 1 or flagged)."""
+    rec = json.loads(Path(job["path"]).read_text())
+    t0 = time.process_time()
+    out, ycache = [], {}
+    if job["dom"] == "2D":
+        T, cache = _W["T"], {}
+        for s, xf in zip(job["seqs"], job["x_on_y0"]):
+            ek = json.dumps(sorted(s))
+            if ek not in ycache:
+                ycache[ek] = T.query(rec, s, cache, "Y")
+            y = ycache[ek]
+            x = T.query(rec, s, cache, "X") if (y.get("y") == 1 or xf) else None
+            out.append({"seq": s, "x": x, "y": y})
+    else:
+        F = _W["F"]
+        for s, xf in zip(job["seqs"], job["x_on_y0"]):
+            order = [[o, [c // 6, c % 6]] for o, c in s]
+            cells = {**{k: list(v) for k, v in rec["initial_cells"].items()}, **{o: d for o, d in order}}
+            ek = json.dumps(sorted(cells.items()))
+            if ek not in ycache:
+                ycache[ek] = F.capped(F.run_y, rec, cells)
+            y = ycache[ek]
+            x = F.capped(F.run_x, rec, order) if (y.get("y") == 1 or xf) else None
+            out.append({"seq": s, "x": x, "y": y})
+    return {"root": rec["ids"]["root_id"], "mode": "v3", "results": out, "cpu_s": round(time.process_time() - t0, 1)}
+
+
+def v3_label(dom, tag, workers, cpu0, host="g2"):
+    """Teacher labelling of the V3 items; V3_PART='a,b/n' shards roots across hosts (disjoint), output labels_<tag>_<host>.jsonl (resumable)."""
+    import multiprocessing as mp
+    import queue, threading
+    import evaluate as EV
+    EV.SNAP = ABF / "snapshot/abf_9de85710c2a7103f"
+    its = json.loads((V34 / dom.lower() / f"items_{tag}.json").read_text())
+    part = os.environ.get("V3_PART")
+    if part:
+        keep, n = part.split("/")
+        keep = {int(x) for x in keep.split(",")}
+        its = [i for i in its if int(hashlib.sha256(i["root"].encode()).hexdigest(), 16) % int(n) in keep]
+    outp = V34 / dom.lower() / f"labels_{tag}_{host}.jsonl"
+    done = {r["root"] for r in jl(outp)}
+    rows = {r["root_id"]: r for r in map(json.loads, open(EV.SNAP / f"data{dom.lower()}.jsonl"))}
+    jobs = []
+    for it in its:
+        if it["root"] in done:
+            continue
+        p = EV.path_of(dom, rows[it["root"]])
+        geom = "fastgeom1" if dom == "2D" and json.loads(Path(p).read_text()).get("geometry_impl") == "fastgeom1" else "original"
+        jobs.append({"dom": dom, "path": str(p), "geom": geom, "seqs": it["seqs"], "x_on_y0": it["x_on_y0"]})
+    os.sched_setaffinity(0, set(range(cpu0, cpu0 + workers)))
+    print(json.dumps({"dom": dom, "tag": tag, "host": host, "jobs": len(jobs), "queries_max": sum(len(j["seqs"]) for j in jobs)}), flush=True)
+    geoms = sorted({j["geom"] for j in jobs})
+    if not geoms:
+        return
+    ctx = mp.get_context("spawn")
+    share = {g: max(1, round(workers * sum(j["geom"] == g for j in jobs) / len(jobs))) for g in geoms}
+    pools = {g: ctx.Pool(share[g], initializer=_v3_boot, initargs=(dom, g), maxtasksperchild=20) for g in geoms}
+    q = queue.Queue()
+    for g in geoms:
+        it = pools[g].imap_unordered(_v3_job, sorted((j for j in jobs if j["geom"] == g), key=lambda j: -len(j["seqs"])))
+        threading.Thread(target=lambda it=it: ([q.put(r) for r in it], q.put(None)), daemon=True).start()
+    ended = n = 0
+    with open(outp, "a") as f:
+        while ended < len(geoms):
+            r = q.get()
+            if r is None:
+                ended += 1
+                continue
+            ids = rows[r["root"]]["inputs"]["ids"]
+            for x in r["results"]:
+                x["seq"] = [[ids.index(o), c] for o, c in x["seq"]]
+            f.write(json.dumps(r) + "\n"); f.flush()
+            n += 1
+            if n % 20 == 0:
+                print(f"{time.strftime('%H:%M:%S')} {n}/{len(jobs)}", flush=True)
+    for p_ in pools.values():
+        p_.close(); p_.join()
+
+
+def v3_snapshot(tag):
+    """V3 snapshot = V2 snapshot + V3-4 labels on TRAIN roots only (all hosts' label files); new immutable dir under $V3OUT/snapshot."""
+    import stat
+    base = ABF / "snapshot/abf_v2_7d146b53e4b92fe4"
+    extra = {"2D": collections.defaultdict(list), "3D": collections.defaultdict(list)}
+    st, files = collections.Counter(), []
+    for dom in ("2D", "3D"):
+        for fp in sorted((V34 / dom.lower()).glob(f"labels_{tag[dom]}_*.jsonl")):
+            files.append(fp)
+            for r in jl(fp):
+                for x in r["results"]:
+                    xr, yr = x["x"] or {}, x["y"] or {}
+                    xv = xr.get("x") if dom == "2D" else (xr.get("x") if xr.get("resolution") == "EVALUATED" else None)
+                    yv = yr.get("y") if dom == "2D" else (yr.get("y") if yr.get("resolution") == "EVALUATED" else None)
+                    extra[dom][r["root"]].append({"seq": x["seq"], "x": xv if xv in (0, 1) else None, "y": yv if yv in (0, 1) else None,
+                                                  "x_witnesses": xr.get("witnesses"), "kind": "V3_DIRECT_CANDIDATE"})
+                    st[(dom, "x" if xv in (0, 1) else ("x_not_queried" if not x["x"] else "x_missing"), "y" if yv in (0, 1) else "y_missing")] += 1
+    h = hashlib.sha256(json.dumps({d: {k: v for k, v in sorted(e.items())} for d, e in extra.items()}, sort_keys=True).encode()).hexdigest()[:16]
+    out = V3OUT / "snapshot" / f"abf_v3_{h}"
+    if out.exists():
+        raise SystemExit(f"REFUSED: {out} exists")
+    out.mkdir(parents=True)
+    added = collections.Counter()
+    for dom in ("2D", "3D"):
+        with open(out / f"data{dom.lower()}.jsonl", "w") as f:
+            for line in open(base / f"data{dom.lower()}.jsonl"):
+                r = json.loads(line)
+                if r["root_id"] in extra[dom]:
+                    assert r["split"] == "train", r["root_id"]
+                    X = {json.dumps(q["seq"]): q for q in r["labels"]["X"]}
+                    Y = {json.dumps(sorted(map(tuple, y["edit"]))): y for y in r["labels"]["Y"]}
+                    for e in extra[dom][r["root_id"]]:
+                        ek = json.dumps(sorted(map(tuple, e["seq"])))
+                        if e["y"] is not None:
+                            if ek in Y:
+                                assert Y[ek]["y"] == e["y"], (r["root_id"], ek)          # same teacher, same endpoint -> same label
+                            else:
+                                Y[ek] = {"edit": sorted(map(list, e["seq"])), "y": e["y"], "kinds": [e["kind"]]}; added[(dom, "Y")] += 1
+                        xk = json.dumps(e["seq"])
+                        if e["x"] is not None:
+                            if xk in X:
+                                assert X[xk]["x"] == e["x"], (r["root_id"], xk)
+                            else:
+                                X[xk] = {"seq": e["seq"], "x": e["x"], "kind": e["kind"], "x_witnesses": e["x_witnesses"]}; added[(dom, "X")] += 1
+                    r["labels"] = {"X": list(X.values()), "Y": list(Y.values())}
+                f.write(json.dumps(r) + "\n")
+    for n_ in ("QUALIFIED_TRAINING_EXCEPTION.json", "EVALUATION_MASKS.json"):
+        src = base / n_
+        if not src.exists():
+            src = ABF / "snapshot/abf_9de85710c2a7103f" / n_
+        (out / n_).write_bytes(src.read_bytes())
+    lock = {"snapshot_id": out.name, "base_snapshot": base.name, "variant": "V3_DIRECT_CANDIDATES (plan V3 5.5)", "tags": tag,
+            "label_counts": {"|".join(k): v for k, v in st.items()}, "added": {"|".join(k): v for k, v in added.items()},
+            "label_files_sha256": {str(p.name): hashlib.sha256(p.read_bytes()).hexdigest() for p in files},
+            "files": {n_: hashlib.sha256((out / n_).read_bytes()).hexdigest() for n_ in ("data2d.jsonl", "data3d.jsonl")},
+            "rule": "TRAIN roots only; validation / test rows identical to the base snapshot; same-teacher duplicates must agree"}
+    (out / "data_snapshot.lock.json").write_text(json.dumps(lock, indent=1))
+    for p_ in sorted(out.rglob("*"), reverse=True) + [out]:
+        p_.chmod(p_.stat().st_mode & ~(stat.S_IWUSR | stat.S_IWGRP | stat.S_IWOTH))
+    print(json.dumps({"snapshot": str(out), "added": lock["added"], "counts": lock["label_counts"]}))
+
+
 if __name__ == "__main__":
     c, dom = sys.argv[1], sys.argv[2]
     if c == "search":
@@ -320,5 +544,13 @@ if __name__ == "__main__":
         snapshot()
     elif c == "supervise":
         supervise(sys.argv[2:])
+    elif c == "v3cands":
+        v3_candidates(dom, sys.argv[3], sys.argv[4], int(sys.argv[5]), int(sys.argv[6]))
+    elif c == "v3items":
+        v3_items(dom, sys.argv[3])
+    elif c == "v3label":
+        v3_label(dom, sys.argv[3], int(sys.argv[4]), int(sys.argv[5]), sys.argv[6] if len(sys.argv) > 6 else "g2")
+    elif c == "v3snapshot":
+        v3_snapshot(json.loads(sys.argv[2]))
     else:
         raise SystemExit(__doc__)

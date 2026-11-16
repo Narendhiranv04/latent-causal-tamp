@@ -176,7 +176,54 @@ def v3_1(dom, rec_file, caches, roots, out):
     print(out)
 
 
+def v3_23(out_dir, sweeps, summaries):
+    """V3-2/V3-3 figures: (a) teacher-free known-assignment ingredient recall vs M; (b) physical top-1 task success (verified) with the
+    paired 95 % CI vs the Q2 S0 M4 baseline and NONE-abstention, per domain."""
+    out_dir = Path(out_dir)
+    fig, axes = plt.subplots(1, 2, figsize=(10, 3.6))
+    show = [("S0", "Q2 cVAE (S0)", "#777777", "-"), ("S1", "Q2 cVAE (S1 top-M)", "#999999", "--"), ("uniform-S2", "Uniform", "#56B4E9", "-"),
+            ("stratified-S0", "Band-stratified", "#009E73", "-"), ("task:goalablated_one-S1", "Repair cVAE, goal-ablated", "#E69F00", "--"),
+            ("task:q2init_all-S1", "Task cVAE (q2init_all, S1)", "#0072B2", "-")]
+    for a, dom in zip(axes, ("2d", "3d")):
+        r = {}
+        for f in sweeps[dom]:
+            r.update(json.loads(Path(f).read_text()))
+        for key, name, col, ls in show:
+            Ms = [M for M in (4, 8, 12, 16) if f"{key}|M{M}" in r]
+            a.errorbar(Ms, [r[f"{key}|M{M}"]["recall"]["mean"] for M in Ms], yerr=[r[f"{key}|M{M}"]["recall"]["sd"] for M in Ms], color=col, ls=ls,
+                       marker="o", ms=4, lw=2, capsize=2, label=name)
+        a.set_xlabel("destinations per object M (one pass on S0)"); a.set_ylabel("known-assignment ingredient recall (val)")
+        a.set_title(f"{dom.upper()}: proposal coverage (teacher-free, 3 seeds)", fontsize=9); a.set_ylim(0, 1); a.grid(alpha=0.3)
+    axes[1].legend(frameon=False, fontsize=7, loc="upper left")
+    fig.tight_layout(); fig.savefig(out_dir / "recall_vs_M.png", dpi=160); plt.close(fig)
+    fig, axes = plt.subplots(1, 2, figsize=(11, 4.2))
+    order = [("M4_B4096_s0_val", "Q2 S0 M4"), ("M8_B4096_s0_val", "Q2 S0 M8"), ("M16_B4096_s0_val", "Q2 S0 M16"), ("S1_M4_B4096_s0_val", "Q2 S1 M4"),
+             ("uniform-S2_M4_B4096_s0_val", "Uniform M4"), ("task:goalablated_one-S1_M4_B4096_s0_val", "Goal-ablated M4"),
+             ("task:q2init_all-S1_M4_B4096_s0_val", "Task cVAE M4"), ("task:q2init_all-S1_M8_B4096_s0_val", "Task cVAE M8")]
+    for a, dom in zip(axes, ("2d", "3d")):
+        S = json.loads(Path(summaries[dom]).read_text())
+        y = np.arange(len(order))
+        for i, (k, name) in enumerate(order):
+            v = S["v2frozen|" + k]
+            base = S["v2frozen|M4_B4096_s0_val"]["task_success"]
+            d = v.get("task_delta_vs_v2frozen|M4_B4096_s0_val")
+            col = "#0072B2" if k.startswith("task:q2") else ("#E69F00" if "goalabl" in k else "#999999")
+            a.barh(i, 100 * v["task_success"], color=col, height=0.62)
+            if d:
+                lo, hi = 100 * (base + d["ci95"][0]), 100 * (base + d["ci95"][1])
+                a.plot([lo, hi], [i, i], color="#222", lw=1.2)
+            a.text(100 * v["task_success"] + 1, i + 0.05, f"{100 * v['task_success']:.1f}%  (NONE abstain {100 * v['abstain_correct']:.0f}%)", va="center", fontsize=7)
+        a.axvline(100 * S["v2frozen|M4_B4096_s0_val"]["task_success"], color="#777", ls=":", lw=1)
+        a.set_yticks(y, [n for _, n in order], fontsize=8); a.invert_yaxis(); a.set_xlim(0, 100)
+        a.set_xlabel("verified top-1 task success, %  (bar: paired 95 % CI vs Q2 S0 M4)")
+        a.set_title(f"{dom.upper()} validation (n = {S['v2frozen|M4_B4096_s0_val']['n_task']} task roots), frozen V2 scorer", fontsize=9)
+    fig.tight_layout(); fig.savefig(out_dir / "physical_top1.png", dpi=160); plt.close(fig)
+    print(out_dir)
+
+
 if __name__ == "__main__":
     {"p1": lambda: p1(sys.argv[2], sys.argv[3]),
      "v3_0": lambda: v3_0(sys.argv[2], sys.argv[3], [("2d", sys.argv[4]), ("3d", sys.argv[5])]),
+     "v3_23": lambda: v3_23(sys.argv[2], {d: [f"{sys.argv[3]}/{d}/SWEEP_val.json", f"{sys.argv[3]}/{d}/SWEEP_task_val.json"] for d in ("2d", "3d")},
+                            {d: f"{sys.argv[3]}/SUMMARY_{d}_val.json" for d in ("2d", "3d")}),
      "v3_1": lambda: v3_1(sys.argv[2], sys.argv[3], sys.argv[4].split(","), sys.argv[5].split(","), sys.argv[6])}[sys.argv[1]]()
