@@ -33,7 +33,7 @@ ARMS = {"full": {"sampler": "cvae", "xy": "D", "mode": "iterative"},
         "flow": {"sampler": "fm", "xy": "D", "mode": "iterative"},
         "oneshot": {"sampler": "cvae", "xy": "D", "mode": "oneshot"}}
 # "notravel" = the full arm's own searches with gamma = 0 in the frozen stopping rule (plan 5.3)
-SEARCH = {"M": 4, "max_expansions": 12, "fair": 4, "alpha_exp": 0.0}
+SEARCH = {"M": 4, "max_expansions": int(os.environ.get("ABF_MAX_EXP", 12)), "fair": 4, "alpha_exp": 0.0}   # V3.1-C budget override (default = V1/V2)
 GRID = [{"noop_gate": ng, "eta": e, "alpha": a, "beta": b, "gamma": g} for ng in (0.5, 0.8) for e in (0.0, 0.1, 0.3) for a in (0.0, 0.5)
         for b in (0.0, 0.1) for g in (0.0, 0.5, 2.0)]
 
