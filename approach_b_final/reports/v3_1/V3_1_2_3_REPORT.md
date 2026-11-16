@@ -24,7 +24,32 @@
 - **2D:** goal and task conditioning give no measurable proposal benefit at any M = 4–16.
 - **3D:** a small benefit. ELBO is lower by about 0.09, beyond seed noise, and M = 4 recall is 2–4 points higher, within about 1–1.5 seed SDs.
 - **Correction to V3:** the historical `goalablated_one` gap was confounded by initialisation and supervision.
-- The physical arm of this comparison is being verified (seed 0 first).
+
+### V3.1-A physical arm (`v3_1a_phys/PHYS_VAL.json`, `scripts/v31a_phys_table.py`)
+
+**Setup.**
+- Full validation: 2D 751 roots (413 task roots), 3D 364 (220).
+- Each variant uses 3 seeds with V3 D s⟨seed⟩ (frozen), the frozen V3 rule, M = 4 and B = 4,096.
+- Every selection was physically verified (0 unverified).
+- Δ is the paired root-cluster bootstrap on per-root seed-averaged task success vs `q2init_all`.
+
+| | 2D task (seed mean ± SD) | 2D K1 / K2 / K3 | 2D Δ vs q2init_all [95 % CI] | 3D task | 3D K1 / K2 / K3 | 3D Δ [95 % CI] | No-op / NONE abstain (2D; 3D) |
+|---|---:|---|---|---:|---|---|---|
+| `q2init_all` (retrained, gvlab) | 44.9 ± 1.5 % | 61 / 67 / 18 | — | 70.8 ± 2.5 % | 69 / 73 / 69 | — | 96.5 / 92.2; 82.4 / 70.7 |
+| `q2init_all_nogoal` | 43.7 ± 1.0 % | 61 / 61 / 19 | −1.2 [−3.3, +1.0] | 70.3 ± 2.0 % | 70 / 74 / 66 | −0.5 [−2.7, +1.8] | 96.5 / 92.7; 82.4 / 74.1 |
+| `q2init_all_notask` | 43.7 ± 1.6 % | 62 / 63 / 17 | −1.1 [−3.4, +1.1] | 71.5 ± 0.9 % | 70 / 74 / 70 | +0.8 [−2.0, +3.5] | 96.5 / 92.2; 82.4 / 73.0 |
+
+**Findings.**
+- **No physically measurable benefit of goal or task conditioning in either domain** once initialisation, supervision and schedule are matched. Every Δ is within about ±1 point, and every CI contains 0.
+- **The small teacher-free 3D advantage does not carry over to verified top-1 success.** That advantage was ELBO −0.09 and M = 4 recall +2–4 points.
+- **Correction to V3-6.** V3-6 attributed −4.8 points in 2D (significant) to goal conditioning. That gap came from the confounded `goalablated_one` control, so the sampler gain should be attributed to repair-assignment supervision, not to goal conditioning.
+- **Seed variance is comparable to the effects.** Per-seed task success: 2D 42.9 / 45.5 / 46.2 %, 3D 71.8 / 73.2 / 67.3 %. The gvlab-retrained `q2init_all` s0 reaches 71.8 % in 3D vs 75.0 % for the frozen V3 s0 (trained on gvlab2) under the same D, rule and budget. This is retraining nondeterminism, of the same order as the seed SD.
+
+**Compute.**
+- GPU part on gvlab GPU 0.
+- Physical verification began on gvlab CPU (seed 0, and seeds 1–2 up to 2D 275 / 427 and 3D 150 / 239 roots). At 20:08 IST the user moved it off gvlab because of CPU contention.
+- The remaining 2D 151 roots (575 queries) and 3D 83 roots (273 queries) were verified on the laptop. The laptop used the same unchanged teachers (copies parity-checked in V3-6), resumed from the gvlab cache, and ran 12 + 10 workers.
+- The new results were appended to the gvlab cache. `verify_<d>.jsonl.pre_lap` keeps the previous version.
 
 ## V3.1-B: full-pool rule re-tuning (`v3_1_bc/tune_full_*.json`)
 
@@ -93,5 +118,8 @@ The remaining D1 / D2 roots that did not succeed split into "no success known in
 
 ## Status
 
-- V3.1-A physical arms (3 variants × 3 seeds, frozen V3 D, matched M = 4 / B = 4,096): verification in progress.
-- Next: V3.1-4, final evaluation with everything frozen, and V3.1-5, the final scientific report.
+- V3.1-A physical arms: complete (above).
+- **V3.1-4 GPU inference runs on girish-laptop** (RTX 3080 Ti, user-authorised, at most 4 CPU workers) because the gvlab GPUs are full.
+  - Inputs are sha256-checked against the V3.1 manifest (155 / 155 files).
+  - Parity with gvlab is exact: identical selections on 2,230 / 2,230 validation roots (2D and 3D, B = 128 and 4,096).
+- Next: V3.1-4 test-split physical verification on the laptop CPU, then V3.1-5, the final scientific report.
