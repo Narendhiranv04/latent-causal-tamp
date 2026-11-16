@@ -1,0 +1,111 @@
+{
+ "branch": "naren/approach-b-v3-2-training",
+ "base": {
+  "v3_1_validation": "82de92e6820903fc4b6462096b7a82aab21991c8",
+  "v3_2_audit": "b2b801296993b1f2101487fda1450d69c13e74cd"
+ },
+ "code_sha256": {
+  "construct.py": "a385eb070dde75893791c01d322ea86d9022db4864f88d233dadad9848b11517",
+  "evaluate.py": "eb57647f5ab6b98fde08b7cd1085672bbab9f1cd371f9d2bfbe0c601402d0130",
+  "exhaustive.py": "a1fd84379abf149dae25498186f29ad5dc6b1cc1b4a95fa62621e1857872c2be",
+  "search.py": "c19cfc373d34f8e45a8b5439f1c2c751923b240649757a62ff93b4f2c25c1214",
+  "xy.py": "65ba2718a0d65a6a7e689d46bd4ea619b742cb909e3f1b413d93071f081dd268",
+  "onpolicy.py": "692cb90c8f41e3912e657c068924b6d821db3cf9079af5964f5b095604b593b3",
+  "v32c.py": "12a9f91cdba88c3036e3437dbe6a96e5a5078727ea7561d2dcf77e4788b39a8b",
+  "teacher2d.py": "8dd8bc46df40492dd44de80b8481ae601d73dfa4aade6a6d83f8d2eba45045bd",
+  "contracts.py": "4514190f8b3a8512957635055320ac7576c2c75c08af19adc39b3ff6a94ef080"
+ },
+ "snapshots": {
+  "base_abf_9de85710c2a7103f": {
+   "2d": "16222ff85eee7e463d10043f1d18e6911d1588b87f41bec8507f1474aa276bcd",
+   "3d": "1627f34bb2905ba7e399efb14c5ffe18f1f2dea20ca8c895c033e114ff1f2c0f"
+  },
+  "train_control_abf_v3_e8a496bc66266fca": {
+   "2d": "a10aeba8c74e4f12c8ce2181b213b9aa95c6fece28976eeeb1f7fb8cec2f2a66",
+   "3d": "fcb30732b7379961deedc95e87c86b92bc970ff539ba4ce073f248a10e9db6d2"
+  },
+  "train_expanded_abf_v32_fb0eef4f5ff433ee": {
+   "2d": "963c16b2fd573e5737dacdcb8867b62143a08d54230ceb0d70bd9270f20bf7b2",
+   "3d": "bc03d89646156f0d8ac7975db86080e851ab6fef52f2d83d5012215eecee2132"
+  }
+ },
+ "frozen_models": {
+  "task_cvae_q2init_all_s0": {
+   "2d": "d994dbad6af1cd7817fd7bcf3004b9482e02b40847cf1878bc2c2f73baddc9fc",
+   "3d": "55a4e42c5a57c6e8f8db556550827631f9fe4b1291adf5504982b52871e52ff3"
+  },
+  "frozen_V3_D_s0": {
+   "2d": "b74b18f5897c4d658ce0639d2057c3982977675df48b44b38ba4500f6082b96c",
+   "3d": "7a1222f4a45dd65bb412f395e6774aad1ed7526f3de49d10b2844c51175f33ad"
+  }
+ },
+ "trained_models": {
+  "control": [
+   "478aeaba8b643cb847db5f78535d998d55f695b53b10edc1417f851d4b164d59  p2_2d/D_s0/model.pt",
+   "7a318edff4fbbfdbf35eb2c01c3df999ab835a56fab8345abd8bf290e3bcc949  p2_2d/D_s1/model.pt",
+   "aca19fc045309c46f358ace8d49c152155da050834e58e011af1e96661a61e7a  p2_2d/D_s2/model.pt",
+   "ca32e612ee5a3829733d714c5266a00ccc0bd8c1a04bfb72f32f17e8a431212f  p2_3d/D_s0/model.pt",
+   "a278e7d6b0418aabd8046f76416710dfdc18a7b05a3587352eacf99d85feeed0  p2_3d/D_s1/model.pt",
+   "336400aaab3b50e15e3b1e7aee17d99ddb2fa7483d77562ed09fadfbc96bad52  p2_3d/D_s2/model.pt"
+  ],
+  "expanded": [
+   "0fa126da80ceecb19ef4d3cf7c21287abc6e5965151b1e4ddc37e0ffe99623d4  p2_2d/D_s0/model.pt",
+   "ea6dba7a9d054242ff72ada9668f2b16eb0336443ac5f44bc3b141f9b2ffb3af  p2_2d/D_s1/model.pt",
+   "928a6e2b79c84398ca6c03e2233812db724ca2d694df6bd431d7303446c44097  p2_2d/D_s2/model.pt",
+   "c02afcbc29a9552fd4631c1fd46dfa196a19029151251078bed9f4e3b72dfde1  p2_3d/D_s0/model.pt",
+   "88f49a606bd42f76f6d77215082b8dbeb72dec0a602af1396f09de1aa902551e  p2_3d/D_s1/model.pt",
+   "948ac82026b6ba273cb7f764f9f470a7e4fa0fd23b349ce9598fee5a01d58f40  p2_3d/D_s2/model.pt"
+  ]
+ },
+ "rule": {
+  "noop_gate": 0.5,
+  "eta": 0.3,
+  "alpha": 0.0,
+  "beta": 0.0,
+  "gamma": 0.0
+ },
+ "sampler": {
+  "V3_TASK_STAGE": "v3_3",
+  "kind": "task:q2init_all",
+  "seed": 0,
+  "mc_draws": 64,
+  "top": 6,
+  "M": [
+   4,
+   5,
+   6
+  ],
+  "B": "uncapped"
+ },
+ "training": {
+  "recipe": "xy.fit arm D",
+  "epochs": 60,
+  "patience": "disabled (XY_PATIENCE=60)",
+  "batch": 64,
+  "lr": 0.001,
+  "weight_decay": 0.0001,
+  "grad_clip": 10,
+  "seeds": [
+   0,
+   1,
+   2
+  ],
+  "checkpoint": "best VAL NLL"
+ },
+ "teacher_hosts": [
+  "laptop (pop-os)",
+  "gvlab",
+  "girish-laptop (gvcstar)",
+  "gvlab2 (cstar)"
+ ],
+ "gpu_hosts": [
+  "Blackwell (server, RTX PRO 5000)",
+  "girish-laptop (RTX 3080 Ti)",
+  "laptop (RTX 5060)"
+ ],
+ "freeze": {
+  "preregistration": "b6de8c432b (2026-11-17 ~02:30 IST)",
+  "test_rule": "0f438dfb95 (~05:00 IST)",
+  "phase_C_dataset_frozen": "2026-11-17 04:01 IST"
+ }
+}
