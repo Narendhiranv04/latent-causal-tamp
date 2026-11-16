@@ -1,0 +1,59 @@
+{
+  "id": "E16-v1",
+  "status": "APPROVED",
+  "host": "gvlab",
+  "workers": 1,
+  "cpu_threads": 1,
+  "nice": 10,
+  "gpu_hours": 0,
+  "ram_ceiling_gib": 4,
+  "new_disk_ceiling_gib": 10,
+  "cohort_manifest_sha256": "f789a68c9a9221add3297118814ab68cfa705b0e981043940638fc47a58fa0e3",
+  "domains": {
+    "2d": {
+      "independent_train_roots": 16,
+      "rounds": 2,
+      "per_root_adapter_cap": 32,
+      "aggregate_adapter_cap": 1024,
+      "aggregate_cpu_s": 14400,
+      "active_wall_s": 14400,
+      "query_wall_s": 60,
+      "root_wall_s": 900
+    },
+    "3d": {
+      "independent_train_roots": 16,
+      "rounds": 2,
+      "per_root_adapter_cap": 16,
+      "aggregate_adapter_cap": 512,
+      "aggregate_cpu_s": 28800,
+      "active_wall_s": 28800,
+      "query_wall_s": 120,
+      "root_wall_s": 900
+    }
+  },
+  "neural_training": {
+    "model_seeds": [
+      0,
+      1,
+      2
+    ],
+    "schemas": [
+      "o0_v1",
+      "o1_qt_v1"
+    ],
+    "epochs": 45,
+    "cpu_s_cap": 1800,
+    "wall_s_cap": 1800,
+    "gpu": false
+  },
+  "selection": "fixed epochs; VAL task evaluation is separate",
+  "evaluation_authorization": "not included: freeze evaluation envelope after measuring collection; no final TEST opened",
+  "cancellation": "external parent watchdog; durable per-query intent/result; signal only identity-validated own process/session; no automatic ambiguous restart",
+  "accounting": "all attempts including censored work charged to aggregate CPU/wall/call ledger; stop entire envelope at first exceeded cap",
+  "basis": "3D K2 12 completed queries/213.569 search seconds; 2D K3 16 queries/17.930 seconds plus separate root target query censored at60s. Means are pilot-conditional, no reliable population forecast.",
+  "authorization": {
+    "source": "user reply in this session",
+    "text": "Authorize E16-v1 for both domains",
+    "scope": "TRAIN collection and distillation only; final TEST not included"
+  }
+}

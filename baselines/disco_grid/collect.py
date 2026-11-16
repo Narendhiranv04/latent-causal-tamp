@@ -130,7 +130,8 @@ def freeze_manifest(dom, counts, seed, calls, iterations, wall_s, out, query_wal
     return m
 
 
-def _execute_worker(out):
+def _execute_worker(out, controller_pid=None):
+    if controller_pid is not None:J.die_with_parent(controller_pid)
     os.setsid()
     J.atomic_json(out/"WORKER_IDENTITY.json",J.process_identity())
     m=json.loads((out/"manifest.json").read_text())
@@ -146,8 +147,13 @@ def _execute_worker(out):
     os.nice(10)
     import torch
     torch.set_num_threads(1)
-    model,ck=P.load_policy_checkpoint(m["policy_checkpoint"],"cpu")
-    proposal=P.PolicyProposalWrapper(m["domain"],model,ck["scalers"],"cpu","p0")
+    model,ck=P.load_policy_checkpoint(m["policy_checkpoint"],"cpu",observation_schema=m["observation_schema"])
+    value=None
+    if m.get("value_checkpoint"):
+        import distill as DS
+        if D.sha256_file(m["value_checkpoint"])!=m["value_sha256"]:raise ValueError("Frozen value checkpoint changed")
+        value,vck=DS.load_value_checkpoint(m["value_checkpoint"],"cpu")
+    proposal=P.PolicyProposalWrapper(m["domain"],model,ck["scalers"],"cpu",m.get("proposal_mode","p0"),value)
     (out/"pid").write_text(str(os.getpid()))
     prior_wall = sum(json.loads(p.read_text())["wall_s"] for p in (out/"attempts").glob("*/WATCHDOG_ACCOUNTING.json"))
     started=time.time();remaining=m["wall_envelope_s"]-prior_wall
@@ -192,6 +198,14 @@ def _execute_worker(out):
 wait_for_child=J.wait_for_child
 
 
+def manifest_headroom(manifest):
+    r=require_headroom()
+    if manifest.get("disk_budget_root"):
+        size=sum(p.stat().st_size for p in Path(manifest["disk_budget_root"]).rglob("*") if p.is_file())
+        if size>manifest["disk_budget_bytes"]:raise RuntimeError("CAMPAIGN_DISK_LIMIT")
+    return r
+
+
 def execute(out):
     """One externally bounded CPU worker, with aggregate attempt accounting."""
     import fcntl
@@ -220,11 +234,11 @@ def execute(out):
         fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
         attempt=attempts/f"attempt_{len(list(attempts.iterdir())):03d}"
         attempt.mkdir()
-        J.atomic_json(attempt/"START.json",{"controller":J.process_identity(),"utc_s":time.time(),"remaining_wall_s":remaining})
-        proc=mp.get_context("spawn").Process(target=_execute_worker,args=(out,))
+        J.atomic_json(attempt/"START.json",{"controller":J.process_identity(),"utc_s":time.time(),"monotonic_start":time.monotonic(),"remaining_wall_s":remaining})
+        proc=mp.get_context("spawn").Process(target=_execute_worker,args=(out,os.getpid()))
         proc.start()
         # Query journals are below out, watchdog accounting belongs to this parent attempt.
-        cancelled=J.wait_for_child(proc,remaining,directory=out,query_wall_s=manifest["query_wall_s"],resource_check=require_headroom)
+        cancelled=J.wait_for_child(proc,remaining,directory=out,query_wall_s=manifest["query_wall_s"],resource_check=lambda:manifest_headroom(manifest),cpu_seconds=manifest.get("cpu_envelope_s"),rss_limit_kib=manifest.get("rss_limit_kib"))
         os.replace(out/"WATCHDOG_ACCOUNTING.json",attempt/"WATCHDOG_ACCOUNTING.json")
         if cancelled:
             J.atomic_json(out/"BLOCKED_WALL_LIMIT.json",{

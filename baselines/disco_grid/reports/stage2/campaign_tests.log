@@ -1,0 +1,26 @@
+..............................F................                          [100%]
+=================================== FAILURES ===================================
+___________________________ test_archive_protection ____________________________
+
+    def test_archive_protection():
+        root=Path(__file__).resolve().parents[3]
+        manifest=json.loads((Path(__file__).resolve().parents[1]/'reports/stage2/archive_protection.json').read_text())
+>       assert all(D.sha256_file(root/p)==sha for p,sha in manifest['files'].items())
+
+tests/test_stage2.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_stage2.py:15: in <genexpr>
+    assert all(D.sha256_file(root/p)==sha for p,sha in manifest['files'].items())
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+path = PosixPath('/scratch/nav/disco_grid/stage2/baselines/disco_grid/docs/DISCO_plan.md')
+
+    def sha256_file(path: Path | str) -> str:
+        h = hashlib.sha256()
+>       with open(path, "rb") as f:
+E       FileNotFoundError: [Errno 2] No such file or directory: '/scratch/nav/disco_grid/stage2/baselines/disco_grid/docs/DISCO_plan.md'
+
+data.py:37: FileNotFoundError
+=========================== short test summary info ============================
+FAILED tests/test_stage2.py::test_archive_protection - FileNotFoundError: [Er...
+1 failed, 46 passed in 90.88s (0:01:30)

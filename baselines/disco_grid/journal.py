@@ -10,6 +10,14 @@ import signal
 import time
 
 
+def die_with_parent(expected_pid):
+    """Linux orphan guard for jobs created by this controller, before any teacher call."""
+    import ctypes
+    if ctypes.CDLL(None,use_errno=True).prctl(1,signal.SIGKILL,0,0,0)!=0:
+        raise OSError(ctypes.get_errno(),"Cannot install parent-death guard")
+    if os.getppid()!=expected_pid:raise RuntimeError("Controller exited before worker dispatch")
+
+
 def atomic_bytes(path, content):
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -111,7 +119,7 @@ def certify_journal(directory, expected_calls):
             raise ValueError('Parent state checksum mismatch')
 
 
-def wait_for_child(proc, seconds, grace_s=5., directory=None, query_wall_s=None, resource_check=None):
+def wait_for_child(proc, seconds, grace_s=5., directory=None, query_wall_s=None, resource_check=None, cpu_seconds=None, rss_limit_kib=None):
     """Bound our own child even when a teacher replaces alarms or ignores TERM.
 
     A separately created session permits targeted cleanup of only this job's group.
@@ -124,7 +132,7 @@ def wait_for_child(proc, seconds, grace_s=5., directory=None, query_wall_s=None,
     try:
         while proc.is_alive():
             current_identity=process_identity(proc.pid)
-            if current_identity and current_identity["start_ticks"]==identity["start_ticks"] and current_identity["pgid"]==proc.pid:owned_group=proc.pid
+            if current_identity and identity and current_identity["start_ticks"]==identity["start_ticks"] and current_identity["pgid"]==proc.pid:owned_group=proc.pid
             elapsed=time.monotonic()-start
             if elapsed>=seconds: reason='RUN_WALL_LIMIT'
             if directory:
@@ -138,6 +146,8 @@ def wait_for_child(proc, seconds, grace_s=5., directory=None, query_wall_s=None,
                 peak=max([peak]+[int(x.split()[1]) for x in st if x.startswith(('VmRSS:','VmHWM:'))])
                 fields=Path(f'/proc/{proc.pid}/stat').read_text().rsplit(')',1)[1].split()
                 observed_cpu=(int(fields[11])+int(fields[12]))/os.sysconf('SC_CLK_TCK')
+                if cpu_seconds and observed_cpu>=cpu_seconds:reason='CPU_LIMIT'
+                if rss_limit_kib and peak>=rss_limit_kib:reason='RAM_LIMIT'
             except (FileNotFoundError,ProcessLookupError): pass
             if resource_check and time.monotonic()-last_check>=5:
                 try: resource_check()

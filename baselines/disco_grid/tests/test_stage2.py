@@ -188,3 +188,43 @@ def test_watchdog_cleans_own_descendant_after_parent_exits(tmp_path):
     deadline=time.monotonic()+1
     while path.exists() and path.read_text().rsplit(')',1)[1].split()[0]!='Z' and time.monotonic()<deadline:time.sleep(.01)
     assert not path.exists() or path.read_text().rsplit(')',1)[1].split()[0]=='Z'
+
+
+def test_campaign_permission_and_charged_unknowns(tmp_path):
+    import campaign as CA
+    e=json.loads((Path(CA.__file__).parent/'reports/stage2/COMPUTE_ENVELOPE_REQUEST.json').read_text())
+    cohorts=Path(CA.__file__).parent/'reports/stage2/cohorts.json'
+    CA.validate_authorization(e,cohorts)
+    e['domains']['3d']['aggregate_adapter_cap']+=1
+    with pytest.raises(PermissionError,match='Altered'):CA.validate_authorization(e,cohorts)
+    td=tmp_path/'trees/3d/R0/root/root';td.mkdir(parents=True)
+    J.QueryJournal(td).start(1,'terminal',b'parent',{})
+    assert CA.charged_calls(tmp_path,'3d')==1
+    assert CA.charged_calls(tmp_path,'2d')==0
+
+
+def test_campaign_accounts_pending_worker_without_counting_as_overhead(tmp_path):
+    import campaign as CA
+    J.atomic_json(tmp_path/'CONTROLLER.json',dict(monotonic_start=time.monotonic()-40,cpu_start=time.process_time()))
+    a=tmp_path/'trees/2d/R0/root/attempts/000'
+    J.atomic_json(a/'START.json',dict(monotonic_start=time.monotonic()-39))
+    o=CA.controller_overhead(tmp_path)
+    assert .9<o['wall_s']<2
+    J.atomic_json(a/'WATCHDOG_ACCOUNTING.json',dict(wall_s=39,reaped_child_cpu_s=30))
+    assert CA.accounting(tmp_path,'2d')['cpu_s']==30
+    assert .9<CA.controller_overhead(tmp_path)['wall_s']<2
+
+
+def test_cpu_watchdog_and_parent_death_guard(tmp_path):
+    import multiprocessing as mp
+    ctx=mp.get_context('fork')
+    def worker():
+        J.die_with_parent(os.getppid());os.setsid()
+        signal.signal(signal.SIGTERM,signal.SIG_IGN)
+        while True:pass
+    proc=ctx.Process(target=worker);proc.start()
+    assert J.wait_for_child(proc,3,grace_s=.02,directory=tmp_path,cpu_seconds=.05)
+    assert json.loads((tmp_path/'WATCHDOG_ACCOUNTING.json').read_text())['reason']=='CPU_LIMIT'
+    with pytest.raises(RuntimeError,match='Controller exited'):J.die_with_parent(-1)
+    # Restore our own parent-death behavior after testing the mismatch guard.
+    import ctypes;assert ctypes.CDLL(None).prctl(1,0,0,0,0)==0
