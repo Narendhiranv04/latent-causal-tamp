@@ -90,9 +90,16 @@ def check_split_hygiene(rows: list[dict[str, Any]]) -> dict[str, Any]:
     fam_splits: dict[str, set[str]] = collections.defaultdict(set)
     lay_splits: dict[str, set[str]] = collections.defaultdict(set)
     root_splits: dict[str, set[str]] = collections.defaultdict(set)
+    hash_splits: dict[str, set[str]] = collections.defaultdict(set)
+    input_splits: dict[str, set[str]] = collections.defaultdict(set)
     for r in rows:
         sp = r["split"]
         root_splits[r["root_id"]].add(sp)
+        if r.get("root_sha256"):
+            hash_splits[r["root_sha256"]].add(sp)
+        if r.get("inputs"):
+            digest = hashlib.sha256(json.dumps(r["inputs"], sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+            input_splits[digest].add(sp)
         if r.get("parent_family_id"):
             fam_splits[r["parent_family_id"]].add(sp)
         if r.get("layout_root_id"):
@@ -103,6 +110,8 @@ def check_split_hygiene(rows: list[dict[str, Any]]) -> dict[str, Any]:
         "root_split_conflicts": sum(len(v) > 1 for v in root_splits.values()),
         "family_split_conflicts": sum(len(v) > 1 for v in fam_splits.values()),
         "layout_split_conflicts": sum(len(v) > 1 for v in lay_splits.values()),
+        "raw_hash_split_conflicts": sum(len(v) > 1 for v in hash_splits.values()),
+        "input_hash_split_conflicts": sum(len(v) > 1 for v in input_splits.values()),
     }
 
 
@@ -254,3 +263,8 @@ def load_q2_dataset(dom: str, q2_root: Path | None = None) -> dict[str, Any]:
         "ctx": npz["ctx"],
         "src": npz["src"],
     }
+
+
+def root_family_key(row: dict[str, Any]) -> str:
+    """Source lineage first; row counts/descendants are never independent roots."""
+    return str(row.get("parent_family_id") or row.get("layout_root_id") or row.get("root_sha256") or row["root_id"])

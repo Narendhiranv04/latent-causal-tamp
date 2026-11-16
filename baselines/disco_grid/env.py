@@ -95,6 +95,13 @@ class LearnerObservation:
             "moved_mask": self.moved_mask,
             "remaining_steps": self.remaining_steps,
             "is_predicted_edit": self.is_predicted_edit,
+            "q_t_optional": self.q_t_optional,
+            "ids": self.ids, "attrs": self.attrs, "xy": self.xy,
+            "tid": self.tid, "goal_cell": self.goal_cell, "goal_xy": self.goal_xy,
+            "base_xy": self.base_xy, "ctx": self.ctx,
+            "legal_cells": self.legal_cells, "cell_xy": self.cell_xy,
+            "eligible_objects": self.eligible_objects, "legal_destinations": self.legal_destinations,
+            "can_stop": self.can_stop,
         }
         return hashlib.sha256(json.dumps(payload, sort_keys=True).encode()).hexdigest()[:20]
 
@@ -130,6 +137,28 @@ class StopResult:
     endpoint_pose_drift_m: dict[str, float] = field(default_factory=dict)
     planner_calls: int = 0
     time_s: float = 0.0
+
+
+def censor_administrative_stop(result: StopResult) -> StopResult:
+    """v2 status interpretation: retain raw teacher statuses; budgets are censored.
+
+    This does not change the teacher, its budgets, or archived labels. It prevents
+    new training from treating an administrative limit as a physical negative.
+    """
+    x, y = result.x_terminal, result.y_target
+    if "UNKNOWN_BUDGET" in result.connector_status or (result.failure_kind == "TIMEOUT" and str(result.failed_phase).startswith("connector")):
+        x = None
+    if "UNKNOWN_BUDGET" in result.y_status or (result.failure_kind == "TIMEOUT" and str(result.failed_phase).startswith("target")):
+        y = None
+    z = 0 if x == 0 or y == 0 else (1 if x == y == 1 else None)
+    return dataclasses.replace(result, x_terminal=x, y_target=y, z_outcome=z,
+                               success=z == 1, status="DECIDED" if z is not None else "UNRESOLVED")
+
+
+def censor_administrative_step(result: StepResult) -> StepResult:
+    if result.status != "EXECUTED" and (result.failure_kind == "TIMEOUT" or "UNKNOWN_BUDGET" in result.teacher_status):
+        return dataclasses.replace(result, status="UNRESOLVED")
+    return result
 
 
 def predict_observation_edit(obs: LearnerObservation, action: tuple[int, int]) -> LearnerObservation:
@@ -940,11 +969,11 @@ class RepairEnv:
 
     def transition(self, state: FullState, action: tuple[int, int]) -> StepResult:
         row, rec = self._get_row_and_raw(state.root_id)
-        return self.backend.transition(row, rec, state, action)
+        return censor_administrative_step(self.backend.transition(row, rec, state, action))
 
     def terminal_query(self, state: FullState, evaluate_y_on_x_fail: bool = True) -> StopResult:
         row, rec = self._get_row_and_raw(state.root_id)
-        return self.backend.terminal_query(row, rec, state, evaluate_y_on_x_fail=evaluate_y_on_x_fail)
+        return censor_administrative_stop(self.backend.terminal_query(row, rec, state, evaluate_y_on_x_fail=evaluate_y_on_x_fail))
 
     def endpoint_y_query(self, root_id: str, seq: list[tuple[int, int]]) -> dict[str, Any]:
         """Evaluate canonical endpoint Y independently of whether X succeeded (for parity & open-loop verification)."""

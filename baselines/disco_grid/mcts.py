@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """DISCO-Grid Training-Only Progressive-Widening MCTS (`DISCO_plan.md` Section 8).
 
-Implements the exact MCTS algorithm of Saha et al. (CoRL 2026) adapted to discrete object-destination
+Implements progressive-widening MCTS from Saha et al. (CoRL 2026), adapted to discrete object-destination
 rearrangement with stateful physical transitions (`RepairEnv`):
 - Progressive widening condition (`disco/search/mcts.py:797`):
       |children(v)| < k * (N(v) ** alpha)   with k=2.0, alpha=0.3
@@ -29,6 +29,7 @@ rearrangement with stateful physical transitions (`RepairEnv`):
 from __future__ import annotations
 
 import dataclasses
+import hashlib
 import json
 import math
 import os
@@ -187,6 +188,37 @@ class DISCOMCTS:
         self.sim_transition_calls = 0
         self.sim_terminal_calls = 0
         self.current_iter = 0
+        self.cancel_requested = False
+        self.completed_iterations = 0
+        self.resolved_run_config: dict[str, Any] = {}
+        self.iteration_traces: list[dict[str, Any]] = []
+        self.cumulative_wall_s = 0.0
+        self.cumulative_cpu_s = 0.0
+        self.save_dir: Path | None = None
+
+    def _journal_query(self, event: str, kind: str, node: MCTSNode, result=None, action=None):
+        """Write-ahead charge and result/state snapshot for every physical invocation.
+
+        A hard-killed invocation remains a charged unresolved attempt. An in-flight
+        tree is never silently resumed; the journal supports exact reconciliation.
+        """
+        if self.save_dir is None: return
+        qid = self.sim_transition_calls + self.sim_terminal_calls
+        item = {"event":event,"kind":kind,"query_id":qid,"parent_id":node.node_id,
+                "root_id":node.obs.root_id,"action":action,
+                "wall_time":time.time(),"process_cpu_s":time.process_time()}
+        if result is not None:
+            name=f"query_{qid:06d}.pkl"
+            tmp=self.save_dir/(name+".tmp")
+            with tmp.open("wb") as f:
+                pickle.dump(result,f,protocol=pickle.HIGHEST_PROTOCOL)
+                f.flush();os.fsync(f.fileno())
+            os.replace(tmp,self.save_dir/name)
+            item.update(status=result.status,planner_calls=result.planner_calls,
+                        failure_kind=result.failure_kind,result_blob=name)
+        with (self.save_dir/"queries.jsonl").open("a") as f:
+            f.write(json.dumps(item,sort_keys=True)+"\n")
+            f.flush();os.fsync(f.fileno())
 
     def _increment_visit(self, node: MCTSNode):
         if node.visit_count == 0 and node.first_visit_iter < 0:
@@ -214,8 +246,10 @@ class DISCOMCTS:
         if node.stop_evaluated and node.stop_result is not None:
             return node.stop_result
         state = self.env.restore(node.state_blob)
-        stop_res = self.env.terminal_query(state)
         self.sim_terminal_calls += 1
+        self._journal_query("started","terminal",node)
+        stop_res = self.env.terminal_query(state)
+        self._journal_query("finished","terminal",node,result=stop_res)
         node.stop_evaluated = True
         node.stop_result = stop_res
         node.terminal_z = stop_res.z_outcome
@@ -280,8 +314,10 @@ class DISCOMCTS:
 
         for act in batch:
             node.attempted_actions.append(act)
-            sr = self.env.transition(parent_state, act)
             self.sim_transition_calls += 1
+            self._journal_query("started","transition",node,action=act)
+            sr = self.env.transition(parent_state, act)
+            self._journal_query("finished","transition",node,result=sr,action=act)
             self.edge_logs.append({
                 "root_id": node.obs.root_id,
                 "parent_id": node.node_id,
@@ -317,7 +353,7 @@ class DISCOMCTS:
             q_priors = self.proposal.score_actions_q(node.obs, executed_actions)
 
         for idx, (act, next_st, sr) in enumerate(zip(executed_actions, executed_states, executed_results)):
-            child_obs = self.env.observe(next_st)
+            child_obs = self.env.observe(next_st, include_qt=self.proposal.observation_schema == P.O1)
             child_blob = self.env.clone_or_serialize(next_st)
             kappa_child = compute_progress_kappa(child_obs, is_verified_terminal_success=False, mode=self.reward_mode)
             r_edge = kappa_child - node.progress_kappa
@@ -389,9 +425,38 @@ class DISCOMCTS:
     ) -> dict[str, Any]:
         """Run MCTS from `root_id` for `iterations` rollouts (or until `max_sim_calls` is reached)."""
         t0 = time.time()
+        cpu0 = time.process_time()
+        self.save_dir = Path(save_dir) if save_dir is not None else None
+        def model_hash(model):
+            if model is None: return None
+            h = hashlib.sha256()
+            for name, tensor in sorted(model.state_dict().items()):
+                h.update(name.encode())
+                h.update(tensor.detach().cpu().contiguous().numpy().tobytes())
+            return h.hexdigest()
+        config = {"iterations": iterations, "max_sim_calls": max_sim_calls,
+                  "proposal_mode":self.proposal.mode,
+                  "policy_state_sha256":model_hash(self.proposal.model),
+                  "value_state_sha256":model_hash(self.proposal.value_model),
+                  "scalers_sha256":hashlib.sha256(json.dumps(self.proposal.scalers,sort_keys=True).encode()).hexdigest(),
+                  "adapter_source_sha256":D.sha256_file(HERE / "env.py"),
+                  "C": self.C, "k": self.k, "alpha": self.alpha,
+                  "expansion_budget_B": self.expansion_budget_B, "max_depth": self.max_depth,
+                  "selection_mode": self.selection_mode, "reward_mode": self.reward_mode,
+                  "use_progressive_widening": self.use_progressive_widening,
+                  "observation_schema": self.proposal.observation_schema, "seed": self.seed}
+        if self.resolved_run_config and config != self.resolved_run_config:
+            raise ValueError("Resume requires identical resolved configuration and total budgets")
+        self.resolved_run_config = config
+        if self.nodes and self.nodes[0].obs.root_id != root_id:
+            raise ValueError("Cannot resume a different root")
+        if max_sim_calls is not None and max_sim_calls < 0:
+            raise ValueError("Negative physical-call budget")
+        def has_budget():
+            return max_sim_calls is None or self.sim_transition_calls + self.sim_terminal_calls < max_sim_calls
         if not self.nodes:
             s0 = self.env.reset(root_id, seed=self.seed)
-            obs0 = self.env.observe(s0)
+            obs0 = self.env.observe(s0, include_qt=self.proposal.observation_schema == P.O1)
             blob0 = self.env.clone_or_serialize(s0)
             kappa0 = compute_progress_kappa(obs0, is_verified_terminal_success=False, mode=self.reward_mode)
             root = MCTSNode(
@@ -409,18 +474,21 @@ class DISCOMCTS:
             self.nodes.append(root)
 
         root = self.nodes[0]
-        start_iter = root.visit_count
+        start_iter = self.completed_iterations
 
         for it in range(start_iter, iterations):
-            if max_sim_calls is not None and (self.sim_transition_calls + self.sim_terminal_calls) >= max_sim_calls:
+            if self.cancel_requested or not has_budget():
                 break
+            if save_dir is not None:
+                Path(save_dir).mkdir(parents=True, exist_ok=True)
+                (Path(save_dir) / "IN_FLIGHT").write_text(str(it))
             self.current_iter = it
             cur = root
             self._increment_visit(cur)
 
             while not cur.is_stop_node and cur.depth < self.max_depth:
                 # 1. Evaluate STOP at `cur` if not yet evaluated
-                if not cur.stop_evaluated:
+                if not cur.stop_evaluated and has_budget():
                     stop_res = self._evaluate_node_stop(cur)
                     # If K0 root (depth 0) or intermediate prefix already solves the task (Z=1),
                     # and stop_child was created, select it immediately on first discovery!
@@ -443,14 +511,24 @@ class DISCOMCTS:
                 self._increment_visit(cur)
 
             # If descent ended at depth == max_depth (or a non-stop leaf without children), ensure terminal STOP is evaluated
-            if not cur.is_stop_node and not cur.stop_evaluated:
+            if not cur.is_stop_node and not cur.stop_evaluated and has_budget():
                 stop_res = self._evaluate_node_stop(cur)
                 if stop_res.success and cur.stop_child_id is not None:
                     cur = self.nodes[cur.stop_child_id]
                     self._increment_visit(cur)
 
             self.backpropagate(cur)
+            self.completed_iterations = it + 1
+            self.iteration_traces.append({"iteration": it, "leaf_id": cur.node_id,
+                "path_return": self.path_return(cur), "transition_calls": self.sim_transition_calls,
+                "terminal_calls": self.sim_terminal_calls,
+                "visits": [n.visit_count for n in self.nodes], "Q": [n.Q for n in self.nodes]})
+            if save_dir is not None:
+                self.save_tree(save_dir)
+                (Path(save_dir) / "IN_FLIGHT").unlink(missing_ok=True)
 
+        self.cumulative_wall_s += time.time() - t0
+        self.cumulative_cpu_s += time.process_time() - cpu0
         wall_s = round(time.time() - t0, 3)
         summary = self.tree_summary(wall_s=wall_s)
         if save_dir is not None:
@@ -480,6 +558,11 @@ class DISCOMCTS:
             "sim_terminal_calls": self.sim_terminal_calls,
             "total_sim_calls": self.sim_transition_calls + self.sim_terminal_calls,
             "wall_s": wall_s,
+            "cumulative_wall_s": self.cumulative_wall_s,
+            "cumulative_cpu_s": self.cumulative_cpu_s,
+            "completed_iterations": self.completed_iterations,
+            "resolved_config": self.resolved_run_config,
+            "budget_unit": "adapter_transition_plus_terminal_calls; terminal may include connector and Y",
         }
 
     def save_tree(self, save_dir: Path | str, summary: dict[str, Any] | None = None):
@@ -513,9 +596,53 @@ class DISCOMCTS:
             "nodes": json_nodes,
             "edge_logs": self.edge_logs,
         }
-        (save_dir / "tree.json").write_text(json.dumps(payload, indent=2))
-        with open(save_dir / "nodes.pkl", "wb") as f:
-            pickle.dump(self.nodes, f, protocol=pickle.HIGHEST_PROTOCOL)
+        payload["resolved_config"] = self.resolved_run_config
+        payload["iteration_traces"] = self.iteration_traces
+        # One atomic checkpoint is authoritative. Legacy extraction mirrors are
+        # disposable; resume never assembles a tree from mixed file generations.
+        checkpoint = {"version": 2, "config": self.resolved_run_config,
+            "nodes": self.nodes, "edge_logs": self.edge_logs,
+            "rng_state": self.rng.bit_generator.state,
+            "sim_transition_calls": self.sim_transition_calls,
+            "sim_terminal_calls": self.sim_terminal_calls,
+            "completed_iterations": self.completed_iterations,
+            "iteration_traces": self.iteration_traces,
+            "cumulative_wall_s": self.cumulative_wall_s,
+            "cumulative_cpu_s": self.cumulative_cpu_s}
+        for name, content in (("checkpoint.pkl", pickle.dumps(checkpoint, protocol=pickle.HIGHEST_PROTOCOL)),
+                              ("nodes.pkl", pickle.dumps(self.nodes, protocol=pickle.HIGHEST_PROTOCOL)),
+                              ("tree.json", json.dumps(payload, indent=2).encode())):
+            tmp = save_dir / (name + ".tmp")
+            with open(tmp, "wb") as f:
+                f.write(content)
+                f.flush()
+                os.fsync(f.fileno())
+            os.replace(tmp, save_dir / name)
+
+    def resume(self, save_dir: Path | str) -> None:
+        """Resume a clean iteration boundary; refuse uncertain in-flight crashes.
+
+        A terminated physical call cannot be charged exactly after a process crash.
+        Such runs require explicit reconciliation, never automatic re-execution.
+        Pickles must be trusted local artifacts.
+        """
+        save_dir = Path(save_dir)
+        if (save_dir / "IN_FLIGHT").exists():
+            raise ValueError("Unreconciled in-flight physical queries; automatic resume refused")
+        with open(save_dir / "checkpoint.pkl", "rb") as f:
+            ck = pickle.load(f)
+        if ck["version"] != 2:
+            raise ValueError("Unsupported search checkpoint version")
+        self.resolved_run_config = ck["config"]
+        self.nodes = ck["nodes"]
+        self.edge_logs = ck["edge_logs"]
+        self.rng.bit_generator.state = ck["rng_state"]
+        self.sim_transition_calls = ck["sim_transition_calls"]
+        self.sim_terminal_calls = ck["sim_terminal_calls"]
+        self.completed_iterations = ck["completed_iterations"]
+        self.iteration_traces = ck["iteration_traces"]
+        self.cumulative_wall_s = ck["cumulative_wall_s"]
+        self.cumulative_cpu_s = ck["cumulative_cpu_s"]
 
 
 def load_saved_tree_nodes(tree_dir: Path | str) -> tuple[list[MCTSNode], dict[str, Any]]:
@@ -578,7 +705,7 @@ def _mcts_worker_job(job: dict[str, Any]) -> dict[str, Any]:
     val_model = None
     if val_ckpt is not None:
         ck_v = torch.load(val_ckpt, map_location="cpu", weights_only=False)
-        val_model = P.DiscoValueNet(dom, h=ck_v.get("hidden", 128)).to("cpu")
+        val_model = P.DiscoValueNet(dom, h=ck_v.get("hidden", 128), observation_schema=ck_v.get("observation_schema", P.O0)).to("cpu")
         val_model.load_state_dict(ck_v["state_dict"])
         val_model.eval()
 

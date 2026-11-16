@@ -161,6 +161,16 @@ def select_action_model_only(
         q_scores = proposal.score_actions_q(obs, all_acts)
         reloc_q = q_scores[:-1]
         stop_q = float(q_scores[-1])
+        # Optional named root-STOP calibration ablation, fitted on VAL only.
+        # Defaults reproduce the archived raw-Q selector exactly.
+        if depth == 0 and (rule.get("root_stop_temperature", 1.) != 1. or rule.get("root_stop_bias", 0.) != 0.):
+            temp = float(rule.get("root_stop_temperature", 1.))
+            bias = float(rule.get("root_stop_bias", 0.))
+            if not math.isfinite(temp) or temp <= 0 or not math.isfinite(bias):
+                raise ValueError("Invalid root STOP calibration")
+            clipped = min(1.-1e-7, max(1e-7, stop_q))
+            logit = (math.log(clipped / (1.-clipped)) / temp) + bias
+            stop_q = float(1. / (1. + math.exp(-max(-80., min(80., logit)))))
 
         # Rank relocation candidates by Q (tie-break by policy probability)
         ranked_idx = sorted(range(len(cands)), key=lambda i: (round(float(reloc_q[i]), 6), float(c_probs[i])), reverse=True)
@@ -273,6 +283,8 @@ def predict_open_loop_sequence(
     or `ABSTAIN` (`None`) using ONLY predicted object-position edits (`predict_observation_edit`).
     Zero physical simulator or teacher queries occur during sequence generation.
     """
+    if proposal.observation_schema != P.O0:
+        raise ValueError("Strict open-loop inference requires O0; O1 is closed-loop only")
     t0 = time.time()
     p_calls_0 = proposal.policy_calls
     v_calls_0 = proposal.value_calls
@@ -311,6 +323,8 @@ def predict_open_loop_sequence(
         "K_legacy": row["K_legacy"],
         "masks": row["masks"],
         "protocol": "open_loop",
+        "observation_schema": proposal.observation_schema,
+        "policy_call_unit": "scored examples (batched forwards counted separately)",
         "seed": seed,
         "status": status,
         "seq": [[int(o), int(d)] for o, d in committed_seq] if not abstained else None,
@@ -353,9 +367,10 @@ def run_closed_loop_episode(
     failed_mid_episode = False
     failed_phase = None
     failure_kind = None
+    unresolved_mid_episode = False
 
     for step_t in range(3):
-        obs = env.observe(st)
+        obs = env.observe(st, include_qt=proposal.observation_schema == P.O1)
         step_rng = np.random.default_rng(
             int(hashlib.sha256(f"eval_step|{row['root_id']}|{seed}|{step_t}".encode()).hexdigest()[:8], 16)
         )
@@ -385,6 +400,9 @@ def run_closed_loop_episode(
                 break
             failed_phase = f"relocation:{step_t}"
             failure_kind = sr.failure_kind
+            if sr.status == "UNRESOLVED":
+                unresolved_mid_episode = True
+                break
 
         if not step_succeeded:
             # Record the action that was actually attempted last (the failed physical edit)
@@ -435,8 +453,8 @@ def run_closed_loop_episode(
             "seq": [[int(o), int(d)] for o, d in executed_seq],
             "m": len(executed_seq),
             "displacement": round(analytic_displacement(row["inputs"], env.domain, executed_seq), 4),
-            "verified": 0,
-            "x": 0,
+            "verified": None if unresolved_mid_episode else 0,
+            "x": None if unresolved_mid_episode else 0,
             "y": None,
             "failed_phase": failed_phase,
             "failure_kind": failure_kind,
@@ -505,7 +523,7 @@ def compute_benchmark_metrics(outcomes: list[dict[str, Any]]) -> dict[str, Any]:
     none_rows = [o for o in outcomes if o["masks"]["eval_abstain"]]
 
     is_task_succ = lambda o: o.get("verified") == 1 and o["status"] == "REPAIR"  # noqa: E731
-    is_unres = lambda o: o["status"] not in ("ABSTAIN", "NOOP") and o.get("verified") is None  # noqa: E731
+    is_unres = lambda o: o["status"] != "ABSTAIN" and o.get("verified") is None  # noqa: E731
 
     by_k = {}
     for k_cls in ("1", "2", "3"):
@@ -537,6 +555,11 @@ def compute_benchmark_metrics(outcomes: list[dict[str, Any]]) -> dict[str, Any]:
     decided_task = [o for o in task_rows if not is_unres(o)]
     return {
         "n_total": len(outcomes),
+        "n_distinct_roots": len({o["root_id"] for o in outcomes}),
+        "n_distinct_task_roots": len({o["root_id"] for o in task_rows}),
+        "task_macro_K1_K2_K3": float(np.mean([by_k[f"K{k}_success"] for k in (1, 2, 3) if by_k[f"K{k}_success"] is not None])) if task_rows else None,
+        "none_explicit_abstain_rate": float(np.mean([o["status"] == "ABSTAIN" for o in none_rows])) if none_rows else None,
+        "none_noop_rate": float(np.mean([o["status"] == "NOOP" for o in none_rows])) if none_rows else None,
         "task_success": round(float(np.mean([is_task_succ(o) for o in task_rows])), 4) if task_rows else None,
         "task_success_lower_bound_note": "task_success counts UNRESOLVED as not-success; see task_success_upper and n_task_unresolved",
         "task_success_upper": round(float(np.mean([is_task_succ(o) or is_unres(o) for o in task_rows])), 4) if task_rows else None,
@@ -568,6 +591,7 @@ def paired_root_bootstrap_ci(
     outcomes_b: list[dict[str, Any]],
     B_boot: int = 2000,
     seed: int = 0,
+    require_same_seeds: bool = False,
 ) -> dict[str, Any]:
     """Paired root-cluster bootstrap 95% CI of (Arm A - Arm B) task success on `eval_task` roots."""
     def root_means(outs):
@@ -578,6 +602,20 @@ def paired_root_bootstrap_ci(
                 by_r[o["root_id"]].append(ok)
         return {r: float(np.mean(v)) for r, v in by_r.items()}
 
+    def coverage(outs):
+        cov = collections.defaultdict(set)
+        for o in outs:
+            if o["masks"]["eval_task"]:
+                key = (o["domain"], o["root_id"]) if "domain" in o else ("UNKNOWN", o["root_id"])
+                if o.get("seed", 0) in cov[key]:
+                    raise ValueError("Duplicate root/seed in paired comparison")
+                cov[key].add(o.get("seed", 0))
+        return dict(cov)
+    ca, cb = coverage(outcomes_a), coverage(outcomes_b)
+    if ca.keys() != cb.keys():
+        raise ValueError("Paired comparison requires exactly identical domain/root cohorts")
+    if require_same_seeds and ca != cb:
+        raise ValueError("Matched comparison requires identical seed coverage per root")
     ma, mb = root_means(outcomes_a), root_means(outcomes_b)
     shared = sorted(set(ma) & set(mb))
     if not shared:
@@ -589,6 +627,9 @@ def paired_root_bootstrap_ci(
         "delta": round(float(diffs.mean()), 4),
         "ci95": [round(float(np.percentile(boots, 2.5)), 4), round(float(np.percentile(boots, 97.5)), 4)],
         "n_roots": len(shared),
+        "same_seed_coverage": ca == cb,
+        "resampling_unit": "root; average model/trial seeds within root",
+        "unresolved_policy": "verified success lower bound; unknown outcomes remain censored in raw rows",
     }
 
 
@@ -1081,3 +1122,51 @@ if __name__ == "__main__":
         doms = tuple(sys.argv[2:]) or ("2d", "3d")
         r = run_d6_d7_d8_evaluation(domains=doms)
         print(json.dumps({"eval_done": list(r["domains"].keys())}), flush=True)
+
+
+def fit_root_stop_calibration(examples: list[dict[str, Any]]) -> dict[str, Any]:
+    """Named root-only scalar calibration, split by VAL family; no TEST selection.
+
+    Fits a regularized affine logit on one VAL half; reports the other half.
+    This is a task adaptation, not a new DISCO value-supervision definition.
+    """
+    import torch
+    if any(r["split"] != "val" for r in examples):
+        raise ValueError("STOP calibration accepts benchmark VALIDATION only")
+    if any(r["z_stop"] not in (0, 1) for r in examples):
+        raise ValueError("STOP calibration requires decided physical labels")
+    keys = [(r["root_id"],r.get("seed",0)) for r in examples]
+    if len(keys) != len(set(keys)):
+        raise ValueError("Duplicate calibration root/seed")
+    fit, audit = [], []
+    for row in examples:
+        family = str(row.get("family_id") or row["root_id"])
+        (fit if int(hashlib.sha256(family.encode()).hexdigest()[:8],16)%2 == 0 else audit).append(row)
+    if not fit or not audit or len({r["z_stop"] for r in fit}) < 2:
+        raise ValueError("Insufficient independent decided VAL families for calibration")
+    def arrays(rows):
+        q = torch.tensor([min(1.-1e-6,max(1e-6,r["q_stop"])) for r in rows], dtype=torch.float64)
+        return torch.logit(q),torch.tensor([r["z_stop"] for r in rows],dtype=torch.float64)
+    x,y = arrays(fit)
+    params = torch.tensor([0.,0.],dtype=torch.float64,requires_grad=True)
+    opt = torch.optim.LBFGS([params],max_iter=80,line_search_fn="strong_wolfe")
+    def closure():
+        opt.zero_grad()
+        scale = params[0].clamp(-4.,4.).exp()
+        loss = torch.nn.functional.binary_cross_entropy_with_logits(scale*x+params[1],y) + .01*params.square().sum()
+        loss.backward()
+        return loss
+    opt.step(closure)
+    scale = float(params[0].detach().clamp(-4.,4.).exp())
+    bias = float(params[1].detach())
+    hx,hy=arrays(audit)
+    def metrics(logits):
+        return {"nll":float(torch.nn.functional.binary_cross_entropy_with_logits(logits,hy)),
+                "brier":float((torch.sigmoid(logits)-hy).square().mean())}
+    return {"adaptation":"VAL-only affine-logit root-STOP calibration; intermediate STOP unchanged",
+            "rule":{"root_stop_temperature":1./scale,"root_stop_bias":bias},
+            "n_fit_roots":len({r["root_id"] for r in fit}), "n_audit_roots":len({r["root_id"] for r in audit}),
+            "fit_family_ids":sorted({r.get("family_id",r["root_id"]) for r in fit}),
+            "audit_family_ids":sorted({r.get("family_id",r["root_id"]) for r in audit}),
+            "audit_raw":metrics(hx),"audit_calibrated":metrics(scale*hx+bias),
+            "task_success_claim":"NOT_EVALUATED; no TEST selection or performance inferred"}

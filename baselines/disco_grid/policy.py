@@ -41,14 +41,73 @@ import env as E
 GRID = D.GRID_SHAPE
 MAXOBJ = D.MAX_OBJ
 NORM_COLS = [2, 3, 6, 7, 8]
+O0 = "o0_v1"
+O1 = "o1_qt_v1"
 
 
-def task_dim(dom: str) -> int:
+def proprio_features(dom: str, obs: E.LearnerObservation, observation_schema: str) -> np.ndarray:
+    """Versioned sin/cos joint angles and per-joint visibility masks; never impute q.
+
+    Missing joints (Q2 pretraining) are all zero. O1 deployment requires observed
+    joints. Predicted edits may never carry O1 inputs, even with a forged q field.
+    """
+    if observation_schema == O0:
+        return np.zeros(0, dtype=np.float32)
+    if observation_schema != O1:
+        raise ValueError(f"Unknown observation schema: {observation_schema}")
+    if obs.is_predicted_edit:
+        raise ValueError("O1 requires physically observed state; predicted edits are forbidden")
+    nq = {"2d": 3, "3d": 7}[dom.lower()]
+    if obs.q_t_optional is None:
+        return np.zeros(3 * nq, dtype=np.float32)
+    q = np.asarray(obs.q_t_optional, dtype=np.float64)
+    if q.shape != (nq,) or not np.isfinite(q).all():
+        raise ValueError(f"Expected {nq} finite observed joints")
+    return np.concatenate([np.sin(q), np.cos(q), np.ones(nq)]).astype(np.float32)
+
+
+def save_checkpoint(payload: dict[str, Any], path: Path | str) -> None:
+    """Atomically replace a checkpoint only after its bytes are flushed."""
+    path = Path(path)
+    tmp = path.with_name(path.name + ".tmp")
+    with tmp.open("wb") as f:
+        torch.save(payload, f)
+        f.flush()
+        os.fsync(f.fileno())
+    os.replace(tmp, path)
+
+
+def transfer_o0_weights(model: nn.Module, state_dict: dict[str, torch.Tensor]) -> None:
+    """Explicit O0 -> O1 transfer: append zero input weights, preserving old outputs.
+
+    Joint effects are learned during physical-tree distillation, not fabricated
+    from Q2 which has no intermediate proprioception.
+    """
+    target = model.state_dict()
+    if target.keys() != state_dict.keys():
+        raise ValueError("Checkpoint parameter keys differ")
+    for key, old in state_dict.items():
+        new = target[key]
+        if new.shape == old.shape:
+            target[key] = old
+        elif old.ndim == new.ndim == 2 and old.shape[0] == new.shape[0] and old.shape[1] < new.shape[1]:
+            new.zero_()
+            new[:, :old.shape[1]] = old
+        else:
+            raise ValueError(f"Incompatible transfer parameter: {key}")
+    model.load_state_dict(target)
+
+
+
+def task_dim(dom: str, observation_schema: str = O0) -> int:
     dom_l = dom.lower()
     r, c = GRID[dom_l]
     n_cells = r * c
     ctx_d = 9 if dom_l == "2d" else 19
-    return 2 * n_cells + 4 + ctx_d + 2  # +2 for [task_on, remaining_steps_frac]
+    if observation_schema not in (O0, O1):
+        raise ValueError(f"Unknown observation schema: {observation_schema}")
+    extra = 3 * {"2d": 3, "3d": 7}[dom_l] if observation_schema == O1 else 0
+    return 2 * n_cells + 4 + ctx_d + 2 + extra
 
 
 def cell_xy_tuple(dom: str, c: int) -> tuple[float, float]:
@@ -66,6 +125,7 @@ def extract_query_features(
     query_obj_idx: int,
     scalers: dict[str, Any],
     task_on: bool = True,
+    observation_schema: str = O0,
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """Build normalized learner-only tensors `(obj_feat [MAXOBJ, 14], obj_mask [MAXOBJ], occ_task [N + tdim], legal_dest [N])`
     for one queried object `query_obj_idx` in `obs`.
@@ -137,7 +197,7 @@ def extract_query_features(
         t_vec[-2] = 1.0
         t_vec[-1] = float(obs.remaining_steps) / 3.0
 
-    occ_task = np.concatenate([occ, t_vec], axis=0)
+    occ_task = np.concatenate([occ, t_vec, proprio_features(dom_l, obs, observation_schema)], axis=0)
     legal_dest = np.zeros(N, dtype=bool)
     for d in obs.legal_destinations:
         legal_dest[int(d)] = True
@@ -148,6 +208,7 @@ def extract_scene_object_tokens(
     dom: str,
     obs: E.LearnerObservation,
     scalers: dict[str, Any],
+    observation_schema: str = O0,
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """Build scene-level object tokens `[MAXOBJ, 18]`, `obj_mask [MAXOBJ]`, `scene_ctx [N + tdim]`,
     and `eligible_action_mask [MAXOBJ + 1]` (last index = `STOP`) in `obs.ids` index order.
@@ -224,7 +285,7 @@ def extract_scene_object_tokens(
     t_vec[-2] = 1.0
     t_vec[-1] = float(obs.remaining_steps) / 3.0
 
-    scene_ctx = np.concatenate([occ, t_vec], axis=0)
+    scene_ctx = np.concatenate([occ, t_vec, proprio_features(dom_l, obs, observation_schema)], axis=0)
     elig_mask = np.zeros(max_o + 1, dtype=bool)
     if obs.legal_destinations and obs.remaining_steps > 0:
         for o_i in obs.eligible_objects:
@@ -287,13 +348,14 @@ class DiscoPolicyNet(nn.Module):
       over eligible objects `0..MAXOBJ-1` plus `STOP` (`index = MAXOBJ`).
     """
 
-    def __init__(self, dom: str, h: int = 128):
+    def __init__(self, dom: str, h: int = 128, observation_schema: str = O0):
         super().__init__()
         self.dom = dom.lower()
         self.R, self.C = GRID[self.dom]
         self.N = self.R * self.C
         self.max_obj = MAXOBJ[self.dom]
-        self.tdim = task_dim(self.dom)
+        self.observation_schema = observation_schema
+        self.tdim = task_dim(self.dom, observation_schema)
         self.h = h
 
         # 1. Destination proposal network (pretrained in P0 on Q2, refined in P1/P2 on MCTS feasible edges)
@@ -371,13 +433,14 @@ class DiscoValueNet(nn.Module):
     Trained with log-evidence-weighted BCE: `w_i = log(1 + n_visited_leaves)`.
     """
 
-    def __init__(self, dom: str, h: int = 128):
+    def __init__(self, dom: str, h: int = 128, observation_schema: str = O0):
         super().__init__()
         self.dom = dom.lower()
         self.R, self.C = GRID[self.dom]
         self.N = self.R * self.C
         self.max_obj = MAXOBJ[self.dom]
-        self.tdim = task_dim(self.dom)
+        self.observation_schema = observation_schema
+        self.tdim = task_dim(self.dom, observation_schema)
         self.h = h
 
         self.obj_phi = mlp(18, h, h, 2)
@@ -477,15 +540,25 @@ class PolicyProposalWrapper:
         self.dom = dom.lower()
         self.model = model.to(device).eval() if model is not None else None
         self.value_model = value_model.to(device).eval() if value_model is not None else None
+        schemas = {m.observation_schema for m in (self.model, self.value_model) if m is not None}
+        if len(schemas) > 1:
+            raise ValueError("Policy/value observation schemas must match")
+        self.observation_schema = next(iter(schemas), O0)
         self.scalers = scalers
         self.device = device
         self.mode = mode
         self.policy_calls = 0
         self.value_calls = 0
+        self.policy_forward_passes = 0
+        self.value_forward_passes = 0
 
     @torch.no_grad()
     def action_distribution(self, obs: E.LearnerObservation) -> dict[str, Any]:
         """Compute exact masked probability distribution over all legal `(o, d)` actions and `STOP`."""
+        if self.observation_schema == O1:
+            proprio_features(self.dom, obs, O1)
+            if obs.q_t_optional is None:
+                raise ValueError("O1 inference requires observed q_t")
         elig_objs = list(obs.eligible_objects)
         leg_dests = list(obs.legal_destinations)
         R, C = GRID[self.dom]
@@ -527,7 +600,7 @@ class PolicyProposalWrapper:
         task_on = (self.mode == "distilled")
         Fs, Ms, OTs, LDs = [], [], [], []
         for o in elig_objs:
-            f, m, ot, ld = extract_query_features(self.dom, obs, o, self.scalers, task_on=task_on)
+            f, m, ot, ld = extract_query_features(self.dom, obs, o, self.scalers, task_on=task_on, observation_schema=self.observation_schema)
             Fs.append(f); Ms.append(m); OTs.append(ot); LDs.append(ld)
 
         t_F = torch.as_tensor(np.stack(Fs), dtype=torch.float32, device=self.device)
@@ -538,9 +611,10 @@ class PolicyProposalWrapper:
         dst_logits = self.model.forward_dst(t_F, t_M, t_OT, t_LD)
         dst_probs = dst_logits.softmax(dim=-1).cpu().numpy()  # [len(elig_objs), N]
         self.policy_calls += len(elig_objs)
+        self.policy_forward_passes += 1
 
         if self.mode == "distilled" and getattr(self.model, "obj_trained", False):
-            s_tok, s_mask, s_ctx, s_elig = extract_scene_object_tokens(self.dom, obs, self.scalers)
+            s_tok, s_mask, s_ctx, s_elig = extract_scene_object_tokens(self.dom, obs, self.scalers, self.observation_schema)
             o_logits = self.model.forward_obj(
                 torch.as_tensor(s_tok[None], dtype=torch.float32, device=self.device),
                 torch.as_tensor(s_mask[None], dtype=torch.bool, device=self.device),
@@ -549,6 +623,7 @@ class PolicyProposalWrapper:
             )
             o_probs_all = o_logits.softmax(dim=-1)[0].cpu().numpy()
             self.policy_calls += 1
+            self.policy_forward_passes += 1
             stop_prob = float(o_probs_all[max_o])
             reloc_mass = max(float(sum(o_probs_all[o] for o in elig_objs)), 1e-8)
             obj_probs = {o: float(o_probs_all[o] / reloc_mass) for o in elig_objs}
@@ -619,7 +694,9 @@ class PolicyProposalWrapper:
         if self.value_model is None:
             return np.zeros(len(actions), dtype=np.float32)
 
-        s_tok, s_mask, s_ctx, _ = extract_scene_object_tokens(self.dom, obs, self.scalers)
+        if self.observation_schema == O1 and obs.q_t_optional is None:
+            raise ValueError("O1 value inference requires observed q_t")
+        s_tok, s_mask, s_ctx, _ = extract_scene_object_tokens(self.dom, obs, self.scalers, self.observation_schema)
         max_o = MAXOBJ[self.dom]
         N = GRID[self.dom][0] * GRID[self.dom][1]
 
@@ -642,6 +719,7 @@ class PolicyProposalWrapper:
 
         q_vals = self.value_model.predict_q(t_tok, t_mask, t_ctx, t_o, t_d).cpu().numpy()
         self.value_calls += M
+        self.value_forward_passes += 1
         return q_vals
 
 
@@ -767,10 +845,18 @@ def train_p0(
     return meta
 
 
-def load_policy_checkpoint(ckpt_path: Path | str, device: str = "cuda") -> tuple[DiscoPolicyNet, dict[str, Any]]:
+def load_policy_checkpoint(ckpt_path: Path | str, device: str = "cuda", observation_schema: str | None = None) -> tuple[DiscoPolicyNet, dict[str, Any]]:
     ck = torch.load(ckpt_path, map_location=device, weights_only=False)
-    model = DiscoPolicyNet(ck["domain"], h=ck.get("hidden", 128)).to(device)
-    model.load_state_dict(ck["state_dict"])
+    source_schema = ck.get("observation_schema", O0)
+    target_schema = observation_schema or source_schema
+    model = DiscoPolicyNet(ck["domain"], h=ck.get("hidden", 128), observation_schema=target_schema).to(device)
+    if target_schema == source_schema:
+        model.load_state_dict(ck["state_dict"])
+    elif source_schema == O0 and target_schema == O1:
+        transfer_o0_weights(model, ck["state_dict"])
+        ck = {**ck, "initialization_schema": O0, "observation_schema": O1, "state_dict": model.state_dict()}
+    else:
+        raise ValueError("Only explicit O0 -> O1 checkpoint transfer is supported")
     model.obj_trained = bool(ck.get("obj_trained", False))
     model.eval()
     return model, ck

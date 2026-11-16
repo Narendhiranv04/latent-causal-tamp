@@ -19,6 +19,7 @@ Implements the exact distillation principles of Saha et al. (CoRL 2026) adapted 
 from __future__ import annotations
 
 import collections
+import dataclasses
 import json
 import math
 import os
@@ -56,8 +57,9 @@ def compute_leaf_stats(nodes: list[M.MCTSNode]) -> dict[int, tuple[int, int]]:
         ]
         if not visited_kids:
             # This node is a leaf of the visited search tree
-            if node.terminal_z in (0, 1):
-                stats[nid] = (int(node.terminal_z == 1), 1)
+            z = E.censor_administrative_stop(node.stop_result).z_outcome if node.stop_result is not None else node.terminal_z
+            if z in (0, 1):
+                stats[nid] = (int(z == 1), 1)
             else:
                 # Unresolved or un-evaluated leaf -> (0, 0) censored, not a false negative
                 stats[nid] = (0, 0)
@@ -79,9 +81,12 @@ def extract_distillation_data_from_tree(
     dom: str,
     scalers: dict[str, Any],
     tree_round: int = 1,
+    observation_schema: str = P.O0,
     edges_mode: str = "all_feasible",  # "all_feasible" or "successful_only"
 ) -> dict[str, Any]:
     """Extract policy rows (`D_pi`) and value rows (`D_Q`) from one MCTS tree (`nodes`)."""
+    if edges_mode not in ("all_feasible", "successful_only"):
+        raise ValueError("Unknown policy-edge extraction mode")
     dom_l = dom.lower()
     max_o = P.MAXOBJ[dom_l]
     N = P.GRID[dom_l][0] * P.GRID[dom_l][1]
@@ -95,15 +100,20 @@ def extract_distillation_data_from_tree(
     for parent in nodes:
         if parent.is_stop_node:
             continue
-        s_tok, s_mask, s_ctx, s_elig = P.extract_scene_object_tokens(dom_l, parent.obs, scalers)
+        obs = parent.obs
+        if observation_schema == P.O1:
+            state = E.RepairEnv.restore(parent.state_blob)
+            if state.state_hash() != parent.state_hash or state.prefix != parent.prefix:
+                raise ValueError("Physical state/observation lineage mismatch")
+            obs = dataclasses.replace(obs, q_t_optional=list(state.q_t))
+        s_tok, s_mask, s_ctx, s_elig = P.extract_scene_object_tokens(dom_l, obs, scalers, observation_schema)
 
+        stop_result = E.censor_administrative_stop(parent.stop_result) if parent.stop_result is not None else None
         # 1. Decided STOP evaluation at `parent` -> always enters Value dataset (positive OR negative!)
-        if parent.stop_evaluated and parent.stop_result is not None and parent.stop_result.status == "DECIDED":
-            z_stop = int(parent.stop_result.z_outcome == 1)
-            # Evidence weight for decided STOP: if stop_child was visited, use its visits; else 1 decided check
+        if parent.stop_evaluated and stop_result is not None and stop_result.status == "DECIDED" and stop_result.z_outcome in (0, 1):
+            z_stop = int(stop_result.z_outcome == 1)
+            # Repeated selections of a cached STOP are one physical observation.
             n_stop_leaves = 1
-            if parent.stop_child_id is not None and node_map[parent.stop_child_id].visit_count > 0:
-                n_stop_leaves = max(1, int(node_map[parent.stop_child_id].visit_count))
             value_rows.append({
                 "root_id": parent.obs.root_id,
                 "parent_id": parent.node_id,
@@ -166,7 +176,7 @@ def extract_distillation_data_from_tree(
             # Policy row: all feasible edges (default) vs successful-only edges (ablation)
             include_pol = True if edges_mode == "all_feasible" else (n_succ > 0)
             if include_pol:
-                q_f, q_m, q_ot, q_ld = P.extract_query_features(dom_l, parent.obs, act_o, scalers, task_on=True)
+                q_f, q_m, q_ot, q_ld = P.extract_query_features(dom_l, obs, act_o, scalers, task_on=True, observation_schema=observation_schema)
                 if q_ld[act_d]:
                     policy_dst_rows.append({
                         "root_id": parent.obs.root_id,
@@ -197,6 +207,7 @@ def extract_distillation_data_from_tree(
         "policy_obj_rows": policy_obj_rows,
         "value_rows": value_rows,
         "leaf_stats": stats,
+        "observation_schema": observation_schema,
     }
 
 
@@ -206,14 +217,21 @@ def extract_dataset_from_tree_dirs(
     scalers: dict[str, Any],
     tree_round: int = 1,
     edges_mode: str = "all_feasible",
+    observation_schema: str = P.O0,
 ) -> dict[str, Any]:
     all_dst, all_obj, all_val = [], [], []
     summaries = []
+    # The locked source snapshot supplies authoritative family lineage.
+    snapshot_rows = {r["root_id"]: r for r in D.load_snapshot_rows(dom)}
     for td in tree_dirs:
         if not (Path(td) / "nodes.pkl").exists():
             continue
         nodes, meta = M.load_saved_tree_nodes(td)
-        ext = extract_distillation_data_from_tree(nodes, dom, scalers, tree_round=tree_round, edges_mode=edges_mode)
+        for node in nodes:
+            row = snapshot_rows[node.obs.root_id]
+            if row["split"] != "train":
+                raise ValueError("Refusing distillation from non-TRAIN physical trees")
+        ext = extract_distillation_data_from_tree(nodes, dom, scalers, tree_round=tree_round, edges_mode=edges_mode, observation_schema=observation_schema)
         all_dst.extend(ext["policy_dst_rows"])
         all_obj.extend(ext["policy_obj_rows"])
         all_val.extend(ext["value_rows"])
@@ -222,6 +240,7 @@ def extract_dataset_from_tree_dirs(
         "domain": dom.lower(),
         "tree_round": tree_round,
         "edges_mode": edges_mode,
+        "observation_schema": observation_schema,
         "n_trees": len(summaries),
         "n_trees_with_solution": sum(1 for s in summaries if s.get("found_verified_solution")),
         "total_sim_calls": sum(s.get("total_sim_calls", 0) for s in summaries),
@@ -229,6 +248,7 @@ def extract_dataset_from_tree_dirs(
         "policy_obj_rows": all_obj,
         "value_rows": all_val,
         "tree_summaries": summaries,
+        "root_families": {s["root_id"]:D.root_family_key(snapshot_rows[s["root_id"]]) for s in summaries},
     }
 
 
@@ -244,42 +264,70 @@ def distill_policy_and_value(
     lr: float = 1e-3,
     device: str = "cuda",
     out_dir: Path | None = None,
+    checkpoint_rule: str = "train_family_monitor",
 ) -> dict[str, Any]:
     """Train distilled Policy (`P_r`) and Value (`Q_r`) networks from extracted MCTS tree datasets."""
+    if checkpoint_rule not in ("train_family_monitor", "fixed_epochs"):
+        raise ValueError("Unknown checkpoint rule")
     dom_l = dom.lower()
     torch.manual_seed(seed)
     np.random.seed(seed)
 
     save_dir = Path(out_dir or (D.DISCO_ROOT / "runs/distill" / dom_l / f"{round_name}_s{seed}"))
     save_dir.mkdir(parents=True, exist_ok=True)
+    if any(save_dir.iterdir()):
+        raise FileExistsError(f"Refusing to overwrite distillation run: {save_dir}")
 
-    pol_model, p_ck = P.load_policy_checkpoint(init_policy_ckpt, device=device)
+    schema = extracted.get("observation_schema", P.O0)
+    pol_model, p_ck = P.load_policy_checkpoint(init_policy_ckpt, device=device, observation_schema=schema)
     scalers = p_ck["scalers"]
     pol_model.train()
+    (save_dir / "resolved_config.json").write_text(json.dumps({
+        "domain":dom_l, "observation_schema":schema, "seed":seed, "round":round_name,
+        "policy_initialization":str(init_policy_ckpt), "policy_sha256":D.sha256_file(init_policy_ckpt),
+        "value_initialization":str(init_value_ckpt) if init_value_ckpt else None,
+        "value_sha256":D.sha256_file(init_value_ckpt) if init_value_ckpt else None,
+        "epochs":epochs, "batch_size":batch_size, "lr":lr, "weight_decay":1e-4,
+        "edges_mode":extracted.get("edges_mode"), "tree_summaries":extracted.get("tree_summaries", []),
+        "checkpoint_rule":checkpoint_rule,
+        "selection_scope":"fixed epochs or TRAIN-pool monitor, not independent validation",
+        "source_sha256":{p.name:D.sha256_file(p) for p in HERE.glob("*.py")},
+    },indent=2))
 
-    val_model = P.DiscoValueNet(dom_l, h=p_ck.get("hidden", 128)).to(device)
+    val_model = P.DiscoValueNet(dom_l, h=p_ck.get("hidden", 128), observation_schema=schema).to(device)
     if init_value_ckpt is not None and Path(init_value_ckpt).exists():
         v_ck = torch.load(init_value_ckpt, map_location=device, weights_only=False)
-        val_model.load_state_dict(v_ck["state_dict"])
+        if v_ck.get("observation_schema", P.O0) == schema:
+            val_model.load_state_dict(v_ck["state_dict"])
+        elif v_ck.get("observation_schema", P.O0) == P.O0 and schema == P.O1:
+            P.transfer_o0_weights(val_model, v_ck["state_dict"])
+        else:
+            raise ValueError("Incompatible value initialization schema")
     val_model.train()
 
     dst_rows = extracted["policy_dst_rows"]
     obj_rows = extracted["policy_obj_rows"]
     val_rows = extracted["value_rows"]
 
-    # Split extracted rows by root_id into 85% train / 15% held-out tree-val for early stopping
-    all_roots = sorted({r["root_id"] for r in (dst_rows + obj_rows + val_rows)})
+    # This is a TRAIN-pool monitor, not independent benchmark VALIDATION.
+    # Families stay together, including alternate roots from the same source.
+    # Frozen P0 may already have seen Q2 placements from these TRAIN families.
+    # Therefore this loss is never reported as held-out task generalization.
+    root_families = extracted.get("root_families", {})
+    all_roots = sorted({root_families.get(r["root_id"], r["root_id"]) for r in (dst_rows + obj_rows + val_rows)})
     rng = np.random.default_rng(seed)
     rng.shuffle(all_roots)
-    n_val_r = max(1, len(all_roots) // 6) if len(all_roots) >= 4 else 0
+    n_val_r = max(1, len(all_roots) // 6) if len(all_roots) >= 4 and checkpoint_rule == "train_family_monitor" else 0
     val_root_set = set(all_roots[:n_val_r])
 
     def split_rows(rows):
         if not val_root_set:
             return rows, rows
-        tr = [r for r in rows if r["root_id"] not in val_root_set]
-        va = [r for r in rows if r["root_id"] in val_root_set]
-        return (tr or rows), (va or rows)
+        tr = [r for r in rows if root_families.get(r["root_id"], r["root_id"]) not in val_root_set]
+        va = [r for r in rows if root_families.get(r["root_id"], r["root_id"]) in val_root_set]
+        if not tr or not va:
+            raise ValueError("Empty family-held-out stream; use a larger TRAIN cohort instead of leaking rows")
+        return tr, va
 
     dst_tr, dst_va = split_rows(dst_rows)
     obj_tr, obj_va = split_rows(obj_rows)
@@ -323,8 +371,9 @@ def distill_policy_and_value(
             ep_dst_l, ep_obj_l = [], []
             n_steps = max(1, max(len(dst_tr), len(obj_tr)) // batch_size + 1)
             for s_i in range(n_steps):
-                ix_d = p_dst[(s_i * batch_size) % len(dst_tr) : ((s_i + 1) * batch_size) % len(dst_tr) or len(dst_tr)]
-                ix_o = p_obj[(s_i * batch_size) % len(obj_tr) : ((s_i + 1) * batch_size) % len(obj_tr) or len(obj_tr)]
+                # Cycle the smaller stream without empty/wrapped slices.
+                ix_d = p_dst[torch.arange(s_i * batch_size, (s_i + 1) * batch_size, device=device) % len(dst_tr)]
+                ix_o = p_obj[torch.arange(s_i * batch_size, (s_i + 1) * batch_size, device=device) % len(obj_tr)]
                 ld = pol_model.dst_loss(*(x[ix_d] for x in td_tr))
                 lo = pol_model.obj_loss(*(x[ix_o] for x in to_tr))
                 loss = ld + lo
@@ -347,10 +396,10 @@ def distill_policy_and_value(
                 "val_obj_ce": vo,
                 "val_total_ce": vtot,
             })
-            if vtot <= best_p_loss:
+            if checkpoint_rule == "fixed_epochs" or vtot <= best_p_loss:
                 best_p_loss = vtot
                 pol_model.obj_trained = True
-                torch.save(
+                P.save_checkpoint(
                     {
                         "domain": dom_l,
                         "round": round_name,
@@ -358,6 +407,7 @@ def distill_policy_and_value(
                         "epoch": ep,
                         "best_val_ce": vtot,
                         "hidden": pol_model.h,
+                        "observation_schema": schema,
                         "obj_trained": True,
                         "scalers": scalers,
                         "state_dict": pol_model.state_dict(),
@@ -366,7 +416,7 @@ def distill_policy_and_value(
                 )
     else:
         # Preserve previous policy checkpoint if no feasible edges were extracted
-        torch.save(p_ck, save_dir / "policy.pt")
+        P.save_checkpoint(p_ck, save_dir / "policy.pt")
 
     # 2. Train Value Network (weighted BCE over visited leaf fractions + decided STOP outcomes)
     if val_tr:
@@ -409,9 +459,9 @@ def distill_policy_and_value(
                 "val_mse": float(v_stats["mse"]),
                 "val_mae": float(v_stats["mae"]),
             })
-            if float(v_stats["weighted_bce"]) <= best_v_loss:
+            if checkpoint_rule == "fixed_epochs" or float(v_stats["weighted_bce"]) <= best_v_loss:
                 best_v_loss = float(v_stats["weighted_bce"])
-                torch.save(
+                P.save_checkpoint(
                     {
                         "domain": dom_l,
                         "round": round_name,
@@ -419,6 +469,7 @@ def distill_policy_and_value(
                         "epoch": ep,
                         "best_val_weighted_bce": best_v_loss,
                         "hidden": val_model.h,
+                        "observation_schema": schema,
                         "scalers": scalers,
                         "state_dict": val_model.state_dict(),
                     },
@@ -433,8 +484,13 @@ def distill_policy_and_value(
     report = {
         "domain": dom_l,
         "round": round_name,
+        "observation_schema": schema,
         "seed": seed,
         "edges_mode": extracted.get("edges_mode", "all_feasible"),
+        "checkpoint_rule":checkpoint_rule,
+        "selection_scope": "Fixed epoch schedule; training loss diagnostic" if checkpoint_rule == "fixed_epochs" else "TRAIN-pool family monitor; not benchmark VALIDATION",
+        "monitor_families": sorted(val_root_set),
+        "hyperparameters": {"epochs":epochs, "batch_size":batch_size, "lr":lr, "weight_decay":1e-4},
         "n_trees": extracted.get("n_trees", 0),
         "n_trees_with_solution": extracted.get("n_trees_with_solution", 0),
         "total_sim_calls": extracted.get("total_sim_calls", 0),
@@ -459,7 +515,7 @@ def distill_policy_and_value(
 
 def load_value_checkpoint(ckpt_path: Path | str, device: str = "cuda") -> tuple[P.DiscoValueNet, dict[str, Any]]:
     ck = torch.load(ckpt_path, map_location=device, weights_only=False)
-    model = P.DiscoValueNet(ck["domain"], h=ck.get("hidden", 128)).to(device)
+    model = P.DiscoValueNet(ck["domain"], h=ck.get("hidden", 128), observation_schema=ck.get("observation_schema", P.O0)).to(device)
     model.load_state_dict(ck["state_dict"])
     model.eval()
     return model, ck
@@ -467,6 +523,9 @@ def load_value_checkpoint(ckpt_path: Path | str, device: str = "cuda") -> tuple[
 
 def merge_extracted_datasets(d_list: list[dict[str, Any]]) -> dict[str, Any]:
     """Combine extracted policy/value rows across rounds (`r0 + r1`) for cumulative distillation."""
+    schemas = {d.get("observation_schema", P.O0) for d in d_list}
+    if len(schemas) != 1:
+        raise ValueError("Cannot merge mixed observation schemas")
     dst_all, obj_all, val_all, sum_all = [], [], [], []
     for d in d_list:
         dst_all.extend(d["policy_dst_rows"])
@@ -475,6 +534,7 @@ def merge_extracted_datasets(d_list: list[dict[str, Any]]) -> dict[str, Any]:
         sum_all.extend(d.get("tree_summaries", []))
     return {
         "domain": d_list[0]["domain"],
+        "observation_schema": next(iter(schemas)),
         "tree_round": d_list[-1]["tree_round"],
         "edges_mode": d_list[-1]["edges_mode"],
         "n_trees": len(sum_all),
@@ -484,6 +544,7 @@ def merge_extracted_datasets(d_list: list[dict[str, Any]]) -> dict[str, Any]:
         "policy_obj_rows": obj_all,
         "value_rows": val_all,
         "tree_summaries": sum_all,
+        "root_families": {k:v for d in d_list for k,v in d.get("root_families", {}).items()},
     }
 
 
