@@ -41,7 +41,8 @@
    "id": "E2",
    "question": "Coverage vs ranking vs abstention",
    "data": "E1 records + V3.2-A coverage/rank diagnostics",
-   "status": "PENDING"
+   "status": "DONE",
+   "result": "E/TABLE_FAILURES_VAL: 2D residual dominated by COVER_UNKNOWN_Y (no known success in top-M pool for 59-73% of task roots); frozen-D rank failures grow with M; trained arms convert coverage better"
   },
   {
    "id": "E3",
@@ -53,26 +54,30 @@
    "evaluation": "exhaustive M4/M5/M6 on VAL with the frozen sampler and frozen rule; every selected repair physically verified; seed-averaged per-root success, root-paired bootstrap D-expanded vs D-control on identical candidate sets",
    "primary_metric": "VAL verified task success K1-K3 at M4, M5, M6 (all reported; no single-M cherry pick)",
    "interpretation": "expanded > control with CI excl. 0 at >=1 M and no M significantly worse => evidence helps; otherwise null / harmful reported as is",
-   "status": "RUNNING"
+   "status": "DONE",
+   "result": "VAL 0 unknown. 2D task +3.0 [+0.0,+5.9] M4, +3.3 [+0.6,+6.1] M5, +2.8 [+0.2,+5.6] M6; abstain +5.6/+8.9/+10.7 (CI excl 0). 3D task +2.3/+0.9/-0.5 (n.s.); abstain +22.4/+25.9/+25.3 (CI excl 0)"
   },
   {
    "id": "E4",
    "question": "Does one D-expanded generalise across M4/M5/M6?",
    "evaluation": "same D-expanded models on all three nested pools",
-   "status": "RUNNING"
+   "status": "DONE",
+   "result": "D-expanded M5-M4 / M6-M4: 2D -0.1/-1.0, 3D -0.5/-1.4 (all CI incl 0)"
   },
   {
    "id": "E5",
    "question": "Is M-specific fitting necessary? (CONDITIONAL)",
    "activation_condition": "BOTH (a) for D-expanded (seed mean) VAL verified task success at M6 < M4 by >=3 points with root-paired 95% CI excluding 0 in a domain, AND (b) on those roots the M6 selection's p11 calibration (mean p11 minus verified success of the selected repair) exceeds the M4 value by >=0.05; otherwise NOT_RUN",
    "if_activated": "M4-only and M6-only trained D (matched label count and optimizer steps), cross-tested on M4/M5/M6; M5-only only if M4 vs M6 leaves an interpolation question",
-   "status": "PENDING"
+   "status": "NOT_RUN",
+   "result": "activation (a) not met: M6-M4 2D -1.0 [-3.2,+1.4], 3D -1.4 [-3.9,+1.1]"
   },
   {
    "id": "E6",
    "question": "Generalisation and cost",
    "evaluation": "frozen configuration on exposed TEST (regression only) and, if safely feasible, a fresh family-disjoint cohort; else FRESH_CONFIRMATION_NOT_RUN",
-   "status": "PENDING"
+   "status": "RUNNING",
+   "result": "TEST config by registered rule: D-expanded M4 both domains, 3 seeds; FRESH_CONFIRMATION_NOT_RUN"
   }
  ],
  "phase_C_sampling_design": {
