@@ -23,6 +23,7 @@ import data as D
 import env as E
 import mcts as M
 import policy as P
+import journal as J
 
 
 def input_hash(row):
@@ -64,7 +65,8 @@ def teacher_sources(dom):
     return {str(p):D.sha256_file(p) for p in paths}
 
 
-def freeze_manifest(dom, counts, seed, calls, iterations, wall_s, out):
+def freeze_manifest(dom, counts, seed, calls, iterations, wall_s, out, query_wall_s=120):
+    if iterations<=0 or not 0<query_wall_s<=wall_s: raise ValueError("Invalid iteration/query wall cap")
     if any(not isinstance(n,int) or n<=0 for n in counts.values()):
         raise ValueError("Every requested stratum must have a positive integer count")
     rows = D.load_snapshot_rows(dom)
@@ -78,6 +80,10 @@ def freeze_manifest(dom, counts, seed, calls, iterations, wall_s, out):
         raise ValueError("Cross-split source families")
     historic_ids = {p.name for p in (D.DISCO_ROOT/"trees"/dom).glob("*/*") if p.is_dir()}
     excluded_families = {D.root_family_key(r) for r in rows if r["root_id"] in historic_ids}
+    # Prior pilots are exposure, not fresh independent coverage.
+    for path in (D.DISCO_ROOT/"validation_v2").glob("pilot_*/manifest.json"):
+        for root in json.loads(path.read_text()).get("roots",[]):
+            excluded_families.add(root["family_id"])
     selected, seen = [], set(excluded_families)
     for k, count in counts.items():
         candidates = [r for r in rows if r["split"] == "train" and str(r["K_legacy"]) == k]
@@ -99,7 +105,7 @@ def freeze_manifest(dom, counts, seed, calls, iterations, wall_s, out):
         raise ValueError("Outside authorized pilot ceilings")
     ck = D.DISCO_ROOT/f"runs/p0/{dom}/s0/model.pt"
     scalers = D.ABF_ROOT/f"data/q2_{dom}/scalers.json"
-    m = {"version":2, "domain":dom, "roots":selected, "split_hygiene":hygiene,
+    m = {"version":3, "domain":dom, "roots":selected, "split_hygiene":hygiene,
          "excluded_historical_train_families":sorted(excluded_families), "search_seed":seed,
          "network_initialization_seed":0, "proposal_mode":"p0", "observation_schema":P.O0,
          "policy_checkpoint":str(ck), "policy_sha256":D.sha256_file(ck), "scalers":str(scalers),
@@ -107,6 +113,8 @@ def freeze_manifest(dom, counts, seed, calls, iterations, wall_s, out):
          "source_sha256":{p.name:D.sha256_file(p) for p in HERE.glob("*.py")},
          "teacher_source_sha256":teacher_sources(dom),
          "host_allowlist":["gvlab"], "workers":1, "threads":1, "gpu":False,
+         "source_commit":os.environ.get("DISCO_SOURCE_COMMIT","UNRECORDED"),
+         "query_wall_s":query_wall_s,
          "wall_envelope_s":wall_s, "aggregate_adapter_call_ceiling":len(selected)*calls,
          "per_tree":{"iterations":iterations, "max_sim_calls":calls, "expansion_budget_B":2,
                      "C":1.5,"k":2.,"alpha":.3,"max_depth":3,"reward_mode":"geometric"},
@@ -119,6 +127,8 @@ def freeze_manifest(dom, counts, seed, calls, iterations, wall_s, out):
 
 
 def _execute_worker(out):
+    os.setsid()
+    J.atomic_json(out/"WORKER_IDENTITY.json",J.process_identity())
     m=json.loads((out/"manifest.json").read_text())
     for name,expected in m["source_sha256"].items():
         if D.sha256_file(HERE/name)!=expected: raise ValueError("Code changed since manifest freeze: "+name)
@@ -135,10 +145,7 @@ def _execute_worker(out):
     model,ck=P.load_policy_checkpoint(m["policy_checkpoint"],"cpu")
     proposal=P.PolicyProposalWrapper(m["domain"],model,ck["scalers"],"cpu","p0")
     (out/"pid").write_text(str(os.getpid()))
-    prior_wall = 0.0
-    for checkpoint in out.glob("*/checkpoint.pkl"):
-        import pickle
-        with checkpoint.open("rb") as f: prior_wall += pickle.load(f).get("cumulative_wall_s",0.)
+    prior_wall = sum(json.loads(p.read_text())["wall_s"] for p in (out/"attempts").glob("*/WATCHDOG_ACCOUNTING.json"))
     started=time.time();remaining=m["wall_envelope_s"]-prior_wall
     results=[];cancelled=False;active=None
     def cancel(signum,frame):
@@ -177,40 +184,50 @@ def _execute_worker(out):
     return results
 
 
-def wait_for_child(proc, seconds, grace_s=5.):
-    """True if the independently bounded worker required cancellation."""
-    proc.join(timeout=seconds)
-    if not proc.is_alive(): return False
-    proc.terminate()
-    proc.join(timeout=grace_s)
-    if proc.is_alive():
-        proc.kill()
-        proc.join()
-    return True
+# Kept public for existing deterministic watchdog tests.
+wait_for_child=J.wait_for_child
 
 
 def execute(out):
-    """Independent parent watchdog; teacher SIGALRM handlers cannot extend wall cap."""
+    """One externally bounded CPU worker, with aggregate attempt accounting."""
+    import fcntl
     import multiprocessing as mp
+    out=Path(out).resolve()
     manifest=json.loads((out/"manifest.json").read_text())
     require_headroom()
-    prior_wall=0.
-    for ck in out.glob("*/checkpoint.pkl"):
-        import pickle
-        with ck.open("rb") as f: prior_wall += pickle.load(f).get("cumulative_wall_s",0.)
-    remaining=max(0.,manifest["wall_envelope_s"]-prior_wall)
-    if remaining <= 0:
-        raise RuntimeError("BLOCKED_WALL_LIMIT: aggregate envelope exhausted")
-    proc=mp.get_context("spawn").Process(target=_execute_worker,args=(out,))
-    proc.start()
-    (out/"controller_pid").write_text(str(os.getpid()))
-    if wait_for_child(proc, remaining):
-        (out/"BLOCKED_WALL_LIMIT.json").write_text(json.dumps({
-            "status":"UNRESOLVED_IN_FLIGHT", "limit_s":remaining,"grace_s":5,
-            "automatic_resume":"REFUSED if IN_FLIGHT exists; reconcile uncertain calls",
-            "reason":"parent watchdog independent of teacher SIGALRM"}))
-    elif proc.exitcode:
-        raise RuntimeError(f"Collection worker failed with exit code {proc.exitcode}; preserve artifacts")
+    max_roots,max_calls={"2d":(8,40),"3d":(4,24)}[manifest["domain"]]
+    if (len(manifest["roots"])>max_roots or not 0<manifest["per_tree"]["max_sim_calls"]<=max_calls
+        or not 0<manifest["wall_envelope_s"]<=1800 or manifest.get("workers")!=1
+        or manifest.get("gpu") is not False or not 0<manifest.get("query_wall_s",0)<=manifest["wall_envelope_s"]):
+        raise ValueError("Manifest violates authorized pilot envelope")
+    if os.environ.get("CUDA_VISIBLE_DEVICES")!="":
+        raise ValueError("CPU-only execution requires CUDA_VISIBLE_DEVICES=''")
+    if list(out.rglob("IN_FLIGHT")) or list(out.rglob("ACTIVE_QUERY.json")):
+        raise ValueError("Unreconciled in-flight physical work; automatic resume refused")
+    attempts=out/"attempts"; attempts.mkdir(exist_ok=True)
+    prior=0.
+    for old in attempts.iterdir():
+        if not (old/"WATCHDOG_ACCOUNTING.json").exists():
+            raise ValueError("Interrupted parent has unknown wall accounting; reconcile before restart")
+        prior+=json.loads((old/"WATCHDOG_ACCOUNTING.json").read_text())["wall_s"]
+    remaining=manifest["wall_envelope_s"]-prior
+    if remaining<=0: raise RuntimeError("BLOCKED_WALL_LIMIT: aggregate envelope exhausted")
+    with (D.DISCO_ROOT/"active_physical.lock").open("a") as lock:
+        fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
+        attempt=attempts/f"attempt_{len(list(attempts.iterdir())):03d}"
+        attempt.mkdir()
+        J.atomic_json(attempt/"START.json",{"controller":J.process_identity(),"utc_s":time.time(),"remaining_wall_s":remaining})
+        proc=mp.get_context("spawn").Process(target=_execute_worker,args=(out,))
+        proc.start()
+        # Query journals are below out, watchdog accounting belongs to this parent attempt.
+        cancelled=J.wait_for_child(proc,remaining,directory=out,query_wall_s=manifest["query_wall_s"],resource_check=require_headroom)
+        os.replace(out/"WATCHDOG_ACCOUNTING.json",attempt/"WATCHDOG_ACCOUNTING.json")
+        if cancelled:
+            J.atomic_json(out/"BLOCKED_WALL_LIMIT.json",{
+                "status":"UNRESOLVED_IN_FLIGHT" if list(out.rglob("IN_FLIGHT")) else "CANCELLED_CLEAN",
+                "accounting":str(attempt/"WATCHDOG_ACCOUNTING.json"),"automatic_resume":"REFUSED if IN_FLIGHT exists"})
+        elif proc.exitcode:
+            raise RuntimeError(f"Collection worker exit {proc.exitcode}; preserve artifacts")
     return json.loads((out/"results.json").read_text()) if (out/"results.json").exists() else []
 
 
@@ -223,10 +240,11 @@ if __name__=="__main__":
     p.add_argument("--calls",type=int,default=16)
     p.add_argument("--iterations",type=int,default=12)
     p.add_argument("--wall-s",type=int,default=600)
+    p.add_argument("--query-wall-s",type=int,default=120)
     p.add_argument("--execute",action="store_true")
     a=p.parse_args()
     if a.out.resolve().is_relative_to(D.DISCO_ROOT.resolve()) is False:
         p.error("Output must be inside the isolated DISCO root")
     if not (a.out/"manifest.json").exists():
-        freeze_manifest(a.domain,json.loads(a.counts),a.seed,a.calls,a.iterations,a.wall_s,a.out)
+        freeze_manifest(a.domain,json.loads(a.counts),a.seed,a.calls,a.iterations,a.wall_s,a.out,a.query_wall_s)
     if a.execute: print(json.dumps(execute(a.out),indent=2))

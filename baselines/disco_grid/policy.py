@@ -412,6 +412,7 @@ class DiscoPolicyNet(nn.Module):
         legal_dest: torch.Tensor,
         target_dest: torch.Tensor,
     ) -> torch.Tensor:
+        if not legal_dest.gather(1,target_dest[:,None]).all(): raise ValueError("Masked destination target")
         logits = self.forward_dst(obj, mask, occ_task, legal_dest)
         return F.cross_entropy(logits, target_dest)
 
@@ -423,6 +424,7 @@ class DiscoPolicyNet(nn.Module):
         elig_mask: torch.Tensor,
         target_obj_or_stop: torch.Tensor,
     ) -> torch.Tensor:
+        if not elig_mask.gather(1,target_obj_or_stop[:,None]).all(): raise ValueError("Masked object/STOP target")
         logits = self.forward_obj(scene_obj_tok, scene_obj_mask, scene_ctx, elig_mask)
         return F.cross_entropy(logits, target_obj_or_stop)
 
@@ -463,6 +465,10 @@ class DiscoValueNet(nn.Module):
         `action_obj_idx`: `[B]` in `0..MAXOBJ` (`MAXOBJ` = `STOP`)
         `action_dest_idx`: `[B]` in `0..N` (`N` = `STOP`)
         """
+        if ((action_obj_idx<0).any() or (action_obj_idx>self.max_obj).any()
+            or (action_dest_idx<0).any() or (action_dest_idx>self.N).any()
+            or ((action_obj_idx==self.max_obj)!=(action_dest_idx==self.N)).any()):
+            raise ValueError("Invalid value action/STOP shape")
         e = self.obj_phi(scene_obj_tok) * scene_obj_mask[..., None]
         sc = self.ctx_mlp(scene_ctx)
         att_logits = (self.att_q(sc)[:, None] * self.att_k(e)).sum(-1) / math.sqrt(self.h)
@@ -474,7 +480,7 @@ class DiscoValueNet(nn.Module):
         zero_tok = torch.zeros((B, 1, self.h), dtype=e.dtype, device=e.device)
         e_ext = torch.cat([e, zero_tok], dim=1)  # [B, MAXOBJ + 1, h]
         picked_obj = e_ext[torch.arange(B, device=e.device), action_obj_idx.long()]  # [B, h]
-        d_emb = self.dest_embed(action_dest_idx.long().clamp(0, self.N))  # [B, h]
+        d_emb = self.dest_embed(action_dest_idx.long())  # [B, h]
 
         joint = torch.cat([sc, pooled, picked_obj, d_emb], dim=-1)  # [B, 4*h]
         return self.q_head(joint).squeeze(-1)
@@ -506,6 +512,8 @@ class DiscoValueNet(nn.Module):
             w_i = log(1 + n_visited_leaves)
             L_Q = sum_i w_i * BCE(Q(s_i, a_i), y_i) / sum_i w_i
         """
+        if not torch.isfinite(targets).all() or not torch.isfinite(n_leaves).all() or (n_leaves<=0).any() or (targets<0).any() or (targets>1).any():
+            raise ValueError("Value targets require finite decided evidence")
         logits = self.forward_logits(scene_obj_tok, scene_obj_mask, scene_ctx, action_obj_idx, action_dest_idx)
         per_sample_bce = F.binary_cross_entropy_with_logits(logits, targets.float(), reduction="none")
         weights = torch.log1p(n_leaves.float())
@@ -538,6 +546,8 @@ class PolicyProposalWrapper:
         value_model: DiscoValueNet | None = None,
     ):
         self.dom = dom.lower()
+        if any(m.dom!=self.dom for m in (model,value_model) if m is not None):
+            raise ValueError("Mixed-domain model checkpoint")
         self.model = model.to(device).eval() if model is not None else None
         self.value_model = value_model.to(device).eval() if value_model is not None else None
         schemas = {m.observation_schema for m in (self.model, self.value_model) if m is not None}

@@ -15,6 +15,8 @@ Implements the exact contract of `DISCO_plan.md` Sections 3.2-3.4 and 4.1-4.4:
 from __future__ import annotations
 
 import copy
+import contextvars
+import functools
 import dataclasses
 import hashlib
 import json
@@ -32,6 +34,31 @@ import data as D
 
 ABF_ROOT = D.ABF_ROOT
 DISCO_ROOT = D.DISCO_ROOT
+
+
+_SELECTION = contextvars.ContextVar("disco_selection",default=None)
+
+
+def assert_physics_allowed(kind):
+    counters=_SELECTION.get()
+    if counters is not None:
+        counters[kind]=counters.get(kind,0)+1
+        raise RuntimeError("Physical oracle forbidden during model-only selection: "+kind)
+
+
+def selection_only(fn):
+    @functools.wraps(fn)
+    def guarded(*args,**kwargs):
+        counters={"physical_transition_calls":0,"teacher_X_calls":0,"teacher_Y_calls":0,
+                  "simulator_initializations":0,"MCTS_calls":0}
+        token=_SELECTION.set(counters)
+        try:
+            result=fn(*args,**kwargs)
+            if any(counters.values()):raise RuntimeError("Selection oracle counter violation")
+            result["selection_physical_counters"]=counters
+            return result
+        finally:_SELECTION.reset(token)
+    return guarded
 
 
 @dataclass
@@ -117,6 +144,8 @@ class StepResult:
     planner_calls: int = 1
     time_s: float = 0.0
     detail: str | None = None
+    raw_teacher_outcome: dict[str, Any] | None = None
+    accounting: dict[str, Any] | None = None
 
 
 @dataclass
@@ -137,6 +166,8 @@ class StopResult:
     endpoint_pose_drift_m: dict[str, float] = field(default_factory=dict)
     planner_calls: int = 0
     time_s: float = 0.0
+    raw_teacher_outcome: dict[str, Any] | None = None
+    accounting: dict[str, Any] | None = None
 
 
 def censor_administrative_stop(result: StopResult) -> StopResult:
@@ -145,6 +176,9 @@ def censor_administrative_stop(result: StopResult) -> StopResult:
     This does not change the teacher, its budgets, or archived labels. It prevents
     new training from treating an administrative limit as a physical negative.
     """
+    raw = getattr(result,"raw_teacher_outcome",None) or {
+        k:getattr(result,k) for k in ("status","success","x_terminal","y_target","z_outcome",
+                                      "failed_phase","failure_kind","connector_status","y_status")}
     x, y = result.x_terminal, result.y_target
     if "UNKNOWN_BUDGET" in result.connector_status or (result.failure_kind == "TIMEOUT" and str(result.failed_phase).startswith("connector")):
         x = None
@@ -152,10 +186,13 @@ def censor_administrative_stop(result: StopResult) -> StopResult:
         y = None
     z = 0 if x == 0 or y == 0 else (1 if x == y == 1 else None)
     return dataclasses.replace(result, x_terminal=x, y_target=y, z_outcome=z,
-                               success=z == 1, status="DECIDED" if z is not None else "UNRESOLVED")
+                               success=z == 1, status="DECIDED" if z is not None else "UNRESOLVED",raw_teacher_outcome=raw)
 
 
 def censor_administrative_step(result: StepResult) -> StepResult:
+    raw = getattr(result,"raw_teacher_outcome",None) or {
+        k:getattr(result,k) for k in ("status","failure_kind","teacher_status","detail")}
+    result = dataclasses.replace(result,raw_teacher_outcome=raw)
     if result.status != "EXECUTED" and (result.failure_kind == "TIMEOUT" or "UNKNOWN_BUDGET" in result.teacher_status):
         return dataclasses.replace(result, status="UNRESOLVED")
     return result
@@ -220,7 +257,17 @@ def predict_observation_edit(obs: LearnerObservation, action: tuple[int, int]) -
 # 2D Backend (Planar 3R arm, BXY_X_TEACHER_V1 / BXY_Y_TEACHER_V1)
 # ---------------------------------------------------------------------------
 
-class _Backend2D:
+class _PhysicalAccounting:
+    def begin_accounting(self):
+        self.accounting={"transition_planner_calls":0,"connector_calls":0,"y_calls":0,"y_cache_hits":0,
+                         "ik_calls":None,"rrt_calls":None,"grasp_attempts_reported":None}
+
+    def counted(self,kind,fn,*args,**kwargs):
+        self.accounting[kind]+=1
+        return fn(*args,**kwargs)
+
+
+class _Backend2D(_PhysicalAccounting):
     def __init__(self, geom_impl: str = "auto", witness_dir: Path | None = None):
         self.geom_impl = geom_impl
         self.witness_dir = str(witness_dir or (DISCO_ROOT / "caches/witnesses_2d"))
@@ -240,6 +287,7 @@ class _Backend2D:
         self.y_endpoint_cache: dict[str, dict[str, Any]] = {}
 
     def boot(self):
+        assert_physics_allowed("simulator_initializations")
         if self._booted:
             return
         code_dir = ABF_ROOT / "mirror/rss-placement-ready-v2/gh-yadu-iiith/planar_2d/dataset_bd_classquota/code"
@@ -362,7 +410,7 @@ class _Backend2D:
         cells_dict = dict(pay["cells_dict"])
         q_now = np.asarray(pay["q"], dtype=float)
 
-        outs = phys.edges(cells_dict, q_now, o_id, int(dest_cell))
+        outs = self.counted("transition_planner_calls",phys.edges,cells_dict,q_now,o_id,int(dest_cell))
         e = self.pc.best_edge(outs)
         dt = round(time.process_time() - t0, 4)
         if e is None:
@@ -454,6 +502,7 @@ class _Backend2D:
             s = phys.scene(cells_dict, q_now)
             ck = self.mo.checkers(self.E["robot"], s, "t0", None, None, self.E["p"]["delta"], self.E["p"]["eps"])[("start", False)]
             p_calls += 1
+            self.accounting["connector_calls"]+=1
             if ck.status_at(q_now, gap).status != self.ge.CLEAR:
                 x_val = 0
                 conn_status = "TERMINAL_STATE_NOT_CLEAR"
@@ -521,8 +570,9 @@ class _Backend2D:
         y_key = self.T.ykey(state.root_id, rec, seq_obj)
         if y_key in self.y_endpoint_cache:
             yr = self.y_endpoint_cache[y_key]
+            self.accounting["y_cache_hits"]+=1
         else:
-            yr = self.T.y_query(self.E, state.root_id, rec, seq_obj, cache, out=self.witness_dir)
+            yr = self.counted("y_calls",self.T.y_query,self.E,state.root_id,rec,seq_obj,cache,out=self.witness_dir)
             self.y_endpoint_cache[y_key] = yr
             p_calls += 1
 
@@ -533,7 +583,7 @@ class _Backend2D:
             failed_phase = "target"
             fail_kind = yr.get("negative_kind")
 
-        z_val = int(x_val == 1 and y_val == 1) if (x_val in (0, 1) and y_val in (0, 1)) else None
+        z_val = 0 if x_val == 0 or y_val == 0 else (1 if x_val == y_val == 1 else None)
 
         return StopResult(
             status="DECIDED" if z_val is not None else "UNRESOLVED",
@@ -559,7 +609,7 @@ class _Backend2D:
 # 3D Backend (xArm7 + MuJoCo 6x6 Confined Shelf, fin3d / bwlphys)
 # ---------------------------------------------------------------------------
 
-class _Backend3D:
+class _Backend3D(_PhysicalAccounting):
     def __init__(self, witness_dir: Path | None = None):
         self.witness_dir = Path(witness_dir or (DISCO_ROOT / "caches/witnesses_3d"))
         self.witness_dir.mkdir(parents=True, exist_ok=True)
@@ -574,6 +624,7 @@ class _Backend3D:
         self.y_endpoint_cache: dict[str, dict[str, Any]] = {}
 
     def boot(self):
+        assert_physics_allowed("simulator_initializations")
         if self._booted:
             return
         os.environ.setdefault("MUJOCO_GL", "disable")
@@ -701,7 +752,8 @@ class _Backend3D:
         self._restore_env(e, state.physics_payload)
 
         before = {n: e.cell_of(n) for n in e.obj_index if n != o_id}
-        p, qi = self.A.query(e, o_id, dest_rc)
+        p, qi = self.counted("transition_planner_calls",self.A.query,e,o_id,dest_rc)
+        self.accounting["grasp_attempts_reported"]=qi.get("tried")
         if p is None:
             dt = round(time.process_time() - t0, 4)
             lbl = self.A.label(None, qi)
@@ -811,7 +863,7 @@ class _Backend3D:
             fail_kind = None
         else:
             expected = {k: tuple(v) for k, v in canon_rc.items()}
-            c, path = self.BP.connector(e, self.S, expected)
+            c, path = self.counted("connector_calls",self.BP.connector,e,self.S,expected)
             p_calls += 1
             if path is not None:
                 w_conn = self.store.witness({"connector_q": path})
@@ -844,8 +896,9 @@ class _Backend3D:
         ekey = f"{state.root_id}|{json.dumps( sorted(canon_rc.items()) )}"
         if ekey in self.y_endpoint_cache:
             yr = self.y_endpoint_cache[ekey]
+            self.accounting["y_cache_hits"]+=1
         else:
-            yr = self.F.capped(self.F.run_y, rec, canon_rc)
+            yr = self.counted("y_calls",self.F.capped,self.F.run_y,rec,canon_rc)
             self.y_endpoint_cache[ekey] = yr
             p_calls += 1
 
@@ -932,6 +985,7 @@ class RepairEnv:
         return row, self._raw_by_id[root_id]
 
     def reset(self, root_id: str, seed: int = 0) -> FullState:
+        assert_physics_allowed("simulator_initializations")
         row, rec = self._get_row_and_raw(root_id)
         return self.backend.reset(row, rec, seed=seed)
 
@@ -968,15 +1022,23 @@ class RepairEnv:
         return D.legal_actions_at_prefix(row["inputs"], self.domain, state.prefix, include_stop=include_stop)
 
     def transition(self, state: FullState, action: tuple[int, int]) -> StepResult:
+        assert_physics_allowed("physical_transition_calls")
         row, rec = self._get_row_and_raw(state.root_id)
-        return censor_administrative_step(self.backend.transition(row, rec, state, action))
+        self.backend.begin_accounting()
+        result=self.backend.transition(row,rec,state,action)
+        return censor_administrative_step(dataclasses.replace(result,accounting=dict(self.backend.accounting)))
 
     def terminal_query(self, state: FullState, evaluate_y_on_x_fail: bool = True) -> StopResult:
+        assert_physics_allowed("teacher_X_calls")
         row, rec = self._get_row_and_raw(state.root_id)
-        return censor_administrative_stop(self.backend.terminal_query(row, rec, state, evaluate_y_on_x_fail=evaluate_y_on_x_fail))
+        self.backend.begin_accounting()
+        result=self.backend.terminal_query(row,rec,state,evaluate_y_on_x_fail=evaluate_y_on_x_fail)
+        return censor_administrative_stop(dataclasses.replace(result,accounting=dict(self.backend.accounting)))
 
     def endpoint_y_query(self, root_id: str, seq: list[tuple[int, int]]) -> dict[str, Any]:
         """Evaluate canonical endpoint Y independently of whether X succeeded (for parity & open-loop verification)."""
+        assert_physics_allowed("teacher_Y_calls")
+        self.backend.begin_accounting()
         row, rec = self._get_row_and_raw(root_id)
         ids = row["inputs"]["ids"]
         if self.domain == "2d":
@@ -986,11 +1048,14 @@ class RepairEnv:
             y_key = self.backend.T.ykey(root_id, rec, seq_obj)
             if y_key not in self.backend.y_endpoint_cache:
                 cache = self.backend._get_cache(root_id)
-                self.backend.y_endpoint_cache[y_key] = self.backend.T.y_query(
+                self.backend.y_endpoint_cache[y_key] = self.backend.counted("y_calls",self.backend.T.y_query,
                     self.backend.E, root_id, rec, seq_obj, cache, out=self.backend.witness_dir
                 )
+            else:self.backend.accounting["y_cache_hits"]+=1
             yr = self.backend.y_endpoint_cache[y_key]
-            return {"y": yr.get("y"), "status": yr.get("teacher_status"), "witness": yr.get("target_witness")}
+            y=None if yr.get("negative_kind")=="TIMEOUT" or "UNKNOWN_BUDGET" in str(yr.get("teacher_status")) else yr.get("y")
+            return {"y":y,"status":yr.get("teacher_status"),"witness":yr.get("target_witness"),
+                    "raw_teacher_outcome":dict(yr),"accounting":dict(self.backend.accounting)}
         else:
             self.backend.boot()
             canon_rc = {
@@ -999,14 +1064,16 @@ class RepairEnv:
             }
             ekey = f"{root_id}|{json.dumps(sorted(canon_rc.items()))}"
             if ekey not in self.backend.y_endpoint_cache:
-                self.backend.y_endpoint_cache[ekey] = self.backend.F.capped(self.backend.F.run_y, rec, canon_rc)
+                self.backend.y_endpoint_cache[ekey] = self.backend.counted("y_calls",self.backend.F.capped,self.backend.F.run_y,rec,canon_rc)
+            else:self.backend.accounting["y_cache_hits"]+=1
             yr = self.backend.y_endpoint_cache[ekey]
             if yr.get("resolution") != "EVALUATED":
-                return {"y": None, "status": yr.get("resolution"), "witness": None}
+                return {"y": None, "status": yr.get("resolution"), "witness": None,"raw_teacher_outcome":dict(yr),"accounting":dict(self.backend.accounting)}
             return {
                 "y": int(yr["y"]),
                 "status": yr.get("status") or ("VERIFIED" if yr["y"] == 1 else "FAILED"),
                 "witness": (yr.get("witnesses") or [None])[0],
+                "raw_teacher_outcome":dict(yr),"accounting":dict(self.backend.accounting),
             }
 
     def execute_complete_sequence(
@@ -1044,7 +1111,7 @@ class RepairEnv:
                     }
                 yq = self.endpoint_y_query(root_id, seq)
                 y_val = yq["y"]
-                z_val = int(x_val == 1 and y_val == 1) if (x_val in (0, 1) and y_val in (0, 1)) else None
+                z_val = 0 if x_val == 0 or y_val == 0 else (1 if x_val == y_val == 1 else None)
                 return {
                     "root_id": root_id,
                     "seq": [[int(o), int(d)] for o, d in seq],
@@ -1075,6 +1142,15 @@ class RepairEnv:
             "step_results": step_results,
             "stop_result": stop_res,
         }
+
+    def snapshot_caches(self):
+        names=["y_endpoint_cache"]+(["root_caches"] if self.domain=="2d" else [])
+        return {name:copy.deepcopy(getattr(self.backend,name)) for name in names}
+
+    def restore_caches(self,caches):
+        for name,value in caches.items():
+            if name not in ("y_endpoint_cache","root_caches"): raise ValueError("Unexpected backend cache")
+            setattr(self.backend,name,copy.deepcopy(value))
 
     @staticmethod
     def clone_or_serialize(state: FullState) -> bytes:

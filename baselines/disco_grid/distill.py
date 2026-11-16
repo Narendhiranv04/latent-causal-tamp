@@ -105,6 +105,10 @@ def extract_distillation_data_from_tree(
             state = E.RepairEnv.restore(parent.state_blob)
             if state.state_hash() != parent.state_hash or state.prefix != parent.prefix:
                 raise ValueError("Physical state/observation lineage mismatch")
+            if (state.root_id!=obs.root_id or state.domain!=dom_l or state.cells!=obs.cells
+                or state.moved_mask!=obs.moved_mask or state.depth!=parent.depth
+                or obs.remaining_steps!=3-state.depth or obs.is_predicted_edit):
+                raise ValueError("Executed observation/state identity mismatch")
             obs = dataclasses.replace(obs, q_t_optional=list(state.q_t))
         s_tok, s_mask, s_ctx, s_elig = P.extract_scene_object_tokens(dom_l, obs, scalers, observation_schema)
 
@@ -202,6 +206,9 @@ def extract_distillation_data_from_tree(
                         "tree_round": tree_round,
                     })
 
+    for rows in (policy_dst_rows,policy_obj_rows,value_rows):
+        for row in rows:
+            row["depth"]=node_map[row["parent_id"]].depth
     return {
         "policy_dst_rows": policy_dst_rows,
         "policy_obj_rows": policy_obj_rows,
@@ -225,13 +232,17 @@ def extract_dataset_from_tree_dirs(
     snapshot_rows = {r["root_id"]: r for r in D.load_snapshot_rows(dom)}
     for td in tree_dirs:
         if not (Path(td) / "nodes.pkl").exists():
-            continue
+            raise FileNotFoundError(f"Missing declared tree: {td}")
         nodes, meta = M.load_saved_tree_nodes(td)
         for node in nodes:
             row = snapshot_rows[node.obs.root_id]
             if row["split"] != "train":
                 raise ValueError("Refusing distillation from non-TRAIN physical trees")
         ext = extract_distillation_data_from_tree(nodes, dom, scalers, tree_round=tree_round, edges_mode=edges_mode, observation_schema=observation_schema)
+        for key in ("policy_dst_rows","policy_obj_rows","value_rows"):
+            for row in ext[key]:
+                row["K_legacy"]=snapshot_rows[row["root_id"]]["K_legacy"]
+                row["tree_source_sha256"]=D.sha256_file(Path(td)/("checkpoint.pkl" if (Path(td)/"checkpoint.pkl").exists() else "nodes.pkl"))
         all_dst.extend(ext["policy_dst_rows"])
         all_obj.extend(ext["policy_obj_rows"])
         all_val.extend(ext["value_rows"])
@@ -253,263 +264,166 @@ def extract_dataset_from_tree_dirs(
 
 
 def distill_policy_and_value(
-    dom: str,
-    extracted: dict[str, Any],
-    init_policy_ckpt: Path | str,
-    init_value_ckpt: Path | str | None = None,
-    round_name: str = "r1",
-    seed: int = 0,
-    epochs: int = 45,
-    batch_size: int = 64,
-    lr: float = 1e-3,
-    device: str = "cuda",
-    out_dir: Path | None = None,
-    checkpoint_rule: str = "train_family_monitor",
-) -> dict[str, Any]:
-    """Train distilled Policy (`P_r`) and Value (`Q_r`) networks from extracted MCTS tree datasets."""
-    if checkpoint_rule not in ("train_family_monitor", "fixed_epochs"):
+    dom, extracted, init_policy_ckpt, init_value_ckpt=None, round_name="r1", seed=0,
+    epochs=45, batch_size=64, lr=1e-3, device="cuda", out_dir=None,
+    checkpoint_rule="train_family_monitor", resume=False, stop_after_epochs=None,
+):
+    """Distill executed TRAIN evidence; atomic epoch checkpoints resume both optimizers.
+
+    Fixed epochs use all TRAIN and last epoch. The optional family monitor is
+    inside TRAIN, never benchmark VAL. Separate VAL execution selects protocols.
+    Policy NLL averages over object/STOP rows; relocation destination CE has
+    weight n_relocations/n_policy_rows, preserving the joint categorical NLL.
+    """
+    import copy, hashlib, pickle, random, resource
+    if checkpoint_rule not in ("train_family_monitor","fixed_epochs"):
         raise ValueError("Unknown checkpoint rule")
-    dom_l = dom.lower()
-    torch.manual_seed(seed)
-    np.random.seed(seed)
-
-    save_dir = Path(out_dir or (D.DISCO_ROOT / "runs/distill" / dom_l / f"{round_name}_s{seed}"))
-    save_dir.mkdir(parents=True, exist_ok=True)
-    if any(save_dir.iterdir()):
-        raise FileExistsError(f"Refusing to overwrite distillation run: {save_dir}")
-
-    schema = extracted.get("observation_schema", P.O0)
-    pol_model, p_ck = P.load_policy_checkpoint(init_policy_ckpt, device=device, observation_schema=schema)
-    scalers = p_ck["scalers"]
-    pol_model.train()
-    (save_dir / "resolved_config.json").write_text(json.dumps({
-        "domain":dom_l, "observation_schema":schema, "seed":seed, "round":round_name,
-        "policy_initialization":str(init_policy_ckpt), "policy_sha256":D.sha256_file(init_policy_ckpt),
-        "value_initialization":str(init_value_ckpt) if init_value_ckpt else None,
+    dom=dom.lower(); schema=extracted.get("observation_schema",P.O0)
+    if extracted.get("domain",dom)!=dom: raise ValueError("Mixed-domain data")
+    if epochs<=0 or batch_size<=0 or lr<=0: raise ValueError("Invalid training schedule")
+    save_dir=Path(out_dir or D.DISCO_ROOT/"runs/distill"/dom/f"{round_name}_s{seed}")
+    save_dir.mkdir(parents=True,exist_ok=True)
+    if any(save_dir.iterdir()) and not resume: raise FileExistsError(f"Refusing to overwrite {save_dir}")
+    if resume and not (save_dir/"trainer.pt").exists(): raise ValueError("Missing authoritative trainer checkpoint")
+    config={"domain":dom,"observation_schema":schema,"seed":seed,"round":round_name,
+        "policy_sha256":D.sha256_file(init_policy_ckpt),
         "value_sha256":D.sha256_file(init_value_ckpt) if init_value_ckpt else None,
-        "epochs":epochs, "batch_size":batch_size, "lr":lr, "weight_decay":1e-4,
-        "edges_mode":extracted.get("edges_mode"), "tree_summaries":extracted.get("tree_summaries", []),
-        "checkpoint_rule":checkpoint_rule,
-        "selection_scope":"fixed epochs or TRAIN-pool monitor, not independent validation",
-        "source_sha256":{p.name:D.sha256_file(p) for p in HERE.glob("*.py")},
-    },indent=2))
-
-    val_model = P.DiscoValueNet(dom_l, h=p_ck.get("hidden", 128), observation_schema=schema).to(device)
-    if init_value_ckpt is not None and Path(init_value_ckpt).exists():
-        v_ck = torch.load(init_value_ckpt, map_location=device, weights_only=False)
-        if v_ck.get("observation_schema", P.O0) == schema:
-            val_model.load_state_dict(v_ck["state_dict"])
-        elif v_ck.get("observation_schema", P.O0) == P.O0 and schema == P.O1:
-            P.transfer_o0_weights(val_model, v_ck["state_dict"])
-        else:
-            raise ValueError("Incompatible value initialization schema")
-    val_model.train()
-
-    dst_rows = extracted["policy_dst_rows"]
-    obj_rows = extracted["policy_obj_rows"]
-    val_rows = extracted["value_rows"]
-
-    # This is a TRAIN-pool monitor, not independent benchmark VALIDATION.
-    # Families stay together, including alternate roots from the same source.
-    # Frozen P0 may already have seen Q2 placements from these TRAIN families.
-    # Therefore this loss is never reported as held-out task generalization.
-    root_families = extracted.get("root_families", {})
-    all_roots = sorted({root_families.get(r["root_id"], r["root_id"]) for r in (dst_rows + obj_rows + val_rows)})
-    rng = np.random.default_rng(seed)
-    rng.shuffle(all_roots)
-    n_val_r = max(1, len(all_roots) // 6) if len(all_roots) >= 4 and checkpoint_rule == "train_family_monitor" else 0
-    val_root_set = set(all_roots[:n_val_r])
-
-    def split_rows(rows):
-        if not val_root_set:
-            return rows, rows
-        tr = [r for r in rows if root_families.get(r["root_id"], r["root_id"]) not in val_root_set]
-        va = [r for r in rows if root_families.get(r["root_id"], r["root_id"]) in val_root_set]
-        if not tr or not va:
-            raise ValueError("Empty family-held-out stream; use a larger TRAIN cohort instead of leaking rows")
-        return tr, va
-
-    dst_tr, dst_va = split_rows(dst_rows)
-    obj_tr, obj_va = split_rows(obj_rows)
-    val_tr, val_va = split_rows(val_rows)
-
-    t0 = time.time()
-    pol_curve = []
-    val_curve = []
-
-    # 1. Train Policy Network (both destination head and object/STOP head)
-    if dst_tr and obj_tr:
-        opt_p = torch.optim.AdamW(pol_model.parameters(), lr=lr, weight_decay=1e-4)
-        best_p_loss = math.inf
-
-        def tensorize_dst(rows):
-            return (
-                torch.as_tensor(np.stack([r["obj"] for r in rows]), dtype=torch.float32, device=device),
-                torch.as_tensor(np.stack([r["mask"] for r in rows]), dtype=torch.bool, device=device),
-                torch.as_tensor(np.stack([r["occ_task"] for r in rows]), dtype=torch.float32, device=device),
-                torch.as_tensor(np.stack([r["legal_dest"] for r in rows]), dtype=torch.bool, device=device),
-                torch.as_tensor([r["target_dest"] for r in rows], dtype=torch.long, device=device),
-            )
-
-        def tensorize_obj(rows):
-            return (
-                torch.as_tensor(np.stack([r["scene_obj_tok"] for r in rows]), dtype=torch.float32, device=device),
-                torch.as_tensor(np.stack([r["scene_obj_mask"] for r in rows]), dtype=torch.bool, device=device),
-                torch.as_tensor(np.stack([r["scene_ctx"] for r in rows]), dtype=torch.float32, device=device),
-                torch.as_tensor(np.stack([r["elig_mask"] for r in rows]), dtype=torch.bool, device=device),
-                torch.as_tensor([r["target_obj_or_stop"] for r in rows], dtype=torch.long, device=device),
-            )
-
-        td_tr, td_va = tensorize_dst(dst_tr), tensorize_dst(dst_va)
-        to_tr, to_va = tensorize_obj(obj_tr), tensorize_obj(obj_va)
-        gen = torch.Generator(device=device).manual_seed(seed)
-
-        for ep in range(epochs):
-            pol_model.train()
-            p_dst = torch.randperm(len(dst_tr), device=device, generator=gen)
-            p_obj = torch.randperm(len(obj_tr), device=device, generator=gen)
-            ep_dst_l, ep_obj_l = [], []
-            n_steps = max(1, max(len(dst_tr), len(obj_tr)) // batch_size + 1)
-            for s_i in range(n_steps):
-                # Cycle the smaller stream without empty/wrapped slices.
-                ix_d = p_dst[torch.arange(s_i * batch_size, (s_i + 1) * batch_size, device=device) % len(dst_tr)]
-                ix_o = p_obj[torch.arange(s_i * batch_size, (s_i + 1) * batch_size, device=device) % len(obj_tr)]
-                ld = pol_model.dst_loss(*(x[ix_d] for x in td_tr))
-                lo = pol_model.obj_loss(*(x[ix_o] for x in to_tr))
-                loss = ld + lo
-                opt_p.zero_grad()
-                loss.backward()
-                opt_p.step()
-                ep_dst_l.append(float(ld.item()))
-                ep_obj_l.append(float(lo.item()))
-
-            pol_model.eval()
-            with torch.no_grad():
-                vd = float(pol_model.dst_loss(*td_va).item())
-                vo = float(pol_model.obj_loss(*to_va).item())
-                vtot = vd + vo
-            pol_curve.append({
-                "epoch": ep,
-                "train_dst_ce": float(np.mean(ep_dst_l)),
-                "train_obj_ce": float(np.mean(ep_obj_l)),
-                "val_dst_ce": vd,
-                "val_obj_ce": vo,
-                "val_total_ce": vtot,
-            })
-            if checkpoint_rule == "fixed_epochs" or vtot <= best_p_loss:
-                best_p_loss = vtot
-                pol_model.obj_trained = True
-                P.save_checkpoint(
-                    {
-                        "domain": dom_l,
-                        "round": round_name,
-                        "seed": seed,
-                        "epoch": ep,
-                        "best_val_ce": vtot,
-                        "hidden": pol_model.h,
-                        "observation_schema": schema,
-                        "obj_trained": True,
-                        "scalers": scalers,
-                        "state_dict": pol_model.state_dict(),
-                    },
-                    save_dir / "policy.pt",
-                )
+        "dataset_sha256":hashlib.sha256(pickle.dumps(extracted,protocol=4)).hexdigest(),
+        "epochs":epochs,"batch_size":batch_size,"lr":lr,"weight_decay":1e-4,
+        "scheduler":"none (constant learning rate)","checkpoint_rule":checkpoint_rule,
+        "loss_version":"joint_categorical_nll_v2_unique_stop",
+        "source_sha256":{p.name:D.sha256_file(p) for p in HERE.glob('*.py')}}
+    if resume:
+        state=torch.load(save_dir/"trainer.pt",map_location=device,weights_only=False)
+        if config!=state["config"]: raise ValueError("Trainer resume configuration/data/source mismatch")
     else:
-        # Preserve previous policy checkpoint if no feasible edges were extracted
-        P.save_checkpoint(p_ck, save_dir / "policy.pt")
-
-    # 2. Train Value Network (weighted BCE over visited leaf fractions + decided STOP outcomes)
-    if val_tr:
-        opt_v = torch.optim.AdamW(val_model.parameters(), lr=lr, weight_decay=1e-4)
-        best_v_loss = math.inf
-
-        def tensorize_val(rows):
-            return (
-                torch.as_tensor(np.stack([r["scene_obj_tok"] for r in rows]), dtype=torch.float32, device=device),
-                torch.as_tensor(np.stack([r["scene_obj_mask"] for r in rows]), dtype=torch.bool, device=device),
-                torch.as_tensor(np.stack([r["scene_ctx"] for r in rows]), dtype=torch.float32, device=device),
-                torch.as_tensor([r["action_obj_idx"] for r in rows], dtype=torch.long, device=device),
-                torch.as_tensor([r["action_dest_idx"] for r in rows], dtype=torch.long, device=device),
-                torch.as_tensor([r["value_target"] for r in rows], dtype=torch.float32, device=device),
-                torch.as_tensor([r["n_visited_leaves"] for r in rows], dtype=torch.float32, device=device),
-            )
-
-        tv_tr, tv_va = tensorize_val(val_tr), tensorize_val(val_va)
-        gen_v = torch.Generator(device=device).manual_seed(seed + 77)
-
-        for ep in range(epochs):
-            val_model.train()
-            perm = torch.randperm(len(val_tr), device=device, generator=gen_v)
-            tr_bce = []
-            for i in range(0, len(perm), batch_size):
-                ix = perm[i : i + batch_size]
-                l_v, _ = val_model.weighted_bce_loss(*(x[ix] for x in tv_tr))
-                opt_v.zero_grad()
-                l_v.backward()
-                opt_v.step()
-                tr_bce.append(float(l_v.item()))
-
-            val_model.eval()
+        (save_dir/"resolved_config.json").write_text(json.dumps(config,indent=2))
+        state=None
+    torch.manual_seed(seed);np.random.seed(seed);random.seed(seed)
+    pol,pck=P.load_policy_checkpoint(init_policy_ckpt,device,observation_schema=schema)
+    if pck['domain']!=dom: raise ValueError("Mixed-domain policy checkpoint")
+    # Initialize Q in O0 then zero-pad to O1: common initial function for matched q ablation.
+    q_rng=torch.get_rng_state()
+    torch.manual_seed(seed+777)
+    val0=P.DiscoValueNet(dom,h=pck.get('hidden',128),observation_schema=P.O0).to(device)
+    if schema==P.O1:
+        val=P.DiscoValueNet(dom,h=val0.h,observation_schema=P.O1).to(device)
+        P.transfer_o0_weights(val,val0.state_dict())
+    else: val=val0
+    torch.set_rng_state(q_rng)
+    if init_value_ckpt:
+        vck=torch.load(init_value_ckpt,map_location=device,weights_only=False)
+        if vck['domain']!=dom: raise ValueError("Mixed-domain value checkpoint")
+        if vck.get('observation_schema',P.O0)==schema:val.load_state_dict(vck['state_dict'])
+        elif vck.get('observation_schema',P.O0)==P.O0 and schema==P.O1:P.transfer_o0_weights(val,vck['state_dict'])
+        else:raise ValueError("Incompatible value schema")
+    optp=torch.optim.AdamW(pol.parameters(),lr=lr,weight_decay=1e-4)
+    optv=torch.optim.AdamW(val.parameters(),lr=lr,weight_decay=1e-4)
+    gp=torch.Generator(device=device).manual_seed(seed)
+    gv=torch.Generator(device=device).manual_seed(seed+77)
+    dst=extracted['policy_dst_rows'];obj=extracted['policy_obj_rows'];vr=extracted['value_rows']
+    if not obj and not vr:raise ValueError("Empty physical supervision")
+    families=extracted.get('root_families',{})
+    roots=sorted({families.get(r['root_id'],r['root_id']) for r in dst+obj+vr})
+    rng=np.random.default_rng(seed);rng.shuffle(roots)
+    nmon=max(1,len(roots)//6) if len(roots)>=4 and checkpoint_rule=='train_family_monitor' else 0
+    monitor=set(roots[:nmon])
+    def split(rows):
+        if not monitor:return rows,rows
+        tr=[r for r in rows if families.get(r['root_id'],r['root_id']) not in monitor]
+        va=[r for r in rows if families.get(r['root_id'],r['root_id']) in monitor]
+        if rows and (not tr or not va):raise ValueError('Empty family-held-out stream')
+        return tr,va
+    dt,dv=split(dst);ot,ov=split(obj);vt,vv=split(vr)
+    def tensors(rows,kind):
+        if not rows:return None
+        cols={'dst':('obj','mask','occ_task','legal_dest','target_dest'),
+              'obj':('scene_obj_tok','scene_obj_mask','scene_ctx','elig_mask','target_obj_or_stop'),
+              'val':('scene_obj_tok','scene_obj_mask','scene_ctx','action_obj_idx','action_dest_idx','value_target','n_visited_leaves')}[kind]
+        bools={'mask','legal_dest','scene_obj_mask','elig_mask'}
+        ints={'target_dest','target_obj_or_stop','action_obj_idx','action_dest_idx'}
+        if kind=='dst' and any(not r['legal_dest'][r['target_dest']] for r in rows):raise ValueError('Masked destination label')
+        if kind=='obj' and any(not r['elig_mask'][r['target_obj_or_stop']] for r in rows):raise ValueError('Masked object/STOP label')
+        if kind=='val' and any(r['n_visited_leaves']<=0 or not 0<=r['value_target']<=1 for r in rows):raise ValueError('Invalid decided evidence')
+        return tuple(torch.as_tensor(np.stack([r[c] for r in rows]),dtype=torch.bool if c in bools else torch.long if c in ints else torch.float32,device=device) for c in cols)
+    td,vd=tensors(dt,'dst'),tensors(dv,'dst');to,vo=tensors(ot,'obj'),tensors(ov,'obj');tv,vv_t=tensors(vt,'val'),tensors(vv,'val')
+    pc=[];vc=[];bp=bv=math.inf; selected_p=selected_v=None;start_ep=0;cpu_prior=wall_prior=0.
+    if state:
+        pol.load_state_dict(state['policy']);val.load_state_dict(state['value'])
+        pol.obj_trained=state['obj_trained'];optp.load_state_dict(state['optimizer_policy']);optv.load_state_dict(state['optimizer_value'])
+        gp.set_state(state['generator_policy'].cpu());gv.set_state(state['generator_value'].cpu())
+        torch.set_rng_state(state['torch_rng'].cpu());np.random.set_state(state['numpy_rng']);random.setstate(state['python_rng'])
+        if device.startswith('cuda'):torch.cuda.set_rng_state_all(state['cuda_rng'])
+        pc=state['policy_curve'];vc=state['value_curve'];bp=state['best_policy_loss'];bv=state['best_value_loss'];start_ep=state['completed_epochs']
+        selected_p=state['selected_policy'];selected_v=state['selected_value'];cpu_prior=state['cpu_s'];wall_prior=state['wall_s']
+    t0=time.monotonic();c0=time.process_time()
+    def payload(model,epoch,metric):
+        return copy.deepcopy({'domain':dom,'round':round_name,'seed':seed,'epoch':epoch,'hidden':model.h,'observation_schema':schema,
+            'obj_trained':getattr(model,'obj_trained',False),'scalers':pck['scalers'],'state_dict':model.state_dict(),
+            'selection_metric':metric,'checkpoint_rule':checkpoint_rule,'dataset_sha256':config['dataset_sha256']})
+    def update(loss,opt,model):
+        if not torch.isfinite(loss):raise FloatingPointError('Nonfinite distillation loss')
+        opt.zero_grad();loss.backward()
+        norm=torch.nn.utils.clip_grad_norm_(model.parameters(),float('inf'),error_if_nonfinite=True)
+        opt.step();return float(norm)
+    # On resume, restore exported selected models from the authoritative epoch.
+    if selected_p:P.save_checkpoint(selected_p,save_dir/'policy.pt')
+    if selected_v:P.save_checkpoint(selected_v,save_dir/'value.pt')
+    for ep in range(start_ep,epochs):
+        pol.train();val.train(); dl=[];ol=[];bl=[];pn=vn=None
+        if to is not None:
+            po=torch.randperm(len(ot),generator=gp,device=device)
+            pd=torch.randperm(len(dt),generator=gp,device=device) if td is not None else None
+            steps=max(1,math.ceil(max(len(dt),len(ot))/batch_size))
+            dst_weight=len(dt)/len(ot)
+            for step in range(steps):
+                io=po[torch.arange(step*batch_size,(step+1)*batch_size,device=device)%len(ot)]
+                lo=pol.obj_loss(*(x[io] for x in to));loss=lo
+                if td is not None:
+                    ix=pd[torch.arange(step*batch_size,(step+1)*batch_size,device=device)%len(dt)]
+                    ld=pol.dst_loss(*(x[ix] for x in td));loss=loss+dst_weight*ld;dl.append(float(ld))
+                pn=update(loss,optp,pol);ol.append(float(lo))
+            pol.obj_trained=True;pol.eval()
             with torch.no_grad():
-                v_loss, v_stats = val_model.weighted_bce_loss(*tv_va)
-            val_curve.append({
-                "epoch": ep,
-                "train_weighted_bce": float(np.mean(tr_bce)),
-                "val_weighted_bce": float(v_stats["weighted_bce"]),
-                "val_mse": float(v_stats["mse"]),
-                "val_mae": float(v_stats["mae"]),
-            })
-            if checkpoint_rule == "fixed_epochs" or float(v_stats["weighted_bce"]) <= best_v_loss:
-                best_v_loss = float(v_stats["weighted_bce"])
-                P.save_checkpoint(
-                    {
-                        "domain": dom_l,
-                        "round": round_name,
-                        "seed": seed,
-                        "epoch": ep,
-                        "best_val_weighted_bce": best_v_loss,
-                        "hidden": val_model.h,
-                        "observation_schema": schema,
-                        "scalers": scalers,
-                        "state_dict": val_model.state_dict(),
-                    },
-                    save_dir / "value.pt",
-                )
-
-    stop_pos = sum(1 for r in val_rows if r["is_stop"] and r["value_target"] >= 0.5)
-    stop_neg = sum(1 for r in val_rows if r["is_stop"] and r["value_target"] < 0.5)
-    reloc_pos = sum(1 for r in val_rows if not r["is_stop"] and r["value_target"] > 0.0)
-    reloc_zero = sum(1 for r in val_rows if not r["is_stop"] and r["value_target"] == 0.0)
-
-    report = {
-        "domain": dom_l,
-        "round": round_name,
-        "observation_schema": schema,
-        "seed": seed,
-        "edges_mode": extracted.get("edges_mode", "all_feasible"),
-        "checkpoint_rule":checkpoint_rule,
-        "selection_scope": "Fixed epoch schedule; training loss diagnostic" if checkpoint_rule == "fixed_epochs" else "TRAIN-pool family monitor; not benchmark VALIDATION",
-        "monitor_families": sorted(val_root_set),
-        "hyperparameters": {"epochs":epochs, "batch_size":batch_size, "lr":lr, "weight_decay":1e-4},
-        "n_trees": extracted.get("n_trees", 0),
-        "n_trees_with_solution": extracted.get("n_trees_with_solution", 0),
-        "total_sim_calls": extracted.get("total_sim_calls", 0),
-        "n_policy_dst_rows": len(dst_rows),
-        "n_policy_obj_rows": len(obj_rows),
-        "n_value_rows": len(val_rows),
-        "value_row_breakdown": {
-            "stop_positive": stop_pos,
-            "stop_negative": stop_neg,
-            "reloc_positive_target": reloc_pos,
-            "reloc_zero_target": reloc_zero,
-        },
-        "policy_ckpt": str(save_dir / "policy.pt"),
-        "value_ckpt": str(save_dir / "value.pt") if val_tr else None,
-        "wall_s": round(time.time() - t0, 2),
-        "policy_curve": pol_curve,
-        "value_curve": val_curve,
-    }
-    (save_dir / "distill_report.json").write_text(json.dumps(report, indent=2))
+                dloss=float(pol.dst_loss(*vd)) if vd is not None else None
+                oloss=float(pol.obj_loss(*vo));total=oloss+(len(dv)/len(ov))*dloss if dloss is not None else oloss
+                oa=float((pol.forward_obj(*vo[:-1]).argmax(-1)==vo[-1]).float().mean())
+                da=float((pol.forward_dst(*vd[:-1]).argmax(-1)==vd[-1]).float().mean()) if vd is not None else None
+            pc.append(dict(epoch=ep,train_dst_ce=float(np.mean(dl)) if dl else None,train_obj_ce=float(np.mean(ol)),
+                val_dst_ce=dloss,val_obj_ce=oloss,val_total_ce=total,monitor_obj_accuracy=oa,monitor_dst_accuracy=da,gradient_norm=pn))
+            if checkpoint_rule=='fixed_epochs' or total<=bp:bp=total;selected_p=payload(pol,ep,total)
+        elif selected_p is None:selected_p=payload(pol,ep,None)
+        if tv is not None:
+            perm=torch.randperm(len(vt),device=device,generator=gv)
+            for i in range(0,len(vt),batch_size):
+                ix=perm[i:i+batch_size];loss,_=val.weighted_bce_loss(*(x[ix] for x in tv))
+                vn=update(loss,optv,val);bl.append(float(loss))
+            val.eval()
+            with torch.no_grad():_,stats=val.weighted_bce_loss(*vv_t)
+            vc.append(dict(epoch=ep,train_weighted_bce=float(np.mean(bl)),val_weighted_bce=stats['weighted_bce'],val_mse=stats['mse'],val_mae=stats['mae'],gradient_norm=vn))
+            if checkpoint_rule=='fixed_epochs' or stats['weighted_bce']<=bv:bv=stats['weighted_bce'];selected_v=payload(val,ep,bv)
+        checkpoint={'version':1,'config':config,'completed_epochs':ep+1,'policy':pol.state_dict(),'value':val.state_dict(),
+            'obj_trained':pol.obj_trained,'optimizer_policy':optp.state_dict(),'optimizer_value':optv.state_dict(),'scheduler':None,
+            'generator_policy':gp.get_state(),'generator_value':gv.get_state(),'torch_rng':torch.get_rng_state(),
+            'cuda_rng':torch.cuda.get_rng_state_all() if device.startswith('cuda') else None,
+            'numpy_rng':np.random.get_state(),'python_rng':random.getstate(),'policy_curve':pc,'value_curve':vc,
+            'best_policy_loss':bp,'best_value_loss':bv,'selected_policy':selected_p,'selected_value':selected_v,
+            'cpu_s':cpu_prior+time.process_time()-c0,'wall_s':wall_prior+time.monotonic()-t0}
+        P.save_checkpoint(checkpoint,save_dir/'trainer.pt')
+        if selected_p:P.save_checkpoint(selected_p,save_dir/'policy.pt')
+        if selected_v:P.save_checkpoint(selected_v,save_dir/'value.pt')
+        P.save_checkpoint(payload(pol,ep,None),save_dir/'last_policy.pt')
+        if tv is not None:P.save_checkpoint(payload(val,ep,None),save_dir/'last_value.pt')
+        if stop_after_epochs and ep+1>=stop_after_epochs:break
+    report={'domain':dom,'round':round_name,'observation_schema':schema,'seed':seed,'edges_mode':extracted.get('edges_mode','all_feasible'),
+        'checkpoint_rule':checkpoint_rule,'selection_scope':'fixed TRAIN epochs' if checkpoint_rule=='fixed_epochs' else 'TRAIN family monitor; not benchmark VAL',
+        'monitor_families':sorted(monitor),'hyperparameters':config,'n_trees':extracted.get('n_trees',0),'n_trees_with_solution':extracted.get('n_trees_with_solution',0),
+        'total_sim_calls':extracted.get('total_sim_calls',0),'n_policy_dst_rows':len(dst),'n_policy_obj_rows':len(obj),'n_value_rows':len(vr),
+        'completed_epochs':ep+1 if start_ep<epochs else start_ep,'policy_ckpt':str(save_dir/'policy.pt'),'value_ckpt':str(save_dir/'value.pt') if selected_v else None,
+        'wall_s':wall_prior+time.monotonic()-t0,'cpu_s':cpu_prior+time.process_time()-c0,'peak_rss_kib':resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,
+        'policy_curve':pc,'value_curve':vc,'new_physical_calls':0,'value_initialization':'common O0 weights, zero padded for O1',
+        'value_row_breakdown':dict(collections.Counter('stop_positive' if r['is_stop'] and r['value_target']==1 else 'stop_negative' if r['is_stop'] else 'reloc_positive_target' if r['value_target']>0 else 'reloc_zero_target' for r in vr))}
+    (save_dir/'distill_report.json').write_text(json.dumps(report,indent=2))
     return report
 
 

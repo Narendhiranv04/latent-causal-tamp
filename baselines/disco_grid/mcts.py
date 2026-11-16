@@ -48,6 +48,7 @@ sys.path.insert(0, str(HERE))
 import data as D
 import env as E
 import policy as P
+import journal as J
 
 
 def point_to_segment_dist(px: float, py: float, ax: float, ay: float, bx: float, by: float) -> float:
@@ -197,28 +198,16 @@ class DISCOMCTS:
         self.save_dir: Path | None = None
 
     def _journal_query(self, event: str, kind: str, node: MCTSNode, result=None, action=None):
-        """Write-ahead charge and result/state snapshot for every physical invocation.
-
-        A hard-killed invocation remains a charged unresolved attempt. An in-flight
-        tree is never silently resumed; the journal supports exact reconciliation.
-        """
         if self.save_dir is None: return
-        qid = self.sim_transition_calls + self.sim_terminal_calls
-        item = {"event":event,"kind":kind,"query_id":qid,"parent_id":node.node_id,
-                "root_id":node.obs.root_id,"action":action,
-                "wall_time":time.time(),"process_cpu_s":time.process_time()}
-        if result is not None:
-            name=f"query_{qid:06d}.pkl"
-            tmp=self.save_dir/(name+".tmp")
-            with tmp.open("wb") as f:
-                pickle.dump(result,f,protocol=pickle.HIGHEST_PROTOCOL)
-                f.flush();os.fsync(f.fileno())
-            os.replace(tmp,self.save_dir/name)
-            item.update(status=result.status,planner_calls=result.planner_calls,
-                        failure_kind=result.failure_kind,result_blob=name)
-        with (self.save_dir/"queries.jsonl").open("a") as f:
-            f.write(json.dumps(item,sort_keys=True)+"\n")
-            f.flush();os.fsync(f.fileno())
+        if not hasattr(self, "query_journal"):
+            self.query_journal = J.QueryJournal(self.save_dir)
+        if event == "started":
+            self.query_journal.start(self.sim_transition_calls+self.sim_terminal_calls,kind,node.state_blob,
+                {"parent_id":node.node_id,"root_id":node.obs.root_id,"action":action,
+                 "parent_state_hash":node.state_hash,"depth":node.depth,
+                 "resolved_config_sha256":hashlib.sha256(json.dumps(self.resolved_run_config,sort_keys=True).encode()).hexdigest()})
+        else:
+            self.query_journal.finish(result)
 
     def _increment_visit(self, node: MCTSNode):
         if node.visit_count == 0 and node.first_visit_iter < 0:
@@ -313,6 +302,7 @@ class DISCOMCTS:
         executed_results = []
 
         for act in batch:
+            if self.cancel_requested: break
             node.attempted_actions.append(act)
             self.sim_transition_calls += 1
             self._journal_query("started","transition",node,action=act)
@@ -424,8 +414,10 @@ class DISCOMCTS:
         save_dir: Path | None = None,
     ) -> dict[str, Any]:
         """Run MCTS from `root_id` for `iterations` rollouts (or until `max_sim_calls` is reached)."""
+        E.assert_physics_allowed("MCTS_calls")
         t0 = time.time()
         cpu0 = time.process_time()
+        accounted_wall, accounted_cpu = t0, cpu0
         self.save_dir = Path(save_dir) if save_dir is not None else None
         def model_hash(model):
             if model is None: return None
@@ -440,6 +432,7 @@ class DISCOMCTS:
                   "value_state_sha256":model_hash(self.proposal.value_model),
                   "scalers_sha256":hashlib.sha256(json.dumps(self.proposal.scalers,sort_keys=True).encode()).hexdigest(),
                   "adapter_source_sha256":D.sha256_file(HERE / "env.py"),
+                  "search_sources_sha256":{n:D.sha256_file(HERE/n) for n in ("mcts.py","policy.py","data.py","journal.py")},
                   "C": self.C, "k": self.k, "alpha": self.alpha,
                   "expansion_budget_B": self.expansion_budget_B, "max_depth": self.max_depth,
                   "selection_mode": self.selection_mode, "reward_mode": self.reward_mode,
@@ -453,7 +446,7 @@ class DISCOMCTS:
         if max_sim_calls is not None and max_sim_calls < 0:
             raise ValueError("Negative physical-call budget")
         def has_budget():
-            return max_sim_calls is None or self.sim_transition_calls + self.sim_terminal_calls < max_sim_calls
+            return not self.cancel_requested and (max_sim_calls is None or self.sim_transition_calls + self.sim_terminal_calls < max_sim_calls)
         if not self.nodes:
             s0 = self.env.reset(root_id, seed=self.seed)
             obs0 = self.env.observe(s0, include_qt=self.proposal.observation_schema == P.O1)
@@ -481,7 +474,7 @@ class DISCOMCTS:
                 break
             if save_dir is not None:
                 Path(save_dir).mkdir(parents=True, exist_ok=True)
-                (Path(save_dir) / "IN_FLIGHT").write_text(str(it))
+                J.atomic_bytes(Path(save_dir)/"IN_FLIGHT",str(it).encode())
             self.current_iter = it
             cur = root
             self._increment_visit(cur)
@@ -523,12 +516,16 @@ class DISCOMCTS:
                 "path_return": self.path_return(cur), "transition_calls": self.sim_transition_calls,
                 "terminal_calls": self.sim_terminal_calls,
                 "visits": [n.visit_count for n in self.nodes], "Q": [n.Q for n in self.nodes]})
+            now, cpu = time.time(), time.process_time()
+            self.cumulative_wall_s += now-accounted_wall
+            self.cumulative_cpu_s += cpu-accounted_cpu
+            accounted_wall, accounted_cpu = now, cpu
             if save_dir is not None:
                 self.save_tree(save_dir)
                 (Path(save_dir) / "IN_FLIGHT").unlink(missing_ok=True)
 
-        self.cumulative_wall_s += time.time() - t0
-        self.cumulative_cpu_s += time.process_time() - cpu0
+        self.cumulative_wall_s += time.time() - accounted_wall
+        self.cumulative_cpu_s += time.process_time() - accounted_cpu
         wall_s = round(time.time() - t0, 3)
         summary = self.tree_summary(wall_s=wall_s)
         if save_dir is not None:
@@ -600,7 +597,7 @@ class DISCOMCTS:
         payload["iteration_traces"] = self.iteration_traces
         # One atomic checkpoint is authoritative. Legacy extraction mirrors are
         # disposable; resume never assembles a tree from mixed file generations.
-        checkpoint = {"version": 2, "config": self.resolved_run_config,
+        checkpoint = {"version": 2, "config": self.resolved_run_config, "summary":payload["summary"],
             "nodes": self.nodes, "edge_logs": self.edge_logs,
             "rng_state": self.rng.bit_generator.state,
             "sim_transition_calls": self.sim_transition_calls,
@@ -608,16 +605,13 @@ class DISCOMCTS:
             "completed_iterations": self.completed_iterations,
             "iteration_traces": self.iteration_traces,
             "cumulative_wall_s": self.cumulative_wall_s,
-            "cumulative_cpu_s": self.cumulative_cpu_s}
-        for name, content in (("checkpoint.pkl", pickle.dumps(checkpoint, protocol=pickle.HIGHEST_PROTOCOL)),
-                              ("nodes.pkl", pickle.dumps(self.nodes, protocol=pickle.HIGHEST_PROTOCOL)),
-                              ("tree.json", json.dumps(payload, indent=2).encode())):
-            tmp = save_dir / (name + ".tmp")
-            with open(tmp, "wb") as f:
-                f.write(content)
-                f.flush()
-                os.fsync(f.fileno())
-            os.replace(tmp, save_dir / name)
+            "cumulative_cpu_s": self.cumulative_cpu_s,
+            "backend_caches": self.env.snapshot_caches() if hasattr(self.env,"snapshot_caches") else None}
+        checkpoint_bytes=pickle.dumps(checkpoint,protocol=pickle.HIGHEST_PROTOCOL)
+        J.atomic_bytes(save_dir/"checkpoint.pkl",checkpoint_bytes)
+        J.atomic_bytes(save_dir/"checkpoint.sha256",hashlib.sha256(checkpoint_bytes).hexdigest().encode())
+        J.atomic_bytes(save_dir/"nodes.pkl",pickle.dumps(self.nodes,protocol=pickle.HIGHEST_PROTOCOL))
+        J.atomic_json(save_dir/"tree.json",payload)
 
     def resume(self, save_dir: Path | str) -> None:
         """Resume a clean iteration boundary; refuse uncertain in-flight crashes.
@@ -627,12 +621,20 @@ class DISCOMCTS:
         Pickles must be trusted local artifacts.
         """
         save_dir = Path(save_dir)
-        if (save_dir / "IN_FLIGHT").exists():
+        if (save_dir / "IN_FLIGHT").exists() or (save_dir/"ACTIVE_QUERY.json").exists():
             raise ValueError("Unreconciled in-flight physical queries; automatic resume refused")
+        if not (save_dir/"checkpoint.sha256").exists() or D.sha256_file(save_dir/"checkpoint.pkl")!=(save_dir/"checkpoint.sha256").read_text():
+            raise ValueError("Uncertified or corrupt checkpoint checksum")
         with open(save_dir / "checkpoint.pkl", "rb") as f:
             ck = pickle.load(f)
         if ck["version"] != 2:
             raise ValueError("Unsupported search checkpoint version")
+        if (save_dir/"queries.jsonl").exists():
+            J.certify_journal(save_dir,ck["sim_transition_calls"]+ck["sim_terminal_calls"])
+        else:
+            raise ValueError("Missing durable journal; legacy tree is analysis-only")
+        if ck.get("backend_caches") is not None:
+            self.env.restore_caches(ck["backend_caches"])
         self.resolved_run_config = ck["config"]
         self.nodes = ck["nodes"]
         self.edge_logs = ck["edge_logs"]
@@ -647,6 +649,11 @@ class DISCOMCTS:
 
 def load_saved_tree_nodes(tree_dir: Path | str) -> tuple[list[MCTSNode], dict[str, Any]]:
     tree_dir = Path(tree_dir)
+    if (tree_dir/"IN_FLIGHT").exists() or (tree_dir/"ACTIVE_QUERY.json").exists():
+        raise ValueError("Unreconciled physical tree cannot supervise training")
+    if (tree_dir/"checkpoint.pkl").exists():
+        with (tree_dir/"checkpoint.pkl").open("rb") as f: ck=pickle.load(f)
+        return ck["nodes"], {"summary":ck["summary"] if "summary" in ck else json.loads((tree_dir/"tree.json").read_text())["summary"],"config":ck["config"]}
     meta = json.loads((tree_dir / "tree.json").read_text())
     with open(tree_dir / "nodes.pkl", "rb") as f:
         nodes = pickle.load(f)

@@ -111,6 +111,7 @@ def analytic_displacement(inp: dict[str, Any], dom: str, seq: list[tuple[int, in
     return float(sum(math.dist(cell_xy[str(cells0[int(o)])], cell_xy[str(int(d))]) for o, d in seq) / pitch)
 
 
+@E.selection_only
 def select_action_model_only(
     obs: E.LearnerObservation,
     proposal: P.PolicyProposalWrapper,
@@ -269,6 +270,7 @@ def select_action_model_only(
     }
 
 
+@E.selection_only
 def predict_open_loop_sequence(
     row: dict[str, Any],
     dom: str,
@@ -355,6 +357,8 @@ def run_closed_loop_episode(
     When `max_action_retries=1` (disclosed separately per Section 10.3 item 3), allows at most 1 retry
     from the next-highest ranked candidate in `C_theta(h_t)` if an executed step fails.
     """
+    if max_action_retries != 0:
+        raise ValueError("Retries require certified post-failure state; Stage 2 supports no-retry only")
     t0 = time.time()
     p_calls_0 = proposal.policy_calls
     v_calls_0 = proposal.value_calls
