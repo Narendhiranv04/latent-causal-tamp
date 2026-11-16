@@ -81,3 +81,15 @@
 - V3 rule tuning used truncated pools for 2D roots with more than 2,048 candidates. The selected rule (α = β = γ = 0) only needs the top candidate, so the frozen V3 rule is unaffected, but rules with non-zero penalties were evaluated on truncated pools.
 - **5,458 labelled candidate sequences** (V3-4) is not the same as **6,961 newly added X/Y label entries** (2D 2,326 Y + 1,587 X; 3D 1,423 Y + 1,625 X).
 - V3-7 status: the teammate's dataset extension was **deferred** while the methodology proceeded, not cancelled.
+
+## Addendum: V3 artifacts on gvlab + inference parity (2026-11-16 13:15 IST)
+
+- **Copy (user-approved, one time, read-only).** The frozen V3 artifacts were copied from gvlab2 to `/scratch/nav/abf_v3_1/v3_artifacts`, relayed through the laptop as a plain file transfer. Nothing was computed on gvlab2 or the laptop.
+  - Contents: snapshot `abf_v3_e8a496bc66266fca`, `v3_3` task cVAEs, `v3_5` scorers / rules / tuning records, `v3_4` labels / items / candidates.
+  - 8,015 files; sha256 verified at both ends against the source manifest (`SHA256SUMS.source`, sha256 `5fc6da800def7243…`); write-protected on gvlab.
+- **Parity.** The frozen V3 primary (task cVAE q2init_all s0 + V3 D s0) was re-run on gvlab (RTX 4090, torch 2.5.1) on validation `valsub` (2D 300 / 3D 291 roots). It was compared with the original gvlab2 records (RTX 5090, torch 2.9.1), using the same seed, M = 4 and B = 4,096 (`v3_1_1/PARITY_GVLAB.json`):
+  - identical proposal sets: 300 / 300 and 291 / 291;
+  - identical stored candidate sets: 300 / 300 and 291 / 291;
+  - max |Δp11| = 1.0e-6 (the stored rounding);
+  - identical selections under the same rule: 300 / 300 (2D) and 291 / 291 (3D).
+  The original valsub records were written under the V2 rule (2D β = 0.1) before V3-5 tuned the V3 rule. Re-selecting both record sets under either rule gives 300 / 300 agreement. **V3 inference is reproduced exactly on gvlab.**
