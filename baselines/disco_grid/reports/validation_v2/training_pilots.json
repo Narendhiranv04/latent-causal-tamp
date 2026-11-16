@@ -1,0 +1,230 @@
+{
+  "2d": {
+    "manifest": {
+      "version": 2,
+      "domain": "2d",
+      "roots": [
+        {
+          "root_id": "D2H_7aa5bebefe",
+          "family_id": "fam-309a0a9cb9",
+          "root_sha256": "a784d8eef9b1e756c7e623ec2598d546696330bdd9efc7d97c0efe9120459100",
+          "input_sha256": "d4781dba7eac13b6ef786356f0422c603479eaa0c915d60c7b420c4bd278eb79",
+          "K_legacy": "3",
+          "split": "train"
+        }
+      ],
+      "split_hygiene": {
+        "n_roots": 5000,
+        "unique_roots": 5000,
+        "root_split_conflicts": 0,
+        "family_split_conflicts": 0,
+        "layout_split_conflicts": 0,
+        "raw_hash_split_conflicts": 0,
+        "input_hash_split_conflicts": 0
+      },
+      "excluded_historical_train_families": [
+        "fam-0ed5037462",
+        "fam-21012cf366",
+        "fam-2d6963b40d",
+        "fam-375c18ccda",
+        "fam-41acebbbe2",
+        "fam-6368fa74ba",
+        "fam-6a1decf49b",
+        "fam-72131b0de5",
+        "fam-72a636e689",
+        "fam-795735d9d6",
+        "fam-7e5e344bb5",
+        "fam-8f07548f85",
+        "fam-92778deb71",
+        "fam-9bbe4f27ad",
+        "fam-a05790de96",
+        "fam-a39f10a12a",
+        "fam-ae16e2dca1",
+        "fam-b4da0e3fa6",
+        "fam-b85c5cef7c",
+        "fam-c9836ef1fb",
+        "fam-cfbe35fcf9",
+        "fam-d9782081e7",
+        "fam-e880a72994",
+        "fam-e934e64f96"
+      ],
+      "search_seed": 20261116,
+      "network_initialization_seed": 0,
+      "proposal_mode": "p0",
+      "observation_schema": "o0_v1",
+      "policy_checkpoint": "/scratch/nav/disco_grid/runs/p0/2d/s0/model.pt",
+      "policy_sha256": "63ba7613c1369c668e314e5f61551ce6c72db752b75f0c4b431db365ae565307",
+      "scalers": "/scratch/nav/approachb_final/data/q2_2d/scalers.json",
+      "scalers_sha256": "884b35673692a98adf73a6662fdb05e7a489112d6340f32be72e4a1a7e744095",
+      "snapshot_lock_sha256": "1b3b9e939882a117dd8f9f579e0f9ffb01794fd30bc89c652d86d57321749608",
+      "source_sha256": {
+        "mcts.py": "b46af253b110efeb074b046db765843e814b5ca31a0e0dd5f69a8e0f8d659807",
+        "policy.py": "b51c8f4f1a262a172129fbd017a4fea7d2bc36d17e4b1a30159b11aaa039c751",
+        "evaluate.py": "a385326922776a5897cba91014e68c89786b4c3668c329459717d48d5fa9ec5a",
+        "collect.py": "ed825d5b450093ad0b8e77dd7266b7b01ff27b3ecaca5508615d0e8c1eb8edea",
+        "distill.py": "1b43f3b7788ae3349ae21d48e9269ccfbcbdc6f1fdf6e7e706678b234ffc6827",
+        "viz.py": "fce5e62252e6e899917372fa04a88a199d2a1dced844d53ae95121537df00af6",
+        "data.py": "538357f06c238960a9136c9e668f3aefa526a7014f6fcfaba1861660796d2634",
+        "env.py": "69e53e7040ee22d57ffe2b4cc898b7b35f109e59100ea0627637123e66b5ea76",
+        "ablate.py": "d0d7ca737ac6918a674add2d19c8cb5f458e49e57ae4fe2ae947ab39ac553602"
+      },
+      "host_allowlist": [
+        "gvlab"
+      ],
+      "workers": 1,
+      "threads": 1,
+      "gpu": false,
+      "wall_envelope_s": 180,
+      "aggregate_adapter_call_ceiling": 16,
+      "per_tree": {
+        "iterations": 8,
+        "max_sim_calls": 16,
+        "expansion_budget_B": 2,
+        "C": 1.5,
+        "k": 2.0,
+        "alpha": 0.3,
+        "max_depth": 3,
+        "reward_mode": "geometric"
+      },
+      "cancel_command": "kill -TERM <pid recorded in /scratch/nav/disco_grid/validation_v2/pilot_2d_k3_seed20261116/pid> (cooperative iteration-boundary save)",
+      "scaling_status": "NOT_AUTHORIZED beyond pilot ceilings"
+    },
+    "results": [
+      {
+        "root_id": "D2H_7aa5bebefe",
+        "domain": "2d",
+        "seed": 20261116,
+        "reward_mode": "geometric",
+        "use_progressive_widening": true,
+        "root_visits": 2,
+        "total_nodes": 9,
+        "feasible_relocation_edges": 8,
+        "failed_transition_attempts": 2,
+        "successful_terminal_nodes": 0,
+        "found_verified_solution": false,
+        "verified_solutions": [],
+        "best_path_return": 0.2287,
+        "sim_transition_calls": 10,
+        "sim_terminal_calls": 6,
+        "total_sim_calls": 16,
+        "wall_s": 99.582,
+        "cumulative_wall_s": 99.58202815055847,
+        "cumulative_cpu_s": 99.37701919,
+        "completed_iterations": 2,
+        "resolved_config": {
+          "iterations": 8,
+          "max_sim_calls": 16,
+          "C": 1.5,
+          "k": 2.0,
+          "alpha": 0.3,
+          "expansion_budget_B": 2,
+          "max_depth": 3,
+          "selection_mode": "ucb",
+          "reward_mode": "geometric",
+          "use_progressive_widening": true,
+          "observation_schema": "o0_v1",
+          "seed": 20261116
+        },
+        "budget_unit": "adapter_transition_plus_terminal_calls; terminal may include connector and Y",
+        "resources_before": {
+          "hostname": "gvlab",
+          "load1": 20.3857421875,
+          "logical_cpus": 24,
+          "ram_available": 51078524928,
+          "disk_free": 213666676736
+        },
+        "K_legacy": "3"
+      }
+    ]
+  },
+  "3d": {
+    "manifest": {
+      "version": 2,
+      "domain": "3d",
+      "roots": [
+        {
+          "root_id": "D3H_GVLAB_366ce85b50",
+          "family_id": "fam-08037cd63c",
+          "root_sha256": "c9c4c04ef8f3e02230264728ae731f42d396a15916592f0f720b734e65904ac5",
+          "input_sha256": "94ed3f33b6ac3d4f4b02c873743b31549e8e8ccdad1f5c4cbc131d6a7b85fca7",
+          "K_legacy": "3",
+          "split": "train"
+        }
+      ],
+      "split_hygiene": {
+        "n_roots": 2500,
+        "unique_roots": 2500,
+        "root_split_conflicts": 0,
+        "family_split_conflicts": 0,
+        "layout_split_conflicts": 0,
+        "raw_hash_split_conflicts": 0,
+        "input_hash_split_conflicts": 0
+      },
+      "excluded_historical_train_families": [
+        "fam-09d1c4f24a",
+        "fam-3420302819",
+        "fam-38d2e211ff",
+        "fam-44bde6f6cc",
+        "fam-5c8108aa20",
+        "fam-68d33e838f",
+        "fam-7eacde0833",
+        "fam-83d1a682af",
+        "fam-87f3ad70c5",
+        "fam-9e5bbb925a",
+        "fam-f982fcbb45",
+        "fam-fa18c4f030"
+      ],
+      "search_seed": 20261116,
+      "network_initialization_seed": 0,
+      "proposal_mode": "p0",
+      "observation_schema": "o0_v1",
+      "policy_checkpoint": "/scratch/nav/disco_grid/runs/p0/3d/s0/model.pt",
+      "policy_sha256": "dd91ba5184a27fd172e6ad30d5ce02500c5fffefd510039572364dfcc49efc40",
+      "scalers": "/scratch/nav/approachb_final/data/q2_3d/scalers.json",
+      "scalers_sha256": "36a94926ddd875cc2271827d1c01bbba65ad487a8c7387cf1d3f827bb916dee6",
+      "snapshot_lock_sha256": "1b3b9e939882a117dd8f9f579e0f9ffb01794fd30bc89c652d86d57321749608",
+      "source_sha256": {
+        "mcts.py": "b46af253b110efeb074b046db765843e814b5ca31a0e0dd5f69a8e0f8d659807",
+        "policy.py": "b51c8f4f1a262a172129fbd017a4fea7d2bc36d17e4b1a30159b11aaa039c751",
+        "evaluate.py": "a385326922776a5897cba91014e68c89786b4c3668c329459717d48d5fa9ec5a",
+        "collect.py": "ed825d5b450093ad0b8e77dd7266b7b01ff27b3ecaca5508615d0e8c1eb8edea",
+        "distill.py": "1b43f3b7788ae3349ae21d48e9269ccfbcbdc6f1fdf6e7e706678b234ffc6827",
+        "viz.py": "fce5e62252e6e899917372fa04a88a199d2a1dced844d53ae95121537df00af6",
+        "data.py": "538357f06c238960a9136c9e668f3aefa526a7014f6fcfaba1861660796d2634",
+        "env.py": "69e53e7040ee22d57ffe2b4cc898b7b35f109e59100ea0627637123e66b5ea76",
+        "ablate.py": "d0d7ca737ac6918a674add2d19c8cb5f458e49e57ae4fe2ae947ab39ac553602"
+      },
+      "host_allowlist": [
+        "gvlab"
+      ],
+      "workers": 1,
+      "threads": 1,
+      "gpu": false,
+      "wall_envelope_s": 300,
+      "aggregate_adapter_call_ceiling": 12,
+      "per_tree": {
+        "iterations": 8,
+        "max_sim_calls": 12,
+        "expansion_budget_B": 2,
+        "C": 1.5,
+        "k": 2.0,
+        "alpha": 0.3,
+        "max_depth": 3,
+        "reward_mode": "geometric"
+      },
+      "cancel_command": "kill -TERM <pid recorded in /scratch/nav/disco_grid/validation_v2/pilot_3d_k3_seed20261116/pid> (cooperative iteration-boundary save)",
+      "scaling_status": "NOT_AUTHORIZED beyond pilot ceilings"
+    },
+    "status": {
+      "pid": 2788292,
+      "elapsed_s": 305,
+      "status": "UNRESOLVED_IN_FLIGHT",
+      "automatic_resume": "REFUSED",
+      "scope": "only owned DISCO pilot process"
+    },
+    "completed_tree": false,
+    "physical_adapter_calls": "UNAVAILABLE: interrupted before first iteration checkpoint in pre-journal collector",
+    "cpu_time": "UNAVAILABLE: process ended before final accounting",
+    "labels": "UNRESOLVED in-flight; no negatives inferred; witnesses preserved on host"
+  }
+}

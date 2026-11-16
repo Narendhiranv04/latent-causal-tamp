@@ -40,3 +40,21 @@ Execution gate: no new physical collection or GPU training while both gvlab GPUs
 and the ongoing 9+7 Approach B verification workers are busy. Lightweight tests
 may use one nice CPU thread. Other three hosts: authenticated read-only inventory,
 zero DISCO execution authorization. See HOST_INVENTORY.md / host_inventory.json.
+
+Validation completion addendum (17 November 2026 IST): original lightweight
+suite 10/10, final suite 35/35 on gvlab; archived primary predictions replayed
+315/315 exactly and fresh 2D/3D physical order parity 4/4. Teacher sources are
+hashed in teacher_sources.json (15 possible 2D imports, 7 authoritative 3D files).
+The actual 3D wrapper selects `confined` and applies SHELF66 scene overrides:
+6×6, pitch .075, floor .55, azimuth step22.5 degrees, level side grasps with
+middle/top heights. Base module defaults are not the resolved shelf settings.
+Native mesh/library hashes were not exhaustively re-audited.
+
+Additional verified issues and fixes: repeated cached STOP visits inflated
+positive evidence; wrapped minibatch slices could omit/empty batches; NOOP
+unknowns were missing from task censoring; closed-loop unresolved steps were
+coerced to X=0; seed/root pairing silently intersected cohorts; early 3D wall
+alarms could be replaced by the teacher. These corrections and remaining gates
+are documented in Q_STATE_AND_MCTS_AUDIT.md and FINAL_DECISION.md. Historical
+reports/data labels/checkpoints remain unchanged; any prospective administrative
+censoring revision must be common to both methods before paired evaluation.

@@ -1,0 +1,481 @@
+[
+  {
+    "case": "K0 STOP miss",
+    "domain": "2d",
+    "root_id": "2d-plus2d-w0057-s022",
+    "root_sha256": "5d91855b28937cede55905746b75c41d1cb7318ef34ee42da32804aba288de9c",
+    "prediction": {
+      "root_id": "2d-plus2d-w0057-s022",
+      "domain": "2d",
+      "split": "test",
+      "K_legacy": "0",
+      "masks": {
+        "train_prediction": true,
+        "eval_repair": false,
+        "eval_task": false,
+        "eval_noop": true,
+        "eval_abstain": false
+      },
+      "protocol": "open_loop",
+      "seed": 0,
+      "status": "REPAIR",
+      "seq": [
+        [
+          1,
+          27
+        ],
+        [
+          2,
+          35
+        ],
+        [
+          0,
+          38
+        ]
+      ],
+      "m": 3,
+      "displacement": 11.0552,
+      "policy_calls": 9,
+      "value_calls": 51,
+      "planner_calls_during_selection": 0,
+      "latency_ms": 17.586,
+      "step_traces": [
+        {
+          "step": 0,
+          "selected": [
+            1,
+            27
+          ],
+          "score": 0.98768,
+          "stop_score": 0.47621,
+          "n_candidates": 16
+        },
+        {
+          "step": 1,
+          "selected": [
+            2,
+            35
+          ],
+          "score": 0.99371,
+          "stop_score": 0.67634,
+          "n_candidates": 16
+        },
+        {
+          "step": 2,
+          "selected": [
+            0,
+            38
+          ],
+          "score": 0.99965,
+          "stop_score": 0.94161,
+          "n_candidates": 16
+        }
+      ],
+      "arm": "p2_q2_primary",
+      "verified": 1,
+      "x": 1,
+      "y": 1,
+      "failed_phase": null,
+      "failure_kind": null,
+      "verification_source": "physical_verifier"
+    },
+    "verification": "archived independent verifier; not re-executed for this plot"
+  },
+  {
+    "case": "K1 independently verified success",
+    "domain": "2d",
+    "root_id": "2d-conv-plus2d-w0134-s012",
+    "root_sha256": "91bfdc910ac380d474c3ebfa193a54f64ea9f0660f4a07f5ac3dbb0760ad6b5f",
+    "prediction": {
+      "root_id": "2d-conv-plus2d-w0134-s012",
+      "domain": "2d",
+      "split": "test",
+      "K_legacy": "1",
+      "masks": {
+        "train_prediction": true,
+        "eval_repair": true,
+        "eval_task": true,
+        "eval_noop": false,
+        "eval_abstain": false
+      },
+      "protocol": "open_loop",
+      "seed": 0,
+      "status": "REPAIR",
+      "seq": [
+        [
+          7,
+          21
+        ],
+        [
+          0,
+          10
+        ],
+        [
+          2,
+          32
+        ]
+      ],
+      "m": 3,
+      "displacement": 12.4842,
+      "policy_calls": 30,
+      "value_calls": 51,
+      "planner_calls_during_selection": 0,
+      "latency_ms": 25.104,
+      "step_traces": [
+        {
+          "step": 0,
+          "selected": [
+            7,
+            21
+          ],
+          "score": 0.13567,
+          "stop_score": 0.01039,
+          "n_candidates": 16
+        },
+        {
+          "step": 1,
+          "selected": [
+            0,
+            10
+          ],
+          "score": 0.38853,
+          "stop_score": 0.01716,
+          "n_candidates": 16
+        },
+        {
+          "step": 2,
+          "selected": [
+            2,
+            32
+          ],
+          "score": 0.30022,
+          "stop_score": 0.05139,
+          "n_candidates": 16
+        }
+      ],
+      "arm": "p2_q2_primary",
+      "verified": 1,
+      "x": 1,
+      "y": 1,
+      "failed_phase": null,
+      "failure_kind": null,
+      "verification_source": "physical_verifier"
+    },
+    "verification": "archived independent verifier; not re-executed for this plot"
+  },
+  {
+    "case": "K2 failed proposed repair",
+    "domain": "2d",
+    "root_id": "2d-plus2d-srv-w0255-s022",
+    "root_sha256": "4ce01c345f485491c97c060abf2cd6ab9ca11bf1299669d21c901575728d1c8d",
+    "prediction": {
+      "root_id": "2d-plus2d-srv-w0255-s022",
+      "domain": "2d",
+      "split": "test",
+      "K_legacy": "2",
+      "masks": {
+        "train_prediction": true,
+        "eval_repair": true,
+        "eval_task": true,
+        "eval_noop": false,
+        "eval_abstain": false
+      },
+      "protocol": "open_loop",
+      "seed": 0,
+      "status": "REPAIR",
+      "seq": [
+        [
+          6,
+          44
+        ],
+        [
+          0,
+          10
+        ],
+        [
+          3,
+          35
+        ]
+      ],
+      "m": 3,
+      "displacement": 11.24,
+      "policy_calls": 27,
+      "value_calls": 51,
+      "planner_calls_during_selection": 0,
+      "latency_ms": 22.263,
+      "step_traces": [
+        {
+          "step": 0,
+          "selected": [
+            6,
+            44
+          ],
+          "score": 0.16031,
+          "stop_score": 0.00296,
+          "n_candidates": 16
+        },
+        {
+          "step": 1,
+          "selected": [
+            0,
+            10
+          ],
+          "score": 0.10982,
+          "stop_score": 0.0055,
+          "n_candidates": 16
+        },
+        {
+          "step": 2,
+          "selected": [
+            3,
+            35
+          ],
+          "score": 0.82257,
+          "stop_score": 0.01836,
+          "n_candidates": 16
+        }
+      ],
+      "arm": "p2_q2_primary",
+      "verified": 0,
+      "x": 0,
+      "y": null,
+      "failed_phase": "relocation:0",
+      "failure_kind": "CERTIFIED",
+      "verification_source": "physical_verifier"
+    },
+    "verification": "archived independent verifier; not re-executed for this plot"
+  },
+  {
+    "case": "K3 failed proposed repair",
+    "domain": "2d",
+    "root_id": "D2H_e0c53bca91",
+    "root_sha256": "d0c3548fa9c599f2e825e856e60cf893e06adf3e41415b30faeee236bb75307e",
+    "prediction": {
+      "root_id": "D2H_e0c53bca91",
+      "domain": "2d",
+      "split": "test",
+      "K_legacy": "3",
+      "masks": {
+        "train_prediction": true,
+        "eval_repair": true,
+        "eval_task": true,
+        "eval_noop": false,
+        "eval_abstain": false
+      },
+      "protocol": "open_loop",
+      "seed": 0,
+      "status": "REPAIR",
+      "seq": [
+        [
+          2,
+          3
+        ],
+        [
+          1,
+          27
+        ],
+        [
+          3,
+          43
+        ]
+      ],
+      "m": 3,
+      "displacement": 10.7213,
+      "policy_calls": 36,
+      "value_calls": 51,
+      "planner_calls_during_selection": 0,
+      "latency_ms": 24.381,
+      "step_traces": [
+        {
+          "step": 0,
+          "selected": [
+            2,
+            3
+          ],
+          "score": 0.53187,
+          "stop_score": 0.02147,
+          "n_candidates": 16
+        },
+        {
+          "step": 1,
+          "selected": [
+            1,
+            27
+          ],
+          "score": 0.36493,
+          "stop_score": 0.01058,
+          "n_candidates": 16
+        },
+        {
+          "step": 2,
+          "selected": [
+            3,
+            43
+          ],
+          "score": 0.87389,
+          "stop_score": 0.18939,
+          "n_candidates": 16
+        }
+      ],
+      "arm": "p2_q2_primary",
+      "verified": 0,
+      "x": 1,
+      "y": 0,
+      "failed_phase": "target",
+      "failure_kind": "NO_PLAN_FOUND",
+      "verification_source": "physical_verifier"
+    },
+    "verification": "archived independent verifier; not re-executed for this plot"
+  },
+  {
+    "case": "Legacy NONE explicit abstention",
+    "domain": "2d",
+    "root_id": "2d-plus2d-w0238-s020",
+    "root_sha256": "094d9839d8c0548599f7d920d4192259138f2d678f9a9798296e79f59688a10c",
+    "prediction": {
+      "root_id": "2d-plus2d-w0238-s020",
+      "domain": "2d",
+      "split": "test",
+      "K_legacy": "NONE",
+      "masks": {
+        "train_prediction": true,
+        "eval_repair": false,
+        "eval_task": false,
+        "eval_noop": false,
+        "eval_abstain": true
+      },
+      "protocol": "open_loop",
+      "seed": 0,
+      "status": "ABSTAIN",
+      "seq": null,
+      "m": null,
+      "displacement": null,
+      "policy_calls": 19,
+      "value_calls": 17,
+      "planner_calls_during_selection": 0,
+      "latency_ms": 11.33,
+      "step_traces": [
+        {
+          "step": 0,
+          "selected": "ABSTAIN",
+          "score": 0.00075,
+          "stop_score": 2e-05,
+          "n_candidates": 16
+        }
+      ],
+      "arm": "p2_q2_primary",
+      "verified": 0,
+      "x": null,
+      "y": null,
+      "verification_source": "abstain_no_query"
+    },
+    "verification": "archived independent verifier; not re-executed for this plot"
+  },
+  {
+    "case": "3D failed grasp / connector",
+    "domain": "3d",
+    "root_id": "3ds66-lap-w0034-s009",
+    "root_sha256": "d2047c01e222bf53fe23662da298a4c7f232788ecb374a188920d81cbdb3e754",
+    "prediction": {
+      "root_id": "3ds66-lap-w0034-s009",
+      "domain": "3d",
+      "split": "test",
+      "K_legacy": "0",
+      "masks": {
+        "train_prediction": true,
+        "eval_repair": false,
+        "eval_task": false,
+        "eval_noop": true,
+        "eval_abstain": false
+      },
+      "protocol": "open_loop",
+      "seed": 1,
+      "status": "REPAIR",
+      "seq": [
+        [
+          3,
+          5
+        ],
+        [
+          1,
+          13
+        ],
+        [
+          4,
+          28
+        ]
+      ],
+      "m": 3,
+      "displacement": 5.4721,
+      "policy_calls": 12,
+      "value_calls": 39,
+      "planner_calls_during_selection": 0,
+      "latency_ms": 14.755,
+      "step_traces": [
+        {
+          "step": 0,
+          "selected": [
+            3,
+            5
+          ],
+          "score": 0.1071,
+          "stop_score": 0.01204,
+          "n_candidates": 12
+        },
+        {
+          "step": 1,
+          "selected": [
+            1,
+            13
+          ],
+          "score": 0.10266,
+          "stop_score": 0.0257,
+          "n_candidates": 12
+        },
+        {
+          "step": 2,
+          "selected": [
+            4,
+            28
+          ],
+          "score": 0.54358,
+          "stop_score": 0.064,
+          "n_candidates": 12
+        }
+      ],
+      "arm": "p2_q2_primary",
+      "verified": 0,
+      "x": 0,
+      "y": null,
+      "failed_phase": "connector",
+      "failure_kind": "CONNECTOR_NO_PLAN",
+      "verification_source": "physical_verifier"
+    },
+    "verification": "archived independent verifier; not re-executed for this plot"
+  },
+  {
+    "case": "same geometry differing q",
+    "root_id": "2d-conv-plus2d-w0047-s019",
+    "tree": "/scratch/nav/disco_grid/trees/2d/r0_p0_pw_geom/2d-conv-plus2d-w0047-s019/nodes.pkl",
+    "state_hash": "787d4959485a5f8df1b0b445",
+    "q_t": [
+      0.8458485368340343,
+      -1.4089813550459196,
+      -1.5312622841813104
+    ],
+    "q_ref": [
+      1.5707963267948966,
+      1.5707963267948966,
+      1.5707963267948966
+    ],
+    "cells": [
+      22,
+      4,
+      7,
+      19,
+      6,
+      5
+    ],
+    "connector_witness": "20a5ff14d4451c74db1880a3"
+  }
+]
