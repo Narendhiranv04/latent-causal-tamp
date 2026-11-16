@@ -399,7 +399,7 @@ class _Backend2D:
             detail=meta.get("via"),
         )
 
-    def terminal_query(self, row: dict[str, Any], rec: dict[str, Any], state: FullState) -> StopResult:
+    def terminal_query(self, row: dict[str, Any], rec: dict[str, Any], state: FullState, evaluate_y_on_x_fail: bool = True) -> StopResult:
         self.boot()
         t0 = time.process_time()
         inp = row["inputs"]
@@ -463,6 +463,30 @@ class _Backend2D:
                         failed_phase = "replay"
                         fail_kind = "OTHER_FAILURE"
 
+        canon_cells = {ids[i]: int(c) for i, c in enumerate(state.cells)}
+        exec_poses = {ids[i]: list(inp["cell_xy"][str(c)]) for i, c in enumerate(state.cells)}
+        drift = {k: 0.0 for k in canon_cells}
+
+        if not evaluate_y_on_x_fail and x_val == 0:
+            return StopResult(
+                status="DECIDED",
+                success=False,
+                x_terminal=0,
+                y_target=None,
+                z_outcome=0,
+                failed_phase=failed_phase,
+                failure_kind=fail_kind,
+                connector_status=conn_status,
+                y_status="SKIPPED_ON_X_FAIL",
+                witness_connector=w_conn,
+                witness_y=None,
+                canonical_endpoint_cells=canon_cells,
+                executed_object_poses=exec_poses,
+                endpoint_pose_drift_m=drift,
+                planner_calls=p_calls,
+                time_s=round(time.process_time() - t0, 4),
+            )
+
         # 2. Canonical endpoint Y query (cached by canonical endpoint key)
         self._sync_geom(rec)
         y_key = self.T.ykey(state.root_id, rec, seq_obj)
@@ -481,9 +505,6 @@ class _Backend2D:
             fail_kind = yr.get("negative_kind")
 
         z_val = int(x_val == 1 and y_val == 1) if (x_val in (0, 1) and y_val in (0, 1)) else None
-        canon_cells = {ids[i]: int(c) for i, c in enumerate(state.cells)}
-        exec_poses = {ids[i]: list(inp["cell_xy"][str(c)]) for i, c in enumerate(state.cells)}
-        drift = {k: 0.0 for k in canon_cells}
 
         return StopResult(
             status="DECIDED" if z_val is not None else "UNRESOLVED",
@@ -732,7 +753,7 @@ class _Backend3D:
             detail=f"grasp_id={qi.get('grasp_id')}",
         )
 
-    def terminal_query(self, row: dict[str, Any], rec: dict[str, Any], state: FullState) -> StopResult:
+    def terminal_query(self, row: dict[str, Any], rec: dict[str, Any], state: FullState, evaluate_y_on_x_fail: bool = True) -> StopResult:
         self.boot()
         t0 = time.process_time()
         inp = row["inputs"]
@@ -769,6 +790,26 @@ class _Backend3D:
             conn_status = str(c.get("failure") or "VERIFIED")
             failed_phase = None if c["ok"] else "connector"
             fail_kind = None if c["ok"] else conn_status
+
+        if not evaluate_y_on_x_fail and x_val == 0:
+            return StopResult(
+                status="DECIDED",
+                success=False,
+                x_terminal=0,
+                y_target=None,
+                z_outcome=0,
+                failed_phase=failed_phase,
+                failure_kind=fail_kind,
+                connector_status=conn_status,
+                y_status="SKIPPED_ON_X_FAIL",
+                witness_connector=w_conn,
+                witness_y=None,
+                canonical_endpoint_cells=canon_rc,
+                executed_object_poses=exec_poses,
+                endpoint_pose_drift_m=drift,
+                planner_calls=p_calls,
+                time_s=round(time.process_time() - t0, 4),
+            )
 
         # Canonical endpoint Y query (independent of relocation order, settled at q_ready)
         ekey = f"{state.root_id}|{json.dumps( sorted(canon_rc.items()) )}"
@@ -901,9 +942,9 @@ class RepairEnv:
         row, rec = self._get_row_and_raw(state.root_id)
         return self.backend.transition(row, rec, state, action)
 
-    def terminal_query(self, state: FullState) -> StopResult:
+    def terminal_query(self, state: FullState, evaluate_y_on_x_fail: bool = True) -> StopResult:
         row, rec = self._get_row_and_raw(state.root_id)
-        return self.backend.terminal_query(row, rec, state)
+        return self.backend.terminal_query(row, rec, state, evaluate_y_on_x_fail=evaluate_y_on_x_fail)
 
     def endpoint_y_query(self, root_id: str, seq: list[tuple[int, int]]) -> dict[str, Any]:
         """Evaluate canonical endpoint Y independently of whether X succeeded (for parity & open-loop verification)."""
@@ -939,10 +980,16 @@ class RepairEnv:
                 "witness": (yr.get("witnesses") or [None])[0],
             }
 
-    def execute_complete_sequence(self, root_id: str, seq: list[tuple[int, int]], seed: int = 0) -> dict[str, Any]:
+    def execute_complete_sequence(
+        self,
+        root_id: str,
+        seq: list[tuple[int, int]],
+        seed: int = 0,
+        evaluate_y_on_x_fail: bool = True,
+    ) -> dict[str, Any]:
         """Run `reset -> transition -> ... -> terminal_query` for `seq` (`0 <= len(seq) <= 3`).
         If an intermediate `transition` fails at step `j`, `x=0` (`failed_phase=f'relocation:{j}'`),
-        and `y` is still evaluated on the canonical endpoint `End(S0, seq)`.
+        and `y` is evaluated on the canonical endpoint `End(S0, seq)` iff `evaluate_y_on_x_fail=True`.
         """
         st = self.reset(root_id, seed=seed)
         step_results = []
@@ -950,9 +997,24 @@ class RepairEnv:
             sr = self.transition(st, (int(act[0]), int(act[1])))
             step_results.append(sr)
             if sr.status != "EXECUTED":
+                x_val = 0 if sr.status == "PHYSICALLY_FAILED" else None
+                if not evaluate_y_on_x_fail and x_val == 0:
+                    return {
+                        "root_id": root_id,
+                        "seq": [[int(o), int(d)] for o, d in seq],
+                        "status": "DECIDED",
+                        "x": 0,
+                        "y": None,
+                        "z": 0,
+                        "failed_phase": f"relocation:{j}",
+                        "failure_kind": sr.failure_kind,
+                        "teacher_status": sr.teacher_status,
+                        "y_status": "SKIPPED_ON_X_FAIL",
+                        "step_results": step_results,
+                        "stop_result": None,
+                    }
                 yq = self.endpoint_y_query(root_id, seq)
                 y_val = yq["y"]
-                x_val = 0 if sr.status == "PHYSICALLY_FAILED" else None
                 z_val = int(x_val == 1 and y_val == 1) if (x_val in (0, 1) and y_val in (0, 1)) else None
                 return {
                     "root_id": root_id,
@@ -969,7 +1031,7 @@ class RepairEnv:
                     "stop_result": None,
                 }
             st = sr.next_state
-        stop_res = self.terminal_query(st)
+        stop_res = self.terminal_query(st, evaluate_y_on_x_fail=evaluate_y_on_x_fail)
         return {
             "root_id": root_id,
             "seq": [[int(o), int(d)] for o, d in seq],
