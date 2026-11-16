@@ -221,9 +221,34 @@ def v3_23(out_dir, sweeps, summaries):
     print(out_dir)
 
 
+def v3_6(table, out):
+    """V3-6 final TEST figure: verified top-1 task success per arm (seed-averaged) with the paired 95 % CI vs the primary arm; NONE abstention."""
+    T = json.loads(Path(table).read_text())
+    fig, axes = plt.subplots(1, 2, figsize=(12, 5.2))
+    for a, dom in zip(axes, ("2d", "3d")):
+        S = T[dom]
+        names = list(S)
+        prim = names[0]
+        for i, n in enumerate(names):
+            v = S[n]
+            col = "#0072B2" if i == 0 else ("#777777" if n.startswith("Old") else ("#E69F00" if n.startswith("E:") else ("#009E73" if n.startswith("F:") else "#BBBBBB")))
+            a.barh(i, 100 * v["task"], color=col, height=0.62)
+            d = v.get("delta_task_vs_primary")
+            if d:
+                a.plot([100 * (S[prim]["task"] + d[1]), 100 * (S[prim]["task"] + d[2])], [i, i], color="#222", lw=1.2)
+            a.text(100 * v["task"] + 1.2, i, f"{100 * v['task']:.1f}%  abst {100 * v['abstain']:.0f}%  ({v['seeds']} seed{'s' if v['seeds'] > 1 else ''})", va="center", fontsize=7)
+        a.axvline(100 * S[prim]["task"], color="#0072B2", ls=":", lw=1)
+        a.set_yticks(range(len(names)), [n.replace(" (", "\n(") for n in names], fontsize=7); a.invert_yaxis(); a.set_xlim(0, 105)
+        a.set_xlabel("verified top-1 task success on TEST, %  (bar: paired 95 % CI vs primary)")
+        a.set_title(f"{dom.upper()} test (n = {S[prim]['n_task']} task roots)", fontsize=9)
+    fig.tight_layout(); fig.savefig(out, dpi=160); plt.close(fig)
+    print(out)
+
+
 if __name__ == "__main__":
     {"p1": lambda: p1(sys.argv[2], sys.argv[3]),
      "v3_0": lambda: v3_0(sys.argv[2], sys.argv[3], [("2d", sys.argv[4]), ("3d", sys.argv[5])]),
      "v3_23": lambda: v3_23(sys.argv[2], {d: [f"{sys.argv[3]}/{d}/SWEEP_val.json", f"{sys.argv[3]}/{d}/SWEEP_task_val.json"] for d in ("2d", "3d")},
                             {d: f"{sys.argv[3]}/SUMMARY_{d}_val.json" for d in ("2d", "3d")}),
+     "v3_6": lambda: v3_6(sys.argv[2], sys.argv[3]),
      "v3_1": lambda: v3_1(sys.argv[2], sys.argv[3], sys.argv[4].split(","), sys.argv[5].split(","), sys.argv[6])}[sys.argv[1]]()

@@ -239,7 +239,7 @@ def verify(dom, files, workers, cpu0, cache_in=()):
         keep, n = part.split("/")
         keep = {int(x) for x in keep.split(",")}
         want = {k: v for k, v in want.items() if int(hashlib.sha256(k.encode()).hexdigest(), 16) % int(n) in keep}
-    rows = {r["root_id"]: r for split in ("val", "train") for r in EV.rows_of(dom.upper(), split)}
+    rows = {r["root_id"]: r for split in ("val", "train", "test") for r in EV.rows_of(dom.upper(), split)}
     jobs = []
     for root, seqs in sorted(want.items()):
         ids = rows[root]["inputs"]["ids"]
