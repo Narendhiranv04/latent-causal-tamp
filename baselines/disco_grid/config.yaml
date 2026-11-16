@@ -1,0 +1,70 @@
+# DISCO-Grid (Adapted) Configuration Contract
+baseline_name: "DISCO-Grid (adapted)"
+upstream_disco_repo: "https://github.com/kallol-saha/DISCO"
+upstream_disco_commit: "c62b32e5f6e40444459742525a86ffef620951aa"
+paper_arxiv: "2610.25785"
+
+paths:
+  abf_root: "/scratch/nav/approachb_final"
+  disco_root: "/scratch/nav/disco_grid"
+  base_snapshot: "/scratch/nav/approachb_final/snapshot/abf_9de85710c2a7103f"
+  v2_snapshot: "/scratch/nav/approachb_final/snapshot/abf_v2_7d146b53e4b92fe4"
+  v3_snapshot: "/scratch/nav/abf_v3/stores/snapshot/abf_v3_e8a496bc66266fca"
+  q2_2d: "/scratch/nav/approachb_final/data/q2_2d"
+  q2_3d: "/scratch/nav/approachb_final/data/q2_3d"
+  fin3d_code: "/home/nav/approachb_final_gen/final3d_v4/code"
+  fin3d_src: "/home/nav/approachb_final_gen/final3d_v4/src/dataset_bd_classquota_without_home_position_no_overpass"
+
+domains:
+  2d:
+    grid_rows: 8
+    grid_cols: 8
+    pitch_m: 0.08
+    base_xy_m: [-0.14, 0.32]
+    max_objects: 20
+    max_depth: 3
+    side_grasps: 48          # 24 approach_dirs (every 15 deg) x 2 elbow branches
+    teacher_x: "BXY_X_TEACHER_V1"
+    teacher_y: "BXY_Y_TEACHER_V1"
+  3d:
+    grid_rows: 6
+    grid_cols: 6
+    pitch_m: 0.075
+    x0_m: 0.42
+    table_z_m: 0.55
+    q_ref: [-1.345029, -0.632166, 0.221281, 2.024222, 0.267756, 2.629261, 2.210774]
+    max_objects: 16
+    max_depth: 3
+    side_grasps: 32          # 16 azimuths (every 22.5 deg) x 1 tilt (90 deg level) x 2 heights (middle, top)
+    ik_branches: 4
+    rrt_max_iters: 5000
+    teacher_x: "fin3d X (relocations + CONNECTOR_TO_QREADY_V1)"
+    teacher_y: "BD3DS66_Y_PLAN_V1"
+
+mcts:
+  C: 1.5
+  alpha: 0.3
+  k: 2.0
+  max_depth: 3
+  expansion_budget_B: 16
+  iterations_per_tree: 25
+  selection_mode: "ucb"
+  reward_mode: "geometric"   # "geometric" (bounded < 1 nonterminal, 1 on verified terminal Z=1) or "sparse"
+
+training:
+  seed_list: [0, 1, 2]
+  hidden_dim: 128
+  p0_epochs: 40
+  p0_batch_size: 512
+  p0_lr: 0.001
+  distill_policy_epochs: 50
+  distill_value_epochs: 50
+  distill_batch_size: 128
+  distill_lr: 0.001
+  weight_decay: 0.0001
+  patience: 12
+
+inference:
+  candidate_budget_B_test: 16
+  max_steps: 3
+  stop_threshold_default: 0.5
