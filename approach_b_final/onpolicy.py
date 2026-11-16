@@ -308,7 +308,7 @@ def coverage(dom):
 
 # --------------------------------------------------------------------------------------------- V3-4: candidate-matched X/Y evidence (plan V3 5.5)
 V3OUT = Path(os.environ.get("V3OUT", str(ABF.parent / "runs")))
-V34 = V3OUT / "v3_4"
+V34 = Path(os.environ.get("V34_DIR", str(V3OUT / "v3_4")))                       # V3.2 Phase C: V34_DIR=$V3OUT/v3_2c
 V3_ROOTS = {"2D": {"1": 120, "2": 120, "3": 120, "0": 40, "NONE": 60}, "3D": {"1": 70, "2": 70, "3": 70, "0": 25, "NONE": 40}}
 
 
@@ -471,7 +471,7 @@ def v3_label(dom, tag, workers, cpu0, host="g2"):
 def v3_snapshot(tag):
     """V3 snapshot = V2 snapshot + V3-4 labels on TRAIN roots only (all hosts' label files); new immutable dir under $V3OUT/snapshot."""
     import stat
-    base = ABF / "snapshot/abf_v2_7d146b53e4b92fe4"
+    base = Path(os.environ.get("V3_SNAP_BASE", str(ABF / "snapshot/abf_v2_7d146b53e4b92fe4")))   # V3.2: base = the V3 snapshot
     extra = {"2D": collections.defaultdict(list), "3D": collections.defaultdict(list)}
     st, files = collections.Counter(), []
     for dom in ("2D", "3D"):
@@ -483,10 +483,10 @@ def v3_snapshot(tag):
                     xv = xr.get("x") if dom == "2D" else (xr.get("x") if xr.get("resolution") == "EVALUATED" else None)
                     yv = yr.get("y") if dom == "2D" else (yr.get("y") if yr.get("resolution") == "EVALUATED" else None)
                     extra[dom][r["root"]].append({"seq": x["seq"], "x": xv if xv in (0, 1) else None, "y": yv if yv in (0, 1) else None,
-                                                  "x_witnesses": xr.get("witnesses"), "kind": "V3_DIRECT_CANDIDATE"})
+                                                  "x_witnesses": xr.get("witnesses"), "kind": os.environ.get("V3_LABEL_KIND", "V3_DIRECT_CANDIDATE")})
                     st[(dom, "x" if xv in (0, 1) else ("x_not_queried" if not x["x"] else "x_missing"), "y" if yv in (0, 1) else "y_missing")] += 1
     h = hashlib.sha256(json.dumps({d: {k: v for k, v in sorted(e.items())} for d, e in extra.items()}, sort_keys=True).encode()).hexdigest()[:16]
-    out = V3OUT / "snapshot" / f"abf_v3_{h}"
+    out = V3OUT / "snapshot" / (os.environ.get("V3_SNAP_PREFIX", "abf_v3_") + h)
     if out.exists():
         raise SystemExit(f"REFUSED: {out} exists")
     out.mkdir(parents=True)
@@ -519,7 +519,7 @@ def v3_snapshot(tag):
         if not src.exists():
             src = ABF / "snapshot/abf_9de85710c2a7103f" / n_
         (out / n_).write_bytes(src.read_bytes())
-    lock = {"snapshot_id": out.name, "base_snapshot": base.name, "variant": "V3_DIRECT_CANDIDATES (plan V3 5.5)", "tags": tag,
+    lock = {"snapshot_id": out.name, "base_snapshot": base.name, "variant": os.environ.get("V3_SNAP_VARIANT", "V3_DIRECT_CANDIDATES (plan V3 5.5)"), "tags": tag,
             "label_counts": {"|".join(k): v for k, v in st.items()}, "added": {"|".join(k): v for k, v in added.items()},
             "label_files_sha256": {str(p.name): hashlib.sha256(p.read_bytes()).hexdigest() for p in files},
             "files": {n_: hashlib.sha256((out / n_).read_bytes()).hexdigest() for n_ in ("data2d.jsonl", "data3d.jsonl")},

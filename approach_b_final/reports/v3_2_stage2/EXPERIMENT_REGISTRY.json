@@ -1,0 +1,36 @@
+{
+ "registry": "Approach B V3.2 stage 2 (exhaustive top-M + clean X/Y scorer retraining)",
+ "preregistered_at": "2026-11-17T02:30+05:30, before any Phase C TRAIN label or any new-scorer outcome was observed",
+ "fixed": {
+  "sampler": "frozen task cVAE q2init_all (V3_TASK_STAGE v3_3), seed-0 per-root generator, 64 MC draws, top-6 destinations; M4/M5 = nested prefixes",
+  "rule": {"noop_gate": 0.5, "eta": 0.3, "alpha": 0.0, "beta": 0.0, "gamma": 0.0},
+  "K_max": 3, "B_cap": "none (exact exhaustive enumeration)",
+  "teachers": "unchanged X/Y teachers via construct.verify / onpolicy._v3_job; hosts admitted only after the predeclared parity sample (PARITY_V32.json)"
+ },
+ "experiments": [
+  {"id": "E0", "question": "Is the integrated exhaustive implementation exact?", "reference": "V3.2-A tests + parity files", "treatment": "integrated branch",
+   "gate": "all tests pass; nested M4<M5<M6; selectors == xy.choose", "status": "PENDING"},
+  {"id": "E1", "question": "Does removing the B cap at fixed frozen model change PHYSICAL success?", "controlled_variable": "candidate pool (capped M4 B=4096 vs exhaustive M4/M5/M6)",
+   "reference": "capped M4 B=4096, frozen V3 D s0, VAL", "treatment": "exhaustive M4/M5/M6, same draws/model/rule/roots",
+   "population": "all VAL roots (2D 751, 3D 364)", "labels": "every newly selected repair physically verified (Phase B)",
+   "metrics": "task success K1-K3 (+per K), no-op, NONE abstention, NONE->verified success; root-paired delta, 2,000 bootstrap",
+   "interpretation": "delta<0 with CI excl. 0 => frozen scorer mis-ranks the larger pool (supports E3); delta>0 => coverage gain realised; CI incl. 0 => inconclusive", "status": "RUNNING"},
+  {"id": "E2", "question": "Coverage vs ranking vs abstention", "data": "E1 records + V3.2-A coverage/rank diagnostics", "status": "PENDING"},
+  {"id": "E3", "question": "Does physically labelled expanded-distribution TRAIN evidence improve D's ranking?", "controlled_variable": "training evidence (snapshot)",
+   "reference": "D-control: xy.fit arm D on snapshot abf_v3_e8a496bc66266fca (the frozen V3 D's data)", "treatment": "D-expanded: same + V3.2 Phase C TRAIN labels (new immutable snapshot)",
+   "matching": "identical architecture, torch seed (=> identical init), batch partition seed, AdamW lr 1e-3 wd 1e-4, batch 64, FIXED 60 epochs (patience disabled), checkpoint = best epoch by VAL NLL on the identical base VAL labels; seeds 0,1,2 after a seed-0 smoke run; same TRAIN root list (only label sets differ)",
+   "evaluation": "exhaustive M4/M5/M6 on VAL with the frozen sampler and frozen rule; every selected repair physically verified; seed-averaged per-root success, root-paired bootstrap D-expanded vs D-control on identical candidate sets",
+   "primary_metric": "VAL verified task success K1-K3 at M4, M5, M6 (all reported; no single-M cherry pick)",
+   "interpretation": "expanded > control with CI excl. 0 at >=1 M and no M significantly worse => evidence helps; otherwise null / harmful reported as is", "status": "PENDING"},
+  {"id": "E4", "question": "Does one D-expanded generalise across M4/M5/M6?", "evaluation": "same D-expanded models on all three nested pools", "status": "PENDING"},
+  {"id": "E5", "question": "Is M-specific fitting necessary? (CONDITIONAL)",
+   "activation_condition": "BOTH (a) for D-expanded (seed mean) VAL verified task success at M6 < M4 by >=3 points with root-paired 95% CI excluding 0 in a domain, AND (b) on those roots the M6 selection's p11 calibration (mean p11 minus verified success of the selected repair) exceeds the M4 value by >=0.05; otherwise NOT_RUN",
+   "if_activated": "M4-only and M6-only trained D (matched label count and optimizer steps), cross-tested on M4/M5/M6; M5-only only if M4 vs M6 leaves an interpolation question", "status": "PENDING"},
+  {"id": "E6", "question": "Generalisation and cost", "evaluation": "frozen configuration on exposed TEST (regression only) and, if safely feasible, a fresh family-disjoint cohort; else FRESH_CONFIRMATION_NOT_RUN", "status": "PENDING"}
+ ],
+ "phase_C_sampling_design": {
+  "roots": "TRAIN only; stratified by K_legacy (1,2,3,0,NONE) in sha256('v32c|'+root_id) order (v32c.roots); pilot 2D 8/8/8/4/4, 3D 6/6/6/3/3; full counts set after the pilot from measured cost",
+  "items_per_root": "label-blind and seeded (v32c.items): frozen-rule top-1 at M4/M5/M6, next 2 highest-p11, one seeded reservoir draw per p11 band [0.3,0.9),[0.1,0.3),[0,0.1), one uniform draw, every other order of the M6 top-1 assignment and of up to 2 known successful assignments; exact duplicates of existing X labels dropped",
+  "teacher_queries": "onpolicy.v3_label: Y once per canonical endpoint; X where Y=1 or seeded-flagged (1/3), X|Y=0 kept; unresolved = MISSING (censored)"
+ }
+}
