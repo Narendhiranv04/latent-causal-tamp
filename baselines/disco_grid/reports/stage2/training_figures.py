@@ -26,7 +26,7 @@ def csv_write(path,rows):
 def build(campaign,coverage_path,out):
     out.mkdir(parents=True,exist_ok=False)
     coverage=read(coverage_path);records=coverage['records'];sources={str(coverage_path):sha(coverage_path)}
-    curves=[];fit_summaries=[];resources=[];censored=[];depths=[];stops=[]
+    curves=[];fit_summaries=[];resources=[];censored=[];depths=[];stops=[];query_outcomes=collections.Counter()
     for path in sorted(campaign.glob('training/*/*/distill_report.json')):
         report=read(path);sources[str(path)]=sha(path)
         ident=dict(domain=report['domain'],fit=path.parent.parent.name,schema=report['observation_schema'],
@@ -44,6 +44,16 @@ def build(campaign,coverage_path,out):
         resources.append(dict(layer='reaped_child_attempt',path=str(path),cpu_s=info.get('reaped_child_cpu_s'),
             wall_s=info.get('wall_s'),peak_rss_kib=info.get('peak_rss_kib'),reason=info.get('reason'),sha256=sha(path)))
     for row in records:
+        journal=campaign/f"trees/{row['domain']}/{row['round']}/{row['root_id']}/{row['root_id']}/queries.jsonl"
+        if journal.exists():
+            sources[str(journal)]=sha(journal)
+            for line in journal.read_text().splitlines():
+                event=json.loads(line)
+                if event['event']!='finished':continue
+                raw=event.get('raw_teacher_outcome') or {}
+                key=(row['domain'],row['round'],str(row['K']),event.get('depth'),event['kind'],event['status'],
+                    raw.get('x_terminal'),raw.get('y_target'),raw.get('failed_phase'),raw.get('failure_kind'))
+                query_outcomes[key]+=1
         if row['status']!='COMPLETED' or row['unreturned_adapter_queries'] or row.get('returned_unresolved_queries',0):
             censored.append({k:row.get(k) for k in ('domain','round','root_id','family_id','K','status','charged_adapter_intents','returned_adapter_queries','unreturned_adapter_queries','returned_unresolved_queries','cpu_s','wall_s')})
         for depth,count in row['checkpoint_depth_counts'].items():
@@ -56,6 +66,8 @@ def build(campaign,coverage_path,out):
     csv_write(out/'TRAINING_LOSS.csv',curves);csv_write(out/'DISTILLATION_COVERAGE.csv',fit_summaries)
     csv_write(out/'SEARCH_DEPTH.csv',depths);csv_write(out/'CENSORING_LEDGER.csv',censored);csv_write(out/'RESOURCE_ACCOUNTING.csv',resources)
     csv_write(out/'TRAIN_STOP_EVIDENCE.csv',stops)
+    outcome_fields=('domain','round','K','depth','query_kind','adapter_status','raw_X','raw_Y','raw_failed_phase','raw_failure_kind')
+    csv_write(out/'TRAIN_QUERY_OUTCOMES.csv',[dict(zip(outcome_fields,key),count=count,interpretation='Returned adapter evidence only; raw teacher negative is scope-specific, not global impossibility') for key,count in query_outcomes.items()])
     csv_write(out/'SEARCH_COVERAGE.csv',[{k:v for k,v in r.items() if not isinstance(v,(dict,list))} for r in records])
     plt.rcParams.update({'font.size':9,'axes.spines.top':False,'axes.spines.right':False,'svg.fonttype':'none'})
     figure_paths=[]
