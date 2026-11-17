@@ -10,6 +10,7 @@ HERE=Path(__file__).resolve().parents[2];sys.path.insert(0,str(HERE))
 import matplotlib;matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from matplotlib.patches import Circle, Polygon
+from matplotlib.lines import Line2D
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 import numpy as np
 import collect as C, data as D, env as E
@@ -77,8 +78,13 @@ def render3d(ax,state,env):
 
 def render2d(ax,state,env):
     row,raw=env._get_row_and_raw(state.root_id);b=env.backend;b.boot();inp=row['inputs']
+    legal=D.legal_static_destinations(inp)
+    if legal:
+        points=np.array([inp['cell_xy'][str(cell)] for cell in legal])
+        ax.scatter(points[:,0],points[:,1],s=9,c='#b8b8b8',marker='+',zorder=0)
+    movable=set(D.movable_object_indices(inp,'2d'))
     for i,(oid,cell,attr) in enumerate(zip(inp['ids'],state.cells,inp['attrs'])):
-        xy=inp['cell_xy'][str(cell)];color='#bf423b' if i==inp['tid'] else '#5685a6'
+        xy=inp['cell_xy'][str(cell)];color='#bf423b' if i==inp['tid'] else '#5685a6' if i in movable else '#8b8b8b'
         ax.add_patch(Circle(xy,float(attr[0]),facecolor=color,alpha=.8));ax.text(*xy,oid,ha='center',fontsize=6)
     for name,(core,radius) in b.ge.bodies(b.E['robot'],state.q_t,state.gripper_state['gap']).items():
         core=np.asarray(core)
@@ -89,8 +95,13 @@ def render2d(ax,state,env):
             for point in core:ax.add_patch(Circle(point,radius,color='#343a40'))
         else:ax.add_patch(Polygon(core,color='#343a40'))
     ax.plot(*inp['goal'][:2],'*',color='#bf423b',ms=12)
+    ax.legend(handles=[Line2D([],[],marker='o',linestyle='none',color='#bf423b',label='Target'),
+        Line2D([],[],marker='o',linestyle='none',color='#5685a6',label='Movable obstacle'),
+        Line2D([],[],marker='o',linestyle='none',color='#8b8b8b',label='Fixed obstacle'),
+        Line2D([],[],marker='*',linestyle='none',color='#bf423b',label='Target goal'),
+        Line2D([],[],marker='+',linestyle='none',color='#b8b8b8',label='Originally empty legal cell')],fontsize=6,loc='upper left')
     ax.set_aspect('equal');ax.autoscale_view();ax.set_xlabel('x (m)');ax.set_ylabel('y (m)')
-    return dict(native_robot_geometry=str(b.E['robot']),display_only='native collision cores and radii; no predicted cell arrows')
+    return dict(native_robot_geometry=str(b.E['robot']),original_legal_cells=legal,display_only='native collision cores and radii; originally empty legal cells marked; no invented motion paths')
 
 
 def run(paths,out):
