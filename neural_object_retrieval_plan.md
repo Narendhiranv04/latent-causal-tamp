@@ -1,386 +1,288 @@
-# SORC-Grid: Selective Object Rearrangement in Clutter — Adapted Learned Baseline
+# Neural Object Retrieval (OSNet + RPNet) — Corrected Learned Baseline Implementation Plan
 
-> **OWNER AMENDMENT (2026-11-18, user's own message, supersedes §0.9, §8.1 and the compute line below where they conflict):**
-> Compute = the user's laptop (CPU + RTX 5060 8 GB) **plus the GPU of gvlab2** (RTX 5090, ~18–19 GB VRAM free; shared with a teammate).
-> gvlab2 is for GPU work only (with the minimal CPU needed to drive it, <= 4 threads). Every other host (gvlab, Blackwell, enigma,
-> girish, dinesh, any cloud) remains forbidden. All other rules of this contract are unchanged.
+**Research project:** Latent Causal TAMP / Approach B — learned rearrangement comparison
+**File:** `neural_object_retrieval_plan.md`
+**Baseline ID:** `NOR-Grid` (adapted Ren–Qureshi OSNet/RPNet; use a single ID consistently; do not confuse with the separate 2021 NeRP paper)
+**Authoritative source:** Hanwen Ren and Ahmed H. Qureshi, *Neural Rearrangement Planning for Object Retrieval from Confined Spaces Perceivable by Robot's In-hand RGB-D Sensor*, ICRA 2024, [arXiv:2402.06976](https://arxiv.org/abs/2402.06976), [HTML](https://arxiv.org/html/2402.06976v1).
+**Repository:** `Narendhiranv04/latent-causal-tamp`, inspect current local checkout; reference branch `naren/approach-b-v3-4-final-benchmark` (not a claim about local checkout).
+**Status:** corrected normative handoff, **not** an implementation, trained model or observed result.
+**Historical error corrected:** the prior file with this *same name* was accidentally written for Bingjie Tang and Gaurav S. Sukhatme's *Selective Object Rearrangement in Clutter* (CoRL 2022). **ALL SORC, Tang/Sukhatme, SimGNN, goal-graph edit, DenseNet PUSH/GRASP and visual-correspondence instructions are superseded. Do not implement the old architecture.** (The superseded file is archived at `baselines/neural_object_retrieval/reports/superseded/`.)
 
-**Project:** Latent Causal Infeasibility for Long-Horizon TAMP / Approach B
-**Deliverable name requested:** `neural_object_retrieval_plan.md`
-**Research baseline name:** **SORC-Grid (adapted)**, from **Bingjie Tang and Gaurav S. Sukhatme, "Selective Object Rearrangement in Clutter," CoRL 2022 (PMLR volume published 2023)**.
-**Original paper:** https://proceedings.mlr.press/v205/tang23a.html
-**Original paper PDF:** https://proceedings.mlr.press/v205/tang23a/tang23a.pdf
-**Supplement:** https://proceedings.mlr.press/v205/tang23a/tang23a-supp.pdf
-**Original project:** https://bingjietang718.github.io/selective-rearrangement/
-**Host repository:** https://github.com/Narendhiranv04/latent-causal-tamp
-**Preparation basis:** Read-only review of GitHub branch `naren/approach-b-v3-4-final-benchmark`, repository `naren/dataset-done` historical reports, and the cited paper, on 18 November 2026. **No local raw dataset bytes, local GPU or physical simulator were executed in this preparation.** Every item marked `VERIFY_LOCALLY` must be checked before a coding agent asserts parity or data readiness.
-**Status:** Implementation contract, not a claim of a trained baseline or measured benchmark numbers.
-**Scope:** Existing data, TRAIN and VALIDATION. The ongoing V3.4 new held-out test-cohort expansion is explicitly out of scope.
-**Compute (original text, amended above):** USER'S OWN LAPTOP ONLY, CPU and single local GPU. Never use gvlab, gvlab2, Blackwell, enigma, Girish's laptop, SSH, a remote server, a hosted GPU, a distributed job, or an external inference/training API.
+> **Primary scientific goal:** Train an integrated neural baseline that (1) selects a non-target object likely to obstruct the robot's original target manipulation, (2) proposes a permissible relocation cell, and (3) composes at most three relocations before attempting the unchanged target-to-goal action. Its object selection and region proposals are its own learned OSNet and RPNet; **no additional symbolic TAMP framework or Approach B X/Y scorer** makes its decisions.
 
-> **Identity warning:** This is **Tang & Sukhatme's Selective Object Rearrangement in Clutter**, NOT Ren & Qureshi's 2024 *Neural Rearrangement Planning for Object Retrieval from Confined Spaces* (OSNet/RPNet). The historical filename `neural_object_retrieval_plan.md` is retained solely as requested; code, citation, metrics, and result tables must identify the method as `SORC-Grid (adapted)`.
+> **Strict compute:** All data reading, labels, neural training, simulations, verification, figures and reports must execute **only on the user's own laptop CPU and GPU**. No server/SSH/cloud/hosted API/remote GPU/remote simulator. Lack of local data means a reported blocker, not permission to use remote compute.
 
 ---
 
-## 0. Highest-priority scientific and execution rules
+## 0. STOP/RESUME PROTOCOL — REUSE THE EXISTING `efa1b8da4f` WORK
 
-1. **Benchmark truth is unchanged.** Same root scene, original target/goal, robot embodiment, permitted side-grasp family, legal cells, physical teacher, X/Y query protocol, and verification budget as Approach B V3.4, DISCO-Grid and REAP. No easier new robot, proxy physics, teleport-as-success, unrestricted grasp, unverified shortcut, hidden target oracle, or extra TAMP planner.
-2. **The baseline is an integrated learned rearrangement policy.** Its own neural sequencing + GRASP feasibility/value + placement policy + task-conditioned stopping determine **one ordered correction sequence**. No Approach B cVAE, XYNet, X/Y Boltzmann scorer, learned blocker oracle, external symbolic TAMP, or borrowed DISCO/REAP policy is permitted inside its decision rule.
-3. **Allowed correction grammar:** `0 <= K <= 3` corrective relocations. Each movable, non-target object can be moved **at most once**; the original target is not a corrective object and is moved **once at the end** only by its original specified target action. A correction is a full side-grasp pick, attached transport, place, release, retreat. No PUSH, swap, push-grasp workaround, bin/disposal, stack, use of cells occupied at original S0, reuse of previously vacated cells, reuse of a destination, target-goal changes, staging move of an already moved object, intermediate return-home or extra task actions.
-4. **Physical semantics:** 2D = existing full fixed-base 3R arm, finite-width links/gripper, 8x8 resting cells; 3D = original xArm7 shelf, 6x6 resting cells with supported boxes/cylinders, pinned body/robot geometry. Use **current tested** grasp candidates and planner budgets from local teacher configs; do not blindly hard-code historical 48/32 counts. Resting cells are discrete; motion is continuous.
-5. **State continuity:** Every correction carries the actual attained robot configuration, gripper and attachment state to the next correction. No reset-to-home between moves. X includes correction sequence **and terminal free-gripper connector to q_ref**; Y is the independent original target task from q_ref in the canonical edited endpoint scene. `SUCCESS = (X=1 and Y=1)` for the same proposed ordered sequence. Noop is the independent empty-scene Y. X and Y are observed via teacher **only after prediction is frozen** in primary evaluation.
-6. **One-shot open-loop primary comparison:** One original observation; all intermediate states used by this baseline during proposal are **hypothetical object edits only**, not simulated or robot-achieved states. Select one complete ordered sequence, seal it, run independent verifier **once**, no execution-time second-best retry/replanning. A separately declared closed-loop version may be a secondary, **different-feedback-budget** experiment, never quietly merged with the primary comparison.
-7. **No test leakage or interference:** TRAIN-only supervised teacher labels; VALIDATION-only hyperparameters/stopping thresholds; never use existing or incoming TEST labels to select model weights, camera, architecture or reward shaping. Do not open, write, modify, clean, read outcome fields from, or generate the ongoing 1,120-root V3.4 test expansion. Treat all expansion code, generation runs, manifests, and working directories as someone else's immutable work.
-8. **Three-valued evidence bookkeeping:** An independently replayed success is a verified positive; a finite-budget negative remains `attempted_failure_under_frozen_protocol` unless an independent sound certificate supports a wider impossibility claim; absent/unattempted/infra/timeouts with no operational label stay `UNKNOWN`. Do not turn missing X/Y into zero. Preserve teacher provenance and the legacy `K` meaning; `NONE` is not universal unsolvability.
-9. **Local hardware and data:** Never run teacher calls at inference-time for ranking, never offload training. Detect hardware, storage, RAM, CUDA/Torch versions at P0. Train locally with one GPU process and bounded CPU workers. If raw datasets or required physical teacher APIs are not available **on this laptop**, report `BLOCKED_LOCAL_DATA` or `BLOCKED_TEACHER` with concrete missing files; do not substitute remote paths or fabricate labels. *(Amended: gvlab2 GPU also allowed for training/inference.)*
-10. **Truthful paper attribution:** Original SORC uses goal **images** describing a desired arrangement, a graph edit/SimGNN object sequencer, a learned **PUSH/GRASP** DenseNet FCN, and a correspondence-based PLACE head (plus a discard bin and swaps). Our task lacks a desired arrangement for the non-target objects and **forbids PUSH/bin/swaps**. Therefore results must be named **SORC-Grid (adapted; grasp-only; task-goal-conditioned)**. Do not call this an exact SORC replication. Preserve its **three-part learned decomposition** as far as the legal task permits, and audit every change.
+The coding agent reported commit `efa1b8da4f` containing only paper-agnostic data auditing, legality checks and scene-graph feature work. **Do not delete it, discard it, reset the branch, force-push, or rerun the audit unnecessarily.** Verify `git show --stat efa1b8da4f` and tests; reuse only components that are truly paper-agnostic. Do not assume this commit is a completed model.
 
----
+1. Inspect current `git status`, branch, commit, worktrees, local data/asset mounts and any concurrent agent activity. Create an isolated **local** branch from the existing baseline branch/commit or continue an already isolated branch if safe.
+2. Replace obsolete SORC plan/prompt references with this corrected paper identity. Commit the correction with a clear `METHOD_SWITCH` changelog; don't silently overwrite the historical explanation in a report.
+3. Keep previously created legal/data/graph files if validated. **Graph object features may be reused as Transformer input tokens**, but no SimGNN / graph-edit-distance sequencer should be implemented because it belongs to the wrong paper.
+4. Resume model work at the first unimplemented stage, after checking that P0/P1 tests for the new model pass.
+5. Never read or modify the **ongoing new 1,120-root V3.4 held-out expansion** or its generation logs/manifests/labels. The historical existing TRAIN/VAL data are the only experimental dataset here.
 
-## 1. Verified repository/data starting point, and what is NOT verified
+## 1. Paper fidelity — what the ICRA 2024 method really does
 
-### 1.1 Sources of authority (inspect the actual checkout first)
+### 1.1 Native original model
 
-- `naren/approach-b-v3-4-final-benchmark/approach_b_final/benchmark.py`: common public-input/prediction/seal/validate/query/teach/evaluate/summarize harness; `PolicyAdapter`, `predict_one` API in `baseline_adapters.py` is a **harness test**, not a scientific baseline.
-- `approach_b_final/contracts.py`: `view2d` / `view3d`, immutable input-label separation, base snapshot, per-root split and evaluation masks.
-- `approach_b_final/search.py`: `Root`, original-root legal-destination and move-once rules; **reuse the shared legality**, not its sampler or scorer.
-- `approach_b_final/evaluate.py`, `teacher2d.py`, `construct.py`, and the exact 3D fin3d source referenced by the pinned manifest: teacher semantics, q_ref connector, replay and resource accounting.
-- `approach_b_final/placement.py`: Q2 isolated-placement record format and location of frozen **TRAIN/VAL** files; use metadata and legally sourced labels, **not** Approach B sampler weights.
-- `approach_b_final/onpolicy.py` and `xy.py`: training-root X/Y query semantics, outcome masks, cost and provenance; **do not import the learned XY model as a feature, reward or policy**.
-- `approach_b_final/reports/results/data_snapshot.lock.json`, `v2_data_snapshot.lock.json`, `LOADER_SCHEMA_REPORT*`, `QUALIFIED_TRAINING_EXCEPTION.json`, `approach_b_final/docs/PLAN_V3_2026-11-15.md` and `approach_b_final/config/final_protocol.yaml`.
-- `naren/dataset-done/final_dataset_generation/FINAL_2D_TARGET_DATASET_REPORT.md`, `FINAL_3D_TARGET_DATASET_REPORT.md`, `FINAL_XY_EVIDENCE_COVERAGE.md`: provenance and **historical** teacher/readiness reports. Older `FINAL_XY_EVIDENCE_COVERAGE.md` explicitly predates the later Nov 12 compiled finalized snapshot; do not use its old "not yet measured" warning to contradict the frozen `abf_...` manifest.
-- Existing local REAP/DISCO baseline contracts and actual adapter output conventions are to be **read and matched** before execution; do not assume every baseline has the same internal model calls.
+The paper addresses **target-object retrieval from a cluttered confined space**, with an in-hand RGB-D active-sensing system and a specified target grasp. It has two learned components and a low-level robot planner:
 
-### 1.2 Snapshot facts from the frozen documents
+- **OSNet (Object Selection Network)**: MLP embeddings of robot location, desired target-gripper pose, target box/state and non-target object bounding boxes; multi-head self-attention Transformer; per-non-target categorical obstruction probability. The original training target comes from *multiple smoothed collision-ignorant RRTConnect paths to the target*: count how often each other object obstructs these path homotopies, normalize counts to a distribution, and minimize **MSE** on the probability vector. Selection at runtime is `argmax` over non-target objects.
+- **RPNet (Region Proposal Network)**: MLP embeddings of robot and target context, selected object, gripper pose and candidate surface-region tokens. A Transformer **encoder** processes the robot/target/region context; a Transformer **decoder** takes region tokens augmented by the selected object's embedding and attends to encoder outputs. A small MLP produces **cost per region**. In original offline supervision, occupied/unobserved/homotopy-blocking regions receive maximal cost; valid regions are ranked by distance from the selected object's source. Train by **MSE** to the region cost vector; select the lowest-cost region.
+- **Execution loop:** the original pipeline performs active observation, tests target reachability with RRTConnect, selects and **physically relocates** an object if necessary, replans/reobserves, and repeats. That is **native closed-loop physical checking**, not a purely neural standalone success guarantee. The paper uses an underlying motion planner; it is not an external symbolic TAMP planner.
 
-| Dataset, immutable base snapshot `abf_9de85710c2a7103f` | 2D | 3D |
+**Source:** arXiv:2402.06976, Sections III-C, III-D and III-E, especially equations (2)–(4). Read the original HTML or PDF before coding. Never claim open-loop equivalence or original paper experimental reproduction.
+
+### 1.2 Mandatory adaptations and exact naming
+
+| Dimension | Original Ren/Qureshi | Our justified adaptation | Reporting honesty |
+|---|---|---|---|
+| Task | Reach/grasp/retrieve a target object | Execute **original complete target-to-goal manipulation** after corrective relocations | More general/changed task |
+| Perception | In-hand active RGB-D, partly unknown scene | Given GT poses/shape/support/IDs, optional available initial RGB-D/masks; no new active sensing claim | Privileged structured observation vs native |
+| Target grasp | A specified grasp pose; original may use GraspNet | Fixed **allowed side-grasp family** from benchmark; no new candidate grasps | Not original GraspNet setup |
+| Obstruction labels | Path-homotopy collision counts for retrieval | Offline TRAIN-only *complete target-action* reference-path obstruction counts, only if actually generated under unchanged robot/planner contract | Adapted supervision, never fabricate |
+| Region labels | Path-homotopy blockage plus distance | Offline TRAIN-only target-to-goal homotopy/legality costs over original-root legal cells | Adapted region map |
+| Action space | Select/relocate objects until reachable | K <= 3 move-once, side-grasp pick-place, original-root-empty destinations, target last | Strict shared grammar |
+| Online verification | Physical state after each move; RRT target checks | **Primary open-loop** one proposal, then *independent post-seal* X/Y evaluation | Not native execution protocol |
+| Comparison | Native object retrieval benchmark | Approach B, REAP, DISCO-Grid same 2D/3D roots and exact X/Y semantics | New benchmark, not paper's reported scores |
+
+Do NOT add a learned GRASP-Q head, goal-arrangement SimGNN head, unrelated action-value network or separate learned feasibility classifier and call them OSNet/RPNet. A small **adapted STOP/NOOP confidence head** may be required for one-shot evaluation; mark it explicitly as an added benchmark adapter, supervised on target Y evidence. The paper itself uses a planner to decide whether to stop.
+
+## 2. Dataset and source audit — existing corpus only
+
+### 2.1 Verified repository metadata (audit local bytes before relying on it)
+
+Frozen base snapshot `abf_9de85710c2a7103f` reported by `approach_b_final/reports/results/data_snapshot.lock.json`:
+
+| | 2D | 3D |
 |---|---:|---:|
-| Independent target roots | **5,000** | **2,500** |
-| Original ordered X observations | **12,400** | **7,089** |
-| Original distinct-endpoint Y observations | **9,700** | **5,305** |
-| Legacy K0 / K1 / K2 / K3 / NONE roots | **1,250 / 800 / 800 / 1,150 / 1,000** | **511 / 357 / 612 / 612 / 408** |
-| Additional V2 **TRAIN-only** X observations (on these roots) | **7,594** | **2,126** |
-| Additional V2 **TRAIN-only** Y observations (on these roots) | **9,661** | **2,493** |
+| Independent target roots | 5,000 | 2,500 |
+| Original ordered X observation records | 12,400 | 7,089 |
+| Original endpoint Y observation records | 9,700 | 5,305 |
+| Legacy K0/K1/K2/K3/NONE root counts | 1,250 / 800 / 800 / 1,150 / 1,000 | 511 / 357 / 612 / 612 / 408 |
+| V2 *additional TRAIN-only* X evidence on the same roots | 7,594 | 2,126 |
+| V2 *additional TRAIN-only* Y evidence on the same roots | 9,661 | 2,493 |
 
-**Critical:** These counts are metadata from checked-in snapshot documents; they are **not** the number of usable unique training sequences after masking, not sums of independent examples and not proof that local raw source packages are mounted. X is ordered; the same endpoint assignment can share Y across orders. Some V2 queries add Y without X. Q2 isolated-placement trial **counts are not established by this document**; P0 must enumerate exact unique trials, eligible labels, provenance, split and consistency in the actual local source package. K-class labels are **private stratification/evaluation metadata**, never network inputs.
+These are **not** counts of independent X/Y scenes. Y is an endpoint outcome and may be reused by several ordered X sequences; deduplicate physical signatures. The K classes are metadata, not permissible model inputs; `NONE` is a legacy restricted-search outcome, not a global impossibility proof. The historical `naren/dataset-done` reports document 2D K2/K3 dependent/independent scene provenance and 3D 6×6 shelf selection, but their old readiness timestamps do not supersede the frozen compiled snapshot.
 
-Historical 2D final selection was reported complete. Historical 3D partial report predates the later compiled 2,500-root finalized snapshot, so the latter is used for this baseline. `QUALIFIED_TRAINING_EXCEPTION.json` and evaluation masks explicitly flag incomplete relative minimality; never report globally minimum K. Training/validation/test split **counts must be recomputed locally** from actual compiled rows. The pre-existing local historical test split is *not* a development pool.
+Four distinct streams must not be conflated: 2D Q2 individual placement trials; 3D Q2 individual placement trials; 2D target-scene ordered X/endpoint Y; 3D target-scene X/Y. Q2 placement success does not establish target restoration. A complete X/Y repaired sequence does not automatically identify the physically blocking object or give a per-step failure label.
 
-### 1.3 Four different evidence streams; no mistaken substitutions
+### 2.2 Where to inspect in the existing repo
 
-1. **2D and 3D target X/Y:** same original-root task, high-level ordered corrections; X exact order includes end connector, Y unique target endpoint query from q_ref. Preferred data for object selection, STOP, successful-sequence and cost supervision.
-2. **Q2 individual placement trials:** queried object, context, destination and observed conditional placement feasibility **given that the object has been grasped**; not automatically an executable whole relocation, not X/Y and not guaranteed to specify a useful target repair.
-3. **Original physical witnesses / phase logs:** if actually mounted and provenance-verified, may supervise **GRASP/action** prediction and per-step transitions. A complete X=1 witness proves that ordered sequence executed; X=0 of a longer sequence does **not** prove the first grasp failed.
-4. **Rendered original-state observations:** data rows in `contracts` are primarily structured pose/geometry/robot context; do not assume real RGB-D and masks are present. If original-state 2D/3D renderers are available, render canonical **initial/hypothetical posed geometry** with a locked camera, without teacher collision outcomes. A pose raster is **not** a genuine sensory-equivalence claim; record observation provenance and distinguish image-like rendering from sensor RGB-D.
+- `approach_b_final/contracts.py` — compiled root public `inputs`, split/evidence masks, `view2d/view3d`; the private labels **must never** pass through a learner-visible batch.
+- `approach_b_final/benchmark.py` — `public`, `validate`, `seal`, `queries`, `teach`, `evaluate`, `summarize`; primary one-prediction-per-root method adapter.
+- `approach_b_final/baseline_adapters.py` — *harness smoke policies only*; they are **not scientific baselines**.
+- `approach_b_final/search.py` — `Root`, `legal_dests` semantics, robot/task geometry; reuse legality only, not Approach B cVAE/XYNet or optimizer.
+- `approach_b_final/teacher2d.py`, `evaluate.py`, `construct.py`, exact pinned 3D `fin3d` assets — unchanged independent physical verifier and teacher budgets.
+- `approach_b_final/placement.py`, `onpolicy.py` — TRAIN-only Q2 placement and extra X/Y query provenance, but not their learned weights.
+- `approach_b_final/reports/results/data_snapshot.lock.json`, `v2_data_snapshot.lock.json`, `LOADER_SCHEMA_REPORT*`, `QUALIFIED_TRAINING_EXCEPTION.json` and current experiment config.
+- `approach_b_final/docs/PLAN_V3_2026-11-15.md` — archived task restriction and root/split semantics; current V3.4 benchmark configs take precedence for comparing frozen decisions.
+- Current **local** DISCO/REAP baseline adapters, if available — compare external action grammar, verification budgets, and method-input privilege, not their internals.
 
-### 1.4 Mandatory P0 data audit output
+Resolve local paths rather than assuming `/scratch/nav` or server storage. This chat inspected GitHub metadata and source excerpts, **not** every raw dataset byte, local teacher asset or actual local available VRAM. Record exactly what exists on laptop and what is missing.
 
-Create `reports/SORC_DATA_AUDIT.md` and machine-readable `reports/sorc_dataset_manifest.json` **from local files** containing: all input paths (or `MISSING`), sha256 sizes, snapshot IDs, source code commit, per-domain TRAIN/VAL/TEST roots (counts only, no TEST outcomes), per-root X/Y/XY decided coverage by K and by full/order-prefix length, replay/witness/cost availability, unique Q2 trial counts, label provenance, duplicate endpoint/order counts, same-assignment order contrast count, split/lineage leakage tests, Q2 overlap with XY roots, support/cell/shape dimensions, and fitted TRAIN-only normalizers. List missing fields that block specific losses. Make no edits to source snapshots.
+### 2.3 Mandatory dataset audit report
 
-**Strict local precondition:** if training roots or teacher assets exist only at `/scratch/...` or on another user's host, mark `NOT_LOCAL` and stop that stage. Do not SSH to obtain them or execute work there. Local copies can be used only if already present and hash-verified.
+Produce `baselines/neural_object_retrieval/reports/DATA_AND_LABEL_AUDIT.md` and a machine-readable manifest with:
 
----
+- Exact `git rev-parse HEAD`, snapshot IDs/SHA256, files, root counts, split counts, family/layout disjointness and unlabeled/missing scope.
+- Train/val/test group leakage check **without opening test outcome fields**. Keep historical TEST out of tuning, and don't open the expanded new cohort at all.
+- Ordered-X unique signatures `(root, order, destinations)`, endpoint-Y unique signatures `(root, assignment)`, attempted/unknown/infra labels and teacher provenance.
+- Counts and masks for OSNet homotopy **path-count supervision actually present**, RPNet **cost maps actually present**, target Y for STOP and Q2 placement trials. These new specific supervision types **must not be claimed to exist merely because X/Y are present**.
+- Local cost estimates: how many TRAIN-only path samples, planner calls, RAM/CPU wall estimates are needed to construct OSNet/RPNet targets without a full new 2D/3D dataset; mark missing sources or projected budget excess.
 
-## 2. Adaptation versus the paper: preserve the mechanism, disclose differences
+**Hard gating:** if path-homotopy labels are missing, the coding agent must either (a) construct them **locally on a small TRAIN-only pilot using pinned teacher robotics**, then scale only under declared budget, or (b) report `BLOCKED_HOMOTOPY_SUPERVISION`. It may implement architecture and synthetic unit tests, but must not silently substitute ground-truth blocker IDs, K class, successful teacher repair order or XYNet probability as the *original-paper homotopy labels*.
 
-| Component in Tang & Sukhatme | Permitted SORC-Grid interpretation | Fidelity / must NOT do |
-|---|---|---|
-| Object accessibility graph and graph-difference / SimGNN sequencing | **Learned goal-conditioned graph edit/similarity ranking** over the initial (then hypothetically edited) robot/object/task graph; for each eligible movable object, score the graph with its node *masked from the comparison*, then select the highest-priority remaining object. Train from TRAIN outcomes / demonstrated successful sequences with incomplete-label masking. | Masking a graph node is a *sequencing hypothesis*, not proof that an object is a blocker or can be removed. Do **not** create the goal graph from hidden successful repairs or ask a teacher which objects should move at inference. The original desired-arrangement GED is **not defined** for our target-only task; the task-goal graph/learned similarity is an explicit replacement, not original SimGNN fidelity. |
-| Image-based PUSH and GRASP Q-maps | **GRASP-only** action-value/feasibility scoring, using actual permitted side-grasp candidates or their common high-level object-action proxy. The push head and any push execution are disabled. Use local *step-level* simulator experience or sufficiently scoped phase/witness annotations for labels. | If true step-level labels cannot be produced locally, do not misrepresent a whole-sequence label as an individual grasp label. Document a `GRASP_HEAD_NOT_SUPERVISED` limitation and provide a transparent GRASP-only ablation, not an invented Q-learning result. Avoid changing the shared lower-level grasp planner or passing a privileged grasp oracle to this baseline. |
-| Visual correspondence between current-object patch and **goal arrangement image** for PLACE | **Task-conditioned correspondence/heatmap**: original-scene/object patch + known target/goal representation + scene occupancy and candidate support cells -> learned scores over permissible destination cells. Train only from observed successful complete repairs and Q2 conditional placement signals where semantically appropriate. | There is no ground-truth goal location for relocated **non-target** objects. Do not render privileged teacher-corrected endpoints as a goal image. Do not copy the paper's PLACE cross-entropy as though every object has exactly one correct destination. Use a multi-positive, partial-label loss and mark the changed goal modality. |
-| Multiple PUSH, swap, disposal/bin and grasp actions | Restrict exclusively to K<=3 unique non-target **side-grasp pick-and-place** corrections with fixed original-empty cells; original target attempted last. | Original capabilities are removed by benchmark constraint, not silently reintroduced. Report zero push/swap/disposal actions by design. |
-| Original closed-loop observation after each action | **Primary:** open-loop, simulated edits in the policy's input only, one sequence. **Optional secondary:** physically reobserve and run the same policy after each executed step, reported separately from the one-shot methods. | Do not give closed-loop corrective feedback to the primary line when Approach B/REAP/DISCO-Grid strict protocol is open-loop. |
+## 3. Shared task, legal correction grammar and physical truth
 
-**Name of the method in every paper, code README and chart:** `SORC-Grid (adapted Tang & Sukhatme 2022; grasp-only, target-goal-conditioned)`. **Do not call** it "OSNet/RPNet", "original SORC reproduced", a full learned X/Y Boltzmann model or a no-planner physical trajectory policy.
+For initial root `R=(S0,q0,q_ref,T,g,robot/geometry,legal_cells)`, a proposal is `r=((o1,d1),...,(om,dm))`, `0 <= m <= 3`. A corrective action is a complete side-grasp pick/place of a movable **non-target** object to a supported physical destination cell; final original target manipulation is separate and last.
 
----
+**No exceptions:** each object at most once; no pushes, swaps, stacks, disposal, handing objects off, added staging actions or intermediate home reset. Destinations must be legal and supported, **empty in original S0**, not target goal, not used elsewhere, and free in current hypothetical prefix. An object initially occupying a cell cannot move so another object can reuse that cell. Objects fixed in 2D are never moved; 3D honors the actual fixed/movable semantics and native shapes.
 
-## 3. Inputs, action grammar, and target-feasibility interface
+**Embodiments:** 2D full 3R articulated arm, 8×8 0.08-m support lattice, tested side-grasp family; 3D pinned xArm7 shelf, 6×6 0.075-m cells, fixed box/cylinder geometry, verified side-grasp pitch/offset options. The robot/attachment trajectories are continuous. **Read actual current configs**; do not hard-code historical grasp counts without checking the active profile.
 
-### 3.1 Learner-visible input at root
+Shared final evidence:
 
-Use the exact `benchmark.py public` JSONL row `{root_id, domain, inputs}`. Each `inputs` record has object IDs, `tid`, `cells0`, `legal_cells`, `goal_cell`, attributes (`fixed` flag where applicable), cell coordinates, robot context and target-goal representation as defined by `contracts.view2d/view3d`. Construct a graph with object and robot/goal nodes using only these public quantities and optional *initial-scene* render/masks. Do not inspect `K_legacy`, split metadata inside a public inference row, teacher labels/phase, root family ids, oracle target swept volumes, private index, future edits or future robot state.
+- `X(r)=1`: the exact **ordered** corrections are executable under the frozen robot/planner budget, carried physical `q,g,attachment` between moves, and terminal free-gripper connector to `q_ref` completes.
+- `Y(End(S0,r))=1`: original target-to-goal action is feasible **from q_ref** in the independently constructed canonical edited endpoint scene; same Y for endpoint-identical sequences regardless of order.
+- `Z(r)=X(r) AND Y(End(S0,r))`: **complete repair success**, both sides independently decided.
+- For `r=[]`, `X([])=1` by convention when reference state is available; judge `NOOP` by independently checked `Y(empty)`.
+- `ABSTAIN` is a method decision, not proof that no repair exists. A failure within a finite teacher budget is operationally scoped; an unattempted/missing/infra query must not be recoded as negative. Log `UNKNOWN` distinctly.
 
-The graph's **goal specification** consists only of the publicly specified original target, desired goal cell / pose and fixed scene geometry. No full desired non-target arrangement exists. Graph edges may encode public relative distance, support, projected occlusion/direction and task-conditioned relations; do not silently invoke full physical collision/IK/motion checks to construct them at inference. In the training split, a learned graph comparison score can be trained against *decided* operational outcomes. If the agent proposes analytical target-action corridor features, preregister them as public **proxy geometry** and ablate them; never substitute a private teacher trajectory/sweep.
+**Independent verifier** is allowed *after* a root's frozen prediction. No test-time teacher calls, collision traces, partial target probes, simulated motion, trusted blocker sets or failed-proposal feedback in the method's **decision pathway**. Always seal predictions before invoking `benchmark.queries/teach/evaluate`.
 
-### 3.2 Legal moves
+## 4. OSNet — paper-based learned object selector
 
-Write **one adapter** to call/reproduce the active `benchmark.legality` and `search.Root.legal_dests` behavior, with invariant tests. Formally, for initial occupied cells `Occ0` and target goal cell `g`, a legal destination `d` must satisfy `d in Support`, `d not in Occ0`, `d != g`, and be unoccupied in the current hypothetical prefix. Objects must be movable non-target entities, not already moved. No two chosen moves share a destination. Endpoints are unique physical cells, not continuous off-grid poses; 3D preserves the validated shape/support/offset conventions.
+### 4.1 Inputs and architecture
 
-```text
-Candidate repair r = [(object_id_1, destination_cell_1), ...]
-0 <= len(r) <= 3
-one relocation per non-target movable object
-original target action appended implicitly at the end, never a corrective r-entry
-```
+Inputs: observed **original** scene object states and current *hypothetically edited* object poses (not actual robot state), target object and requested target-goal pose, robot base and **declared q_ref/q0 numeric context**, one frozen/known target-side-grasp representation or small fixed set summary. Include every non-target object whether it is fixed, movable or previously moved; mask ineligible objects from the output distribution. 2D physical attributes use known radius/fixedness; 3D use supplied box/cylinder sizes/offset/support. No predicted future robot joints or original teacher path inside the network.
 
-### 3.3 Teacher outcomes and prediction status
+Follow the paper's **MLP token embedding → multi-head self-attention Transformer → non-target object scoring MLP**. Do **not** substitute SimGNN graph-edit-distance, a learned push/grasp classifier, a classical blocker detector or merely the old data-audit graph features. For compact local GPU: propose width 128, 2–3 encoder layers, 4 heads, dropout 0.1; actual choice frozen from validation and recorded. Permutation-equivariant input ordering and fixed/target masking tested.
 
-For a proposed r, do **not** compute teacher X/Y during model inference. Teacher X/Y are used for TRAIN labels and independent post-seal verification:
+### 4.2 Train-only homotopy label construction
 
-- `X(r)`: under pinned budget, execute exactly r physically in order, with continuous robot state, and connect to `q_ref` at the end.
-- `Y(End(S0,r))`: target-from-`q_ref` result in canonical hypothetically edited endpoint scene; **same Y** for endpoint-identical different orders.
-- `Z(r) = X(r) AND Y(End(S0,r))` when both recorded under the exact contract.
-- Empty r: `NOOP` only if the policy predicts target already succeeds; the evaluator checks actual `Y(empty)`.
-- `ABSTAIN` is permitted if the policy cannot find an admissible predicted repair. It never claims universal impossibility.
-- A teacher failure/exhaustion is not a *certificate* of globally impossible motion, and unattempted/unknown labels never become negative.
+**Paper-native label idea:** sample multiple smoothed target paths with RRTConnect while *ignoring collisions with the movable non-target objects* but still validating robot kinematics, fixed obstacles, support and allowed target grasp conditions. Count how often each non-target object intersects complete robot/gripper/attached-target path geometry; normalize counts into `p_object` (with defined zero-count mask). In 2D use full 3R links and gripper; in 3D full xArm7/shelf. **Do not use straight-line point-robot or destination-only collision as substitute**, and do not require the path to physically execute through ignored obstacles: it is a *reference homotopy query* for labeling.
 
----
+**Task extension:** the requested target task is a *full target-to-goal motion*, not just reaching a grasp pose. For each TRAIN root, preregister the stages to include: initial approach, allowed side-grasp closure, attached target transport to goal, release and safe retreat, with any necessary connector/phase semantics from the existing teacher. Generate reference traces that ignore **movable obstruction contacts only** and obey all other verified constraints. If the teacher cannot safely generate these traces, report a target-motion-specific blocker. Do not treat a frozen historical sweep from another protocol as current oracle proof.
 
-## 4. Minimal integrated SORC-Grid model, with genuine learned components
+- Freeze `path_sampling_seed`, number of reference paths and object collision-count aggregation per root **before** seeing model predictions.
+- Counts are **teacher-side labels**, not model inputs. Counts are not a minimal-causal-culprit certificate, nor necessary across all possible repair plans.
+- Object identifiers are stable only for logging; no ID/family/root memorization. If no paths or zero counts, mask the OSNet MSE for that query or use an explicitly predeclared zero-target convention with a separate flag, not an arbitrary uniform blocker target.
+- On hypothetical *prefix* scenes, use TRAIN-only predeclared scene edits to generate conditional labels. Never generate labels for unselected TEST roots; budget and preserve root family grouping.
 
-Use separate per-domain networks (2D and 3D) with **identical semantics** but input dimensionality adjusted for 8x8 vs 6x6; do not share a checkpoint across embodiments without explicit experiment. Target hardware is a **single 8 GB local GPU** *(amended: or the gvlab2 GPU, <= 18 GB)*; prefer modest shared encoders and small heads, not replicated multi-GB backbones.
+**Loss:** original-paper inspired `L_OS = mean_masked ||p_hat - p_homotopy||^2` with probabilities normalized over eligible objects. Optional CE/KL only as a named auxiliary ablation. The privileged path counts never enter inference. Note possible target-to-goal task adaptation in the paper-fidelity report.
 
-### 4.1 Graph-based object sequencer (the central original-paper mechanism)
+## 5. RPNet — paper-based learned destination-region predictor
 
-- Build permutation-equivariant graph tokens for eligible movable objects, fixed obstacle objects and target, plus robot/gripper and desired target-goal nodes. Feature candidates: normalized position, size/type, support, movable/fixed flag, target/goal relation and robot reference q; if a local initial RGB-D renderer is verified, add mask-pooled compact visual features.
-- A compact graph encoder (e.g. 2–3 message-passing layers, width 128) computes scene/object features. **Use the same trained encoder** to score a candidate object after virtually masking its node in the *graph comparison*, not by changing the physical scene or pretending the object vanished.
-- Construct an explicit **task goal graph** using only target/goal and fixed geometry, rather than faking a fully corrected final arrangement. A similarity/difference head scores `S(G_current minus node i, G_goal-task)`. Document exactly what edit distance/similarity means: since this is not the paper's labeled full-arrangement GED, call it **learned task-conditioned graph difference**, not exact GED or original SimGNN pretraining.
-- Score eligible objects and include `STOP` / `ABSTAIN` decisions from a **small goal-completion head** on the same task-conditioned graph. There is no external symbolic TAMP planner. The learned STOP head uses only TRAIN Y(empty)/Y(endpoint) labels under the correct scope.
-- Guard against trivial identity shortcuts: object-order permutation invariance, node mask validity, fixed/target nonselection, and counterfactual object-pose sensitivity tests.
+### 5.1 Inputs, architecture, outputs
 
-### 4.2 GRASP-only action/value component
+Inputs: same context as OSNet plus the **chosen** movable non-target object and **all declared physical candidate cells** (8×8 or 6×6). Use original paper's MLP region/scene embeddings, Transformer **encoder** on robot/target/region tokens, Transformer **decoder** with `(region embedding + chosen-object embedding)` queries, and scalar per-region cost head. The selected object's current hypothetical source cell is included. Fixed and moved masks are retained. Do **not** replace this with SORC's image correspondence policy or Approach B's categorical cVAE.
 
-- Original SORC's high-level Q-map branches over PUSH/GRASP and orientations. In our legal grammar PUSH is forbidden, so there is only **GRASP**. Preserve a **learned masked GRASP score** for legal object candidates or side-grasp approaches as the replacement for action-selection; the existing low-level side-grasp motion planner still chooses a physically permitted realization. Do not invent high-level decisions outside `(object, destination)`.
-- Training positives: explicitly replayed **step-level successful** grasps/relocations or COMPLETE X=1 traces whose achieved per-step phases are unambiguous. Step-specific failures only if their phase and attempted candidate are recorded; other failure labels remain masked. Do not label the first action negative from `X(r)=0` when later moves might have failed.
-- If the original local teacher has no safe intermediate-state/step APIs, use **logged offline witness prefixes** and a supervised action-value/feasibility head, labeled as an adaptation; a full TD-style Q-learning claim requires actual local simulated transitions and reward accounting. Never fabricate replay data by teleporting a robot or by applying X/Y predictor probabilities.
-- Outputs must be distinct from the sequencer and PLACE heatmap, with at least one targeted ablation showing its benefit or null result. GRASP score can reweight choice among permitted objects, but **must never override a legal/physical constraint or grant a new grasp**.
+Output one numeric **lower-is-better** cost for each physical region; hard-mask **legality** during selection. Legal placement alone is not a complete executable relocation. The RPNet can prefer a bad but legal region, and the independent final verifier must be allowed to expose that failure.
 
-### 4.3 Correspondence-style learned PLACE distribution
+### 5.2 Training targets are different from X/Y
 
-- Inputs: original/current *hypothetical* image/occupancy scene, selected object patch/token, target and original-goal map, legal destination mask; build an image-patch-to-cell correspondence/attention score analogous to SORC's feature correlation, with occupancy penalty. If only known primitive rendering is possible, disclose that and test structured-only vs render-based features.
-- Output: **one learned categorical distribution over every legal physical resting cell** (`64` potential cells in 2D, `36` in 3D before legality masking); do not sneak in Approach B's cVAE, pretrained Q2 weights or XYNet.
-- Goal locations for **non-target** obstacles are *not provided*. Do not use an oracle-corrected reference image. Successful TRAIN complete sequences may produce a set of admissible destinations for the same object/context, not a unique prescribed pixel. Q2 isolated-placeability examples can train a **separate auxiliary conditional-placement head** or constrain a loss **with provenance**; they cannot be treated as goal-restoring repairs. A placement may be easy and still useless for the target.
-- During inference score legal cells once for the selected object, choose one destination (or an explicitly preregistered small set, secondary only), and add that move to the predicted prefix. Only hypothetical object-pose edits are used to generate the next policy observation; robot q is not manufactured.
+Reproduce the paper's **region cost** principle on TRAIN-only audited homotopy evidence: occupied, unsupported, out-of-scope, or predicted/reference-homotopy-blocking regions have a defined maximum cost; among the eligible nonblocking regions, normalize distance from selected object's source. Before assigning labels, explicitly define what counts as "blocks the target path" for its full target-to-goal action and whether a proposed placement changes the reference-path geometry. Use original-source *robot/full-body* geometry and 2D/3D clearance; no point-robot shortcut.
 
-### 4.4 STOP and admissibility decisions
+- Physical legality masking is deterministic/public and can be applied at inference; offline homotopy obstruction status **must not** be applied as an oracle mask at inference.
+- If cost labels require a small offline TRAIN-only intervention to evaluate a proposed cell, log `do(object→candidate)` and all changed fields, with **robot state unchanged**; the edit gives a *hypothetical geometry label*, never physical X=1.
+- Maintain separate label fields for `static_legal`, `homotopy_nonblocking`, `source_distance` and `whole_repair_outcome`. Never label an isolated Q2 placement or geometrically cleared path as full X/Y success.
+- RPNet loss: `L_RP = mean_masked ||c_hat - c_teacher||^2` per observed cost-map cell. Mask missing/unattempted cost-map cells without treating them as max cost. If paper-style complete cost maps are unavailable, local TRAIN-only pilot first; **do not invent them from the legacy K labels**.
+- Evaluate raw cost MSE/MAE, top-M valid legal coverage, original-homotopy nonblocking recall, candidate diversity and downstream independently verified task success. Low region cost is a learned prediction, not a certificate.
 
-- Evaluate initial `STOP` before moving (K0); after 1–3 hypothetical moves evaluate the learned target-restoration score and GRASP/executability confidence. A low partial-prefix target score **must not automatically terminate the search** before K3; K1 and K2 may fail Y while K3 succeeds.
-- At depth 3, stop and output the highest-ranking predicted complete prefix only if it passes the **validation-calibrated** admissibility threshold. Otherwise `ABSTAIN`. A `STOP` after a hypothetical prefix means output that **whole prefix**, not execute target and then choose more corrections.
-- No end-to-end physical checker feedback is used to rank proposals. The policy may predict task feasibility, but physical truth is evaluated independently.
+## 6. Learned termination adapter and one-shot sequence construction
 
----
+### 6.1 Why this is an **adaptation**
 
-## 5. Teacher-aligned training samples and losses (no fabricated negatives)
+Ren/Qureshi's native system **checks target reachability with RRTConnect after executing each move**. Using that online planner during proposal would give it an information advantage over Approach B's single-commit inference. For primary apples-to-apples evaluation, **replace only the termination signal** with a small learned benchmark-specific target-success/STOP head. This head is NOT OSNet or RPNet and is NOT an original contribution of the ICRA paper. Mark it as `OSRP-openloop-adapter`.
 
-### 5.1 Build root-local, deduplicated training supervision
+Supervise it using **TRAIN-only endpoint Y** for target-to-goal feasibility on the hypothetically edited scene (and optionally a separately named X/execution auxiliary using exact ordered X). Use only verified/attempted labels; no ground-truth target labels at inference. A Y-only STOP may predict restoration while the repair is physically unrealizable; **that is expected and measured by independent X**. Never use Approach B XYNet/F2/F3/F5 scores or Q2 neural checkpoints as this adapter.
 
-- Load only `split=train` roots. Each `root_id` is a unit of statistical independence; join V1 and V2 evidence by `(root_id, ordered sequence)` for X and `(root_id, sorted endpoint assignment)` for Y. Resolve exact duplicates and logged conflicts through provenance; never count six orders sharing one Y as six independent Y observations.
-- Recover every **witnessed** successful full repair with complete decided `X=1, Y=1`; create **prefix-level positive candidate actions** when physical trace supports the action and its actual order. Deduplicate repeated sequences and missing values.
-- For each observed Y endpoint construct the canonical hypothetical *object-only* edited scene; this can train STOP/goal-head Y predictions, but **is not evidence that the robot executed the edit**. Y=0 endpoint labels may train the task goal head; they may not label a specific object as ungraspable.
-- For each X=0 ordered sequence, use only the **whole-sequence operational outcome** or specifically localized phase evidence. It is not proof of a particular individual failed step or a globally impossible correction.
-- Missing/unobserved sequences and destinations remain **unlabeled**. Use **partial-label positive-only or contrastive objectives** against legitimately observed decided competing candidates; don't train false binary zeros for every unobserved cell.
-- Cache small graph/image tensors once per local root/split (separate hashes), not thousands of duplicate goal images or large dense all-sequence tensors. Ensure class balancing does not leak `K_legacy` as a feature.
-
-### 5.2 Losses
-
-Specify each loss and mask in code, log label availability per batch:
-
-1. `L_graph` — multi-positive/selective **first-action set** ranking. Positive candidates are first moves of witness-verified successful sequences with declared provenance. For a fully comparable root/prefix pool, use set likelihood such as `-log sum_{a in Pos} softmax(score(a))`; with unknown candidates, use a **positive-unlabeled/listwise masked** variant rather than assuming all other objects fail. An exact original-paper GED/similarity BCE is allowed **only** if a legitimate task-goal graph GED target is independently defined without leaking repaired goals; otherwise label this learned graph-ranker adaptation.
-2. `L_place` — masked softmax over legal destinations for a selected object, using multi-positive observed successful repair destinations and optionally weighted conditional Q2 placeability. Distinguish `P(placeable|grasped)` from `P(useful for target repair)`; record source, root/prefix, and coverage of each target.
-3. `L_grasp` — Huber/BCE/TD on **actual available** individual grasp/relocation phase labels; no loss on unresolved/uncertain attribution. If learning from replay rewards, state the reward exactly and discounting / bootstrap behavior; do not report deep Q-learning when only supervised replay classification was used.
-4. `L_stop` — masked BCE for target-from-q_ref Y on original and canonical edited scenes, with endpoint dedup. This is the baseline's task-completion head, not the host Approach B Boltzmann predictor. If desired, a separately labeled complete X success auxiliary may regularize the action policy **only** with exact ordered-X labels, never from geometric proximity.
-5. `L_cost` — optional small auxiliary Huber on witnessed normalized joint travel **only** when the same source code provides verified comparable witness cost, mask missing; otherwise **no learned cost**. At inference deterministic K and displacement penalties are allowed if preregistered identically to other methods, with exact accounting.
-
-`L = λg L_graph + λp L_place + λq L_grasp + λs L_stop (+ λc L_cost if measured)`. Start with declared equal positive weights for active heads, then tune only on TRAIN/VAL. Report per-head sample counts, mask fractions, calibration and ablations. Do not call every factor a learned *causal* quantity.
-
-### 5.3 Concrete modest training settings (PROPOSALS; freeze after a local dry run)
-
-- Encoder width `128`, graph layers `2–3`, small residual/patch encoder rather than compulsory DenseNet-121, top-down/cell heatmaps, object count capped **by actual observed max**, not guessed. Preserve fixed/target/unknown masks.
-- `AdamW`, initial learning rate `3e-4`, weight decay `1e-4`, batch `8–16`, gradient accumulation if needed, max `50` epochs, validation patience `8`, gradient clip `1.0`, seeds `0,1,2` as feasible; mixed precision only if parity/finite-loss tests pass.
-- **CPU-only smoke** before GPU. One GPU training process, automatic VRAM check, no tensor caches retained on GPU across epochs. If local RTX 5060 8 GB and torch CUDA is available, target <= `6 GiB` allocated, safe OOM recovery (lower batch / gradient accumulation), no long-lived multi-GPU code.
-- Train 2D and 3D separately, identically scoped; do not claim image-based generalization if rendering only known primitives. Quantify validation under each domain independently.
-
-### 5.4 Local teacher collection only if required
-
-Existing X/Y and Q2 evidence are the starting point; do **not** launch new full-grid oracle collection to train a sequencer. Only if GRASP-step supervision is demonstrably insufficient, a bounded **TRAIN-root-only** local teacher sub-study is permitted after a preflight budget: e.g. pilot 20 roots/domain, cap 2 candidate actions/root, pinned original grasp candidates, no changing teacher budgets or simulator. Log CPU-seconds/query, witness/phase coverage and local memory; then scale **only within a separately declared local wall/CPU budget**. Stop and report if projected cost is impractical; a transparent supervised adaptation is preferable to falsely claiming full TD reproduction.
-
----
-
-## 6. Inference algorithm — one integrated policy, one frozen proposal
+### 6.2 Primary frozen open-loop policy
 
 ```text
-INPUT: one public root R = (original scene S0, robot context q_ref/q0,
-       target T, goal g, legal support cells), frozen network parameters
-SET prefix r = [], hypothetical object poses = S0 object poses
-FOR t = 0, 1, 2, 3:
-    score task-conditioned STOP from public/hypothetical graph
-    record candidate completed prefix r with learned stopping score
-    IF t == 3: break
-    build graph of hypothetical object placements (never physical robot state)
-    for each eligible not-yet-moved non-target movable object:
-         graph edit/similarity sequencing score + masked GRASP score
-    select object using frozen learned policy and deterministic tie-break
-    obtain learned PLACE distribution over ALL legal original-empty cells
-    select one statically legal physical destination with learned policy
-    IF no legal object / destination: break
-    append (object_id, destination_cell); update hypothetical OBJECT poses
-END FOR
-From the visited completed-prefix candidates select ONE via frozen
-VALIDATION-only STOP/admission/cost rule; if none admitted -> ABSTAIN
-if selected prefix is [] -> NOOP else -> REPAIR with ordered moves
-WRITE the prediction for R; never invoke a teacher or live motion planner
+INPUT public initial root, fixed OSNet, RPNet and trained STOP adapter
+INIT r=[], hypothetical object poses = S0 poses, moved={}.
+Collect STOP score for r=[] (K0 possibility).
+FOR depth=1,2,3:
+    OSNet scores all eligible non-target movable, not-yet-moved objects.
+    Select highest-ranked with deterministic tie-break and legal-action mask.
+    RPNet scores all declared original-root-empty, currently free destination cells.
+    Select minimum learned-cost legal cell (deterministic tie-break).
+    Append (object, cell) to r; update object poses in hypothetical scene ONLY.
+    Record STOP score for current full prefix (may remain low after 1 or 2 moves).
+END
+Choose ONE visited prefix using frozen VAL-only stopping/admission rule
+(never require target Y to rise after every intermediate move).
+If selected prefix=[]: output NOOP.
+If no admissible prefix: output ABSTAIN.
+Otherwise output REPAIR with that exact ordered prefix.
+Output one JSONL prediction; do not run robot motion / target planner.
 ```
 
-This **greedy sequential selection** is the primary SORC-Grid analogue. A beam/tree expansion ablation may be added if carefully declared and charged but is **not** allowed as an unreported default. Crucially, a chosen prefix is only *predicted* to succeed; the independent `benchmark` verifier decides whether it actually restores the target. No fake robot q updates, no unsupported object motion, and no retry.
+**One-shot means:** one initial root observation and one final selected ordered repair, even though the neural networks may receive internally edited hypothetical object states for up to three forward passes. No physical state/reobservation/failure feedback; no retry if independently verified sequence fails. Do not fabricate intermediate robot configurations (`q_t`), actor success or executed repair trajectories.
 
-### 6.1 Exact adapter output
+**Optional secondary native-feedback protocol:** implement only after primary if local budget permits. Execute and reobserve after each real move; run existing native target-access check only where authorized. Label as *closed-loop, incomparable feedback budget* and keep statistics separate. It may help paper fidelity but **must never replace** primary open-loop numbers.
 
-One immutable JSONL row per root, matching `approach_b_final/benchmark.py`:
+## 7. Training and evaluation design
 
-```json
-{
-  "root_id": "<copied from public root>",
-  "domain": "2d",
-  "decision": "REPAIR",
-  "moves": [{"object_id": "<original stable ID>", "object_index": 2, "destination_cell": 15}],
-  "method": "sorc_grid_adapted",
-  "model_hash": "<actual sha256>",
-  "inference_mode": "open_loop_one_shot",
-  "timing_s": {"total": 0.0},
-  "n_graph_queries": 0,
-  "n_grasp_queries": 0,
-  "n_place_queries": 0
-}
-```
+### 7.1 Train/VAL and computational controls
 
-`0.0` and `0` above are **schema illustration only**; replace them with measured values. `NOOP` and `ABSTAIN` must have `moves: []`. Never output K, teacher labels, oracle collision distances, private masks or causal certificates. `benchmark.validate` must pass for every emitted row. `benchmark.seal` creates the immutable prediction seal before any teacher query.
+- Train on **historical TRAIN roots only**, including admissible TRAIN sidecars; validate/tune on historical **VALIDATION** only. Do not touch historical TEST or new expanded held-out scenes for selection. Apply lineage/group splitting to all derived path-count and region-cost examples.
+- Freeze label construction rules and seeds **before** teacher calls. Cache work per `(root_sha, hypothetical_edit, path_protocol_hash)`; never recompute a label under different planner settings and mix without provenance.
+- Keep OSNet and RPNet genuinely trained with MSE on privileged TRAIN-only path evidence. Do not train an imitation-only `(object,destination)` classifier and name it OSNet/RPNet. Optional imitation auxiliary must be declared separately and ablated.
+- Suggested compact start (tune VAL only): 128-d, 2–3 Transformer layers, 4 heads; AdamW 3e-4, weight decay 1e-4, batch 8–16, 30–50 epochs max, early-stop patience 8, grad norm clip 1, 3 seeds if local budget permits; label as proposed hyperparameters, not measured optimum.
+- Small CPU/data pilot first, then GPU smoke. All model parameters from random initialization (or explicitly declared deterministic feature embeddings); no training on frozen Approach B network weights. Never use external model APIs.
 
----
+### 7.2 Verification and metrics
 
-## 7. Evaluation plan: directly paired with REAP, DISCO-Grid, Approach B
+The existing **shared benchmark harness** controls all decisions and final verification:
 
-### 7.1 Primary comparison (must match host's public/teacher boundary)
+1. `benchmark.public` exports only learner-visible `root_id/domain/inputs`, never K, X/Y, witness, labels, repair solution.
+2. Per root write `decision` ∈ `NOOP|REPAIR|ABSTAIN` and `moves=[{"object_id", "object_index", "destination_cell"}, ...]`; record inference timing, number of OSNet/RPNet calls, CPU peak RSS and GPU peak VRAM.
+3. Call `benchmark.validate` to certify static K≤3 grammar; **no teacher calls in selection**.
+4. Run `benchmark.seal` on predictions **before** any physical verifier query. Hash and preserve weights/rules/seed and public inputs.
+5. Only then use shared `queries` → `teach` → `evaluate` → `summarize`; unchanged 2D/3D teachers and same planner/replay attempts/robot configs as other methods.
+6. Count correct `NOOP` on K0, `REPAIR` success on evaluable K1/K2/K3, `ABSTAIN` on `NONE` **separately**. `NONE` is not proof of unsolvability. Report per-K success, FAIL_X, FAIL_Y, UNKNOWN, invalid grammar, abstention/failure, action count, displacement, *witnessed* travel, inference latency/CPU/VRAM, teacher call/wall time, root-cluster bootstrap CIs. Never impute unknown as failure or zero travel.
 
-- Use exactly the same **public roots**, robot geometry, original target/goal, K<=3 grammar, q_ref, X/Y teacher, phase policies, legal cells, and deterministic verification budget. No per-method budget escalation; local runtime machine is reported for SORC, and cross-machine runtime claims require normalization or a separately matched machine run.
-- The policy is **one-shot open-loop**; its own sequence decisions are permitted to be sequential *neural* calls under hypothetical object edits, but no privileged physical result can condition them. Seal all predictions BEFORE physical evaluation. If a proposal fails, count as failure/unknown according to actual verifier; never repair it with second-best sequence.
-- Do not silently use existing test or incoming 1,120-scene expansion for tuning or trial selection. Development plots: TRAIN diagnostics, **VALIDATION** comparison. The **primary locked test** will be applied only when externally authorized after model/config freeze.
-- SORC on 2D and 3D are two separately trained domain models and two separate verified tables. No shared teacher result is to be interpreted as achieved robot execution by SORC before verification.
+On validation, compare against fixed REAP, DISCO and Approach B with the **same public roots and exact physical verifier** when their predictions are already available. Otherwise record `NOT_RUN_COMPARATOR`; do not borrow paper-native success rates as local benchmark results. Use the new 1,120-root benchmark **only later, under separate explicit authorization**, frozen models and thresholds, with paired root IDs.
 
-### 7.2 Required primary/secondary metrics
+### 7.3 Mandatory ablations
 
-1. **Original-task success on K1/K2/K3**, and separately **per K** (complete verified `X=1 AND Y=1`, denominator = independently evaluable roots; UNKNOWN fraction explicitly displayed).
-2. **K0 NOOP accuracy**, **NONE abstention and false-repair attempts**; NONE is a restricted-label category, not global impossibility.
-3. **Failure decomposition:** X failure versus Y failure versus unknown/replay/infra, as returned by common harness. Do not score X/Y prediction as if the method itself produces calibrated X/Y unless it has a dedicated, calibrated head with held-out truth.
-4. **Action economy:** `K_selected` distribution, success by K, selected displacement cost, normalized witnessed joint travel `J_complete` only with valid comparable trajectories; no imputed cost for failed/unknown predictions.
-5. **Compute:** CPU-seconds and process CPU, GPU model/device and peak VRAM, memory, latency p50/p90/p99, graph/GRASP/place forward counts, original teacher calls at verification (separate), model parameters, local training compute and data/query budget. Do not suggest cross-machine inference time is directly comparable without matched re-runs.
-6. **Paired uncertainty:** 95% group/lineage-cluster bootstrap with same K stratification/weights as `benchmark.summarize`. Compare on **identical roots**. Independent seeds and validation-only stop threshold selection. No pseudo-replication of X/Y queries as independent roots.
-7. **Mechanism metrics:** positive first-action recall against decided candidate pools, observed useful destination recall / hit@M (not physical hit on unlabeled destinations), action GRASP success classification where labels exist, STOP Y AUROC/AUPRC/NLL/Brier/ECE, object-order contrast sensitivity when same endpoint assignments have decided differing X, fixed-robot original-target no-op predictions, and conditional placement vs target-restoration distinction.
+- Full OSNet + RPNet + STOP adapter.
+- **OSNet-only:** same learned object selector, analytical **legal-region** choice (nearest Euclidean, no oracle target path at inference).
+- **RPNet-only:** a predeclared geometric/random eligible-object selector, learned region predictor.
+- Both replaced with analytic/random controls (same legality, budget).
+- No task-goal context vs full target-to-goal conditioning.
+- No learned STOP (fixed validation-independent depths or explicit admissibility rule), clearly distinguish fairness of Y evidence.
+- Optional: target **approach-only** homotopy supervision vs full **target-to-goal** homotopy supervision (scientifically important task-specific modification).
+- Same-endpoint order-swap held-out validation cases if physically decided, and K2/K3 dependent scenes. Report how order-specific X may differ even when RPNet's endpoint costs are identical.
 
-### 7.3 Mandatory ablations (all evaluated on same validation roots)
+Ablations must use matched TRAIN/VAL splits, same teacher cache and only the permissible neural/analytic components—no Approach B XY predictor or ground-truth blocker masks at inference.
 
-- Full learned graph sequence + learned GRASP score + learned PLACE + learned STOP (**primary**).
-- Graph sequencer replaced with deterministic legal-object order (isolates learned sequencing).
-- Learned PLACE replaced with matched uniform/legal/stratified selection (isolates learned placement).
-- GRASP head removed or constant, if actual grasp labels permit a trained head (isolates action-value contribution).
-- Task-goal conditioning removed (tests whether learned model uses target/goal rather than generic clutter clearance).
-- Structured-only vs initial-render-assisted features, **only if both are locally producible**; expose missing RGB-D rather than asserting paper-style image equivalence.
-- Optional learned STOP vs validation-frozen simple score threshold; no hidden oracle STOP.
-- Optional beam width >1 **secondary only**, with exactly charged proposals and separate name.
+### 7.4 Scene-backed figures and audit outputs
 
-### 7.4 Visual audit and example plots
+For every stage generate accurate 2D/3D scene figures from the actual public root: robot reference configuration, all object IDs/poses/shapes, target/goal, fixed vs movable, legal original-empty regions, OSNet object probabilities, RPNet region-cost heatmap, selected ordered cells and actual verified robot trajectories **only if a complete witness exists**. Include at least one K2/K3 dependence/order contrast where evidence exists; if not available, label `NOT_MEASURED`. All figures must distinguish hypothetical placements from achieved motion. Same axis/camera settings for comparisons.
 
-Save **scene-backed**, non-artistic representations: original root with actual target and goal, numbered proposed corrections and legal ghost destinations, final hypothetical object arrangement, side-grasp/collision evidence overlay **only from independent post-seal verifier**, graph sequence score bars for each eligible object, PLACE heatmap with legal cells, observed X/Y result, first physical failure stage, 2D arm/3D xArm actual checked trajectory when a complete witness exists; `NOT_RUN` elsewhere. Keep same axis/camera within matched scenes. A minimum of K0, each K1–K3, NONE, successful and failed examples per domain (where present) and one same-endpoint order-sensitive pair.
+## 8. Local hardware, resource and workspace contract
 
----
+**Laptop only.** Historical observation: AMD Ryzen 9 8940HX, ~32 GB system RAM, NVIDIA RTX 5060 ~8 GB VRAM. These may have changed; detect them before any run. Historical compatible Torch setup includes `torch 2.9.1+cu128` (not a directive to install a specific build). Print and log `hostname`, `nproc`, lscpu physical/logical, free RAM, disk, CUDA availability, Torch/CUDA versions, `nvidia-smi`, GPU compute capability, currently active processes, temperature and estimated training/teacher costs.
 
-## 8. Local-only engineering and minimal source ownership
+- Use an isolated **local** worktree/virtualenv and minimal project files. No gvlab, Girish, Blackwell, enigma, cloud/SSH, SLURM/Ray remote cluster, remote Docker, hosted model inference or external CPU. **Do not interrupt** another local process generating V3.4 data.
+- Start 1–2 CPU teacher workers; increase only after resource and temperature/available-RAM pilot. Maintain headroom (suggest ≥4 logical CPU threads and ≥4 GiB free RAM); bounded teacher **per-query and total** budgets must be pinned before scaling. No unlimited overnight jobs or altered low-level planner limits.
+- One local GPU model training process at a time, initial peak target ≤6 GiB allocated on an 8 GiB device, data loader ≤4 workers, CPU threads controlled, reasonable 8–16 minibatches, gradient accumulation, chunked dataset memory maps, deterministic seed/worker initialization, bounded tensor caching. If OOM reduce batch, not physical/planner constraints. Retain separate CPU teacher and GPU usage ledgers.
+- No database, distributed trainer or mirrored physical simulator code. Local raw data already present can be used if hashes match, but **do not fetch absent large files from a remote server** under this user's strictly local-compute restriction without an explicit authorization to transfer data (none provided here). If inputs missing locally, report exact bytes/paths needed and stop appropriately.
+- Write only under `baselines/neural_object_retrieval/`, except an explicitly documented adapter import and any **additive, isolated** benchmark extension necessary. No edits to archived models, teachers, config hashes, training snapshots, or the ongoing held-out cohort generation.
 
-Recommended one isolated worktree/branch `baseline/sorc-grid` (use a new local branch based on a pinned stable source; **not** the active V3.4 generation checkout) and a small subtree. Do not modify `approach_b_final/teacher2d.py`, `contracts.py`, `benchmark.py`, `evaluate.py`, `onpolicy.py`, original source snapshots, archived model checkpoints or any V3.4 generator/expansion file. Add an adapter instead of changing the benchmark contract.
+Suggested minimal files after inspecting `efa1b8da4f`:
 
 ```text
-baselines/sorc_grid/
-  README.md                 # adaptation/fidelity, local setup and exact commands
-  config.toml               # paths, hashes, CPU/GPU caps, training/validation knobs
-  data.py                   # read-only source audit, splits, labels, masks, raster input
-  graph.py                  # goal-conditioned graph and candidate node masking
-  model.py                  # compact graph, GRASP, PLACE and STOP modules
-  train.py                  # losses, train/val loops, checkpoints
-  policy.py                 # stateless greedy policy + benchmark JSONL adapter
-  run.py                    # one thin CLI: audit / smoke / train / predict / report
-  tests/                    # focused data/legality/invariance/teacher-contract tests
-  reports/                  # newly generated audit, plots, figures, metrics, decisions
+baselines/neural_object_retrieval/
+  README.md
+  config.json                 # one small frozen experiment contract
+  data.py                     # exact root/label views and masks; reuse audited files
+  homotopy.py                 # TRAIN-only offline full-arm reference-path counting
+  region_labels.py            # TRAIN-only region cost map and provenance
+  networks.py                 # OSNet + RPNet + explicit STOP adapter
+  train.py                    # MSE losses / masks / checkpoints
+  policy.py                   # open-loop greedy proposal; no teacher imports
+  run.py                      # audit / label-pilot / train / predict / report
+  tests/
+  reports/
 ```
 
-Use **existing installed shared robot/harness code** via a small read-only imported adapter, do not copy entire teacher or rebuild a simulator. Prefer 120–280 logical lines per Python file; if >300, split one coherent responsibility. Plain PyTorch, NumPy, stdlib TOML/JSON, and existing project environment only. New package installs must be local in an isolated environment and pinned after passing smoke. No generic plugin registry, notebooks as required runtime, second dataset generator, excessive folder nesting or internet-inference dependency.
+Suggested 120–280 logical lines per ordinary module; split >300 where a responsibility genuinely differs. Reuse existing audited data/legality files rather than duplicate. Commit after every passing stage.
 
-### 8.1 Only user's laptop resources *(amended: + gvlab2 GPU, see top)*
+## 9. Stage-gated execution (proceed without asking questions unless hard blocker)
 
-- P0 print `hostname`, `uname`, `nproc`, physical/logical CPU, available/free RAM, disk space, CUDA availability, `nvidia-smi` if available, `torch.__version__`, CUDA runtime and GPU name/capacity. Do **not** infer performance solely from earlier hardware reports.
-- Previously recorded laptop: Ryzen 9 8940HX (32 threads), approximately 31 GB total RAM, RTX 5060 8 GB; current free RAM may be only 7–8 GB. **Re-detect now.** On this GPU a torch build with working sm_120 support was previously documented as `torch 2.9.1 + cu128`; do not force historical torch 2.5.1 / cu121 or an untested CUDA wheel.
-- **Hard local caps (initial defaults, reduce if telemetry requires):** 1 GPU training/inference process; no more than `min(16, max(1, logical_cpus - 6))` CPU workers for teacher work; no more than **4 CPU workers** for data loading; constrain `torch` intra-op threads to `min(8, physical cores)` for training and measure; retain >=4 logical threads and >=4 GB **available** host RAM when possible. Avoid simultaneous CPU physics collection and GPU training if memory constrained.
-- First 2D/3D teacher smoke uses 1–2 workers and tight per-call wall/cpu caps. Estimate total teacher CPU cost from the pilot; **never launch hundreds/thousands of unbudgeted simulation tasks**. Graceful Ctrl+C, checkpoint/resume, per-root transaction logs and disk-quotas. Thermal guard, RAM guard and OOM fallback; never increase teacher planner budgets to make this method look better.
-- Peak VRAM target <=6 GiB on 8 GiB GPU. Use small images (e.g., 128–192 px square initially) and 8–16 batch, selective data caching, fp32 baseline; only enable autocast after loss/metric parity and max allocated memory evidence.
-- Absolutely no `ssh`, `scp`, `rsync user@host`, remote shell, SLURM, Ray cluster, cloud notebook, external GPU API, mounted server compute, or writing to another agent's run files *(amended: except the gvlab2 GPU path of the owner amendment)*. Dataset **already copied locally and hash-verified** is allowed to be read; missing source is a blocker and must be reported.
+**P0 — Correct identity, inspect, reuse.** Validate `efa1b8da4f`; reconcile old SORC wording; inspect ICRA 2024 original; verify local data/hardware/current teacher and benchmark contracts; write `METHOD_SWITCH_AND_FIDELITY.md`, dataset/split audit and resource report. **Gate:** paper/model identity correct and existing work preserved. If missing local 3D assets, flag `BLOCKED_3D` but continue independent 2D preparation.
 
----
+**P1 — Exact legal and model input adapter.** Retain audited legality/scene feature code, test against `benchmark.legality` and `validate` on legal/illegal 2D/3D sequences and permutation/order cases. Ensure only public root is available to `policy.predict`, and no test labels/teacher/repair K. **Gate:** 100% matching legality and no privilege-leak paths.
 
-## 9. Tests and invariant gates (fail closed)
+**P2 — Homotopy and region-label pilot.** Implement training-only collision-ignorant reference target path sampling using validated full robot, count intersections with movable objects, create original-like OSNet vector and RPNet cost maps; pilot **~10–20 TRAIN roots/domain** under predeclared local per-query/aggregate budgets. Render verified labels and log complete statuses. **Gate:** teacher geometry correct, label provenance sound, at least one nondegenerate multi-object path-count example and at least one nontrivial legal-vs-blocking region map; otherwise `BLOCKED_HOMOTOPY_SUPERVISION` with exact reason. Never invent oracle labels to pass.
 
-### P0 — Repository + paper fidelity + local data gate
+**P3 — Neural fidelity and tiny-data learning.** Implement MLP+Transformer OSNet and encoder/decoder Transformer RPNet with MSE loss, optional learned STOP adapter with only decided Y. CPU overfit 16–32 TRAIN examples, deterministic held-out 8–12 VAL smoke, gradient flow, zero probability on masked objects/cells, checkpoint hash/reload, local GPU memory smoke. **Gate:** both networks genuinely train on the correct label type; neither clones Approach B.
 
-- Inspect correct paper and supplementary, record exact methodology differences in `reports/SORC_FIDELITY_AUDIT.md`.
-- Resolve branch/commit, original source modules, teacher and config hashes; check hardware and local data paths. Audit snapshot counts/coverage locally against Table 1; unique X/Y signatures and train/val lineage. Confirm test expansion remains untouched.
-- `PASS` only when public input loader, labels masks, local 2D and 3D teacher imports and dataset provenance are verified; if 3D assets absent, report `BLOCKED_3D` and implement 2D path without pretending 3D parity. No training.
+**P4 — Bounded local full TRAIN/VAL training.** Estimate CPU-hours for needed homotopy/cost labels from P2 throughput and available laptop; **only scale if within recorded user-imposed local resource constraints**. Train 2D and 3D separately (3 seeds if feasible; clearly flag 1-seed as preliminary), calibrate STOP on VAL only, freeze weights. If label quantity inadequate, report `LIMITED_LABEL_COVERAGE` rather than falsely claiming completed full supervision. **Gate:** train/val leakage=0, per-head data counts/coverage and metric report, no hidden model/test information.
 
-### P1 — Legal grammar + policy interface gate
+**P5 — Sealed one-shot VALIDATION evaluation.** Run one original-scene prediction/root (up to 3 internal neural steps), static validate, **SEAL BEFORE TEACH**, share unchanged X/Y final verifier, log successes and unknowns by domain/K. Ablations and CI, timed runs and figures. **Gate:** reproducible fixed model, self-contained predictions, same external physics and budgets, all counts and failure types reported. If local teacher too costly, leave a frozen predictions-only report, `PHYSICAL_EVAL_NOT_RUN`, not fake scores.
 
-- Build one deterministic high-level legality adapter; verify identical verdicts against `benchmark.validate` for random legal/illegal sequences in both domains.
-- Test K0, K1–K3, target-not-movable, fixed-not-movable, move-once, original-occupied destinations, reused vacated destination, same destination twice, target-goal exclusion, 2D/3D legal support and offsets, order preserving, padding/IDs, 3D box/cylinder shape. Test model NEVER receives `K`, X/Y teacher, replay or private test index.
-- One minimal adapter predicts explicit `NOOP`/`ABSTAIN`/`REPAIR`; no teacher calls. `PASS` when the host `validate` accepts all legal entries and rejects every constructed counterexample.
+**P6 — Freeze handoff for later common held-out.** Save commit/model/label/split/homotopy-rule/resource hashes, all reproduction commands, final learned-baseline comparison row and paper-fidelity delta; no test expansion accessed. **Gate:** independent agent can run the frozen `benchmark.public→predict→validate→seal→queries→teach→evaluate→summarize` protocol later without retuning.
 
-### P2 — Goal-graph, rendering and supervised-sample provenance
+At every hard gate: if blocked, state precisely whether it is absent local data, absent safe teacher path-generation API, infeasible local CPU budgets, model learnability or physical parity. Preserve useful completed code and results. Don't change the research algorithm to pass a gate without creating a separately named, honestly labeled ablation.
 
-- Build original and hypothetically edited graphs, renderer provenance, graph node removal for scoring and legal destination masks. Confirm permutation equivariance and target/goal sensitivity.
-- Build positive sets from X/Y train labels **only**, without treating missing as negative; no six-permutation Y inflation. Every sample must have provenance and loss mask. Explicitly audit whether grasp-step labels are possible. Generate matched 2D/3D figures from available local scenes.
-- `PASS` when split leakage = 0, group root provenance preserved, every loss has declared decided teacher targets, rendering is observation-only, all counters are logged.
+## 10. Required deliverables / acceptance
 
-### P3 — 2D CPU smoke, then local GPU train
+1. `baselines/neural_object_retrieval/README.md`, minimal working code/tests and unchanged baseline/harness integration.
+2. `reports/METHOD_SWITCH_AND_FIDELITY.md`, `DATA_AND_LABEL_AUDIT.md`, `LOCAL_RESOURCES.json`, homotopy/region pilot results and mask reports.
+3. Validated OSNet and RPNet source with actual paper-inspired **MSE supervision** and a clearly separated adapted STOP head; checkpoints if locally trainable.
+4. Frozen original-root one-shot VALIDATION prediction JSONL for each available domain; static legality verdict and pre-teacher `.SEAL.json`; post-seal physical X/Y evaluations **only if run locally**.
+5. Per-K success, NOOP/ABSTAIN, FAIL_X/FAIL_Y/UNKNOWN, action counts, witnessed travel, displacement, end-to-end runtime and local CPU/GPU use with uncertainty and matching ablations.
+6. Real scene-backed visualizations, exact checkpoint/source/dataset/homotopy seed/protocol hashes and a comparison to REAP/DISCO/Approach B (never replacing unavailable rows with fabricated numbers).
+7. `reports/NEURAL_OBJECT_RETRIEVAL_BASELINE_REPORT.md` with an explicit *ICRA 2024 adapted baseline* caption; **not Tang/SORC and not exact native reimplementation**.
+8. A final stage-by-stage verdict `PASS / BLOCKED / NOT_RUN` with exact evidence, not an assertion that every target was fulfilled.
 
-- Tiny seed-controlled TRAIN subset (e.g. 24 roots), held-out 8-12 VALIDATION roots, full forward/backward, loss decreases and nonzero gradients for all active heads. Demonstrate overfitting tiny training sample without outcome leakage; no claim of generalization.
-- Verify model selects different objects for analytically distinct original target/goal contexts, GRASP head uses only permitted candidates, and PLACE assigns zero probability to illegal cells. Run GPU microbenchmark and memory log. If step-level labels unavailable, explicitly mark the GRASP head limited rather than invent results.
-- `PASS`: finite losses, correct masks, deterministic checkpoint/reload and prediction reproducibility, no forbidden oracle in model path.
-
-### P4 — Complete 2D/3D TRAIN + VALIDATION baseline
-
-- Train on existing train split and (optionally) additional properly scoped TRAIN-only Q2/witness data; early stop/tune on VALIDATION. Train each domain separately, 3 seeds if local resources permit; if constrained, report 1-seed preliminary clearly and continue remaining seeds only under the approved local budget.
-- Run open-loop learned-policy VALIDATION inference one root at a time, choose one sequence or abstention; seal output before verification. Use common independent X/Y verifier with same budgets as REAP and DISCO. Local teacher budget must be logged and bounded; don't assume all 7,500 roots need fresh teacher queries.
-- `PASS`: primary VALIDATION table with by-K denominators, X/Y failure types, no-op/abstain, inference CPU/GPU and timing, memory/travel and locked model hash. No test evaluation.
-
-### P5 — Faithful ablations, hard cases, figures, limitations
-
-- Run the ablations from §7.3 on identical validation roots and teacher caches; quantify learned graph contribution, placement contribution, GRASP contribution (if trained), target-goal conditioning and any visual-feature benefit. Verify same endpoint order swaps where teacher X evidence exists, and report why graph-only selection can fail on order-dependent physical access.
-- Plot requested scene-backed figures/heatmaps, root-bootstrap CIs, resource accounting, failures and mismatch with original SORC domain. Document whether SORC-Grid is genuinely learned and differs from REAP/DISCO and Approach B.
-- `PASS` only with complete `SORC_BASELINE_REPORT.md` and zero unfounded "paper reproduced" claims.
-
-### P6 — Freeze for future COMMON held-out evaluation (do not execute new test expansion)
-
-- Freeze 2D/3D weights, normalizers, feature/raster hashes, exact source commit, action grammar, threshold, seed list, train/val root hashes and public adapter, with a reproducibility manifest. **No newly generated V3.4 test roots are accessed or scored in P0–P6.**
-- Provide exact commands for the host to later create public test rows, run fixed inference, seal predictions, verify independently, summarize paired results. No tuning on those outcomes after the fact.
-
-**Mandatory failure behavior:** If an acceptance test fails, diagnose and correct within the current stage, rerun tests and clearly label any blocking missing local source. Never silently weaken a motion/grasp rule, relabel unknown as negative, invent a 3D outcome, or switch to a simpler classifier while calling it the original baseline.
-
----
-
-## 10. Deliverables and acceptance checklist
-
-Output locations are **new and isolated**, not old results. Required:
-
-- `baselines/sorc_grid/README.md`, working code/tests, minimal local config, deterministic CLI, runnable local environment instructions.
-- `reports/SORC_DATA_AUDIT.md`, `reports/sorc_dataset_manifest.json`, `reports/SORC_FIDELITY_AUDIT.md`, `reports/SORC_LOCAL_RESOURCE_AUDIT.json`.
-- Exact TRAIN/VAL split hashes and any TRAIN sidecars generated **locally**, with complete failure/missingness and time budgets.
-- 2D and 3D checkpoints and hashes, recorded seeds and per-head training curves, local CPU/GPU peak usage.
-- One `open_loop_one_shot` JSONL prediction per original validation root (K absent in inference), full `benchmark.validate` verdict, immutable SEAL, post-seal physical X/Y query/verification ledger and final independent outcomes.
-- `reports/SORC_BASELINE_REPORT.md`: side-by-side constraints audit against REAP/DISCO, mechanisms and fidelity, per-K performance, K0, NONE, travel, time, empirical root-bootstrap CIs, ablations, failure cases, truthful unknowns and explicitly **NOT_RUN** entries.
-- At least one 2D and one 3D scene with correctly rendered legal cells, selected movers, predicted destination heatmap and full physically witnessed robot trace (only if verified); no artistic stand-ins presented as empirical evidence.
-- `reports/SORC_FREEZE_MANIFEST.json` containing commit/teacher/data/model/config hashes and the exact post-freeze testing procedure.
-
-### Absolute no-go list
-
-No extra symbolic TAMP, no copying Approach B XYNet/cVAE or DISCO/REAP policy weights, no target correction among K moves, no PUSH despite original paper, no object moved twice, no initially occupied destination, no scene-edit oracle during inference, no grasp family widening, no robot q reset, no second predicted candidate after failure, no private K/label/test outcome feature, no GPU outside the local system *(amended: gvlab2 GPU allowed)*, no remote CPU, no test-expansion interference, and no claimed physical success until original teacher/replay verifies it.
-
-### Final naming to put in comparisons
-
-**SORC-Grid (Tang & Sukhatme, CoRL 2022; adapted)** — integrated **learned graph-based object selection + GRASP-only action scoring + task-conditioned placement + learned stopping**, matched to K<=3 fixed pick-and-place and original target-task restoration. Its original publication benchmarks full goal-image rearrangement with PUSH/swap/bin capabilities, so **these reported numbers are not imported into our new task**.
-
-**Research release condition:** the baseline is valid only if it emits independently legal, sealed proposals and a detailed fidelity/compute audit. A lower-scoring SORC-Grid baseline remains a scientifically valid result; changing its constraints, grasp set or teacher budgets to improve it is not.
+**Absolute no-go:** no test expansion read, no off-laptop execution, no test-time physics inside policy, no new symbolic TAMP, no different grasp/robot task, no imputed X/Y/path-count/region labels, no SORC modules, no rewriting old commits or teacher, and no success claim without the independent verifier.
