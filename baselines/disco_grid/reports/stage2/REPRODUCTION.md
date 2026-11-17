@@ -173,3 +173,40 @@ that actual release, then update the final numerical report. Source-only fixture
 checks can run locally; all real physical collection and model fitting ran on
 one low-priority gvlab CPU worker. Earlier unprofiled diagnostic CPU remains
 UNKNOWN instead of being added as zero to a claimed all-stage total.
+
+
+## Authorized V15-F25 physical release
+
+`EVALUATION_APPROVED.json` records the explicit user approval of both domains'
+VAL and TEST phases. `EVALUATION_LAUNCH.json` records the exact detached process
+identity, immutable engine, log and output paths. The physical run uses
+`source/final_eval_v3` (4aae3d12720be39a175c010059c35c31b320c8fa), without
+replacing that deployed source. Do not rerun the command into the existing output.
+The request/preparation version suffixes preserve the earlier prospective
+clean-control binding before its outcome-free correction.
+
+After the exact authorized process exits, `finish_physical_release.py` runs
+analysis once, under a separate 600 CPU/active-wall second watchdog and 3 GiB
+child RSS limit. It never launches or retries physical evaluation. It records
+partial evidence if a guard or the VAL coverage gate stops the release. Native
+failure frames reconstruct saved query-parent poses; their model initialization
+steps are separately counted and no planner is called. The finisher writes a
+versioned output outside the physical release, containing metrics, root STOP
+calibration, paired ablations, saved-state failure frames, reports and a streaming
+SHA-256 inventory of the quiescent physical evidence. Its watchdog account
+covers analysis/plotting/native reconstruction; observer CPU and inventory
+costs are separate in FINISH_COMPLETE.json. Time waiting for the already-running
+physical process is inactive observation time.
+
+```sh
+CUDA_VISIBLE_DEVICES= OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 \
+  nice -n 10 /scratch/nav/disco_grid/venv/bin/python \
+  baselines/disco_grid/reports/stage2/finish_physical_release.py \
+  /scratch/nav/disco_grid/stage2/evidence/V15_F25_v1_20261117_LAUNCH.json \
+  /scratch/nav/disco_grid/stage2/evidence/V15_F25_v1_20261117_final_v1 \
+  baselines/disco_grid/reports/stage2
+```
+
+`report_training_release.py` is the archived **pre-evaluation** generator;
+do not use it to replace actual physical results. Use `analyze_evaluation.py`
+and `report_physical_release.py` for the measured release instead.
