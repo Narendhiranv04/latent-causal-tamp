@@ -42,7 +42,7 @@ def build(campaign,coverage_path,out):
     for path in sorted(campaign.glob('**/WATCHDOG_ACCOUNTING.json')):
         info=read(path);sources[str(path)]=sha(path)
         resources.append(dict(layer='reaped_child_attempt',path=str(path),cpu_s=info.get('reaped_child_cpu_s'),
-            wall_s=info.get('wall_s'),peak_rss_kib=info.get('peak_rss_kib'),reason=info.get('reason'),sha256=sha(path)))
+            wall_s=info.get('wall_s'),sampled_peak_rss_kib=info.get('sampled_peak_rss_kib'),reason=info.get('reason'),sha256=sha(path)))
     for row in records:
         journal=campaign/f"trees/{row['domain']}/{row['round']}/{row['root_id']}/{row['root_id']}/queries.jsonl"
         if journal.exists():
@@ -113,7 +113,7 @@ def build(campaign,coverage_path,out):
                 ax.bar(range(4),values,bottom=bottom,color=color,label=label);bottom+=values
             ax.set_title(f'{dom.upper()} | '+('K3 roots' if k3 else 'all TRAIN strata'));ax.set_xlabel('Relocation depth');ax.set_ylabel('Unique terminal observations');ax.set_xticks(range(4));ax.legend(fontsize=7)
     fig.suptitle('MCTS STOP evidence in completed checkpoints; pooled R0/R1\nTRAIN observations, not model stopping accuracy',fontsize=10);fig.tight_layout();save(fig,'train_stop_evidence')
-    manifest=dict(scope='TRAIN-only diagnostics; no physical dispatch; no model selection',source_hashes=sources,
+    manifest=dict(scope='TRAIN-only diagnostics; no physical dispatch; no model selection',source_hashes=sources,script_sha256=sha(Path(__file__)),
         source_campaign=str(campaign),figures={p.name:sha(p) for p in figure_paths},
         limitations=['Root-count/search-budget task-success learning curves NOT_RUN: only E16 rung executed.',
             'Checkpoint depth totals include quarantined completed checkpoints; use certified-prefix provenance to establish fitting eligibility.',
