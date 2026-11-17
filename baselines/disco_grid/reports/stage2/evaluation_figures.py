@@ -32,8 +32,8 @@ def plot(metrics_path,out):
                     hatch='//' if value['status']=='PARTIAL' else None,alpha=.85)
                 ax.errorbar(position,rate,yerr=[[max(0.,rate-lo)],[max(0.,hi-rate)]],fmt='none',ecolor=color,capsize=3)
                 ax.text(position,rate+3,f"{value['n_verified_success']}/{value['n_expected_predictions']}",ha='center',fontsize=6,rotation=90)
-        primary=entry(dom,arms[0]);overall=primary['overall'] if primary else None
-        root_note=f" | {overall['n_roots']} roots, {overall['n_expected_predictions']//overall['n_roots']} model seeds" if overall and overall['n_roots'] else ' | NOT_RUN'
+        primary=entry(dom,arms[0]);tasks=primary['tasks_K1_K2_K3'] if primary else None
+        root_note=f" | {tasks['n_roots']} task roots, {tasks['n_expected_predictions']//tasks['n_roots']} model seeds" if tasks and tasks['n_roots'] else ' | NOT_RUN'
         ax.set_xticks(range(3),['K1','K2','K3']);ax.set_title(dom.upper()+root_note);ax.set_ylim(0,115);ax.set_ylabel('Verified task success (%)');ax.legend(fontsize=7)
     fig.suptitle('Exploratory held-out DISCO evaluation | fixed root/seed denominators\n95% root-family bootstrap intervals; hatching denotes unresolved/unexecuted outcomes',fontsize=10)
     fig.tight_layout();save(fig,'heldout_success_by_K')

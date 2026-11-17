@@ -112,6 +112,10 @@ constant learning rate, and CPU execution. Successful-only P2 starts from the
 corresponding all-feasible P1 so that the current policy-edge filter is isolated.
 O0/O1 share identical physical supervision; O1 does not receive a separate
 search campaign. Model-seed variation is not independent teacher-data replication.
+Legacy trainer fields named `val_*` monitor TRAIN rows under this fixed-epoch
+schedule; they are not benchmark VAL measurements and do not select checkpoints.
+The clean-only P2 control changes current P2 supervision, retaining its matched
+P1 initialization; it is not an entirely clean-only training curriculum.
 
 The collection ceilings are 1,024 adapter intents / four CPU and active wall hours
 in 2D and 512 intents / eight CPU and active wall hours in 3D. Queries are bounded
