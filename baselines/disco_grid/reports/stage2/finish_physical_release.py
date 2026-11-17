@@ -45,6 +45,10 @@ def load(name):
 def analyze(release, out, training):
     analyzer = load('analyze_evaluation')
     result = analyzer.analyze(release, out)
+    for name in ('APPROVED_ENVELOPE.json','HOST_MIGRATION.json','PARALLEL_HANDOFF.json','ORIGINAL_TRANSFER_INDEX.json'):
+        source=release/name
+        if source.exists():
+            (out/name).write_bytes(source.read_bytes())
     # One deterministic first failure per protocol/stratum/kind, not selected by
     # visual appeal. These reference the real physical journals, not new rollouts.
     failures = {}
