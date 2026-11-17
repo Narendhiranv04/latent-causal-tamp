@@ -20,6 +20,9 @@ sys.path.insert(0, str(H))
 import graph as G  # noqa: E402
 import homotopy as HM  # noqa: E402
 import nor_data as DA  # noqa: E402
+import os  # noqa: E402
+
+GOAL = os.environ.get("NOR_GOAL", "1") != "0"                     # NOR_GOAL=0: task-goal ablation tensors (every goal feature zeroed)
 
 
 def paths_of(e, dom, inp):
@@ -73,7 +76,7 @@ def build(dom, labels_file, out):
         key = (rid, json.dumps(sorted(map(list, prefix))) if prefix is None else json.dumps([list(map(int, m)) for m in prefix]))
         if key in cache:
             return cache[key]
-        sc = G.scene(inp, dom, [tuple(m) for m in prefix])
+        sc = G.scene(inp, dom, [tuple(m) for m in prefix], goal=GOAL)
         tm = np.zeros(G.NMAX[dom] + 2, bool)
         tm[inp["tid"]] = True
         for k, v in (("X", sc["X"].astype(np.float16)), ("M", sc["M"]), ("C", sc["C"].astype(np.float16)), ("L", sc["L"]), ("E", sc["elig"]), ("T", tm)):
@@ -148,7 +151,7 @@ def build(dom, labels_file, out):
                         rp_i=np.array([a for a, _, _ in RP]), rp_o=np.array([b for _, b, _ in RP]), rp_c=np.stack([c for _, _, c in RP]),
                         st_i=np.array([a for a, _ in ST]), st_y=np.array([b for _, b in ST], np.float32),
                         vst_i=np.array([a for a, _ in vst]), vst_y=np.array([b for _, b in vst], np.float32))
-    info = {"dom": dom, "states": len(S["X"]), "osnet": len(OS), "rpnet": len(RP), "stop_train": len(ST), "stop_val": len(vst), **n_skip,
+    info = {"goal_features": GOAL, "dom": dom, "states": len(S["X"]), "osnet": len(OS), "rpnet": len(RP), "stop_train": len(ST), "stop_val": len(vst), **n_skip,
             "holdout_roots": len({r for r, h in zip(S["root"], S["hold"]) if h})}
     Path(str(out) + ".json").write_text(json.dumps(info, indent=1))
     print(json.dumps(info))

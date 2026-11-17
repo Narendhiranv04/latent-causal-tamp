@@ -103,3 +103,30 @@ def run(dom, npz, outdir, seed, models=("os", "rp", "st"), max_n=None, cfg=CFG, 
 if __name__ == "__main__":
     a = sys.argv
     run(a[1], a[2], a[3], int(a[4]), tuple(a[5].split(",")) if len(a) > 5 else ("os", "rp", "st"), int(a[6]) if len(a) > 6 else None)
+
+
+def calibrate(npz, mdir, dev=None):
+    """STOP adapter temperature T fitted by NLL on the decided VALIDATION endpoint-Y samples (vst_*) -> mdir/calibration.json."""
+    dev = dev or ("cuda" if torch.cuda.is_available() else "cpu")
+    D = np.load(npz)
+    ck = torch.load(Path(mdir) / "st.pt", map_location=dev)
+    net = NW.StopAdapter(ck["cfg"]["d"], ck["cfg"]["st_layers"]).to(dev)
+    net.load_state_dict(ck["state"]); net.eval()
+    T = lambda a, dt=torch.float32: torch.as_tensor(np.asarray(a), dtype=dt, device=dev)  # noqa: E731
+    s = T(D["vst_i"], torch.long)
+    with torch.no_grad():
+        lg = torch.cat([net(T(D["X"])[s[i:i + 512]], T(D["M"], torch.bool)[s[i:i + 512]], T(D["T"], torch.bool)[s[i:i + 512]])
+                        for i in range(0, len(s), 512)])
+    y = T(D["vst_y"])
+    grid = np.exp(np.linspace(np.log(0.25), np.log(8), 200))
+    nll = [float(torch.nn.functional.binary_cross_entropy_with_logits(lg / t, y)) for t in grid]
+    t = float(grid[int(np.argmin(nll))])
+    p = torch.sigmoid(lg / t).cpu().numpy()
+    yy = y.cpu().numpy()
+    bins = np.clip((p * 10).astype(int), 0, 9)
+    ece = float(sum(abs(p[bins == b].mean() - yy[bins == b].mean()) * (bins == b).mean() for b in range(10) if (bins == b).any()))
+    out = {"T": t, "nll_T1": float(nll[int(np.argmin(np.abs(grid - 1)))]), "nll_T": float(min(nll)), "ece_T": ece, "n_val_endpoints": int(len(yy)),
+           "val_pos_rate": float(yy.mean()), "source": "decided VALIDATION endpoint Y labels of the frozen snapshot (not NOR-Grid outcomes)"}
+    (Path(mdir) / "calibration.json").write_text(json.dumps(out, indent=1))
+    print(json.dumps(out))
+    return out
