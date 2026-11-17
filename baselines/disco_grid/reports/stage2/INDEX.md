@@ -1,7 +1,8 @@
 # DISCO-Grid Stage 2 evidence index
 
-**PARTIAL release: E16 TRAIN cycles and model freezing are complete; new physical
-VAL/TEST task-success results are pending the authorized physical run.**
+**PARTIAL release: TRAIN is complete. The user revoked gvlab execution and
+authorized girish-laptop. Physical evaluation is migrating with prior attempts
+and costs preserved; final TEST results remain pending.**
 
 Branch: `naren/disco-grid-stage2`. D0–D8 and validation archives are unchanged.
 
@@ -51,3 +52,7 @@ physical evaluation uses the frozen source recorded in its preparation manifest.
 All costs include interrupted attempts; unknown old accounting remains UNKNOWN.
 
 No cross-method performance evaluation is part of this release.
+
+## User-directed host amendment
+
+[Girish authorization](GIRISH_EXECUTION_AUTHORIZATION.json), [current hardware inventory](GIRISH_HOST_INVENTORY.json), [1,301-file migration hash audit](GIRISH_MIGRATION_HASH_AUDIT.json), and [gvlab stop record](GVLAB_USER_HOST_STOP.json). All owned gvlab evaluation and finisher processes exited. The continuation retains completed and interrupted trials without retry, charges all 109 original query intents, and conservatively charges unrecoverable detached-controller CPU. The physical budget is not reset.

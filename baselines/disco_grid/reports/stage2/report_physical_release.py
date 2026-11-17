@@ -78,7 +78,7 @@ def report(release, metrics_dir, training_reports):
         'This is a standalone DISCO study. All rates below come from independently '
         'executed teacher episodes or exact, source-bound verification certificates. '
         'Training loss and search success are never substituted for learned-policy performance.', '',
-        f'Run: `{release}`. Host: gvlab; one low-priority CPU worker, zero GPU allocation. '
+        f"Run: `{release}`. Execution host: {envelope['host']}; one low-priority CPU worker, zero GPU allocation. "
         'Both VAL and TEST were explicitly authorized. Previous archives remain preserved.', '',
         'The cohort contains 15 VAL and 25 exploratory TEST roots/domain, balanced '
         'over K0/K1/K2/K3/NONE. The three primary protocols use three fixed model '
@@ -161,7 +161,7 @@ def report(release, metrics_dir, training_reports):
               '63 fits. The prospective 3D clean-control correction used no held-out '
               'outcome; original candidates and weights remain archived.', '',
               '## Resource accounting', '',
-              '| Phase | Domain | Predictions attempted / frozen | Charged adapter calls | CPU s | Active wall s |',
+              '| Phase | Domain | Predictions attempted / frozen | Charged adapter calls | Charged CPU s | Active wall s |',
               '|---|---|---|---|---|---|']
     for p in phase_costs:
         lines.append(f"| {p['phase']} | {p['domain']} | {p['n_attempted']}/{p['n_frozen_jobs']} | {p['adapter_calls']} | {p['cpu_s']:.3f} | {p['active_wall_s']:.3f} |")
@@ -203,6 +203,23 @@ def report(release, metrics_dir, training_reports):
               'only. ROOT_STOP_DIAGNOSTICS.json uses independent root STOP probes '
               'for descriptive raw-Q calibration, never legacy K labels or fitted '
               'TEST calibration. Reproduction commands are in REPRODUCTION.md.', '']
+    if (release/'HOST_MIGRATION.json').exists():
+        migration=read(release/'HOST_MIGRATION.json')
+        lines += ['## User-directed host migration', '',
+            'The user revoked gvlab execution and authorized girish-laptop. '
+            'Existing gvlab evidence was copied with byte-hash checks; finished '
+            'and interrupted trials were retained without retry. The primary '
+            'models, roots, rules and precommitted open-loop sequences are unchanged. '
+            'VAL therefore includes both hosts where recorded; TEST is on the '
+            'laptop. Only file paths and the explicit host guard were amended.', '',
+            'All gvlab query intents and reaped worker CPU remain charged. The '
+            'detached gvlab controller\'s final CPU could not be recovered, so '
+            'its entire elapsed interval is conservatively charged as controller '
+            'CPU, in addition to exact reaped worker CPU. Thus phase/total CPU '
+            'figures containing gvlab work are charged upper bounds, not exact '
+            'CPU measurements. Worker accounts and HOST_MIGRATION.json retain '
+            'the distinction. Environment installation/transfer qualification is '
+            'reported separately from physical query runtime.', '']
     (metrics_dir / 'FINAL_DISCO_STAGE2_REPORT.md').write_text('\n'.join(lines))
     (metrics_dir / 'PHYSICAL_RESOURCE_TOTALS.json').write_text(json.dumps(physical_cost, indent=2)+'\n')
     statuses = read(training_reports / 'STAGE2_FINAL_STATUS.json')
@@ -211,6 +228,8 @@ def report(release, metrics_dir, training_reports):
     statuses['gates']['S2.7'] = dict(status='DONE' if test_complete else 'PARTIAL',
         reason='See fixed-denominator metrics, censoring ledger and phase accounting; no unknown outcome imputed as a physical negative.')
     statuses['gates']['S2.6'] = dict(status='PARTIAL', reason='Prepared arms physically evaluated where recorded; additional root/search-budget ladders NOT_RUN.')
+    statuses['gates']['S2.8'] = dict(status='DONE' if test_complete and (metrics_dir/'figures/figure_sources.json').exists() else 'PARTIAL',
+        reason='Native TRAIN frames preserved; measured held-out plots and deterministic saved-state failure frames generated where actual evidence exists. Missing independent STOP probes or failure states are not fabricated.')
     statuses['gates']['S2.9'] = dict(status='PARTIAL', reason='Standalone evidence/report packaged; unexecuted ladder experiments and other limitations explicitly retained.')
     statuses['report_generator_sha256'] = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
     (metrics_dir / 'STAGE2_FINAL_STATUS.json').write_text(json.dumps(statuses, indent=2)+'\n')

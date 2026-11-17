@@ -7,6 +7,24 @@ import data as D, env as E, journal as J, physical_eval as PE, policy as P
 from test_validation_v2 import ToyEnv
 
 
+def test_explicit_laptop_amendment_revokes_gvlab_without_weakening_headroom(tmp_path,monkeypatch):
+    import collect as C
+    path=tmp_path/'host.json'
+    path.write_text(json.dumps(dict(status='APPROVED',scope='DISCO_RELEASE_HOST_AMENDMENT',
+        authorization_text='fixture: use girish laptop',host='girish-laptop',hostname='gvcstar',
+        workers=1,cpu_threads=1,gpu=False)))
+    monkeypatch.setenv('DISCO_EXECUTION_AUTHORIZATION',str(path))
+    assert C.execution_host('girish-laptop')['hostname']=='gvcstar'
+    with pytest.raises(RuntimeError,match='requested host'):C.execution_host('gvlab')
+    available=dict(hostname='gvcstar',load1=0.,logical_cpus=24,ram_available=10*2**30,disk_free=30*2**30)
+    monkeypatch.setattr(C,'resources',lambda:dict(available))
+    assert C.require_headroom()['hostname']=='gvcstar'
+    available['ram_available']=7*2**30
+    with pytest.raises(RuntimeError,match='BLOCKED_RESOURCE'):C.require_headroom()
+    available.update(ram_available=10*2**30,hostname='gvlab')
+    with pytest.raises(RuntimeError,match='actual host'):C.require_headroom()
+
+
 def test_train_approval_cannot_execute_evaluation(tmp_path):
     jobs=tmp_path/'jobs.json';jobs.write_text(json.dumps({'jobs':[]}))
     with pytest.raises(PermissionError,match='Separate explicit evaluation'):

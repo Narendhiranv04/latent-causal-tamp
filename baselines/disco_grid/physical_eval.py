@@ -179,7 +179,9 @@ def validate_execution(jobs_path,envelope):
     if envelope.get('status')!='APPROVED' or envelope.get('scope')!='DISCO_PHYSICAL_EVALUATION' or not envelope.get('authorization_text'):
         raise PermissionError('Separate explicit evaluation authorization required; E16 TRAIN is insufficient')
     if envelope['jobs_sha256']!=D.sha256_file(jobs_path):raise ValueError('Approved jobs changed')
-    if envelope['host']!='gvlab' or envelope['workers']!=1 or envelope['gpu'] is not False:raise PermissionError('Evaluation host/resource mismatch')
+    try:C.execution_host(envelope['host'])
+    except RuntimeError as error:raise PermissionError('Evaluation host/resource mismatch') from error
+    if envelope['workers']!=1 or envelope['gpu'] is not False:raise PermissionError('Evaluation host/resource mismatch')
     jobs=read(jobs_path)['jobs']
     if len({j['id'] for j in jobs})!=len(jobs):raise ValueError('Duplicate job IDs')
     if any(j['split']!=envelope['split'] or j['protocol'] not in ('open_loop','closed_loop') for j in jobs):raise ValueError('Mixed or invalid split/protocol')

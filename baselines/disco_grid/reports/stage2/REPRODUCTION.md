@@ -210,3 +210,35 @@ CUDA_VISIBLE_DEVICES= OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1
 `report_training_release.py` is the archived **pre-evaluation** generator;
 do not use it to replace actual physical results. Use `analyze_evaluation.py`
 and `report_physical_release.py` for the measured release instead.
+
+
+## Girish-laptop continuation (supersedes gvlab execution)
+
+The user explicitly revoked gvlab execution and authorized girish-laptop.
+`GIRISH_EXECUTION_AUTHORIZATION.json` is the runtime host amendment. Set
+`DISCO_EXECUTION_AUTHORIZATION` to the on-laptop copy; the guard then accepts
+only hostname `gvcstar` / alias `girish-laptop` and rejects gvlab. Load, RAM,
+disk, CPU-worker, query-time and GPU guards remain enforced.
+
+The isolated Python 3.10 environment is
+`/home/longhorizon/disco_grid_stage2/venv`. Frozen checkpoint/input/teacher files
+were copied under `rootfs` with all 1,301 SHA-256 hashes verified. Set
+`ABF_ROOT`, `DISCO_ROOT`, `FIN3D_CODE` and `FIN3D_SRC` to their relocated
+rootfs paths. This does not edit benchmark files or assume a shared filesystem.
+The CPU PyTorch build is 2.5.1; NumPy 2.2.6 and MuJoCo 3.16.0 match gvlab.
+Prediction parity and actual input/teacher hashes must pass before physical work.
+
+`continue_physical_laptop.py` keeps original job IDs, models, roots, rules and
+open-loop sequences. Only path bindings and the explicit host guard change.
+The first 32 completed gvlab outcomes and the 33rd administratively cancelled
+attempt are retained without retry. All 109 original query intents are charged.
+Worker CPU is exactly reaped; detached-controller final CPU is unavailable,
+so the controller's entire elapsed interval is conservatively charged as CPU
+in addition to worker CPU. The resulting bound reduces the remaining 2D VAL
+CPU envelope. It is not presented as an exact CPU measurement. The full original
+phase ceilings and global 5,523-query ceiling are never reset.
+
+The prior frozen gvlab tree remains an immutable input to the continuation.
+New physical fragments are stored separately and joined through explicit
+symlinks and provenance rows. All TEST physical execution is on the laptop;
+VAL may contain both hosts. No failed/timed-out/cancelled trial is rerun.

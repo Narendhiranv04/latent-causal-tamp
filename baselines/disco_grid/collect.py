@@ -38,11 +38,35 @@ def resources():
 
 def require_headroom():
     r = resources()
-    if r["hostname"] != "gvlab":
-        raise RuntimeError("BLOCKED_PERMISSION: DISCO execution host allowlist is gvlab only")
+    host=execution_host()
+    if r["hostname"] != host['hostname']:
+        raise RuntimeError("BLOCKED_PERMISSION: actual host differs from explicit execution authorization")
     if r["load1"] > r["logical_cpus"]-3 or r["ram_available"] < 8*2**30 or r["disk_free"] < 20*2**30:
         raise RuntimeError("BLOCKED_RESOURCE: " + json.dumps(r))
     return r
+
+
+def execution_host(requested=None):
+    """An explicit host amendment changes placement, never resource limits.
+
+    The historical gvlab default supports preserved releases. A continuation
+    supplies the recorded user amendment, whose single host supersedes it.
+    """
+    path=os.environ.get('DISCO_EXECUTION_AUTHORIZATION')
+    if path:
+        record=json.loads(Path(path).read_text())
+        if (record.get('status')!='APPROVED' or record.get('scope')!='DISCO_RELEASE_HOST_AMENDMENT'
+                or not record.get('authorization_text') or record.get('workers')!=1
+                or record.get('gpu') is not False or record.get('cpu_threads')!=1):
+            raise RuntimeError('BLOCKED_PERMISSION: invalid execution host amendment')
+        host=dict(alias=record.get('host'),hostname=record.get('hostname'))
+        if host!={'alias':'girish-laptop','hostname':'gvcstar'}:
+            raise RuntimeError('BLOCKED_PERMISSION: unsupported amended execution host')
+    else:
+        host=dict(alias='gvlab',hostname='gvlab')
+    if requested is not None and requested!=host['alias']:
+        raise RuntimeError('BLOCKED_PERMISSION: requested host differs from recorded authorization')
+    return host
 
 
 def teacher_sources(dom):

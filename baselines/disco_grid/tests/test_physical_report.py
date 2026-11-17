@@ -19,7 +19,7 @@ def setup(tmp_path):
     release, metrics, training = [tmp_path / name for name in ('release', 'metrics', 'training')]
     for path in (release, metrics, training):
         path.mkdir()
-    write(release/'APPROVED_ENVELOPE.json', dict(global_adapter_call_ceiling=5523,
+    write(release/'APPROVED_ENVELOPE.json', dict(host='girish-laptop',global_adapter_call_ceiling=5523,
         ceilings={d:dict(val=3600, test=3600) for d in ('2d','3d')}))
     write(metrics/'FINAL_METRICS.json', dict(metrics={}, paired={}))
     write(training/'RESOURCE_TOTALS.json', dict(recorded_E16_subtotal=dict(cpu_s=10.,active_wall_s=12.)))
@@ -75,3 +75,25 @@ def test_unexecuted_or_all_unknown_paired_arms_have_no_point_estimate():
     censored=A.paired_evidence(unknown,unknown,roots,[0],bootstrap=10)
     assert censored['status']=='UNRESOLVED' and censored['delta'] is None
     assert censored['unresolved_sensitivity']==[-1.,1.]
+
+
+def test_host_continuation_charges_cancelled_child_and_preserves_job_identity(tmp_path):
+    import sys
+    sys.path.insert(0,str(script.parents[2]))
+    spec=importlib.util.spec_from_file_location('laptop_continuation',script.with_name('continue_physical_laptop.py'))
+    L=importlib.util.module_from_spec(spec);spec.loader.exec_module(L)
+    prior=tmp_path/'prior';launch=tmp_path/'launch.json'
+    write(launch,dict(utc='1970-01-01T00:00:00+00:00'))
+    for i,(cpu,end) in enumerate(((2.,10.),(4.,20.))):
+        d=prior/'val_2d'/str(i)
+        write(d/'WATCHDOG_ACCOUNTING.json',dict(reaped_child_cpu_s=cpu,wall_time_end=end,wall_s=10.))
+        (d/'queries.jsonl').write_text(json.dumps(dict(event='started'))+'\n')
+    cost=L.previous_cost(prior,launch)
+    assert cost['worker_cpu_s']==6. and cost['cpu_s']==26. and cost['active_wall_s']==20.
+    assert cost['adapter_calls']==2 and cost['exact_final_controller_cpu_s'] is None
+    job=dict(id='fixed',policy='/scratch/nav/disco_grid/p.pt',
+        prediction=dict(seq=[[1,4]],status='REPAIR'),teacher_sources={'/home/nav/teacher.py':'hash'})
+    moved=L.relocated(job,tmp_path/'rootfs')
+    assert moved['id']==job['id'] and moved['prediction']==job['prediction']
+    assert moved['policy'].startswith(str(tmp_path/'rootfs'))
+    assert job['policy']=='/scratch/nav/disco_grid/p.pt'
