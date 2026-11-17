@@ -1,0 +1,106 @@
+{
+  "affinity": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21
+  ],
+  "authorization": {
+    "authorization_text": "you can use the girish laptop rest of the cpu cores to speed things up. make sure you have 2 cores free on the girish laptop, other than you can use whatever's available.",
+    "authorized_hosts": {
+      "girish-laptop": "gvcstar",
+      "user-laptop": "pop-os"
+    },
+    "ceilings": {
+      "2d": {
+        "test": 10800,
+        "val": 3600
+      },
+      "3d": {
+        "test": 21600,
+        "val": 7200
+      }
+    },
+    "cpu_affinity": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21
+    ],
+    "cpu_threads": 1,
+    "disk_gib": 10,
+    "global_adapter_call_ceiling": 5523,
+    "gpu": false,
+    "gpu_assessment": "Neural latency sum 846.7ms versus 1747.74s 2D VAL physical phase; preserve frozen CPU inference. Physics and planning are CPU-only.",
+    "gpu_authorized_if_useful": true,
+    "host": "girish-laptop",
+    "hostname": "gvcstar",
+    "inference_device": "frozen CPU",
+    "interpretation": "User amended host/worker placement only. Same aggregate CPU, wall, call, RAM and disk ceilings; no change to models, roots, benchmark, query caps, retries or verification.",
+    "ram_gib": 4,
+    "reserved_logical_cpus": [
+      22,
+      23
+    ],
+    "reserved_physical_cores": 2,
+    "resource_coordination": {
+      "disco_trial_nice": 19,
+      "girish_workers": 3,
+      "load_ceiling": 22,
+      "local_reason": "Observed MemAvailable about 6 GiB below unchanged 8 GiB headroom guard; high swap use. Do not disrupt other methodology work.",
+      "local_worker_allocation": 0,
+      "other_job_observed_workers": {
+        "girish-laptop": 16,
+        "user-laptop": 14
+      },
+      "reserved_from_DISCO": "Physical cores 14 and 15, logical CPUs 22 and 23. Other workloads unchanged; global idleness not guaranteed."
+    },
+    "revoked_execution_hosts": [
+      "gvlab"
+    ],
+    "scheduling_note": "Use three slots after measured four-slot transient load stops; same user authorization, two complete physical cores excluded, original budgets and no-retry rule unchanged.",
+    "scope": "DISCO_RELEASE_RESERVED_CORES_AMENDMENT",
+    "status": "APPROVED",
+    "utc": "2026-11-17T18:24:36.058225+00:00",
+    "workers": 3
+  },
+  "prior_complete_sha256": "207e0076f3e8b27873efc81ec089d8f1bac352a393a9ac3e2a4ca8dd67517cfe",
+  "prior_release": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_reserved_stable3_20261117",
+  "semantics": "Never-attempted frozen TEST identities only. No re-selection, no retry of unresolved or cancelled attempts."
+}

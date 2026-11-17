@@ -4,7 +4,7 @@
 
 This is a standalone DISCO study. All rates below come from independently executed teacher episodes or exact, source-bound verification certificates. Training loss and search success are never substituted for learned-policy performance.
 
-Run: `/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_reserved_stable3_20261117`. Execution host: girish-laptop; 3 low-priority CPU worker(s), zero GPU allocation. Both VAL and TEST were explicitly authorized. Previous archives remain preserved.
+Run: `/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_reserved_stable3_20261118`. Execution host: girish-laptop; 3 low-priority CPU worker(s), zero GPU allocation. Both VAL and TEST were explicitly authorized. Previous archives remain preserved.
 
 The cohort contains 15 VAL and 25 exploratory TEST roots/domain, balanced over K0/K1/K2/K3/NONE. The three primary protocols use three fixed model seeds, so their K1–K3 denominator is 15 roots and 45 predictions. Source-family bootstrap intervals use 10,000 replicates, seed 20261117; model seeds remain within each root. These small balanced cohorts are neither full-TEST population estimates nor untouched confirmation.
 
@@ -17,9 +17,9 @@ Missing or interrupted outcomes remain in the fixed denominator and the unknown 
 | 2D | O0 open loop | 2/45 = 4.44% [0.00%, 11.11%]; 15 roots; unknown 6 |
 | 2D | O0 closed loop | 2/45 = 4.44% [0.00%, 11.11%]; 15 roots; unknown 5 |
 | 2D | O1 closed loop | 2/45 = 4.44% [0.00%, 11.11%]; 15 roots; unknown 4 |
-| 3D | O0 open loop | 15/45 = 33.33% [15.56%, 51.11%]; 15 roots; unknown 13 |
-| 3D | O0 closed loop | NOT_RUN |
-| 3D | O1 closed loop | NOT_RUN |
+| 3D | O0 open loop | 15/45 = 33.33% [15.56%, 51.11%]; 15 roots; unknown 4 |
+| 3D | O0 closed loop | 17/45 = 37.78% [20.00%, 57.78%]; 15 roots; unknown 0 |
+| 3D | O1 closed loop | 5/45 = 11.11% [0.00%, 26.67%]; 15 roots; unknown 40 |
 
 ## Per-stratum results
 
@@ -42,20 +42,20 @@ K0 and NONE physical success are shown separately from their intended NOOP and e
 | 2D | O1 closed loop | 2 | 1/15 = 6.67% [0.00%, 20.00%]; 5 roots; unknown 3 |
 | 2D | O1 closed loop | 3 | 0/15 = 0.00% [0.00%, 0.00%]; 5 roots; unknown 0 |
 | 2D | O1 closed loop | NONE | 3/15 = 20.00% [0.00%, 46.67%]; 5 roots; unknown 2 |
-| 3D | O0 open loop | 0 | 7/15 = 46.67% [6.67%, 86.67%]; 5 roots; unknown 5 |
-| 3D | O0 open loop | 1 | 7/15 = 46.67% [13.33%, 80.00%]; 5 roots; unknown 4 |
-| 3D | O0 open loop | 2 | 6/15 = 40.00% [6.67%, 73.33%]; 5 roots; unknown 3 |
-| 3D | O0 open loop | 3 | 2/15 = 13.33% [0.00%, 26.67%]; 5 roots; unknown 6 |
-| 3D | O0 open loop | NONE | 0/15 = 0.00% [0.00%, 0.00%]; 5 roots; unknown 5 |
-| 3D | O0 closed loop | 0 | NOT_RUN |
-| 3D | O0 closed loop | 1 | NOT_RUN |
-| 3D | O0 closed loop | 2 | NOT_RUN |
-| 3D | O0 closed loop | 3 | NOT_RUN |
-| 3D | O0 closed loop | NONE | NOT_RUN |
-| 3D | O1 closed loop | 0 | NOT_RUN |
-| 3D | O1 closed loop | 1 | NOT_RUN |
-| 3D | O1 closed loop | 2 | NOT_RUN |
-| 3D | O1 closed loop | 3 | NOT_RUN |
+| 3D | O0 open loop | 0 | 9/15 = 60.00% [26.67%, 93.33%]; 5 roots; unknown 3 |
+| 3D | O0 open loop | 1 | 7/15 = 46.67% [13.33%, 80.00%]; 5 roots; unknown 1 |
+| 3D | O0 open loop | 2 | 6/15 = 40.00% [6.67%, 73.33%]; 5 roots; unknown 0 |
+| 3D | O0 open loop | 3 | 2/15 = 13.33% [0.00%, 26.67%]; 5 roots; unknown 3 |
+| 3D | O0 open loop | NONE | 0/15 = 0.00% [0.00%, 0.00%]; 5 roots; unknown 2 |
+| 3D | O0 closed loop | 0 | 11/15 = 73.33% [33.33%, 100.00%]; 5 roots; unknown 0 |
+| 3D | O0 closed loop | 1 | 8/15 = 53.33% [13.33%, 93.33%]; 5 roots; unknown 0 |
+| 3D | O0 closed loop | 2 | 6/15 = 40.00% [6.67%, 73.33%]; 5 roots; unknown 0 |
+| 3D | O0 closed loop | 3 | 3/15 = 20.00% [6.67%, 33.33%]; 5 roots; unknown 0 |
+| 3D | O0 closed loop | NONE | 0/15 = 0.00% [0.00%, 0.00%]; 5 roots; unknown 0 |
+| 3D | O1 closed loop | 0 | 3/15 = 20.00% [0.00%, 60.00%]; 5 roots; unknown 12 |
+| 3D | O1 closed loop | 1 | 3/15 = 20.00% [0.00%, 60.00%]; 5 roots; unknown 12 |
+| 3D | O1 closed loop | 2 | 2/15 = 13.33% [0.00%, 40.00%]; 5 roots; unknown 13 |
+| 3D | O1 closed loop | 3 | 0/15 = 0.00% [0.00%, 0.00%]; 5 roots; unknown 15 |
 | 3D | O1 closed loop | NONE | NOT_RUN |
 
 ## Stopping, execution failures and inference costs
@@ -65,9 +65,9 @@ K0 and NONE physical success are shown separately from their intended NOOP and e
 | 2D | O0 open loop | 0/15 | 15 | 0/15 | 17 | 12.599 / 16.2117 |
 | 2D | O0 closed loop | 0/15 | 15 | 0/15 | 13 | 18.409661017358303 / 37.61256784200668 |
 | 2D | O1 closed loop | 0/15 | 15 | 0/15 | 12 | 20.45479998923838 / 37.60697022080421 |
-| 3D | O0 open loop | 4/15 | 6 | 0/15 | 2 | 5.8315 / 10.73705 |
-| 3D | O0 closed loop | 0/15 | 0 | 0/15 | 0 | None / None |
-| 3D | O1 closed loop | 0/15 | 0 | 0/15 | 0 | None / None |
+| 3D | O0 open loop | 6/15 | 6 | 0/15 | 3 | 6.047000000000001 / 10.723 |
+| 3D | O0 closed loop | 7/15 | 8 | 0/15 | 2 | 14.677264029160142 / 25.743696175049987 |
+| 3D | O1 closed loop | 0/15 | 3 | 0/15 | 0 | 16.436462989076972 / 17.918345978250727 |
 
 X=0,Y=1 denotes execution failure at a target-feasible endpoint; it does not establish that order alone caused the failure. Complete failure phases/kinds, action counts and reference path travel remain in FINAL_METRICS.json. Travel measures accepted corrective joint waypoints plus the certified connector, excluding target Y; actual servo-integrated arc is NOT_RECORDED. Cached certificates reduce physical calls, not neural latency measurements.
 
@@ -85,10 +85,10 @@ X=0,Y=1 denotes execution failure at a target-feasible endpoint; it does not est
 | test|3d|O0_P1Q1_minus_O0_P1_success_onlyQ1|eta0.0 | 6.67 pp | [0.00, 20.00] pp | 15 / [0] | 14 |
 | test|3d|O0_P2Q2_minus_O0_P0|eta0.0 | 26.67 pp | [6.67, 46.67] pp | 15 / [0] | 15 |
 | test|3d|O0_P2Q2_minus_O0_P1Q1|eta0.0 | 20.00 pp | [0.00, 40.00] pp | 15 / [0] | 13 |
-| test|3d|O0_P2Q2_minus_O0_P2_clean_onlyQ2|eta0.0 | 20.00 pp | [0.00, 40.00] pp | 15 / [0] | 11 |
-| test|3d|O0_P2Q2_minus_O0_P2_success_onlyQ2|eta0.0 | 17.78 pp | [6.67, 31.11] pp | 15 / [0, 1, 2] | 31 |
+| test|3d|O0_P2Q2_minus_O0_P2_clean_onlyQ2|eta0.0 | 20.00 pp | [0.00, 40.00] pp | 15 / [0] | 9 |
+| test|3d|O0_P2Q2_minus_O0_P2_success_onlyQ2|eta0.0 | 17.78 pp | [6.67, 31.11] pp | 15 / [0, 1, 2] | 26 |
 | test|3d|O0_P2Q2_minus_O0_P2|eta0.0 | 33.33 pp | [15.56, 51.11] pp | 15 / [0, 1, 2] | 40 |
-| test|3d|O1_closed_P2Q2_minus_O0_closed_P2Q2|eta0.0 | NOT_RUN | unavailable | 15 / [0, 1, 2] | 45 |
+| test|3d|O1_closed_P2Q2_minus_O0_closed_P2Q2|eta0.0 | -26.67 pp | [-46.67, -8.89] pp | 15 / [0, 1, 2] | 40 |
 
 Q on/off, policy evolution, all-feasible/successful-only, clean/prefix data and observed-joint effects use identical frozen roots and common model seeds. Secondary evolution/coverage arms use seed 0. These are descriptive paired estimates without multiplicity-adjusted hypothesis tests. No improvement is inferred from fitting loss. Successful-only P2 starts from all-feasible P1, and the clean-data contrast holds current-P2 fitting controls fixed; neither is a whole-curriculum or root-count learning curve.
 
@@ -104,8 +104,8 @@ final_predictions.jsonl, final_verifications.jsonl, final_root_manifest.json and
 |---|---|---|---|---|---|
 | val | 2d | 145/255 | 381 | 3560.354 | 2658.970 |
 | val | 3d | 162/255 | 339 | 7111.527 | 3928.404 |
-| test | 2d | 412/525 | 923 | 10720.021 | 2847.137 |
-| test | 3d | 119/525 | 140 | 3470.321 | 1005.125 |
+| test | 2d | 412/525 | 923 | 10720.036 | 2847.155 |
+| test | 3d | 237/525 | 403 | 9913.317 | 2891.509 |
 
 PHYSICAL_RESOURCE_TOTALS.json provides non-overlapping phase costs and, when available, shared-overhead-inclusive release totals. All interrupted attempts are charged. Phase limits and the 5,523-call global ceiling are checked against the explicit approval. TRAIN recorded subtotal: 10935.151 CPU / 11497.676 active-wall seconds. These scopes must not be summed with overlapping upper bounds. Older unprofiled work remains UNKNOWN; no exact all-stage total is claimed.
 

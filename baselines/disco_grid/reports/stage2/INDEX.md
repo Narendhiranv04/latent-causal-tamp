@@ -127,3 +127,11 @@ Earlier pending-run statements in this index describe preparation history; the m
 The v3 partial package is archived and pushed at `24fca20b4f`: TEST attempts 412/525 (2D), 119/525 (3D). 2D charged 10720.020898/10800 CPU seconds, leaving insufficient reserve for another physical trial. 3D charged 3470.321474/21600 CPU seconds and stopped at load 22.089/24. Load recovered to 16.67, so never-attempted frozen TEST identities resumed as `V15_F25_v1_reserved_stable3_20261118` with the existing immutable engine, three slots and CPUs 22/23 excluded. Cancelled or timed-out identities are never retried. No budget, model, threshold or selection changed.
 
 [Physical launch](RESERVED_STABLE3_20261118_EVALUATION_LAUNCH.json), [report observer](RESERVED_STABLE3_20261118_FINISH_LAUNCH.json). Canonical metrics remain the v3 partial snapshot until v4 publication. Resource stops make wall-clock completion uncertain; no full Stage 2 completion claim is made.
+
+## Measured physical release
+
+- [Standalone measured report](FINAL_DISCO_STAGE2_REPORT.md), [metrics](FINAL_METRICS.csv), and [paired ablations](ABLATIONS.csv).
+- [Versioned physical evidence package](physical_release_V15_F25_v4/FINISH_COMPLETE.json), [query/state byte inventory](physical_release_V15_F25_v4/physical_evidence_index.json), and [publication hashes](PHYSICAL_RELEASE_PUBLICATION.json).
+- [Root STOP diagnostics](ROOT_STOP_DIAGNOSTICS.json), [failure examples](FAILURE_EXAMPLES.json), and [physical resource totals](PHYSICAL_RESOURCE_TOTALS.json).
+
+Earlier pending-run statements in this index describe preparation history; the measured report and status JSON are current.
