@@ -134,3 +134,42 @@ executed 2D/3D TRAIN order fixtures used for parity, but rerunning these also
 creates charged physical queries and requires an unused output path and an
 applicable authorized envelope. Preserve original robot/task/connector/Y
 semantics and all host guards.
+
+## Current release revision
+
+The final TRAIN release has 63 completed fits and a 69/69 gvlab test pass.
+`evaluation_preparation_v3` supersedes the first complete preparation: the
+3D clean-data arm now points to `training/3d_P2Q2_strictclean`, whose current
+supervision excludes the recovered R0 prefix. The primary models, other arms,
+roots and decisions are unchanged; regenerate the audit with:
+
+```sh
+"$stage_python" baselines/disco_grid/reports/stage2/audit_preparation.py \
+  "$stage_campaign/evaluation_preparation_v2" \
+  "$stage_campaign/evaluation_preparation_v3" /tmp/disco_control_audit_new.json
+```
+
+The resource envelope enforces a global maximum of 5,523 charged calls in
+addition to per-phase CPU/wall ceilings. Its uncached proposal matrix can require
+six more calls; cached certificates reduce actual dispatch, and hitting a ceiling
+retains unexecuted trials rather than exceeding approval.
+
+All initial release artifacts remain in `training_release_v1`; corrected
+coverage/cost tables and the genuine clean-data fit are in `training_release_v2`.
+The final native frames are reused from v1, whose source/state hashes and actual
+construction cost are preserved. Do not sum these snapshots as independent runs.
+
+Regenerate the current explicitly partial, pre-evaluation report from copied
+CSV/JSON without physics:
+
+```sh
+python3 baselines/disco_grid/reports/stage2/report_training_release.py \
+  baselines/disco_grid/reports/stage2
+```
+
+The generator refuses to replace populated physical metrics. After authorized
+physical execution, use `analyze_evaluation.py` and `evaluation_figures.py` on
+that actual release, then update the final numerical report. Source-only fixture
+checks can run locally; all real physical collection and model fitting ran on
+one low-priority gvlab CPU worker. Earlier unprofiled diagnostic CPU remains
+UNKNOWN instead of being added as zero to a claimed all-stage total.

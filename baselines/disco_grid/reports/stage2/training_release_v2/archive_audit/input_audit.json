@@ -1,0 +1,314 @@
+{
+  "utc": "2026-11-17T06:29:52.923480+00:00",
+  "source_sha256": {
+    "physical_eval.py": "b2957d7aa795f8897be29d76830bce053d6255fd3eca619b4a73c6f33bbe63af",
+    "mcts.py": "1e7c7cc0f72ead13425cece0d776255761202fbf97ccd2f447e5a80075830677",
+    "policy.py": "813ebb7b0676ea3bc5190728d31c0b08026be01d337b6e811d2fbd0edce43a8b",
+    "campaign.py": "f23c785482e2266ec4c61b723a20d0c6f052a3bf992eecbb2e318f17752560e7",
+    "journal.py": "e9242781ad57a96fe6657688dddd485c4413d6ae92393bd78df7d8e4226f0f5c",
+    "evaluate.py": "e537712c6d7d279fde74f789433eaf37cd16565edf194f2d4e8a2be0486439eb",
+    "collect.py": "94d11d9382a33dadfdd6cdfef91169d135bac34ba788023d2ad1ebc6d42b8516",
+    "distill.py": "8a9d97e36b26f0c93f3e8557a65fab49ad6ab42befd6cbcc18e49aa76c4eedcd",
+    "viz.py": "fce5e62252e6e899917372fa04a88a199d2a1dced844d53ae95121537df00af6",
+    "data.py": "a6d354b668dbfca6f5390f84e8b186cf20b5d02ddae106614762be260efcf4c0",
+    "env.py": "ab6a07aec171cb14f8da40aff2e000e312406461b9992099034cebcf51269dac",
+    "ablate.py": "d0d7ca737ac6918a674add2d19c8cb5f458e49e57ae4fe2ae947ab39ac553602"
+  },
+  "snapshots": {
+    "/scratch/nav/approachb_final/snapshot/abf_9de85710c2a7103f": {
+      "snapshot_id": "abf_9de85710c2a7103f",
+      "lock_sha256": "1b3b9e939882a117dd8f9f579e0f9ffb01794fd30bc89c652d86d57321749608",
+      "files_ok": {
+        "data2d.jsonl": true,
+        "data3d.jsonl": true,
+        "QUALIFIED_TRAINING_EXCEPTION.json": true,
+        "EVALUATION_MASKS.json": true
+      },
+      "all_ok": true,
+      "teachers": {
+        "2D": "BXY_X_TEACHER_V1 / BXY_Y_TEACHER_V1 (bxy_teacher.py @ 68183081d)",
+        "3D": "fin3d X (relocations + CONNECTOR_TO_QREADY_V1) / BD3DS66_Y_PLAN_V1"
+      }
+    },
+    "/scratch/nav/approachb_final/snapshot/abf_v2_7d146b53e4b92fe4": {
+      "snapshot_id": "abf_v2_7d146b53e4b92fe4",
+      "lock_sha256": "76afe645e651ba2df4bef6130d500a332bc53f310c7deadc043aa1785a2e2b0c",
+      "files_ok": {
+        "data2d.jsonl": true,
+        "data3d.jsonl": true
+      },
+      "all_ok": true,
+      "teachers": {}
+    }
+  },
+  "domains": {
+    "2d": {
+      "n_roots": 5000,
+      "split_K": {
+        "train|0": 875,
+        "test|0": 187,
+        "val|0": 188,
+        "val|1": 120,
+        "train|1": 560,
+        "test|1": 120,
+        "train|2": 560,
+        "val|2": 120,
+        "test|2": 120,
+        "test|NONE": 150,
+        "val|NONE": 150,
+        "train|NONE": 700,
+        "test|3": 172,
+        "train|3": 805,
+        "val|3": 173
+      },
+      "families": {
+        "train": 1574,
+        "test": 585,
+        "val": 584
+      },
+      "connected_source_components": 2663,
+      "hygiene": {
+        "n_roots": 5000,
+        "unique_roots": 5000,
+        "root_split_conflicts": 0,
+        "family_split_conflicts": 0,
+        "layout_split_conflicts": 0,
+        "raw_hash_split_conflicts": 0,
+        "input_hash_split_conflicts": 0
+      },
+      "data_sha256": "16222ff85eee7e463d10043f1d18e6911d1588b87f41bec8507f1474aa276bcd",
+      "teacher_sources": {
+        "/scratch/nav/approachb_final/mirror/rss-placement-ready-v2/gh-yadu-iiith/planar_2d/dataset_bd_classquota/code/latent-causal-tamp/config.toml": "56ede7f0ea1bd7b0e76e9b1bfd7d04f237e96f65276b79e498edce0b51b28d79",
+        "/scratch/nav/approachb_final/teacher2d_wt/config.toml": "56ede7f0ea1bd7b0e76e9b1bfd7d04f237e96f65276b79e498edce0b51b28d79",
+        "/scratch/nav/approachb_final/teacher2d_wt/bxy_teacher.py": "c18ac91c89b95db46346eb49c3117b4ddc303d0f06c07a0d7a4aa31358f8ba3b",
+        "/scratch/nav/approachb_final/mirror/rss-placement-ready-v2/gh-yadu-iiith/planar_2d/dataset_bd_classquota/code/dataset-bd/bd_2d.py": "eb97136c204b3b0e358f643fac708a3cbef15bfdf38a158730561c154ab4af11",
+        "/scratch/nav/approachb_final/teacher2d_wt/bd_2d.py": "eb97136c204b3b0e358f643fac708a3cbef15bfdf38a158730561c154ab4af11",
+        "/scratch/nav/approachb_final/mirror/rss-placement-ready-v2/gh-yadu-iiith/planar_2d/dataset_bd_classquota/code/latent-causal-tamp/p16_motion.py": "43f4c38c64183104e73c4aaada65098e74e2a693040d1c61de948a2302ac2dce",
+        "/scratch/nav/approachb_final/teacher2d_wt/p16_motion.py": "43f4c38c64183104e73c4aaada65098e74e2a693040d1c61de948a2302ac2dce",
+        "/scratch/nav/approachb_final/mirror/rss-placement-ready-v2/gh-yadu-iiith/planar_2d/dataset_bd_classquota/code/latent-causal-tamp/p16_common.py": "dec0b7edc4bdf5cf0843926ec075df2bd9e9b634744d123a38ac084e2a05d569",
+        "/scratch/nav/approachb_final/teacher2d_wt/p16_common.py": "dec0b7edc4bdf5cf0843926ec075df2bd9e9b634744d123a38ac084e2a05d569",
+        "/scratch/nav/approachb_final/mirror/rss-placement-ready-v2/gh-yadu-iiith/planar_2d/dataset_bd_classquota/code/latent-causal-tamp/geometry.py": "3db5ad2cee5dc506c6d3315c6a099c755897b2b07a4a432c7d309e642eab3917",
+        "/scratch/nav/approachb_final/teacher2d_wt/geometry.py": "3db5ad2cee5dc506c6d3315c6a099c755897b2b07a4a432c7d309e642eab3917",
+        "/scratch/nav/approachb_final/mirror/rss-placement-ready-v2/gh-yadu-iiith/planar_2d/dataset_bd_classquota/code/latent-causal-tamp/motion.py": "f2052d6049e288036122f0a31bc70791d9da6824b59036866ad411b215dd9678",
+        "/scratch/nav/approachb_final/teacher2d_wt/motion.py": "f2052d6049e288036122f0a31bc70791d9da6824b59036866ad411b215dd9678",
+        "/scratch/nav/approachb_final/mirror/rss-placement-ready-v2/gh-yadu-iiith/planar_2d/dataset_bd_classquota/code/latent-causal-tamp/skill.py": "c45ba175171f80e7e62591df7c9822a986e608fd50a77378cc79ce31d64ea51a",
+        "/scratch/nav/approachb_final/teacher2d_wt/skill.py": "c45ba175171f80e7e62591df7c9822a986e608fd50a77378cc79ce31d64ea51a"
+      },
+      "task_dims": {
+        "o0_v1": 143,
+        "o1_qt_v1": 152
+      }
+    },
+    "3d": {
+      "n_roots": 2500,
+      "split_K": {
+        "train|NONE": 288,
+        "val|NONE": 58,
+        "test|NONE": 62,
+        "test|0": 67,
+        "train|0": 358,
+        "val|0": 86,
+        "val|1": 53,
+        "test|1": 53,
+        "train|1": 251,
+        "test|2": 86,
+        "train|2": 429,
+        "val|2": 97,
+        "val|3": 70,
+        "train|3": 440,
+        "test|3": 102
+      },
+      "families": {
+        "train": 871,
+        "val": 185,
+        "test": 175
+      },
+      "connected_source_components": 1231,
+      "hygiene": {
+        "n_roots": 2500,
+        "unique_roots": 2500,
+        "root_split_conflicts": 0,
+        "family_split_conflicts": 0,
+        "layout_split_conflicts": 0,
+        "raw_hash_split_conflicts": 0,
+        "input_hash_split_conflicts": 0
+      },
+      "data_sha256": "1627f34bb2905ba7e399efb14c5ffe18f1f2dea20ca8c895c033e114ff1f2c0f",
+      "teacher_sources": {
+        "/home/nav/approachb_final_gen/final3d_v4/code/fin3d.py": "29eb0b29ba7623cdfae0eeb7ac2f63b97a83ce2653959ebf0b3bbef4696c64d3",
+        "/home/nav/approachb_final_gen/final3d_v4/code/bwlphys.py": "259652f14dabc40ee57093b85ad7707b3f669b0e1229c4600e2395f12a9b22da",
+        "/home/nav/approachb_final_gen/final3d_v4/src/dataset_bd_classquota_without_home_position_no_overpass/code/shelf66_v3/bd_shelf.py": "ef71dcf43c6df19d4b84332876ecf02ac5356683fc063d622c18fca23318479c",
+        "/home/nav/approachb_final_gen/final3d_v4/src/dataset_bd_classquota_without_home_position_no_overpass/code/shelf66_v3/bd_3dt.py": "62dc853ccb5055eaad738a9b2eb810c1de5cb12621c1039bbd68c20b54058815",
+        "/home/nav/approachb_final_gen/final3d_v4/src/scene/shelf_scene.py": "a8453e249d1654dc5e25640c0613946809e68aecda70a2cb189b17c0deae3552",
+        "/home/nav/approachb_final_gen/final3d_v4/src/scene/rrt_connect.py": "d2a2e25cfc7321b66842090a42b14b0ee414147ff2ffdf7d91bd8e0d044a78db",
+        "/home/nav/approachb_final_gen/final3d_v4/src/scene/rrt_star.py": "b35ff354d6d8dfde32bc182762effa1e2f06b0a0814f1a916f3a248fbfbe193b"
+      },
+      "task_dims": {
+        "o0_v1": 97,
+        "o1_qt_v1": 118
+      }
+    }
+  },
+  "preservation": {
+    "/scratch/nav/disco_grid/runs/p0/2d/s0/model.pt": true,
+    "/scratch/nav/disco_grid/runs/p0/2d/s1/model.pt": true,
+    "/scratch/nav/disco_grid/runs/p0/2d/s2/model.pt": true,
+    "/scratch/nav/disco_grid/runs/distill/2d/r1_s0/policy.pt": true,
+    "/scratch/nav/disco_grid/runs/distill/2d/r1_s1/policy.pt": true,
+    "/scratch/nav/disco_grid/runs/distill/2d/r1_s2/policy.pt": true,
+    "/scratch/nav/disco_grid/runs/distill/2d/r1_s0/value.pt": true,
+    "/scratch/nav/disco_grid/runs/distill/2d/r1_s1/value.pt": true,
+    "/scratch/nav/disco_grid/runs/distill/2d/r1_s2/value.pt": true,
+    "/scratch/nav/disco_grid/runs/distill/2d/r2_s0/policy.pt": true,
+    "/scratch/nav/disco_grid/runs/distill/2d/r2_s1/policy.pt": true,
+    "/scratch/nav/disco_grid/runs/distill/2d/r2_s2/policy.pt": true,
+    "/scratch/nav/disco_grid/runs/distill/2d/r2_s0/value.pt": true,
+    "/scratch/nav/disco_grid/runs/distill/2d/r2_s1/value.pt": true,
+    "/scratch/nav/disco_grid/runs/distill/2d/r2_s2/value.pt": true,
+    "/scratch/nav/disco_grid/runs/distill/2d/r1_succ_only_s0/policy.pt": true,
+    "/scratch/nav/disco_grid/runs/distill/2d/r1_succ_only_s0/value.pt": true,
+    "/scratch/nav/disco_grid/runs/p0/3d/s0/model.pt": true,
+    "/scratch/nav/disco_grid/runs/p0/3d/s1/model.pt": true,
+    "/scratch/nav/disco_grid/runs/p0/3d/s2/model.pt": true,
+    "/scratch/nav/disco_grid/runs/distill/3d/r1_s0/policy.pt": true,
+    "/scratch/nav/disco_grid/runs/distill/3d/r1_s1/policy.pt": true,
+    "/scratch/nav/disco_grid/runs/distill/3d/r1_s2/policy.pt": true,
+    "/scratch/nav/disco_grid/runs/distill/3d/r1_s0/value.pt": true,
+    "/scratch/nav/disco_grid/runs/distill/3d/r1_s1/value.pt": true,
+    "/scratch/nav/disco_grid/runs/distill/3d/r1_s2/value.pt": true,
+    "/scratch/nav/disco_grid/runs/distill/3d/r2_s0/policy.pt": true,
+    "/scratch/nav/disco_grid/runs/distill/3d/r2_s1/policy.pt": true,
+    "/scratch/nav/disco_grid/runs/distill/3d/r2_s2/policy.pt": true,
+    "/scratch/nav/disco_grid/runs/distill/3d/r2_s0/value.pt": true,
+    "/scratch/nav/disco_grid/runs/distill/3d/r2_s1/value.pt": true,
+    "/scratch/nav/disco_grid/runs/distill/3d/r2_s2/value.pt": true,
+    "/scratch/nav/disco_grid/runs/distill/3d/r1_succ_only_s0/policy.pt": true,
+    "/scratch/nav/disco_grid/runs/distill/3d/r1_succ_only_s0/value.pt": true,
+    "/scratch/nav/approachb_final/mirror/rss-placement-ready-v2/gh-yadu-iiith/planar_2d/dataset_bd_classquota/code/latent-causal-tamp/config.toml": true,
+    "/scratch/nav/approachb_final/teacher2d_wt/config.toml": true,
+    "/scratch/nav/approachb_final/teacher2d_wt/bxy_teacher.py": true,
+    "/scratch/nav/approachb_final/mirror/rss-placement-ready-v2/gh-yadu-iiith/planar_2d/dataset_bd_classquota/code/dataset-bd/bd_2d.py": true,
+    "/scratch/nav/approachb_final/teacher2d_wt/bd_2d.py": true,
+    "/scratch/nav/approachb_final/mirror/rss-placement-ready-v2/gh-yadu-iiith/planar_2d/dataset_bd_classquota/code/latent-causal-tamp/p16_motion.py": true,
+    "/scratch/nav/approachb_final/teacher2d_wt/p16_motion.py": true,
+    "/scratch/nav/approachb_final/mirror/rss-placement-ready-v2/gh-yadu-iiith/planar_2d/dataset_bd_classquota/code/latent-causal-tamp/p16_common.py": true,
+    "/scratch/nav/approachb_final/teacher2d_wt/p16_common.py": true,
+    "/scratch/nav/approachb_final/mirror/rss-placement-ready-v2/gh-yadu-iiith/planar_2d/dataset_bd_classquota/code/latent-causal-tamp/geometry.py": true,
+    "/scratch/nav/approachb_final/teacher2d_wt/geometry.py": true,
+    "/scratch/nav/approachb_final/mirror/rss-placement-ready-v2/gh-yadu-iiith/planar_2d/dataset_bd_classquota/code/latent-causal-tamp/motion.py": true,
+    "/scratch/nav/approachb_final/teacher2d_wt/motion.py": true,
+    "/scratch/nav/approachb_final/mirror/rss-placement-ready-v2/gh-yadu-iiith/planar_2d/dataset_bd_classquota/code/latent-causal-tamp/skill.py": true,
+    "/scratch/nav/approachb_final/teacher2d_wt/skill.py": true,
+    "/home/nav/approachb_final_gen/final3d_v4/code/fin3d.py": true,
+    "/home/nav/approachb_final_gen/final3d_v4/code/bwlphys.py": true,
+    "/home/nav/approachb_final_gen/final3d_v4/src/dataset_bd_classquota_without_home_position_no_overpass/code/shelf66_v3/bd_shelf.py": true,
+    "/home/nav/approachb_final_gen/final3d_v4/src/dataset_bd_classquota_without_home_position_no_overpass/code/shelf66_v3/bd_3dt.py": true,
+    "/home/nav/approachb_final_gen/final3d_v4/src/scene/shelf_scene.py": true,
+    "/home/nav/approachb_final_gen/final3d_v4/src/scene/rrt_connect.py": true,
+    "/home/nav/approachb_final_gen/final3d_v4/src/scene/rrt_star.py": true,
+    "/scratch/nav/disco_grid/validation_v2/ablations_2d_r1/o0_v1_all_feasible_s0/policy.pt": true,
+    "/scratch/nav/disco_grid/validation_v2/ablations_2d_r1/o0_v1_all_feasible_s0/value.pt": true,
+    "/scratch/nav/disco_grid/validation_v2/ablations_2d_r1/o0_v1_all_feasible_s1/policy.pt": true,
+    "/scratch/nav/disco_grid/validation_v2/ablations_2d_r1/o0_v1_all_feasible_s1/value.pt": true,
+    "/scratch/nav/disco_grid/validation_v2/ablations_2d_r1/o0_v1_all_feasible_s2/policy.pt": true,
+    "/scratch/nav/disco_grid/validation_v2/ablations_2d_r1/o0_v1_all_feasible_s2/value.pt": true,
+    "/scratch/nav/disco_grid/validation_v2/ablations_2d_r1/o0_v1_successful_only_s0/policy.pt": true,
+    "/scratch/nav/disco_grid/validation_v2/ablations_2d_r1/o0_v1_successful_only_s0/value.pt": true,
+    "/scratch/nav/disco_grid/validation_v2/ablations_2d_r1/o0_v1_successful_only_s1/policy.pt": true,
+    "/scratch/nav/disco_grid/validation_v2/ablations_2d_r1/o0_v1_successful_only_s1/value.pt": true,
+    "/scratch/nav/disco_grid/validation_v2/ablations_2d_r1/o0_v1_successful_only_s2/policy.pt": true,
+    "/scratch/nav/disco_grid/validation_v2/ablations_2d_r1/o0_v1_successful_only_s2/value.pt": true,
+    "/scratch/nav/disco_grid/validation_v2/ablations_2d_r1/o1_qt_v1_all_feasible_s0/policy.pt": true,
+    "/scratch/nav/disco_grid/validation_v2/ablations_2d_r1/o1_qt_v1_all_feasible_s0/value.pt": true,
+    "/scratch/nav/disco_grid/validation_v2/ablations_2d_r1/o1_qt_v1_all_feasible_s1/policy.pt": true,
+    "/scratch/nav/disco_grid/validation_v2/ablations_2d_r1/o1_qt_v1_all_feasible_s1/value.pt": true,
+    "/scratch/nav/disco_grid/validation_v2/ablations_2d_r1/o1_qt_v1_all_feasible_s2/policy.pt": true,
+    "/scratch/nav/disco_grid/validation_v2/ablations_2d_r1/o1_qt_v1_all_feasible_s2/value.pt": true,
+    "/scratch/nav/disco_grid/validation_v2/ablations_3d_r1/o0_v1_all_feasible_s0/policy.pt": true,
+    "/scratch/nav/disco_grid/validation_v2/ablations_3d_r1/o0_v1_all_feasible_s0/value.pt": true,
+    "/scratch/nav/disco_grid/validation_v2/ablations_3d_r1/o0_v1_all_feasible_s1/policy.pt": true,
+    "/scratch/nav/disco_grid/validation_v2/ablations_3d_r1/o0_v1_all_feasible_s1/value.pt": true,
+    "/scratch/nav/disco_grid/validation_v2/ablations_3d_r1/o0_v1_all_feasible_s2/policy.pt": true,
+    "/scratch/nav/disco_grid/validation_v2/ablations_3d_r1/o0_v1_all_feasible_s2/value.pt": true,
+    "/scratch/nav/disco_grid/validation_v2/ablations_3d_r1/o0_v1_successful_only_s0/policy.pt": true,
+    "/scratch/nav/disco_grid/validation_v2/ablations_3d_r1/o0_v1_successful_only_s0/value.pt": true,
+    "/scratch/nav/disco_grid/validation_v2/ablations_3d_r1/o0_v1_successful_only_s1/policy.pt": true,
+    "/scratch/nav/disco_grid/validation_v2/ablations_3d_r1/o0_v1_successful_only_s1/value.pt": true,
+    "/scratch/nav/disco_grid/validation_v2/ablations_3d_r1/o0_v1_successful_only_s2/policy.pt": true,
+    "/scratch/nav/disco_grid/validation_v2/ablations_3d_r1/o0_v1_successful_only_s2/value.pt": true,
+    "/scratch/nav/disco_grid/validation_v2/ablations_3d_r1/o1_qt_v1_all_feasible_s0/policy.pt": true,
+    "/scratch/nav/disco_grid/validation_v2/ablations_3d_r1/o1_qt_v1_all_feasible_s0/value.pt": true,
+    "/scratch/nav/disco_grid/validation_v2/ablations_3d_r1/o1_qt_v1_all_feasible_s1/policy.pt": true,
+    "/scratch/nav/disco_grid/validation_v2/ablations_3d_r1/o1_qt_v1_all_feasible_s1/value.pt": true,
+    "/scratch/nav/disco_grid/validation_v2/ablations_3d_r1/o1_qt_v1_all_feasible_s2/policy.pt": true,
+    "/scratch/nav/disco_grid/validation_v2/ablations_3d_r1/o1_qt_v1_all_feasible_s2/value.pt": true
+  },
+  "legacy_full_parse": {
+    "artifact_inventory": {
+      "sha256": "dcb88350e86c6c1ce70ce1a5657c9d14ccf2006075bd7019a2b55c686e73b71b",
+      "scalar_counts": {
+        "int": 170,
+        "str": 457
+      }
+    },
+    "archive_replay": {
+      "sha256": "85436849fd84f50670a42c8b48ad94b62f477490570aab6d110498e728d4fba1",
+      "scalar_counts": {
+        "int": 274,
+        "float": 212,
+        "str": 50
+      }
+    },
+    "resolved_config": {
+      "sha256": "b2c30d96cd525057af5717e690f1f7041c0b7170ef74dc4f24281701eb1016c1",
+      "scalar_counts": {
+        "str": 7,
+        "int": 50,
+        "float": 5
+      }
+    },
+    "new_training": {
+      "sha256": "86e9195ef10822cc479edf546ed22a5d6e158443d072f15924e4272a7ff7b475",
+      "scalar_counts": {
+        "str": 180,
+        "int": 1854,
+        "float": 7346
+      }
+    },
+    "training_pilots": {
+      "sha256": "68a7676e8948bb29cf8fd4234cfdf76380effde25799c653de9182dbc20ac724",
+      "scalar_counts": {
+        "int": 56,
+        "str": 105,
+        "bool": 6,
+        "float": 14
+      }
+    },
+    "physical_parity": {
+      "sha256": "8359ebc78cfa543674e033eadb05b9b7fa3dcaaeed94c830300bbd9035c2fa42",
+      "scalar_counts": {
+        "str": 47,
+        "int": 65,
+        "NoneType": 6,
+        "bool": 8,
+        "float": 6
+      }
+    },
+    "stop_calibration": {
+      "sha256": "f17aa0bb3e2b9c555ac0f760a82031e7d877ff86eb3b68bef4d66acd456473c2",
+      "scalar_counts": {
+        "str": 777,
+        "float": 12,
+        "int": 10,
+        "bool": 2
+      }
+    },
+    "release_verification": {
+      "sha256": "3d98faee23315a541564f1bfefe8971895f21fa1e4c952b5abdcb4b6b58676b3",
+      "scalar_counts": {
+        "bool": 57,
+        "str": 12
+      }
+    }
+  }
+}

@@ -1,0 +1,88 @@
+{
+  "id": "V15-F25-v1",
+  "status": "REQUESTED_NOT_AUTHORIZED",
+  "scope": "DISCO_RELEASE_EVALUATION",
+  "host": "gvlab",
+  "workers": 1,
+  "cpu_threads": 1,
+  "gpu": false,
+  "authorization_text": null,
+  "approved_phases": [
+    "val",
+    "test"
+  ],
+  "preparation": "/scratch/nav/disco_grid/stage2/campaigns/E16_v1_20261117/evaluation_preparation_v2",
+  "engine": "/scratch/nav/disco_grid/stage2/source/f4e231e036/baselines/disco_grid",
+  "preparation_sha256": "e215e0e5e02678e6e4d9794b10ac0ddc054cce154abc4117603e8ef8c8117b5e",
+  "checkpoint_manifest_sha256": "b363d7f0c7049e748ce45b2b1a0c92a39d8f7fa5429c7ff3fb6c8fc66142cf9b",
+  "runner_sha256": "edd6647b53dae5701e6dbae0ec124fc51752a667a03a9fa0a52aa954ccbd5da7",
+  "candidate_sets": {
+    "test_eta0.08.json": {
+      "jobs": 1000,
+      "maximum_uncached_adapter_calls": 3022,
+      "sha256": "23d50e58058d16319558aee2893bb18d6129f4fb6597de2ff03a989f4df13580"
+    },
+    "test_eta0.15.json": {
+      "jobs": 1000,
+      "maximum_uncached_adapter_calls": 2992,
+      "sha256": "878b511764b6d359b38d05d6ce7e1132305e38c683122a10f206fe5a42ece61d"
+    },
+    "test_eta0.json": {
+      "jobs": 1050,
+      "maximum_uncached_adapter_calls": 3688,
+      "sha256": "b7728a629520138497cbd31b3f13ac2a7d55f93f75f1ffbf109f76ec067dff29"
+    },
+    "val_eta0.08.json": {
+      "jobs": 90,
+      "maximum_uncached_adapter_calls": 362,
+      "sha256": "300c18385c903126ed914dd7b3f8c94988bfc7576df43f23f263571c32606b3e"
+    },
+    "val_eta0.15.json": {
+      "jobs": 90,
+      "maximum_uncached_adapter_calls": 358,
+      "sha256": "65768f51fdb5ef9dc23d076a85b67c42292202df50dcdc5d507038726c52d274"
+    },
+    "val_eta0.json": {
+      "jobs": 330,
+      "maximum_uncached_adapter_calls": 1115,
+      "sha256": "cc088e60150afc8e3190ad3b1c6c61595497d112a3f07e55d14852df550f94f6"
+    }
+  },
+  "ceilings": {
+    "2d": {
+      "val": 3600,
+      "test": 10800
+    },
+    "3d": {
+      "val": 7200,
+      "test": 21600
+    }
+  },
+  "units": "seconds per domain and phase, CPU and active wall; all attempts and parent overhead charged",
+  "disk_gib": 10,
+  "ram_gib": 4,
+  "query_wall_s": {
+    "2d": 60,
+    "3d": 120
+  },
+  "trial_wall_s": {
+    "2d": 300,
+    "3d": 600
+  },
+  "roots_per_domain": {
+    "val": 15,
+    "test": 25
+  },
+  "final_model_seeds": [
+    0,
+    1,
+    2
+  ],
+  "validation_model_seeds": [
+    0
+  ],
+  "selection": "VAL O0_P2Q2 task success, then verified K0 NOOP, then explicit NONE abstention; residual ties smaller eta. Apply common selected eta to all Q arms and O0/O1 closed-loop.",
+  "interpretation": "Exploratory held-out cohorts; no untouched confirmation attested; fixed-root denominators retain every unresolved/unexecuted trial",
+  "exclusions": "No competing method, no new training, no additional machine or GPU. TEST starts only after selection freeze and required VAL coverage.",
+  "cancellation": "Identity-scoped child/session watchdog and parent-death guard; per-query durable evidence; no automatic ambiguous restart"
+}

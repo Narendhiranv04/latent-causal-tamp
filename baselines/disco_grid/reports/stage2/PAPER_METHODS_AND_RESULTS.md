@@ -1,6 +1,6 @@
 # DISCO-Grid (adapted): standalone methods and evidence
 
-**Working manuscript. Stage 2 TRAIN execution is ongoing. Final independently
+**Working manuscript. The E16 TRAIN cycle is complete. Final independently
 verified model task-success results are NOT_RUN.** Historical results are not
 substituted for the pending study.
 
@@ -35,9 +35,12 @@ for isolated pretraining features; O1 deployment requires observed joints.
 
 ## Physical search and terminal semantics
 
-The existing 2D 3R arm, full-width links and gripper geometry, collision checks,
-grasp settings, per-root geometry implementation and physical budgets are reused.
-The 3D xArm7 shelf environment retains its original meshes, side-grasp search,
+The existing 2D 3R arm uses the 8×8, 0.08 m resting lattice, base
+(-0.14, 0.32) m, link lengths (0.42, 0.34, 0.20) m and finite-width links,
+palm and fingers. Its 48 side grasps are 24 azimuths × two elbow branches.
+These native geometry settings, collision checks, per-root implementation and
+physical budgets are reused. The 3D xArm7 uses the 6×6, 0.075 m shelf lattice
+and 32 level side-grasp candidates. It retains its original meshes, side-grasp search,
 settling, support/collision checks and planner behavior. Teacher source hashes
 are recorded per run. No alternative simulator or simplified verifier supplies
 training labels.
@@ -60,6 +63,9 @@ The learned continuation score initializes unvisited child Q; its first backup
 replaces that prior by the observed root-path return. Progressive widening
 allows further feasible relocation children when their count is less than
 2 max(N,1)^0.3; each expansion samples up to two previously unattempted actions.
+The check precedes the batch, so the resulting child count can overshoot that
+threshold. E16 uses a maximum of 12 search iterations per root-round in both
+domains; actual query caps, rather than YAML defaults, constrain the search.
 STOP is evaluated at physical states and cached as one observation. Verified
 successful STOP is absorbing on revisits. The correction depth limit is three;
 the extra STOP child is bookkeeping, not a fourth relocation. Geometric shaping
@@ -116,6 +122,12 @@ Legacy trainer fields named `val_*` monitor TRAIN rows under this fixed-epoch
 schedule; they are not benchmark VAL measurements and do not select checkpoints.
 The clean-only P2 control changes current P2 supervision, retaining its matched
 P1 initialization; it is not an entirely clean-only training curriculum.
+In 3D this control is a separate `3d_P2Q2_strictclean` fit on 31 clean trees.
+The initial pooled `3d_P2Q2` had already inherited the recovered R0 prefix and
+cannot serve as that control. Its original weights remain archived. The final
+primary model uses 32 eligible trees including that prefix; the corrected
+coverage contrast changes current supervision while preserving the P1 seed,
+initial weights, architecture, optimizer and epoch schedule.
 
 The collection ceilings are 1,024 adapter intents / four CPU and active wall hours
 in 2D and 512 intents / eight CPU and active wall hours in 3D. Queries are bounded
@@ -166,8 +178,32 @@ are unknown. A new 3D K3 pilot completed 24 calls, 15 feasible relocations, reac
 depth three, and found zero verified repairs. Parent CPU/elapsed cost was
 399.403797/400.546165 seconds. Its best shaped return of .566 is not success.
 
-Expanded E16-v1 numerical coverage and checkpoints will be regenerated from
-`training_coverage.json` and the immutable campaign tree/result records.
+E16 attempted 16 independent TRAIN roots/domain in two rounds. In 2D, 544
+charged query intents yielded 531 returned results; 19 root-rounds were clean
+and 13 quarantined. In 3D, 411 charged queries all returned; 31 root-rounds
+were clean and one stopped at a resource guard after returned evidence.
+Certified completed prefixes produce final 2D supervision from 26 trees on
+13 roots (231 relocation-policy, 247 object/STOP and 309 Q rows); 3D uses
+32 trees on 16 roots (181, 213 and 269 rows). These counts are data coverage,
+not independent held-out prediction trials. There are 63 completed 45-epoch
+fits including controls; P0's six existing checkpoints are reused unchanged.
+
+Completed R0/R1 checkpoint edges at depths 1/2/3 are 37/48/29 and 37/47/33
+in 2D, and 38/27/7 and 48/44/17 in 3D. All 45 returned terminal probes on
+the 3D K3 TRAIN roots passed X but failed canonical Y with no feasible side
+grasp. This establishes missing successful endpoint evidence under the pinned
+teacher, rather than demonstrating universal impossibility or measuring
+learned-policy K3 task success. The final 69-test suite passes; all 92 protected
+checkpoint/teacher hashes match. Tables regenerate from the stored JSON/CSV
+and source-backed report generator in this release.
+
+Final evaluation is proposed on 15 VAL and 25 exploratory TEST roots/domain,
+balanced across five legacy strata. Each primary protocol has 15 K1–K3 task
+roots and 45 fixed-seed task trials. It is a resource-limited balanced cohort,
+not the entire TEST split or an untouched confirmatory population. A separate
+physical compute request is pending. No final selected TEST prediction JSONL
+or verification records are manufactured in its absence.
+
 **Final model task-success percentages, CIs, VAL-selected STOP calibration,
 O0/O1 task effects, Q effectiveness and sample-efficiency learning curves are
 NOT_RUN at this manuscript revision.** No positive or negative improvement claim

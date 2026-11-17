@@ -1,0 +1,97 @@
+{
+  "id": "V15-F25-v1",
+  "status": "APPROVED",
+  "scope": "DISCO_RELEASE_EVALUATION",
+  "host": "gvlab",
+  "workers": 1,
+  "cpu_threads": 1,
+  "gpu": false,
+  "authorization_text": "Authorize VAL and TEST for both domains",
+  "approved_phases": [
+    "val",
+    "test"
+  ],
+  "preparation": "/scratch/nav/disco_grid/stage2/campaigns/E16_v1_20261117/evaluation_preparation_v3",
+  "engine": "/scratch/nav/disco_grid/stage2/source/final_eval_v3/baselines/disco_grid",
+  "preparation_sha256": "92073646fbfd984a10342fb5792ce6bea2b8ce3478e534af9b76eb9d7b51dd17",
+  "checkpoint_manifest_sha256": "0b5c9ecb78eae4c27abcd7749e5157d3893f0cc7c99f3ae6b43cdd2f7c82ac3f",
+  "runner_sha256": "237d96c02c92e5bffd4beddcd039d1cb51b9bd3d4856ff3a2a2fad1475585f80",
+  "candidate_sets": {
+    "test_eta0.08.json": {
+      "jobs": 1000,
+      "maximum_uncached_adapter_calls": 3022,
+      "sha256": "06e5c53d70cb65e592efb47e7c2cfa1153ed68c6d6e7a874be21bff879290b44"
+    },
+    "test_eta0.15.json": {
+      "jobs": 1000,
+      "maximum_uncached_adapter_calls": 2995,
+      "sha256": "7f450db1c247d5b9dfb454346b298e2b51dc8de45c05a2dbaa87a2c19075ba6d"
+    },
+    "test_eta0.json": {
+      "jobs": 1050,
+      "maximum_uncached_adapter_calls": 3689,
+      "sha256": "acb40349289aef254e51c1f1c00c1adc5beb7ffe14a8c163de330cfca061b402"
+    },
+    "val_eta0.08.json": {
+      "jobs": 90,
+      "maximum_uncached_adapter_calls": 362,
+      "sha256": "c869a93c9dd87014e3c8cd9a06ee982b63dc756e9f0580f987dd1abee25a96df"
+    },
+    "val_eta0.15.json": {
+      "jobs": 90,
+      "maximum_uncached_adapter_calls": 358,
+      "sha256": "b49ea14c806c5dec3954587bf943cd7ecab9e9ed330f78fec154e244226d6048"
+    },
+    "val_eta0.json": {
+      "jobs": 330,
+      "maximum_uncached_adapter_calls": 1120,
+      "sha256": "50880c333c3b9b2503a3720669dfc8012ffe0dbba82acb0288bb87042c292665"
+    }
+  },
+  "ceilings": {
+    "2d": {
+      "val": 3600,
+      "test": 10800
+    },
+    "3d": {
+      "val": 7200,
+      "test": 21600
+    }
+  },
+  "units": "seconds per domain and phase, CPU and active wall; all attempts and parent overhead charged",
+  "disk_gib": 10,
+  "ram_gib": 4,
+  "query_wall_s": {
+    "2d": 60,
+    "3d": 120
+  },
+  "trial_wall_s": {
+    "2d": 300,
+    "3d": 600
+  },
+  "global_adapter_call_ceiling": 5523,
+  "roots_per_domain": {
+    "val": 15,
+    "test": 25
+  },
+  "final_model_seeds": [
+    0,
+    1,
+    2
+  ],
+  "validation_model_seeds": [
+    0
+  ],
+  "selection": "VAL O0_P2Q2 task success, then verified K0 NOOP, then explicit NONE abstention; residual ties smaller eta. Apply common selected eta to all Q arms and O0/O1 closed-loop.",
+  "interpretation": "Exploratory held-out cohorts; no untouched confirmation attested; fixed-root denominators retain every unresolved/unexecuted trial",
+  "exclusions": "No competing method, no new training, no additional machine or GPU. TEST starts only after selection freeze and required VAL coverage.",
+  "cancellation": "Identity-scoped child/session watchdog and parent-death guard; per-query durable evidence; no automatic ambiguous restart",
+  "approved_utc": "2026-11-17T12:02:07.779433+00:00",
+  "prospective_control_correction": {
+    "audit": "/scratch/nav/disco_grid/stage2/campaigns/E16_v1_20261117/training_release_v2/CANDIDATE_CONTROL_CORRECTION.json",
+    "sha256": "3b089805f0b3e6b4d39679a1cb42071400334065850ea06e57d4517af56fd3a4",
+    "heldout_outcomes_used": false,
+    "resource_ceilings_and_primary_models_unchanged": true
+  },
+  "authorization_origin": "Explicit user reply to V15-F25-v1 approval question in Codex session; 510 VAL and at most 1050 TEST trials, 5523 uncached calls; 2D 1h VAL + 3h TEST, 3D 2h VAL + 6h TEST, CPU and active wall."
+}

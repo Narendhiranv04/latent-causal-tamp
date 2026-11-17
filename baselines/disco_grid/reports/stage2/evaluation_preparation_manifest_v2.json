@@ -1,0 +1,58 @@
+{
+  "checkpoint_manifest_sha256": "b363d7f0c7049e748ce45b2b1a0c92a39d8f7fa5429c7ff3fb6c8fc66142cf9b",
+  "cohorts_sha256": "c8c5a78ac0a50824eae886ee3d3a8f0a78bbbd0f7bc0c500c25ae9f147e6620f",
+  "cpu_s": 20.633396666,
+  "peak_rss_kib": 761792,
+  "physical_queries": 0,
+  "primary_model_rule": "Known-prefix P2 when fully certified and fitted; otherwise completed clean-only P2. Fixed before VAL.",
+  "selection_rule": "Choose eta by VAL seed-0 O0 open-loop task success, then K0 verified NOOP, then explicit NONE abstention; remaining ties smaller eta. Same eta used by all Q arms and both closed-loop schemas.",
+  "sets": {
+    "test_eta0.08.json": {
+      "jobs": 1000,
+      "maximum_uncached_adapter_calls": 3022,
+      "sha256": "23d50e58058d16319558aee2893bb18d6129f4fb6597de2ff03a989f4df13580"
+    },
+    "test_eta0.15.json": {
+      "jobs": 1000,
+      "maximum_uncached_adapter_calls": 2992,
+      "sha256": "878b511764b6d359b38d05d6ce7e1132305e38c683122a10f206fe5a42ece61d"
+    },
+    "test_eta0.json": {
+      "jobs": 1050,
+      "maximum_uncached_adapter_calls": 3688,
+      "sha256": "b7728a629520138497cbd31b3f13ac2a7d55f93f75f1ffbf109f76ec067dff29"
+    },
+    "val_eta0.08.json": {
+      "jobs": 90,
+      "maximum_uncached_adapter_calls": 362,
+      "sha256": "300c18385c903126ed914dd7b3f8c94988bfc7576df43f23f263571c32606b3e"
+    },
+    "val_eta0.15.json": {
+      "jobs": 90,
+      "maximum_uncached_adapter_calls": 358,
+      "sha256": "65768f51fdb5ef9dc23d076a85b67c42292202df50dcdc5d507038726c52d274"
+    },
+    "val_eta0.json": {
+      "jobs": 330,
+      "maximum_uncached_adapter_calls": 1115,
+      "sha256": "cc088e60150afc8e3190ad3b1c6c61595497d112a3f07e55d14852df550f94f6"
+    }
+  },
+  "source_commit": "f4e231e036e4160eda501d0db9ec189fb03c690c",
+  "source_sha256": {
+    "ablate.py": "d0d7ca737ac6918a674add2d19c8cb5f458e49e57ae4fe2ae947ab39ac553602",
+    "campaign.py": "f23c785482e2266ec4c61b723a20d0c6f052a3bf992eecbb2e318f17752560e7",
+    "collect.py": "94d11d9382a33dadfdd6cdfef91169d135bac34ba788023d2ad1ebc6d42b8516",
+    "data.py": "a6d354b668dbfca6f5390f84e8b186cf20b5d02ddae106614762be260efcf4c0",
+    "distill.py": "8a9d97e36b26f0c93f3e8557a65fab49ad6ab42befd6cbcc18e49aa76c4eedcd",
+    "env.py": "ab6a07aec171cb14f8da40aff2e000e312406461b9992099034cebcf51269dac",
+    "evaluate.py": "e537712c6d7d279fde74f789433eaf37cd16565edf194f2d4e8a2be0486439eb",
+    "journal.py": "e9242781ad57a96fe6657688dddd485c4413d6ae92393bd78df7d8e4226f0f5c",
+    "mcts.py": "1e7c7cc0f72ead13425cece0d776255761202fbf97ccd2f447e5a80075830677",
+    "physical_eval.py": "30d552b61c820d25a865bbe49024291fa10e7ab466f4dea4836ec1548abe6764",
+    "policy.py": "813ebb7b0676ea3bc5190728d31c0b08026be01d337b6e811d2fbd0edce43a8b",
+    "viz.py": "fce5e62252e6e899917372fa04a88a199d2a1dced844d53ae95121537df00af6"
+  },
+  "test_outcomes_opened": false,
+  "wall_s": 21.491416297852993
+}
