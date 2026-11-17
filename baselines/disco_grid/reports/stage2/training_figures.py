@@ -26,7 +26,7 @@ def csv_write(path,rows):
 def build(campaign,coverage_path,out):
     out.mkdir(parents=True,exist_ok=False)
     coverage=read(coverage_path);records=coverage['records'];sources={str(coverage_path):sha(coverage_path)}
-    curves=[];fit_summaries=[];resources=[];censored=[];depths=[]
+    curves=[];fit_summaries=[];resources=[];censored=[];depths=[];stops=[]
     for path in sorted(campaign.glob('training/*/*/distill_report.json')):
         report=read(path);sources[str(path)]=sha(path)
         ident=dict(domain=report['domain'],fit=path.parent.parent.name,schema=report['observation_schema'],
@@ -49,8 +49,13 @@ def build(campaign,coverage_path,out):
         for depth,count in row['checkpoint_depth_counts'].items():
             depths.append(dict(domain=row['domain'],round=row['round'],root_id=row['root_id'],K=row['K'],status=row['status'],depth=int(depth),feasible_edges=count,
                 interpretation='latest completed iteration checkpoint; interrupted tail excluded'))
+        for label,count in row['checkpoint_terminal_counts'].items():
+            depth,z=label.split('|')
+            stops.append(dict(domain=row['domain'],round=row['round'],root_id=row['root_id'],K=row['K'],depth=int(depth.removeprefix('depth')),terminal_Z=z.removeprefix('Z'),count=count,
+                interpretation='unique STOP observations in completed checkpoint; not deployment decisions'))
     csv_write(out/'TRAINING_LOSS.csv',curves);csv_write(out/'DISTILLATION_COVERAGE.csv',fit_summaries)
     csv_write(out/'SEARCH_DEPTH.csv',depths);csv_write(out/'CENSORING_LEDGER.csv',censored);csv_write(out/'RESOURCE_ACCOUNTING.csv',resources)
+    csv_write(out/'TRAIN_STOP_EVIDENCE.csv',stops)
     csv_write(out/'SEARCH_COVERAGE.csv',[{k:v for k,v in r.items() if not isinstance(v,(dict,list))} for r in records])
     plt.rcParams.update({'font.size':9,'axes.spines.top':False,'axes.spines.right':False,'svg.fonttype':'none'})
     figure_paths=[]
@@ -87,6 +92,15 @@ def build(campaign,coverage_path,out):
         ax.bar(positions,returned,label='Returned (includes unresolved)');ax.bar(positions,missing,bottom=returned,label='Unreturned',color='#ba4c48')
         ax.axvline(15.5,color='gray',lw=.8);ax.set_xlabel('Frozen root-round order: R0 then R1');ax.set_ylabel('Charged adapter intents');ax.set_title(dom.upper());ax.legend(fontsize=7)
     fig.suptitle('All attempted queries stay in the cost ledger',fontsize=10);fig.tight_layout();save(fig,'mcts_query_accounting')
+    fig,axes=plt.subplots(2,2,figsize=(9,6),sharex=True)
+    for i,dom in enumerate(('2d','3d')):
+        for col,k3 in enumerate((False,True)):
+            ax=axes[i,col];bottom=np.zeros(4)
+            for z,color,label in [('1','#31816a','Z=1'),('0','#ba4c48','Z=0 (teacher scope)'),('None','#959595','Undecided')]:
+                values=np.array([sum(r['count'] for r in stops if r['domain']==dom and r['depth']==depth and r['terminal_Z']==z and (not k3 or str(r['K'])=='3')) for depth in range(4)])
+                ax.bar(range(4),values,bottom=bottom,color=color,label=label);bottom+=values
+            ax.set_title(f'{dom.upper()} | '+('K3 roots' if k3 else 'all TRAIN strata'));ax.set_xlabel('Relocation depth');ax.set_ylabel('Unique terminal observations');ax.set_xticks(range(4));ax.legend(fontsize=7)
+    fig.suptitle('MCTS STOP evidence in completed checkpoints; pooled R0/R1\nTRAIN observations, not model stopping accuracy',fontsize=10);fig.tight_layout();save(fig,'train_stop_evidence')
     manifest=dict(scope='TRAIN-only diagnostics; no physical dispatch; no model selection',source_hashes=sources,
         source_campaign=str(campaign),figures={p.name:sha(p) for p in figure_paths},
         limitations=['Root-count/search-budget task-success learning curves NOT_RUN: only E16 rung executed.',

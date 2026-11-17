@@ -28,7 +28,7 @@ def summarize(root,out):
                     cpu_s=sum(a['reaped_child_cpu_s'] for a in accounts) if accounts else None,
                     wall_s=sum(a['wall_s'] for a in accounts) if accounts else None,
                     checkpoint_feasible_edges=len(feasible),checkpoint_depth_counts=dict(collections.Counter(n['depth'] for n in feasible)),
-                    checkpoint_terminal_counts=dict(collections.Counter(f"depth{len(n['prefix'])}|Z{n['terminal_z']}" for n in nodes if n['stop_evaluated'])),
+                    checkpoint_terminal_counts=dict(collections.Counter(f"depth{len(n['prefix'])}|Z{n['terminal_z']}" for n in nodes if n['stop_evaluated'] and not n['is_stop_node'])),
                     returned_terminal_outcomes=dict(collections.Counter(f"depth{e['depth']}|Z{(e.get('raw_teacher_outcome') or {}).get('z_outcome') if e['status']=='DECIDED' else 'UNRESOLVED'}" for e in ends if e['kind']=='terminal')),
                     checkpoint_summary=tree.get('summary'),phases=phases,watchdog_reasons=[a['reason'] for a in accounts],
                     checkpoint_sha256=sha(state/'checkpoint.pkl') if (state/'checkpoint.pkl').exists() else None)

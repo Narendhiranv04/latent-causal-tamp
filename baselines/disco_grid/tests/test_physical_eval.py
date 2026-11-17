@@ -164,3 +164,31 @@ def test_release_analysis_retains_missing_roots_and_distinguishes_novel_repairs(
     assert metrics['deployment_diagnostics']['n_novel_verified_repairs_NONE']==1
     assert metrics['deployment_diagnostics']['n_verified_original_target_NONE']==1
     assert 'NOT_RUN' in (out/'CENSORING_LEDGER.csv').read_text()
+
+
+def test_coverage_counts_physical_stop_once_not_absorbing_child(tmp_path):
+    sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'reports/stage2'))
+    import summarize_campaign as SC
+    campaign=tmp_path/'campaign';campaign.mkdir()
+    root=dict(root_id='fixture',family_id='f',K_legacy='0')
+    (campaign/'manifest.json').write_text(json.dumps(dict(source_commit='fixture',cohorts=dict(domains={'2d':{'train_roots':[root]},'3d':{'train_roots':[]}}))))
+    td=campaign/'trees/2d/R0/fixture/fixture';td.mkdir(parents=True)
+    nodes=[dict(node_id=0,is_stop_node=False,depth=0,prefix=[],stop_evaluated=True,terminal_z=1),
+           dict(node_id=1,is_stop_node=True,depth=1,prefix=[],stop_evaluated=True,terminal_z=1)]
+    (td/'tree.json').write_text(json.dumps(dict(nodes=nodes,summary=dict(root_id='fixture'))))
+    out=tmp_path/'summary';SC.summarize(campaign,out)
+    rows=json.loads((out/'training_coverage.json').read_text())['records']
+    assert rows[0]['checkpoint_terminal_counts']=={'depth0|Z1':1}
+
+
+def test_root_stop_diagnostics_require_independent_probe_not_legacy_K():
+    sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'reports/stage2'))
+    import analyze_evaluation as AE
+    model=dict(id='model',split='test',domain='2d',root_id='r',family_id='f',seed=0,arm='O0_P2Q2',use_value=True,
+        rule={'abstain_eta':0.},prediction={'selection_trace':[{'decision':dict(n_candidates=2,best_reloc_score=.3,stop_score=.2,selected='STOP')}]})
+    probe=dict(model,id='probe',arm='root_stop_diagnostic',diagnostic_only=True)
+    assert AE.root_stop_diagnostics([model,probe],[])['examples']==[]
+    result=AE.root_stop_diagnostics([model,probe],[dict(job_id='probe',verified=1)])
+    stats=result['summaries']['test|2d|O0_P2Q2']
+    assert stats['n']==1 and stats['n_positive']==1 and stats['brier']==pytest.approx(.64)
+    assert stats['stop_precision']==1. and stats['stop_recall']==1.

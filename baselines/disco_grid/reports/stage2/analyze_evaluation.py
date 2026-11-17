@@ -9,11 +9,53 @@ import numpy as np
 def read(p):return json.loads(p.read_text())
 
 
-def write_csv(path,rows):
-    if not rows:return
-    keys=list(dict.fromkeys(key for row in rows for key in row))
+def write_csv(path,rows,empty_columns=('status',)):
+    keys=list(dict.fromkeys(key for row in rows for key in row)) or list(empty_columns)
     with path.open('w') as file:
         writer=csv.DictWriter(file,fieldnames=keys);writer.writeheader();writer.writerows(rows)
+
+
+def root_stop_diagnostics(jobs,observed):
+    """Raw root STOP Q versus separate original-target physical probes.
+
+    No calibration fitting, no labels imputed from legacy K, no counterfactual
+    continuation labels. Keep one seed-0 prediction per arm/root at raw eta=0 on
+    VAL and the frozen selected eta on TEST. Forced STOP scores are not Q outputs.
+    """
+    lookup={r['job_id']:r for r in observed};labels={};examples=[]
+    for job in jobs:
+        row=lookup.get(job['id'],{})
+        if job.get('diagnostic_only') and row.get('verified') in (0,1):
+            labels[(job['split'],job['domain'],job['root_id'])]=int(row['verified'])
+    for job in jobs:
+        if job.get('diagnostic_only') or job['seed']!=0 or not job.get('use_value'):continue
+        if job['split']=='val' and job['rule']['abstain_eta']!=0.:continue
+        key=(job['split'],job['domain'],job['root_id'])
+        if key not in labels:continue
+        row=lookup.get(job['id'],{});trace=job.get('prediction',{}).get('selection_trace')
+        if trace is None:
+            path=Path(row.get('execution_evidence',{}).get('directory',''))/'selection_trace.json'
+            trace=read(path) if path.is_file() else []
+        if not trace:continue
+        decision=trace[0]['decision']
+        if not decision.get('n_candidates') or 'best_reloc_score' not in decision:continue
+        if not np.isfinite(decision['stop_score']) or not 0<=decision['stop_score']<=1:raise ValueError('Invalid raw STOP probability')
+        examples.append(dict(phase=job['split'],domain=job['domain'],arm=job['arm'],root_id=job['root_id'],
+            family_id=job['family_id'],q_stop=float(decision['stop_score']),label=labels[key],selected_stop=decision['selected']=='STOP'))
+    groups={}
+    for row in examples:groups.setdefault((row['phase'],row['domain'],row['arm']),[]).append(row)
+    summaries={}
+    for key,rows in groups.items():
+        q=np.clip([r['q_stop'] for r in rows],1e-7,1-1e-7);y=np.array([r['label'] for r in rows]);selected=np.array([r['selected_stop'] for r in rows])
+        bins=[]
+        for lo,hi in zip(np.linspace(0,1,6)[:-1],np.linspace(0,1,6)[1:]):
+            mask=(q>=lo)&(q<hi if hi<1 else q<=hi)
+            bins.append(dict(low=lo,high=hi,n=int(mask.sum()),mean_q=float(q[mask].mean()) if mask.any() else None,positive_fraction=float(y[mask].mean()) if mask.any() else None))
+        summaries['|'.join(key)]=dict(n=len(rows),n_positive=int(y.sum()),brier=float(np.mean((q-y)**2)),
+            nll=float(np.mean(-y*np.log(q)-(1-y)*np.log1p(-q))),
+            stop_precision=float(y[selected].mean()) if selected.any() else None,
+            stop_recall=float(selected[y==1].mean()) if (y==1).any() else None,bins=bins)
+    return dict(examples=examples,summaries=summaries,interpretation='Independent root STOP probes only; descriptive small-sample raw-Q diagnostics, no fitted calibration and no continuation-value truth claim')
 
 
 def analyze(release,out):
@@ -106,9 +148,10 @@ def analyze(release,out):
                     aa=[r for r in ga['rows'] if r['root_id'] in {x['root_id'] for x in roots} and r['seed'] in seeds];bb=[r for r in gb['rows'] if r['root_id'] in {x['root_id'] for x in roots} and r['seed'] in seeds]
                     paired[f'{phase}|{dom}|{a}_minus_{b}|eta{ka[4]}']=EV.paired_frozen_root_metrics(aa,bb,roots,seeds=seeds)
     J.atomic_json(out/'FINAL_METRICS.json',dict(metrics=metrics,paired=paired,source_hashes=row_sources,interpretation='Frozen-root intention-to-evaluate; not-run and unresolved are not physical negative labels'))
-    write_csv(out/'RESOURCE_ACCOUNTING.csv',costs)
-    write_csv(out/'CENSORING_LEDGER.csv',censoring)
-    write_csv(out/'ABLATIONS.csv',[dict(comparison=name,**{k:json.dumps(v) if isinstance(v,(dict,list)) else v for k,v in item.items()}) for name,item in paired.items()])
+    J.atomic_json(out/'ROOT_STOP_DIAGNOSTICS.json',root_stop_diagnostics(jobs_all,observed_all))
+    write_csv(out/'RESOURCE_ACCOUNTING.csv',costs,('phase','domain','cpu_s','active_wall_s','adapter_calls'))
+    write_csv(out/'CENSORING_LEDGER.csv',censoring,('phase','domain','arm','protocol','root_id','seed','job_id','status','failure_kind','interpretation'))
+    write_csv(out/'ABLATIONS.csv',[dict(comparison=name,**{k:json.dumps(v) if isinstance(v,(dict,list)) else v for k,v in item.items()}) for name,item in paired.items()],('comparison','delta','ci95'))
     if flat:
         with (out/'FINAL_METRICS.csv').open('w') as f:
             w=csv.DictWriter(f,fieldnames=list(flat[0]));w.writeheader();w.writerows(flat)
