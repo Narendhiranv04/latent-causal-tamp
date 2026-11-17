@@ -13,7 +13,7 @@
   * OSNet label of a (hypothetical) scene: count_o = number of reference paths whose sweep contains object o's current cell, p = count /
     sum(count) over eligible movable objects; sum 0 -> masked (no blocker under the reference paths);
   * RPNet label for object o: cost(c) = 1 for cells that are statically illegal (occupied now, occupied at S0, goal, undeclared) or lie
-    in the union sweep of the reference paths (homotopy-blocking); otherwise 0.9 * dist(c, source(o)) / max legal distance (in [0, 0.9]).
+    on the sweep of at least half of the reference paths (homotopy-blocking, REGION_RULE_V2_MAJORITY; V1 = union, rejected at the P2 pilot gate); otherwise 0.9 * dist(c, source(o)) / max legal distance (in [0, 0.9]).
 The reference paths never depend on movable objects, so labels for any hypothetical prefix are exact lookups (no new planner call).
 
     homotopy.py 2d ROWS_SPLIT OUT N_ROOTS WORKERS     (run with the 2D teacher env; ABF_ROOT = laptop mirror root)"""
@@ -80,7 +80,7 @@ def labels(inp, dom, cells, sweeps, legal, src_obj=None):
     tot = sum(cnt.values())
     res = {"count": cnt, "p": {i: c / tot for i, c in cnt.items()} if tot else None}
     if src_obj is not None:
-        U = set().union(*sweeps) if sweeps else set()
+        U = {c for c in legal if sweeps and sum(c in s_ for s_ in sweeps) * 2 >= len(sweeps)}   # REGION_RULE_V2_MAJORITY (see samples.py)
         xy = {int(k): np.array(v) for k, v in inp["cell_xy"].items()}
         s = xy[int(cells[src_obj])]
         ok = [c for c in legal if c not in U]

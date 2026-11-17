@@ -6,7 +6,7 @@ States per TRAIN root (all hypothetical object edits of S0, never robot states):
   every prefix of a verified successful repair (X=1 and Y=1, nor_data.supervision).
 Blocking of object o by reference path k: 2D cell(o) in sweep_k; 3D o in blockers_k if o is at its S0 cell (exact _object_hits) else
 cell(o) in sweep_k (generic-column probe).  OSNet target p = counts / sum over eligible objects (state skipped if the sum is 0).
-RPNet target for (state, o): homotopy.labels cost map, for the 3 most-blocking eligible objects and the successful repairs' next objects.
+RPNet target for (state, o): cost map (illegal or majority-swept -> 1, else 0.9 * source distance / max), for the 3 most-blocking eligible objects and the successful repairs' next objects.
 STOP: every decided endpoint Y of the root (TRAIN) or of VAL roots (calibration only).  Holdout: 10% of TRAIN roots (sha256 group).
 
     samples.py DOM LABELS.jsonl OUT.npz"""
@@ -53,7 +53,10 @@ def counts(inp, dom, cells, P):
 
 def cost_map(inp, cells, P, o, nc):
     legal = set(G.legal_dests(inp, cells))
-    U = set().union(*[p["sweep"] for p in P]) if P else set()
+    # REGION_RULE_V2_MAJORITY (P2 pilot-gate revision, before any full training): a cell is homotopy-blocking iff it lies on the sweep of
+    # at least half of the reference paths.  The V1 union rule marked 63/64 2D cells blocking (the planar 3R arm reaches over almost the
+    # whole lattice across grasp homotopies), leaving RPNet a degenerate all-max cost map.
+    U = {c for c in legal if P and sum(c in p["sweep"] for p in P) * 2 >= len(P)}
     xy = {int(k): np.array(v) for k, v in inp["cell_xy"].items()}
     s = xy[int(cells[o])]
     ok = [c for c in legal if c not in U]
