@@ -1,7 +1,7 @@
 {
-  "utc": "2026-11-17T13:49:23.451487+00:00",
+  "utc": "2026-11-17T14:27:03.762701+00:00",
   "overall": "PARTIAL",
-  "physical_task_results": "RUNNING_THREE_WORKER_VAL_ON_GIRISH",
+  "physical_task_results": "PARTIAL_OR_NOT_RUN",
   "gates": {
     "S2.0": {
       "status": "DONE",
@@ -29,20 +29,21 @@
     },
     "S2.6": {
       "status": "PARTIAL",
-      "reason": "Models/ablation matrices prepared; physical VAL/paired effects and root/budget ladders NOT_RUN"
+      "reason": "Prepared arms physically evaluated where recorded; additional root/search-budget ladders NOT_RUN."
     },
     "S2.7": {
-      "status": "IN_PROGRESS",
-      "reason": "Three supervised physical CPU workers on Girish, nice 19, shared 4 GiB RSS and unchanged aggregate budgets. Serial trial drained with returned result; 132 2D and 64 3D prior attempts retained without retry. Local host remains below RAM headroom guard."
+      "status": "PARTIAL",
+      "reason": "See fixed-denominator metrics, censoring ledger and phase accounting; no unknown outcome imputed as a physical negative."
     },
     "S2.8": {
       "status": "PARTIAL",
-      "reason": "Native frames and TRAIN plots complete; held-out performance/failure/calibration figures NOT_RUN"
+      "reason": "Native TRAIN frames preserved; measured held-out plots and deterministic saved-state failure frames generated where actual evidence exists. Missing independent STOP probes or failure states are not fabricated."
     },
     "S2.9": {
       "status": "PARTIAL",
-      "reason": "Implementation and auditable TRAIN release pushed; final numerical physical release incomplete"
+      "reason": "Standalone evidence/report packaged; unexecuted ladder experiments and other limitations explicitly retained."
     }
   },
-  "generator_sha256": "e1f07d0317dbd263f4c078773dbf56a085e0f0a1bfebfedf76d91397c69eadb6"
+  "generator_sha256": "e1f07d0317dbd263f4c078773dbf56a085e0f0a1bfebfedf76d91397c69eadb6",
+  "report_generator_sha256": "7a1fafdd4635b69c5702687a1c9db2209b2a58b0869624daaf4139f20049e3b2"
 }

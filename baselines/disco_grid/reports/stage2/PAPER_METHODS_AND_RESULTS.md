@@ -1,8 +1,6 @@
 # DISCO-Grid (adapted): standalone methods and evidence
 
-**Working manuscript. The E16 TRAIN cycle is complete. Final independently
-verified model task-success results are NOT_RUN.** Historical results are not
-substituted for the pending study.
+**Working manuscript. The E16 TRAIN cycle is complete. Measured physical evidence and completion limits follow below.** Historical results are not substituted for this physical study.
 
 ## Method and declared adaptations
 
@@ -197,14 +195,128 @@ learned-policy K3 task success. The final 69-test suite passes; all 92 protected
 checkpoint/teacher hashes match. Tables regenerate from the stored JSON/CSV
 and source-backed report generator in this release.
 
-Final evaluation is proposed on 15 VAL and 25 exploratory TEST roots/domain,
-balanced across five legacy strata. Each primary protocol has 15 K1–K3 task
-roots and 45 fixed-seed task trials. It is a resource-limited balanced cohort,
-not the entire TEST split or an untouched confirmatory population. A separate
-physical compute request is pending. No final selected TEST prediction JSONL
-or verification records are manufactured in its absence.
 
-**Final model task-success percentages, CIs, VAL-selected STOP calibration,
-O0/O1 task effects, Q effectiveness and sample-efficiency learning curves are
-NOT_RUN at this manuscript revision.** No positive or negative improvement claim
-is inferred from fitting losses or TRAIN discovery alone.
+<!-- MEASURED_STAGE2_RESULTS -->
+
+## Primary physical task results
+
+| Domain | Protocol | K1–K3 verified task success, 95% root CI |
+|---|---|---|
+| 2D | O0 open loop | 2/45 = 4.44% [0.00%, 11.11%]; 15 roots; unknown 6 |
+| 2D | O0 closed loop | 0/45 = 0.00% [0.00%, 0.00%]; 15 roots; unknown 35 |
+| 2D | O1 closed loop | NOT_RUN |
+| 3D | O0 open loop | 1/45 = 2.22% [0.00%, 6.67%]; 15 roots; unknown 44 |
+| 3D | O0 closed loop | NOT_RUN |
+| 3D | O1 closed loop | NOT_RUN |
+
+## Per-stratum results
+
+K0 and NONE physical success are shown separately from their intended NOOP and explicit-abstention diagnostics. A newly verified NONE repair is retained rather than relabeled from the legacy stratum.
+
+| Domain | Protocol | K | Verified physical success, 95% root CI |
+|---|---|---|---|
+| 2D | O0 open loop | 0 | 8/15 = 53.33% [20.00%, 86.67%]; 5 roots; unknown 0 |
+| 2D | O0 open loop | 1 | 1/15 = 6.67% [0.00%, 20.00%]; 5 roots; unknown 4 |
+| 2D | O0 open loop | 2 | 1/15 = 6.67% [0.00%, 20.00%]; 5 roots; unknown 2 |
+| 2D | O0 open loop | 3 | 0/15 = 0.00% [0.00%, 0.00%]; 5 roots; unknown 0 |
+| 2D | O0 open loop | NONE | 2/15 = 13.33% [0.00%, 26.67%]; 5 roots; unknown 2 |
+| 2D | O0 closed loop | 0 | 4/15 = 26.67% [0.00%, 66.67%]; 5 roots; unknown 9 |
+| 2D | O0 closed loop | 1 | 0/15 = 0.00% [0.00%, 0.00%]; 5 roots; unknown 11 |
+| 2D | O0 closed loop | 2 | 0/15 = 0.00% [0.00%, 0.00%]; 5 roots; unknown 12 |
+| 2D | O0 closed loop | 3 | 0/15 = 0.00% [0.00%, 0.00%]; 5 roots; unknown 12 |
+| 2D | O0 closed loop | NONE | 0/15 = 0.00% [0.00%, 0.00%]; 5 roots; unknown 12 |
+| 2D | O1 closed loop | 0 | NOT_RUN |
+| 2D | O1 closed loop | 1 | NOT_RUN |
+| 2D | O1 closed loop | 2 | NOT_RUN |
+| 2D | O1 closed loop | 3 | NOT_RUN |
+| 2D | O1 closed loop | NONE | NOT_RUN |
+| 3D | O0 open loop | 0 | 0/15 = 0.00% [0.00%, 0.00%]; 5 roots; unknown 15 |
+| 3D | O0 open loop | 1 | 1/15 = 6.67% [0.00%, 20.00%]; 5 roots; unknown 14 |
+| 3D | O0 open loop | 2 | NOT_RUN |
+| 3D | O0 open loop | 3 | NOT_RUN |
+| 3D | O0 open loop | NONE | NOT_RUN |
+| 3D | O0 closed loop | 0 | NOT_RUN |
+| 3D | O0 closed loop | 1 | NOT_RUN |
+| 3D | O0 closed loop | 2 | NOT_RUN |
+| 3D | O0 closed loop | 3 | NOT_RUN |
+| 3D | O0 closed loop | NONE | NOT_RUN |
+| 3D | O1 closed loop | 0 | NOT_RUN |
+| 3D | O1 closed loop | 1 | NOT_RUN |
+| 3D | O1 closed loop | 2 | NOT_RUN |
+| 3D | O1 closed loop | 3 | NOT_RUN |
+| 3D | O1 closed loop | NONE | NOT_RUN |
+
+## Stopping, execution failures and inference costs
+
+| Domain | Protocol | K0 verified NOOP | K0 relocation predictions | NONE explicit abstention | X=0,Y=1 | Neural latency median / p95 ms |
+|---|---|---|---|---|---|---|
+| 2D | O0 open loop | 0/15 | 15 | 0/15 | 17 | 12.599 / 16.2117 |
+| 2D | O0 closed loop | 0/15 | 6 | 0/15 | 4 | 17.669645021669567 / 37.260737339966 |
+| 2D | O1 closed loop | 0/15 | 0 | 0/15 | 0 | None / None |
+| 3D | O0 open loop | 0/15 | 0 | 0/15 | 0 | 5.893 / 5.893 |
+| 3D | O0 closed loop | 0/15 | 0 | 0/15 | 0 | None / None |
+| 3D | O1 closed loop | 0/15 | 0 | 0/15 | 0 | None / None |
+
+X=0,Y=1 denotes execution failure at a target-feasible endpoint; it does not establish that order alone caused the failure. Complete failure phases/kinds, action counts and reference path travel remain in FINAL_METRICS.json. Travel measures accepted corrective joint waypoints plus the certified connector, excluding target Y; actual servo-integrated arc is NOT_RECORDED. Cached certificates reduce physical calls, not neural latency measurements.
+
+## Paired DISCO-only ablations
+
+| Domain / contrast | Task-success difference | 95% root CI | Roots / fixed seeds | Unknown paired trials |
+|---|---|---|---|---|
+| test|2d|O0_P1Q1_minus_O0_P1_success_onlyQ1|eta0.0 | 0.00 pp | [0.00, 0.00] pp | 15 / [0] | 14 |
+| test|2d|O0_P2Q2_minus_O0_P0|eta0.0 | 0.00 pp | [0.00, 0.00] pp | 15 / [0] | 15 |
+| test|2d|O0_P2Q2_minus_O0_P1Q1|eta0.0 | 0.00 pp | [0.00, 0.00] pp | 15 / [0] | 14 |
+| test|2d|O0_P2Q2_minus_O0_P2_clean_onlyQ2|eta0.0 | 0.00 pp | [0.00, 0.00] pp | 15 / [0] | 14 |
+| test|2d|O0_P2Q2_minus_O0_P2_success_onlyQ2|eta0.0 | 4.44 pp | [0.00, 11.11] pp | 15 / [0, 1, 2] | 42 |
+| test|2d|O0_P2Q2_minus_O0_P2|eta0.0 | 4.44 pp | [0.00, 11.11] pp | 15 / [0, 1, 2] | 43 |
+| test|2d|O1_closed_P2Q2_minus_O0_closed_P2Q2|eta0.0 | 0.00 pp | [0.00, 0.00] pp | 15 / [0, 1, 2] | 45 |
+| test|3d|O0_P1Q1_minus_O0_P1_success_onlyQ1|eta0.0 | NOT_RUN | unavailable | 15 / [0] | 15 |
+| test|3d|O0_P2Q2_minus_O0_P0|eta0.0 | 6.67 pp | [0.00, 20.00] pp | 15 / [0] | 15 |
+| test|3d|O0_P2Q2_minus_O0_P1Q1|eta0.0 | 6.67 pp | [0.00, 20.00] pp | 15 / [0] | 15 |
+| test|3d|O0_P2Q2_minus_O0_P2_clean_onlyQ2|eta0.0 | 6.67 pp | [0.00, 20.00] pp | 15 / [0] | 15 |
+| test|3d|O0_P2Q2_minus_O0_P2_success_onlyQ2|eta0.0 | 2.22 pp | [0.00, 6.67] pp | 15 / [0, 1, 2] | 45 |
+| test|3d|O0_P2Q2_minus_O0_P2|eta0.0 | 2.22 pp | [0.00, 6.67] pp | 15 / [0, 1, 2] | 45 |
+| test|3d|O1_closed_P2Q2_minus_O0_closed_P2Q2|eta0.0 | NOT_RUN | unavailable | 15 / [0, 1, 2] | 45 |
+
+Q on/off, policy evolution, all-feasible/successful-only, clean/prefix data and observed-joint effects use identical frozen roots and common model seeds. Secondary evolution/coverage arms use seed 0. These are descriptive paired estimates without multiplicity-adjusted hypothesis tests. No improvement is inferred from fitting loss. Successful-only P2 starts from all-feasible P1, and the clean-data contrast holds current-P2 fitting controls fixed; neither is a whole-curriculum or root-count learning curve.
+
+## VAL-only selection and provenance
+
+Selected eta: `{"2d": 0.0, "3d": 0.0}`. SELECTION_FREEZE.json records the VAL evidence hashes and selected TEST job identities before TEST execution.
+
+final_predictions.jsonl, final_verifications.jsonl, final_root_manifest.json and final_checkpoints.json preserve the actual model/root bindings. The checkpoint registry has SHA-256 hashes; all large weights, optimizer/RNG states and physical witnesses remain on gvlab. The completed TRAIN inventory verified 315 checkpoint files from 63 fits. The prospective 3D clean-control correction used no held-out outcome; original candidates and weights remain archived.
+
+## Resource accounting
+
+| Phase | Domain | Predictions attempted / frozen | Charged adapter calls | Charged CPU s | Active wall s |
+|---|---|---|---|---|---|
+| val | 2d | 145/255 | 381 | 3560.354 | 2658.970 |
+| val | 3d | 162/255 | 339 | 7111.527 | 3928.404 |
+| test | 2d | 121/525 | 250 | 2853.351 | 848.192 |
+| test | 3d | 4/525 | 10 | 108.991 | 34.344 |
+
+PHYSICAL_RESOURCE_TOTALS.json provides non-overlapping phase costs and, when available, shared-overhead-inclusive release totals. All interrupted attempts are charged. Phase limits and the 5,523-call global ceiling are checked against the explicit approval. TRAIN recorded subtotal: 10935.151 CPU / 11497.676 active-wall seconds. These scopes must not be summed with overlapping upper bounds. Older unprofiled work remains UNKNOWN; no exact all-stage total is claimed.
+
+## Implementation, TRAIN evidence and remaining work
+
+TRAINING_RELEASE_AUDIT.md retains the detailed search/distillation audit: 16 independent attempted TRAIN roots/domain in two rounds, 544/411 charged intents (2D/3D), certified prefix handling and the P0→R0→P1/Q1→R1→P2/Q2 chain. O0 is q-blind; O1 consumes actual observed joints in closed loop. Geometry and the independent physical X/Y contract are unchanged. The deployed physical engine is pinned in the preparation manifest, separately from later reporting code.
+
+Search remains UCB C=1.5, widening k=2 and alpha=.3 before a two-proposal batch, with a 12-iteration E16 cap. Q is learned from decided descendant-leaf success fractions; its unvisited-child prior is overwritten by shaped-return backup. All 45 returned 3D K3 TRAIN terminal probes passed X and failed target Y with no feasible side grasp. This diagnoses missing successful endpoint evidence, not universal impossibility or learned-policy performance.
+
+DONE: source/archive audit, journal/watchdog/checkpoint fixes, bounded physical pilots, two iterative TRAIN rounds, 63 completed fits and frozen candidates. Physical evaluation completion is reported from evidence above. PARTIAL: overall Stage 2 because root-count/search-budget task-success ladders were not collected. NOT_RUN: additional ladder rungs, capacity-matched joint controls, reward/widening/retry experiments and full-arm animation. NOT_RECORDED: actual servo arc. UNKNOWN: exhaustive external TEST exposure, historical transitive assets and old unrecoverable query costs. No saturation or sufficiently trained K3 claim is made.
+
+Sixteen native saved-state frames and TRAIN loss/search-coverage figures accompany the release. Held-out plots use measured metrics only. ROOT_STOP_DIAGNOSTICS.json uses independent root STOP probes for descriptive raw-Q calibration, never legacy K labels or fitted TEST calibration. Reproduction commands are in REPRODUCTION.md.
+
+## User-directed host migration
+
+The user revoked gvlab execution and authorized girish-laptop. Existing gvlab evidence was copied with byte-hash checks; finished and interrupted trials were retained without retry. The primary models, roots, rules and precommitted open-loop sequences are unchanged. VAL therefore includes both hosts where recorded; TEST is on the laptop. Only file paths and the explicit host guard were amended.
+
+All gvlab query intents and reaped worker CPU remain charged. The detached gvlab controller's final CPU could not be recovered, so its entire elapsed interval is conservatively charged as controller CPU, in addition to exact reaped worker CPU. Thus phase/total CPU figures containing gvlab work are charged upper bounds, not exact CPU measurements. Worker accounts and HOST_MIGRATION.json retain the distinction. Environment installation/transfer qualification is reported separately from physical query runtime.
+
+## Explicitly authorized three-worker execution
+
+The user authorized at least three CPU workers and both laptops. The run uses three one-thread physical workers on Girish, each with its own supervisor and durable query journal. Total CPU and adapter-call quotas are reserved before dispatch; active wall time is elapsed pool time, not the sum of concurrent worker durations. All prior serial attempts remain charged and are not retried.
+
+The other methodology job was observed using 16 workers on Girish and 14 on the user laptop. DISCO physical workers use nice 19 and leave the other processes unchanged. The user laptop had only about 6 GiB available RAM, below the unchanged 8 GiB headroom guard, so no physical DISCO worker was allocated there. The pool retains the shared 4 GiB RSS ceiling plus individual watchdogs. Configured workers do not guarantee three simultaneously active trials near the end of a queue or budget.
+
+Frozen CPU inference is retained. Measured 2D neural-selection latencies totalled 0.85 seconds during a 1,747.74-second physical phase, so GPU inference was not the runtime bottleneck. No GPU speedup is claimed. Parallel execution changes scheduling, not the model, action grammar, verification caps or TEST selection. PARALLEL_HANDOFF.json and per-phase accounts record topology, prior cost bounds and actual pool costs.

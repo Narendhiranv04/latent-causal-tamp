@@ -1,8 +1,6 @@
 # DISCO-Grid Stage 2 evidence index
 
-**PARTIAL release: TRAIN is complete. The user revoked gvlab execution and
-authorized girish-laptop. Physical evaluation is running on girish-laptop with prior attempts
-and costs preserved; final TEST results remain pending.**
+**PARTIAL Stage 2 release. Physical evaluation status: PARTIAL_OR_NOT_RUN. Measured results and execution limits are recorded below; missing evidence stays explicit.**
 
 Branch: `naren/disco-grid-stage2`. D0–D8 and validation archives are unchanged.
 
@@ -85,3 +83,11 @@ regression [passes separately](PARALLEL_DRAIN_TESTS.log). These fixtures call no
 physical teacher and are not benchmark scores.
 
 [Parallel postprocessing observer](PARALLEL_FINISH_LAUNCH.json) waits for the exact physical controller to exit, then packages measured evidence under a separate bounded analysis watchdog. It never restarts physics. The local publication observer fetches and pushes that package only after FINISH_COMPLETE.json and refuses to overwrite concurrent worktree edits.
+
+## Measured physical release
+
+- [Standalone measured report](FINAL_DISCO_STAGE2_REPORT.md), [metrics](FINAL_METRICS.csv), and [paired ablations](ABLATIONS.csv).
+- [Versioned physical evidence package](physical_release_V15_F25_v1/FINISH_COMPLETE.json), [query/state byte inventory](physical_release_V15_F25_v1/physical_evidence_index.json), and [publication hashes](PHYSICAL_RELEASE_PUBLICATION.json).
+- [Root STOP diagnostics](ROOT_STOP_DIAGNOSTICS.json), [failure examples](FAILURE_EXAMPLES.json), and [physical resource totals](PHYSICAL_RESOURCE_TOTALS.json).
+
+Earlier pending-run statements in this index describe preparation history; the measured report and status JSON are current.

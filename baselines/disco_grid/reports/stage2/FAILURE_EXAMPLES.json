@@ -1,0 +1,5853 @@
+{
+  "selection": "First frozen TEST job in each domain/protocol/legacy-K/failure-kind; no new physics or model tuning",
+  "examples": {
+    "2d|open_loop|0|NO_PLAN_FOUND": {
+      "K_legacy": "0",
+      "adapter_calls": 2,
+      "arm": "O0_P2Q2",
+      "displacement": 4.0,
+      "domain": "2d",
+      "failed_phase": "connector",
+      "failure_kind": "NO_PLAN_FOUND",
+      "family_id": "source-a2c76c50eb2489414848d146",
+      "independent_verification": true,
+      "job_id": "c44d632917bfe63ba4c4",
+      "latency_ms": 3.401,
+      "m": 1,
+      "masks": {
+        "eval_abstain": false,
+        "eval_noop": true,
+        "eval_repair": false,
+        "eval_task": false,
+        "train_prediction": true
+      },
+      "model_source": {
+        "policy": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/campaigns/E16_v1_20261117/training/2d_P2Q2_knownprefix/o0_v1_all_feasible_s1/policy.pt",
+        "policy_sha256": "6031f0c6f159d8b2597f18d0c23b055a4e79bb0d074651d47580eb5b9e9e0b6e",
+        "value": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/campaigns/E16_v1_20261117/training/2d_P2Q2_knownprefix/o0_v1_all_feasible_s1/value.pt",
+        "value_sha256": "266495bea36fca8fc3d55e2b28cdb65f92dd47636263e7ea690d0593c1ed9967"
+      },
+      "observation_schema": "o0_v1",
+      "physical_phases": {
+        "connector_calls": 1,
+        "transition_planner_calls": 1,
+        "y_cache_hits": 0,
+        "y_calls": 1
+      },
+      "physics_seed": 0,
+      "planner_calls_during_selection": 0,
+      "policy_call_unit": "scored examples (batched forwards counted separately)",
+      "policy_calls": 2,
+      "policy_forward_passes": 2,
+      "protocol": "open_loop",
+      "robot_travel": null,
+      "robot_travel_reference": {
+        "coverage": "PARTIAL_EXECUTION_PREFIX",
+        "definition": "Sum L2 joint-waypoint arc lengths of accepted corrective plans and certified terminal connector; target Y excluded; not actual servo integration travel",
+        "missing_witnesses": [],
+        "observed_successful_step_joint_displacement_lower_bound_rad": 4.522288119029762,
+        "reference_joint_path_rad": 5.464405791605073,
+        "sources": [
+          {
+            "joint_waypoint_length_rad": 5.464405791605073,
+            "path": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_parallel_20261117/test_2d_pool_fragment/0001_c44d632917bfe63ba4c4/witnesses/witnesses/00/00cfb1de8c31e1c74890d941.npz",
+            "sha256": "f42b23698f27f192611c477d80787fd2691fd78a34c91038f7fa2f4663d017ec"
+          }
+        ]
+      },
+      "robot_travel_status": "Actual integration-step arc NOT_RECORDED; certified reference path reported separately",
+      "root_id": "2d-plus2d-srv-w0075-s012",
+      "seed": 1,
+      "selection_physical_counters": {
+        "MCTS_calls": 0,
+        "physical_transition_calls": 0,
+        "simulator_initializations": 0,
+        "teacher_X_calls": 0,
+        "teacher_Y_calls": 0
+      },
+      "selection_trace": [
+        {
+          "cells": [
+            6,
+            47
+          ],
+          "decision": {
+            "best_reloc_score": 1.0,
+            "candidates": [
+              [
+                0,
+                19
+              ],
+              [
+                0,
+                50
+              ],
+              [
+                0,
+                2
+              ],
+              [
+                0,
+                35
+              ],
+              [
+                0,
+                10
+              ],
+              [
+                0,
+                37
+              ],
+              [
+                0,
+                42
+              ],
+              [
+                0,
+                28
+              ],
+              [
+                0,
+                12
+              ],
+              [
+                0,
+                14
+              ],
+              [
+                0,
+                13
+              ],
+              [
+                0,
+                25
+              ],
+              [
+                0,
+                49
+              ],
+              [
+                0,
+                56
+              ],
+              [
+                0,
+                15
+              ],
+              [
+                0,
+                22
+              ]
+            ],
+            "n_candidates": 16,
+            "ranked_candidates": [
+              [
+                0,
+                2
+              ],
+              [
+                0,
+                42
+              ],
+              [
+                0,
+                10
+              ],
+              [
+                0,
+                14
+              ],
+              [
+                0,
+                28
+              ],
+              [
+                0,
+                37
+              ],
+              [
+                0,
+                35
+              ],
+              [
+                0,
+                12
+              ],
+              [
+                0,
+                22
+              ],
+              [
+                0,
+                15
+              ],
+              [
+                0,
+                19
+              ],
+              [
+                0,
+                49
+              ],
+              [
+                0,
+                13
+              ],
+              [
+                0,
+                25
+              ],
+              [
+                0,
+                56
+              ],
+              [
+                0,
+                50
+              ]
+            ],
+            "ranked_scores": [
+              1.0,
+              0.9999998807907104,
+              1.0,
+              1.0,
+              1.0,
+              1.0,
+              0.9999819993972778,
+              0.9955568909645081,
+              0.9896942377090454,
+              0.9822971224784851,
+              0.9486803412437439,
+              0.6981427073478699,
+              0.18625585734844208,
+              0.03733711689710617,
+              2.83871304418426e-05,
+              1.8849803382181562e-05
+            ],
+            "score": 1.0,
+            "selected": [
+              0,
+              2
+            ],
+            "selection_physical_counters": {
+              "MCTS_calls": 0,
+              "physical_transition_calls": 0,
+              "simulator_initializations": 0,
+              "teacher_X_calls": 0,
+              "teacher_Y_calls": 0
+            },
+            "stop_score": 0.00024391818442381918
+          },
+          "is_predicted_edit": false,
+          "moved_mask": [
+            false,
+            false
+          ],
+          "observation_hash": "361dac75c1e0ec9c81c9",
+          "q_visible": false,
+          "remaining_steps": 3
+        },
+        {
+          "cells": [
+            2,
+            47
+          ],
+          "decision": {
+            "candidates": [],
+            "n_candidates": 0,
+            "score": 1.0,
+            "selected": "STOP",
+            "selection_physical_counters": {
+              "MCTS_calls": 0,
+              "physical_transition_calls": 0,
+              "simulator_initializations": 0,
+              "teacher_X_calls": 0,
+              "teacher_Y_calls": 0
+            },
+            "stop_score": 1.0
+          },
+          "is_predicted_edit": true,
+          "moved_mask": [
+            true,
+            false
+          ],
+          "observation_hash": "90a01e0c0f703a5e5323",
+          "q_visible": false,
+          "remaining_steps": 2
+        }
+      ],
+      "seq": [
+        [
+          0,
+          2
+        ]
+      ],
+      "split": "test",
+      "status": "REPAIR",
+      "step_traces": [
+        {
+          "n_candidates": 16,
+          "score": 1.0,
+          "selected": [
+            0,
+            2
+          ],
+          "step": 0,
+          "stop_score": 0.00024
+        },
+        {
+          "n_candidates": 0,
+          "score": 1.0,
+          "selected": "STOP",
+          "step": 1,
+          "stop_score": 1.0
+        }
+      ],
+      "value_calls": 17,
+      "value_forward_passes": 1,
+      "verified": 0,
+      "x": 0,
+      "y": 1,
+      "execution_host": "girish-laptop",
+      "execution_evidence": {
+        "directory": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_parallel_20261117/test_2d/0001_c44d632917bfe63ba4c4",
+        "selection_trace_sha256": null,
+        "journal_sha256": "7761cc06bf527c4046fef1ee8ba58cdb141d63e730fd5ef231bc6f7e5d3b0452",
+        "attempted_relocations": 1,
+        "executed_relocations": 1
+      }
+    },
+    "2d|open_loop|1|SINGLE_QUERY_WALL_LIMIT": {
+      "root_id": "2d-conv-plus2d-srv-w0119-s017",
+      "domain": "2d",
+      "seed": 0,
+      "arm": "O0_P2Q2",
+      "protocol": "open_loop",
+      "K_legacy": "1",
+      "family_id": "source-fba457297786ce48432eb7a0",
+      "job_id": "10127c6aaab1b604e35f",
+      "status": "UNRESOLVED",
+      "verified": null,
+      "x": null,
+      "y": null,
+      "failure_kind": "SINGLE_QUERY_WALL_LIMIT",
+      "evidence": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_parallel_20261117/test_2d_pool_fragment/0003_10127c6aaab1b604e35f",
+      "execution_host": "girish-laptop",
+      "execution_evidence": {
+        "directory": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_parallel_20261117/test_2d/0003_10127c6aaab1b604e35f",
+        "selection_trace_sha256": null,
+        "journal_sha256": "5dac36b3968fdd5d9de561ec75b5de6f799342f8162c333156f68b5e5eec0fcc",
+        "attempted_relocations": 1,
+        "executed_relocations": 1
+      }
+    },
+    "2d|open_loop|1|NO_PLAN_FOUND": {
+      "K_legacy": "1",
+      "adapter_calls": 4,
+      "arm": "O0_P2Q2",
+      "displacement": 15.4477,
+      "domain": "2d",
+      "failed_phase": "connector",
+      "failure_kind": "NO_PLAN_FOUND",
+      "family_id": "source-fba457297786ce48432eb7a0",
+      "independent_verification": true,
+      "job_id": "95b0b2b8c1c5adcdc34a",
+      "latency_ms": 13.13,
+      "m": 3,
+      "masks": {
+        "eval_abstain": false,
+        "eval_noop": false,
+        "eval_repair": true,
+        "eval_task": true,
+        "train_prediction": true
+      },
+      "model_source": {
+        "policy": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/campaigns/E16_v1_20261117/training/2d_P2Q2_knownprefix/o0_v1_all_feasible_s2/policy.pt",
+        "policy_sha256": "3bbda276f74c1c7f0e318d362d34016b5a00e80f604292a9657fe1c619492132",
+        "value": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/campaigns/E16_v1_20261117/training/2d_P2Q2_knownprefix/o0_v1_all_feasible_s2/value.pt",
+        "value_sha256": "d12e9259c949ce517b6c863a2dc87dc4210586ccbe404af06349266999ecc2af"
+      },
+      "observation_schema": "o0_v1",
+      "physical_phases": {
+        "connector_calls": 1,
+        "transition_planner_calls": 3,
+        "y_cache_hits": 0,
+        "y_calls": 1
+      },
+      "physics_seed": 0,
+      "planner_calls_during_selection": 0,
+      "policy_call_unit": "scored examples (batched forwards counted separately)",
+      "policy_calls": 30,
+      "policy_forward_passes": 6,
+      "protocol": "open_loop",
+      "robot_travel": null,
+      "robot_travel_reference": {
+        "coverage": "PARTIAL_EXECUTION_PREFIX",
+        "definition": "Sum L2 joint-waypoint arc lengths of accepted corrective plans and certified terminal connector; target Y excluded; not actual servo integration travel",
+        "missing_witnesses": [],
+        "observed_successful_step_joint_displacement_lower_bound_rad": 5.4574039775433505,
+        "reference_joint_path_rad": 19.338073123727373,
+        "sources": [
+          {
+            "joint_waypoint_length_rad": 11.190557226062381,
+            "path": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_parallel_20261117/test_2d_pool_fragment/0005_95b0b2b8c1c5adcdc34a/witnesses/witnesses/c7/c7f8aa9be0834f67a0d2faa8.npz",
+            "sha256": "5328be5a6ae0a649117a41a3339ac2b18c7be70938e34ee8ce5af9a1faa1866c"
+          },
+          {
+            "joint_waypoint_length_rad": 4.520473915617377,
+            "path": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_parallel_20261117/test_2d_pool_fragment/0005_95b0b2b8c1c5adcdc34a/witnesses/witnesses/19/19271fd91f0b6623e76a434d.npz",
+            "sha256": "10c0a6f922cac77d0c6ec2f218b299b21121af4f65a8e808ca53ff3f889949b0"
+          },
+          {
+            "joint_waypoint_length_rad": 3.627041982047615,
+            "path": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_parallel_20261117/test_2d_pool_fragment/0005_95b0b2b8c1c5adcdc34a/witnesses/witnesses/92/926651e827184818f63290d5.npz",
+            "sha256": "71c1728ab8d0167ebf48b67d376dcb12ea000afb0db047c2348180dd9014eca4"
+          }
+        ]
+      },
+      "robot_travel_status": "Actual integration-step arc NOT_RECORDED; certified reference path reported separately",
+      "root_id": "2d-conv-plus2d-srv-w0119-s017",
+      "seed": 2,
+      "selection_physical_counters": {
+        "MCTS_calls": 0,
+        "physical_transition_calls": 0,
+        "simulator_initializations": 0,
+        "teacher_X_calls": 0,
+        "teacher_Y_calls": 0
+      },
+      "selection_trace": [
+        {
+          "cells": [
+            59,
+            60,
+            20,
+            28,
+            52,
+            46,
+            47,
+            62,
+            54,
+            37,
+            61
+          ],
+          "decision": {
+            "best_reloc_score": 0.6900367140769958,
+            "candidates": [
+              [
+                0,
+                19
+              ],
+              [
+                3,
+                1
+              ],
+              [
+                6,
+                42
+              ],
+              [
+                8,
+                58
+              ],
+              [
+                3,
+                4
+              ],
+              [
+                9,
+                21
+              ],
+              [
+                1,
+                41
+              ],
+              [
+                7,
+                58
+              ],
+              [
+                2,
+                49
+              ],
+              [
+                5,
+                42
+              ],
+              [
+                2,
+                4
+              ],
+              [
+                3,
+                49
+              ],
+              [
+                1,
+                9
+              ],
+              [
+                2,
+                21
+              ],
+              [
+                2,
+                1
+              ],
+              [
+                6,
+                21
+              ]
+            ],
+            "n_candidates": 16,
+            "ranked_candidates": [
+              [
+                6,
+                42
+              ],
+              [
+                3,
+                4
+              ],
+              [
+                2,
+                4
+              ],
+              [
+                5,
+                42
+              ],
+              [
+                3,
+                1
+              ],
+              [
+                1,
+                9
+              ],
+              [
+                2,
+                1
+              ],
+              [
+                0,
+                19
+              ],
+              [
+                1,
+                41
+              ],
+              [
+                7,
+                58
+              ],
+              [
+                8,
+                58
+              ],
+              [
+                3,
+                49
+              ],
+              [
+                2,
+                49
+              ],
+              [
+                9,
+                21
+              ],
+              [
+                6,
+                21
+              ],
+              [
+                2,
+                21
+              ]
+            ],
+            "ranked_scores": [
+              0.6900367140769958,
+              0.5186135172843933,
+              0.4866853654384613,
+              0.23231881856918335,
+              0.036526307463645935,
+              0.036480940878391266,
+              0.03120391257107258,
+              0.013864919543266296,
+              0.004386599641293287,
+              0.0026779465842992067,
+              0.0024980297312140465,
+              0.0020923365373164415,
+              0.0018403331050649285,
+              0.0010394774144515395,
+              0.0009175595478154719,
+              0.0007147527649067342
+            ],
+            "score": 0.6900367140769958,
+            "selected": [
+              6,
+              42
+            ],
+            "selection_physical_counters": {
+              "MCTS_calls": 0,
+              "physical_transition_calls": 0,
+              "simulator_initializations": 0,
+              "teacher_X_calls": 0,
+              "teacher_Y_calls": 0
+            },
+            "stop_score": 0.06612570583820343
+          },
+          "is_predicted_edit": false,
+          "moved_mask": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          "observation_hash": "16d888cb098781fea9d7",
+          "q_visible": false,
+          "remaining_steps": 3
+        },
+        {
+          "cells": [
+            59,
+            60,
+            20,
+            28,
+            52,
+            46,
+            42,
+            62,
+            54,
+            37,
+            61
+          ],
+          "decision": {
+            "best_reloc_score": 0.712472677230835,
+            "candidates": [
+              [
+                1,
+                9
+              ],
+              [
+                5,
+                21
+              ],
+              [
+                7,
+                53
+              ],
+              [
+                7,
+                57
+              ],
+              [
+                0,
+                41
+              ],
+              [
+                0,
+                19
+              ],
+              [
+                0,
+                9
+              ],
+              [
+                3,
+                16
+              ],
+              [
+                4,
+                9
+              ],
+              [
+                8,
+                53
+              ],
+              [
+                2,
+                1
+              ],
+              [
+                8,
+                58
+              ],
+              [
+                9,
+                21
+              ],
+              [
+                9,
+                16
+              ],
+              [
+                3,
+                32
+              ],
+              [
+                7,
+                58
+              ]
+            ],
+            "n_candidates": 16,
+            "ranked_candidates": [
+              [
+                3,
+                32
+              ],
+              [
+                7,
+                53
+              ],
+              [
+                8,
+                53
+              ],
+              [
+                2,
+                1
+              ],
+              [
+                7,
+                57
+              ],
+              [
+                1,
+                9
+              ],
+              [
+                4,
+                9
+              ],
+              [
+                0,
+                9
+              ],
+              [
+                9,
+                16
+              ],
+              [
+                7,
+                58
+              ],
+              [
+                0,
+                19
+              ],
+              [
+                8,
+                58
+              ],
+              [
+                3,
+                16
+              ],
+              [
+                5,
+                21
+              ],
+              [
+                0,
+                41
+              ],
+              [
+                9,
+                21
+              ]
+            ],
+            "ranked_scores": [
+              0.712472677230835,
+              0.632205069065094,
+              0.4925295114517212,
+              0.2210424840450287,
+              0.1449895203113556,
+              0.09196950495243073,
+              0.08131534606218338,
+              0.06836649030447006,
+              0.05420958623290062,
+              0.05156896635890007,
+              0.05055702105164528,
+              0.03587327525019646,
+              0.024054929614067078,
+              0.010275326669216156,
+              0.0095221484079957,
+              0.008021488785743713
+            ],
+            "score": 0.712472677230835,
+            "selected": [
+              3,
+              32
+            ],
+            "selection_physical_counters": {
+              "MCTS_calls": 0,
+              "physical_transition_calls": 0,
+              "simulator_initializations": 0,
+              "teacher_X_calls": 0,
+              "teacher_Y_calls": 0
+            },
+            "stop_score": 0.09429445117712021
+          },
+          "is_predicted_edit": true,
+          "moved_mask": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            true,
+            false,
+            false,
+            false,
+            false
+          ],
+          "observation_hash": "f82a380490cf036e0a39",
+          "q_visible": false,
+          "remaining_steps": 2
+        },
+        {
+          "cells": [
+            59,
+            60,
+            20,
+            32,
+            52,
+            46,
+            42,
+            62,
+            54,
+            37,
+            61
+          ],
+          "decision": {
+            "best_reloc_score": 0.9867972135543823,
+            "candidates": [
+              [
+                2,
+                12
+              ],
+              [
+                5,
+                21
+              ],
+              [
+                4,
+                35
+              ],
+              [
+                7,
+                53
+              ],
+              [
+                9,
+                16
+              ],
+              [
+                9,
+                51
+              ],
+              [
+                0,
+                7
+              ],
+              [
+                4,
+                2
+              ],
+              [
+                8,
+                57
+              ],
+              [
+                0,
+                9
+              ],
+              [
+                8,
+                53
+              ],
+              [
+                5,
+                0
+              ],
+              [
+                4,
+                5
+              ],
+              [
+                1,
+                9
+              ],
+              [
+                2,
+                31
+              ],
+              [
+                0,
+                15
+              ]
+            ],
+            "n_candidates": 16,
+            "ranked_candidates": [
+              [
+                4,
+                2
+              ],
+              [
+                7,
+                53
+              ],
+              [
+                8,
+                53
+              ],
+              [
+                2,
+                31
+              ],
+              [
+                8,
+                57
+              ],
+              [
+                2,
+                12
+              ],
+              [
+                1,
+                9
+              ],
+              [
+                9,
+                16
+              ],
+              [
+                4,
+                5
+              ],
+              [
+                0,
+                9
+              ],
+              [
+                0,
+                15
+              ],
+              [
+                4,
+                35
+              ],
+              [
+                0,
+                7
+              ],
+              [
+                5,
+                21
+              ],
+              [
+                5,
+                0
+              ],
+              [
+                9,
+                51
+              ]
+            ],
+            "ranked_scores": [
+              0.9867972135543823,
+              0.9717475771903992,
+              0.9459663033485413,
+              0.37782731652259827,
+              0.34701961278915405,
+              0.22085145115852356,
+              0.1615690290927887,
+              0.140227809548378,
+              0.13140681385993958,
+              0.09088701754808426,
+              0.09059885144233704,
+              0.06288482248783112,
+              0.06066463142633438,
+              0.057923849672079086,
+              0.03925502672791481,
+              0.01675957813858986
+            ],
+            "score": 0.9867972135543823,
+            "selected": [
+              4,
+              2
+            ],
+            "selection_physical_counters": {
+              "MCTS_calls": 0,
+              "physical_transition_calls": 0,
+              "simulator_initializations": 0,
+              "teacher_X_calls": 0,
+              "teacher_Y_calls": 0
+            },
+            "stop_score": 0.08654001355171204
+          },
+          "is_predicted_edit": true,
+          "moved_mask": [
+            false,
+            false,
+            false,
+            true,
+            false,
+            false,
+            true,
+            false,
+            false,
+            false,
+            false
+          ],
+          "observation_hash": "e133e56b18f3e2dc66d5",
+          "q_visible": false,
+          "remaining_steps": 1
+        }
+      ],
+      "seq": [
+        [
+          6,
+          42
+        ],
+        [
+          3,
+          32
+        ],
+        [
+          4,
+          2
+        ]
+      ],
+      "split": "test",
+      "status": "REPAIR",
+      "step_traces": [
+        {
+          "n_candidates": 16,
+          "score": 0.69004,
+          "selected": [
+            6,
+            42
+          ],
+          "step": 0,
+          "stop_score": 0.06613
+        },
+        {
+          "n_candidates": 16,
+          "score": 0.71247,
+          "selected": [
+            3,
+            32
+          ],
+          "step": 1,
+          "stop_score": 0.09429
+        },
+        {
+          "n_candidates": 16,
+          "score": 0.9868,
+          "selected": [
+            4,
+            2
+          ],
+          "step": 2,
+          "stop_score": 0.08654
+        }
+      ],
+      "value_calls": 51,
+      "value_forward_passes": 3,
+      "verified": 0,
+      "x": 0,
+      "y": 1,
+      "execution_host": "girish-laptop",
+      "execution_evidence": {
+        "directory": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_parallel_20261117/test_2d/0005_95b0b2b8c1c5adcdc34a",
+        "selection_trace_sha256": null,
+        "journal_sha256": "fa4758b8cd3a0c12f35d66553e1524be9503f6d2aabf170ac1558ae2e3f31bfe",
+        "attempted_relocations": 3,
+        "executed_relocations": 3
+      }
+    },
+    "2d|open_loop|2|CERTIFIED": {
+      "K_legacy": "2",
+      "adapter_calls": 2,
+      "arm": "O0_P2Q2",
+      "displacement": 6.3246,
+      "domain": "2d",
+      "failed_phase": "target",
+      "failure_kind": "CERTIFIED",
+      "family_id": "source-76e9f4d0a4778ee73e1985f3",
+      "independent_verification": true,
+      "job_id": "6e17717a75a6684b1a1a",
+      "latency_ms": 8.553,
+      "m": 1,
+      "masks": {
+        "eval_abstain": false,
+        "eval_noop": false,
+        "eval_repair": true,
+        "eval_task": true,
+        "train_prediction": true
+      },
+      "model_source": {
+        "policy": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/campaigns/E16_v1_20261117/training/2d_P2Q2_knownprefix/o0_v1_all_feasible_s0/policy.pt",
+        "policy_sha256": "2d3e2914c5cba9ff90e938203580017affcb5046a06ae1302b2615331972b280",
+        "value": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/campaigns/E16_v1_20261117/training/2d_P2Q2_knownprefix/o0_v1_all_feasible_s0/value.pt",
+        "value_sha256": "590e9dd916415426d8007825c56fcd978783a1045646437a8b54efbd2892a759"
+      },
+      "observation_schema": "o0_v1",
+      "physical_phases": {
+        "connector_calls": 1,
+        "transition_planner_calls": 1,
+        "y_cache_hits": 0,
+        "y_calls": 1
+      },
+      "physics_seed": 0,
+      "planner_calls_during_selection": 0,
+      "policy_call_unit": "scored examples (batched forwards counted separately)",
+      "policy_calls": 19,
+      "policy_forward_passes": 4,
+      "protocol": "open_loop",
+      "robot_travel": null,
+      "robot_travel_reference": {
+        "coverage": "ACCEPTED_CORRECTIVE_PREFIX_AND_CONNECTOR",
+        "definition": "Sum L2 joint-waypoint arc lengths of accepted corrective plans and certified terminal connector; target Y excluded; not actual servo integration travel",
+        "missing_witnesses": [],
+        "observed_successful_step_joint_displacement_lower_bound_rad": 4.4569498332814925,
+        "reference_joint_path_rad": 16.933146252228305,
+        "sources": [
+          {
+            "joint_waypoint_length_rad": 10.42864907425983,
+            "path": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_parallel_20261117/test_2d_pool_fragment/0006_6e17717a75a6684b1a1a/witnesses/witnesses/7f/7f802f88ba26edfae9496f3f.npz",
+            "sha256": "89dad6fe89d925f58b0dd2a952769ee1268e3569863856fb5b56186b7390225e"
+          },
+          {
+            "joint_waypoint_length_rad": 6.504497177968475,
+            "path": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_parallel_20261117/test_2d_pool_fragment/0006_6e17717a75a6684b1a1a/witnesses/witnesses/82/82fe4ad5d09c07709a5944d8.npz",
+            "sha256": "cafda2b3daf5a867be1deaa19e41849191b3f3f5ee0b76436296cb4e34fd7e36"
+          }
+        ]
+      },
+      "robot_travel_status": "Actual integration-step arc NOT_RECORDED; certified reference path reported separately",
+      "root_id": "2d-plus2d-w0185-s017",
+      "seed": 0,
+      "selection_physical_counters": {
+        "MCTS_calls": 0,
+        "physical_transition_calls": 0,
+        "simulator_initializations": 0,
+        "teacher_X_calls": 0,
+        "teacher_Y_calls": 0
+      },
+      "selection_trace": [
+        {
+          "cells": [
+            23,
+            38,
+            14,
+            6,
+            20,
+            13,
+            7,
+            5,
+            4,
+            15
+          ],
+          "decision": {
+            "best_reloc_score": 0.10737795382738113,
+            "candidates": [
+              [
+                7,
+                26
+              ],
+              [
+                6,
+                26
+              ],
+              [
+                6,
+                12
+              ],
+              [
+                0,
+                1
+              ],
+              [
+                3,
+                12
+              ],
+              [
+                0,
+                30
+              ],
+              [
+                0,
+                16
+              ],
+              [
+                4,
+                33
+              ],
+              [
+                1,
+                16
+              ],
+              [
+                6,
+                19
+              ],
+              [
+                8,
+                12
+              ],
+              [
+                7,
+                12
+              ],
+              [
+                5,
+                26
+              ],
+              [
+                5,
+                33
+              ],
+              [
+                6,
+                42
+              ],
+              [
+                2,
+                26
+              ]
+            ],
+            "n_candidates": 16,
+            "ranked_candidates": [
+              [
+                0,
+                1
+              ],
+              [
+                6,
+                42
+              ],
+              [
+                5,
+                26
+              ],
+              [
+                7,
+                26
+              ],
+              [
+                2,
+                26
+              ],
+              [
+                6,
+                26
+              ],
+              [
+                0,
+                30
+              ],
+              [
+                5,
+                33
+              ],
+              [
+                4,
+                33
+              ],
+              [
+                8,
+                12
+              ],
+              [
+                7,
+                12
+              ],
+              [
+                3,
+                12
+              ],
+              [
+                1,
+                16
+              ],
+              [
+                6,
+                12
+              ],
+              [
+                0,
+                16
+              ],
+              [
+                6,
+                19
+              ]
+            ],
+            "ranked_scores": [
+              0.10737795382738113,
+              0.07282155007123947,
+              0.00966696534305811,
+              0.008406591601669788,
+              0.008057851344347,
+              0.0075847855769097805,
+              0.003194148186594248,
+              0.001549120876006782,
+              0.001541861449368298,
+              0.0005944731528870761,
+              0.0005755407619290054,
+              0.00041666245670057833,
+              0.0003845139581244439,
+              0.00035778575693257153,
+              0.00020934945496264845,
+              3.797186946030706e-05
+            ],
+            "score": 0.10737795382738113,
+            "selected": [
+              0,
+              1
+            ],
+            "selection_physical_counters": {
+              "MCTS_calls": 0,
+              "physical_transition_calls": 0,
+              "simulator_initializations": 0,
+              "teacher_X_calls": 0,
+              "teacher_Y_calls": 0
+            },
+            "stop_score": 2.216704342572484e-05
+          },
+          "is_predicted_edit": false,
+          "moved_mask": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          "observation_hash": "52a60af0cd623f687eec",
+          "q_visible": false,
+          "remaining_steps": 3
+        },
+        {
+          "cells": [
+            1,
+            38,
+            14,
+            6,
+            20,
+            13,
+            7,
+            5,
+            4,
+            15
+          ],
+          "decision": {
+            "best_reloc_score": 1.0,
+            "candidates": [
+              [
+                3,
+                12
+              ],
+              [
+                6,
+                49
+              ],
+              [
+                5,
+                12
+              ],
+              [
+                2,
+                37
+              ],
+              [
+                7,
+                12
+              ],
+              [
+                6,
+                25
+              ],
+              [
+                1,
+                16
+              ],
+              [
+                4,
+                12
+              ],
+              [
+                6,
+                12
+              ],
+              [
+                6,
+                42
+              ],
+              [
+                8,
+                12
+              ],
+              [
+                4,
+                59
+              ],
+              [
+                6,
+                2
+              ],
+              [
+                2,
+                12
+              ],
+              [
+                6,
+                26
+              ],
+              [
+                2,
+                26
+              ]
+            ],
+            "n_candidates": 16,
+            "ranked_candidates": [
+              [
+                6,
+                12
+              ],
+              [
+                4,
+                12
+              ],
+              [
+                8,
+                12
+              ],
+              [
+                5,
+                12
+              ],
+              [
+                3,
+                12
+              ],
+              [
+                7,
+                12
+              ],
+              [
+                6,
+                42
+              ],
+              [
+                4,
+                59
+              ],
+              [
+                2,
+                12
+              ],
+              [
+                6,
+                2
+              ],
+              [
+                2,
+                37
+              ],
+              [
+                6,
+                26
+              ],
+              [
+                2,
+                26
+              ],
+              [
+                1,
+                16
+              ],
+              [
+                6,
+                49
+              ],
+              [
+                6,
+                25
+              ]
+            ],
+            "ranked_scores": [
+              1.0,
+              1.0,
+              1.0,
+              1.0,
+              1.0,
+              1.0,
+              1.0,
+              1.0,
+              1.0,
+              1.0,
+              1.0,
+              0.9999984502792358,
+              0.9999980926513672,
+              0.9999645948410034,
+              0.9889167547225952,
+              0.9061927199363708
+            ],
+            "score": 0.9943700432777405,
+            "selected": "STOP",
+            "selection_physical_counters": {
+              "MCTS_calls": 0,
+              "physical_transition_calls": 0,
+              "simulator_initializations": 0,
+              "teacher_X_calls": 0,
+              "teacher_Y_calls": 0
+            },
+            "stop_score": 0.9943700432777405
+          },
+          "is_predicted_edit": true,
+          "moved_mask": [
+            true,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          "observation_hash": "fc30c5a17addb3b0ffd2",
+          "q_visible": false,
+          "remaining_steps": 2
+        }
+      ],
+      "seq": [
+        [
+          0,
+          1
+        ]
+      ],
+      "split": "test",
+      "status": "REPAIR",
+      "step_traces": [
+        {
+          "n_candidates": 16,
+          "score": 0.10738,
+          "selected": [
+            0,
+            1
+          ],
+          "step": 0,
+          "stop_score": 2e-05
+        },
+        {
+          "n_candidates": 16,
+          "score": 0.99437,
+          "selected": "STOP",
+          "step": 1,
+          "stop_score": 0.99437
+        }
+      ],
+      "value_calls": 34,
+      "value_forward_passes": 2,
+      "verified": 0,
+      "x": 1,
+      "y": 0,
+      "execution_host": "girish-laptop",
+      "execution_evidence": {
+        "directory": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_parallel_20261117/test_2d/0006_6e17717a75a6684b1a1a",
+        "selection_trace_sha256": null,
+        "journal_sha256": "0721547ce146e95aa60592d6449b25527cb23fe90946f1ec394ce7c20f276c16",
+        "attempted_relocations": 1,
+        "executed_relocations": 1
+      }
+    },
+    "2d|open_loop|3|NO_PLAN_FOUND": {
+      "K_legacy": "3",
+      "adapter_calls": 1,
+      "arm": "O0_P2Q2",
+      "displacement": 0.0,
+      "domain": "2d",
+      "failed_phase": "target",
+      "failure_kind": "NO_PLAN_FOUND",
+      "family_id": "source-de3dafaca53a7a3c4dbfda59",
+      "independent_verification": true,
+      "job_id": "2cf337a6a3198d3135fe",
+      "latency_ms": 5.043,
+      "m": 0,
+      "masks": {
+        "eval_abstain": false,
+        "eval_noop": false,
+        "eval_repair": true,
+        "eval_task": true,
+        "train_prediction": true
+      },
+      "model_source": {
+        "policy": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/campaigns/E16_v1_20261117/training/2d_P2Q2_knownprefix/o0_v1_all_feasible_s0/policy.pt",
+        "policy_sha256": "2d3e2914c5cba9ff90e938203580017affcb5046a06ae1302b2615331972b280",
+        "value": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/campaigns/E16_v1_20261117/training/2d_P2Q2_knownprefix/o0_v1_all_feasible_s0/value.pt",
+        "value_sha256": "590e9dd916415426d8007825c56fcd978783a1045646437a8b54efbd2892a759"
+      },
+      "observation_schema": "o0_v1",
+      "physical_phases": {
+        "connector_calls": 0,
+        "transition_planner_calls": 0,
+        "y_cache_hits": 0,
+        "y_calls": 1
+      },
+      "physics_seed": 0,
+      "planner_calls_during_selection": 0,
+      "policy_call_unit": "scored examples (batched forwards counted separately)",
+      "policy_calls": 15,
+      "policy_forward_passes": 2,
+      "protocol": "open_loop",
+      "robot_travel": null,
+      "robot_travel_reference": {
+        "coverage": "ACCEPTED_CORRECTIVE_PREFIX_AND_CONNECTOR",
+        "definition": "Sum L2 joint-waypoint arc lengths of accepted corrective plans and certified terminal connector; target Y excluded; not actual servo integration travel",
+        "missing_witnesses": [],
+        "observed_successful_step_joint_displacement_lower_bound_rad": 0.0,
+        "reference_joint_path_rad": 0,
+        "sources": []
+      },
+      "robot_travel_status": "Actual integration-step arc NOT_RECORDED; certified reference path reported separately",
+      "root_id": "2d-plus2d-srv-w0245-s022",
+      "seed": 0,
+      "selection_physical_counters": {
+        "MCTS_calls": 0,
+        "physical_transition_calls": 0,
+        "simulator_initializations": 0,
+        "teacher_X_calls": 0,
+        "teacher_Y_calls": 0
+      },
+      "selection_trace": [
+        {
+          "cells": [
+            6,
+            12,
+            31,
+            36,
+            46,
+            38,
+            62,
+            47,
+            28,
+            29,
+            44,
+            37,
+            55,
+            63,
+            60
+          ],
+          "decision": {
+            "best_reloc_score": 0.9999995231628418,
+            "candidates": [
+              [
+                3,
+                24
+              ],
+              [
+                1,
+                50
+              ],
+              [
+                2,
+                23
+              ],
+              [
+                13,
+                59
+              ],
+              [
+                12,
+                59
+              ],
+              [
+                7,
+                45
+              ],
+              [
+                4,
+                61
+              ],
+              [
+                0,
+                50
+              ],
+              [
+                9,
+                23
+              ],
+              [
+                8,
+                24
+              ],
+              [
+                0,
+                35
+              ],
+              [
+                7,
+                59
+              ],
+              [
+                5,
+                30
+              ],
+              [
+                5,
+                21
+              ],
+              [
+                6,
+                41
+              ],
+              [
+                12,
+                61
+              ]
+            ],
+            "n_candidates": 16,
+            "ranked_candidates": [
+              [
+                2,
+                23
+              ],
+              [
+                7,
+                45
+              ],
+              [
+                12,
+                59
+              ],
+              [
+                13,
+                59
+              ],
+              [
+                7,
+                59
+              ],
+              [
+                4,
+                61
+              ],
+              [
+                5,
+                30
+              ],
+              [
+                0,
+                35
+              ],
+              [
+                12,
+                61
+              ],
+              [
+                9,
+                23
+              ],
+              [
+                8,
+                24
+              ],
+              [
+                3,
+                24
+              ],
+              [
+                6,
+                41
+              ],
+              [
+                5,
+                21
+              ],
+              [
+                1,
+                50
+              ],
+              [
+                0,
+                50
+              ]
+            ],
+            "ranked_scores": [
+              0.9999995231628418,
+              1.0,
+              1.0,
+              1.0,
+              1.0,
+              1.0,
+              1.0,
+              1.0,
+              1.0,
+              0.9999978542327881,
+              0.9999969005584717,
+              0.9999973773956299,
+              0.999982476234436,
+              0.9998089671134949,
+              0.8328663110733032,
+              0.3028600215911865
+            ],
+            "score": 0.9998358488082886,
+            "selected": "STOP",
+            "selection_physical_counters": {
+              "MCTS_calls": 0,
+              "physical_transition_calls": 0,
+              "simulator_initializations": 0,
+              "teacher_X_calls": 0,
+              "teacher_Y_calls": 0
+            },
+            "stop_score": 0.9998358488082886
+          },
+          "is_predicted_edit": false,
+          "moved_mask": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          "observation_hash": "5f4aeb1c19cb82e39e7c",
+          "q_visible": false,
+          "remaining_steps": 3
+        }
+      ],
+      "seq": [],
+      "split": "test",
+      "status": "NOOP",
+      "step_traces": [
+        {
+          "n_candidates": 16,
+          "score": 0.99984,
+          "selected": "STOP",
+          "step": 0,
+          "stop_score": 0.99984
+        }
+      ],
+      "value_calls": 17,
+      "value_forward_passes": 1,
+      "verified": 0,
+      "x": 1,
+      "y": 0,
+      "execution_host": "girish-laptop",
+      "execution_evidence": {
+        "directory": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_parallel_20261117/test_2d/0009_2cf337a6a3198d3135fe",
+        "selection_trace_sha256": null,
+        "journal_sha256": "4e38d5454bccd884cddae7a8182f26718d3517cb8cc19b295f0263edd858c6ae",
+        "attempted_relocations": 0,
+        "executed_relocations": 0
+      }
+    },
+    "2d|open_loop|NONE|CERTIFIED": {
+      "K_legacy": "NONE",
+      "adapter_calls": 3,
+      "arm": "O0_P2Q2",
+      "displacement": 6.0,
+      "domain": "2d",
+      "failed_phase": "relocation:1",
+      "failure_kind": "CERTIFIED",
+      "family_id": "source-df638665e158e4fe5be9b70e",
+      "independent_verification": true,
+      "job_id": "18c2e6b0b9870610e0e6",
+      "latency_ms": 16.484,
+      "m": 2,
+      "masks": {
+        "eval_abstain": true,
+        "eval_noop": false,
+        "eval_repair": false,
+        "eval_task": false,
+        "train_prediction": true
+      },
+      "model_source": {
+        "policy": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/campaigns/E16_v1_20261117/training/2d_P2Q2_knownprefix/o0_v1_all_feasible_s0/policy.pt",
+        "policy_sha256": "2d3e2914c5cba9ff90e938203580017affcb5046a06ae1302b2615331972b280",
+        "value": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/campaigns/E16_v1_20261117/training/2d_P2Q2_knownprefix/o0_v1_all_feasible_s0/value.pt",
+        "value_sha256": "590e9dd916415426d8007825c56fcd978783a1045646437a8b54efbd2892a759"
+      },
+      "observation_schema": "o0_v1",
+      "physical_phases": {
+        "connector_calls": 0,
+        "transition_planner_calls": 2,
+        "y_cache_hits": 0,
+        "y_calls": 1
+      },
+      "physics_seed": 0,
+      "planner_calls_during_selection": 0,
+      "policy_call_unit": "scored examples (batched forwards counted separately)",
+      "policy_calls": 54,
+      "policy_forward_passes": 6,
+      "protocol": "open_loop",
+      "robot_travel": null,
+      "robot_travel_reference": {
+        "coverage": "PARTIAL_EXECUTION_PREFIX",
+        "definition": "Sum L2 joint-waypoint arc lengths of accepted corrective plans and certified terminal connector; target Y excluded; not actual servo integration travel",
+        "missing_witnesses": [],
+        "observed_successful_step_joint_displacement_lower_bound_rad": 2.2149136966913625,
+        "reference_joint_path_rad": 4.821394574013564,
+        "sources": [
+          {
+            "joint_waypoint_length_rad": 4.821394574013564,
+            "path": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_parallel_20261117/test_2d_pool_fragment/0012_18c2e6b0b9870610e0e6/witnesses/witnesses/48/4849d315030f2e41b8e59d63.npz",
+            "sha256": "e8e7f2e767271a77967de38135d51eb3249c4d144de264d910c8fbc1321f4b37"
+          }
+        ]
+      },
+      "robot_travel_status": "Actual integration-step arc NOT_RECORDED; certified reference path reported separately",
+      "root_id": "2d-plus2d-srv-w0242-s023",
+      "seed": 0,
+      "selection_physical_counters": {
+        "MCTS_calls": 0,
+        "physical_transition_calls": 0,
+        "simulator_initializations": 0,
+        "teacher_X_calls": 0,
+        "teacher_Y_calls": 0
+      },
+      "selection_trace": [
+        {
+          "cells": [
+            29,
+            54,
+            36,
+            37,
+            44,
+            22,
+            21,
+            46,
+            20,
+            47,
+            62,
+            52,
+            28,
+            59,
+            60,
+            63,
+            14,
+            31,
+            30
+          ],
+          "decision": {
+            "best_reloc_score": 0.023668183013796806,
+            "candidates": [
+              [
+                8,
+                4
+              ],
+              [
+                0,
+                49
+              ],
+              [
+                14,
+                40
+              ],
+              [
+                5,
+                42
+              ],
+              [
+                12,
+                49
+              ],
+              [
+                4,
+                49
+              ],
+              [
+                2,
+                49
+              ],
+              [
+                16,
+                42
+              ],
+              [
+                1,
+                58
+              ],
+              [
+                11,
+                40
+              ],
+              [
+                3,
+                49
+              ],
+              [
+                10,
+                58
+              ],
+              [
+                3,
+                58
+              ],
+              [
+                13,
+                40
+              ],
+              [
+                6,
+                49
+              ],
+              [
+                13,
+                19
+              ]
+            ],
+            "n_candidates": 16,
+            "ranked_candidates": [
+              [
+                8,
+                4
+              ],
+              [
+                5,
+                42
+              ],
+              [
+                16,
+                42
+              ],
+              [
+                14,
+                40
+              ],
+              [
+                11,
+                40
+              ],
+              [
+                13,
+                40
+              ],
+              [
+                4,
+                49
+              ],
+              [
+                0,
+                49
+              ],
+              [
+                2,
+                49
+              ],
+              [
+                3,
+                49
+              ],
+              [
+                6,
+                49
+              ],
+              [
+                12,
+                49
+              ],
+              [
+                10,
+                58
+              ],
+              [
+                13,
+                19
+              ],
+              [
+                3,
+                58
+              ],
+              [
+                1,
+                58
+              ]
+            ],
+            "ranked_scores": [
+              0.023668183013796806,
+              0.0005160268046893179,
+              0.0004607965238392353,
+              0.00011150646605528891,
+              9.561784827383235e-05,
+              6.813696381868795e-05,
+              6.764694717276143e-06,
+              5.615007012238493e-06,
+              6.0455736274889205e-06,
+              6.305638180492679e-06,
+              4.948009063809877e-06,
+              5.427656560641481e-06,
+              4.7947924031177536e-06,
+              4.787814759765752e-06,
+              4.065054781676736e-06,
+              4.356672434369102e-06
+            ],
+            "score": 0.023668183013796806,
+            "selected": [
+              8,
+              4
+            ],
+            "selection_physical_counters": {
+              "MCTS_calls": 0,
+              "physical_transition_calls": 0,
+              "simulator_initializations": 0,
+              "teacher_X_calls": 0,
+              "teacher_Y_calls": 0
+            },
+            "stop_score": 5.831675480294507e-07
+          },
+          "is_predicted_edit": false,
+          "moved_mask": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          "observation_hash": "bee2f23b6f8c5506f6e6",
+          "q_visible": false,
+          "remaining_steps": 3
+        },
+        {
+          "cells": [
+            29,
+            54,
+            36,
+            37,
+            44,
+            22,
+            21,
+            46,
+            4,
+            47,
+            62,
+            52,
+            28,
+            59,
+            60,
+            63,
+            14,
+            31,
+            30
+          ],
+          "decision": {
+            "best_reloc_score": 0.3833107352256775,
+            "candidates": [
+              [
+                0,
+                49
+              ],
+              [
+                5,
+                42
+              ],
+              [
+                4,
+                40
+              ],
+              [
+                16,
+                42
+              ],
+              [
+                5,
+                18
+              ],
+              [
+                14,
+                40
+              ],
+              [
+                10,
+                58
+              ],
+              [
+                6,
+                49
+              ],
+              [
+                2,
+                49
+              ],
+              [
+                3,
+                58
+              ],
+              [
+                1,
+                58
+              ],
+              [
+                11,
+                40
+              ],
+              [
+                4,
+                35
+              ],
+              [
+                5,
+                49
+              ],
+              [
+                4,
+                58
+              ],
+              [
+                11,
+                58
+              ]
+            ],
+            "n_candidates": 16,
+            "ranked_candidates": [
+              [
+                5,
+                18
+              ],
+              [
+                16,
+                42
+              ],
+              [
+                5,
+                42
+              ],
+              [
+                4,
+                35
+              ],
+              [
+                14,
+                40
+              ],
+              [
+                11,
+                40
+              ],
+              [
+                4,
+                40
+              ],
+              [
+                2,
+                49
+              ],
+              [
+                11,
+                58
+              ],
+              [
+                0,
+                49
+              ],
+              [
+                4,
+                58
+              ],
+              [
+                6,
+                49
+              ],
+              [
+                3,
+                58
+              ],
+              [
+                10,
+                58
+              ],
+              [
+                1,
+                58
+              ],
+              [
+                5,
+                49
+              ]
+            ],
+            "ranked_scores": [
+              0.3833107352256775,
+              0.15241241455078125,
+              0.14483295381069183,
+              0.023940036073327065,
+              0.002698548138141632,
+              0.0023714585695415735,
+              0.0021005794405937195,
+              0.0001928577694343403,
+              0.00016512794536538422,
+              0.00016111998411361128,
+              0.00014925077266525477,
+              0.00014206604100763798,
+              0.00012888120545540005,
+              0.0001089854195015505,
+              0.00010238300455966964,
+              8.885220449883491e-05
+            ],
+            "score": 0.3833107352256775,
+            "selected": [
+              5,
+              18
+            ],
+            "selection_physical_counters": {
+              "MCTS_calls": 0,
+              "physical_transition_calls": 0,
+              "simulator_initializations": 0,
+              "teacher_X_calls": 0,
+              "teacher_Y_calls": 0
+            },
+            "stop_score": 1.7608703274163418e-05
+          },
+          "is_predicted_edit": true,
+          "moved_mask": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            true,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          "observation_hash": "24a2cc3d228ca4dc8d65",
+          "q_visible": false,
+          "remaining_steps": 2
+        },
+        {
+          "cells": [
+            29,
+            54,
+            36,
+            37,
+            44,
+            18,
+            21,
+            46,
+            4,
+            47,
+            62,
+            52,
+            28,
+            59,
+            60,
+            63,
+            14,
+            31,
+            30
+          ],
+          "decision": {
+            "best_reloc_score": 1.0,
+            "candidates": [
+              [
+                14,
+                40
+              ],
+              [
+                7,
+                61
+              ],
+              [
+                1,
+                45
+              ],
+              [
+                16,
+                15
+              ],
+              [
+                7,
+                45
+              ],
+              [
+                6,
+                1
+              ],
+              [
+                0,
+                57
+              ],
+              [
+                2,
+                51
+              ],
+              [
+                12,
+                12
+              ],
+              [
+                2,
+                5
+              ],
+              [
+                4,
+                16
+              ],
+              [
+                13,
+                40
+              ],
+              [
+                0,
+                49
+              ],
+              [
+                10,
+                40
+              ],
+              [
+                0,
+                43
+              ],
+              [
+                9,
+                45
+              ]
+            ],
+            "n_candidates": 16,
+            "ranked_candidates": [
+              [
+                16,
+                15
+              ],
+              [
+                7,
+                45
+              ],
+              [
+                14,
+                40
+              ],
+              [
+                13,
+                40
+              ],
+              [
+                6,
+                1
+              ],
+              [
+                2,
+                5
+              ],
+              [
+                7,
+                61
+              ],
+              [
+                1,
+                45
+              ],
+              [
+                10,
+                40
+              ],
+              [
+                0,
+                49
+              ],
+              [
+                9,
+                45
+              ],
+              [
+                2,
+                51
+              ],
+              [
+                0,
+                57
+              ],
+              [
+                4,
+                16
+              ],
+              [
+                0,
+                43
+              ],
+              [
+                12,
+                12
+              ]
+            ],
+            "ranked_scores": [
+              1.0,
+              1.0,
+              1.0,
+              0.9999998807907104,
+              1.0,
+              1.0,
+              1.0,
+              1.0,
+              1.0,
+              0.9999998807907104,
+              1.0,
+              1.0,
+              1.0,
+              1.0,
+              1.0,
+              1.0
+            ],
+            "score": 0.9999998807907104,
+            "selected": "STOP",
+            "selection_physical_counters": {
+              "MCTS_calls": 0,
+              "physical_transition_calls": 0,
+              "simulator_initializations": 0,
+              "teacher_X_calls": 0,
+              "teacher_Y_calls": 0
+            },
+            "stop_score": 0.9999998807907104
+          },
+          "is_predicted_edit": true,
+          "moved_mask": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            true,
+            false,
+            false,
+            true,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          "observation_hash": "f02e21f8582e1fa1ddd4",
+          "q_visible": false,
+          "remaining_steps": 1
+        }
+      ],
+      "seq": [
+        [
+          8,
+          4
+        ],
+        [
+          5,
+          18
+        ]
+      ],
+      "split": "test",
+      "status": "REPAIR",
+      "step_traces": [
+        {
+          "n_candidates": 16,
+          "score": 0.02367,
+          "selected": [
+            8,
+            4
+          ],
+          "step": 0,
+          "stop_score": 0.0
+        },
+        {
+          "n_candidates": 16,
+          "score": 0.38331,
+          "selected": [
+            5,
+            18
+          ],
+          "step": 1,
+          "stop_score": 2e-05
+        },
+        {
+          "n_candidates": 16,
+          "score": 1.0,
+          "selected": "STOP",
+          "step": 2,
+          "stop_score": 1.0
+        }
+      ],
+      "value_calls": 51,
+      "value_forward_passes": 3,
+      "verified": 0,
+      "x": 0,
+      "y": 0,
+      "execution_host": "girish-laptop",
+      "execution_evidence": {
+        "directory": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_parallel_20261117/test_2d/0012_18c2e6b0b9870610e0e6",
+        "selection_trace_sha256": null,
+        "journal_sha256": "b118c9a3bc5507a5dbccd7d0ca646a03de79860dbd3caddaade58d047ff481ac",
+        "attempted_relocations": 2,
+        "executed_relocations": 1
+      }
+    },
+    "2d|open_loop|2|SINGLE_QUERY_WALL_LIMIT": {
+      "root_id": "2d-plus2d-w0274-s001",
+      "domain": "2d",
+      "seed": 0,
+      "arm": "O0_P2Q2",
+      "protocol": "open_loop",
+      "K_legacy": "2",
+      "family_id": "source-12a065679d854727d8e76d5d",
+      "job_id": "116ecb8dbf7fb5b42110",
+      "status": "UNRESOLVED",
+      "verified": null,
+      "x": null,
+      "y": null,
+      "failure_kind": "SINGLE_QUERY_WALL_LIMIT",
+      "evidence": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_parallel_20261117/test_2d_pool_fragment/0021_116ecb8dbf7fb5b42110",
+      "execution_host": "girish-laptop",
+      "execution_evidence": {
+        "directory": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_parallel_20261117/test_2d/0021_116ecb8dbf7fb5b42110",
+        "selection_trace_sha256": null,
+        "journal_sha256": "3e033576858ff635ed9ecfd7787845f7b143b2db986e245bc8cc286e0bd479b3",
+        "attempted_relocations": 1,
+        "executed_relocations": 1
+      }
+    },
+    "2d|open_loop|3|CERTIFIED": {
+      "K_legacy": "3",
+      "adapter_calls": 4,
+      "arm": "O0_P2Q2",
+      "displacement": 8.3592,
+      "domain": "2d",
+      "failed_phase": "target",
+      "failure_kind": "CERTIFIED",
+      "family_id": "source-f39f2f9f4b42142543f8a157",
+      "independent_verification": true,
+      "job_id": "216097ce9fd72424890f",
+      "latency_ms": 13.637,
+      "m": 3,
+      "masks": {
+        "eval_abstain": false,
+        "eval_noop": false,
+        "eval_repair": true,
+        "eval_task": true,
+        "train_prediction": true
+      },
+      "model_source": {
+        "policy": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/campaigns/E16_v1_20261117/training/2d_P2Q2_knownprefix/o0_v1_all_feasible_s0/policy.pt",
+        "policy_sha256": "2d3e2914c5cba9ff90e938203580017affcb5046a06ae1302b2615331972b280",
+        "value": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/campaigns/E16_v1_20261117/training/2d_P2Q2_knownprefix/o0_v1_all_feasible_s0/value.pt",
+        "value_sha256": "590e9dd916415426d8007825c56fcd978783a1045646437a8b54efbd2892a759"
+      },
+      "observation_schema": "o0_v1",
+      "physical_phases": {
+        "connector_calls": 1,
+        "transition_planner_calls": 3,
+        "y_cache_hits": 0,
+        "y_calls": 1
+      },
+      "physics_seed": 0,
+      "planner_calls_during_selection": 0,
+      "policy_call_unit": "scored examples (batched forwards counted separately)",
+      "policy_calls": 36,
+      "policy_forward_passes": 6,
+      "protocol": "open_loop",
+      "robot_travel": null,
+      "robot_travel_reference": {
+        "coverage": "ACCEPTED_CORRECTIVE_PREFIX_AND_CONNECTOR",
+        "definition": "Sum L2 joint-waypoint arc lengths of accepted corrective plans and certified terminal connector; target Y excluded; not actual servo integration travel",
+        "missing_witnesses": [],
+        "observed_successful_step_joint_displacement_lower_bound_rad": 5.288254271641012,
+        "reference_joint_path_rad": 24.39374311527016,
+        "sources": [
+          {
+            "joint_waypoint_length_rad": 5.80948782815677,
+            "path": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_parallel_20261117/test_2d_pool_fragment/0024_216097ce9fd72424890f/witnesses/witnesses/f2/f23fb39e9dd3b9625dfa6b2a.npz",
+            "sha256": "44b2a963b868771b317308488d1dd6a258dda7edcf328ce40a1480983c3e19c6"
+          },
+          {
+            "joint_waypoint_length_rad": 2.4676420076636996,
+            "path": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_parallel_20261117/test_2d_pool_fragment/0024_216097ce9fd72424890f/witnesses/witnesses/8b/8b5abe01515e74d8237261a4.npz",
+            "sha256": "2674bfee5d9446c3c4c89e2e8966a7d285d693e611bdcf37ebfba10d43dfc513"
+          },
+          {
+            "joint_waypoint_length_rad": 12.613111212477254,
+            "path": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_parallel_20261117/test_2d_pool_fragment/0024_216097ce9fd72424890f/witnesses/witnesses/cd/cde427ac5e3a5bf6208da561.npz",
+            "sha256": "ad75d154e863960f5d389ae7ecc0a0b9503c8bb486e5d45c7563c2b7155e7a9c"
+          },
+          {
+            "joint_waypoint_length_rad": 3.5035020669724353,
+            "path": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_parallel_20261117/test_2d_pool_fragment/0024_216097ce9fd72424890f/witnesses/witnesses/a6/a6dda6aac2870581a4fa0d81.npz",
+            "sha256": "45b0d7eb2f1a1b3ebb4b6e5cc729bcdad3eede13274b33e7c1c1c1c85ebe3484"
+          }
+        ]
+      },
+      "robot_travel_status": "Actual integration-step arc NOT_RECORDED; certified reference path reported separately",
+      "root_id": "D2H_a7d6598ab3",
+      "seed": 0,
+      "selection_physical_counters": {
+        "MCTS_calls": 0,
+        "physical_transition_calls": 0,
+        "simulator_initializations": 0,
+        "teacher_X_calls": 0,
+        "teacher_Y_calls": 0
+      },
+      "selection_trace": [
+        {
+          "cells": [
+            45,
+            30,
+            52,
+            60,
+            28,
+            14,
+            15,
+            22,
+            55,
+            47,
+            20,
+            63,
+            53
+          ],
+          "decision": {
+            "best_reloc_score": 0.00537744490429759,
+            "candidates": [
+              [
+                10,
+                4
+              ],
+              [
+                6,
+                18
+              ],
+              [
+                9,
+                44
+              ],
+              [
+                5,
+                18
+              ],
+              [
+                6,
+                42
+              ],
+              [
+                7,
+                18
+              ],
+              [
+                10,
+                1
+              ],
+              [
+                1,
+                1
+              ],
+              [
+                7,
+                1
+              ],
+              [
+                5,
+                42
+              ],
+              [
+                5,
+                49
+              ],
+              [
+                8,
+                44
+              ],
+              [
+                0,
+                44
+              ],
+              [
+                2,
+                41
+              ],
+              [
+                3,
+                41
+              ],
+              [
+                0,
+                59
+              ]
+            ],
+            "n_candidates": 16,
+            "ranked_candidates": [
+              [
+                10,
+                4
+              ],
+              [
+                7,
+                18
+              ],
+              [
+                5,
+                18
+              ],
+              [
+                0,
+                59
+              ],
+              [
+                6,
+                18
+              ],
+              [
+                1,
+                1
+              ],
+              [
+                7,
+                1
+              ],
+              [
+                10,
+                1
+              ],
+              [
+                5,
+                42
+              ],
+              [
+                6,
+                42
+              ],
+              [
+                8,
+                44
+              ],
+              [
+                0,
+                44
+              ],
+              [
+                9,
+                44
+              ],
+              [
+                5,
+                49
+              ],
+              [
+                2,
+                41
+              ],
+              [
+                3,
+                41
+              ]
+            ],
+            "ranked_scores": [
+              0.00537744490429759,
+              0.00028344281599856913,
+              0.00024534095427952707,
+              0.0002378367935307324,
+              0.000174456974491477,
+              0.00016372458776459098,
+              0.00014503998681902885,
+              9.88872125162743e-05,
+              6.39590434730053e-05,
+              4.677563265431672e-05,
+              2.547909616623656e-06,
+              3.0406827136175707e-06,
+              2.228309540441842e-06,
+              3.5582331747718854e-07,
+              1.1472670990997358e-07,
+              1.2995045040042896e-07
+            ],
+            "score": 0.00537744490429759,
+            "selected": [
+              10,
+              4
+            ],
+            "selection_physical_counters": {
+              "MCTS_calls": 0,
+              "physical_transition_calls": 0,
+              "simulator_initializations": 0,
+              "teacher_X_calls": 0,
+              "teacher_Y_calls": 0
+            },
+            "stop_score": 6.379294603675589e-08
+          },
+          "is_predicted_edit": false,
+          "moved_mask": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          "observation_hash": "da0da035c951bc6a63e1",
+          "q_visible": false,
+          "remaining_steps": 3
+        },
+        {
+          "cells": [
+            45,
+            30,
+            52,
+            60,
+            28,
+            14,
+            15,
+            22,
+            55,
+            47,
+            4,
+            63,
+            53
+          ],
+          "decision": {
+            "best_reloc_score": 0.0021333901677280664,
+            "candidates": [
+              [
+                5,
+                49
+              ],
+              [
+                6,
+                18
+              ],
+              [
+                5,
+                18
+              ],
+              [
+                7,
+                21
+              ],
+              [
+                8,
+                44
+              ],
+              [
+                7,
+                1
+              ],
+              [
+                5,
+                13
+              ],
+              [
+                5,
+                12
+              ],
+              [
+                3,
+                41
+              ],
+              [
+                1,
+                1
+              ],
+              [
+                9,
+                44
+              ],
+              [
+                4,
+                59
+              ],
+              [
+                1,
+                21
+              ],
+              [
+                9,
+                62
+              ],
+              [
+                9,
+                46
+              ],
+              [
+                2,
+                41
+              ]
+            ],
+            "n_candidates": 16,
+            "ranked_candidates": [
+              [
+                5,
+                18
+              ],
+              [
+                6,
+                18
+              ],
+              [
+                1,
+                1
+              ],
+              [
+                4,
+                59
+              ],
+              [
+                7,
+                1
+              ],
+              [
+                5,
+                13
+              ],
+              [
+                9,
+                46
+              ],
+              [
+                9,
+                62
+              ],
+              [
+                8,
+                44
+              ],
+              [
+                5,
+                12
+              ],
+              [
+                9,
+                44
+              ],
+              [
+                1,
+                21
+              ],
+              [
+                7,
+                21
+              ],
+              [
+                5,
+                49
+              ],
+              [
+                2,
+                41
+              ],
+              [
+                3,
+                41
+              ]
+            ],
+            "ranked_scores": [
+              0.0021333901677280664,
+              0.0017062429105862975,
+              0.001449147122912109,
+              0.0014141034334897995,
+              0.0012823084834963083,
+              7.414613355649635e-05,
+              7.042504876153544e-05,
+              3.0023595172679052e-05,
+              2.9105580324539915e-05,
+              2.937775025202427e-05,
+              2.538553781050723e-05,
+              9.857976692728698e-06,
+              8.419057849096134e-06,
+              4.68281496068812e-06,
+              1.7149122868431732e-06,
+              1.9309925392008154e-06
+            ],
+            "score": 0.0021333901677280664,
+            "selected": [
+              5,
+              18
+            ],
+            "selection_physical_counters": {
+              "MCTS_calls": 0,
+              "physical_transition_calls": 0,
+              "simulator_initializations": 0,
+              "teacher_X_calls": 0,
+              "teacher_Y_calls": 0
+            },
+            "stop_score": 8.086955745056912e-07
+          },
+          "is_predicted_edit": true,
+          "moved_mask": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            true,
+            false,
+            false
+          ],
+          "observation_hash": "aed5f38373f53ac8b6e8",
+          "q_visible": false,
+          "remaining_steps": 2
+        },
+        {
+          "cells": [
+            45,
+            30,
+            52,
+            60,
+            28,
+            18,
+            15,
+            22,
+            55,
+            47,
+            4,
+            63,
+            53
+          ],
+          "decision": {
+            "best_reloc_score": 0.3752884566783905,
+            "candidates": [
+              [
+                6,
+                25
+              ],
+              [
+                9,
+                62
+              ],
+              [
+                1,
+                21
+              ],
+              [
+                2,
+                40
+              ],
+              [
+                8,
+                62
+              ],
+              [
+                7,
+                21
+              ],
+              [
+                7,
+                37
+              ],
+              [
+                7,
+                31
+              ],
+              [
+                11,
+                62
+              ],
+              [
+                4,
+                46
+              ],
+              [
+                2,
+                61
+              ],
+              [
+                7,
+                25
+              ],
+              [
+                6,
+                31
+              ],
+              [
+                11,
+                61
+              ],
+              [
+                3,
+                40
+              ],
+              [
+                1,
+                25
+              ]
+            ],
+            "n_candidates": 16,
+            "ranked_candidates": [
+              [
+                7,
+                37
+              ],
+              [
+                6,
+                31
+              ],
+              [
+                7,
+                31
+              ],
+              [
+                11,
+                61
+              ],
+              [
+                2,
+                61
+              ],
+              [
+                3,
+                40
+              ],
+              [
+                2,
+                40
+              ],
+              [
+                4,
+                46
+              ],
+              [
+                11,
+                62
+              ],
+              [
+                8,
+                62
+              ],
+              [
+                9,
+                62
+              ],
+              [
+                1,
+                21
+              ],
+              [
+                1,
+                25
+              ],
+              [
+                7,
+                21
+              ],
+              [
+                7,
+                25
+              ],
+              [
+                6,
+                25
+              ]
+            ],
+            "ranked_scores": [
+              0.3752884566783905,
+              0.026998376473784447,
+              0.0031778127886354923,
+              0.00018844961596187204,
+              0.00012380105908960104,
+              9.525046334601939e-05,
+              8.313961734529585e-05,
+              4.3060055759269744e-05,
+              3.133857899229042e-05,
+              2.8123307856731117e-05,
+              2.5079676561290398e-05,
+              7.704789823037572e-06,
+              7.899509000708349e-06,
+              6.643021606578259e-06,
+              6.759864845662378e-06,
+              3.5979869608127046e-06
+            ],
+            "score": 0.3752884566783905,
+            "selected": [
+              7,
+              37
+            ],
+            "selection_physical_counters": {
+              "MCTS_calls": 0,
+              "physical_transition_calls": 0,
+              "simulator_initializations": 0,
+              "teacher_X_calls": 0,
+              "teacher_Y_calls": 0
+            },
+            "stop_score": 5.376999752115807e-07
+          },
+          "is_predicted_edit": true,
+          "moved_mask": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            true,
+            false,
+            false,
+            false,
+            false,
+            true,
+            false,
+            false
+          ],
+          "observation_hash": "06514e5378ecf31de3f2",
+          "q_visible": false,
+          "remaining_steps": 1
+        }
+      ],
+      "seq": [
+        [
+          10,
+          4
+        ],
+        [
+          5,
+          18
+        ],
+        [
+          7,
+          37
+        ]
+      ],
+      "split": "test",
+      "status": "REPAIR",
+      "step_traces": [
+        {
+          "n_candidates": 16,
+          "score": 0.00538,
+          "selected": [
+            10,
+            4
+          ],
+          "step": 0,
+          "stop_score": 0.0
+        },
+        {
+          "n_candidates": 16,
+          "score": 0.00213,
+          "selected": [
+            5,
+            18
+          ],
+          "step": 1,
+          "stop_score": 0.0
+        },
+        {
+          "n_candidates": 16,
+          "score": 0.37529,
+          "selected": [
+            7,
+            37
+          ],
+          "step": 2,
+          "stop_score": 0.0
+        }
+      ],
+      "value_calls": 51,
+      "value_forward_passes": 3,
+      "verified": 0,
+      "x": 1,
+      "y": 0,
+      "execution_host": "girish-laptop",
+      "execution_evidence": {
+        "directory": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_parallel_20261117/test_2d/0024_216097ce9fd72424890f",
+        "selection_trace_sha256": null,
+        "journal_sha256": "7c46a5743d4f2cdd17d0b9205da29e03d62e6530ee126929e90813e0a51b6138",
+        "attempted_relocations": 3,
+        "executed_relocations": 3
+      }
+    },
+    "2d|open_loop|NONE|NO_PLAN_FOUND": {
+      "K_legacy": "NONE",
+      "adapter_calls": 2,
+      "arm": "O0_P2Q2",
+      "displacement": 7.0711,
+      "domain": "2d",
+      "failed_phase": "connector",
+      "failure_kind": "NO_PLAN_FOUND",
+      "family_id": "source-483912ea3faee44995b15880",
+      "independent_verification": true,
+      "job_id": "55dc2afd673b1daf37d9",
+      "latency_ms": 6.283,
+      "m": 1,
+      "masks": {
+        "eval_abstain": true,
+        "eval_noop": false,
+        "eval_repair": false,
+        "eval_task": false,
+        "train_prediction": true
+      },
+      "model_source": {
+        "policy": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/campaigns/E16_v1_20261117/training/2d_P2Q2_knownprefix/o0_v1_all_feasible_s1/policy.pt",
+        "policy_sha256": "6031f0c6f159d8b2597f18d0c23b055a4e79bb0d074651d47580eb5b9e9e0b6e",
+        "value": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/campaigns/E16_v1_20261117/training/2d_P2Q2_knownprefix/o0_v1_all_feasible_s1/value.pt",
+        "value_sha256": "266495bea36fca8fc3d55e2b28cdb65f92dd47636263e7ea690d0593c1ed9967"
+      },
+      "observation_schema": "o0_v1",
+      "physical_phases": {
+        "connector_calls": 1,
+        "transition_planner_calls": 1,
+        "y_cache_hits": 0,
+        "y_calls": 1
+      },
+      "physics_seed": 0,
+      "planner_calls_during_selection": 0,
+      "policy_call_unit": "scored examples (batched forwards counted separately)",
+      "policy_calls": 5,
+      "policy_forward_passes": 4,
+      "protocol": "open_loop",
+      "robot_travel": null,
+      "robot_travel_reference": {
+        "coverage": "PARTIAL_EXECUTION_PREFIX",
+        "definition": "Sum L2 joint-waypoint arc lengths of accepted corrective plans and certified terminal connector; target Y excluded; not actual servo integration travel",
+        "missing_witnesses": [],
+        "observed_successful_step_joint_displacement_lower_bound_rad": 3.8335431304210505,
+        "reference_joint_path_rad": 6.169558647031822,
+        "sources": [
+          {
+            "joint_waypoint_length_rad": 6.169558647031822,
+            "path": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_parallel_20261117/test_2d_pool_fragment/0028_55dc2afd673b1daf37d9/witnesses/witnesses/4d/4daaee612543b6b0b3b98983.npz",
+            "sha256": "4354e060ff0114ba73a4f7411f2a7d0397f5b19c2ce801adb4bb8097c519f700"
+          }
+        ]
+      },
+      "robot_travel_status": "Actual integration-step arc NOT_RECORDED; certified reference path reported separately",
+      "root_id": "2d-plus2d-srv-w0248-s004",
+      "seed": 1,
+      "selection_physical_counters": {
+        "MCTS_calls": 0,
+        "physical_transition_calls": 0,
+        "simulator_initializations": 0,
+        "teacher_X_calls": 0,
+        "teacher_Y_calls": 0
+      },
+      "selection_trace": [
+        {
+          "cells": [
+            47,
+            4,
+            15
+          ],
+          "decision": {
+            "best_reloc_score": 1.0,
+            "candidates": [
+              [
+                0,
+                24
+              ],
+              [
+                0,
+                54
+              ],
+              [
+                0,
+                46
+              ],
+              [
+                1,
+                50
+              ],
+              [
+                0,
+                32
+              ],
+              [
+                0,
+                1
+              ],
+              [
+                0,
+                55
+              ],
+              [
+                0,
+                16
+              ],
+              [
+                1,
+                2
+              ],
+              [
+                0,
+                36
+              ],
+              [
+                0,
+                62
+              ],
+              [
+                1,
+                42
+              ],
+              [
+                0,
+                57
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                1,
+                19
+              ],
+              [
+                1,
+                10
+              ]
+            ],
+            "n_candidates": 16,
+            "ranked_candidates": [
+              [
+                0,
+                32
+              ],
+              [
+                1,
+                2
+              ],
+              [
+                1,
+                10
+              ],
+              [
+                0,
+                1
+              ],
+              [
+                0,
+                36
+              ],
+              [
+                1,
+                42
+              ],
+              [
+                0,
+                57
+              ],
+              [
+                0,
+                46
+              ],
+              [
+                0,
+                54
+              ],
+              [
+                0,
+                24
+              ],
+              [
+                0,
+                62
+              ],
+              [
+                0,
+                55
+              ],
+              [
+                0,
+                16
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                1,
+                19
+              ],
+              [
+                1,
+                50
+              ]
+            ],
+            "ranked_scores": [
+              1.0,
+              1.0,
+              0.9999998807907104,
+              1.0,
+              0.9999997615814209,
+              0.999998927116394,
+              0.9999990463256836,
+              0.9999904632568359,
+              0.9999761581420898,
+              0.9994682669639587,
+              0.9988381266593933,
+              0.998769223690033,
+              0.8811051249504089,
+              0.8270223736763,
+              0.5803102254867554,
+              0.00010571658640401438
+            ],
+            "score": 1.0,
+            "selected": [
+              0,
+              32
+            ],
+            "selection_physical_counters": {
+              "MCTS_calls": 0,
+              "physical_transition_calls": 0,
+              "simulator_initializations": 0,
+              "teacher_X_calls": 0,
+              "teacher_Y_calls": 0
+            },
+            "stop_score": 0.014699517749249935
+          },
+          "is_predicted_edit": false,
+          "moved_mask": [
+            false,
+            false,
+            false
+          ],
+          "observation_hash": "be95699178189ff0dd2a",
+          "q_visible": false,
+          "remaining_steps": 3
+        },
+        {
+          "cells": [
+            32,
+            4,
+            15
+          ],
+          "decision": {
+            "best_reloc_score": 1.0,
+            "candidates": [
+              [
+                1,
+                61
+              ],
+              [
+                1,
+                12
+              ],
+              [
+                1,
+                10
+              ],
+              [
+                1,
+                52
+              ],
+              [
+                1,
+                3
+              ],
+              [
+                1,
+                20
+              ],
+              [
+                1,
+                2
+              ],
+              [
+                1,
+                30
+              ],
+              [
+                1,
+                42
+              ],
+              [
+                1,
+                57
+              ],
+              [
+                1,
+                38
+              ],
+              [
+                1,
+                35
+              ],
+              [
+                1,
+                14
+              ],
+              [
+                1,
+                58
+              ],
+              [
+                1,
+                55
+              ],
+              [
+                1,
+                54
+              ]
+            ],
+            "n_candidates": 16,
+            "ranked_candidates": [
+              [
+                1,
+                61
+              ],
+              [
+                1,
+                12
+              ],
+              [
+                1,
+                10
+              ],
+              [
+                1,
+                2
+              ],
+              [
+                1,
+                42
+              ],
+              [
+                1,
+                14
+              ],
+              [
+                1,
+                35
+              ],
+              [
+                1,
+                30
+              ],
+              [
+                1,
+                3
+              ],
+              [
+                1,
+                57
+              ],
+              [
+                1,
+                58
+              ],
+              [
+                1,
+                52
+              ],
+              [
+                1,
+                38
+              ],
+              [
+                1,
+                20
+              ],
+              [
+                1,
+                55
+              ],
+              [
+                1,
+                54
+              ]
+            ],
+            "ranked_scores": [
+              1.0,
+              0.9999997615814209,
+              1.0,
+              1.0,
+              1.0,
+              1.0,
+              0.9999994039535522,
+              0.9999879598617554,
+              0.9999784231185913,
+              0.9999707937240601,
+              0.9999632835388184,
+              0.9998345375061035,
+              0.9997757077217102,
+              0.9996814727783203,
+              0.9995512366294861,
+              0.9909117221832275
+            ],
+            "score": 0.9999197721481323,
+            "selected": "STOP",
+            "selection_physical_counters": {
+              "MCTS_calls": 0,
+              "physical_transition_calls": 0,
+              "simulator_initializations": 0,
+              "teacher_X_calls": 0,
+              "teacher_Y_calls": 0
+            },
+            "stop_score": 0.9999197721481323
+          },
+          "is_predicted_edit": true,
+          "moved_mask": [
+            true,
+            false,
+            false
+          ],
+          "observation_hash": "a62189202f8048b95bd1",
+          "q_visible": false,
+          "remaining_steps": 2
+        }
+      ],
+      "seq": [
+        [
+          0,
+          32
+        ]
+      ],
+      "split": "test",
+      "status": "REPAIR",
+      "step_traces": [
+        {
+          "n_candidates": 16,
+          "score": 1.0,
+          "selected": [
+            0,
+            32
+          ],
+          "step": 0,
+          "stop_score": 0.0147
+        },
+        {
+          "n_candidates": 16,
+          "score": 0.99992,
+          "selected": "STOP",
+          "step": 1,
+          "stop_score": 0.99992
+        }
+      ],
+      "value_calls": 34,
+      "value_forward_passes": 2,
+      "verified": 0,
+      "x": 0,
+      "y": 1,
+      "execution_host": "girish-laptop",
+      "execution_evidence": {
+        "directory": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_parallel_20261117/test_2d/0028_55dc2afd673b1daf37d9",
+        "selection_trace_sha256": null,
+        "journal_sha256": "326a8e8b414d180d03aa310eb630f467430be42152952f20d2b4f053da88e4e8",
+        "attempted_relocations": 1,
+        "executed_relocations": 1
+      }
+    },
+    "2d|open_loop|1|CERTIFIED": {
+      "K_legacy": "1",
+      "displacement": 15.0531,
+      "domain": "2d",
+      "latency_ms": 12.979,
+      "m": 3,
+      "masks": {
+        "eval_abstain": false,
+        "eval_noop": false,
+        "eval_repair": true,
+        "eval_task": true,
+        "train_prediction": true
+      },
+      "observation_schema": "o0_v1",
+      "planner_calls_during_selection": 0,
+      "policy_call_unit": "scored examples (batched forwards counted separately)",
+      "policy_calls": 30,
+      "policy_forward_passes": 6,
+      "protocol": "open_loop",
+      "root_id": "2d-conv-plus2d-w0124-s009",
+      "seed": 2,
+      "selection_physical_counters": {
+        "MCTS_calls": 0,
+        "physical_transition_calls": 0,
+        "simulator_initializations": 0,
+        "teacher_X_calls": 0,
+        "teacher_Y_calls": 0
+      },
+      "selection_trace": [
+        {
+          "cells": [
+            60,
+            44,
+            45,
+            28,
+            55,
+            31,
+            39,
+            38,
+            37,
+            47,
+            53
+          ],
+          "decision": {
+            "best_reloc_score": 0.9302381873130798,
+            "candidates": [
+              [
+                6,
+                10
+              ],
+              [
+                5,
+                21
+              ],
+              [
+                4,
+                62
+              ],
+              [
+                6,
+                15
+              ],
+              [
+                5,
+                10
+              ],
+              [
+                6,
+                18
+              ],
+              [
+                9,
+                59
+              ],
+              [
+                6,
+                42
+              ],
+              [
+                5,
+                42
+              ],
+              [
+                5,
+                18
+              ],
+              [
+                1,
+                7
+              ],
+              [
+                4,
+                59
+              ],
+              [
+                6,
+                21
+              ],
+              [
+                5,
+                15
+              ],
+              [
+                9,
+                26
+              ],
+              [
+                7,
+                21
+              ]
+            ],
+            "n_candidates": 16,
+            "ranked_candidates": [
+              [
+                6,
+                10
+              ],
+              [
+                5,
+                10
+              ],
+              [
+                4,
+                59
+              ],
+              [
+                9,
+                59
+              ],
+              [
+                6,
+                18
+              ],
+              [
+                5,
+                18
+              ],
+              [
+                6,
+                42
+              ],
+              [
+                5,
+                42
+              ],
+              [
+                6,
+                15
+              ],
+              [
+                5,
+                15
+              ],
+              [
+                1,
+                7
+              ],
+              [
+                4,
+                62
+              ],
+              [
+                9,
+                26
+              ],
+              [
+                6,
+                21
+              ],
+              [
+                7,
+                21
+              ],
+              [
+                5,
+                21
+              ]
+            ],
+            "ranked_scores": [
+              0.9302381873130798,
+              0.8859553337097168,
+              0.2978300154209137,
+              0.2423413246870041,
+              0.12038995325565338,
+              0.0804540365934372,
+              0.037735700607299805,
+              0.029626699164509773,
+              0.00848118495196104,
+              0.006531045772135258,
+              0.0031588105484843254,
+              0.0016786083579063416,
+              0.0004271999641787261,
+              9.437222615815699e-05,
+              9.224591485690325e-05,
+              8.763100777287036e-05
+            ],
+            "score": 0.9302381873130798,
+            "selected": [
+              6,
+              10
+            ],
+            "selection_physical_counters": {
+              "MCTS_calls": 0,
+              "physical_transition_calls": 0,
+              "simulator_initializations": 0,
+              "teacher_X_calls": 0,
+              "teacher_Y_calls": 0
+            },
+            "stop_score": 0.006147329229861498
+          },
+          "is_predicted_edit": false,
+          "moved_mask": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          "observation_hash": "1b12b3bf6a28274baf61",
+          "q_visible": false,
+          "remaining_steps": 3
+        },
+        {
+          "cells": [
+            60,
+            44,
+            45,
+            28,
+            55,
+            31,
+            10,
+            38,
+            37,
+            47,
+            53
+          ],
+          "decision": {
+            "best_reloc_score": 0.9411357045173645,
+            "candidates": [
+              [
+                5,
+                15
+              ],
+              [
+                5,
+                18
+              ],
+              [
+                9,
+                59
+              ],
+              [
+                9,
+                62
+              ],
+              [
+                4,
+                62
+              ],
+              [
+                9,
+                26
+              ],
+              [
+                5,
+                21
+              ],
+              [
+                8,
+                54
+              ],
+              [
+                7,
+                21
+              ],
+              [
+                1,
+                5
+              ],
+              [
+                5,
+                42
+              ],
+              [
+                4,
+                59
+              ],
+              [
+                5,
+                30
+              ],
+              [
+                3,
+                54
+              ],
+              [
+                2,
+                5
+              ],
+              [
+                9,
+                42
+              ]
+            ],
+            "n_candidates": 16,
+            "ranked_candidates": [
+              [
+                4,
+                59
+              ],
+              [
+                5,
+                18
+              ],
+              [
+                9,
+                59
+              ],
+              [
+                9,
+                42
+              ],
+              [
+                5,
+                42
+              ],
+              [
+                5,
+                30
+              ],
+              [
+                5,
+                15
+              ],
+              [
+                3,
+                54
+              ],
+              [
+                8,
+                54
+              ],
+              [
+                4,
+                62
+              ],
+              [
+                9,
+                62
+              ],
+              [
+                2,
+                5
+              ],
+              [
+                1,
+                5
+              ],
+              [
+                9,
+                26
+              ],
+              [
+                5,
+                21
+              ],
+              [
+                7,
+                21
+              ]
+            ],
+            "ranked_scores": [
+              0.9411357045173645,
+              0.9333071112632751,
+              0.9103212952613831,
+              0.8599950075149536,
+              0.6684476137161255,
+              0.24514079093933105,
+              0.23893144726753235,
+              0.21652410924434662,
+              0.20347018539905548,
+              0.05231885612010956,
+              0.03318271413445473,
+              0.018940050154924393,
+              0.017396265640854836,
+              0.004805436357855797,
+              0.0003778784885071218,
+              0.0003618619521148503
+            ],
+            "score": 0.9411357045173645,
+            "selected": [
+              4,
+              59
+            ],
+            "selection_physical_counters": {
+              "MCTS_calls": 0,
+              "physical_transition_calls": 0,
+              "simulator_initializations": 0,
+              "teacher_X_calls": 0,
+              "teacher_Y_calls": 0
+            },
+            "stop_score": 0.04368602856993675
+          },
+          "is_predicted_edit": true,
+          "moved_mask": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            true,
+            false,
+            false,
+            false,
+            false
+          ],
+          "observation_hash": "f72f179d819b408a26db",
+          "q_visible": false,
+          "remaining_steps": 2
+        },
+        {
+          "cells": [
+            60,
+            44,
+            45,
+            28,
+            59,
+            31,
+            10,
+            38,
+            37,
+            47,
+            53
+          ],
+          "decision": {
+            "best_reloc_score": 0.9595533013343811,
+            "candidates": [
+              [
+                5,
+                42
+              ],
+              [
+                5,
+                18
+              ],
+              [
+                8,
+                54
+              ],
+              [
+                9,
+                42
+              ],
+              [
+                7,
+                21
+              ],
+              [
+                9,
+                26
+              ],
+              [
+                9,
+                62
+              ],
+              [
+                5,
+                21
+              ],
+              [
+                9,
+                21
+              ],
+              [
+                3,
+                16
+              ],
+              [
+                9,
+                9
+              ],
+              [
+                9,
+                20
+              ],
+              [
+                1,
+                5
+              ],
+              [
+                3,
+                54
+              ],
+              [
+                9,
+                52
+              ],
+              [
+                2,
+                54
+              ]
+            ],
+            "n_candidates": 16,
+            "ranked_candidates": [
+              [
+                5,
+                18
+              ],
+              [
+                9,
+                42
+              ],
+              [
+                9,
+                20
+              ],
+              [
+                5,
+                42
+              ],
+              [
+                3,
+                54
+              ],
+              [
+                8,
+                54
+              ],
+              [
+                2,
+                54
+              ],
+              [
+                9,
+                9
+              ],
+              [
+                9,
+                62
+              ],
+              [
+                1,
+                5
+              ],
+              [
+                9,
+                52
+              ],
+              [
+                9,
+                26
+              ],
+              [
+                3,
+                16
+              ],
+              [
+                9,
+                21
+              ],
+              [
+                5,
+                21
+              ],
+              [
+                7,
+                21
+              ]
+            ],
+            "ranked_scores": [
+              0.9595533013343811,
+              0.8971902132034302,
+              0.7856084108352661,
+              0.745568037033081,
+              0.23044316470623016,
+              0.21403051912784576,
+              0.2100050002336502,
+              0.07061013579368591,
+              0.052556153386831284,
+              0.028695160523056984,
+              0.020316369831562042,
+              0.007809446658939123,
+              0.006743718404322863,
+              0.000809932651463896,
+              0.0005953735671937466,
+              0.0005917520611546934
+            ],
+            "score": 0.9595533013343811,
+            "selected": [
+              5,
+              18
+            ],
+            "selection_physical_counters": {
+              "MCTS_calls": 0,
+              "physical_transition_calls": 0,
+              "simulator_initializations": 0,
+              "teacher_X_calls": 0,
+              "teacher_Y_calls": 0
+            },
+            "stop_score": 0.05772611126303673
+          },
+          "is_predicted_edit": true,
+          "moved_mask": [
+            false,
+            false,
+            false,
+            false,
+            true,
+            false,
+            true,
+            false,
+            false,
+            false,
+            false
+          ],
+          "observation_hash": "14a93f1aab1d6579c301",
+          "q_visible": false,
+          "remaining_steps": 1
+        }
+      ],
+      "seq": [
+        [
+          6,
+          10
+        ],
+        [
+          4,
+          59
+        ],
+        [
+          5,
+          18
+        ]
+      ],
+      "split": "test",
+      "status": "REPAIR",
+      "step_traces": [
+        {
+          "n_candidates": 16,
+          "score": 0.93024,
+          "selected": [
+            6,
+            10
+          ],
+          "step": 0,
+          "stop_score": 0.00615
+        },
+        {
+          "n_candidates": 16,
+          "score": 0.94114,
+          "selected": [
+            4,
+            59
+          ],
+          "step": 1,
+          "stop_score": 0.04369
+        },
+        {
+          "n_candidates": 16,
+          "score": 0.95955,
+          "selected": [
+            5,
+            18
+          ],
+          "step": 2,
+          "stop_score": 0.05773
+        }
+      ],
+      "value_calls": 51,
+      "value_forward_passes": 3,
+      "verified": 0,
+      "x": 0,
+      "y": null,
+      "failed_phase": "relocation:0",
+      "failure_kind": "CERTIFIED",
+      "arm": "O0_P2Q2",
+      "family_id": "source-4447988e025f1fb4e38cfeac",
+      "job_id": "bcecfbe0b68379084156",
+      "recovered_from_durable_query": 1,
+      "proof_result_sha256": "fbdcf0b4d105e28e6c4639aba4ec08c403188d276e51f2f70279b1a681ef3ec9",
+      "interrupted_episode": true,
+      "execution_host": "girish-laptop",
+      "execution_evidence": {
+        "directory": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_parallel_20261117/test_2d/0035_bcecfbe0b68379084156",
+        "selection_trace_sha256": null,
+        "journal_sha256": "1121be8c3ae634fda90082b96297c1fbb5f9d57f3093251419f54db9521128ec",
+        "attempted_relocations": 1,
+        "executed_relocations": 0
+      }
+    },
+    "2d|open_loop|2|NO_PLAN_FOUND": {
+      "K_legacy": "2",
+      "adapter_calls": 4,
+      "arm": "O0_P2Q2",
+      "displacement": 7.6503,
+      "domain": "2d",
+      "failed_phase": "connector",
+      "failure_kind": "NO_PLAN_FOUND",
+      "family_id": "source-e740bf45e391e3f807604b90",
+      "independent_verification": true,
+      "job_id": "7461bf758bc4c8f04aa1",
+      "latency_ms": 12.035,
+      "m": 3,
+      "masks": {
+        "eval_abstain": false,
+        "eval_noop": false,
+        "eval_repair": true,
+        "eval_task": true,
+        "train_prediction": true
+      },
+      "model_source": {
+        "policy": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/campaigns/E16_v1_20261117/training/2d_P2Q2_knownprefix/o0_v1_all_feasible_s0/policy.pt",
+        "policy_sha256": "2d3e2914c5cba9ff90e938203580017affcb5046a06ae1302b2615331972b280",
+        "value": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/campaigns/E16_v1_20261117/training/2d_P2Q2_knownprefix/o0_v1_all_feasible_s0/value.pt",
+        "value_sha256": "590e9dd916415426d8007825c56fcd978783a1045646437a8b54efbd2892a759"
+      },
+      "observation_schema": "o0_v1",
+      "physical_phases": {
+        "connector_calls": 1,
+        "transition_planner_calls": 3,
+        "y_cache_hits": 0,
+        "y_calls": 1
+      },
+      "physics_seed": 0,
+      "planner_calls_during_selection": 0,
+      "policy_call_unit": "scored examples (batched forwards counted separately)",
+      "policy_calls": 21,
+      "policy_forward_passes": 6,
+      "protocol": "open_loop",
+      "robot_travel": null,
+      "robot_travel_reference": {
+        "coverage": "PARTIAL_EXECUTION_PREFIX",
+        "definition": "Sum L2 joint-waypoint arc lengths of accepted corrective plans and certified terminal connector; target Y excluded; not actual servo integration travel",
+        "missing_witnesses": [],
+        "observed_successful_step_joint_displacement_lower_bound_rad": 5.463384244865145,
+        "reference_joint_path_rad": 11.032865827820531,
+        "sources": [
+          {
+            "joint_waypoint_length_rad": 4.44788094527472,
+            "path": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_parallel_20261117/test_2d_pool_fragment/0036_7461bf758bc4c8f04aa1/witnesses/witnesses/ce/ce0bb370a59a93b3eaece331.npz",
+            "sha256": "ebc6f745fe10d6aa70f4103b4489681ec9f26daa9293d32f1db14c585827c894"
+          },
+          {
+            "joint_waypoint_length_rad": 3.9663990281847252,
+            "path": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_parallel_20261117/test_2d_pool_fragment/0036_7461bf758bc4c8f04aa1/witnesses/witnesses/ef/ef4121f4d1ec5ed1ba3fca74.npz",
+            "sha256": "6069106616f2b4b1c726e7349ee96181ba55c1d84cafc62f0c7715e5052cda14"
+          },
+          {
+            "joint_waypoint_length_rad": 2.6185858543610863,
+            "path": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_parallel_20261117/test_2d_pool_fragment/0036_7461bf758bc4c8f04aa1/witnesses/witnesses/59/594637687dba602654bcd04e.npz",
+            "sha256": "b3657b7c9f1f348a9e3985a9a3b4ce74d7eea0a3bbbaeaa025195783c13aae09"
+          }
+        ]
+      },
+      "robot_travel_status": "Actual integration-step arc NOT_RECORDED; certified reference path reported separately",
+      "root_id": "D2_LOCAL_K2_REPARK_2105675375",
+      "seed": 0,
+      "selection_physical_counters": {
+        "MCTS_calls": 0,
+        "physical_transition_calls": 0,
+        "simulator_initializations": 0,
+        "teacher_X_calls": 0,
+        "teacher_Y_calls": 0
+      },
+      "selection_trace": [
+        {
+          "cells": [
+            45,
+            37,
+            61,
+            21,
+            14,
+            55,
+            47,
+            46
+          ],
+          "decision": {
+            "best_reloc_score": 0.25378236174583435,
+            "candidates": [
+              [
+                6,
+                44
+              ],
+              [
+                3,
+                6
+              ],
+              [
+                5,
+                44
+              ],
+              [
+                4,
+                18
+              ],
+              [
+                4,
+                6
+              ],
+              [
+                3,
+                12
+              ],
+              [
+                2,
+                41
+              ],
+              [
+                4,
+                12
+              ],
+              [
+                6,
+                52
+              ],
+              [
+                1,
+                44
+              ],
+              [
+                1,
+                36
+              ],
+              [
+                4,
+                49
+              ],
+              [
+                4,
+                13
+              ],
+              [
+                2,
+                54
+              ],
+              [
+                1,
+                49
+              ],
+              [
+                1,
+                52
+              ]
+            ],
+            "n_candidates": 16,
+            "ranked_candidates": [
+              [
+                2,
+                54
+              ],
+              [
+                4,
+                18
+              ],
+              [
+                4,
+                13
+              ],
+              [
+                3,
+                12
+              ],
+              [
+                1,
+                44
+              ],
+              [
+                3,
+                6
+              ],
+              [
+                4,
+                12
+              ],
+              [
+                4,
+                6
+              ],
+              [
+                5,
+                44
+              ],
+              [
+                6,
+                44
+              ],
+              [
+                1,
+                52
+              ],
+              [
+                1,
+                36
+              ],
+              [
+                6,
+                52
+              ],
+              [
+                1,
+                49
+              ],
+              [
+                4,
+                49
+              ],
+              [
+                2,
+                41
+              ]
+            ],
+            "ranked_scores": [
+              0.25378236174583435,
+              0.004769499413669109,
+              0.0001953877799678594,
+              0.00010112935706274584,
+              9.821547428146005e-05,
+              9.432463411940262e-05,
+              7.696116517763585e-05,
+              7.550777081632987e-05,
+              7.54117063479498e-05,
+              6.562984344782308e-05,
+              3.348554309923202e-05,
+              2.2846836145618e-05,
+              2.318849328730721e-05,
+              2.20154852286214e-05,
+              1.1320439625706058e-05,
+              5.206736204854678e-06
+            ],
+            "score": 0.25378236174583435,
+            "selected": [
+              2,
+              54
+            ],
+            "selection_physical_counters": {
+              "MCTS_calls": 0,
+              "physical_transition_calls": 0,
+              "simulator_initializations": 0,
+              "teacher_X_calls": 0,
+              "teacher_Y_calls": 0
+            },
+            "stop_score": 2.416987399556092e-06
+          },
+          "is_predicted_edit": false,
+          "moved_mask": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          "observation_hash": "3cd518e4195a57336ac8",
+          "q_visible": false,
+          "remaining_steps": 3
+        },
+        {
+          "cells": [
+            45,
+            37,
+            54,
+            21,
+            14,
+            55,
+            47,
+            46
+          ],
+          "decision": {
+            "best_reloc_score": 0.28512322902679443,
+            "candidates": [
+              [
+                4,
+                10
+              ],
+              [
+                4,
+                19
+              ],
+              [
+                6,
+                44
+              ],
+              [
+                4,
+                50
+              ],
+              [
+                4,
+                18
+              ],
+              [
+                3,
+                6
+              ],
+              [
+                5,
+                44
+              ],
+              [
+                0,
+                44
+              ],
+              [
+                1,
+                58
+              ],
+              [
+                3,
+                50
+              ],
+              [
+                3,
+                4
+              ],
+              [
+                3,
+                49
+              ],
+              [
+                4,
+                6
+              ],
+              [
+                4,
+                28
+              ],
+              [
+                4,
+                35
+              ],
+              [
+                3,
+                35
+              ]
+            ],
+            "n_candidates": 16,
+            "ranked_candidates": [
+              [
+                3,
+                4
+              ],
+              [
+                4,
+                10
+              ],
+              [
+                4,
+                28
+              ],
+              [
+                3,
+                35
+              ],
+              [
+                4,
+                35
+              ],
+              [
+                4,
+                18
+              ],
+              [
+                0,
+                44
+              ],
+              [
+                3,
+                6
+              ],
+              [
+                4,
+                6
+              ],
+              [
+                5,
+                44
+              ],
+              [
+                6,
+                44
+              ],
+              [
+                3,
+                49
+              ],
+              [
+                1,
+                58
+              ],
+              [
+                4,
+                19
+              ],
+              [
+                3,
+                50
+              ],
+              [
+                4,
+                50
+              ]
+            ],
+            "ranked_scores": [
+              0.28512322902679443,
+              0.21369442343711853,
+              0.1663367599248886,
+              0.032314006239175797,
+              0.029765194281935692,
+              0.012391000986099243,
+              0.0004123548569623381,
+              0.0003567598760128021,
+              0.00026576590607874095,
+              0.00022563955280929804,
+              0.0001961276720976457,
+              6.430703069781885e-05,
+              5.673208215739578e-05,
+              3.549184839357622e-05,
+              1.1611117770371493e-05,
+              6.239669346541632e-06
+            ],
+            "score": 0.28512322902679443,
+            "selected": [
+              3,
+              4
+            ],
+            "selection_physical_counters": {
+              "MCTS_calls": 0,
+              "physical_transition_calls": 0,
+              "simulator_initializations": 0,
+              "teacher_X_calls": 0,
+              "teacher_Y_calls": 0
+            },
+            "stop_score": 8.700614671397489e-06
+          },
+          "is_predicted_edit": true,
+          "moved_mask": [
+            false,
+            false,
+            true,
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          "observation_hash": "ab27615610e9a1b6d8e0",
+          "q_visible": false,
+          "remaining_steps": 2
+        },
+        {
+          "cells": [
+            45,
+            37,
+            54,
+            4,
+            14,
+            55,
+            47,
+            46
+          ],
+          "decision": {
+            "best_reloc_score": 0.9955677390098572,
+            "candidates": [
+              [
+                4,
+                50
+              ],
+              [
+                4,
+                10
+              ],
+              [
+                6,
+                44
+              ],
+              [
+                1,
+                52
+              ],
+              [
+                4,
+                18
+              ],
+              [
+                0,
+                58
+              ],
+              [
+                4,
+                19
+              ],
+              [
+                1,
+                16
+              ],
+              [
+                5,
+                44
+              ],
+              [
+                4,
+                12
+              ],
+              [
+                4,
+                28
+              ],
+              [
+                1,
+                44
+              ],
+              [
+                4,
+                2
+              ],
+              [
+                0,
+                52
+              ],
+              [
+                1,
+                36
+              ],
+              [
+                4,
+                35
+              ]
+            ],
+            "n_candidates": 16,
+            "ranked_candidates": [
+              [
+                4,
+                10
+              ],
+              [
+                4,
+                28
+              ],
+              [
+                4,
+                2
+              ],
+              [
+                4,
+                18
+              ],
+              [
+                4,
+                35
+              ],
+              [
+                4,
+                12
+              ],
+              [
+                1,
+                44
+              ],
+              [
+                5,
+                44
+              ],
+              [
+                0,
+                52
+              ],
+              [
+                1,
+                16
+              ],
+              [
+                1,
+                52
+              ],
+              [
+                6,
+                44
+              ],
+              [
+                1,
+                36
+              ],
+              [
+                0,
+                58
+              ],
+              [
+                4,
+                19
+              ],
+              [
+                4,
+                50
+              ]
+            ],
+            "ranked_scores": [
+              0.9955677390098572,
+              0.9815558791160583,
+              0.9675728678703308,
+              0.6825097799301147,
+              0.27647414803504944,
+              0.00516558438539505,
+              0.004110666923224926,
+              0.0016956691397354007,
+              0.0016843675402924418,
+              0.0015971329994499683,
+              0.001514327828772366,
+              0.001475512981414795,
+              0.001334299799054861,
+              0.001026258454658091,
+              0.00045505145681090653,
+              6.718033546349034e-05
+            ],
+            "score": 0.9955677390098572,
+            "selected": [
+              4,
+              10
+            ],
+            "selection_physical_counters": {
+              "MCTS_calls": 0,
+              "physical_transition_calls": 0,
+              "simulator_initializations": 0,
+              "teacher_X_calls": 0,
+              "teacher_Y_calls": 0
+            },
+            "stop_score": 0.0001291261287406087
+          },
+          "is_predicted_edit": true,
+          "moved_mask": [
+            false,
+            false,
+            true,
+            true,
+            false,
+            false,
+            false,
+            false
+          ],
+          "observation_hash": "877da8e06fa454088588",
+          "q_visible": false,
+          "remaining_steps": 1
+        }
+      ],
+      "seq": [
+        [
+          2,
+          54
+        ],
+        [
+          3,
+          4
+        ],
+        [
+          4,
+          10
+        ]
+      ],
+      "split": "test",
+      "status": "REPAIR",
+      "step_traces": [
+        {
+          "n_candidates": 16,
+          "score": 0.25378,
+          "selected": [
+            2,
+            54
+          ],
+          "step": 0,
+          "stop_score": 0.0
+        },
+        {
+          "n_candidates": 16,
+          "score": 0.28512,
+          "selected": [
+            3,
+            4
+          ],
+          "step": 1,
+          "stop_score": 1e-05
+        },
+        {
+          "n_candidates": 16,
+          "score": 0.99557,
+          "selected": [
+            4,
+            10
+          ],
+          "step": 2,
+          "stop_score": 0.00013
+        }
+      ],
+      "value_calls": 51,
+      "value_forward_passes": 3,
+      "verified": 0,
+      "x": 0,
+      "y": 1,
+      "execution_host": "girish-laptop",
+      "execution_evidence": {
+        "directory": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_parallel_20261117/test_2d/0036_7461bf758bc4c8f04aa1",
+        "selection_trace_sha256": null,
+        "journal_sha256": "d00948f6935b76945a80bceba846205694bda0b4bb66c8ed3d32e45769563b85",
+        "attempted_relocations": 3,
+        "executed_relocations": 3
+      }
+    },
+    "2d|open_loop|NONE|SINGLE_QUERY_WALL_LIMIT": {
+      "root_id": "2d-plus2d-srv-w0266-s009",
+      "domain": "2d",
+      "seed": 0,
+      "arm": "O0_P2Q2",
+      "protocol": "open_loop",
+      "K_legacy": "NONE",
+      "family_id": "source-2a3426b627be360dc1987093",
+      "job_id": "4f8f7280579bb85db4d2",
+      "status": "UNRESOLVED",
+      "verified": null,
+      "x": null,
+      "y": null,
+      "failure_kind": "SINGLE_QUERY_WALL_LIMIT",
+      "evidence": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_parallel_20261117/test_2d_pool_fragment/0042_4f8f7280579bb85db4d2",
+      "execution_host": "girish-laptop",
+      "execution_evidence": {
+        "directory": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_parallel_20261117/test_2d/0042_4f8f7280579bb85db4d2",
+        "selection_trace_sha256": null,
+        "journal_sha256": "0bf56f17c3067a5ebc34e66bcee2709e43fd1c519112a90b04ab9767db2feaf9",
+        "attempted_relocations": 1,
+        "executed_relocations": 0
+      }
+    },
+    "2d|closed_loop|0|NO_PLAN_FOUND": {
+      "K_legacy": "0",
+      "action_retries_used": 0,
+      "adapter_calls": 3,
+      "arm": "O0_closed_P2Q2",
+      "displacement": 4.0,
+      "domain": "2d",
+      "execution_planner_calls": 2,
+      "failed_phase": "connector",
+      "failure_kind": "NO_PLAN_FOUND",
+      "family_id": "source-a2c76c50eb2489414848d146",
+      "independent_verification": true,
+      "independent_y_diagnostic": true,
+      "job_id": "17a6eff982fe18671230",
+      "latency_ms": 12.979021877981722,
+      "m": 1,
+      "masks": {
+        "eval_abstain": false,
+        "eval_noop": true,
+        "eval_repair": false,
+        "eval_task": false,
+        "train_prediction": true
+      },
+      "max_action_retries": 0,
+      "model_source": {
+        "policy": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/campaigns/E16_v1_20261117/training/2d_P2Q2_knownprefix/o0_v1_all_feasible_s1/policy.pt",
+        "policy_sha256": "6031f0c6f159d8b2597f18d0c23b055a4e79bb0d074651d47580eb5b9e9e0b6e",
+        "value": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/campaigns/E16_v1_20261117/training/2d_P2Q2_knownprefix/o0_v1_all_feasible_s1/value.pt",
+        "value_sha256": "266495bea36fca8fc3d55e2b28cdb65f92dd47636263e7ea690d0593c1ed9967"
+      },
+      "observation_schema": "o0_v1",
+      "physical_phases": {
+        "connector_calls": 1,
+        "transition_planner_calls": 1,
+        "y_cache_hits": 0,
+        "y_calls": 1
+      },
+      "physics_seed": 0,
+      "policy_calls": 2,
+      "policy_forward_passes": 2,
+      "protocol": "closed_loop",
+      "robot_travel": null,
+      "robot_travel_reference": {
+        "coverage": "PARTIAL_EXECUTION_PREFIX",
+        "definition": "Sum L2 joint-waypoint arc lengths of accepted corrective plans and certified terminal connector; target Y excluded; not actual servo integration travel",
+        "missing_witnesses": [],
+        "observed_successful_step_joint_displacement_lower_bound_rad": 4.522288119029762,
+        "reference_joint_path_rad": 5.464405791605073,
+        "sources": [
+          {
+            "joint_waypoint_length_rad": 5.464405791605073,
+            "path": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_parallel_20261117/test_2d_pool_fragment/0076_17a6eff982fe18671230/witnesses/witnesses/00/00cfb1de8c31e1c74890d941.npz",
+            "sha256": "f42b23698f27f192611c477d80787fd2691fd78a34c91038f7fa2f4663d017ec"
+          }
+        ]
+      },
+      "robot_travel_status": "Actual integration-step arc NOT_RECORDED; certified reference path reported separately",
+      "root_id": "2d-plus2d-srv-w0075-s012",
+      "seed": 1,
+      "selection_decisions": 2,
+      "selection_physical_counters": {
+        "MCTS_calls": 0,
+        "physical_transition_calls": 0,
+        "simulator_initializations": 0,
+        "teacher_X_calls": 0,
+        "teacher_Y_calls": 0
+      },
+      "seq": [
+        [
+          0,
+          2
+        ]
+      ],
+      "split": "test",
+      "status": "REPAIR",
+      "value_calls": 17,
+      "value_forward_passes": 1,
+      "verified": 0,
+      "wall_s": 5.532,
+      "x": 0,
+      "y": 1,
+      "execution_host": "girish-laptop",
+      "execution_evidence": {
+        "directory": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_parallel_20261117/test_2d/0076_17a6eff982fe18671230",
+        "selection_trace_sha256": "3920914c207bcd356843f63dbb08bb84e3114b0716372239f222aeda144a28f7",
+        "journal_sha256": "91a4dbaf4327153814735b52886b39f437a91b773e5a28548a10a2033cb0ec86",
+        "attempted_relocations": 1,
+        "executed_relocations": 1
+      }
+    },
+    "2d|closed_loop|1|NO_PLAN_FOUND": {
+      "root_id": "2d-conv-plus2d-srv-w0119-s017",
+      "domain": "2d",
+      "seed": 0,
+      "protocol": "closed_loop",
+      "K_legacy": "1",
+      "verified": 0,
+      "x": 0,
+      "y": null,
+      "failed_phase": "connector",
+      "failure_kind": "NO_PLAN_FOUND",
+      "seq": [
+        [
+          6,
+          18
+        ]
+      ],
+      "arm": "O0_closed_P2Q2",
+      "family_id": "source-fba457297786ce48432eb7a0",
+      "job_id": "35521a698434d232cce4",
+      "recovered_from_durable_query": 2,
+      "proof_result_sha256": "117462092c0d3dd83e423a3953faec33fd372f8a975db3b26da068742b6aa1fc",
+      "interrupted_episode": true,
+      "status": "REPAIR",
+      "execution_host": "girish-laptop",
+      "execution_evidence": {
+        "directory": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_parallel_20261117/test_2d/0078_35521a698434d232cce4",
+        "selection_trace_sha256": "57d382f3e36ee1ac393eeaf4a7a2b5089cf7269df342d576114a0b1be8607a52",
+        "journal_sha256": "85624ea512c2ff904d3c7204bbf4692dc3eba7bbd946e5795ba624b041436333",
+        "attempted_relocations": 1,
+        "executed_relocations": 1
+      }
+    },
+    "2d|closed_loop|2|CERTIFIED": {
+      "K_legacy": "2",
+      "action_retries_used": 0,
+      "adapter_calls": 2,
+      "arm": "O0_closed_P2Q2",
+      "displacement": 6.3246,
+      "domain": "2d",
+      "execution_planner_calls": 3,
+      "failed_phase": "target",
+      "failure_kind": "CERTIFIED",
+      "family_id": "source-76e9f4d0a4778ee73e1985f3",
+      "independent_verification": true,
+      "job_id": "de268a6cf816c9aea9be",
+      "latency_ms": 22.518776007927954,
+      "m": 1,
+      "masks": {
+        "eval_abstain": false,
+        "eval_noop": false,
+        "eval_repair": true,
+        "eval_task": true,
+        "train_prediction": true
+      },
+      "max_action_retries": 0,
+      "model_source": {
+        "policy": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/campaigns/E16_v1_20261117/training/2d_P2Q2_knownprefix/o0_v1_all_feasible_s0/policy.pt",
+        "policy_sha256": "2d3e2914c5cba9ff90e938203580017affcb5046a06ae1302b2615331972b280",
+        "value": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/campaigns/E16_v1_20261117/training/2d_P2Q2_knownprefix/o0_v1_all_feasible_s0/value.pt",
+        "value_sha256": "590e9dd916415426d8007825c56fcd978783a1045646437a8b54efbd2892a759"
+      },
+      "observation_schema": "o0_v1",
+      "physical_phases": {
+        "connector_calls": 1,
+        "transition_planner_calls": 1,
+        "y_cache_hits": 0,
+        "y_calls": 1
+      },
+      "physics_seed": 0,
+      "policy_calls": 19,
+      "policy_forward_passes": 4,
+      "protocol": "closed_loop",
+      "robot_travel": null,
+      "robot_travel_reference": {
+        "coverage": "ACCEPTED_CORRECTIVE_PREFIX_AND_CONNECTOR",
+        "definition": "Sum L2 joint-waypoint arc lengths of accepted corrective plans and certified terminal connector; target Y excluded; not actual servo integration travel",
+        "missing_witnesses": [],
+        "observed_successful_step_joint_displacement_lower_bound_rad": 4.4569498332814925,
+        "reference_joint_path_rad": 16.933146252228305,
+        "sources": [
+          {
+            "joint_waypoint_length_rad": 10.42864907425983,
+            "path": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_parallel_20261117/test_2d_pool_fragment/0081_de268a6cf816c9aea9be/witnesses/witnesses/7f/7f802f88ba26edfae9496f3f.npz",
+            "sha256": "89dad6fe89d925f58b0dd2a952769ee1268e3569863856fb5b56186b7390225e"
+          },
+          {
+            "joint_waypoint_length_rad": 6.504497177968475,
+            "path": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_parallel_20261117/test_2d_pool_fragment/0081_de268a6cf816c9aea9be/witnesses/witnesses/82/82fe4ad5d09c07709a5944d8.npz",
+            "sha256": "cafda2b3daf5a867be1deaa19e41849191b3f3f5ee0b76436296cb4e34fd7e36"
+          }
+        ]
+      },
+      "robot_travel_status": "Actual integration-step arc NOT_RECORDED; certified reference path reported separately",
+      "root_id": "2d-plus2d-w0185-s017",
+      "seed": 0,
+      "selection_decisions": 2,
+      "selection_physical_counters": {
+        "MCTS_calls": 0,
+        "physical_transition_calls": 0,
+        "simulator_initializations": 0,
+        "teacher_X_calls": 0,
+        "teacher_Y_calls": 0
+      },
+      "seq": [
+        [
+          0,
+          1
+        ]
+      ],
+      "split": "test",
+      "status": "REPAIR",
+      "value_calls": 34,
+      "value_forward_passes": 2,
+      "verified": 0,
+      "wall_s": 11.791,
+      "x": 1,
+      "y": 0,
+      "execution_host": "girish-laptop",
+      "execution_evidence": {
+        "directory": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_parallel_20261117/test_2d/0081_de268a6cf816c9aea9be",
+        "selection_trace_sha256": "e1e093d836f6bd31ad249f79b88a13a8a63310f9f4e098f5b53813f9b5f38e79",
+        "journal_sha256": "03bc68870a0c12023fef6d9e7ac2ee16461c35627ddaee530b52cb291f8b72b5",
+        "attempted_relocations": 1,
+        "executed_relocations": 1
+      }
+    },
+    "2d|closed_loop|3|NO_PLAN_FOUND": {
+      "K_legacy": "3",
+      "action_retries_used": 0,
+      "adapter_calls": 1,
+      "arm": "O0_closed_P2Q2",
+      "displacement": 0.0,
+      "domain": "2d",
+      "execution_planner_calls": 1,
+      "failed_phase": "target",
+      "failure_kind": "NO_PLAN_FOUND",
+      "family_id": "source-de3dafaca53a7a3c4dbfda59",
+      "independent_verification": true,
+      "job_id": "19665c3b2fb9081d1767",
+      "latency_ms": 8.43717495445162,
+      "m": 0,
+      "masks": {
+        "eval_abstain": false,
+        "eval_noop": false,
+        "eval_repair": true,
+        "eval_task": true,
+        "train_prediction": true
+      },
+      "max_action_retries": 0,
+      "model_source": {
+        "policy": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/campaigns/E16_v1_20261117/training/2d_P2Q2_knownprefix/o0_v1_all_feasible_s0/policy.pt",
+        "policy_sha256": "2d3e2914c5cba9ff90e938203580017affcb5046a06ae1302b2615331972b280",
+        "value": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/campaigns/E16_v1_20261117/training/2d_P2Q2_knownprefix/o0_v1_all_feasible_s0/value.pt",
+        "value_sha256": "590e9dd916415426d8007825c56fcd978783a1045646437a8b54efbd2892a759"
+      },
+      "observation_schema": "o0_v1",
+      "physical_phases": {
+        "connector_calls": 0,
+        "transition_planner_calls": 0,
+        "y_cache_hits": 0,
+        "y_calls": 1
+      },
+      "physics_seed": 0,
+      "policy_calls": 15,
+      "policy_forward_passes": 2,
+      "protocol": "closed_loop",
+      "robot_travel": null,
+      "robot_travel_reference": {
+        "coverage": "ACCEPTED_CORRECTIVE_PREFIX_AND_CONNECTOR",
+        "definition": "Sum L2 joint-waypoint arc lengths of accepted corrective plans and certified terminal connector; target Y excluded; not actual servo integration travel",
+        "missing_witnesses": [],
+        "observed_successful_step_joint_displacement_lower_bound_rad": 0.0,
+        "reference_joint_path_rad": 0,
+        "sources": []
+      },
+      "robot_travel_status": "Actual integration-step arc NOT_RECORDED; certified reference path reported separately",
+      "root_id": "2d-plus2d-srv-w0245-s022",
+      "seed": 0,
+      "selection_decisions": 1,
+      "selection_physical_counters": {
+        "MCTS_calls": 0,
+        "physical_transition_calls": 0,
+        "simulator_initializations": 0,
+        "teacher_X_calls": 0,
+        "teacher_Y_calls": 0
+      },
+      "seq": [],
+      "split": "test",
+      "status": "NOOP",
+      "value_calls": 17,
+      "value_forward_passes": 1,
+      "verified": 0,
+      "wall_s": 3.135,
+      "x": 1,
+      "y": 0,
+      "execution_host": "girish-laptop",
+      "execution_evidence": {
+        "directory": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_parallel_20261117/test_2d/0084_19665c3b2fb9081d1767",
+        "selection_trace_sha256": "f5d684ddb85d859effebf1d92c0a81ade7d70099a26c7ca8a9beb7c2f4612260",
+        "journal_sha256": "00d7a57dbfd38bf8492597abfde74c36099af763622967b57406fd92c59599f2",
+        "attempted_relocations": 0,
+        "executed_relocations": 0
+      }
+    },
+    "2d|closed_loop|NONE|CERTIFIED": {
+      "K_legacy": "NONE",
+      "action_retries_used": 0,
+      "adapter_calls": 3,
+      "arm": "O0_closed_P2Q2",
+      "displacement": 6.0,
+      "domain": "2d",
+      "execution_planner_calls": 2,
+      "failed_phase": "relocation:1",
+      "failure_kind": "CERTIFIED",
+      "family_id": "source-df638665e158e4fe5be9b70e",
+      "independent_verification": true,
+      "independent_y_diagnostic": true,
+      "job_id": "f29e1445fcf60e757797",
+      "latency_ms": 32.0729500381276,
+      "m": 2,
+      "masks": {
+        "eval_abstain": true,
+        "eval_noop": false,
+        "eval_repair": false,
+        "eval_task": false,
+        "train_prediction": true
+      },
+      "max_action_retries": 0,
+      "model_source": {
+        "policy": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/campaigns/E16_v1_20261117/training/2d_P2Q2_knownprefix/o0_v1_all_feasible_s0/policy.pt",
+        "policy_sha256": "2d3e2914c5cba9ff90e938203580017affcb5046a06ae1302b2615331972b280",
+        "value": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/campaigns/E16_v1_20261117/training/2d_P2Q2_knownprefix/o0_v1_all_feasible_s0/value.pt",
+        "value_sha256": "590e9dd916415426d8007825c56fcd978783a1045646437a8b54efbd2892a759"
+      },
+      "observation_schema": "o0_v1",
+      "physical_phases": {
+        "connector_calls": 0,
+        "transition_planner_calls": 2,
+        "y_cache_hits": 0,
+        "y_calls": 1
+      },
+      "physics_seed": 0,
+      "policy_calls": 37,
+      "policy_forward_passes": 4,
+      "protocol": "closed_loop",
+      "robot_travel": null,
+      "robot_travel_reference": {
+        "coverage": "PARTIAL_EXECUTION_PREFIX",
+        "definition": "Sum L2 joint-waypoint arc lengths of accepted corrective plans and certified terminal connector; target Y excluded; not actual servo integration travel",
+        "missing_witnesses": [],
+        "observed_successful_step_joint_displacement_lower_bound_rad": 2.2149136966913625,
+        "reference_joint_path_rad": 4.821394574013564,
+        "sources": [
+          {
+            "joint_waypoint_length_rad": 4.821394574013564,
+            "path": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_parallel_20261117/test_2d_pool_fragment/0087_f29e1445fcf60e757797/witnesses/witnesses/48/4849d315030f2e41b8e59d63.npz",
+            "sha256": "e8e7f2e767271a77967de38135d51eb3249c4d144de264d910c8fbc1321f4b37"
+          }
+        ]
+      },
+      "robot_travel_status": "Actual integration-step arc NOT_RECORDED; certified reference path reported separately",
+      "root_id": "2d-plus2d-srv-w0242-s023",
+      "seed": 0,
+      "selection_decisions": 2,
+      "selection_physical_counters": {
+        "MCTS_calls": 0,
+        "physical_transition_calls": 0,
+        "simulator_initializations": 0,
+        "teacher_X_calls": 0,
+        "teacher_Y_calls": 0
+      },
+      "seq": [
+        [
+          8,
+          4
+        ],
+        [
+          5,
+          18
+        ]
+      ],
+      "split": "test",
+      "status": "REPAIR",
+      "value_calls": 34,
+      "value_forward_passes": 2,
+      "verified": 0,
+      "wall_s": 4.922,
+      "x": 0,
+      "y": 0,
+      "execution_host": "girish-laptop",
+      "execution_evidence": {
+        "directory": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_parallel_20261117/test_2d/0087_f29e1445fcf60e757797",
+        "selection_trace_sha256": "71ca77565db9c1a037509ded2a15825d54254f9dd9b69c8bb3150172ec3868de",
+        "journal_sha256": "581cf3b54069fe7ab4caaf0088170458857ec9d2271953889d1a97d76069bc59",
+        "attempted_relocations": 2,
+        "executed_relocations": 1
+      }
+    },
+    "2d|closed_loop|1|RESOURCE_HEADROOM_LOST": {
+      "root_id": "2d-conv-plus2d-w0039-s006",
+      "domain": "2d",
+      "seed": 1,
+      "arm": "O0_closed_P2Q2",
+      "protocol": "closed_loop",
+      "K_legacy": "1",
+      "family_id": "source-4f73360a96ab5a8334a722c2",
+      "job_id": "29c12cc3d16c4eeb787b",
+      "status": "UNRESOLVED",
+      "verified": null,
+      "x": null,
+      "y": null,
+      "failure_kind": "RESOURCE_HEADROOM_LOST",
+      "evidence": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_parallel_20261117/test_2d_pool_fragment/0094_29c12cc3d16c4eeb787b",
+      "execution_host": "girish-laptop",
+      "execution_evidence": {
+        "directory": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_parallel_20261117/test_2d/0094_29c12cc3d16c4eeb787b",
+        "selection_trace_sha256": "85a7e852510741b6e68d916c8d34ced11dcd09e7ce02a19acccbb1c7a7b07a72",
+        "journal_sha256": "150ba6e81b72a9671a3c561bfd77bbd41786045ef8bd2cb20b7fd63bdfaae834",
+        "attempted_relocations": 1,
+        "executed_relocations": 0
+      }
+    },
+    "2d|closed_loop|2|RESOURCE_HEADROOM_LOST": {
+      "root_id": "2d-plus2d-w0274-s001",
+      "domain": "2d",
+      "seed": 0,
+      "arm": "O0_closed_P2Q2",
+      "protocol": "closed_loop",
+      "K_legacy": "2",
+      "family_id": "source-12a065679d854727d8e76d5d",
+      "job_id": "dca9fa4cd8dc0c28b39d",
+      "status": "UNRESOLVED",
+      "verified": null,
+      "x": null,
+      "y": null,
+      "failure_kind": "RESOURCE_HEADROOM_LOST",
+      "evidence": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_parallel_20261117/test_2d_pool_fragment/0096_dca9fa4cd8dc0c28b39d",
+      "execution_host": "girish-laptop",
+      "execution_evidence": {
+        "directory": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_parallel_20261117/test_2d/0096_dca9fa4cd8dc0c28b39d",
+        "selection_trace_sha256": "201356074ced636311185346150e1de34a954def1598fcd1959a28101d53aa03",
+        "journal_sha256": "5b60fec8ec41d9cd2bfe8af9b93e3ae569e3ee6ca72867fe96fa65b7f8c1e626",
+        "attempted_relocations": 1,
+        "executed_relocations": 1
+      }
+    },
+    "2d|closed_loop|None|None": {
+      "job_id": "0d94ae1474e7d1d0e9b2",
+      "root_id": "2d-plus2d-w0274-s001",
+      "domain": "2d",
+      "arm": "O0_closed_P2Q2",
+      "protocol": "closed_loop",
+      "seed": 1,
+      "status": "NOT_RUN",
+      "verified": null,
+      "x": null,
+      "y": null
+    },
+    "2d|open_loop|None|None": {
+      "job_id": "32a0f52d7f46cc4cd499",
+      "root_id": "2d-plus2d-srv-w0075-s012",
+      "domain": "2d",
+      "arm": "O0_P2",
+      "protocol": "open_loop",
+      "seed": 0,
+      "status": "NOT_RUN",
+      "verified": null,
+      "x": null,
+      "y": null
+    },
+    "3d|open_loop|0|RESOURCE_HEADROOM_LOST": {
+      "root_id": "3ds66-lap-w0007-s011",
+      "domain": "3d",
+      "seed": 0,
+      "arm": "O0_P2Q2",
+      "protocol": "open_loop",
+      "K_legacy": "0",
+      "family_id": "source-07b72ed6336286bdeb4487b9",
+      "job_id": "78a0887310007c4a1f56",
+      "status": "UNRESOLVED",
+      "verified": null,
+      "x": null,
+      "y": null,
+      "failure_kind": "RESOURCE_HEADROOM_LOST",
+      "evidence": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_parallel_20261117/test_3d_pool_fragment/0000_78a0887310007c4a1f56",
+      "execution_host": "girish-laptop",
+      "execution_evidence": {
+        "directory": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_parallel_20261117/test_3d/0000_78a0887310007c4a1f56",
+        "selection_trace_sha256": null,
+        "journal_sha256": "e2ff7f64798832055cdd9278781108810a14aec40a26029608033d2e347ac140",
+        "attempted_relocations": 1,
+        "executed_relocations": 1
+      }
+    },
+    "3d|open_loop|None|None": {
+      "job_id": "a7b35df4e9ad3ec8425e",
+      "root_id": "3ds66-lap-w0007-s011",
+      "domain": "3d",
+      "arm": "O0_P2Q2",
+      "protocol": "open_loop",
+      "seed": 2,
+      "status": "NOT_RUN",
+      "verified": null,
+      "x": null,
+      "y": null
+    },
+    "3d|open_loop|1|RESOURCE_HEADROOM_LOST": {
+      "root_id": "3ds66-lap-w0003-s008",
+      "domain": "3d",
+      "seed": 1,
+      "arm": "O0_P2Q2",
+      "protocol": "open_loop",
+      "K_legacy": "1",
+      "family_id": "source-d39812cdf6357076e05bd0aa",
+      "job_id": "36f26b023bb35a4e825d",
+      "status": "UNRESOLVED",
+      "verified": null,
+      "x": null,
+      "y": null,
+      "failure_kind": "RESOURCE_HEADROOM_LOST",
+      "evidence": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_parallel_20261117/test_3d_pool_fragment/0004_36f26b023bb35a4e825d",
+      "execution_host": "girish-laptop",
+      "execution_evidence": {
+        "directory": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_parallel_20261117/test_3d/0004_36f26b023bb35a4e825d",
+        "selection_trace_sha256": null,
+        "journal_sha256": "a1856a44c496de2399b4c5ab5709dd0e1af81b3799869d289ddb2c4016818f45",
+        "attempted_relocations": 2,
+        "executed_relocations": 1
+      }
+    },
+    "3d|closed_loop|None|None": {
+      "job_id": "c24539f7a9b938a15d40",
+      "root_id": "3ds66-lap-w0007-s011",
+      "domain": "3d",
+      "arm": "O0_closed_P2Q2",
+      "protocol": "closed_loop",
+      "seed": 0,
+      "status": "NOT_RUN",
+      "verified": null,
+      "x": null,
+      "y": null
+    }
+  }
+}
