@@ -44,14 +44,16 @@ def local_faces(model,g,mj):
 
 
 def render3d(ax,state,env):
-    row,raw=env._get_row_and_raw(state.root_id);b=env.backend;b.boot();initialization_steps=0;original_step=b.mujoco.mj_step
+    import mujoco
+    row,raw=env._get_row_and_raw(state.root_id);b=env.backend;initialization_steps=0;original_step=mujoco.mj_step
     def count_step(*args,**kwargs):
         nonlocal initialization_steps
         initialization_steps+=int(kwargs.get('nstep',args[2] if len(args)>2 else 1))
         return original_step(*args,**kwargs)
-    b.mujoco.mj_step=count_step
-    try:scene=b._get_env(state.root_id,raw)
-    finally:b.mujoco.mj_step=original_step
+    mujoco.mj_step=count_step
+    try:
+        b.boot();scene=b._get_env(state.root_id,raw)
+    finally:mujoco.mj_step=original_step
     b._restore_env(scene,state.physics_payload)
     model,data=scene.model,scene.data;bounds=[];moving_bounds=[];geoms=0;mesh_hashes={}
     for g in range(model.ngeom):
