@@ -58,7 +58,7 @@
   "checkpoint_manifest_sha256": "0ec9ef1fa46cdb095b4174294da79ec61d760272ba9d6109979c7b6fc06a8e96",
   "cpu_threads": 1,
   "disk_gib": 10,
-  "engine": "/home/longhorizon/disco_grid_stage2/source/parallel_pool_v2/baselines/disco_grid",
+  "engine": "/home/longhorizon/disco_grid_stage2/source/reserved_cores_0537d1bd12/baselines/disco_grid",
   "exclusions": "No competing method, no new training, no additional machine or GPU. TEST starts only after selection freeze and required VAL coverage.",
   "final_model_seeds": [
     0,
@@ -92,7 +92,7 @@
   "original_frozen_preparation_sha256": "92073646fbfd984a10342fb5792ce6bea2b8ce3478e534af9b76eb9d7b51dd17",
   "original_preparation": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/campaigns/E16_v1_20261117/evaluation_preparation_v3",
   "parallel_authorization": {
-    "authorization_text": "increase the performance of the gitish laptop, use more of the GPU and CPU, make sure you have atleast 3 CPU workers so that it doesn't crash. you can use my laptop CPU cores and girish laptop CPU cores. make sure you have it aligned with the other job that I am performing, for the methodology that I am working on. you focus on the DISCO IMPLEMENTATION",
+    "authorization_text": "you can use the girish laptop rest of the cpu cores to speed things up. make sure you have 2 cores free on the girish laptop, other than you can use whatever's available.",
     "authorized_hosts": {
       "girish-laptop": "gvcstar",
       "user-laptop": "pop-os"
@@ -107,6 +107,30 @@
         "val": 7200
       }
     },
+    "cpu_affinity": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21
+    ],
     "cpu_threads": 1,
     "disk_gib": 10,
     "global_adapter_call_ceiling": 5523,
@@ -118,23 +142,30 @@
     "inference_device": "frozen CPU",
     "interpretation": "User amended host/worker placement only. Same aggregate CPU, wall, call, RAM and disk ceilings; no change to models, roots, benchmark, query caps, retries or verification.",
     "ram_gib": 4,
+    "reserved_logical_cpus": [
+      22,
+      23
+    ],
+    "reserved_physical_cores": 2,
     "resource_coordination": {
       "disco_trial_nice": 19,
-      "girish_workers": 3,
+      "girish_workers": 4,
+      "load_ceiling": 22,
       "local_reason": "Observed MemAvailable about 6 GiB below unchanged 8 GiB headroom guard; high swap use. Do not disrupt other methodology work.",
       "local_worker_allocation": 0,
       "other_job_observed_workers": {
         "girish-laptop": 16,
         "user-laptop": 14
-      }
+      },
+      "reserved_from_DISCO": "Physical cores 14 and 15, logical CPUs 22 and 23. Other workloads unchanged; global idleness not guaranteed."
     },
     "revoked_execution_hosts": [
       "gvlab"
     ],
-    "scope": "DISCO_RELEASE_PARALLEL_HOST_AMENDMENT",
+    "scope": "DISCO_RELEASE_RESERVED_CORES_AMENDMENT",
     "status": "APPROVED",
-    "utc": "2026-11-17T13:41:33.440714+00:00",
-    "workers": 3
+    "utc": "2026-11-17T17:05:05.109120+00:00",
+    "workers": 4
   },
   "parallel_runner_sha256": "ecbe42428b654298fa7ae5b42d822ce2d325a2b256d7f912435bcac5bf553548",
   "parallel_source_commit": "bc47221c789f9236a1d940908909d900de43ffcb",
@@ -153,7 +184,7 @@
     "worker_cpu_s": 894.3853640000002,
     "worker_wall_s": 899.1270242715254
   },
-  "prior_release": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_girish_20261117",
+  "prior_release": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_parallel_20261117",
   "prospective_control_correction": {
     "audit": "/scratch/nav/disco_grid/stage2/campaigns/E16_v1_20261117/training_release_v2/CANDIDATE_CONTROL_CORRECTION.json",
     "heldout_outcomes_used": false,
@@ -186,6 +217,7 @@
   },
   "scope": "DISCO_RELEASE_EVALUATION",
   "selection": "VAL O0_P2Q2 task success, then verified K0 NOOP, then explicit NONE abstention; residual ties smaller eta. Apply common selected eta to all Q arms and O0/O1 closed-loop.",
+  "source_commit": "0537d1bd12",
   "status": "APPROVED",
   "trial_wall_s": {
     "2d": 300,
@@ -195,5 +227,5 @@
   "validation_model_seeds": [
     0
   ],
-  "workers": 3
+  "workers": 4
 }

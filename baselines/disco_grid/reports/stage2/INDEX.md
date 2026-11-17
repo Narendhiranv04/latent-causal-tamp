@@ -99,3 +99,11 @@ The user authorized spare Girish CPU capacity with two physical cores reserved. 
 - [Authorization](RESERVED_CORES_AUTHORIZATION.json), [resource/budget and no-retry contract](RESERVED_CORES_CONTINUATION.md), [49 passing tests](RESERVED_CORES_TESTS.log).
 - [Physical launch](RESERVED_CORES_EVALUATION_LAUNCH.json), [live affinity verification](RESERVED_CORES_LIVE_VERIFICATION.json), [report observer](RESERVED_CORES_FINISH_LAUNCH.json).
 - Original per-domain CPU/wall and global 5523-call ceilings remain unchanged; earlier costs count. Only never-attempted TEST identities execute; VAL selection remains byte-identical. No GPU required.
+
+## Measured physical release
+
+- [Standalone measured report](FINAL_DISCO_STAGE2_REPORT.md), [metrics](FINAL_METRICS.csv), and [paired ablations](ABLATIONS.csv).
+- [Versioned physical evidence package](physical_release_V15_F25_v2/FINISH_COMPLETE.json), [query/state byte inventory](physical_release_V15_F25_v2/physical_evidence_index.json), and [publication hashes](PHYSICAL_RELEASE_PUBLICATION.json).
+- [Root STOP diagnostics](ROOT_STOP_DIAGNOSTICS.json), [failure examples](FAILURE_EXAMPLES.json), and [physical resource totals](PHYSICAL_RESOURCE_TOTALS.json).
+
+Earlier pending-run statements in this index describe preparation history; the measured report and status JSON are current.
