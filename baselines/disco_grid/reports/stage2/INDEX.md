@@ -149,3 +149,7 @@ The v4 partial report was pushed as `70977c09c0`; TEST attempts remain 412/525 (
 ## Approved frozen 2D completion extension
 
 [Approval and request hash](COMPLETION_RESOURCE_APPROVAL.json), [implementation and limits](F113_COMPLETION_EXTENSION.md), [54 passing relevant tests](F113_EXTENSION_TESTS.log), and [two disk-guard regressions](F113_DISK_GUARD_TESTS.log). The exact 113-trial completion is approved and is queued behind the existing 3D supervisor, with final report publication following both. Earlier statements that the 2D extension is unapproved describe history.
+
+## Live approved 2D queue
+
+The approved extension is deployed at immutable source `7665c3a528` and its queue is live. [Queue configuration](F113_COMPLETION_QUEUE_CONFIG.json) and [launch identity](F113_COMPLETION_QUEUE_LAUNCH.json). It waits for the upstream 3D supervisor's final marker, preserves that evidence, then starts the frozen 2D registry with separate CPU/wall caps. Deployment footprint is 79,654,631 bytes, within the reserved 0.5 GiB; runtime artifacts use the stricter 1.5 GiB cumulative guard. The additional startup-manifest race regression passed; local metadata/monitor coverage is now nine passing tests. Final combined reporting/publication follows the queue's terminal marker.
