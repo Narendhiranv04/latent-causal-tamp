@@ -96,5 +96,7 @@ if __name__=='__main__':
     parser=argparse.ArgumentParser()
     parser.add_argument('worktree',type=Path)
     parser.add_argument('--wait',action='store_true')
+    parser.add_argument('--remote',default=REMOTE)
+    parser.add_argument('--version',default='v1',choices=('v1','v2'))
     args=parser.parse_args()
     print(json.dumps(sync(args.worktree,args.wait,args.remote,args.version),indent=2),flush=True)
