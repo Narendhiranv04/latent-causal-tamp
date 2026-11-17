@@ -112,11 +112,23 @@ def run(paths,out):
         state=pickle.loads(path.read_bytes());env=E.RepairEnv(state.domain,witness_dir=out/'display_only_cache'/str(i))
         fig=plt.figure(figsize=(7,5));ax=fig.add_subplot(111,projection='3d' if state.domain=='3d' else None)
         detail=(render3d if state.domain=='3d' else render2d)(ax,state,env)
+        row,_=env._get_row_and_raw(state.root_id);inp=row['inputs']
+        if state.domain=='3d':
+            ax.set_position([.01,.1,.7,.78]);grid=fig.add_axes([.77,.29,.21,.4])
+            legal=D.legal_static_destinations(inp)
+            if legal:
+                xy=np.array([inp['cell_xy'][str(c)] for c in legal]);grid.scatter(xy[:,0],xy[:,1],s=6,c='#b8b8b8',marker='+')
+            for oid,cell in enumerate(state.cells):
+                xy=inp['cell_xy'][str(cell)];grid.scatter(*xy,s=16,c='#bf423b' if oid==inp['tid'] else '#5685a6')
+                grid.text(*xy,str(oid),fontsize=4)
+            grid.plot(*inp['goal'],'*',color='#bf423b',ms=8);grid.set_aspect('equal');grid.tick_params(labelsize=5)
+            grid.set_title('Canonical cells (XY)\nred: target / goal star\ngray +: original legal empty',fontsize=6)
+            detail['inset']='Canonical resting-cell projection only; actual subcell offsets are retained in the native mesh panel'
         ax.set_title(f'{state.root_id} | executed depth {state.depth}\nq/state from {path.name} | {D.sha256_file(path)[:12]}',fontsize=9)
         for ext in ('png','svg'):fig.savefig(out/f'{i:02d}_{state.domain}_depth{state.depth}.{ext}',dpi=200,bbox_inches='tight')
         plt.close(fig)
         manifest.append(dict(path=str(path),state_sha256=D.sha256_file(path),state_hash=state.state_hash(),root_id=state.root_id,
-            domain=state.domain,executed_prefix=state.prefix,q_t=state.q_t,geometry=detail,teacher_sources=C.teacher_sources(state.domain),
+            domain=state.domain,K_legacy=row['K_legacy'],executed_prefix=state.prefix,q_t=state.q_t,geometry=detail,teacher_sources=C.teacher_sources(state.domain),
             physics_initialization_steps=detail.get('native_model_initialization_steps',0),post_restore_physics_steps=0,physical_planner_calls=0,render_backend='matplotlib Agg CPU; native forward kinematics only'))
     (out/'scene_manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
 if __name__=='__main__':
