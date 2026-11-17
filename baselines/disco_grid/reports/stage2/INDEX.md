@@ -1,7 +1,7 @@
 # DISCO-Grid Stage 2 evidence index
 
 **PARTIAL release: TRAIN is complete. The user revoked gvlab execution and
-authorized girish-laptop. Physical evaluation is migrating with prior attempts
+authorized girish-laptop. Physical evaluation is running on girish-laptop with prior attempts
 and costs preserved; final TEST results remain pending.**
 
 Branch: `naren/disco-grid-stage2`. D0–D8 and validation archives are unchanged.
@@ -56,3 +56,5 @@ No cross-method performance evaluation is part of this release.
 ## User-directed host amendment
 
 [Girish authorization](GIRISH_EXECUTION_AUTHORIZATION.json), [current hardware inventory](GIRISH_HOST_INVENTORY.json), [1,301-file migration hash audit](GIRISH_MIGRATION_HASH_AUDIT.json), and [gvlab stop record](GVLAB_USER_HOST_STOP.json). All owned gvlab evaluation and finisher processes exited. The continuation retains completed and interrupted trials without retry, charges all 109 original query intents, and conservatively charges unrecoverable detached-controller CPU. The physical budget is not reset.
+
+Laptop execution: [launch identity](GIRISH_EVALUATION_LAUNCH.json), [postprocessing observer](GIRISH_FINISH_LAUNCH.json), [41-test log](GIRISH_MIGRATION_TESTS.log), and [frozen-input/model qualification](GIRISH_MIGRATION_QUALIFICATION.json). The qualification checked 80 roots, 22 teacher files and 50 model files; 28 sampled frozen model-decision cases matched with zero physical queries.

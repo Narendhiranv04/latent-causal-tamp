@@ -1,6 +1,6 @@
 # DISCO-Grid Stage 2 release audit
 
-**Verdict: PARTIAL. TRAIN execution and model freezing are complete. The user authorized both VAL and TEST; guarded physical release V15_F25_v1_20261117 is running. Final learned-policy metrics remain unavailable until execution finishes. NOT_RUN is not 0% success.**
+**Verdict: PARTIAL. TRAIN execution and model freezing are complete. The user authorized both VAL and TEST; the original gvlab run was stopped at the user’s request and the guarded continuation V15_F25_v1_girish_20261117 is running on girish-laptop. Final learned-policy metrics remain unavailable until execution finishes. NOT_RUN is not 0% success.**
 
 This audit is generated from stored records by `report_training_release.py`.
 It does not replace the preserved D0–D8 or Stage 1 results. The release contains
@@ -208,3 +208,7 @@ identity-scoped gvlab launch at 2026-11-17T12:02:09Z, with zero GPU allocation.
 VAL runs first; the preregistered coverage gate and VAL-only eta selection
 freeze the TEST branch before TEST execution. No additional collection or
 competing method is authorized by this release.
+
+## Current execution host
+
+Gvlab execution was revoked by the user. All owned workers and observers there exited. The laptop continuation launched at 2026-11-17T12:34:40Z after 41 tests and frozen-input/policy qualification. GPU allocation remains zero. Girish execution records supersede the earlier gvlab launch status; archived attempts and their costs remain charged.

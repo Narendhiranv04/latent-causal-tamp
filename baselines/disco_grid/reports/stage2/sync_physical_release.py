@@ -82,8 +82,10 @@ def sync(worktree, wait=False):
     text+='\nEarlier pending-run statements in this index describe preparation history; the measured report and status JSON are current.\n'
     index.write_text(text)
     relative='baselines/disco_grid/reports/stage2'
-    command(['git','add',relative],worktree)
-    command(['git','commit','-m','Publish measured standalone DISCO physical release and limitations'],worktree)
+    published=[f'{relative}/physical_release_V15_F25_v1',f'{relative}/PHYSICAL_RELEASE_PUBLICATION.json',f'{relative}/INDEX.md']
+    published.extend(f'{relative}/{name}' for name in CANONICAL if (destination/name).exists())
+    command(['git','add','--',*published],worktree)
+    command(['git','commit','--only','-m','Publish measured standalone DISCO physical release and limitations','--',*published],worktree)
     commit=command(['git','rev-parse','HEAD'],worktree).strip()
     command(['git','push','origin',BRANCH],worktree)
     return dict(status='PUSHED',commit=commit,physical_status=status['physical_task_results'])
