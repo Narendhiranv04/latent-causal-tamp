@@ -122,7 +122,27 @@ Wall times are per root per process, one pinned CPU, nice 10, shared hosts; GPU 
 
 **TEST configuration**, fixed by the rule registered before any 2D VAL outcome of the trained arms (commit `0f438dfb95`): D-expanded at M4 in both domains (2D VAL 55.9 vs control 52.9; 3D 78.5 vs 76.2), 3 seeds.
 
-TEST results are added below when physical verification completes.
+**Procedure.**
+- **Scoring:** both arms' TEST pools were scored before the rule was applied. Scoring makes no teacher calls and reveals no outcome. Only the registered configuration was physically verified.
+- **New TEST queries:** 960 in 2D (422 roots) and 297 in 3D (186 roots), on parity-passed hosts. The rest were already labelled in the V3.1-4 caches.
+- **Unknown:** 0. Files: `E/TABLE_TEST_REGRESSION.{json,txt}`, `E/*_T_verify_*.jsonl.gz`, compact decisions `E/records/*_test_expanded_decisions.jsonl.gz`.
+
+| TEST (exposed) | Capped V3 (V3.1-4, M4 B=4,096, frozen D s0–s2) | D-expanded exhaustive M4 (s0–s2) | Δ [95 % CI] |
+|---|---:|---:|---|
+| 2D task % (± seed SD) | 43.6 ± 2.6 | 52.0 ± 1.2 | **+8.4 [+5.4, +11.3]** |
+| 2D K1 / K2 / K3 % | 72 / 61 / 12 | 71 / 70 / 26 | |
+| 2D correct NONE abstain % | 92.7 | 92.9 | +0.2 [−1.3, +1.8] |
+| 2D correct no-op % | 89.7 | 91.1 | +1.4 [+0.2, +2.9] |
+| 3D task % | 77.3 ± 1.4 | 81.2 ± 1.9 | **+3.9 [+0.4, +7.3]** |
+| 3D K1 / K2 / K3 % | 80 / 79 / 74 | 77 / 84 / 81 | |
+| 3D correct NONE abstain % | 76.9 | 82.3 | +5.4 [−2.7, +12.9] |
+| 3D correct no-op % | 77.6 | 86.1 | +8.5 [+3.5, +13.9] |
+
+The capped numbers reproduce the V3.1-4 table exactly.
+
+**What this comparison changes.** It changes the candidate pool (uncapped exhaustive M4) and the scorer (retrained with expanded evidence) together; the matched VAL experiments (E1, E3) separate the two.
+
+**TEST interpretation.** The registered configuration improves verified task success over the capped V3 path, by +8.4 points in 2D (K3 doubles) and +3.9 in 3D. NONE abstention does not degrade, unlike frozen-model exhaustive selection on VAL. TEST is historically exposed, so this is a regression check consistent with the VAL findings, not an unbiased confirmation.
 
 **Fresh cohort: `FRESH_CONFIRMATION_NOT_RUN`.**
 - **What it would need:** a family-disjoint confirmation cohort means new scenes from the frozen 2D / 3D generators, then full teacher labelling of each root (K class, evaluation masks, known successes) before evaluation. At the size of the historical cohorts (~400 2D and ~240 3D task roots), the original production took multiple days of CPU on gvlab.
