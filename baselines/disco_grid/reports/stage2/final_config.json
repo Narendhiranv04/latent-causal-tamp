@@ -149,7 +149,7 @@
     "reserved_physical_cores": 2,
     "resource_coordination": {
       "disco_trial_nice": 19,
-      "girish_workers": 4,
+      "girish_workers": 3,
       "load_ceiling": 22,
       "local_reason": "Observed MemAvailable about 6 GiB below unchanged 8 GiB headroom guard; high swap use. Do not disrupt other methodology work.",
       "local_worker_allocation": 0,
@@ -162,10 +162,11 @@
     "revoked_execution_hosts": [
       "gvlab"
     ],
+    "scheduling_note": "Use three slots after measured four-slot transient load stops; same user authorization, two complete physical cores excluded, original budgets and no-retry rule unchanged.",
     "scope": "DISCO_RELEASE_RESERVED_CORES_AMENDMENT",
     "status": "APPROVED",
-    "utc": "2026-11-17T17:05:05.109120+00:00",
-    "workers": 4
+    "utc": "2026-11-17T18:24:36.058225+00:00",
+    "workers": 3
   },
   "parallel_runner_sha256": "ecbe42428b654298fa7ae5b42d822ce2d325a2b256d7f912435bcac5bf553548",
   "parallel_source_commit": "bc47221c789f9236a1d940908909d900de43ffcb",
@@ -184,7 +185,7 @@
     "worker_cpu_s": 894.3853640000002,
     "worker_wall_s": 899.1270242715254
   },
-  "prior_release": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_parallel_20261117",
+  "prior_release": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_reserved_cores_20261117",
   "prospective_control_correction": {
     "audit": "/scratch/nav/disco_grid/stage2/campaigns/E16_v1_20261117/training_release_v2/CANDIDATE_CONTROL_CORRECTION.json",
     "heldout_outcomes_used": false,
@@ -227,5 +228,5 @@
   "validation_model_seeds": [
     0
   ],
-  "workers": 4
+  "workers": 3
 }

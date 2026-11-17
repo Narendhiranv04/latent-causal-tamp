@@ -1,0 +1,232 @@
+{
+  "approved_phases": [
+    "val",
+    "test"
+  ],
+  "approved_utc": "2026-11-17T12:02:07.779433+00:00",
+  "authorization_origin": "Explicit user reply to V15-F25-v1 approval question in Codex session; 510 VAL and at most 1050 TEST trials, 5523 uncached calls; 2D 1h VAL + 3h TEST, 3D 2h VAL + 6h TEST, CPU and active wall.",
+  "authorization_text": "Authorize VAL and TEST for both domains",
+  "cancellation": "Identity-scoped child/session watchdog and parent-death guard; per-query durable evidence; no automatic ambiguous restart",
+  "candidate_sets": {
+    "test_eta0.08.json": {
+      "jobs": 1000,
+      "maximum_uncached_adapter_calls": 3022,
+      "original_sha256": "06e5c53d70cb65e592efb47e7c2cfa1153ed68c6d6e7a874be21bff879290b44",
+      "sha256": "deef9e6cbde05c95507a5ddbf72d0f428572f289d2b9702286ec7ce463388ecf"
+    },
+    "test_eta0.15.json": {
+      "jobs": 1000,
+      "maximum_uncached_adapter_calls": 2995,
+      "original_sha256": "7f450db1c247d5b9dfb454346b298e2b51dc8de45c05a2dbaa87a2c19075ba6d",
+      "sha256": "d0eaa155bf2d98cb1a36beacdaefe083902d660aa6efbda2e482b4a30f3d07a6"
+    },
+    "test_eta0.json": {
+      "jobs": 1050,
+      "maximum_uncached_adapter_calls": 3689,
+      "original_sha256": "acb40349289aef254e51c1f1c00c1adc5beb7ffe14a8c163de330cfca061b402",
+      "sha256": "91bf4eb200da3d8b33fc5ce97aeffcbc2625a392ec436f7e57f7811d6a86fb30"
+    },
+    "val_eta0.08.json": {
+      "jobs": 90,
+      "maximum_uncached_adapter_calls": 362,
+      "original_sha256": "c869a93c9dd87014e3c8cd9a06ee982b63dc756e9f0580f987dd1abee25a96df",
+      "sha256": "39e4be1aff48e568c2086a8d3263acaf7fdcdfedaefbbe2a07d91c2b9bc18c18"
+    },
+    "val_eta0.15.json": {
+      "jobs": 90,
+      "maximum_uncached_adapter_calls": 358,
+      "original_sha256": "b49ea14c806c5dec3954587bf943cd7ecab9e9ed330f78fec154e244226d6048",
+      "sha256": "d92c7ba95c8e0c3f7068c505580f7374823a6b7e5224250088f6ed57f55a8be8"
+    },
+    "val_eta0.json": {
+      "jobs": 330,
+      "maximum_uncached_adapter_calls": 1120,
+      "original_sha256": "50880c333c3b9b2503a3720669dfc8012ffe0dbba82acb0288bb87042c292665",
+      "sha256": "57a7078aa29738093e58ce879235aad41910d092060ff7524e529ba7aace9ed1"
+    }
+  },
+  "ceilings": {
+    "2d": {
+      "test": 10800,
+      "val": 3600
+    },
+    "3d": {
+      "test": 21600,
+      "val": 7200
+    }
+  },
+  "checkpoint_manifest_sha256": "0ec9ef1fa46cdb095b4174294da79ec61d760272ba9d6109979c7b6fc06a8e96",
+  "cpu_threads": 1,
+  "disk_gib": 10,
+  "engine": "/home/longhorizon/disco_grid_stage2/source/reserved_cores_0537d1bd12/baselines/disco_grid",
+  "exclusions": "No competing method, no new training, no additional machine or GPU. TEST starts only after selection freeze and required VAL coverage.",
+  "final_model_seeds": [
+    0,
+    1,
+    2
+  ],
+  "global_adapter_call_ceiling": 5523,
+  "gpu": false,
+  "host": "girish-laptop",
+  "host_amendment": {
+    "authorization_text": "don't use gvlab since its all occupied. use the girish laptop GPU if needed and its CPU cores.",
+    "cpu_threads": 1,
+    "execution_root": "/home/longhorizon/disco_grid_stage2",
+    "gpu": false,
+    "host": "girish-laptop",
+    "hostname": "gvcstar",
+    "resource_semantics": "Continue the previously approved V15-F25-v1 ceiling, including all gvlab attempts; no reset or expansion. GPU is authorized if needed but unused for physical evaluation.",
+    "revoked_execution_hosts": [
+      "gvlab"
+    ],
+    "scope": "DISCO_RELEASE_HOST_AMENDMENT",
+    "ssh_alias": "girish",
+    "status": "APPROVED",
+    "utc": "2026-11-17T12:23:07.594980+00:00",
+    "workers": 1
+  },
+  "host_amendment_sha256": "9797f789321dcc7c0fe2f904f7705e61b0e29d33e97629918558fa8aaf138608",
+  "id": "V15-F25-v1",
+  "interpretation": "Exploratory held-out cohorts; no untouched confirmation attested; fixed-root denominators retain every unresolved/unexecuted trial",
+  "original_checkpoint_manifest_sha256": "0b5c9ecb78eae4c27abcd7749e5157d3893f0cc7c99f3ae6b43cdd2f7c82ac3f",
+  "original_frozen_preparation_sha256": "92073646fbfd984a10342fb5792ce6bea2b8ce3478e534af9b76eb9d7b51dd17",
+  "original_preparation": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/campaigns/E16_v1_20261117/evaluation_preparation_v3",
+  "parallel_authorization": {
+    "authorization_text": "you can use the girish laptop rest of the cpu cores to speed things up. make sure you have 2 cores free on the girish laptop, other than you can use whatever's available.",
+    "authorized_hosts": {
+      "girish-laptop": "gvcstar",
+      "user-laptop": "pop-os"
+    },
+    "ceilings": {
+      "2d": {
+        "test": 10800,
+        "val": 3600
+      },
+      "3d": {
+        "test": 21600,
+        "val": 7200
+      }
+    },
+    "cpu_affinity": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21
+    ],
+    "cpu_threads": 1,
+    "disk_gib": 10,
+    "global_adapter_call_ceiling": 5523,
+    "gpu": false,
+    "gpu_assessment": "Neural latency sum 846.7ms versus 1747.74s 2D VAL physical phase; preserve frozen CPU inference. Physics and planning are CPU-only.",
+    "gpu_authorized_if_useful": true,
+    "host": "girish-laptop",
+    "hostname": "gvcstar",
+    "inference_device": "frozen CPU",
+    "interpretation": "User amended host/worker placement only. Same aggregate CPU, wall, call, RAM and disk ceilings; no change to models, roots, benchmark, query caps, retries or verification.",
+    "ram_gib": 4,
+    "reserved_logical_cpus": [
+      22,
+      23
+    ],
+    "reserved_physical_cores": 2,
+    "resource_coordination": {
+      "disco_trial_nice": 19,
+      "girish_workers": 3,
+      "load_ceiling": 22,
+      "local_reason": "Observed MemAvailable about 6 GiB below unchanged 8 GiB headroom guard; high swap use. Do not disrupt other methodology work.",
+      "local_worker_allocation": 0,
+      "other_job_observed_workers": {
+        "girish-laptop": 16,
+        "user-laptop": 14
+      },
+      "reserved_from_DISCO": "Physical cores 14 and 15, logical CPUs 22 and 23. Other workloads unchanged; global idleness not guaranteed."
+    },
+    "revoked_execution_hosts": [
+      "gvlab"
+    ],
+    "scheduling_note": "Use three slots after measured four-slot transient load stops; same user authorization, two complete physical cores excluded, original budgets and no-retry rule unchanged.",
+    "scope": "DISCO_RELEASE_RESERVED_CORES_AMENDMENT",
+    "status": "APPROVED",
+    "utc": "2026-11-17T18:24:36.058225+00:00",
+    "workers": 3
+  },
+  "parallel_runner_sha256": "ecbe42428b654298fa7ae5b42d822ce2d325a2b256d7f912435bcac5bf553548",
+  "parallel_source_commit": "bc47221c789f9236a1d940908909d900de43ffcb",
+  "pool_sha256": "9d506aa0d4c250f19cc9b820d912e1a26f739dac8ace9a943af647cdc5f07bbd",
+  "preparation": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_girish_20261117/execution_preparation",
+  "preparation_sha256": "bae2e8321a8481b84aaa8ab39fae30083e191d2bb135a028224c30ff6906fc29",
+  "prior_attempt_charge": {
+    "active_wall_s": 911.0308232307434,
+    "adapter_calls": 109,
+    "attempts": 33,
+    "controller_cpu_s": 911.0308232307434,
+    "cpu_accounting_kind": "CONSERVATIVE_CONTROLLER_ELAPSED_UPPER_BOUND",
+    "cpu_s": 1805.4161872307436,
+    "exact_final_controller_cpu_s": null,
+    "scope": "All original gvlab attempts, including user-cancelled final trial; detached controller CPU charged at elapsed-wall upper bound",
+    "worker_cpu_s": 894.3853640000002,
+    "worker_wall_s": 899.1270242715254
+  },
+  "prior_release": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_reserved_cores_20261117",
+  "prospective_control_correction": {
+    "audit": "/scratch/nav/disco_grid/stage2/campaigns/E16_v1_20261117/training_release_v2/CANDIDATE_CONTROL_CORRECTION.json",
+    "heldout_outcomes_used": false,
+    "resource_ceilings_and_primary_models_unchanged": true,
+    "sha256": "3b089805f0b3e6b4d39679a1cb42071400334065850ea06e57d4517af56fd3a4"
+  },
+  "query_wall_s": {
+    "2d": 60,
+    "3d": 120
+  },
+  "ram_gib": 4,
+  "roots_per_domain": {
+    "test": 25,
+    "val": 15
+  },
+  "runner_sha256": "237d96c02c92e5bffd4beddcd039d1cb51b9bd3d4856ff3a2a2fad1475585f80",
+  "scientific_source_sha256": {
+    "ablate.py": "d0d7ca737ac6918a674add2d19c8cb5f458e49e57ae4fe2ae947ab39ac553602",
+    "campaign.py": "f23c785482e2266ec4c61b723a20d0c6f052a3bf992eecbb2e318f17752560e7",
+    "collect.py": "8bdd1b3edc504b32460ab8e690009b07e4816d6e1af7b10622eb142cf94961db",
+    "data.py": "a6d354b668dbfca6f5390f84e8b186cf20b5d02ddae106614762be260efcf4c0",
+    "distill.py": "8a9d97e36b26f0c93f3e8557a65fab49ad6ab42befd6cbcc18e49aa76c4eedcd",
+    "env.py": "ab6a07aec171cb14f8da40aff2e000e312406461b9992099034cebcf51269dac",
+    "evaluate.py": "e537712c6d7d279fde74f789433eaf37cd16565edf194f2d4e8a2be0486439eb",
+    "journal.py": "e9242781ad57a96fe6657688dddd485c4413d6ae92393bd78df7d8e4226f0f5c",
+    "mcts.py": "1e7c7cc0f72ead13425cece0d776255761202fbf97ccd2f447e5a80075830677",
+    "physical_eval.py": "fbbe83ee0b00f7478163dce430675b6e3ff0db9537bd34fd66d1876c6cf64e05",
+    "policy.py": "813ebb7b0676ea3bc5190728d31c0b08026be01d337b6e811d2fbd0edce43a8b",
+    "viz.py": "fce5e62252e6e899917372fa04a88a199d2a1dced844d53ae95121537df00af6"
+  },
+  "scope": "DISCO_RELEASE_EVALUATION",
+  "selection": "VAL O0_P2Q2 task success, then verified K0 NOOP, then explicit NONE abstention; residual ties smaller eta. Apply common selected eta to all Q arms and O0/O1 closed-loop.",
+  "source_commit": "0537d1bd12",
+  "status": "APPROVED",
+  "trial_wall_s": {
+    "2d": 300,
+    "3d": 600
+  },
+  "units": "seconds per domain and phase, CPU and active wall; all attempts and parent overhead charged",
+  "validation_model_seeds": [
+    0
+  ],
+  "workers": 3
+}
