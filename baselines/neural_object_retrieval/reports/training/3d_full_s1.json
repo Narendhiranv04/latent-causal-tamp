@@ -1,0 +1,67 @@
+{
+ "train": {
+  "dom": "3d",
+  "seed": 1,
+  "cfg": {
+   "d": 128,
+   "os_layers": 3,
+   "rp_layers": 2,
+   "st_layers": 2,
+   "lr": 0.0003,
+   "wd": 0.0001,
+   "batch": 64,
+   "epochs": 50,
+   "patience": 8,
+   "clip": 1.0
+  },
+  "device": "cuda",
+  "tensors_sha256": "39ba3d1a9a3aab12f80dd369902e2006f79592c8a2f673efb3a9d7b1d03a8263",
+  "models": {
+   "os": {
+    "n_train": 8165,
+    "n_holdout": 1059,
+    "best_holdout": 0.005787278991192579,
+    "best_epoch": 21,
+    "epochs_run": 30,
+    "wall_s": 28.5,
+    "state_sha256": "399791bad7f4a1a6b63ee5f06b39420ea920e936a7103e34edaa0a7d0e6865d6",
+    "file_sha256": "c104cd535386ad87a7b5136dc31c24909faa6458d757781a35f53ca0cc29e312",
+    "params": 434305,
+    "gpu_peak_mib": 99.8
+   },
+   "rp": {
+    "n_train": 18195,
+    "n_holdout": 2459,
+    "best_holdout": 0.01853428324684501,
+    "best_epoch": 9,
+    "epochs_run": 18,
+    "wall_s": 70.7,
+    "state_sha256": "d92de4a6ff65b2ab38118c79fcc217303864bc206ffe2082497f94ec06769946",
+    "file_sha256": "9920f22924c5c28590d6fcfebdf6350e0d320c2963e01f5c1748f0471f2cf9b9",
+    "params": 717825,
+    "gpu_peak_mib": 192.5
+   },
+   "st": {
+    "n_train": 6921,
+    "n_holdout": 750,
+    "best_holdout": 0.2716534386078517,
+    "best_epoch": 32,
+    "epochs_run": 41,
+    "wall_s": 19.5,
+    "state_sha256": "3e7e674e3b83c6195c2d13e1b35683ef9ee45f353c7834c360ff5a7c70ab90df",
+    "file_sha256": "dbefdd8abd5a03b587d1b5a56322f24a1de58bfe244c8f304795ccf47486d9eb",
+    "params": 318209,
+    "gpu_peak_mib": 93.1
+   }
+  }
+ },
+ "calibration": {
+  "T": 1.2850362391203194,
+  "nll_T1": 0.22195303440093994,
+  "nll_T": 0.21574366092681885,
+  "ece_T": 0.030093650327382804,
+  "n_val_endpoints": 751,
+  "val_pos_rate": 0.4047936201095581,
+  "source": "decided VALIDATION endpoint Y labels of the frozen snapshot (not NOR-Grid outcomes)"
+ }
+}
