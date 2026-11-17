@@ -212,3 +212,7 @@ competing method is authorized by this release.
 ## Current execution host
 
 Gvlab execution was revoked by the user. All owned workers and observers there exited. The laptop continuation launched at 2026-11-17T12:34:40Z after 41 tests and frozen-input/policy qualification. GPU allocation remains zero. Girish execution records supersede the earlier gvlab launch status; archived attempts and their costs remain charged.
+
+## Current three-worker execution
+
+The user explicitly authorized a three-worker pool. It launched on Girish at 2026-11-17T13:46:36Z after 45 source/integration tests and a separately passing drain regression. Three actual physical-worker processes were verified at nice 19; aggregate RAM and original CPU/query budgets remain guarded. The serial trial drained with a returned result, retaining 132 2D and 64 3D prior attempts. The local laptop is not allocated a physical worker while below the 8 GiB available-memory guard. Final task results remain pending.

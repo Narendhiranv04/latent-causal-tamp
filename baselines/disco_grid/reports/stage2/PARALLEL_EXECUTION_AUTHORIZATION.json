@@ -1,0 +1,45 @@
+{
+  "status": "APPROVED",
+  "scope": "DISCO_RELEASE_PARALLEL_HOST_AMENDMENT",
+  "authorization_text": "increase the performance of the gitish laptop, use more of the GPU and CPU, make sure you have atleast 3 CPU workers so that it doesn't crash. you can use my laptop CPU cores and girish laptop CPU cores. make sure you have it aligned with the other job that I am performing, for the methodology that I am working on. you focus on the DISCO IMPLEMENTATION",
+  "host": "girish-laptop",
+  "hostname": "gvcstar",
+  "authorized_hosts": {
+    "girish-laptop": "gvcstar",
+    "user-laptop": "pop-os"
+  },
+  "workers": 3,
+  "cpu_threads": 1,
+  "gpu": false,
+  "gpu_authorized_if_useful": true,
+  "inference_device": "frozen CPU",
+  "gpu_assessment": "Neural latency sum 846.7ms versus 1747.74s 2D VAL physical phase; preserve frozen CPU inference. Physics and planning are CPU-only.",
+  "revoked_execution_hosts": [
+    "gvlab"
+  ],
+  "ram_gib": 4,
+  "disk_gib": 10,
+  "global_adapter_call_ceiling": 5523,
+  "ceilings": {
+    "2d": {
+      "val": 3600,
+      "test": 10800
+    },
+    "3d": {
+      "val": 7200,
+      "test": 21600
+    }
+  },
+  "resource_coordination": {
+    "other_job_observed_workers": {
+      "user-laptop": 14,
+      "girish-laptop": 16
+    },
+    "disco_trial_nice": 19,
+    "local_worker_allocation": 0,
+    "local_reason": "Observed MemAvailable about 6 GiB below unchanged 8 GiB headroom guard; high swap use. Do not disrupt other methodology work.",
+    "girish_workers": 3
+  },
+  "interpretation": "User amended host/worker placement only. Same aggregate CPU, wall, call, RAM and disk ceilings; no change to models, roots, benchmark, query caps, retries or verification.",
+  "utc": "2026-11-17T13:41:33.440714+00:00"
+}

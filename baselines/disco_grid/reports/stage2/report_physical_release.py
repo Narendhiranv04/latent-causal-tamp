@@ -78,7 +78,7 @@ def report(release, metrics_dir, training_reports):
         'This is a standalone DISCO study. All rates below come from independently '
         'executed teacher episodes or exact, source-bound verification certificates. '
         'Training loss and search success are never substituted for learned-policy performance.', '',
-        f"Run: `{release}`. Execution host: {envelope['host']}; one low-priority CPU worker, zero GPU allocation. "
+        f"Run: `{release}`. Execution host: {envelope['host']}; {envelope.get('workers',1)} low-priority CPU worker(s), zero GPU allocation. "
         'Both VAL and TEST were explicitly authorized. Previous archives remain preserved.', '',
         'The cohort contains 15 VAL and 25 exploratory TEST roots/domain, balanced '
         'over K0/K1/K2/K3/NONE. The three primary protocols use three fixed model '
@@ -220,6 +220,29 @@ def report(release, metrics_dir, training_reports):
             'CPU measurements. Worker accounts and HOST_MIGRATION.json retain '
             'the distinction. Environment installation/transfer qualification is '
             'reported separately from physical query runtime.', '']
+    if (release/'PARALLEL_HANDOFF.json').exists():
+        lines += ['## Explicitly authorized three-worker execution', '',
+            'The user authorized at least three CPU workers and both laptops. '
+            'The run uses three one-thread physical workers on Girish, each '
+            'with its own supervisor and durable query journal. Total CPU and '
+            'adapter-call quotas are reserved before dispatch; active wall time '
+            'is elapsed pool time, not the sum of concurrent worker durations. '
+            'All prior serial attempts remain charged and are not retried.', '',
+            'The other methodology job was observed using 16 workers on Girish '
+            'and 14 on the user laptop. DISCO physical workers use nice 19 and '
+            'leave the other processes unchanged. The user laptop had only '
+            'about 6 GiB available RAM, below the unchanged 8 GiB headroom '
+            'guard, so no physical DISCO worker was allocated there. The pool '
+            'retains the shared 4 GiB RSS ceiling plus individual watchdogs. '
+            'Configured workers do not guarantee three simultaneously active '
+            'trials near the end of a queue or budget.', '',
+            'Frozen CPU inference is retained. Measured 2D neural-selection '
+            'latencies totalled 0.85 seconds during a 1,747.74-second physical '
+            'phase, so GPU inference was not the runtime bottleneck. No GPU '
+            'speedup is claimed. Parallel execution changes scheduling, not '
+            'the model, action grammar, verification caps or TEST selection. '
+            'PARALLEL_HANDOFF.json and per-phase accounts record topology, '
+            'prior cost bounds and actual pool costs.', '']
     (metrics_dir / 'FINAL_DISCO_STAGE2_REPORT.md').write_text('\n'.join(lines))
     (metrics_dir / 'PHYSICAL_RESOURCE_TOTALS.json').write_text(json.dumps(physical_cost, indent=2)+'\n')
     statuses = read(training_reports / 'STAGE2_FINAL_STATUS.json')

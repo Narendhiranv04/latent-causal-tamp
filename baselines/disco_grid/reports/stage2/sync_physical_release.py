@@ -14,7 +14,7 @@ import subprocess
 import time
 
 HOST = 'girish'
-REMOTE = '/home/longhorizon/disco_grid_stage2/final_physical_release_v1'
+REMOTE = '/home/longhorizon/disco_grid_stage2/final_parallel_physical_release_v1'
 BRANCH = 'naren/disco-grid-stage2'
 CANONICAL = ('FINAL_METRICS.json','FINAL_METRICS.csv','ABLATIONS.csv',
     'CENSORING_LEDGER.csv','RESOURCE_ACCOUNTING.csv','PHYSICAL_RESOURCE_TOTALS.json',

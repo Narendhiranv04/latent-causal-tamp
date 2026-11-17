@@ -1,0 +1,91 @@
+{
+  "utc": "2026-11-17T13:51:37.771474+00:00",
+  "owned_processes": [
+    {
+      "pid": 2995986,
+      "parent": 1,
+      "nice": 10,
+      "rss_kib": 1920,
+      "command": "timeout --kill-after=10s 42000s /home/longhorizon/disco_grid_stage2/venv/bin/python /home/longhorizon/disco_grid_stage2/source/parallel_pool_v2/baselines/disco_grid/reports/stage2/continue_parallel_evaluation.py /home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_girish_20261117 /home/longhorizon/disco_grid_stage2/PARALLEL_SERIAL_DRAIN.json /home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_parallel_20261117 ",
+      "start_ticks": "54948722"
+    },
+    {
+      "pid": 2995987,
+      "parent": 2995986,
+      "nice": 10,
+      "rss_kib": 231364,
+      "command": "/home/longhorizon/disco_grid_stage2/venv/bin/python /home/longhorizon/disco_grid_stage2/source/parallel_pool_v2/baselines/disco_grid/reports/stage2/continue_parallel_evaluation.py /home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_girish_20261117 /home/longhorizon/disco_grid_stage2/PARALLEL_SERIAL_DRAIN.json /home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_parallel_20261117 ",
+      "start_ticks": "54948722"
+    },
+    {
+      "pid": 2996197,
+      "parent": 2995987,
+      "nice": 10,
+      "rss_kib": 10752,
+      "command": "/home/longhorizon/disco_grid_stage2/venv/bin/python -c from multiprocessing.resource_tracker import main;main(4) ",
+      "start_ticks": "54948942"
+    },
+    {
+      "pid": 3019017,
+      "parent": 2995987,
+      "nice": 19,
+      "rss_kib": 201252,
+      "command": "/home/longhorizon/disco_grid_stage2/venv/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=5, pipe_handle=9) --multiprocessing-fork ",
+      "start_ticks": "54974242"
+    },
+    {
+      "pid": 3019142,
+      "parent": 3019017,
+      "nice": 19,
+      "rss_kib": 553640,
+      "command": "/home/longhorizon/disco_grid_stage2/venv/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=5, pipe_handle=9) --multiprocessing-fork ",
+      "start_ticks": "54974373"
+    },
+    {
+      "pid": 3021285,
+      "parent": 2995987,
+      "nice": 19,
+      "rss_kib": 201964,
+      "command": "/home/longhorizon/disco_grid_stage2/venv/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=5, pipe_handle=9) --multiprocessing-fork ",
+      "start_ticks": "54976798"
+    },
+    {
+      "pid": 3021390,
+      "parent": 3021285,
+      "nice": 19,
+      "rss_kib": 471960,
+      "command": "/home/longhorizon/disco_grid_stage2/venv/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=5, pipe_handle=9) --multiprocessing-fork ",
+      "start_ticks": "54976927"
+    },
+    {
+      "pid": 3022130,
+      "parent": 2995987,
+      "nice": 19,
+      "rss_kib": 201932,
+      "command": "/home/longhorizon/disco_grid_stage2/venv/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=5, pipe_handle=9) --multiprocessing-fork ",
+      "start_ticks": "54977769"
+    },
+    {
+      "pid": 3022315,
+      "parent": 3022130,
+      "nice": 19,
+      "rss_kib": 471872,
+      "command": "/home/longhorizon/disco_grid_stage2/venv/bin/python -c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=5, pipe_handle=9) --multiprocessing-fork ",
+      "start_ticks": "54977973"
+    }
+  ],
+  "summed_owned_rss_kib": 2346656,
+  "other_methodology_controllers": [
+    {
+      "pid": 2812036,
+      "parent": 1,
+      "nice": 10,
+      "rss_kib": 63356,
+      "command": "/home/longhorizon/abf_v314v/env3d/bin/python /home/longhorizon/abf_v34/drv/scripts/v34_gen.py 3d /home/longhorizon/abf_v34/cohort/SLOT_PLAN.json /home/longhorizon/abf_v34/gen/g3_girish fc34gi 16 RAW,REPARK,HARD ",
+      "start_ticks": "54745945"
+    }
+  ],
+  "other_methodology_worker_count": 16,
+  "other_processes_modified": false,
+  "load": " 19:21:37 up 6 days,  8:43,  7 users,  load average: 18.43, 17.43, 15.52\n"
+}

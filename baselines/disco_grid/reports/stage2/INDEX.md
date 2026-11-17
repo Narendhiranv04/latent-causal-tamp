@@ -58,3 +58,28 @@ No cross-method performance evaluation is part of this release.
 [Girish authorization](GIRISH_EXECUTION_AUTHORIZATION.json), [current hardware inventory](GIRISH_HOST_INVENTORY.json), [1,301-file migration hash audit](GIRISH_MIGRATION_HASH_AUDIT.json), and [gvlab stop record](GVLAB_USER_HOST_STOP.json). All owned gvlab evaluation and finisher processes exited. The continuation retains completed and interrupted trials without retry, charges all 109 original query intents, and conservatively charges unrecoverable detached-controller CPU. The physical budget is not reset.
 
 Laptop execution: [launch identity](GIRISH_EVALUATION_LAUNCH.json), [postprocessing observer](GIRISH_FINISH_LAUNCH.json), [41-test log](GIRISH_MIGRATION_TESTS.log), and [frozen-input/model qualification](GIRISH_MIGRATION_QUALIFICATION.json). The qualification checked 80 roots, 22 teacher files and 50 model files; 28 sampled frozen model-decision cases matched with zero physical queries.
+
+
+## Three-worker DISCO continuation
+
+The user explicitly authorized at least three CPU workers and both laptops.
+[Parallel authorization](PARALLEL_EXECUTION_AUTHORIZATION.json) records three
+one-thread physical workers on Girish at nice 19. The other job's 16 Girish and
+14 local workers remain untouched. No physical worker is assigned locally while
+available RAM is below the unchanged 8 GiB guard. Measured neural selection was
+0.85 seconds across a 1,747.74-second physical phase; frozen CPU inference is
+retained and GPU speedup is not claimed.
+
+[Serial drain](PARALLEL_SERIAL_DRAIN.json) completed the current trial normally.
+[Prior-cost audit](PARALLEL_PRIOR_AUDIT.json) retains 132 2D and 64 3D attempts,
+including timeouts and the earlier host cancellation; none is retried.
+[Parallel launch](PARALLEL_EVALUATION_LAUNCH.json) uses immutable source
+`bc47221c789f9236a1d940908909d900de43ffcb`. Its pool reserves aggregate CPU and
+adapter-call quotas before dispatch, deduplicates identical in-flight open-loop
+sequences, and gives each physical child its own accounting supervisor. The
+shared pool RSS ceiling remains 4 GiB. Models, roots, rules, query caps and
+verification remain frozen; the original 5,523-call and phase CPU/wall ceilings
+are not reset. [45-test log](PARALLEL_POOL_TESTS.log) includes actual synthetic
+three-process accounting and duplicate-sequence checks; the additional drain
+regression [passes separately](PARALLEL_DRAIN_TESTS.log). These fixtures call no
+physical teacher and are not benchmark scores.

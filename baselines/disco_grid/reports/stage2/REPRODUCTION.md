@@ -242,3 +242,32 @@ The prior frozen gvlab tree remains an immutable input to the continuation.
 New physical fragments are stored separately and joined through explicit
 symlinks and provenance rows. All TEST physical execution is on the laptop;
 VAL may contain both hosts. No failed/timed-out/cancelled trial is rerun.
+
+
+## Explicitly authorized three-worker continuation
+
+Use `PARALLEL_EXECUTION_AUTHORIZATION.json` as
+`DISCO_EXECUTION_AUTHORIZATION`. It supersedes the one-worker runtime record
+without modifying archived records or expanding the aggregate physical budget.
+`drain_serial_evaluation.py` verifies the exact controller identity, freezes only
+that controller, supervises its current physical child under the existing caps,
+then allows the controller to reap and record it. The observed drain returned a
+complete result; no new physical retry occurred. The controller CPU at freeze is
+recorded and cleanup wall time is charged as an upper bound on additional CPU.
+
+`continue_parallel_evaluation.py` audits every prior attempt, validates unchanged
+scientific sources/checkpoints/candidate hashes and runs remaining frozen jobs
+through `parallel_eval.py`. Each of three supervisors reaps exactly one physical
+child to avoid cross-worker RUSAGE double counting. The coordinator reserves
+CPU/query quotas before dispatch, releases only certified unused quota and
+records actual dispatch order. It enforces one thread per physical worker,
+4 GiB aggregate RSS and the unchanged machine headroom guards. Its 20-second
+per-trial CPU reservation covers supervisor work and cancellation grace. Actual
+costs, administrative unknowns and fixed root denominators remain explicit.
+The output is a new versioned release; the prior serial run is never overwritten.
+
+The active physical source is immutable
+`bc47221c789f9236a1d940908909d900de43ffcb`. Later report-only sources are separate.
+Girish's other job retains all of its workers and their original priorities.
+The local laptop is authorized but not used for physical execution while its
+available RAM remains below the unchanged guard. Do not bypass this condition.
