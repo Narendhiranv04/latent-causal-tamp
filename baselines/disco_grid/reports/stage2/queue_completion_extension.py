@@ -13,6 +13,14 @@ import time
 import monitor_frozen_evaluation as M
 
 
+def wait_for_startup(target,launch,timeout=300):
+    start=time.monotonic()
+    while not (target/'SELECTION_FREEZE.json').exists():
+        if not M.alive(launch):raise RuntimeError('Physical continuation exited before frozen startup manifest')
+        if time.monotonic()-start>timeout:raise RuntimeError('Physical startup manifest watchdog expired')
+        time.sleep(1)
+
+
 def prepare(prior,request_path,approval_path,out):
     prior=Path(prior);request=M.read(request_path);approval=M.read(approval_path)
     if (approval.get('status')!='APPROVED' or approval.get('scope')!='DISCO_ONLY_FROZEN_2D_TEST_CPU_EXTENSION'
@@ -85,6 +93,8 @@ def run(config_path,state):
         with (state/'physical_initial.log').open('x') as f:p=subprocess.Popen(cmd,stdout=f,stderr=subprocess.STDOUT,start_new_session=True)
         launch=dict(pid=p.pid,proc_stat=Path(f'/proc/{p.pid}/stat').read_text(),command=cmd,output=str(target),log=str(state/'physical_initial.log'),source_commit=config['source_commit'])
         lp=state/'physical_initial_launch.json';M.write(lp,launch)
+        status('STARTING_PHYSICAL_CONTINUATION',release=str(target))
+        wait_for_startup(target,launch)
         report=root/'report_initial';cmd=list(config['report_template']);cmd[-4]=str(engine/'reports/stage2/finish_physical_release.py');cmd[-3]=str(lp);cmd[-2]=str(report)
         with (state/'report_initial.log').open('x') as f:p=subprocess.Popen(cmd,stdout=f,stderr=subprocess.STDOUT,start_new_session=True)
         rp=state/'report_initial_launch.json';M.write(rp,dict(pid=p.pid,proc_stat=Path(f'/proc/{p.pid}/stat').read_text(),command=cmd))

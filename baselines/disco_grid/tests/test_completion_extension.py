@@ -58,3 +58,10 @@ def test_unapproved_or_modified_request_cannot_raise_limits(tmp_path):
 def test_changed_pending_job_is_rejected(tmp_path):
     args=fixture(tmp_path);p=args[0]/'test_2d_jobs.json';a=M.read(p);a['jobs'][1]['trial_wall_s']=301;M.write(p,a)
     with pytest.raises(ValueError,match='Frozen job bytes'):Q.prepare(*args)
+
+
+def test_queue_waits_for_startup_manifest_and_detects_early_exit(tmp_path,monkeypatch):
+    monkeypatch.setattr(M,'alive',lambda record:False)
+    with pytest.raises(RuntimeError,match='before frozen startup'):Q.wait_for_startup(tmp_path,{})
+    M.write(tmp_path/'SELECTION_FREEZE.json',dict(selected_eta=0))
+    Q.wait_for_startup(tmp_path,{})
