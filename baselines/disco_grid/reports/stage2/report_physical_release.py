@@ -247,7 +247,7 @@ def report(release, metrics_dir, training_reports):
         lines += ['## Two-core reservation and frozen TEST continuation', '',
             'The user authorized remaining available Girish CPU capacity while reserving two physical cores. '
             'DISCO affinity excludes all threads of those two cores; other processes are unchanged, so global idleness is not guaranteed. '
-            'Four one-thread trial slots retain the 4 GiB pool RSS cap, 8 GiB available-memory floor, '
+            'The configured one-thread trial slots retain the 4 GiB pool RSS cap, 8 GiB available-memory floor, '
             '20 GiB disk headroom and load ceiling of 22/24 logical CPUs. '
             'Only never-attempted TEST identities are dispatched; prior timeouts, cancellations and returned results are retained without retry. '
             'The existing VAL selection is byte-preserved; all earlier costs remain charged against the original ceilings.', '']

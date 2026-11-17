@@ -1,0 +1,77 @@
+{
+  "status": "APPROVED",
+  "scope": "DISCO_RELEASE_RESERVED_CORES_AMENDMENT",
+  "authorization_text": "you can use the girish laptop rest of the cpu cores to speed things up. make sure you have 2 cores free on the girish laptop, other than you can use whatever's available.",
+  "host": "girish-laptop",
+  "hostname": "gvcstar",
+  "authorized_hosts": {
+    "girish-laptop": "gvcstar",
+    "user-laptop": "pop-os"
+  },
+  "workers": 3,
+  "cpu_threads": 1,
+  "gpu": false,
+  "gpu_authorized_if_useful": true,
+  "inference_device": "frozen CPU",
+  "gpu_assessment": "Neural latency sum 846.7ms versus 1747.74s 2D VAL physical phase; preserve frozen CPU inference. Physics and planning are CPU-only.",
+  "revoked_execution_hosts": [
+    "gvlab"
+  ],
+  "ram_gib": 4,
+  "disk_gib": 10,
+  "global_adapter_call_ceiling": 5523,
+  "ceilings": {
+    "2d": {
+      "val": 3600,
+      "test": 10800
+    },
+    "3d": {
+      "val": 7200,
+      "test": 21600
+    }
+  },
+  "resource_coordination": {
+    "other_job_observed_workers": {
+      "user-laptop": 14,
+      "girish-laptop": 16
+    },
+    "disco_trial_nice": 19,
+    "local_worker_allocation": 0,
+    "local_reason": "Observed MemAvailable about 6 GiB below unchanged 8 GiB headroom guard; high swap use. Do not disrupt other methodology work.",
+    "girish_workers": 3,
+    "reserved_from_DISCO": "Physical cores 14 and 15, logical CPUs 22 and 23. Other workloads unchanged; global idleness not guaranteed.",
+    "load_ceiling": 22
+  },
+  "interpretation": "User amended host/worker placement only. Same aggregate CPU, wall, call, RAM and disk ceilings; no change to models, roots, benchmark, query caps, retries or verification.",
+  "utc": "2026-11-17T18:24:36.058225+00:00",
+  "reserved_physical_cores": 2,
+  "reserved_logical_cpus": [
+    22,
+    23
+  ],
+  "cpu_affinity": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21
+  ],
+  "scheduling_note": "Use three slots after measured four-slot transient load stops; same user authorization, two complete physical cores excluded, original budgets and no-retry rule unchanged."
+}

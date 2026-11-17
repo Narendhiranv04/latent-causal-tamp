@@ -107,3 +107,9 @@ The user authorized spare Girish CPU capacity with two physical cores reserved. 
 - [Root STOP diagnostics](ROOT_STOP_DIAGNOSTICS.json), [failure examples](FAILURE_EXAMPLES.json), and [physical resource totals](PHYSICAL_RESOURCE_TOTALS.json).
 
 Earlier pending-run statements in this index describe preparation history; the measured report and status JSON are current.
+
+## Current three-slot continuation after transient load stop
+
+At 2026-11-17 18:24 UTC the four-slot release had reached 338/525 2D TEST and 18/525 3D TEST attempts, and its immutable v2 reports were pushed as `32815ce9b7`. Both phases stopped on transient load >22/24. Current load had fallen to 16.75. Remaining never-attempted frozen TEST jobs resumed as `V15_F25_v1_reserved_stable3_20261117`, with three slots to lower scheduling pressure. CPUs 22/23 remain excluded; prior interrupted jobs are never retried, and budgets do not reset. VAL freeze is unchanged. Original physical engine source `0537d1bd12` is reused without edits.
+
+[Authorization](RESERVED_CORES_STABLE3_AUTHORIZATION.json), [physical launch](RESERVED_STABLE3_EVALUATION_LAUNCH.json), [report observer](RESERVED_STABLE3_FINISH_LAUNCH.json). Current canonical numbers remain the v2 partial snapshot until v3 publication. Additional training-budget ladders remain NOT_RUN.
