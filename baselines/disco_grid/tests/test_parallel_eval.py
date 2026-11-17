@@ -63,6 +63,18 @@ def test_parallel_host_amendment_keeps_exactly_three_workers(tmp_path,monkeypatc
     with pytest.raises(RuntimeError,match='invalid execution'):C.execution_workers()
 
 
+def test_drain_does_not_mistake_cached_trials_for_unpublished_worker(tmp_path):
+    import importlib.util
+    p=Path(__file__).resolve().parents[1]/'reports/stage2/drain_serial_evaluation.py'
+    spec=importlib.util.spec_from_file_location('drain_fixture',p)
+    module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+    fragment=tmp_path/'val_3d_girish_fragment';fragment.mkdir()
+    for i in ('cached','active'):
+        d=fragment/i;d.mkdir();J.atomic_json(d/'job.json',dict(id=i));J.atomic_json(d/'result.json',dict(verified=1))
+    (fragment/'outcomes.jsonl').write_text(json.dumps(dict(job_id='cached'))+'\n')
+    assert module.unpublished_trials(tmp_path)==[fragment/'active']
+
+
 @pytest.mark.skipif(os.environ.get('DISCO_POOL_INTEGRATION')!='1',reason='Opt-in synthetic process fixture on a headroom-qualified host')
 def test_three_supervisors_have_separate_child_accounts(tmp_path,monkeypatch):
     args=fixture(tmp_path,monkeypatch,[job(i,'closed_loop') for i in range(3)])

@@ -19,7 +19,7 @@ def rows(p):return [json.loads(s) for s in p.read_text().splitlines()] if p.exis
 
 def audit_prior(prior,drain):
     records={};completed_controller=0.
-    active_phase='_'.join(Path(drain['trial']).parent.name.split('_')[:2]) if drain.get('trial') else None
+    active_phase=drain.get('active_phase') or ('_'.join(Path(drain['trial']).parent.name.split('_')[:2]) if drain.get('trial') else None)
     for phase in ('val_2d','val_3d','test_2d','test_3d'):
         jp=prior/f'{phase}_jobs.json'
         if not jp.exists():continue
