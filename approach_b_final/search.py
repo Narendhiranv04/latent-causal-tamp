@@ -11,7 +11,7 @@ Selection = xy.choose (no-op gate, admission threshold eta, argmin -log p11 + al
 No physical teacher is called here."""
 from __future__ import annotations
 
-import heapq, itertools, json, math, time
+import heapq, itertools, json, math, os, time
 from pathlib import Path
 
 import numpy as np
@@ -55,7 +55,8 @@ class Root:
 class Sampler:
     """Frozen placement sampler (P1 checkpoint or analytical control) behind one call: propose(root, cells, obj, M, gen)."""
 
-    def __init__(self, dom, kind, seed, data_dir, device="cuda", raw_mult=8, rule=None, model=None):
+    def __init__(self, dom, kind, seed, data_dir, device=None, raw_mult=8, rule=None, model=None):
+        device = device or os.environ.get("ABF_DEVICE", "cuda")           # V3.3: CPU fallback via ABF_DEVICE=cpu (default unchanged)
         sc = json.loads((Path(data_dir) / "scalers.json").read_text())
         self.mu, self.sd = np.array(sc["mean"], np.float32), np.array(sc["std"], np.float32)
         self.m = model if model is not None else PL.load(dom, kind, seed, device)
@@ -106,7 +107,8 @@ class Sampler:
 class Scorer:
     """Frozen X/Y model (+ optional frozen travel head): p11, pY, pX and J_hat for many ordered sequences of one root in one batch."""
 
-    def __init__(self, xy_ckpt, cost_ckpt=None, device="cuda"):
+    def __init__(self, xy_ckpt, cost_ckpt=None, device=None):
+        device = device or os.environ.get("ABF_DEVICE", "cuda")
         self.net, self.dev = XY.load_model(xy_ckpt, device), device
         self.cost = XY.load_model(cost_ckpt, device) if cost_ckpt else None
         self.evals = 0

@@ -566,20 +566,36 @@ def repair_data(dom, snap, split, assign, task_on, device="cuda"):
             "dest": torch.as_tensor(Dd, dtype=torch.long, device=device), "w": torch.as_tensor(w / w.mean(), device=device), "roots": rid}
 
 
-def fit_task(dom, variant, seed, cfg=None):
+def state_sha(m):
+    """sha256 over a module's state_dict (sorted keys, CPU float bytes): checkpoint / initialization identity."""
+    h = hashlib.sha256()
+    for k, t in sorted(m.state_dict().items()):
+        h.update(k.encode()); h.update(t.detach().cpu().contiguous().numpy().tobytes())
+    return h.hexdigest()
+
+
+def fit_task(dom, variant, seed, cfg=None, train_snap=None, val_snap=None, device=None):
     """Train one task-conditioned cVAE variant (TRAIN = V2 snapshot train roots; model selection = weighted negative ELBO on VALIDATION repair
-    targets of the base snapshot).  Identical architecture / optimizer / epochs for every variant; only init, supervision and task input differ."""
+    targets of the base snapshot).  Identical architecture / optimizer / epochs for every variant; only init, supervision and task input differ.
+    V3.3 switches (absent = the exact historical behaviour): train_snap / val_snap or env V33_TRAIN_SNAP / V33_VAL_SNAP = explicit immutable
+    snapshot dirs; device or env ABF_DEVICE (default cuda); cfg["steps"] (env V33_STEPS) = fixed optimizer-step budget with VAL evaluated every
+    cfg["eval_every"] steps (env V33_EVAL_EVERY), beta warm-up counted in evaluations, best-VAL checkpoint, no early stopping."""
     v = VARIANTS[variant]
-    cfg = {"epochs": 80, "batch": 256, "lr": 1e-3, "beta_max": 1.0, "warm": 10, "hidden": 128, "zdim": 8, "patience": 15, **(cfg or {})}
-    dev = "cuda"
+    env = {k: int(os.environ[e]) for k, e in (("steps", "V33_STEPS"), ("eval_every", "V33_EVAL_EVERY")) if os.environ.get(e)}
+    cfg = {"epochs": 80, "batch": 256, "lr": 1e-3, "beta_max": 1.0, "warm": 10, "hidden": 128, "zdim": 8, "patience": 15, **env, **(cfg or {})}
+    dev = device or os.environ.get("ABF_DEVICE", "cuda")
+    train_snap = Path(train_snap or os.environ.get("V33_TRAIN_SNAP") or ROOT / "snapshot/abf_v2_7d146b53e4b92fe4")
+    val_snap = Path(val_snap or os.environ.get("V33_VAL_SNAP") or ROOT / "snapshot/abf_9de85710c2a7103f")
     torch.manual_seed(seed)
     V3 = Path(os.environ.get("V3OUT", str(ROOT.parent / "runs")))
-    tr = repair_data(dom, ROOT / "snapshot/abf_v2_7d146b53e4b92fe4", "train", v["assign"], v["task"], dev)
-    va = repair_data(dom, ROOT / "snapshot/abf_9de85710c2a7103f", "val", "all", v["task"], dev)
+    tr = repair_data(dom, train_snap, "train", v["assign"], v["task"], dev)
+    va = repair_data(dom, val_snap, "val", "all", v["task"], dev)
     R, C = GRID[dom]
     m = TaskCVAE(R, C, task_dim(dom), cfg["hidden"], cfg["zdim"]).to(dev)
     if v["init"] == "q2":
         init_from_q2(m, load(dom, "cvae", seed, dev))
+    if "steps" in cfg:
+        return _fit_task_steps(dom, variant, v, seed, cfg, m, tr, va, train_snap, val_snap, dev, V3)
     q2 = None
     if v["q2aux"]:
         D = Data(ROOT / "data" / f"q2_{dom}", dev)
@@ -623,7 +639,58 @@ def fit_task(dom, variant, seed, cfg=None):
     print(json.dumps({"dom": dom, "variant": variant, "seed": seed, "best_val": best[0], "best_epoch": best[1], "n": n, "wall_s": round(time.time() - t0, 1)}))
 
 
-def load_task(dom, variant, seed, device="cuda"):
+def _fit_task_steps(dom, variant, v, seed, cfg, m, tr, va, train_snap, val_snap, dev, V3):
+    """V3.3 fixed-step training (matched optimizer steps across data arms): batches = consecutive slices of seeded permutations of this arm's
+    examples (re-drawn when exhausted), VAL weighted negative ELBO (beta_max) every eval_every steps, best-VAL checkpoint, no early stopping."""
+    assert not v["q2aux"], "fixed-step mode supports repair supervision only"
+    sha = lambda p: hashlib.sha256(Path(p).read_bytes()).hexdigest()  # noqa: E731
+    init_sha = state_sha(m)
+    opt = torch.optim.AdamW(m.parameters(), lr=cfg["lr"], weight_decay=1e-4)
+    out = V3 / os.environ.get("V3_TASK_STAGE", "v3_3") / dom / f"{variant}_s{seed}"
+    out.mkdir(parents=True, exist_ok=True)
+    g = torch.Generator(device=dev).manual_seed(seed)
+    n, S, E, B = len(tr["dest"]), int(cfg["steps"]), int(cfg["eval_every"]), int(cfg["batch"])
+    pick = lambda d, ix: (d["obj"][ix], d["mask"][ix], d["occx"][ix], d["legal"][ix], d["dest"][ix])  # noqa: E731
+    prov = {"train_snapshot": str(train_snap), "train_data_sha256": sha(Path(train_snap) / f"data{dom}.jsonl"), "val_snapshot": str(val_snap),
+            "val_data_sha256": sha(Path(val_snap) / f"data{dom}.jsonl"), "q2_scaler_sha256": sha(ROOT / "data" / f"q2_{dom}" / "scalers.json"),
+            "init": v["init"], "init_state_sha256": init_sha, "device": dev, "torch": torch.__version__}
+    curve, best, t0, step, ev, perm, pi, tl, parts_tr = [], (math.inf, None), time.time(), 0, 0, None, n, [], []
+    while step < S:
+        if pi >= n:
+            perm, pi = torch.randperm(n, device=dev, generator=g), 0
+        ix = perm[pi:pi + B]
+        pi += B
+        m.train()
+        beta = cfg["beta_max"] * min(1.0, (ev + 1) / cfg["warm"])
+        l, pt = m.loss_w(*pick(tr, ix), beta, tr["w"][ix])
+        opt.zero_grad(); l.backward(); opt.step()
+        step += 1
+        tl.append(l.item()); parts_tr.append(pt)
+        if step % E == 0 or step == S:
+            m.eval()
+            with torch.no_grad():
+                vl, parts = m.loss_w(*pick(va, slice(None)), cfg["beta_max"], va["w"])
+            curve.append({"eval": ev, "step": step, "data_epochs": round(step * B / n, 3), "train": float(np.mean(tl)),
+                          "train_rec": float(np.mean([p["rec"] for p in parts_tr])), "train_kl": float(np.mean([p["kl"] for p in parts_tr])),
+                          "val": float(vl), **{f"val_{k}": x for k, x in parts.items()}, "beta": beta})
+            tl, parts_tr = [], []
+            if float(vl) < best[0]:
+                best = (float(vl), step)
+                torch.save({"state": m.state_dict(), "cfg": cfg, "variant": variant, "v": v, "grid": list(GRID[dom]), "tdim": m.tdim, "epoch": ev,
+                            "step": step, "prov": prov}, out / "model.pt.tmp")
+                os.replace(out / "model.pt.tmp", out / "model.pt")
+            ev += 1
+    peak = round(torch.cuda.max_memory_allocated() / 2 ** 20, 1) if str(dev).startswith("cuda") else None
+    res = {"curve": curve, "best_val": best[0], "best_step": best[1], "cfg": cfg, "variant": v, "seed": seed, "prov": prov,
+           "train_examples": n, "train_roots": len(set(tr["roots"])), "val_examples": len(va["dest"]), "val_roots": len(set(va["roots"])),
+           "wall_s": round(time.time() - t0, 1), "gpu_peak_mib": peak, "model_sha256": sha(out / "model.pt")}
+    (out / "curve.json").write_text(json.dumps(res, indent=1))
+    print(json.dumps({"dom": dom, "variant": variant, "seed": seed, "best_val": best[0], "best_step": best[1], "n": n, "init_sha": init_sha[:12],
+                      "wall_s": res["wall_s"]}))
+
+
+def load_task(dom, variant, seed, device=None):
+    device = device or os.environ.get("ABF_DEVICE", "cuda")
     V3 = Path(os.environ.get("V3OUT", str(ROOT.parent / "runs")))
     ck = torch.load(V3 / os.environ.get("V3_TASK_STAGE", "v3_3") / dom / f"{variant}_s{seed}" / "model.pt", map_location=device, weights_only=False)
     m = TaskCVAE(*ck["grid"], ck["tdim"], ck["cfg"]["hidden"], ck["cfg"]["zdim"]).to(device)

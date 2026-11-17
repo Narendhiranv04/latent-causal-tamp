@@ -186,7 +186,7 @@ def known_success(row):
 def setup(dom, seed=0):
     import construct as CO
     import search as S
-    samp = CO.make_sampler(dom, "task:q2init_all", seed, CO.RULES["S1"])
+    samp = CO.make_sampler(dom, os.environ.get("V33_SAMPLER", "task:q2init_all"), int(os.environ.get("V33_SAMPLER_SEED", seed)), CO.RULES["S1"])  # V3.3 switch
     dpath = os.environ.get("V32_SCORER")                                       # V3.2: e.g. .../p2_{dom}/D_s1/model.pt; sampler stays seed 0
     scor = S.Scorer(Path(dpath.format(dom=dom)) if dpath else V3OUT / "v3_5" / f"p2_{dom}" / f"D_s{seed}" / "model.pt",
                     ABF / "runs" / f"p3_{dom}" / f"cost_s{seed}" / "model.pt")
@@ -223,7 +223,9 @@ def run(dom, split, mmax, tag, n=None, chunk=8192):
         import hashlib
         i_, k_ = map(int, part.split("/"))
         rows = [r for r in rows if int(hashlib.sha256(r["root_id"].encode()).hexdigest(), 16) % k_ == i_]
-    torch.cuda.reset_peak_memory_stats()
+    cuda = torch.cuda.is_available() and samp.dev != "cpu"
+    if cuda:
+        torch.cuda.reset_peak_memory_stats()
     t0 = time.time()
     with open(fo, "a") as f:
         for r in rows:
@@ -232,7 +234,7 @@ def run(dom, split, mmax, tag, n=None, chunk=8192):
             root = S.Root(r, dom)
             D6 = proposals(root, samp)
             rec = score_root(root, D6, scor, rules, mmax, known_success(r), chunk)
-            rec["gpu_peak_mib"] = round(torch.cuda.max_memory_allocated() / 2 ** 20, 1)
+            rec["gpu_peak_mib"] = round(torch.cuda.max_memory_allocated() / 2 ** 20, 1) if cuda else None
             f.write(json.dumps(rec) + "\n"); f.flush()
     print(json.dumps({"out": str(fo), "roots": sum(1 for _ in open(fo)), "s": round(time.time() - t0, 1)}), flush=True)
 

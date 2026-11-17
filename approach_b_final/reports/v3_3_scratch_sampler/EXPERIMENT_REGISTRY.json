@@ -1,0 +1,53 @@
+{
+ "experiment": "Approach B V3.3 - from-scratch corrective-placement sampler (TaskCVAE scratch_all): S-control vs S-expanded",
+ "registered_before": "any V3.3 sampler training, proposal outcome or teacher query",
+ "branch": "naren/approach-b-v3-3-scratch-sampler",
+ "base_commit": "044f3f737313b157dc43fec8e2ef5d604a01a788",
+ "splits": "TRAIN = training; VALIDATION = every decision in this milestone; exposed TEST = NOT used in V3.3 (no run planned); fresh cohort = preparation and cost pilot only",
+ "terms": {
+  "M": "top-M distinct destination proposals per eligible object (S1: top-M of the 64-draw Monte-Carlo marginal); NOT repair length",
+  "K": "number of ordered corrective relocations, K <= 3",
+  "B": "historic 4,096 complete-sequence cap; V3.3 uses exact exhaustive enumeration (no cap)",
+  "positive_target": "V3-grammar-legal assignment whose canonical endpoint has Y = 1 and with >= 1 physically verified X = 1 order (contracts.positive_assignments); all successful orders of one assignment = ONE target; X = 0 / Y = 0 / unknown never positive",
+  "unknown": "a missing / censored / unresolved X or Y is UNKNOWN, never a failure"
+ },
+ "hypothesis_H1": "A randomly initialized TaskCVAE trained on all positive assignments of the expanded V3.2 snapshot (S-expanded) gives higher physically verified top-1 task success than the identical scratch TaskCVAE trained on the pre-expansion V3 snapshot (S-control), when both are paired with the same frozen D-expanded scorer, exhaustive M4 and the frozen V3.2 rule.",
+ "arms": {
+  "S-control": {"variant": "scratch_all", "train_snapshot": "abf_v3_e8a496bc66266fca", "train_sha256": {"2d": "a10aeba8c74e4f12c8ce2181b213b9aa95c6fece28976eeeb1f7fb8cec2f2a66", "3d": "fcb30732b7379961deedc95e87c86b92bc970ff539ba4ce073f248a10e9db6d2"}},
+  "S-expanded": {"variant": "scratch_all", "train_snapshot": "abf_v32_fb0eef4f5ff433ee", "train_sha256": {"2d": "963c16b2fd573e5737dacdcb8867b62143a08d54230ceb0d70bd9270f20bf7b2", "3d": "bc03d89646156f0d8ac7975db86080e851ab6fef52f2d83d5012215eecee2132"}},
+  "reference_only": "historical q2init_all s0 (Q2-pretrained then fine-tuned on V2 snapshot abf_v2_7d146b53e4b92fe4) + D-expanded s0, exhaustive M4: existing verified V3.2 VAL records; different initialization AND training data -> not a matched ablation"
+ },
+ "data_audit": "DATA_AUDIT.json (2D: +879 unique positive assignments on 272 roots, +1,469 distinct actions, examples 7,591 -> 9,729; 3D: +854 on 254 roots, +1,066 actions, 4,782 -> 6,807; 0 control positives lost; 0 holdout rows changed; 0 families in two splits)",
+ "controlled_variables": {
+  "architecture": "placement.TaskCVAE (hidden 128, z 8, task branch on; task input unchanged)",
+  "initialization": "random (torch.manual_seed(seed) then construction on CPU); NO init_from_q2, no pretrained load, no resume; init state sha256 must be equal across arms per seed",
+  "input_normalization": "Q2 TRAIN feature scaler data/q2_<dom>/scalers.json (deterministic normalization constants, not model weights; sha256 2d 884b3567..., 3d 36a94926...)",
+  "supervision": "assign = all; one example per (object, destination) action of each target; context = original scene + task features; static legal mask",
+  "weighting": "unchanged repair_data rule: each TRAIN root with >= 1 positive has total weight 1 (1/|A_i| per assignment x 1/|A| per action), normalized to mean 1; a newly positive root enters the expanded arm with the same rule (2D +25 roots, 3D +22)",
+  "objective": "weighted negative conditional ELBO (reconstruction + beta KL), beta_max 1.0, warm-up over the first 10 evaluations",
+  "optimizer": "AdamW lr 1e-3 weight decay 1e-4, batch 256",
+  "budget": "FIXED optimizer steps per domain, equal for both arms = 80 epochs of the S-control data: 2D 2,400 steps (eval every 30), 3D 1,520 steps (eval every 19); batches = slices of seeded permutations of the arm's own examples; no early stopping",
+  "checkpoint": "minimum VALIDATION weighted negative ELBO on the identical base-snapshot VAL targets (2D 860 examples / 404 roots, 3D 455 / 219)",
+  "seeds": [0, 1, 2],
+  "fits": "2 domains x 2 arms x 3 seeds = 12 (smoke seed 0 reused)"
+ },
+ "smoke_gate": "seed 0 both arms per domain: finite train/VAL ELBO, equal init sha, legal masks intact, non-empty targets. Budget rule (VAL ELBO only, before any proposal or physical outcome): if either arm's best VAL ELBO is at the final evaluation, double the step budget for BOTH arms in that domain and re-run the smoke.",
+ "frozen_evaluation": {
+  "scorer": "frozen V3.2 D-expanded s0 (2d 0fa126da..., 3d c02afcbc...), never retrained; travel head p3 cost_s0 (unused by the rule)",
+  "rule": {"noop_gate": 0.5, "eta": 0.3, "alpha": 0, "beta": 0, "gamma": 0},
+  "sampling": "S1 top-M of 64 MC latent draws, per-root torch generator seed 0 (identical proposal RNG stream for every sampler), same device (girish CUDA) for every sampler",
+  "construction": "exact exhaustive M4 (exhaustive.py run, mmax 4)",
+  "teachers": "unchanged 2D/3D X/Y teachers on parity-passed hosts (laptop CPU, girish CPU)"
+ },
+ "screening_teacher_free": "VAL proposal-level known-success coverage at M4 (diagnostic M5/M6): a VAL task root is covered if some KNOWN positive assignment (base snapshot VAL labels + V3.2 VAL verify caches) has every action inside the top-M proposal sets; K1/K2/K3 separate; plus unique proposals, NONE/no-op roots and weighted VAL ELBO. Diagnostic only (known labels are incomplete; collected mostly from q2init proposals).",
+ "physical_pilot": "sampler seed 0 of both arms on ALL VAL roots (2D 751, 3D 364), D-expanded s0, exhaustive M4, every selected repair physically verified.",
+ "pilot_go_no_go": "per domain, Delta = S-expanded - S-control verified task success (paired root bootstrap, 2,000): STOP_NULL (no seeds 1-2 physical evaluation) if Delta <= 0 AND CI95 upper < +2.0 points; otherwise evaluate sampler seeds 1 and 2 of both arms.",
+ "primary_analysis": "per domain, 3 sampler seeds (if not stopped): per-root average over seeds, paired root-cluster bootstrap (2,000) of S-expanded - S-control on VAL task roots (2D 413, 3D 220); secondary: K1/K2/K3, correct NONE abstention, correct no-op, calibration (selected mean p11 - verified rate), coverage vs ranking failures.",
+ "decision_rule": "SUPPORTED if task Delta CI95 lower > 0 AND NONE-abstention Delta point estimate >= -3.0 points; HARMFUL if task Delta CI95 upper < 0; otherwise NULL (or NULL_PILOT if stopped after the pilot).",
+ "final_scratch_configuration": "the arm with the higher seed-mean VAL task success, unless its seed-mean correct NONE abstention is > 3.0 points below the other arm's (then the other arm); deployed sampler seed = 0 (pre-declared, not best-of-seeds).",
+ "robustness": "only if the primary decision is SUPPORTED or HARMFUL: sampler seed 0 of BOTH arms re-scored with D-expanded s1 and s2 (paired, physically verified).",
+ "production_reference": "q2init_all s0 + D-expanded s0 exhaustive M4 on the same VAL roots (existing verified V3.2 E records); labelled different-initialization/different-data reference; production is NOT replaced automatically - trade-off reported for the user.",
+ "not_in_scope": ["D / E / G / DIRECT training", "M-specific models", "selector retuning", "TEST evaluation", "full fresh-cohort generation (needs an authorized CPU budget)"],
+ "compute_policy": {"authorized_hosts": ["girish-laptop (gvcstar): CPU + GPU if free", "user laptop: CPU ONLY (CUDA_VISIBLE_DEVICES='')"], "forbidden": ["gvlab", "gvlab2/cstar", "blackwell/server", "any other host"], "workers": "dynamic by measured free RAM, load and temperature; one thread per teacher worker; nice 10; leave >= 4 CPU threads free on girish"},
+ "status": {"E1_smoke": "PENDING", "E2_training_12": "PENDING", "E3_screening": "PENDING", "E4_physical_pilot": "PENDING", "E5_seeds_1_2": "PENDING", "E6_robustness": "PENDING", "E7_fresh_prep": "PENDING"}
+}
