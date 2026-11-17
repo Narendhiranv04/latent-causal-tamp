@@ -192,3 +192,16 @@ def test_root_stop_diagnostics_require_independent_probe_not_legacy_K():
     stats=result['summaries']['test|2d|O0_P2Q2']
     assert stats['n']==1 and stats['n_positive']==1 and stats['brier']==pytest.approx(.64)
     assert stats['stop_precision']==1. and stats['stop_recall']==1.
+
+
+def test_artifact_inventory_rejects_changed_completed_checkpoint(tmp_path):
+    sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'reports/stage2'))
+    import artifact_index as AI
+    root=tmp_path/'campaign';fit=root/'training/fixture';fit.mkdir(parents=True)
+    checkpoint=fit/'policy.pt';checkpoint.write_bytes(b'opaque fixture; never deserialized')
+    (fit/'COMPLETE.json').write_text(json.dumps({'checkpoint_sha256':{str(checkpoint):AI.digest(checkpoint)}}))
+    ledger=root/'COMPLETE.json';ledger.write_text('{}')
+    report=tmp_path/'index.json';result=AI.index(root,ledger,report)
+    assert result['completed_checkpoint_checks']==1
+    checkpoint.write_bytes(b'changed')
+    with pytest.raises(ValueError,match='hash mismatch'):AI.index(root,ledger,tmp_path/'tampered_index.json')
