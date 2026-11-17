@@ -2,7 +2,7 @@
 """DISCO-Grid Tree-to-Policy and Tree-to-Value Distillation (`DISCO_plan.md` Sections 6.3, 7, 9, and D4).
 
 Implements the exact distillation principles of Saha et al. (CoRL 2026) adapted to DISCO-Grid:
-1. Subtree leaf statistics (`leaf_stats`, matching `disco/data.py:1876-1903`):
+1. Subtree leaf statistics (`leaf_stats`, matching pinned reference `disco/data.py:17`):
    - Recursively counts `(n_success_leaves, n_visited_leaves)` over visited non-failed descendant leaves.
    - Handles `UNRESOLVED` leaves cleanly by returning `(0, 0)` (excluded from decided denominators, never
      falsely treated as physical failures).

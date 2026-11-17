@@ -36,6 +36,8 @@ def summarize(root,out):
     for p in root.glob('training/*/*/distill_report.json'):
         rep=read(p);fits.append(dict(path=str(p),sha256=sha(p),domain=rep['domain'],round=rep['round'],seed=rep['seed'],schema=rep['observation_schema'],completed_epochs=rep['completed_epochs'],edges_mode=rep['edges_mode']))
     totals={dom:dict(planned_root_rounds=32,n_attempted=sum(x['status']!='NOT_RUN' for x in records if x['domain']==dom),
+        n_independent_attempted_roots=len({x['root_id'] for x in records if x['domain']==dom and x['status']!='NOT_RUN'}),
+        n_independent_clean_roots=len({x['root_id'] for x in records if x['domain']==dom and x['status']=='COMPLETED'}),
         n_clean=sum(x['status']=='COMPLETED' for x in records if x['domain']==dom),
         n_quarantined=sum(x['status']=='QUARANTINED_UNRESOLVED' for x in records if x['domain']==dom),
         charged_intents=sum(x['charged_adapter_intents'] for x in records if x['domain']==dom),

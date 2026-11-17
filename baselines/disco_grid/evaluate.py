@@ -1203,7 +1203,7 @@ def root_level_metrics(outcomes, root_manifest, seeds=(0,1,2), bootstrap=10000, 
                 is_abstain=row.get('status')=='ABSTAIN';abstain+=is_abstain
                 unres=row.get('verified') is None and not is_abstain
                 unknown+=unres;vals.append(ok);ups.append(int(ok or unres))
-                if row.get('verified') in (0,1):decided.append(ok)
+                if row.get('verified') in (0,1) and not is_abstain:decided.append(ok)
             means.append(np.mean(vals));upper.append(np.mean(ups));families.append(roots[rid].get('family_id',rid))
         distinct=sorted(set(families));rng=np.random.default_rng(seed)
         values=np.asarray(means);groups=[np.flatnonzero(np.array(families)==f) for f in distinct]
@@ -1220,3 +1220,32 @@ def root_level_metrics(outcomes, root_manifest, seeds=(0,1,2), bootstrap=10000, 
             resampling_unit='source-family cluster, fixed model seeds within root',bootstrap_replicates=bootstrap,bootstrap_seed=seed)
     return {'overall':metrics(list(roots)), 'tasks_K1_K2_K3':metrics([r for r,x in roots.items() if str(x['K_legacy']) in ('1','2','3')]),
             'by_K':{k:metrics([r for r,x in roots.items() if str(x['K_legacy'])==k]) for k in ('0','1','2','3','NONE')}}
+
+
+def paired_frozen_root_metrics(a,b,root_manifest,seeds=(0,1,2),bootstrap=10000,seed=20261117):
+    """Within-DISCO paired root-family bootstrap with fixed missing-trial denominators."""
+    # Reuse input validation, including duplicates and unexpected roots/seeds.
+    root_level_metrics(a,root_manifest,seeds,bootstrap=1,seed=seed)
+    root_level_metrics(b,root_manifest,seeds,bootstrap=1,seed=seed)
+    if not root_manifest:raise ValueError('Empty paired cohort')
+    aa={(r['root_id'],r['seed']):r for r in a};bb={(r['root_id'],r['seed']):r for r in b}
+    values=[];lower=[];upper=[];families=[];unknown=0
+    def bounds(row):
+        if row is None:return 0,1
+        ok=int(row.get('verified')==1)
+        unresolved=row.get('verified') is None and row.get('status')!='ABSTAIN'
+        return ok,int(ok or unresolved)
+    for root in root_manifest:
+        av=[];bv=[];al=[];bl=[]
+        for s in seeds:
+            x,xu=bounds(aa.get((root['root_id'],s)));y,yu=bounds(bb.get((root['root_id'],s)))
+            av.append(x);bv.append(y);al.append(x-yu);bl.append(xu-y);unknown+=int(x!=xu or y!=yu)
+        values.append(np.mean(av)-np.mean(bv));lower.append(np.mean(al));upper.append(np.mean(bl));families.append(root.get('family_id',root['root_id']))
+    distinct=sorted(set(families));groups=[np.flatnonzero(np.asarray(families)==f) for f in distinct]
+    rng=np.random.default_rng(seed);values=np.asarray(values);boots=[]
+    for _ in range(bootstrap):
+        ix=np.concatenate([groups[i] for i in rng.integers(len(groups),size=len(groups))]);boots.append(float(values[ix].mean()))
+    return dict(n_roots=len(root_manifest),n_families=len(groups),fixed_seeds=list(seeds),delta=float(values.mean()),
+        ci95=list(np.percentile(boots,[2.5,97.5])),unknown_pair_trials=unknown,
+        unresolved_sensitivity=[float(np.mean(lower)),float(np.mean(upper))],bootstrap_replicates=bootstrap,bootstrap_seed=seed,
+        interpretation='Paired verified-success indicator difference; unknowns retained, not certified physical negatives')

@@ -49,8 +49,10 @@ independent canonical-endpoint Y checks the original target task from its
 prescribed ready state. Empty-prefix X is one by definition. Z is X AND Y:
 a decided zero in either factor certifies failure; otherwise missing factors
 remain unknown. Administrative time/budget limits are censored rather than
-negative physical labels. Independent evaluation may skip Y after decided X=0,
-which leaves Z=0; any skipped factor remains explicitly missing.
+negative physical labels. The Stage 2 evaluator queries independent canonical Y even following a selected
+execution failure, to distinguish X=0,Y=1 execution-at-feasible-endpoint cases
+from target-endpoint failures. Such a case alone does not prove that order caused
+the failure. Matched reversed physical fixtures provide direct order evidence.
 
 MCTS uses UCB, not PUCT, with exploration constant C=1.5. Progressive widening
 allows further feasible relocation children when their count is less than
@@ -83,7 +85,9 @@ n_relocation/n_policy. Thus STOP-only trees still train the policy.
 For a visited feasible action, the Q target is the fraction of unique decided
 visited descendant leaves with verified Z=1. Leaf counts are structural physical
 evidence, not repeated simulation visits. A decided STOP contributes one leaf;
-unresolved leaves contribute no decided label. Q uses binary cross entropy
+unresolved leaves contribute no decided label. Intermediate negative STOP probes
+supervise STOP rows but do not add leaves to a relocation subtree once that
+state has visited children; this is the structural leaf convention. Q uses binary cross entropy
 weighted by log(1+n_decided). It learns continuation success under explored
 search continuations, not geometric progress or a proof of existential feasibility.
 

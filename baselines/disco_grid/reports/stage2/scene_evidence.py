@@ -43,7 +43,7 @@ def local_faces(model,g,mj):
 
 def render3d(ax,state,env):
     row,raw=env._get_row_and_raw(state.root_id);b=env.backend;b.boot();scene=b._get_env(state.root_id,raw);b._restore_env(scene,state.physics_payload)
-    model,data=scene.model,scene.data;bounds=[];geoms=0;mesh_hashes={}
+    model,data=scene.model,scene.data;bounds=[];moving_bounds=[];geoms=0;mesh_hashes={}
     for g in range(model.ngeom):
         color=model.geom_rgba[g].copy()
         if color[3]<=0:continue
@@ -56,13 +56,14 @@ def render3d(ax,state,env):
         if int(model.geom_bodyid[g])==0:alpha=min(alpha,.18)
         ax.add_collection3d(Poly3DCollection(world,facecolors=color[:3],edgecolors='none',alpha=alpha,rasterized=True))
         bounds.append(np.concatenate(world));geoms+=1
+        if int(model.geom_bodyid[g])!=0:moving_bounds.append(np.concatenate(world))
         if int(model.geom_type[g])==int(b.mujoco.mjtGeom.mjGEOM_MESH):
             import hashlib;mesh_hashes[str(g)]=hashlib.sha256(np.asarray(faces).tobytes()).hexdigest()
-    points=np.concatenate(bounds);low=points.min(0);high=points.max(0);span=high-low
+    points=np.concatenate(moving_bounds or bounds);low=points.min(0);high=points.max(0);span=high-low
     for setter,lo,hi in zip((ax.set_xlim,ax.set_ylim,ax.set_zlim),low-.03,high+.03):setter(lo,hi)
     ax.set_box_aspect(span);ax.view_init(elev=24,azim=-130)
     ax.set_xlabel('x (m)');ax.set_ylabel('y (m)');ax.set_zlabel('z (m)')
-    return dict(native_geoms=geoms,native_mesh_vertex_hashes=mesh_hashes,display_only='curved primitives tessellated; all native mesh faces retained')
+    return dict(native_geoms=geoms,native_mesh_vertex_hashes=mesh_hashes,display_only='curved primitives tessellated; all native mesh faces retained; view cropped to robot/object extents')
 
 
 def render2d(ax,state,env):

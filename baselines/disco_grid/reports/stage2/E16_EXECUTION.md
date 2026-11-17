@@ -60,3 +60,22 @@ Evaluation infrastructure has passed 19 tests (17 Stage 2 plus two journal/
 authorization tests); the additional continuation-accounting check and both
 evaluation checks passed 3/3 separately. These tests use analytical fixtures,
 not held-out physical task trials. No evaluation is authorized by E16.
+
+Before any new VAL/TEST outcome, the final data rule is strengthened prospectively:
+checksum-certify completed iteration checkpoints inside interrupted attempts into
+new immutable prefix artifacts. Keep original IN_FLIGHT/ACTIVE markers and all
+queries intact. Only the exact completed checkpoint/journal prefix may supervise;
+the unfinished query and any completed-but-unreconstructed tail remain excluded.
+Fit a separate final P2/Q2 candidate using clean trees plus these certified
+prefixes, with the same P1 initializations, epochs, seeds and O0/O1 controls.
+Keep clean-only P2 as a data-coverage ablation. These extra fits are allowed only
+within the original aggregate 1,800-second fitting envelope; no extra physical
+calls are authorized or dispatched. If certification or budget fails, the fully
+completed clean-only P2 remains the declared fallback. This choice precedes VAL;
+no TEST outcome or training-loss comparison chooses the data rule.
+
+`post_train.sh` serializes the next gates after the active collection controller
+exits: full lightweight/analytical tests, completed-prefix certification, bounded
+P2 fits, prediction-only model/evaluation freezing, coverage analysis and native
+scene figures. It contains no VAL/TEST physical execution command. Newly added
+recovery/evaluation checks must pass before that workflow activates the new fits.
