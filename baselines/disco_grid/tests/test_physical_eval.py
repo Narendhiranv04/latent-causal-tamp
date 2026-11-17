@@ -224,7 +224,7 @@ def test_empty_physical_phase_retains_zero_attempt_accounting(tmp_path,monkeypat
     envelope=tmp_path/'envelope.json';envelope.write_text(json.dumps(dict(status='APPROVED',scope='DISCO_PHYSICAL_EVALUATION',
         authorization_text='analytical fixture only',host='gvlab',workers=1,gpu=False,split='val',jobs_sha256=D.sha256_file(jobs),
         cpu_s=1,active_wall_s=1,adapter_calls=0,disk_gib=1)))
-    monkeypatch.setenv('CUDA_VISIBLE_DEVICES','');monkeypatch.setattr(D,'DISCO_ROOT',tmp_path)
+    monkeypatch.setenv('CUDA_VISIBLE_DEVICES','');monkeypatch.setenv('DISCO_SOURCE_COMMIT','analytical-fixture');monkeypatch.setattr(D,'DISCO_ROOT',tmp_path)
     monkeypatch.setattr(PE.C,'require_headroom',lambda:{})
     out=tmp_path/'stage2/empty';PE.run(jobs,envelope,out)
     cost=json.loads((out/'ACCOUNTING.json').read_text())
