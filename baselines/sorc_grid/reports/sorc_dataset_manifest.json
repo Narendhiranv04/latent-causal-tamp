@@ -1,0 +1,370 @@
+{
+ "snapshots": {
+  "abf_9de85710c2a7103f": {
+   "path": "/home/naren/abf_v3_laptop/root/snapshot/abf_9de85710c2a7103f",
+   "EVALUATION_MASKS.json": {
+    "sha256": "0f646aaad2dbb3865a5f0142a20eb752df474646298574f93152dda3bcffcd2d",
+    "bytes": 1777844
+   },
+   "QUALIFIED_TRAINING_EXCEPTION.json": {
+    "sha256": "1a226b74023ccaf192c16bee5737e4ee2323500cb8fbcc91e50337d99f401a6e",
+    "bytes": 6440
+   },
+   "data2d.jsonl": {
+    "sha256": "16222ff85eee7e463d10043f1d18e6911d1588b87f41bec8507f1474aa276bcd",
+    "bytes": 18566449
+   },
+   "data3d.jsonl": {
+    "sha256": "1627f34bb2905ba7e399efb14c5ffe18f1f2dea20ca8c895c033e114ff1f2c0f",
+    "bytes": 9940838
+   },
+   "data_snapshot.lock.json": {
+    "sha256": "1b3b9e939882a117dd8f9f579e0f9ffb01794fd30bc89c652d86d57321749608",
+    "bytes": 1935
+   }
+  },
+  "abf_v3_e8a496bc66266fca": {
+   "path": "/home/naren/abf_v3_2_audit/root/snapshot/abf_v3_e8a496bc66266fca",
+   "EVALUATION_MASKS.json": {
+    "sha256": "0f646aaad2dbb3865a5f0142a20eb752df474646298574f93152dda3bcffcd2d",
+    "bytes": 1777844
+   },
+   "QUALIFIED_TRAINING_EXCEPTION.json": {
+    "sha256": "1a226b74023ccaf192c16bee5737e4ee2323500cb8fbcc91e50337d99f401a6e",
+    "bytes": 6440
+   },
+   "data2d.jsonl": {
+    "sha256": "a10aeba8c74e4f12c8ce2181b213b9aa95c6fece28976eeeb1f7fb8cec2f2a66",
+    "bytes": 20585157
+   },
+   "data3d.jsonl": {
+    "sha256": "fcb30732b7379961deedc95e87c86b92bc970ff539ba4ce073f248a10e9db6d2",
+    "bytes": 10793980
+   },
+   "data_snapshot.lock.json": {
+    "sha256": "6ce8cad55e69f1caf2c5aa19525c3fbba92640fdaf20fce0f89996aedb6f4dd0",
+    "bytes": 1013
+   }
+  }
+ },
+ "domains": {
+  "2d": {
+   "splits": {
+    "train": 3500,
+    "test": 749,
+    "val": 751
+   },
+   "K_by_split": {
+    "train": {
+     "0": 875,
+     "1": 560,
+     "2": 560,
+     "NONE": 700,
+     "3": 805
+    },
+    "val": {
+     "0": 188,
+     "1": 120,
+     "2": 120,
+     "NONE": 150,
+     "3": 173
+    },
+    "test": {
+     "0": 187,
+     "1": 120,
+     "2": 120,
+     "NONE": 150,
+     "3": 172
+    }
+   },
+   "train": {
+    "samples": {
+     "n_success": 5123,
+     "x_conflicts": 0,
+     "exec_conflicts": 0,
+     "SEQ": 7637,
+     "PLACE": 9863,
+     "EXEC": 19300,
+     "STOP": 18777,
+     "EXEC_pos": 16562,
+     "STOP_pos": 5880
+    },
+    "X_kinds": {
+     "V3_DIRECT_CANDIDATE": 1587,
+     "SELECTED_ASSIGNMENT_ORDER": 6510,
+     "ONPOLICY_COLLECT": 7133,
+     "ONPOLICY_COVERAGE": 461,
+     "OMISSION_YNEG": 2170
+    },
+    "X0_phase": {
+     "x=1": 8784,
+     "None": 5349,
+     "connector": 273,
+     "relocation:1": 1888,
+     "relocation:0": 533,
+     "relocation:2": 1034
+    },
+    "by_K": {
+     "0": {
+      "roots": 875,
+      "roots_with_success": 24
+     },
+     "1": {
+      "roots": 560,
+      "roots_with_success": 549
+     },
+     "2": {
+      "roots": 560,
+      "roots_with_success": 554
+     },
+     "3": {
+      "roots": 805,
+      "roots_with_success": 786
+     },
+     "NONE": {
+      "roots": 700,
+      "roots_with_success": 0
+     }
+    },
+    "order": {
+     "endpoints_multi_order": 10106,
+     "order_contrast_endpoints": 1443
+    }
+   },
+   "val": {
+    "samples": {
+     "n_success": 719,
+     "x_conflicts": 0,
+     "exec_conflicts": 0,
+     "SEQ": 1300,
+     "PLACE": 1615,
+     "EXEC": 2729,
+     "STOP": 1457,
+     "EXEC_pos": 2127,
+     "STOP_pos": 601
+    },
+    "X_kinds": {
+     "SELECTED_ASSIGNMENT_ORDER": 1398,
+     "OMISSION_YNEG": 466
+    },
+    "X0_phase": {
+     "x=1": 1032,
+     "connector": 51,
+     "relocation:1": 432,
+     "relocation:0": 135,
+     "relocation:2": 214
+    },
+    "by_K": {
+     "0": {
+      "roots": 188,
+      "roots_with_success": 0
+     },
+     "1": {
+      "roots": 120,
+      "roots_with_success": 117
+     },
+     "2": {
+      "roots": 120,
+      "roots_with_success": 118
+     },
+     "3": {
+      "roots": 173,
+      "roots_with_success": 169
+     },
+     "NONE": {
+      "roots": 150,
+      "roots_with_success": 0
+     }
+    },
+    "order": {
+     "endpoints_multi_order": 466,
+     "order_contrast_endpoints": 301
+    }
+   },
+   "val_test_rows_identical_to_base": true,
+   "leakage": {
+    "families_in_2plus_splits": 0,
+    "layouts_in_2plus_splits": 0
+   },
+   "max_objects": 20,
+   "grid": [
+    8,
+    8
+   ],
+   "n_legal_cells": [
+    64
+   ]
+  },
+  "3d": {
+   "splits": {
+    "train": 1766,
+    "val": 364,
+    "test": 370
+   },
+   "K_by_split": {
+    "train": {
+     "NONE": 288,
+     "0": 358,
+     "1": 251,
+     "2": 429,
+     "3": 440
+    },
+    "val": {
+     "NONE": 58,
+     "0": 86,
+     "1": 53,
+     "2": 97,
+     "3": 70
+    },
+    "test": {
+     "NONE": 62,
+     "0": 67,
+     "1": 53,
+     "2": 86,
+     "3": 102
+    }
+   },
+   "train": {
+    "samples": {
+     "n_success": 3702,
+     "x_conflicts": 0,
+     "exec_conflicts": 0,
+     "SEQ": 5287,
+     "PLACE": 6871,
+     "EXEC": 11141,
+     "STOP": 7671,
+     "EXEC_pos": 9906,
+     "STOP_pos": 3068
+    },
+    "X_kinds": {
+     "V3_DIRECT_CANDIDATE": 1625,
+     "SELECTED_ASSIGNMENT_ORDER": 3749,
+     "ONPOLICY_COLLECT": 1933,
+     "ONPOLICY_COVERAGE": 193,
+     "OMISSION_YNEG": 1309
+    },
+    "X0_phase": {
+     "x=1": 5555,
+     "None": 1543,
+     "relocation:1": 902,
+     "relocation:0": 337,
+     "connector": 43,
+     "relocation:2": 429
+    },
+    "by_K": {
+     "0": {
+      "roots": 358,
+      "roots_with_success": 16
+     },
+     "1": {
+      "roots": 251,
+      "roots_with_success": 251
+     },
+     "2": {
+      "roots": 429,
+      "roots_with_success": 429
+     },
+     "3": {
+      "roots": 440,
+      "roots_with_success": 440
+     },
+     "NONE": {
+      "roots": 288,
+      "roots_with_success": 0
+     }
+    },
+    "order": {
+     "endpoints_multi_order": 3999,
+     "order_contrast_endpoints": 721
+    }
+   },
+   "val": {
+    "samples": {
+     "n_success": 449,
+     "x_conflicts": 0,
+     "exec_conflicts": 0,
+     "SEQ": 751,
+     "PLACE": 981,
+     "EXEC": 1283,
+     "STOP": 751,
+     "EXEC_pos": 1099,
+     "STOP_pos": 304
+    },
+    "X_kinds": {
+     "SELECTED_ASSIGNMENT_ORDER": 667,
+     "OMISSION_YNEG": 237
+    },
+    "X0_phase": {
+     "x=1": 633,
+     "relocation:1": 137,
+     "connector": 10,
+     "relocation:0": 69,
+     "relocation:2": 55
+    },
+    "by_K": {
+     "0": {
+      "roots": 86,
+      "roots_with_success": 0
+     },
+     "1": {
+      "roots": 53,
+      "roots_with_success": 53
+     },
+     "2": {
+      "roots": 97,
+      "roots_with_success": 96
+     },
+     "3": {
+      "roots": 70,
+      "roots_with_success": 70
+     },
+     "NONE": {
+      "roots": 58,
+      "roots_with_success": 0
+     }
+    },
+    "order": {
+     "endpoints_multi_order": 237,
+     "order_contrast_endpoints": 98
+    }
+   },
+   "val_test_rows_identical_to_base": true,
+   "leakage": {
+    "families_in_2plus_splits": 0,
+    "layouts_in_2plus_splits": 0
+   },
+   "max_objects": 13,
+   "grid": [
+    6,
+    6
+   ],
+   "n_legal_cells": [
+    36
+   ]
+  }
+ },
+ "q2": {
+  "2d": {
+   "path": "/home/naren/approachb3d_v3/2d_q2_spillover/src/gh-yadu-iiith/planar_2d/dataset_relocations_v1/q2_spillover/merged/q2_canonical_v4",
+   "status": "NOT_LOCAL (gvlab-only merge; contract forbids fetching)"
+  },
+  "3d": {
+   "path": "/home/naren/approachb3d_v3/repo/gh-yadu-iiith/shelf_6x6_open_sides/dataset_placement_extension_v2/production_v4",
+   "status": "NOT_LOCAL (gvlab-only production set; a partial off-host parity mirror is not a provenance-verified copy)"
+  },
+  "consequence": "optional auxiliary conditional-placement head not trained; PLACE learns only from target-repair evidence"
+ },
+ "hardware": {
+  "hostname": "pop-os",
+  "uname": "Linux pop-os 6.17.9-76061709-generic #202511241048~1764607909~24.04~df6b2b6 SMP PREEMPT_DYNAMIC Mon D x86_64 ",
+  "nproc": 32,
+  "meminfo": "MemTotal:       31874272 kB\nMemAvailable:    4582576 kB",
+  "disk_home": "/dev/nvme0n1p5  355G  318G   20G  95% /home",
+  "nvidia_smi": "NVIDIA GeForce RTX 5060 Laptop GPU, 419 MiB, 8151 MiB, 580.82.09",
+  "torch": "2.9.1+cu128",
+  "cuda": "12.8",
+  "cuda_available": true,
+  "gpu": "NVIDIA GeForce RTX 5060 Laptop GPU"
+ },
+ "source_commit": "c5a808ecaa913fedbaf91bb51c1ccd0eacb7dcfc"
+}

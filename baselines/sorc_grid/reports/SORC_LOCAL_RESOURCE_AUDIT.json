@@ -1,0 +1,30 @@
+{
+ "laptop": {
+  "hostname": "pop-os",
+  "uname": "Linux pop-os 6.17.9-76061709-generic #202511241048~1764607909~24.04~df6b2b6 SMP PREEMPT_DYNAMIC Mon D x86_64 ",
+  "nproc": 32,
+  "meminfo": "MemTotal:       31874272 kB\nMemAvailable:    4582576 kB",
+  "disk_home": "/dev/nvme0n1p5  355G  318G   20G  95% /home",
+  "nvidia_smi": "NVIDIA GeForce RTX 5060 Laptop GPU, 419 MiB, 8151 MiB, 580.82.09",
+  "torch": "2.9.1+cu128",
+  "cuda": "12.8",
+  "cuda_available": true,
+  "gpu": "NVIDIA GeForce RTX 5060 Laptop GPU"
+ },
+ "gvlab2_gpu_only": {
+  "gpu": "NVIDIA GeForce RTX 5090, 12797 MiB, 32607 MiB",
+  "nproc": "48",
+  "torch_env": "~/abf_v3/envgpu (no installs)",
+  "torch": "2.9.1+cu130 True",
+  "caps": "<=18 GiB VRAM, one GPU process, <=4 CPU threads, workspace ~/sorc_grid; shared uid with a teammate: never touch other processes"
+ },
+ "laptop_caps": "shared with the V3.4 generation: >=3 threads + >=2 GB RAM free, <=95 C, nice 15; laptop GPU <=5 GiB (V3.4 inference needs it later); teacher verification on laptop CPU only",
+ "forbidden": [
+  "gvlab",
+  "blackwell",
+  "enigma",
+  "girish",
+  "dinesh",
+  "cloud"
+ ]
+}
