@@ -1,0 +1,32 @@
+{
+  "pid": 4052752,
+  "proc_stat": "4052752 (nice) R 4052739 4052752 4052752 0 -1 4194304 11 0 0 0 0 0 0 0 20 0 1 0 56154293 438272 0 18446744073709551615 96632532213760 96632532228449 140722789091648 0 0 0 0 0 0 0 0 0 17 21 0 0 0 0 0 96632532241328 96632532242584 96633391656960 140722789099956 140722789100437 140722789100437 140722789101546 0\n",
+  "output": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_reserved_cores_20261117",
+  "log": "/home/longhorizon/disco_grid_stage2/reserved_cores_physical_evaluation.log",
+  "source_commit": "0537d1bd12",
+  "utc": "2026-11-17T17:07:32.458789+00:00",
+  "workers": 4,
+  "gpu_allocation": false,
+  "reserved_logical_cpus": [
+    22,
+    23
+  ],
+  "prior_attempts_retained": true,
+  "command": [
+    "nice",
+    "-n",
+    "10",
+    "taskset",
+    "-c",
+    "0-21",
+    "timeout",
+    "--signal=INT",
+    "--kill-after=30s",
+    "30000s",
+    "/home/longhorizon/disco_grid_stage2/venv/bin/python",
+    "/home/longhorizon/disco_grid_stage2/source/reserved_cores_0537d1bd12/baselines/disco_grid/reports/stage2/continue_frozen_test.py",
+    "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_parallel_20261117",
+    "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_reserved_cores_20261117"
+  ],
+  "authorization_sha256": "af7f676df70c5ca94708c0a4248cbcbf3d349b57d719fc73f5abebd28733c6d1"
+}

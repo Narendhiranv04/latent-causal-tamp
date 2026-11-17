@@ -91,3 +91,11 @@ physical teacher and are not benchmark scores.
 - [Root STOP diagnostics](ROOT_STOP_DIAGNOSTICS.json), [failure examples](FAILURE_EXAMPLES.json), and [physical resource totals](PHYSICAL_RESOURCE_TOTALS.json).
 
 Earlier pending-run statements in this index describe preparation history; the measured report and status JSON are current.
+
+## Current frozen TEST continuation (supersedes prior stopped-run status)
+
+The user authorized spare Girish CPU capacity with two physical cores reserved. **RUNNING**: `V15_F25_v1_reserved_cores_20261117`, source `0537d1bd12`, four one-thread physical workers; CPUs 22/23 excluded from all DISCO affinity. Live verification observed four concurrent trials and about 2.8 GiB peak pool RSS. No other methodology process was changed. The prior v1 measured package remains an immutable partial snapshot; current canonical numeric tables remain that snapshot until v2 publication.
+
+- [Authorization](RESERVED_CORES_AUTHORIZATION.json), [resource/budget and no-retry contract](RESERVED_CORES_CONTINUATION.md), [49 passing tests](RESERVED_CORES_TESTS.log).
+- [Physical launch](RESERVED_CORES_EVALUATION_LAUNCH.json), [live affinity verification](RESERVED_CORES_LIVE_VERIFICATION.json), [report observer](RESERVED_CORES_FINISH_LAUNCH.json).
+- Original per-domain CPU/wall and global 5523-call ceilings remain unchanged; earlier costs count. Only never-attempted TEST identities execute; VAL selection remains byte-identical. No GPU required.
