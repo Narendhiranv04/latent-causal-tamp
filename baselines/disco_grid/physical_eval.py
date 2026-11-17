@@ -181,7 +181,7 @@ def validate_execution(jobs_path,envelope):
     if envelope['jobs_sha256']!=D.sha256_file(jobs_path):raise ValueError('Approved jobs changed')
     try:C.execution_host(envelope['host'])
     except RuntimeError as error:raise PermissionError('Evaluation host/resource mismatch') from error
-    if envelope['workers']!=1 or envelope['gpu'] is not False:raise PermissionError('Evaluation host/resource mismatch')
+    if envelope['workers'] not in (1,3) or envelope['workers']>C.execution_workers() or envelope['gpu'] is not False:raise PermissionError('Evaluation host/resource mismatch')
     jobs=read(jobs_path)['jobs']
     if len({j['id'] for j in jobs})!=len(jobs):raise ValueError('Duplicate job IDs')
     if any(j['split']!=envelope['split'] or j['protocol'] not in ('open_loop','closed_loop') for j in jobs):raise ValueError('Mixed or invalid split/protocol')
@@ -193,6 +193,7 @@ def validate_execution(jobs_path,envelope):
 
 def run(jobs_path,envelope_path,out):
     envelope=read(envelope_path);jobs=validate_execution(jobs_path,envelope)
+    if envelope['workers']!=1:raise ValueError('Parallel envelopes require the separately accounted pool runner')
     if os.environ.get('CUDA_VISIBLE_DEVICES')!='':raise PermissionError('CPU only')
     if not out.resolve().is_relative_to((D.DISCO_ROOT/'stage2').resolve()):raise ValueError('Isolated Stage 2 output required')
     C.require_headroom();out.mkdir(parents=True,exist_ok=False)

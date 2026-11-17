@@ -55,18 +55,27 @@ def execution_host(requested=None):
     path=os.environ.get('DISCO_EXECUTION_AUTHORIZATION')
     if path:
         record=json.loads(Path(path).read_text())
-        if (record.get('status')!='APPROVED' or record.get('scope')!='DISCO_RELEASE_HOST_AMENDMENT'
-                or not record.get('authorization_text') or record.get('workers')!=1
+        parallel=record.get('scope')=='DISCO_RELEASE_PARALLEL_HOST_AMENDMENT'
+        if (record.get('status')!='APPROVED' or record.get('scope') not in ('DISCO_RELEASE_HOST_AMENDMENT','DISCO_RELEASE_PARALLEL_HOST_AMENDMENT')
+                or not record.get('authorization_text') or record.get('workers')!=(3 if parallel else 1)
                 or record.get('gpu') is not False or record.get('cpu_threads')!=1):
             raise RuntimeError('BLOCKED_PERMISSION: invalid execution host amendment')
         host=dict(alias=record.get('host'),hostname=record.get('hostname'))
-        if host!={'alias':'girish-laptop','hostname':'gvcstar'}:
+        supported=[{'alias':'girish-laptop','hostname':'gvcstar'}]
+        if parallel:supported.append({'alias':'user-laptop','hostname':'pop-os'})
+        if host not in supported:
             raise RuntimeError('BLOCKED_PERMISSION: unsupported amended execution host')
     else:
         host=dict(alias='gvlab',hostname='gvlab')
     if requested is not None and requested!=host['alias']:
         raise RuntimeError('BLOCKED_PERMISSION: requested host differs from recorded authorization')
     return host
+
+
+def execution_workers():
+    execution_host()
+    path=os.environ.get('DISCO_EXECUTION_AUTHORIZATION')
+    return json.loads(Path(path).read_text())['workers'] if path else 1
 
 
 def teacher_sources(dom):
