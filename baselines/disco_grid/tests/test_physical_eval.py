@@ -135,5 +135,8 @@ def test_release_rule_selection_uses_val_only_and_fixed_missing_denominator():
                     outcomes.append(dict(job_id=jid,status=status,verified=int(k!='NONE')))
     selected=RE.select_eta(jobs,outcomes)
     assert selected['selected_eta']=={'2d':.08,'3d':.08}
+    abstained_tasks=[dict(row,status='ABSTAIN',verified=0) if row['job_id'].endswith('_1') else row for row in outcomes]
+    with pytest.raises(RuntimeError,match='insufficient decided'):
+        RE.select_eta(jobs,abstained_tasks)
     with pytest.raises(ValueError,match='VAL'):RE.select_eta([dict(jobs[0],split='test')],[])
     with pytest.raises(PermissionError):RE.validate({'status':'REQUESTED_NOT_AUTHORIZED'})

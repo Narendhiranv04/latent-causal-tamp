@@ -66,11 +66,14 @@ def select_eta(val_jobs,outcomes):
             task=sum(lookup.get(j['id'],{}).get('verified')==1 for j in tasks)/len(tasks)
             noop=sum(lookup.get(j['id'],{}).get('verified')==1 and lookup[j['id']].get('status')=='NOOP' for j in k0)/len(k0)
             abstain=sum(lookup.get(j['id'],{}).get('status')=='ABSTAIN' for j in none)/len(none)
-            known=sum(lookup.get(j['id'],{}).get('verified') in (0,1) for j in tasks)
+            def physically_decided(job):
+                result=lookup.get(job['id'],{})
+                return result.get('verified') in (0,1) and result.get('status')!='ABSTAIN'
+            known=sum(physically_decided(j) for j in tasks)
             coverage={}
             for arm in ('O0_P2Q2','O0_closed_P2Q2','O1_closed_P2Q2'):
                 arm_jobs=[j for j in val_jobs if j['domain']==dom and j['arm']==arm and j['rule']['abstain_eta']==eta and str(j['K_legacy']) in ('1','2','3')]
-                coverage[arm]=dict(expected=len(arm_jobs),known=sum(lookup.get(j['id'],{}).get('verified') in (0,1) for j in arm_jobs))
+                coverage[arm]=dict(expected=len(arm_jobs),known=sum(physically_decided(j) for j in arm_jobs))
             eligible=all(c['expected']>0 and c['known']*2>=c['expected'] for c in coverage.values())
             domain_scores.append(dict(eta=eta,eligible=eligible,protocol_coverage=coverage,task_success=task,verified_noop_K0=noop,explicit_abstention_NONE=abstain,n_task_trials=len(tasks),n_task_outcomes_known=known))
         # At least half the raw-Q task trials must have real decided outcomes.
