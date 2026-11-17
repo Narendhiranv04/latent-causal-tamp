@@ -9,8 +9,15 @@ import numpy as np
 def read(p):return json.loads(p.read_text())
 
 
+def write_csv(path,rows):
+    if not rows:return
+    keys=list(dict.fromkeys(key for row in rows for key in row))
+    with path.open('w') as file:
+        writer=csv.DictWriter(file,fieldnames=keys);writer.writeheader();writer.writerows(rows)
+
+
 def analyze(release,out):
-    out.mkdir(parents=True,exist_ok=True);groups={};row_sources={};jobs_all=[];observed_all=[];predictions=[];verifications=[];metrics={};flat=[]
+    out.mkdir(parents=True,exist_ok=True);groups={};row_sources={};jobs_all=[];observed_all=[];predictions=[];verifications=[];metrics={};flat=[];costs=[];censoring=[]
     for phase in ('val','test'):
         for dom in ('2d','3d'):
             path=release/f'{phase}_{dom}_jobs.json'
@@ -23,10 +30,30 @@ def analyze(release,out):
                 job=expected[row['job_id']]
                 if row['root_id']!=job['root_id'] or row['seed']!=job['seed']:raise ValueError('Outcome/job identity mismatch')
                 lookup[row['job_id']]=row;observed_all.append(row)
-            for job in jobs:
+            account=release/f'{phase}_{dom}/ACCOUNTING.json'
+            if account.exists():
+                row_sources[str(account)]=D.sha256_file(account)
+                costs.append(dict(phase=phase,domain=dom,**read(account)))
+            for index,job in enumerate(jobs):
                 eta=job['rule']['abstain_eta'];key=(phase,dom,job['protocol'],job['arm'],eta)
                 groups.setdefault(key,dict(jobs=[],rows=[]));groups[key]['jobs'].append(job)
                 row=lookup.get(job['id'])
+                if row is None or row.get('verified') is None:
+                    censoring.append(dict(phase=phase,domain=dom,arm=job['arm'],protocol=job['protocol'],root_id=job['root_id'],seed=job['seed'],job_id=job['id'],
+                        status=row.get('status') if row else 'NOT_RUN',failure_kind=row.get('failure_kind') if row else None,
+                        interpretation='No certified physical negative inferred'))
+                if row:
+                    directory=release/f'{phase}_{dom}'/f'{index:04d}_{job["id"]}'
+                    trace=directory/'selection_trace.json';journal=directory/'queries.jsonl'
+                    details=dict(directory=str(directory),selection_trace_sha256=D.sha256_file(trace) if trace.exists() else None,
+                        journal_sha256=D.sha256_file(journal) if journal.exists() else None)
+                    if journal.exists():
+                        events=[json.loads(line) for line in journal.read_text().splitlines()]
+                        details.update(attempted_relocations=sum(e['event']=='started' and e['kind']=='transition' for e in events),
+                            executed_relocations=sum(e['event']=='finished' and e['kind']=='transition' and e['status']=='EXECUTED' for e in events))
+                        row_sources[str(journal)]=D.sha256_file(journal)
+                    if trace.exists():row_sources[str(trace)]=D.sha256_file(trace)
+                    row['execution_evidence']=details
                 if row:groups[key]['rows'].append(row)
                 if phase=='test':
                     pred=job.get('prediction') or {k:row.get(k) if row else None for k in ('seq','status','latency_ms','selection_physical_counters')}
@@ -48,11 +75,14 @@ def analyze(release,out):
             n_predicted_NOOP_K0=sum(r['status']=='NOOP' for r in k0),n_verified_NOOP_K0=sum(r['status']=='NOOP' and r.get('verified')==1 for r in k0),
             n_unnecessary_relocation_K0=sum(r['status']=='REPAIR' for r in k0),
             n_expected_NONE=sum(str(r['K_legacy'])=='NONE' for r in roots.values())*len(seeds),n_explicit_abstention_NONE=sum(r['status']=='ABSTAIN' for r in none),
-            n_novel_verified_repairs_NONE=sum(r.get('verified')==1 for r in none),
+            n_novel_verified_repairs_NONE=sum(r.get('verified')==1 and r.get('status')=='REPAIR' for r in none),
+            n_verified_original_target_NONE=sum(r.get('verified')==1 and r.get('status')=='NOOP' for r in none),
+            predicted_action_counts=dict(collections.Counter(str(len(r['seq'])) if r.get('seq') is not None else r.get('status','UNKNOWN') for r in rows)),
+            actual_executed_relocation_counts=dict(collections.Counter(str(r['execution_evidence']['executed_relocations']) for r in rows if 'executed_relocations' in r.get('execution_evidence',{}))),
             execution_failure_at_target_feasible_endpoint=sum(r.get('x')==0 and r.get('y')==1 for r in rows),
             failure_phases=dict(collections.Counter(r.get('failed_phase') or ('verified' if r.get('verified')==1 else r['status']) for r in rows)),
             failure_kinds=dict(collections.Counter(r.get('failure_kind') or 'NONE' for r in rows)),
-            latency_ms=dict(n=len(latency),median=float(np.median(latency)) if latency else None,p95=float(np.percentile(latency,95)) if latency else None),
+            latency_ms=dict(n=len(latency),median=float(np.median(latency)) if latency else None,p90=float(np.percentile(latency,90)) if latency else None,p95=float(np.percentile(latency,95)) if latency else None),
             reference_corrective_joint_path_on_success=dict(n=len(travel),mean_rad=float(np.mean(travel)) if travel else None,
                 definition='Accepted corrective joint waypoint paths plus certified connector, target Y excluded; actual servo arc not recorded'),
             actual_motion_arc_status='NOT_RECORDED',verification_reuse_predictions=sum(bool(r.get('physical_verification_reuse_from')) for r in rows))
@@ -76,6 +106,9 @@ def analyze(release,out):
                     aa=[r for r in ga['rows'] if r['root_id'] in {x['root_id'] for x in roots} and r['seed'] in seeds];bb=[r for r in gb['rows'] if r['root_id'] in {x['root_id'] for x in roots} and r['seed'] in seeds]
                     paired[f'{phase}|{dom}|{a}_minus_{b}|eta{ka[4]}']=EV.paired_frozen_root_metrics(aa,bb,roots,seeds=seeds)
     J.atomic_json(out/'FINAL_METRICS.json',dict(metrics=metrics,paired=paired,source_hashes=row_sources,interpretation='Frozen-root intention-to-evaluate; not-run and unresolved are not physical negative labels'))
+    write_csv(out/'RESOURCE_ACCOUNTING.csv',costs)
+    write_csv(out/'CENSORING_LEDGER.csv',censoring)
+    write_csv(out/'ABLATIONS.csv',[dict(comparison=name,**{k:json.dumps(v) if isinstance(v,(dict,list)) else v for k,v in item.items()}) for name,item in paired.items()])
     if flat:
         with (out/'FINAL_METRICS.csv').open('w') as f:
             w=csv.DictWriter(f,fieldnames=list(flat[0]));w.writeheader();w.writerows(flat)

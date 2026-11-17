@@ -140,3 +140,27 @@ def test_release_rule_selection_uses_val_only_and_fixed_missing_denominator():
         RE.select_eta(jobs,abstained_tasks)
     with pytest.raises(ValueError,match='VAL'):RE.select_eta([dict(jobs[0],split='test')],[])
     with pytest.raises(PermissionError):RE.validate({'status':'REQUESTED_NOT_AUTHORIZED'})
+
+
+def test_release_analysis_retains_missing_roots_and_distinguishes_novel_repairs(tmp_path):
+    sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'reports/stage2'))
+    import analyze_evaluation as AE
+    release=tmp_path/'release';release.mkdir();prep=tmp_path/'prep';prep.mkdir()
+    (prep/'checkpoint_manifest.json').write_text('[]')
+    (release/'APPROVED_ENVELOPE.json').write_text(json.dumps(dict(preparation=str(prep))))
+    jobs=[];outcomes=[]
+    for index,(k,status) in enumerate([('1','REPAIR'),('NONE','NOOP'),('NONE','REPAIR'),('2',None)]):
+        root=f'fixture{index}';jid=f'job{index}'
+        jobs.append(dict(id=jid,root_id=root,family_id=root,K_legacy=k,seed=0,domain='2d',split='test',protocol='open_loop',arm='O0_P2Q2',
+            rule={'abstain_eta':0.},schema=P.O0,policy_sha256='fixture',root_sha256='fixture',input_sha256='fixture',
+            prediction=dict(status=status,seq=[] if status=='NOOP' else [[1,5]])))
+        if status:outcomes.append(dict(job_id=jid,root_id=root,seed=0,domain='2d',status=status,verified=1,x=1,y=1,seq=[] if status=='NOOP' else [[1,5]]))
+    (release/'test_2d_jobs.json').write_text(json.dumps(dict(jobs=jobs)))
+    phase=release/'test_2d';phase.mkdir();(phase/'outcomes.jsonl').write_text(''.join(json.dumps(r)+'\n' for r in outcomes))
+    out=tmp_path/'analysis';AE.analyze(release,out)
+    metrics=json.loads((out/'FINAL_METRICS.json').read_text())['metrics']['test|2d|open_loop|O0_P2Q2|0.0']
+    assert metrics['overall']['n_expected_predictions']==4 and metrics['overall']['n_not_run']==1
+    assert metrics['overall']['success_rate']==.75
+    assert metrics['deployment_diagnostics']['n_novel_verified_repairs_NONE']==1
+    assert metrics['deployment_diagnostics']['n_verified_original_target_NONE']==1
+    assert 'NOT_RUN' in (out/'CENSORING_LEDGER.csv').read_text()
