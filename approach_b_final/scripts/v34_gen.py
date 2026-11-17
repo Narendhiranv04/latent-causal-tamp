@@ -26,6 +26,14 @@ else:
     WALL = RUN.WALL_S
     import bd_2d as A
 bc = RUN.bc
+if os.environ.get("V34_WORK") == "conv":                          # CONV1 slots: V1 raw root -> frozen conversion (v34_conv.work)
+    import v34_conv
+    WORK = v34_conv.work
+elif os.environ.get("V34_WORK") == "none3d":                    # 3D NONE slots: dense + trim (v34_none3d.work)
+    import v34_none3d
+    WORK = v34_none3d.work
+else:
+    WORK = RUN.work
 
 
 def ctl(name, default):
@@ -59,6 +67,15 @@ def main():
     slots = [s for s in plan["slots"] if s["domain"] == DOM and (KINDS is None or s["kind"] in KINDS)]
     if os.environ.get("V34_COVER") in ("0", "1"):                # 2D: only slots that do (1) / do not (0) need bd_2d_cover_table.json
         slots = [s for s in slots if s.get("needs_2d_cover_table") == (os.environ["V34_COVER"] == "1")]
+    ex = os.environ.get("V34_EXCLUDE_REF")                        # e.g. "2d-conv": slots whose reference root id starts with it are skipped
+    only = os.environ.get("V34_ONLY_REF")                         # e.g. "2d-conv": only those slots
+    if ex:
+        slots = [s for s in slots if not s["ref_root_id"].startswith(ex)]
+    if os.environ.get("V34_ONLY_SLOTS"):                         # file with slot ids (replacement runs for rejected enrichment parents)
+        keep_ids = set(Path(os.environ["V34_ONLY_SLOTS"]).read_text().split())
+        slots = [s for s in slots if s["slot_id"] in keep_ids]
+    if only:
+        slots = [s for s in slots if s["ref_root_id"].startswith(only)]
     if os.environ.get("V34_SHARD"):                               # 'a,b/n': this host owns slots with sha256(slot_id) % n in {a, b}
         import hashlib
         keep, n = os.environ["V34_SHARD"].split("/")
@@ -85,7 +102,15 @@ def main():
             for e in led:
                 if "v34_slot" in e:
                     tries[e["v34_slot"]] = max(tries.get(e["v34_slot"], 0), e["v34_attempt"] + 1)
-            used = set()
+            try:                                                   # parents the enrichment stage could not use -> slot needs a new raw root
+                rej = set((OUT / "REJECT_ROOTS").read_text().split())
+            except OSError:
+                rej = set()
+            nrej = {}
+            for e in led:
+                if e.get("root_id") in rej and "v34_slot" in e:
+                    nrej[e["v34_slot"]] = nrej.get(e["v34_slot"], 0) + 1
+            used = set(rej)
             for e in (e for e in led if e.get("accepted")):                  # ledger (completion) order
                 obs = str(e.get("observed"))
                 cand = [s for s in slots if s["slot_id"] not in filled and key(s["spec"]) == key(e["spec"]) and s["raw_class"] == obs]
@@ -96,14 +121,15 @@ def main():
             inflight = {}
             for sid, _, _ in running.values():
                 inflight[sid] = inflight.get(sid, 0) + 1
-            todo = [s for s in slots if s["slot_id"] not in filled and tries.get(s["slot_id"], 0) + inflight.get(s["slot_id"], 0) < CAP]
+            cap = lambda sid: CAP * (1 + nrej.get(sid, 0))  # noqa: E731
+            todo = [s for s in slots if s["slot_id"] not in filled and tries.get(s["slot_id"], 0) + inflight.get(s["slot_id"], 0) < cap(s["slot_id"])]
             ok, mem, temp = guard_ok()
             W = min(MAXW, ctl("WORKERS", MAXW))
             stop = (OUT / "STOP").exists()
             if time.time() - t_log > 300:
                 t_log = time.time()
                 st = {"utc": time.strftime("%FT%TZ", time.gmtime()), "slots": len(slots), "filled": len(filled), "running": len(running),
-                      "attempts": sum(tries.values()), "capped": sum(1 for s in slots if s["slot_id"] not in filled and tries.get(s["slot_id"], 0) >= CAP),
+                      "attempts": sum(tries.values()), "capped": sum(1 for s in slots if s["slot_id"] not in filled and tries.get(s["slot_id"], 0) >= cap(s["slot_id"])), "rejected": len(rej),
                       "mem_mb": mem, "temp_c": temp, "workers": W, "guard_ok": ok, "stop": stop}
                 (OUT / "STATUS.json").write_text(json.dumps({**st, "filled_map": filled}, indent=0))
                 print(json.dumps(st), flush=True)
@@ -114,12 +140,12 @@ def main():
                     for s in sorted(todo, key=lambda s: order[s["slot_id"]]):
                         if len(running) >= W:
                             break
-                        if inflight.get(s["slot_id"], 0) != depth or tries.get(s["slot_id"], 0) + depth >= CAP:
+                        if inflight.get(s["slot_id"], 0) != depth or tries.get(s["slot_id"], 0) + depth >= cap(s["slot_id"]):
                             continue
                         att = tries.get(s["slot_id"], 0) + depth
                         spec = dict(s["spec"])
                         job = (NAME, order[s["slot_id"]], att, spec, str(OUT))
-                        running[pool.apply_async(RUN.work, (job,))] = (s["slot_id"], att, time.time())
+                        running[pool.apply_async(WORK, (job,))] = (s["slot_id"], att, time.time())
                         inflight[s["slot_id"]] = depth + 1
                         break                                          # one launch per loop pass: re-check the guard
             time.sleep(2)
