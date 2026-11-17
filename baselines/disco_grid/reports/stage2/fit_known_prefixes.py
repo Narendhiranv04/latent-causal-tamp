@@ -12,16 +12,16 @@ from continue_e16 import live_child_cpu, charged_totals
 def read(p):return json.loads(p.read_text())
 
 
-def run(engine,campaign,recovered,controller_commit,revision="001",prior_ledger=None):
+def run(engine,campaign,recovered,controller_commit,revision="001",prior_ledger=None,clean_only_control=False):
     began=time.monotonic();sys.path.insert(0,str(engine));CA=importlib.import_module('campaign');C=CA.C;D=CA.D;J=CA.J;P=CA.P
     if not (prior_ledger or campaign/'continuation_001/COMPLETE.json').exists():raise RuntimeError('Collection still active')
     approved=read(campaign/'manifest.json')['envelope'];CA.validate_authorization(approved,engine/'reports/stage2/cohorts.json')
     prior=read(prior_ledger or campaign/'continuation_001/COMPLETE.json')['controller_overhead'];original_accounting=CA.accounting
     if not recovered.resolve().is_relative_to(campaign.resolve()):raise ValueError('Recovery outside approved disk budget')
-    records=read(recovered/'manifest.json')['records'];out=campaign/('known_prefix_fit' if revision=='001' else f'known_prefix_fit_{revision}');out.mkdir(exist_ok=False)
+    records=read(recovered/'manifest.json')['records'];out=campaign/(f'strict_clean_control_{revision}' if clean_only_control else 'known_prefix_fit' if revision=='001' else f'known_prefix_fit_{revision}');out.mkdir(exist_ok=False)
     baseline_wall=original_accounting(campaign,training=True)['wall_s']
     J.atomic_json(out/'manifest.json',dict(controller_commit=controller_commit,script_sha256=D.sha256_file(__file__),
-        recovery_manifest_sha256=D.sha256_file(recovered/'manifest.json'),protocol='P2 known-iteration-prefix augmentation frozen before VAL/TEST',
+        recovery_manifest_sha256=D.sha256_file(recovered/'manifest.json'),protocol='P2 clean-only current-supervision control, matched P1 initialization; no recovered tree' if clean_only_control else 'P2 known-iteration-prefix augmentation frozen before VAL/TEST',
         source_engine_commit=read(campaign/'manifest.json')['source_commit'],initialization='same all-feasible P1 by schema/seed; successful-only affects current policy rows',
         limits=approved['neural_training'],no_new_physics=True))
     def overhead():
@@ -37,7 +37,7 @@ def run(engine,campaign,recovered,controller_commit,revision="001",prior_ledger=
     CA.accounting=charged;CA.checked_resources=resources
     with (campaign/'controller.lock').open('a') as lock:
         fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
-        for dom in ('2d','3d'):
+        for dom in (('3d',) if clean_only_control else ('2d','3d')):
             try:
                 streams=[];provenance=[]
                 for rnd in range(2):
@@ -45,7 +45,7 @@ def run(engine,campaign,recovered,controller_commit,revision="001",prior_ledger=
                     for p in sorted((campaign/f'trees/{dom}/R{rnd}').glob('*/ATTEMPT_COMPLETE.json')):
                         status=read(p)
                         if status['clean']:dirs.append(Path(status['tree']))
-                    for record in records:
+                    for record in ([] if clean_only_control else records):
                         if record['status']=='CERTIFIED_COMPLETED_ITERATION_PREFIX':
                             td=Path(record['destination'])
                             if td.parent.parent.name==dom and td.parent.name==f'R{rnd}':dirs.append(td)
@@ -59,9 +59,9 @@ def run(engine,campaign,recovered,controller_commit,revision="001",prior_ledger=
                     if not dirs:raise RuntimeError('No eligible round supervision')
                     streams.append([str(p) for p in dirs])
                 J.atomic_json(out/f'{dom}_data.json',dict(trees=provenance,independent_roots=len({r['root_id'] for r in provenance})))
-                if not any(r['recovered_prefix'] for r in provenance):
+                if not clean_only_control and not any(r['recovered_prefix'] for r in provenance):
                     J.atomic_json(out/f'{dom}_NO_AUGMENTATION.json',dict(reason='No recoverable completed iteration prefixes; original P2 retained'));continue
-                fit=campaign/f'training/{dom}_P2Q2_knownprefix';previous=campaign/f'training/{dom}_P1Q1'
+                fit=campaign/f'training/{dom}_P2Q2_{"strictclean" if clean_only_control else "knownprefix"}';previous=campaign/f'training/{dom}_P1Q1'
                 if not (previous/'COMPLETE.json').exists():raise RuntimeError('Missing fully completed P1; cannot claim full cycle')
                 if (fit/'COMPLETE.json').exists():
                     scalers=read(D.ABF_ROOT/f'data/q2_{dom}/scalers.json')
@@ -82,4 +82,4 @@ def run(engine,campaign,recovered,controller_commit,revision="001",prior_ledger=
                 J.atomic_json(out/f'{dom}_BLOCKED.json',dict(error=type(error).__name__,reason=str(error),charged_neural_cost_upper_bound=charged(campaign,training=True)))
         J.atomic_json(out/'COMPLETE.json',dict(controller_overhead=overhead(),charged_neural_cost_upper_bound=charged(campaign,training=True)))
 if __name__=='__main__':
-    p=argparse.ArgumentParser();p.add_argument('--engine',type=Path,required=True);p.add_argument('--campaign',type=Path,required=True);p.add_argument('--recovered',type=Path,required=True);p.add_argument('--controller-commit',required=True);p.add_argument('--revision',default='001');p.add_argument('--prior-ledger',type=Path);a=p.parse_args();run(a.engine,a.campaign,a.recovered,a.controller_commit,a.revision,a.prior_ledger)
+    p=argparse.ArgumentParser();p.add_argument('--engine',type=Path,required=True);p.add_argument('--campaign',type=Path,required=True);p.add_argument('--recovered',type=Path,required=True);p.add_argument('--controller-commit',required=True);p.add_argument('--revision',default='001');p.add_argument('--prior-ledger',type=Path);p.add_argument('--clean-only-control',action='store_true');a=p.parse_args();run(a.engine,a.campaign,a.recovered,a.controller_commit,a.revision,a.prior_ledger,a.clean_only_control)

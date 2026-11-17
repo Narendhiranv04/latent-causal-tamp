@@ -140,6 +140,8 @@ def test_release_rule_selection_uses_val_only_and_fixed_missing_denominator():
         RE.select_eta(jobs,abstained_tasks)
     with pytest.raises(ValueError,match='VAL'):RE.select_eta([dict(jobs[0],split='test')],[])
     with pytest.raises(PermissionError):RE.validate({'status':'REQUESTED_NOT_AUTHORIZED'})
+    with pytest.raises(PermissionError,match='physical-call ceiling'):
+        RE.validate(dict(status='APPROVED',scope='DISCO_RELEASE_EVALUATION',authorization_text='fixture',host='gvlab',workers=1,gpu=False,cpu_threads=1,global_adapter_call_ceiling=5524))
 
 
 def test_release_analysis_retains_missing_roots_and_distinguishes_novel_repairs(tmp_path):
@@ -205,3 +207,25 @@ def test_artifact_inventory_rejects_changed_completed_checkpoint(tmp_path):
     assert result['completed_checkpoint_checks']==1
     checkpoint.write_bytes(b'changed')
     with pytest.raises(ValueError,match='hash mismatch'):AI.index(root,ledger,tmp_path/'tampered_index.json')
+
+
+def test_3d_coverage_control_cannot_use_recovered_cycle_as_clean(tmp_path):
+    sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'reports/stage2'))
+    import prepare_evaluation as PRE
+    for name in ('3d_P1Q1','3d_P2Q2'):
+        directory=tmp_path/'training'/name;directory.mkdir(parents=True);(directory/'COMPLETE.json').write_text('{}')
+    with pytest.raises(ValueError,match='genuine clean-only'):PRE.model_configs(tmp_path,'3d')
+    control=tmp_path/'training/3d_P2Q2_strictclean';control.mkdir();(control/'COMPLETE.json').write_text('{}')
+    assert PRE.model_configs(tmp_path,'3d')['O0_P2_clean_onlyQ2'][0]==control
+
+
+def test_empty_physical_phase_retains_zero_attempt_accounting(tmp_path,monkeypatch):
+    jobs=tmp_path/'jobs.json';jobs.write_text(json.dumps({'jobs':[]}))
+    envelope=tmp_path/'envelope.json';envelope.write_text(json.dumps(dict(status='APPROVED',scope='DISCO_PHYSICAL_EVALUATION',
+        authorization_text='analytical fixture only',host='gvlab',workers=1,gpu=False,split='val',jobs_sha256=D.sha256_file(jobs),
+        cpu_s=1,active_wall_s=1,adapter_calls=0,disk_gib=1)))
+    monkeypatch.setenv('CUDA_VISIBLE_DEVICES','');monkeypatch.setattr(D,'DISCO_ROOT',tmp_path)
+    monkeypatch.setattr(PE.C,'require_headroom',lambda:{})
+    out=tmp_path/'stage2/empty';PE.run(jobs,envelope,out)
+    cost=json.loads((out/'ACCOUNTING.json').read_text())
+    assert cost['n_attempted']==cost['adapter_calls']==0 and cost['cpu_s']>=0

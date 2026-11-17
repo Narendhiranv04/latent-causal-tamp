@@ -23,6 +23,7 @@ def request(preparation,engine,out):
         checkpoint_manifest_sha256=sha(preparation/'checkpoint_manifest.json'),runner_sha256=sha(__file__),candidate_sets=manifest['sets'],
         ceilings=CAPS,units='seconds per domain and phase, CPU and active wall; all attempts and parent overhead charged',
         disk_gib=10,ram_gib=4,query_wall_s={'2d':60,'3d':120},trial_wall_s={'2d':300,'3d':600},
+        global_adapter_call_ceiling=5523,
         roots_per_domain={'val':15,'test':25},final_model_seeds=[0,1,2],validation_model_seeds=[0],
         selection='VAL O0_P2Q2 task success, then verified K0 NOOP, then explicit NONE abstention; residual ties smaller eta. Apply common selected eta to all Q arms and O0/O1 closed-loop.',
         interpretation='Exploratory held-out cohorts; no untouched confirmation attested; fixed-root denominators retain every unresolved/unexecuted trial',
@@ -34,6 +35,7 @@ def request(preparation,engine,out):
 def validate(envelope):
     if envelope.get('status')!='APPROVED' or envelope.get('scope')!='DISCO_RELEASE_EVALUATION' or not envelope.get('authorization_text'):raise PermissionError('Explicit V15-F25 approval required; TRAIN approval is insufficient')
     if envelope.get('host')!='gvlab' or envelope.get('workers')!=1 or envelope.get('gpu') is not False or envelope.get('cpu_threads')!=1:raise PermissionError('Unauthorized host/resources')
+    if not 0<envelope.get('global_adapter_call_ceiling',0)<=5523:raise PermissionError('Unauthorized physical-call ceiling')
     if not set(envelope['approved_phases'])<=set(('val','test')):raise PermissionError('Unknown phase')
     for dom in CAPS:
         for phase,maximum in CAPS[dom].items():
@@ -106,7 +108,7 @@ def run(envelope_path,out):
         if remaining_disk<=0:raise RuntimeError('RELEASE_DISK_LIMIT')
         sub=dict(status='APPROVED',scope='DISCO_PHYSICAL_EVALUATION',authorization_text=envelope['authorization_text'],
             jobs_sha256=sha(path),host='gvlab',workers=1,gpu=False,split=phase,cpu_s=budget,active_wall_s=budget,
-            adapter_calls=sum(j['adapter_call_cap'] for j in jobs if not(j['protocol']=='open_loop' and j['prediction']['status']=='ABSTAIN')),disk_gib=remaining_disk)
+            adapter_calls=min(envelope['global_adapter_call_ceiling']-sum(x['adapter_calls'] for x in phase_costs),sum(j['adapter_call_cap'] for j in jobs if not(j['protocol']=='open_loop' and j['prediction']['status']=='ABSTAIN'))),disk_gib=remaining_disk)
         ep=out/f'{phase}_{dom}_envelope.json';J.atomic_json(ep,sub)
         PE.run(path,ep,out/f'{phase}_{dom}')
         p=out/f'{phase}_{dom}/outcomes.jsonl'

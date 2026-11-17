@@ -77,14 +77,14 @@ def build(campaign,coverage_path,out):
         plt.close(fig)
     fig,axes=plt.subplots(2,2,figsize=(10,6),sharex=True)
     for i,dom in enumerate(('2d','3d')):
-        for fit_tag,color in [('P1Q1','#3875a8'),('P2Q2','#d18029'),('P2Q2_knownprefix','#31816a')]:
+        for fit_tag,color,label in [('P1Q1','#3875a8','P1/Q1'),('P2Q2' if dom=='2d' else 'P2Q2_strictclean','#d18029','P2 clean current data'),('P2Q2_knownprefix','#31816a','P2 + certified prefixes')]:
             subset=[r for r in curves if r['domain']==dom and r['fit']==f'{dom}_{fit_tag}' and r['schema']=='o0_v1' and r['edges_mode']=='all_feasible']
             for col,(kind,field) in enumerate((('policy','train_obj_ce'),('value','train_weighted_bce'))):
                 series=[[r for r in subset if r['kind']==kind and r['seed']==s] for s in (0,1,2)]
                 if not all(series):continue
                 common=sorted(set.intersection(*({r['epoch'] for r in seq} for seq in series)))
                 values=np.array([[next(r[field] for r in seq if r['epoch']==epoch) for epoch in common] for seq in series],dtype=float)
-                axes[i,col].plot(common,values.mean(0),color=color,label=fit_tag)
+                axes[i,col].plot(common,values.mean(0),color=color,label=label)
                 axes[i,col].fill_between(common,values.min(0),values.max(0),color=color,alpha=.14)
                 axes[i,col].set_title(f'{dom.upper()} | '+('policy object/STOP NLL' if col==0 else 'weighted Q BCE'))
                 axes[i,col].set_xlabel('TRAIN epoch');axes[i,col].set_ylabel('TRAIN loss');axes[i,col].legend(fontsize=7)

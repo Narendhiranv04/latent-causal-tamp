@@ -29,9 +29,11 @@ def model_configs(campaign,dom):
     tr=campaign/'training';p1=tr/f'{dom}_P1Q1';clean=tr/f'{dom}_P2Q2';known=tr/f'{dom}_P2Q2_knownprefix'
     p2=known if any(campaign.glob(f'known_prefix_fit*/{dom}_COMPLETE.json')) else clean
     if not (p1/'COMPLETE.json').exists() or not (p2/'COMPLETE.json').exists():raise ValueError('Missing completed full iterative cycle')
+    coverage_control=tr/f'{dom}_P2Q2_strictclean' if dom=='3d' else clean
+    if not (coverage_control/'COMPLETE.json').exists():raise ValueError('Missing genuine clean-only current-P2 data control')
     return dict(O0_P0=(None,P.O0,False,'p0'),O0_P1=(p1,P.O0,False,'distilled'),O0_P1Q1=(p1,P.O0,True,'distilled'),
         O0_P2=(p2,P.O0,False,'distilled'),O0_P2Q2=(p2,P.O0,True,'distilled'),O0_P2_success_onlyQ2=(p2,P.O0,True,'distilled'),
-        O0_P1_success_onlyQ1=(p1,P.O0,True,'distilled'),O0_P2_clean_onlyQ2=(clean,P.O0,True,'distilled'),O0_closed_P2Q2=(p2,P.O0,True,'distilled'),O1_closed_P2Q2=(p2,P.O1,True,'distilled'))
+        O0_P1_success_onlyQ1=(p1,P.O0,True,'distilled'),O0_P2_clean_onlyQ2=(coverage_control,P.O0,True,'distilled'),O0_closed_P2Q2=(p2,P.O0,True,'distilled'),O1_closed_P2Q2=(p2,P.O1,True,'distilled'))
 
 
 def make(campaign,cohorts_path,out):

@@ -87,9 +87,9 @@ trainer epoch existed. The historical watchdog omitted the exception text, so
 the exact past guard cause is unavailable; current load/RAM/disk pass all guards.
 Detailed guard-rejection logging is now implemented; no guard is bypassed.
 
-The serial post-training checks passed 61/61 in 38.86 seconds. Six completed 2D
+The serial post-training checks passed 61/61 in 38.86 seconds. Seven completed 2D
 iteration prefixes were certified without modifying interrupted originals. The
-augmented 2D P2 completed all nine fits on 25 trees from 13 distinct TRAIN roots;
+augmented 2D P2 completed all nine fits on 26 trees from 13 distinct TRAIN roots;
 all-feasible and successful-only Q weights match bit-for-bit for all three seeds.
 3D final fitting/preparation correctly stopped because its R1 supervision does
 not yet exist. Nothing was presented as a completed 3D cycle or held-out result.
@@ -108,3 +108,15 @@ roots and excluding known own TEST-exposed source components. Primary protocols,
 Q and P2 edge-filter controls use all three model seeds; secondary policy-evolution
 and clean-only data controls use seed 0 with explicitly matched paired analysis.
 The proposal requires separate authorization; it is not part of E16 approval.
+
+Final source-backed audit corrected two reporting errors before physical VAL/TEST:
+the recovered 2D dataset contains seven prefixes / 26 total trees (not the six /
+25 stated in the earlier prose); original data/checkpoints were already correct.
+The 3D continuation carried its certified R0 prefix into pooled P2, so the folder
+`3d_P2Q2` is not a clean-only coverage control. Preserve it, fit a separate
+`3d_P2Q2_strictclean` on the 31 genuinely clean root-rounds with the same P1
+initializations, and bind the coverage arm to that new control. These fits remain
+inside the original aggregate 1,800-second fitting ceiling. All primary model
+weights and prior run directories are preserved; no held-out physical outcome
+has been observed. Updated candidate-file hashes supersede the first preparation,
+with the same roots, protocols, trial counts and requested compute ceilings.

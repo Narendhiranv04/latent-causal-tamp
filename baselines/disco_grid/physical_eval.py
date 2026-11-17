@@ -245,6 +245,8 @@ def run(jobs_path,envelope_path,out):
             J.atomic_json(out/'ACCOUNTING.json',dict(cpu_s=cpu+time.process_time()-cpu_start,worker_cpu_s=cpu,controller_cpu_s=time.process_time()-cpu_start,worker_wall_s=wall,active_wall_s=time.monotonic()-start,adapter_calls=calls,
                 n_frozen_jobs=len(jobs),n_attempted=len(rows),n_not_run=len(jobs)-len(rows)))
             if sum(p.stat().st_size for p in out.rglob('*') if p.is_file())>envelope['disk_gib']*2**30:break
+    J.atomic_json(out/'ACCOUNTING.json',dict(cpu_s=cpu+time.process_time()-cpu_start,worker_cpu_s=cpu,controller_cpu_s=time.process_time()-cpu_start,worker_wall_s=wall,active_wall_s=time.monotonic()-start,adapter_calls=calls,
+        n_frozen_jobs=len(jobs),n_attempted=len(rows),n_not_run=len(jobs)-len(rows)))
     J.atomic_json(out/'COMPLETE.json',dict(attempted=len(rows),expected=len(jobs),status='COMPLETE' if len(rows)==len(jobs) else 'BUDGET_LIMITED'))
 
 if __name__=='__main__':
