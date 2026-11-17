@@ -94,4 +94,5 @@ python scripts/v33_figs.py reports/v3_3_scratch_sampler TABLE_PHYSICAL_VAL.json
 | `964ba7a24d` | Pre-registration: code switches, data audit, tests, `EXPERIMENT_REGISTRY.json` (before any training or teacher query) |
 | `e9509d1597` | 12 fits, coverage, two-host parity, eval scripts |
 | `45385384af` | Data, training and proposal reports; fresh-cohort exclusion manifests |
-| (this commit) | Physical VAL results, final decision, records, labels, figures, fresh-cohort pilot status |
+| `3f6611be6e` | Physical VAL results, final decision, records, labels, figures |
+| (final commit) | Fresh-cohort generation pilot results and revised budget, checksums |

@@ -1,6 +1,6 @@
 # V3.3 fresh confirmation cohort — preparation (no confirmation run)
 
-**Status: PREPARED, NOT RUN.** This document is a protocol and cost estimate only. No fresh-cohort outcome exists, and none was used for any V3.3 decision. All numbers below are VALIDATION-free generator ledger statistics, read on the user's laptop; no forbidden host was accessed.
+**Status: PREPARED, NOT RUN** (generation throughput pilot done, §6). This document is a protocol and cost estimate only. No fresh-cohort outcome exists, and none was used for any V3.3 decision. All numbers below are VALIDATION-free generator ledger statistics, read on the user's laptop; no forbidden host was accessed.
 
 ## 1. How the existing roots were generated (frozen generators)
 
@@ -62,7 +62,7 @@ Sources: 2D ledger of 11,720 attempts / 981 CPU-h; 3D ledger of 2,983 attempts /
 | 3D generation (240 task + K0 + NONE) | ≈ 270–370 CPU-h |
 | X/Y labelling and replay (Approach B finalized protocol) | to be measured in the pilot |
 | Evaluation (exhaustive M4 scoring + selected-repair teachers) | ≈ 1–2 GPU-h + < 10 CPU-h |
-| Wall time on the two authorized laptops (≈ 20 girish + ≈ 12 laptop threads) | ≈ 2.5–4 days |
+| Wall time on the two authorized laptops (≈ 20 girish + ≈ 12 laptop threads) | ≈ 2–4 days (generation 1–3 days, see pilot in §6) |
 
 **Missing locally:**
 - the dense 3D NONE store and ledger (`dataset_2500_raw_shelf66v3_none_dense`);
@@ -85,6 +85,51 @@ sys.argv=["x","--out",sys.argv[2],"--name","fc2dp","--workers","4"];R.main()' EX
 
 The 3D command is analogous: `run_shelf66_full.py` with `QUOTA.json` / `K4_MAX_RUNNING=0` in the output directory, the domain tag `3ds66` in the family filter, then `run_shelf66_none.py` and `trim_none66_v3.py` for NONE.
 
-## 6. Pilot
+## 6. Generation throughput pilot (run 2026-11-17 11:07–13:12 IST, user's laptop CPU only)
 
-(filled in after the throughput pilot)
+**Setup.**
+- Command: `scripts/v33_hosts/fresh_pilot.sh` with 4 single-thread workers per domain, `nice 10`, and no GPU.
+- Exclusions: `EXCL2D.json` / `EXCL3D.json` (summaries and gzipped copies committed as `FRESH_EXCLUSION_SUMMARY.json` and `FRESH_EXCL*.json.gz`).
+  - 2D: 4,476 families excluded; 4,380 of 8,856 templates remain.
+  - 3D: 1,570 families excluded; 7,286 of 8,856 remain.
+- Quotas: 2D 2 per class (NONE, K0–K3); 3D K0 2, K1/K2/K3 1 each.
+- Wall-clock cap: 13:05 (STOP file, 20-minute drain). Generation only; no X/Y labelling and no model evaluation. Pilot roots are **not** a cohort and were not used for anything.
+
+| | 2D | 3D |
+|---|---|---|
+| Attempts / CPU-h | 137 / 7.9 | 12 / 4.7 |
+| Accepted roots by observed class | K0 12, K1 8, K2 4, K3 1, NONE 3 (1 DEPENDENT not counted) | K0 3, K1 1, K2 4, K3 2 |
+| Quota met | NONE, K0, K1, K2; K3 1 of 2 at the cap | all (at 11:55) |
+| Family / seed / root-id overlap with all existing data | 0 / 0 / 0 | 0 / 0 / 0 |
+| `config_hash` and teacher id | `90d3eb68e8a42108`, `BD2D_TEACHER_V1:DetPhysics(P16_FAST,no-library)`: identical to the existing roots | `8d521b1f6d23db23`, `BD3DS66_TEACHER_V2…RRT 5000`: identical |
+
+CPU-seconds spent on requests of each level, per accepted root of that class:
+
+| Domain | Class | Pilot | Production ledger |
+|---|---|---|---|
+| 2D | K1 | ≈ 530 | 490 |
+| 2D | K2 | ≈ 2,700 | 920 |
+| 2D | K3 | ≈ 11,300 (one root) | 1,690 |
+| 2D | NONE | ≈ 740 | 45 |
+| 3D | K1 | ≈ 420 | 450 |
+| 3D | K2 | ≈ 910 | 1,590 |
+| 3D | K3 | ≈ 6,400 | 7,700–11,600 |
+
+The 2D pilot is costlier than the ledger mainly because the request planner starts cold: no yield history in a fresh ledger, and only 567 untouched K3 templates.
+
+**Revised generation budget for the target cohort.**
+
+| Domain | Estimate | Basis |
+|---|---|---|
+| 2D | ≈ 130–650 CPU-h | ledger rate (lower bound) to cold-start pilot rate (upper bound); dominated by 167 K3 roots |
+| 3D | ≈ 210–370 CPU-h | plus the dense NONE construction, not measured locally |
+
+**Wall time and remaining work.**
+- On girish (20 threads, ≥ 4 left free) plus the user's laptop (8–12 threads), generation is about **1–3 days**.
+- Approach B finalized X/Y labelling and replay of the new roots (the rows' `labels`) and K2/K3 dependence enrichment were **not piloted**. Dependence enrichment needs the gvlab-only dep2d / dep3d / hard3d step or a local port.
+- Add about 1 day before the single frozen evaluation.
+
+**Status: full cohort NOT started.** It needs:
+- an explicit user decision on the family definition (template-restricted vs a new lineage id);
+- an authorized CPU budget;
+- the production (or scratch) configuration to remain frozen as in `FINAL_DECISION.md`.
