@@ -63,6 +63,10 @@ def run(rootfs,out):
     if os.environ.get('CUDA_VISIBLE_DEVICES')!='':raise PermissionError('CPU-only continuation')
     audit=read(rootfs.parent/'MIGRATION_HASH_AUDIT.json')
     if audit['status']!='PASS':raise ValueError('Migration byte audit failed')
+    qualification_path=rootfs.parent/'MIGRATION_QUALIFICATION.json'
+    qualification=read(qualification_path)
+    if qualification.get('status')!='PASS' or qualification.get('physical_queries')!=0 or qualification.get('roots')!=80:
+        raise ValueError('Laptop frozen-input/model qualification required')
     original=rootfs/'scratch/nav/disco_grid/stage2'
     prior=original/'releases/V15_F25_v1_20261117'
     prep=original/'campaigns/E16_v1_20261117/evaluation_preparation_v3'
@@ -106,6 +110,7 @@ def run(rootfs,out):
     # Keep original engine/model hashes alongside relocated execution paths.
     J.atomic_json(out/'APPROVED_ENVELOPE.json',envelope)
     J.atomic_json(out/'HOST_MIGRATION.json',dict(byte_audit=audit,prior_charge=prior_charge,
+        qualification=qualification,qualification_sha256=sha(qualification_path),
         original_release=str(prior),source_commit=os.environ['DISCO_SOURCE_COMMIT'],
         original_source_sha256=old_sources,new_source_sha256=envelope['scientific_source_sha256'],
         interpretation='Only host guard and file bindings amended. Prior failures, timeouts and cancellation are retained without retry. TEST outcomes never select the model.'))
