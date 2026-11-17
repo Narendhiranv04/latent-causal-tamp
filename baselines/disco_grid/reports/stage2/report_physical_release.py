@@ -221,9 +221,9 @@ def report(release, metrics_dir, training_reports):
             'the distinction. Environment installation/transfer qualification is '
             'reported separately from physical query runtime.', '']
     if (release/'PARALLEL_HANDOFF.json').exists():
-        lines += ['## Explicitly authorized three-worker execution', '',
+        lines += ['## Explicitly authorized parallel execution', '',
             'The user authorized at least three CPU workers and both laptops. '
-            'The run uses three one-thread physical workers on Girish, each '
+            f"The current continuation configures {envelope.get('workers',3)} one-thread physical workers on Girish, each "
             'with its own supervisor and durable query journal. Total CPU and '
             'adapter-call quotas are reserved before dispatch; active wall time '
             'is elapsed pool time, not the sum of concurrent worker durations. '
@@ -234,7 +234,7 @@ def report(release, metrics_dir, training_reports):
             'about 6 GiB available RAM, below the unchanged 8 GiB headroom '
             'guard, so no physical DISCO worker was allocated there. The pool '
             'retains the shared 4 GiB RSS ceiling plus individual watchdogs. '
-            'Configured workers do not guarantee three simultaneously active '
+            'Configured workers do not guarantee that all slots are simultaneously active '
             'trials near the end of a queue or budget.', '',
             'Frozen CPU inference is retained. Measured 2D neural-selection '
             'latencies totalled 0.85 seconds during a 1,747.74-second physical '
@@ -243,6 +243,14 @@ def report(release, metrics_dir, training_reports):
             'the model, action grammar, verification caps or TEST selection. '
             'PARALLEL_HANDOFF.json and per-phase accounts record topology, '
             'prior cost bounds and actual pool costs.', '']
+    if (release/'RESERVED_CORES_HANDOFF.json').exists():
+        lines += ['## Two-core reservation and frozen TEST continuation', '',
+            'The user authorized remaining available Girish CPU capacity while reserving two physical cores. '
+            'DISCO affinity excludes all threads of those two cores; other processes are unchanged, so global idleness is not guaranteed. '
+            'Four one-thread trial slots retain the 4 GiB pool RSS cap, 8 GiB available-memory floor, '
+            '20 GiB disk headroom and load ceiling of 22/24 logical CPUs. '
+            'Only never-attempted TEST identities are dispatched; prior timeouts, cancellations and returned results are retained without retry. '
+            'The existing VAL selection is byte-preserved; all earlier costs remain charged against the original ceilings.', '']
     (metrics_dir / 'FINAL_DISCO_STAGE2_REPORT.md').write_text('\n'.join(lines))
     (metrics_dir / 'PHYSICAL_RESOURCE_TOTALS.json').write_text(json.dumps(physical_cost, indent=2)+'\n')
     statuses = read(training_reports / 'STAGE2_FINAL_STATUS.json')

@@ -41,7 +41,10 @@ def require_headroom():
     host=execution_host()
     if r["hostname"] != host['hostname']:
         raise RuntimeError("BLOCKED_PERMISSION: actual host differs from explicit execution authorization")
-    if r["load1"] > r["logical_cpus"]-3 or r["ram_available"] < 8*2**30 or r["disk_free"] < 20*2**30:
+    record_path=os.environ.get('DISCO_EXECUTION_AUTHORIZATION')
+    record=json.loads(Path(record_path).read_text()) if record_path else {}
+    reserve=2 if record.get('scope')=='DISCO_RELEASE_RESERVED_CORES_AMENDMENT' else 3
+    if r["load1"] > r["logical_cpus"]-reserve or r["ram_available"] < 8*2**30 or r["disk_free"] < 20*2**30:
         raise RuntimeError("BLOCKED_RESOURCE: " + json.dumps(r))
     return r
 
@@ -56,10 +59,28 @@ def execution_host(requested=None):
     if path:
         record=json.loads(Path(path).read_text())
         parallel=record.get('scope')=='DISCO_RELEASE_PARALLEL_HOST_AMENDMENT'
-        if (record.get('status')!='APPROVED' or record.get('scope') not in ('DISCO_RELEASE_HOST_AMENDMENT','DISCO_RELEASE_PARALLEL_HOST_AMENDMENT')
-                or not record.get('authorization_text') or record.get('workers')!=(3 if parallel else 1)
+        reserved=record.get('scope')=='DISCO_RELEASE_RESERVED_CORES_AMENDMENT'
+        valid_workers=(type(record.get('workers')) is int and 3<=record['workers']<=4) if reserved else record.get('workers')==(3 if parallel else 1)
+        if (record.get('status')!='APPROVED' or record.get('scope') not in ('DISCO_RELEASE_HOST_AMENDMENT','DISCO_RELEASE_PARALLEL_HOST_AMENDMENT','DISCO_RELEASE_RESERVED_CORES_AMENDMENT')
+                or not record.get('authorization_text') or not valid_workers
                 or record.get('gpu') is not False or record.get('cpu_threads')!=1):
             raise RuntimeError('BLOCKED_PERMISSION: invalid execution host amendment')
+        if reserved:
+            excluded=record.get('reserved_logical_cpus',[])
+            if record.get('reserved_physical_cores')!=2 or len(excluded)<2 or len(set(excluded))!=len(excluded):
+                raise RuntimeError('BLOCKED_PERMISSION: two complete physical cores must be reserved')
+            if set(os.sched_getaffinity(0)) & set(excluded):
+                raise RuntimeError('BLOCKED_PERMISSION: reserved CPUs present in DISCO affinity')
+            cores=set()
+            for cpu in excluded:
+                topology=Path(f'/sys/devices/system/cpu/cpu{cpu}/topology')
+                siblings=(topology/'thread_siblings_list').read_text().strip()
+                ids=set()
+                for span in siblings.split(','):
+                    ends=list(map(int,span.split('-')));ids.update(range(ends[0],ends[-1]+1))
+                if not ids<=set(excluded):raise RuntimeError('BLOCKED_PERMISSION: partial physical core reservation')
+                cores.add(((topology/'physical_package_id').read_text(),(topology/'core_id').read_text()))
+            if len(cores)!=2:raise RuntimeError('BLOCKED_PERMISSION: reserve exactly two physical cores')
         host=dict(alias=record.get('host'),hostname=record.get('hostname'))
         supported=[{'alias':'girish-laptop','hostname':'gvcstar'}]
         if parallel:supported.append({'alias':'user-laptop','hostname':'pop-os'})

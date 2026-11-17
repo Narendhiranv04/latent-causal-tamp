@@ -181,7 +181,7 @@ def validate_execution(jobs_path,envelope):
     if envelope['jobs_sha256']!=D.sha256_file(jobs_path):raise ValueError('Approved jobs changed')
     try:C.execution_host(envelope['host'])
     except RuntimeError as error:raise PermissionError('Evaluation host/resource mismatch') from error
-    if envelope['workers'] not in (1,3) or envelope['workers']>C.execution_workers() or envelope['gpu'] is not False:raise PermissionError('Evaluation host/resource mismatch')
+    if envelope['workers'] not in (1,3,4) or envelope['workers']>C.execution_workers() or envelope['gpu'] is not False:raise PermissionError('Evaluation host/resource mismatch')
     jobs=read(jobs_path)['jobs']
     if len({j['id'] for j in jobs})!=len(jobs):raise ValueError('Duplicate job IDs')
     if any(j['split']!=envelope['split'] or j['protocol'] not in ('open_loop','closed_loop') for j in jobs):raise ValueError('Mixed or invalid split/protocol')

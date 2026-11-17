@@ -65,14 +65,15 @@ def reserve_cpu(limit,used,reserved,trial_wall):
 
 def run(jobs_path,envelope_path,out,worker_target=PE.trial_worker):
     envelope=read(envelope_path);jobs=PE.validate_execution(jobs_path,envelope)
-    if envelope['workers']!=3:raise PermissionError('Explicit three-worker amendment required')
+    slots=envelope['workers']
+    if slots not in (3,4):raise PermissionError('Explicit parallel worker amendment required')
     if os.environ.get('CUDA_VISIBLE_DEVICES')!='':raise PermissionError('Frozen CPU inference required')
     if not out.resolve().is_relative_to((D.DISCO_ROOT/'stage2').resolve()):raise ValueError('Isolated stage2 output required')
     C.require_headroom();out.mkdir(parents=True,exist_ok=False)
     source={p.name:D.sha256_file(p) for p in HERE.glob('*.py')}
     J.atomic_json(out/'manifest.json',dict(envelope=envelope,jobs_sha256=D.sha256_file(jobs_path),
         source_commit=os.environ['DISCO_SOURCE_COMMIT'],source_sha256=source,
-        scheduling='Frozen job order, first dispatchable entry; identical in-flight sequence certificates wait for completion. Three slots, one thread each, no retries.'))
+        scheduling=f'Frozen job order, first dispatchable entry; identical in-flight sequence certificates wait for completion. {slots} slots, one thread each, no retries.'))
     start=time.monotonic();cpu_start=time.process_time();used_cpu=0.;calls=0;worker_cpu=0.;worker_wall=0.
     pending=list(enumerate(jobs));active={};rows={};certificates={};certificate_sources={};peak_rss=0;peak_active=0;stop=None;dispatch=[]
     def save():
@@ -81,7 +82,7 @@ def run(jobs_path,envelope_path,out,worker_target=PE.trial_worker):
             worker_cpu_s=worker_cpu,controller_cpu_s=used_cpu-worker_cpu+time.process_time()-cpu_start,
             worker_wall_s=worker_wall,active_wall_s=time.monotonic()-start,adapter_calls=calls,
             n_attempted=len(rows),n_frozen_jobs=len(jobs),n_not_run=len(jobs)-len(rows),
-            workers=3,max_concurrent_trials=peak_active,sampled_peak_pool_rss_kib=peak_rss,stop_reason=stop,
+            workers=slots,max_concurrent_trials=peak_active,sampled_peak_pool_rss_kib=peak_rss,stop_reason=stop,
             in_flight_reservations=[dict(job_id=a['job']['id'],cpu_s=a['quota'],adapter_calls=a['job']['adapter_call_cap']) for a in active.values()],
             cpu_accounting_kind='MEASURED_SUPERVISORS_AND_REAPED_CHILDREN'))
     def complete(i,res,directory):
@@ -134,7 +135,7 @@ def run(jobs_path,envelope_path,out,worker_target=PE.trial_worker):
                         key=PE.verification_key(job,source)
                         if key and any(a['key']==key for a in active.values()):continue
                         cheap=key in certificates or job['protocol']=='open_loop' and job['prediction']['status']=='ABSTAIN'
-                        if not cheap and len(active)>=3:continue
+                        if not cheap and len(active)>=slots:continue
                         quota=reserve_cpu(envelope['cpu_s'],used_cpu+time.process_time()-cpu_start,
                             sum(a['quota'] for a in active.values()),job['trial_wall_s'])
                         if not cheap and (quota<job['query_wall_s']+20 or
@@ -170,5 +171,5 @@ def run(jobs_path,envelope_path,out,worker_target=PE.trial_worker):
             save()
             if active:raise RuntimeError('Supervisor did not complete bounded cancellation; no next phase may launch')
     J.atomic_json(out/'COMPLETE.json',dict(status='COMPLETE' if len(rows)==len(jobs) else 'BUDGET_OR_RESOURCE_LIMITED',
-        attempted=len(rows),expected=len(jobs),workers=3,stop_reason=stop))
+        attempted=len(rows),expected=len(jobs),workers=slots,stop_reason=stop))
     return [rows[i] for i in sorted(rows)]

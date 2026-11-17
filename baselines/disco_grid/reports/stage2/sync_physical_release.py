@@ -28,7 +28,8 @@ def command(args, cwd=None):
     return subprocess.run(args,cwd=cwd,text=True,capture_output=True,check=True).stdout
 
 
-def sync(worktree, wait=False):
+def sync(worktree, wait=False, remote=REMOTE, version="v1"):
+    if version not in ("v1","v2"):raise ValueError("Version must be v1 or v2")
     worktree=worktree.resolve()
     reports=worktree/'baselines/disco_grid/reports/stage2'
     if command(['git','branch','--show-current'],worktree).strip()!=BRANCH:
@@ -38,7 +39,7 @@ def sync(worktree, wait=False):
     if initial_status:
         raise RuntimeError('Commit current work before starting the publication observer')
     while True:
-        probe=subprocess.run(['ssh',HOST,'test','-f',REMOTE+'/FINISH_COMPLETE.json'],capture_output=True)
+        probe=subprocess.run(['ssh',HOST,'test','-f',remote+'/FINISH_COMPLETE.json'],capture_output=True)
         if probe.returncode==0:
             break
         if probe.returncode not in (1,):
@@ -48,12 +49,12 @@ def sync(worktree, wait=False):
         time.sleep(60)
     if command(['git','rev-parse','HEAD'],worktree).strip()!=initial_head or command(['git','status','--porcelain'],worktree):
         raise RuntimeError('Worktree changed during evaluation; refusing to overwrite concurrent work')
-    destination=reports/'physical_release_V15_F25_v1'
+    destination=reports/f'physical_release_V15_F25_{version}'
     if destination.exists():
         raise FileExistsError('Do not overwrite a versioned physical release')
     staging=reports/'.physical_release_download'
     staging.mkdir(exist_ok=False)
-    command(['scp','-r',f'{HOST}:{REMOTE}/.',str(staging)])
+    command(['scp','-r',f'{HOST}:{remote}/.',str(staging)])
     marker=json.loads((staging/'FINISH_COMPLETE.json').read_text())
     if marker.get('physical_queries')!=0 or marker.get('automatic_physical_restarts')!=0:
         raise ValueError('Unexpected finisher scope')
@@ -67,22 +68,22 @@ def sync(worktree, wait=False):
             shutil.copyfile(source,reports/name)
     status=json.loads((destination/'STAGE2_FINAL_STATUS.json').read_text())
     record=dict(utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),host=HOST,
-        remote=REMOTE,publication_base_commit=initial_head,files=manifest,
+        remote=remote,publication_base_commit=initial_head,files=manifest,
         physical_status=status['physical_task_results'],scope='Measured evidence transfer and report publication; no physical execution')
     (reports/'PHYSICAL_RELEASE_PUBLICATION.json').write_text(json.dumps(record,indent=2)+'\n')
     index=reports/'INDEX.md';text=index.read_text()
-    start=text.index('**PARTIAL release:')
+    start=text.index('**PARTIAL')
     stop=text.index('**',start+2)+2
     text=text[:start]+('**PARTIAL Stage 2 release. Physical evaluation status: '+status['physical_task_results']+
         '. Measured results and execution limits are recorded below; missing evidence stays explicit.**')+text[stop:]
     text+='\n## Measured physical release\n\n'
     text+='- [Standalone measured report](FINAL_DISCO_STAGE2_REPORT.md), [metrics](FINAL_METRICS.csv), and [paired ablations](ABLATIONS.csv).\n'
-    text+='- [Versioned physical evidence package](physical_release_V15_F25_v1/FINISH_COMPLETE.json), [query/state byte inventory](physical_release_V15_F25_v1/physical_evidence_index.json), and [publication hashes](PHYSICAL_RELEASE_PUBLICATION.json).\n'
+    text+=f'- [Versioned physical evidence package](physical_release_V15_F25_{version}/FINISH_COMPLETE.json), [query/state byte inventory](physical_release_V15_F25_{version}/physical_evidence_index.json), and [publication hashes](PHYSICAL_RELEASE_PUBLICATION.json).\n'
     text+='- [Root STOP diagnostics](ROOT_STOP_DIAGNOSTICS.json), [failure examples](FAILURE_EXAMPLES.json), and [physical resource totals](PHYSICAL_RESOURCE_TOTALS.json).\n'
     text+='\nEarlier pending-run statements in this index describe preparation history; the measured report and status JSON are current.\n'
     index.write_text(text)
     relative='baselines/disco_grid/reports/stage2'
-    published=[f'{relative}/physical_release_V15_F25_v1',f'{relative}/PHYSICAL_RELEASE_PUBLICATION.json',f'{relative}/INDEX.md']
+    published=[f'{relative}/physical_release_V15_F25_{version}',f'{relative}/PHYSICAL_RELEASE_PUBLICATION.json',f'{relative}/INDEX.md']
     published.extend(f'{relative}/{name}' for name in CANONICAL if (destination/name).exists())
     command(['git','add','--',*published],worktree)
     command(['git','commit','--only','-m','Publish measured standalone DISCO physical release and limitations','--',*published],worktree)
@@ -96,4 +97,4 @@ if __name__=='__main__':
     parser.add_argument('worktree',type=Path)
     parser.add_argument('--wait',action='store_true')
     args=parser.parse_args()
-    print(json.dumps(sync(args.worktree,args.wait),indent=2),flush=True)
+    print(json.dumps(sync(args.worktree,args.wait,args.remote,args.version),indent=2),flush=True)

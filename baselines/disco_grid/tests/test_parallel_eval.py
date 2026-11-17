@@ -75,6 +75,60 @@ def test_drain_does_not_mistake_cached_trials_for_unpublished_worker(tmp_path):
     assert module.unpublished_trials(tmp_path)==[fragment/'active']
 
 
+def reserved_authorization(tmp_path,monkeypatch):
+    args=fixture(tmp_path,monkeypatch,[])
+    groups={}
+    for cpu in os.sched_getaffinity(0):
+        top=Path(f'/sys/devices/system/cpu/cpu{cpu}/topology')
+        key=((top/'physical_package_id').read_text(),(top/'core_id').read_text())
+        groups.setdefault(key,[]).append(cpu)
+    excluded=sum(list(groups.values())[-2:],[])
+    p=Path(os.environ['DISCO_EXECUTION_AUTHORIZATION']);a=json.loads(p.read_text())
+    a.update(scope='DISCO_RELEASE_RESERVED_CORES_AMENDMENT',workers=4,
+        reserved_physical_cores=2,reserved_logical_cpus=excluded)
+    J.atomic_json(p,a)
+    return args,p,excluded
+
+
+def test_four_workers_require_complete_core_reservation(tmp_path,monkeypatch):
+    args,p,excluded=reserved_authorization(tmp_path,monkeypatch)
+    original=set(os.sched_getaffinity(0))
+    with pytest.raises(RuntimeError,match='reserved CPUs'):C.execution_workers()
+    monkeypatch.setattr(os,'sched_getaffinity',lambda pid:original-set(excluded))
+    assert C.execution_workers()==4
+    a=json.loads(p.read_text());a['reserved_physical_cores']=1;J.atomic_json(p,a)
+    with pytest.raises(RuntimeError,match='two complete'):C.execution_workers()
+
+
+def test_continuation_never_retries_unknown_or_cancelled_jobs():
+    import importlib.util
+    p=Path(__file__).resolve().parents[1]/'reports/stage2/continue_frozen_test.py'
+    spec=importlib.util.spec_from_file_location('continuation_fixture',p)
+    module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+    jobs=[dict(id=str(i)) for i in range(3)]
+    assert module.remaining_jobs(jobs,[dict(job_id='0',verified=None),dict(job_id='1',verified=0)])==[dict(id='2')]
+    with pytest.raises(ValueError):module.remaining_jobs(jobs,[dict(job_id='0'),dict(job_id='0')])
+
+
+@pytest.mark.skipif(os.environ.get('DISCO_POOL_INTEGRATION')!='1',reason='Opt-in synthetic process fixture')
+def test_four_supervisors_reserve_two_cores(tmp_path,monkeypatch):
+    args,p,excluded=reserved_authorization(tmp_path,monkeypatch)
+    jobs=[job(i,'closed_loop') for i in range(4)]
+    J.atomic_json(args[0],dict(jobs=jobs))
+    env=json.loads(args[1].read_text());env.update(workers=4,adapter_calls=4,jobs_sha256=D.sha256_file(args[0]))
+    J.atomic_json(args[1],env)
+    original=os.sched_getaffinity(0)
+    try:
+        os.sched_setaffinity(0,original-set(excluded))
+        result=POOL.run(*args,worker_target=fake_trial)
+        a=json.loads((args[2]/'ACCOUNTING.json').read_text())
+        assert len(result)==4 and a['max_concurrent_trials']==4 and a['adapter_calls']==4
+        assert not set(excluded)&os.sched_getaffinity(0)
+        supervisors=[json.loads(p.read_text()) for p in args[2].glob('*/SUPERVISOR_COMPLETE.json')]
+        assert a['worker_cpu_s']==pytest.approx(sum(s['physical_child_cpu_s'] for s in supervisors))
+    finally:os.sched_setaffinity(0,original)
+
+
 @pytest.mark.skipif(os.environ.get('DISCO_POOL_INTEGRATION')!='1',reason='Opt-in synthetic process fixture on a headroom-qualified host')
 def test_three_supervisors_have_separate_child_accounts(tmp_path,monkeypatch):
     args=fixture(tmp_path,monkeypatch,[job(i,'closed_loop') for i in range(3)])
