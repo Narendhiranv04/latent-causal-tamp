@@ -83,3 +83,5 @@ are not reset. [45-test log](PARALLEL_POOL_TESTS.log) includes actual synthetic
 three-process accounting and duplicate-sequence checks; the additional drain
 regression [passes separately](PARALLEL_DRAIN_TESTS.log). These fixtures call no
 physical teacher and are not benchmark scores.
+
+[Parallel postprocessing observer](PARALLEL_FINISH_LAUNCH.json) waits for the exact physical controller to exit, then packages measured evidence under a separate bounded analysis watchdog. It never restarts physics. The local publication observer fetches and pushes that package only after FINISH_COMPLETE.json and refuses to overwrite concurrent worktree edits.
