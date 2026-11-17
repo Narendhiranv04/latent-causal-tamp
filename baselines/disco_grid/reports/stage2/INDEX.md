@@ -141,3 +141,7 @@ Earlier pending-run statements in this index describe preparation history; the m
 The v4 partial report was pushed as `70977c09c0`; TEST attempts remain 412/525 (2D), 237/525 (3D) at this handoff. The previous 3D phase stopped at load 22.006; no worker remained active. With load recovered to 16.89 and 19.85 GiB available RAM, unattempted identities resumed as `V15_F25_v1_reserved_stable3_20261118_r2`, reusing immutable physical engine `0537d1bd12`, three workers and the same two-core exclusion. 3D has 11686.682902 CPU seconds remaining before startup/supervisor reserves. 2D has insufficient CPU reserve for further physical dispatch. Prior cancelled/unknown attempts are not retried, and VAL selection is unchanged.
 
 [Physical launch](RESERVED_STABLE3_20261118_R2_EVALUATION_LAUNCH.json), [report observer](RESERVED_STABLE3_20261118_R2_FINISH_LAUNCH.json). Canonical numeric tables remain the v4 partial snapshot until v5 publication. No additional training campaign or budget increase is implied.
+
+## Prioritized bounded completion
+
+[Completion monitor contract](PRIORITY_COMPLETION_MONITOR.md) and [frozen 113-trial 2D CPU extension request](COMPLETION_RESOURCE_REQUEST.json). The current 3D run is being supervised through resource stops and report publication without requiring a new user prompt to continue ordinary authorized work. Numeric CPU ceilings, two-core exclusion, no-retry semantics and VAL freeze remain enforced. Additional 2D execution remains unapproved.
