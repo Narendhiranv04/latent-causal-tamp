@@ -86,3 +86,46 @@ def test_supervision_never_invents_negatives(dom):
             if lab == 0:                                              # a negative must come from a localised failed relocation
                 assert any(json.loads(DA.okey(q["seq"]))[:len(p) + 1] == p + [[o, d]] and q.get("x_phase") == f"relocation:{len(p)}"
                            for q in r["labels"]["X"])
+
+
+# ------------------------------------------------------------------------------------------------ P3: networks + open-loop policy
+SMOKE = Path.home() / "sorc_grid/runs/p3_overfit_cpu"
+
+
+@pytest.mark.skipif(not (SMOKE / "os.pt").exists(), reason="needs the P3 smoke checkpoints")
+def test_policy_valid_deterministic_and_unprivileged(tmp_path):
+    import importlib, subprocess
+    code = ("import sys;sys.path.insert(0,%r);import policy;"
+            "bad=[m for m in sys.modules if m.split('.')[0] in ('teacher2d','bxy_teacher','evaluate','construct','fin3d','homotopy','nor_data','bd_2d','bd_3dt')];"
+            "print(bad)") % str(H)
+    assert subprocess.run([sys.executable, "-c", code], capture_output=True, text=True).stdout.strip() == "[]"
+    import policy as PO
+    rows = [pub(r) for r in ROWS["2d"][:12]]
+    for r in rows:
+        r["domain"] = "2d"
+    pubf = tmp_path / "pub.jsonl"
+    pubf.write_text("".join(json.dumps(r) + "\n" for r in rows))
+    a, b = tmp_path / "a.jsonl", tmp_path / "b.jsonl"
+    PO.predict(pubf, SMOKE, a)
+    PO.predict(pubf, SMOKE, b)
+    strip = lambda r: {k: r[k] for k in ("root_id", "decision", "moves", "stop_probs", "rollout")}  # noqa: E731
+    A_, B_ = [strip(json.loads(l)) for l in open(a)], [strip(json.loads(l)) for l in open(b)]
+    assert A_ == B_
+    _, c = BM.validate(pubf, a, quiet=True)
+    assert sum(v for k, v in c.items() if k.startswith("VALID_")) == len(rows), c
+    for r in A_:                                                    # every rollout step is statically legal in sequence
+        if r["rollout"]:
+            row = next(x for x in rows if x["root_id"] == r["root_id"])
+            assert G.is_legal(row["inputs"], "2d", [tuple(m) for m in r["rollout"]]) is None
+
+
+@pytest.mark.skipif(not (SMOKE / "os.pt").exists(), reason="needs the P3 smoke checkpoints")
+def test_osnet_zero_on_ineligible():
+    import torch
+    import policy as PO
+    Mo = PO.load(SMOKE, "cpu")
+    r = ROWS["2d"][0]
+    sc = G.scene(r["inputs"], "2d")
+    X, M, C, E, TM = PO.tens(sc, "2d", r["inputs"]["tid"], "cpu")
+    p, _ = Mo["os"](X, M, E, TM)
+    assert float(p[0][~E[0]].abs().sum()) == 0.0 and abs(float(p.sum()) - 1.0) < 1e-5
