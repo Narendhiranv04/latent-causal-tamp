@@ -1,0 +1,29 @@
+{
+ "version": "V34_REGISTRY_V1",
+ "registered_before": "any fresh-cohort model inference or teacher outcome on a cohort root (generation in progress; only generator-teacher K labels exist)",
+ "protocol": "config/final_protocol.yaml",
+ "primary": {
+  "system": "S-expanded scratch_all s0 + D-expanded s0, exhaustive M4, rule gate0.5/eta0.3, cuda proposal RNG",
+  "metric": "verified task success K1-K3 per domain",
+  "secondary": [
+   "K1/K2/K3",
+   "K0 NOOP",
+   "NONE ABSTAIN",
+   "X/Y failure decomposition",
+   "calibration",
+   "latency",
+   "D-expanded s1/s2 (same sampler) stability"
+  ]
+ },
+ "no_hypothesis_test_vs_history": "V3.2/V3.3 numbers are context only (different roots)",
+ "hosts": {
+  "laptop": "CPU (RAM-guarded) + RTX 5060 for all Approach B inference (exact V3.3 parity)",
+  "gvlab": "CPU generation (20 of 24 threads)",
+  "girish": "CPU generation, DISCO-aware watchdog (<= 24-4-DISCO-2)"
+ },
+ "p1_parity": {
+  "2d": "751/751 proposals+decisions identical to V3.3 records (laptop RTX 5060, torch 2.9.1)",
+  "3d": "364/364 identical",
+  "cpu_3d": "273/301 proposals, 300/301 decisions identical -> CPU is a non-identical fallback"
+ }
+}

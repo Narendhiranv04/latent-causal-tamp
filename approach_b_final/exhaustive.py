@@ -172,7 +172,7 @@ def score_root(root, D6, scorer, rules, mmax, known, chunk=8192):
                     "best_known": None if best_known is None else {"seq": json.loads(best_known[0]), "p11": best_known[1][0], "py": best_known[1][2],
                                                                      "px": best_known[1][3], "rank_by_p11": int((pm > best_known[1][0]).sum()) + 1},
                     "decisions": dec[M], "top": tops[M]}
-    return {"root_id": root.id, "K": root.row["K_legacy"], "n_movable": len(root.movable), "D6": {str(o): v for o, v in D6.items()},
+    return {"root_id": root.id, "K": root.row.get("K_legacy"), "n_movable": len(root.movable), "D6": {str(o): v for o, v in D6.items()},
             "p_noop": noop["p11"], "mmax": mmax, "per_M": {str(M): v for M, v in per_M.items() if M <= mmax}, "p11_M4_small": small,
             "wall_s": round(time.time() - t0, 3)}
 

@@ -1,0 +1,110 @@
+{
+ "version": "APPROACH_B_BENCH_V1",
+ "config": {
+  "M": 4,
+  "propose_top": 6,
+  "n_z": 64,
+  "proposal_rule": "S1",
+  "proposal_seed": 0,
+  "K_max": 3,
+  "B_cap": null,
+  "chunk": 8192,
+  "rule": {
+   "noop_gate": 0.5,
+   "eta": 0.3,
+   "alpha": 0.0,
+   "beta": 0.0,
+   "gamma": 0.0
+  }
+ },
+ "files": {
+  "2d/sampler.pt": "a01f25eba31684a78384e8406a2066ed1d3a098899b56f7ec90a4f987af1e918",
+  "3d/sampler.pt": "6a0e26c47781fefe5e9fb84043bf772230b22758cb21f47358836d11e84be472",
+  "2d/scorer_s0.pt": "0fa126da80ceecb19ef4d3cf7c21287abc6e5965151b1e4ddc37e0ffe99623d4",
+  "2d/scorer_s1.pt": "ea6dba7a9d054242ff72ada9668f2b16eb0336443ac5f44bc3b141f9b2ffb3af",
+  "2d/scorer_s2.pt": "928a6e2b79c84398ca6c03e2233812db724ca2d694df6bd431d7303446c44097",
+  "3d/scorer_s0.pt": "c02afcbc29a9552fd4631c1fd46dfa196a19029151251078bed9f4e3b72dfde1",
+  "3d/scorer_s1.pt": "88f49a606bd42f76f6d77215082b8dbeb72dec0a602af1396f09de1aa902551e",
+  "3d/scorer_s2.pt": "948ac82026b6ba273cb7f764f9f470a7e4fa0fd23b349ce9598fee5a01d58f40",
+  "2d/scalers.json": "884b35673692a98adf73a6662fdb05e7a489112d6340f32be72e4a1a7e744095",
+  "3d/scalers.json": "36a94926ddd875cc2271827d1c01bbba65ad487a8c7387cf1d3f827bb916dee6"
+ },
+ "provenance": {
+  "2d/sampler.pt": {
+   "source_path": "/home/naren/abf_v33/models/expanded/2d/scratch_all_s0/model.pt",
+   "prov": {
+    "train_snapshot": "/home/longhorizon/abf_v33/snap/abf_v32_fb0eef4f5ff433ee",
+    "train_data_sha256": "963c16b2fd573e5737dacdcb8867b62143a08d54230ceb0d70bd9270f20bf7b2",
+    "val_snapshot": "/home/longhorizon/abf_v33/snap/abf_9de85710c2a7103f",
+    "val_data_sha256": "16222ff85eee7e463d10043f1d18e6911d1588b87f41bec8507f1474aa276bcd",
+    "q2_scaler_sha256": "884b35673692a98adf73a6662fdb05e7a489112d6340f32be72e4a1a7e744095",
+    "init": "scratch",
+    "init_state_sha256": "79d9991d410c374357997b6aa64245a2cbf60f30faf5d616d890d50162611d10",
+    "device": "cuda",
+    "torch": "2.10.0+cu128"
+   },
+   "epoch": 26,
+   "variant": "scratch_all"
+  },
+  "3d/sampler.pt": {
+   "source_path": "/home/naren/abf_v33/models/expanded/3d/scratch_all_s0/model.pt",
+   "prov": {
+    "train_snapshot": "/home/longhorizon/abf_v33/snap/abf_v32_fb0eef4f5ff433ee",
+    "train_data_sha256": "bc03d89646156f0d8ac7975db86080e851ab6fef52f2d83d5012215eecee2132",
+    "val_snapshot": "/home/longhorizon/abf_v33/snap/abf_9de85710c2a7103f",
+    "val_data_sha256": "1627f34bb2905ba7e399efb14c5ffe18f1f2dea20ca8c895c033e114ff1f2c0f",
+    "q2_scaler_sha256": "36a94926ddd875cc2271827d1c01bbba65ad487a8c7387cf1d3f827bb916dee6",
+    "init": "scratch",
+    "init_state_sha256": "f6b833b851fb7e85ff6c21abb4524c1f98bb403d24cce2f342bc1ae6d6ee195d",
+    "device": "cuda",
+    "torch": "2.10.0+cu128"
+   },
+   "epoch": 34,
+   "variant": "scratch_all"
+  },
+  "2d/scorer_s0.pt": {
+   "source_path": "/home/naren/abf_v32/train/expanded/p2_2d/D_s0/model.pt",
+   "arm": "D",
+   "seed": 0,
+   "epoch": 48,
+   "snapshot": "/home/user1/abf_v32/root/snapshot/abf_v32_fb0eef4f5ff433ee"
+  },
+  "2d/scorer_s1.pt": {
+   "source_path": "/home/naren/abf_v32/train/expanded/p2_2d/D_s1/model.pt",
+   "arm": "D",
+   "seed": 1,
+   "epoch": 48,
+   "snapshot": "/home/user1/abf_v32/root/snapshot/abf_v32_fb0eef4f5ff433ee"
+  },
+  "2d/scorer_s2.pt": {
+   "source_path": "/home/naren/abf_v32/train/expanded/p2_2d/D_s2/model.pt",
+   "arm": "D",
+   "seed": 2,
+   "epoch": 34,
+   "snapshot": "/home/user1/abf_v32/root/snapshot/abf_v32_fb0eef4f5ff433ee"
+  },
+  "3d/scorer_s0.pt": {
+   "source_path": "/home/naren/abf_v32/train/expanded/p2_3d/D_s0/model.pt",
+   "arm": "D",
+   "seed": 0,
+   "epoch": 57,
+   "snapshot": "/home/user1/abf_v32/root/snapshot/abf_v32_fb0eef4f5ff433ee"
+  },
+  "3d/scorer_s1.pt": {
+   "source_path": "/home/naren/abf_v32/train/expanded/p2_3d/D_s1/model.pt",
+   "arm": "D",
+   "seed": 1,
+   "epoch": 59,
+   "snapshot": "/home/user1/abf_v32/root/snapshot/abf_v32_fb0eef4f5ff433ee"
+  },
+  "3d/scorer_s2.pt": {
+   "source_path": "/home/naren/abf_v32/train/expanded/p2_3d/D_s2/model.pt",
+   "arm": "D",
+   "seed": 2,
+   "epoch": 45,
+   "snapshot": "/home/user1/abf_v32/root/snapshot/abf_v32_fb0eef4f5ff433ee"
+  }
+ },
+ "created_utc": "2026-11-17T12:37:23Z",
+ "note": "sampler = scratch TaskCVAE scratch_all (random init, no Q2 neural weights); scorer = D-expanded XYNet (random init); scalers = frozen TRAIN-only Q2 feature-normalisation constants (not neural weights)"
+}

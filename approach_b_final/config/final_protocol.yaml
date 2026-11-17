@@ -1,0 +1,56 @@
+# Approach B V3.4 FINAL PROTOCOL (frozen before any fresh-cohort model outcome; amendments only by a new dated block below, never by edit)
+version: APPROACH_B_V34_FINAL_PROTOCOL_V1
+registered_utc: PENDING_COMMIT          # set by the P0 commit
+source_revision: {branch: naren/approach-b-v3-4-final-benchmark, parent: 0274fe8b664c80e41aaf6146e2200353eb70d30b}
+
+model:                                    # owner decision 2026-11-17: fully scratch-trained, uniform expanded data in both domains
+  sampler:
+    class: placement.TaskCVAE variant scratch_all (hidden 128, z 8, task branch on), random init (prov.init = scratch), no Q2 neural weights
+    training_snapshot: abf_v32_fb0eef4f5ff433ee
+    2d: {seed: 0, sha256: a01f25eba31684a78384e8406a2066ed1d3a098899b56f7ec90a4f987af1e918}
+    3d: {seed: 0, sha256: 6a0e26c47781fefe5e9fb84043bf772230b22758cb21f47358836d11e84be472}
+    note: "V3.3 tie-break chose S-control for 2D (null difference -0.1 [-2.1,+2.0]); S-expanded in 2D is an explicit owner preference, not a VAL win"
+  scorer:
+    class: xy.XYNet arm D (coupled X/Y Boltzmann), random init (xy.fit), trained on abf_v32_fb0eef4f5ff433ee (V3.2 D-expanded)
+    primary_seed: 0
+    2d: {s0: 0fa126da80ceecb19ef4d3cf7c21287abc6e5965151b1e4ddc37e0ffe99623d4, s1: ea6dba7a9d054242ff72ada9668f2b16eb0336443ac5f44bc3b141f9b2ffb3af, s2: 928a6e2b79c84398ca6c03e2233812db724ca2d694df6bd431d7303446c44097}
+    3d: {s0: c02afcbc29a9552fd4631c1fd46dfa196a19029151251078bed9f4e3b72dfde1, s1: 88f49a606bd42f76f6d77215082b8dbeb72dec0a602af1396f09de1aa902551e, s2: 948ac82026b6ba273cb7f764f9f470a7e4fa0fd23b349ce9598fee5a01d58f40}
+  feature_scalers:                        # deterministic TRAIN-only Q2 normalisation constants (not neural weights)
+    2d: 884b35673692a98adf73a6662fdb05e7a489112d6340f32be72e4a1a7e744095
+    3d: 36a94926ddd875cc2271827d1c01bbba65ad487a8c7387cf1d3f827bb916dee6
+  travel_head: not loaded (gamma = 0 -> never enters a decision)
+
+inference:                                # benchmark.py predict == exhaustive.score_root (parity: P1)
+  proposals: S1 top-6 of the 64-draw MC marginal, per-root torch.Generator(device=cuda).manual_seed(0); M4 uses the top-4 prefix
+  rng_device: cuda                        # CPU RNG gives different (tie-level) proposals: CPU is a documented non-identical fallback only
+  construction: every statically legal ordered sequence of length 1..3 over top-4 sets (all permutations), no B cap, chunk 8192
+  selection: {noop_gate: 0.5, eta: 0.3, alpha: 0.0, beta: 0.0, gamma: 0.0}    # evaluate.GRID[24], frozen V3-5
+  output: one of REPAIR (ordered moves) / NOOP / ABSTAIN per root; public inputs only (contracts.view2d / view3d)
+
+primary_system: sampler s0 + scorer s0, one decision per root, both domains
+secondary_prespecified: scorer s1 and s2 with the same sampler s0 (stability only; never used to choose the reported system)
+no_retry_policy: each unique (root, ordered sequence) is verified once by the unchanged teachers; UNKNOWN stays UNKNOWN (never failure)
+
+statistics:
+  primary: verified task success on K1-K3 roots (eval_task); K0 correct NOOP (eval_noop); NONE correct ABSTAIN (eval_abstain); separate denominators
+  ci: 95 % percentile, 2000 resamples, seed 0, resampling evaluation groups (instance lineage) within K strata
+  standardized: K1/K2/K3 rates weighted by the locked reference (historical VAL) proportions, plus unweighted cohort rates labelled as such
+  historical_context_only: V3.2 exposed TEST 52.0 % (2D) / 81.2 % (3D) with q2init_all -- different roots and sampler, never a paired control
+
+cohort:                                   # plan.md Option B: independent instances, factor templates MAY recur (never called template-disjoint)
+  design: VAL-slot template matching (scripts/v34_cohort.py plan; V34_SLOT_PLAN_V1, ~/abf_v34/cohort/SLOT_PLAN.json)
+  reference: VAL split of abf_9de85710c2a7103f (2D 751, 3D 364 roots); outcomes of the reference roots are never read
+  quotas: {2d: {K0: 180, K1: 116, K2: 116, K3: 167, NONE: 145}, 3d: {K0: 93, K1: 58, K2: 106, K3: 76, NONE: 63}}
+  quota_amendment: "3D K1/K2/K3 = 58/106/76 replaces the V3.3 pilot plan 54/93/93 (which over-represented K3 vs VAL 53/97/70); registered before generation"
+  slot_rule: VAL roots of a class in sha256('V34_SLOT|'+root_id) order, cycled to the quota; each slot = (8-factor template, observed class, construction kind)
+  raw_request: the frozen runner's work() with the slot's spec; name per host (fc34gv / fc34gi / fc34lp ...), wave = global slot ordinal, slot = attempt
+  acceptance: teacher-observed class == raw_class (slot class, or the parent class for enrichment kinds); <= 16 (2D) / 8 (3D) attempts per slot, then CAPPED (reported, re-planned only by a registered amendment)
+  enrichment: REPARK (dep2d / dep3d) and HARD (hard2d / hard3d) on the NEW raw parent of the slot, frozen acceptance rules; parent and child share one evaluation_group_id
+  ids: parent_family_id keeps its meaning (template hash, will overlap TRAIN/VAL/TEST by design); new fields instance_lineage_id (= raw parent root id), evaluation_group_id, template_id, construction_seed, root_sha256, layout_fp
+  disjointness_asserts: no root_id / construction seed / root_sha256 / layout fingerprint (cells + target + goal) shared with any historical ledger, snapshot V1-V3.3, the V3.3 pilot or other cohort roots
+  no_model_in_admission: no Approach B (or any) model output is computed on a cohort root before the cohort manifest is sealed
+  known_provenance_shifts:
+    - "2D: only ROUTE2D_V6 code exists locally; VAL K1 roots were mostly CONV1 conversions of V1 roots (conversion needs bd_2d_cover_table.json): fresh K1 come from V6 route construction"
+    - "2D: bd_2d_cover_table.json (exact-search pre-filter) is missing on every authorized host; 424 2D slots (exact K2/K3, NONE, enrichment parents) wait for the original file or a reconstruction validated against the production ledger (registered before use)"
+    - "3D: only SHELF66V3 construction code exists (176/364 VAL layouts came from SHELF66V2 then re-taught by the V3 teacher); 3D NONE via run_shelf66_none (dense) + trim_none66_v3 (V1 trim code missing)"
+  ground_truth: K from the frozen generator teacher; eval_noop needs Y(empty) = 1 (one unchanged Y query per K0 root); eval_task = K in 1..3; eval_abstain = K == NONE; certificate (legacy assignment orders X/Y) secondary
