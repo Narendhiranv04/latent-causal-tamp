@@ -145,3 +145,7 @@ The v4 partial report was pushed as `70977c09c0`; TEST attempts remain 412/525 (
 ## Prioritized bounded completion
 
 [Completion monitor contract](PRIORITY_COMPLETION_MONITOR.md) and [frozen 113-trial 2D CPU extension request](COMPLETION_RESOURCE_REQUEST.json). The current 3D run is being supervised through resource stops and report publication without requiring a new user prompt to continue ordinary authorized work. Numeric CPU ceilings, two-core exclusion, no-retry semantics and VAL freeze remain enforced. Additional 2D execution remains unapproved.
+
+## Approved frozen 2D completion extension
+
+[Approval and request hash](COMPLETION_RESOURCE_APPROVAL.json), [implementation and limits](F113_COMPLETION_EXTENSION.md), [54 passing relevant tests](F113_EXTENSION_TESTS.log), and [two disk-guard regressions](F113_DISK_GUARD_TESTS.log). The exact 113-trial completion is approved and is queued behind the existing 3D supervisor, with final report publication following both. Earlier statements that the 2D extension is unapproved describe history.

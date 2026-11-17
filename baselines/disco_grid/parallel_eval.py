@@ -63,12 +63,27 @@ def reserve_cpu(limit,used,reserved,trial_wall):
     return max(0.,min(trial_wall+20,free))
 
 
+def disk_bytes(root):
+    total=0
+    for path in root.rglob('*'):
+        try:
+            if path.is_file():total+=path.stat().st_size
+        except FileNotFoundError:
+            # A journal's atomic temporary file may be renamed during a scan.
+            # It is present under its destination name on the next guard poll.
+            continue
+    return total
+
+
 def run(jobs_path,envelope_path,out,worker_target=PE.trial_worker):
     envelope=read(envelope_path);jobs=PE.validate_execution(jobs_path,envelope)
     slots=envelope['workers']
     if slots not in (3,4):raise PermissionError('Explicit parallel worker amendment required')
     if os.environ.get('CUDA_VISIBLE_DEVICES')!='':raise PermissionError('Frozen CPU inference required')
     if not out.resolve().is_relative_to((D.DISCO_ROOT/'stage2').resolve()):raise ValueError('Isolated stage2 output required')
+    disk_root=Path(envelope.get('cumulative_disk_root',out)).resolve()
+    if not out.resolve().is_relative_to(disk_root) or not disk_root.is_relative_to((D.DISCO_ROOT/'stage2').resolve()):
+        raise ValueError('Disk accounting must cover this isolated Stage 2 output')
     C.require_headroom();out.mkdir(parents=True,exist_ok=False)
     source={p.name:D.sha256_file(p) for p in HERE.glob('*.py')}
     J.atomic_json(out/'manifest.json',dict(envelope=envelope,jobs_sha256=D.sha256_file(jobs_path),
@@ -126,7 +141,7 @@ def run(jobs_path,envelope_path,out,worker_target=PE.trial_worker):
                     except RuntimeError as exc:stop=str(exc)
                     if peak_rss>=4*2**20:stop='POOL_RAM_LIMIT_4_GIB'
                     if time.monotonic()-start>=envelope['active_wall_s']-10:stop='PHASE_WALL_LIMIT'
-                    if sum(p.stat().st_size for p in out.rglob('*') if p.is_file())>=envelope['disk_gib']*2**30:stop='PHASE_DISK_LIMIT'
+                    if disk_bytes(disk_root)>=envelope['disk_gib']*2**30:stop='PHASE_DISK_LIMIT'
                 if stop:
                     for a in active.values():J.atomic_bytes(a['directory']/'CANCEL',stop.encode())
                     pending=[]

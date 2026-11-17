@@ -55,6 +55,22 @@ def test_reservations_include_inflight_and_shutdown_overhead():
     assert POOL.reserve_cpu(100,100,0,600)==0
 
 
+def test_cumulative_disk_counts_prior_new_fragments_without_archived_directory_symlinks(tmp_path):
+    root=tmp_path/'new';root.mkdir();old=tmp_path/'archive';old.mkdir()
+    (old/'large.bin').write_bytes(b'x'*1000)
+    (root/'previous_archive').symlink_to(old,target_is_directory=True)
+    first=root/'fragment1';first.mkdir();(first/'data').write_bytes(b'x'*7)
+    second=root/'fragment2';second.mkdir();(second/'data').write_bytes(b'x'*11)
+    assert POOL.disk_bytes(root)==18
+
+
+def test_disk_root_cannot_exclude_active_output(tmp_path,monkeypatch):
+    args=fixture(tmp_path,monkeypatch,[])
+    e=json.loads(args[1].read_text());e['cumulative_disk_root']=str(args[2].parent/'other')
+    J.atomic_json(args[1],e)
+    with pytest.raises(ValueError,match='Disk accounting'):POOL.run(*args)
+
+
 def test_parallel_host_amendment_keeps_exactly_three_workers(tmp_path,monkeypatch):
     args=fixture(tmp_path,monkeypatch,[])
     assert C.execution_workers()==3

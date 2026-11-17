@@ -46,6 +46,13 @@ def test_duplicate_attempt_aborts_instead_of_rescheduling(tmp_path):
     with pytest.raises(ValueError,match='Invalid prior'):M.continuation_gate(r)
 
 
+def test_wall_limit_is_distinct_from_extended_cpu_limit(tmp_path):
+    r=release(tmp_path);e=M.read(r/'APPROVED_ENVELOPE.json')
+    e['wall_ceilings']={'2d':{'test':10800},'3d':{'test':20}}
+    M.write(r/'APPROVED_ENVELOPE.json',e)
+    assert not M.continuation_gate(r)['can_continue']
+
+
 def test_exhausted_run_publishes_final_pointer_without_any_process_launch(tmp_path,monkeypatch):
     r=release(tmp_path,cpu3d=21550);report=tmp_path/'report';report.mkdir()
     M.write(report/'FINISH_COMPLETE.json',dict(physical_queries=0))

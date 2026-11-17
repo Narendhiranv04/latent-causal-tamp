@@ -39,7 +39,8 @@ def continuation_gate(release,monitor_cpu=0.):
         if len(set(seen))!=len(seen) or not set(seen)<=ids:raise ValueError('Invalid prior attempt identities')
         pending=[j for j in jobs if j['id'] not in set(seen)]
         cost=read(release/f'test_{domain}/ACCOUNTING.json');cap=envelope['ceilings'][domain]['test']
-        cpu=cap-cost['cpu_s']-monitor_cpu;wall=cap-cost['active_wall_s']
+        wall_cap=envelope.get('wall_ceilings',envelope['ceilings'])[domain]['test']
+        cpu=cap-cost['cpu_s']-monitor_cpu;wall=wall_cap-cost['active_wall_s']
         calls=5523-complete['global_adapter_calls']
         viable=any(cpu>j['query_wall_s']+100 and wall>j['query_wall_s']+100 and calls>=j['adapter_call_cap'] for j in pending)
         result[domain]=dict(pending=len(pending),remaining_cpu_s=cpu,remaining_active_wall_s=wall,
@@ -115,7 +116,7 @@ def run(config_path,out):
                 log=str(log),command=cmd,source_commit=config['physical_source_commit'])
             record_path=out/f'physical_{continuations}_launch.json';write(record_path,launch)
             report=Path(config['report_base'])/f'final_monitor_physical_{continuations}'
-            version=f'v{100+continuations}'
+            version=f'v{config.get("version_base",100)+continuations}'
             cmd=list(report_template);cmd[-3]=str(record_path);cmd[-2]=str(report)
             with (out/f'report_{continuations}.log').open('x') as f:p=subprocess.Popen(cmd,stdout=f,stderr=subprocess.STDOUT,start_new_session=True)
             report_record=dict(pid=p.pid,proc_stat=Path(f'/proc/{p.pid}/stat').read_text(),command=cmd)

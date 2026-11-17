@@ -28,6 +28,18 @@ def run(prior,out):
     authorization=read(os.environ['DISCO_EXECUTION_AUTHORIZATION'])
     if authorization['scope']!='DISCO_RELEASE_RESERVED_CORES_AMENDMENT':raise PermissionError('Reserved-core amendment required')
     old=read(prior/'COMPLETE.json');envelope=read(prior/'APPROVED_ENVELOPE.json')
+    extension=envelope.get('completion_extension')
+    if extension:
+        approval=read(extension['approval_path'])
+        if (approval.get('status')!='APPROVED' or approval.get('scope')!='DISCO_ONLY_FROZEN_2D_TEST_CPU_EXTENSION'
+                or not approval.get('authorization_text') or D.sha256_file(extension['approval_path'])!=extension['approval_sha256']
+                or approval['additional_cpu_s']!=43200 or approval['additional_active_wall_s']!=18000
+                or approval['maximum_additional_adapter_calls']!=370 or approval['remaining_trials']!=113):
+            raise PermissionError('Invalid frozen 2D extension approval')
+        if (envelope['ceilings']['2d']['test']!=extension['initial_cpu_s']+43200
+                or envelope['wall_ceilings']['2d']['test']!=extension['initial_active_wall_s']+18000
+                or envelope['ceilings']['3d']['test']!=21600):
+            raise PermissionError('CPU/wall extension does not match explicit approval')
     prep=Path(envelope['preparation']);engine=HERE.parents[1]
     for name,digest in read(prep/'manifest.json')['source_sha256'].items():
         if name not in ('collect.py','physical_eval.py') and D.sha256_file(engine/name)!=digest:
@@ -58,6 +70,7 @@ def run(prior,out):
         parallel_authorization=authorization,prior_release=str(prior),source_commit=os.environ['DISCO_SOURCE_COMMIT']))
     for name in ('SELECTION_FREEZE.json','HOST_MIGRATION.json','ORIGINAL_TRANSFER_INDEX.json','PARALLEL_HANDOFF.json'):
         if (prior/name).exists():J.atomic_bytes(out/name,(prior/name).read_bytes())
+    if extension:J.atomic_json(out/'COMPLETION_EXTENSION.json',extension)
     J.atomic_json(out/'RESERVED_CORES_HANDOFF.json',dict(prior_release=str(prior),prior_complete_sha256=D.sha256_file(prior/'COMPLETE.json'),
         authorization=authorization,affinity=sorted(os.sched_getaffinity(0)),
         semantics='Never-attempted frozen TEST identities only. No re-selection, no retry of unresolved or cancelled attempts.'))
@@ -68,13 +81,18 @@ def run(prior,out):
     for domain in ('2d','3d'):
         key=f'test_{domain}';jobs=read(prior/f'{key}_jobs.json')['jobs'];observed=rows(prior/key/'outcomes.jsonl')
         pending=remaining_jobs(jobs,observed);charge=read(prior/key/'ACCOUNTING.json')
+        if extension and domain=='2d' and not {j['id'] for j in pending}<=set(extension['job_ids']):
+            raise ValueError('2D extension contains an unapproved trial identity')
         J.atomic_json(out/f'{key}_jobs.json',dict(jobs=jobs))
         path=out/f'{key}_remaining_jobs.json';J.atomic_json(path,dict(jobs=pending))
-        cap=envelope['ceilings'][domain]['test'];allowance=30+prior_shared
+        cap=envelope['ceilings'][domain]['test'];wall_cap=envelope.get('wall_ceilings',envelope['ceilings'])[domain]['test'];allowance=30+prior_shared
         sub=dict(status='APPROVED',scope='DISCO_PHYSICAL_EVALUATION',authorization_text=authorization['authorization_text'],
             host='girish-laptop',workers=authorization['workers'],gpu=False,split='test',jobs_sha256=D.sha256_file(path),
-            cpu_s=max(0.,cap-charge['cpu_s']-allowance),active_wall_s=max(0.,cap-charge['active_wall_s']-30),
+            cpu_s=max(0.,cap-charge['cpu_s']-allowance),active_wall_s=max(0.,wall_cap-charge['active_wall_s']-30),
             adapter_calls=5523-calls,disk_gib=8.)
+        if extension:
+            sub.update(disk_gib=2.,cumulative_disk_root=extension['cumulative_disk_root'])
+            if domain=='2d':sub['adapter_calls']=min(sub['adapter_calls'],max(0,extension['initial_adapter_calls']+370-charge['adapter_calls']))
         ep=out/f'{key}_envelope.json';J.atomic_json(ep,sub)
         fragment=out/f'{key}_pool_fragment';phase_cpu=time.process_time();POOL.run(path,ep,fragment)
         own_phase_cpu+=time.process_time()-phase_cpu
@@ -91,14 +109,16 @@ def run(prior,out):
         total={k:charge[k]+account[k] for k in ('cpu_s','active_wall_s','adapter_calls','worker_cpu_s','controller_cpu_s','worker_wall_s')}
         total.update(n_attempted=len(merged),n_frozen_jobs=len(jobs),n_not_run=len(jobs)-len(merged),workers=authorization['workers'],
             prior_charge=charge,new_pool_charge=account,cpu_accounting_kind='MEASURED_SUPERVISORS_AND_REAPED_CHILDREN')
-        if max(total['cpu_s'],total['active_wall_s'])>cap:raise RuntimeError('Original phase ceiling exceeded')
+        if total['cpu_s']>cap or total['active_wall_s']>wall_cap:raise RuntimeError('Approved phase ceiling exceeded')
+        if extension and domain=='2d' and total['adapter_calls']>extension['initial_adapter_calls']+370:
+            raise RuntimeError('Approved 2D extension query ceiling exceeded')
         J.atomic_json(combined/'ACCOUNTING.json',total)
     J.atomic_json(out/'COMPLETE.json',dict(selected_eta=freeze['selected_eta'],workers=authorization['workers'],
         phase_accounting=[read(out/f'{phase}_{domain}/ACCOUNTING.json') for phase in ('val','test') for domain in ('2d','3d')],
         total_cpu_s=old['total_cpu_s']+sum(a['cpu_s'] for a in fresh_accounts)+time.process_time()-cpu_start-own_phase_cpu,
         total_wall_s=old['total_wall_s']+time.monotonic()-start,global_adapter_calls=calls,
         cpu_accounting_kind='PRESERVED_PRIOR_BOUNDS_PLUS_MEASURED_CONTINUATION',
-        scope='Original 5523-call and per-domain CPU/wall ceilings, frozen TEST selection and no retry preserved'))
+        scope='Original 5523-call ceiling and frozen TEST selection/no-retry preserved; CPU/wall limits include the explicit frozen-2D amendment where recorded'))
 
 
 if __name__=='__main__':

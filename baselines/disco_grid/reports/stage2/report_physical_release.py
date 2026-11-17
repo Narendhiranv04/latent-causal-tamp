@@ -68,7 +68,8 @@ def report(release, metrics_dir, training_reports):
         raise ValueError('Physical-call authorization exceeded')
     for p in phase_costs:
         cap = envelope['ceilings'][p['domain']][p['phase']]
-        if max(p['cpu_s'], p['active_wall_s']) > cap:
+        wall_cap = envelope.get('wall_ceilings',envelope['ceilings'])[p['domain']][p['phase']]
+        if p['cpu_s']>cap or p['active_wall_s']>wall_cap:
             raise ValueError('Recorded phase cost exceeds approved ceiling')
 
     lines = [
@@ -251,6 +252,17 @@ def report(release, metrics_dir, training_reports):
             '20 GiB disk headroom and load ceiling of 22/24 logical CPUs. '
             'Only never-attempted TEST identities are dispatched; prior timeouts, cancellations and returned results are retained without retry. '
             'The existing VAL selection is byte-preserved; all earlier costs remain charged against the original ceilings.', '']
+    if envelope.get('completion_extension'):
+        ext=envelope['completion_extension']
+        lines += ['## Explicitly approved frozen 2D completion extension', '',
+            'The user approved execution of the 113 previously unattempted 2D TEST identities, '
+            'with at most 370 additional adapter calls, 43200 additional CPU seconds and 18000 additional active-wall seconds. '
+            'New data are capped at 2 GiB across the extension directory; three workers and the two-core exclusion remain. '
+            'CPU and wall ceilings are each prior charged use plus the explicitly approved extension, rather than resetting earlier costs. '
+            'All models, prior outcomes, teacher limits, and the VAL selection remain frozen. '
+            'The original global 5523-call ceiling and original 3D CPU/wall limits are retained. '
+            'COMPLETION_EXTENSION.json records approval hashes, the exact eligible trial IDs, and the prior release. '
+            'This approval contains no new TRAIN collection or retry of an earlier interrupted episode.', '']
     (metrics_dir / 'FINAL_DISCO_STAGE2_REPORT.md').write_text('\n'.join(lines))
     (metrics_dir / 'PHYSICAL_RESOURCE_TOTALS.json').write_text(json.dumps(physical_cost, indent=2)+'\n')
     statuses = read(training_reports / 'STAGE2_FINAL_STATUS.json')

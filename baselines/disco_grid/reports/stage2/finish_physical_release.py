@@ -45,7 +45,7 @@ def load(name):
 def analyze(release, out, training):
     analyzer = load('analyze_evaluation')
     result = analyzer.analyze(release, out)
-    for name in ('APPROVED_ENVELOPE.json','HOST_MIGRATION.json','PARALLEL_HANDOFF.json','ORIGINAL_TRANSFER_INDEX.json','RESERVED_CORES_HANDOFF.json'):
+    for name in ('APPROVED_ENVELOPE.json','HOST_MIGRATION.json','PARALLEL_HANDOFF.json','ORIGINAL_TRANSFER_INDEX.json','RESERVED_CORES_HANDOFF.json','COMPLETION_EXTENSION.json'):
         source=release/name
         if source.exists():
             (out/name).write_bytes(source.read_bytes())
