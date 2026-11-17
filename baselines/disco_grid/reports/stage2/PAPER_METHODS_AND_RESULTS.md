@@ -54,13 +54,19 @@ execution failure, to distinguish X=0,Y=1 execution-at-feasible-endpoint cases
 from target-endpoint failures. Such a case alone does not prove that order caused
 the failure. Matched reversed physical fixtures provide direct order evidence.
 
-MCTS uses UCB, not PUCT, with exploration constant C=1.5. Progressive widening
+MCTS uses UCB, not PUCT, with exploration constant C=1.5:
+`UCB(v)=Q_tree(v)+1.5 sqrt(log(N_parent+1)/(N_v+1))`.
+The learned continuation score initializes unvisited child Q; its first backup
+replaces that prior by the observed root-path return. Progressive widening
 allows further feasible relocation children when their count is less than
 2 max(N,1)^0.3; each expansion samples up to two previously unattempted actions.
 STOP is evaluated at physical states and cached as one observation. Verified
 successful STOP is absorbing on revisits. The correction depth limit is three;
 the extra STOP child is bookkeeping, not a fourth relocation. Geometric shaping
-and root-path backup guide search; shaped return is not the learned success
+and root-path backup guide search. With zero root edge reward, a path's shaped
+return telescopes to kappa_leaf minus kappa_root; verified terminal success
+therefore need not have numeric return one. Within a root the subtraction is
+constant. Shaped return is not the learned success
 probability and is not an empirical task-success rate.
 
 The execution unit called an adapter query is one transition or terminal call.
@@ -96,7 +102,11 @@ The approved E16-v1 cohort contains 16 new independent source components/domain
 layout, raw hash or input hash; they are split-disjoint. Prior physical-search
 families are excluded. Each domain has fresh P0-guided R0 and O0 P1/Q1-guided R1
 search seeds on this same declared root pool, followed by P1/Q1 and pooled-R0/R1
-P2/Q2 fitting. All-feasible O0/O1 and successful-only O0 use model seeds 0/1/2,
+P2/Q2 fitting. Completed-iteration prefixes are separately checksum-certified
+from interrupted attempts without labelling their unfinished queries. Recovered
+prefixes augment final P2; they also enter the first 3D P1 because recovery became
+available before any 3D P1 epoch. The already completed 2D P1/R1 remain unchanged.
+Clean-only P2 is preserved as a coverage control. All-feasible O0/O1 and successful-only O0 use model seeds 0/1/2,
 45 fixed epochs, batch size 64, AdamW learning rate .001, weight decay .0001,
 constant learning rate, and CPU execution. Successful-only P2 starts from the
 corresponding all-feasible P1 so that the current policy-edge filter is isolated.

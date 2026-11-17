@@ -1,7 +1,8 @@
 """Render saved executed states using the existing teacher's native geometry.
 
-No planning, settling, stepping, GPU rendering, or invented trajectories. 3D
-vertices come from the native compiled MuJoCo model after restoring saved qpos.
+No planning, post-restore integration, GPU rendering, or invented trajectories.
+Native model construction can initialize with integration steps; these are
+counted separately and discarded when the saved state is restored. 3D vertices come from the native compiled MuJoCo model after restoring saved qpos.
 """
 import argparse, itertools, json, pickle, sys
 from pathlib import Path
@@ -42,7 +43,15 @@ def local_faces(model,g,mj):
 
 
 def render3d(ax,state,env):
-    row,raw=env._get_row_and_raw(state.root_id);b=env.backend;b.boot();scene=b._get_env(state.root_id,raw);b._restore_env(scene,state.physics_payload)
+    row,raw=env._get_row_and_raw(state.root_id);b=env.backend;b.boot();initialization_steps=0;original_step=b.mujoco.mj_step
+    def count_step(*args,**kwargs):
+        nonlocal initialization_steps
+        initialization_steps+=int(kwargs.get('nstep',args[2] if len(args)>2 else 1))
+        return original_step(*args,**kwargs)
+    b.mujoco.mj_step=count_step
+    try:scene=b._get_env(state.root_id,raw)
+    finally:b.mujoco.mj_step=original_step
+    b._restore_env(scene,state.physics_payload)
     model,data=scene.model,scene.data;bounds=[];moving_bounds=[];geoms=0;mesh_hashes={}
     for g in range(model.ngeom):
         color=model.geom_rgba[g].copy()
@@ -63,7 +72,7 @@ def render3d(ax,state,env):
     for setter,lo,hi in zip((ax.set_xlim,ax.set_ylim,ax.set_zlim),low-.03,high+.03):setter(lo,hi)
     ax.set_box_aspect(span);ax.view_init(elev=24,azim=-130)
     ax.set_xlabel('x (m)');ax.set_ylabel('y (m)');ax.set_zlabel('z (m)')
-    return dict(native_geoms=geoms,native_mesh_vertex_hashes=mesh_hashes,display_only='curved primitives tessellated; all native mesh faces retained; view cropped to robot/object extents')
+    return dict(native_geoms=geoms,native_model_initialization_steps=initialization_steps,post_restore_steps=0,native_mesh_vertex_hashes=mesh_hashes,display_only='curved primitives tessellated; all native mesh faces retained; view cropped to robot/object extents')
 
 
 def render2d(ax,state,env):
@@ -95,7 +104,7 @@ def run(paths,out):
         plt.close(fig)
         manifest.append(dict(path=str(path),state_sha256=D.sha256_file(path),state_hash=state.state_hash(),root_id=state.root_id,
             domain=state.domain,executed_prefix=state.prefix,q_t=state.q_t,geometry=detail,teacher_sources=C.teacher_sources(state.domain),
-            physics_steps=0,physical_planner_calls=0,render_backend='matplotlib Agg CPU; native forward kinematics only'))
+            physics_initialization_steps=detail.get('native_model_initialization_steps',0),post_restore_physics_steps=0,physical_planner_calls=0,render_backend='matplotlib Agg CPU; native forward kinematics only'))
     (out/'scene_manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
 if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('--states',type=Path,nargs='+',required=True);p.add_argument('--out',type=Path,required=True);a=p.parse_args();run(a.states,a.out)

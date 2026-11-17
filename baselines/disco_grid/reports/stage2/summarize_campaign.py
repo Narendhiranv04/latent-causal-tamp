@@ -23,6 +23,7 @@ def summarize(root,out):
                 phases={k:sum((e.get('accounting') or {}).get(k,0) or 0 for e in ends) for k in ('transition_planner_calls','connector_calls','y_calls','y_cache_hits')}
                 row=dict(domain=dom,round=f'R{rnd}',root_id=r['root_id'],family_id=r['family_id'],K=r['K_legacy'],status=status,
                     charged_adapter_intents=len(starts),returned_adapter_queries=len(ends),unreturned_adapter_queries=len(starts)-len(ends),
+                    returned_unresolved_queries=sum(e['status']=='UNRESOLVED' for e in ends),
                     returned_feasible_transitions=sum(e['kind']=='transition' and e['status']=='EXECUTED' for e in ends),
                     cpu_s=sum(a['reaped_child_cpu_s'] for a in accounts) if accounts else None,
                     wall_s=sum(a['wall_s'] for a in accounts) if accounts else None,
@@ -45,6 +46,7 @@ def summarize(root,out):
         cpu_s=sum(x['cpu_s'] or 0 for x in records if x['domain']==dom),wall_s=sum(x['wall_s'] or 0 for x in records if x['domain']==dom)) for dom in ('2d','3d')}
     report=dict(source=str(root),source_commit=manifest['source_commit'],scope='TRAIN collection and fits; no held-out task results',
         totals=totals,records=records,fits=fits,source_hashes=inputs,controller_complete=(root/'CONTROLLER_COMPLETE.json').exists(),
+        continuation_completion={p.name:(p/'COMPLETE.json').exists() for p in sorted(root.glob('continuation_*')) if p.is_dir()},
         physical_task_evaluation='NOT_RUN')
     out.mkdir(parents=True,exist_ok=True);(out/'training_coverage.json').write_text(json.dumps(report,indent=2)+'\n')
     keys=['domain','round','root_id','family_id','K','status','charged_adapter_intents','returned_adapter_queries','unreturned_adapter_queries','returned_feasible_transitions','cpu_s','wall_s','checkpoint_feasible_edges']

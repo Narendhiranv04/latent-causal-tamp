@@ -5,7 +5,7 @@ The original interrupted directory stays quarantined. Only its hashed atomic
 checkpoint and the exact completed journal prefix are copied into a new artifact.
 Completed tail queries beyond that checkpoint remain archived but are not used.
 """
-import argparse, hashlib, json, pickle, sys
+import argparse, fcntl, hashlib, json, pickle, sys
 from pathlib import Path
 
 
@@ -39,9 +39,16 @@ def recover(source,dest,J,D):
     J.atomic_json(dest/'RECOVERY_PROVENANCE.json',record);return record
 
 
-def run(engine,campaign,out):
+def run(engine,campaign,out,collection_ledger=None):
     sys.path.insert(0,str(engine));import data as D, journal as J
-    if not (campaign/'continuation_001/COMPLETE.json').exists():raise RuntimeError('Wait for serial collection/fitting to finish')
+    ledger=collection_ledger or campaign/'continuation_001/COMPLETE.json'
+    if not ledger.resolve().is_relative_to(campaign.resolve()) or not ledger.exists():raise RuntimeError('Wait for the specified collection ledger')
+    with (campaign/'controller.lock').open('a') as lock:
+        fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
+        return recover_finished_campaign(engine,campaign,out,ledger,J,D)
+
+
+def recover_finished_campaign(engine,campaign,out,ledger,J,D):
     if not out.resolve().is_relative_to(campaign.resolve()):raise ValueError('Recovery must remain inside campaign disk budget')
     out.mkdir(parents=True,exist_ok=False);records=[]
     for p in sorted(campaign.glob('trees/*/*/*/ATTEMPT_COMPLETE.json')):
@@ -50,7 +57,7 @@ def run(engine,campaign,out):
         rel=p.parent.relative_to(campaign/'trees');source=p.parent/status['root_id']
         records.append(recover(source,out/rel,J,D))
     J.atomic_json(out/'manifest.json',dict(records=records,scope='TRAIN-only offline certification; originals unmodified',
-        script_sha256=D.sha256_file(__file__),physical_queries=0))
+        script_sha256=D.sha256_file(__file__),collection_ledger=str(ledger),collection_ledger_sha256=D.sha256_file(ledger),physical_queries=0))
     return records
 if __name__=='__main__':
-    p=argparse.ArgumentParser();p.add_argument('--engine',type=Path,required=True);p.add_argument('--campaign',type=Path,required=True);p.add_argument('--out',type=Path,required=True);a=p.parse_args();print(json.dumps(run(a.engine,a.campaign,a.out),indent=2))
+    p=argparse.ArgumentParser();p.add_argument('--engine',type=Path,required=True);p.add_argument('--campaign',type=Path,required=True);p.add_argument('--out',type=Path,required=True);p.add_argument('--collection-ledger',type=Path);a=p.parse_args();print(json.dumps(run(a.engine,a.campaign,a.out,a.collection_ledger),indent=2))
