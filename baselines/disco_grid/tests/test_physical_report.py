@@ -61,3 +61,17 @@ def test_reporting_refuses_multiple_test_thresholds(tmp_path):
         'test|2d|open_loop|O0_P2Q2|0.15':{}},paired={}))
     with pytest.raises(ValueError,match='Multiple TEST thresholds'):
         R.report(*paths)
+
+
+def test_unexecuted_or_all_unknown_paired_arms_have_no_point_estimate():
+    import sys
+    sys.path.insert(0,str(script.parents[2]))
+    spec=importlib.util.spec_from_file_location('analysis_report',script.with_name('analyze_evaluation.py'))
+    A=importlib.util.module_from_spec(spec);spec.loader.exec_module(A)
+    roots=[dict(root_id='a',family_id='a',K_legacy='1')]
+    empty=A.paired_evidence([],[],roots,[0],bootstrap=10)
+    assert empty['status']=='NOT_RUN' and empty['delta'] is None and empty['ci95'] is None
+    unknown=[dict(root_id='a',seed=0,domain='2d',status='UNRESOLVED',verified=None)]
+    censored=A.paired_evidence(unknown,unknown,roots,[0],bootstrap=10)
+    assert censored['status']=='UNRESOLVED' and censored['delta'] is None
+    assert censored['unresolved_sensitivity']==[-1.,1.]

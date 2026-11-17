@@ -132,6 +132,9 @@ def report(release, metrics_dir, training_reports):
     for name, item in sorted(data['paired'].items()):
         if not name.startswith('test|'):
             continue
+        if item.get('delta') is None:
+            lines.append(f"| {name} | {item.get('status','NOT_RUN')} | unavailable | {item['n_roots']} / {item['fixed_seeds']} | {item['unknown_pair_trials']} |")
+            continue
         lo, hi = item['ci95']
         lines.append(f"| {name} | {100*item['delta']:.2f} pp | [{100*lo:.2f}, {100*hi:.2f}] pp | {item['n_roots']} / {item['fixed_seeds']} | {item['unknown_pair_trials']} |")
     if not any(k.startswith('test|') for k in data['paired']):

@@ -15,6 +15,16 @@ def write_csv(path,rows,empty_columns=('status',)):
         writer=csv.DictWriter(file,fieldnames=keys);writer.writeheader();writer.writerows(rows)
 
 
+def paired_evidence(a,b,roots,seeds,bootstrap=10000):
+    result=EV.paired_frozen_root_metrics(a,b,roots,seeds=seeds,bootstrap=bootstrap)
+    decided=any(r.get('verified') in (0,1) or r.get('status')=='ABSTAIN' for r in a+b)
+    if not decided:
+        result.update(status='UNRESOLVED' if a or b else 'NOT_RUN',delta=None,ci95=None)
+    else:
+        result['status']='PARTIAL' if result['unknown_pair_trials'] else 'MEASURED'
+    return result
+
+
 def root_stop_diagnostics(jobs,observed):
     """Raw root STOP Q versus separate original-target physical probes.
 
@@ -146,7 +156,7 @@ def analyze(release,out):
                     kb,gb=candidates[0];seeds=sorted({j['seed'] for j in ga['jobs']}&{j['seed'] for j in gb['jobs']});ra={j['root_id']:j for j in ga['jobs']};rb={j['root_id']:j for j in gb['jobs']}
                     roots=[dict(root_id=r,family_id=ra[r]['family_id'],K_legacy=ra[r]['K_legacy']) for r in sorted(ra.keys()&rb.keys()) if str(ra[r]['K_legacy']) in ('1','2','3')]
                     aa=[r for r in ga['rows'] if r['root_id'] in {x['root_id'] for x in roots} and r['seed'] in seeds];bb=[r for r in gb['rows'] if r['root_id'] in {x['root_id'] for x in roots} and r['seed'] in seeds]
-                    paired[f'{phase}|{dom}|{a}_minus_{b}|eta{ka[4]}']=EV.paired_frozen_root_metrics(aa,bb,roots,seeds=seeds)
+                    paired[f'{phase}|{dom}|{a}_minus_{b}|eta{ka[4]}']=paired_evidence(aa,bb,roots,seeds=seeds)
     J.atomic_json(out/'FINAL_METRICS.json',dict(metrics=metrics,paired=paired,source_hashes=row_sources,interpretation='Frozen-root intention-to-evaluate; not-run and unresolved are not physical negative labels'))
     J.atomic_json(out/'ROOT_STOP_DIAGNOSTICS.json',root_stop_diagnostics(jobs_all,observed_all))
     write_csv(out/'RESOURCE_ACCOUNTING.csv',costs,('phase','domain','cpu_s','active_wall_s','adapter_calls'))
