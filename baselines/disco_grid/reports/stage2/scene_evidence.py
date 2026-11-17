@@ -109,7 +109,7 @@ def render2d(ax,state,env):
 def run(paths,out):
     C.require_headroom();out.mkdir(parents=True,exist_ok=False);manifest=[]
     for i,path in enumerate(paths):
-        state=pickle.loads(path.read_bytes());env=E.RepairEnv(state.domain)
+        state=pickle.loads(path.read_bytes());env=E.RepairEnv(state.domain,witness_dir=out/'display_only_cache'/str(i))
         fig=plt.figure(figsize=(7,5));ax=fig.add_subplot(111,projection='3d' if state.domain=='3d' else None)
         detail=(render3d if state.domain=='3d' else render2d)(ax,state,env)
         ax.set_title(f'{state.root_id} | executed depth {state.depth}\nq/state from {path.name} | {D.sha256_file(path)[:12]}',fontsize=9)
