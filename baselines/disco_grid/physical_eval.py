@@ -49,6 +49,33 @@ class EvidenceEnv(E.RepairEnv):
         result=super().endpoint_y_query(root_id,seq);self.journal.finish(result);return result
 
 
+def reference_motion_cost(directory):
+    """Accepted corrective/connector waypoint length, never a failed full-plan length."""
+    lengths=[];sources=[];lower=0.;missing=[];incomplete=False
+    for e in J.read_events(directory):
+        if e['event']!='finished' or e['kind'] not in ('transition','terminal'):continue
+        result=pickle.loads((directory/e['result_blob']).read_bytes());ids=[]
+        if e['kind']=='transition':
+            if result.status!='EXECUTED' or result.next_state is None:incomplete=True;continue
+            ids=list(result.witness_ids)
+            parent=E.RepairEnv.restore((directory/e['parent_blob']).read_bytes())
+            lower+=float(np.linalg.norm(np.asarray(result.next_state.q_t)-np.asarray(parent.q_t)))
+        elif result.x_terminal==1 and result.witness_connector:ids=[result.witness_connector]
+        elif result.x_terminal!=1:incomplete=True
+        for wid in ids:
+            path=directory/'witnesses/witnesses'/wid[:2]/(wid+'.npz')
+            if not path.exists():missing.append(wid);continue
+            with np.load(path,allow_pickle=False) as f:
+                name='q' if 'q' in f.files else 'connector_q' if 'connector_q' in f.files else None
+                if name is None:missing.append(wid);continue
+                q=np.asarray(f[name],dtype=float)
+            length=float(np.linalg.norm(np.diff(q,axis=0),axis=1).sum()) if len(q)>1 else 0.
+            lengths.append(length);sources.append(dict(path=str(path),sha256=D.sha256_file(path),joint_waypoint_length_rad=length))
+    return dict(reference_joint_path_rad=None if missing else sum(lengths),observed_successful_step_joint_displacement_lower_bound_rad=lower,
+        definition='Sum L2 joint-waypoint arc lengths of accepted corrective plans and certified terminal connector; target Y excluded; not actual servo integration travel',
+        coverage='PARTIAL_EXECUTION_PREFIX' if incomplete else 'ACCEPTED_CORRECTIVE_PREFIX_AND_CONNECTOR',missing_witnesses=missing,sources=sources)
+
+
 def load_proposal(job):
     for name in ('policy','value'):
         if job.get(name):
@@ -105,7 +132,7 @@ def trial_worker(job,out,controller_pid):
     phases={k:sum((e.get('accounting') or {}).get(k,0) or 0 for e in ends) for k in ('transition_planner_calls','connector_calls','y_calls','y_cache_hits')}
     result.update(arm=job['arm'],family_id=job['family_id'],job_id=job['id'],adapter_calls=len(starts),physical_phases=phases,
         independent_verification=True,model_source={k:job.get(k) for k in ('policy','policy_sha256','value','value_sha256')},
-        robot_travel=None,robot_travel_status='NOT_AGGREGATED; saved physical state/witness evidence available')
+        robot_travel=None,robot_travel_status='Actual integration-step arc NOT_RECORDED; certified reference path reported separately',robot_travel_reference=reference_motion_cost(out))
     J.atomic_json(out/'result.json',plain(result));(out/'IN_FLIGHT').unlink()
 
 
@@ -187,7 +214,7 @@ def run(jobs_path,envelope_path,out):
                 certificate=certificates[key]
                 res=dict(job['prediction'],**{k:certificate[k] for k in ('verified','x','y','failed_phase','failure_kind')},
                     arm=job['arm'],family_id=job['family_id'],job_id=job['id'],physics_seed=job['physics_seed'],
-                    adapter_calls=0,physical_phases={},independent_verification=True,physical_verification_reuse_from=certificate['job_id'],verification_key=key)
+                    adapter_calls=0,physical_phases={},robot_travel_reference=certificate.get('robot_travel_reference'),independent_verification=True,physical_verification_reuse_from=certificate['job_id'],verification_key=key)
                 J.atomic_json(td/'result.json',res)
             elif job['protocol']=='open_loop' and job['prediction']['status']=='ABSTAIN':
                 res=dict(job['prediction'],verified=0,x=None,y=None,failed_phase='abstain',failure_kind='ABSTAIN',

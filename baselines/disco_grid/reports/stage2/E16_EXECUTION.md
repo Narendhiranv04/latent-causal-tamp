@@ -79,3 +79,32 @@ exits: full lightweight/analytical tests, completed-prefix certification, bounde
 P2 fits, prediction-only model/evaluation freezing, coverage analysis and native
 scene figures. It contains no VAL/TEST physical execution command. Newly added
 recovery/evaluation checks must pass before that workflow activates the new fits.
+
+Continuation 001 completed all 16 3D R0 attempts (3684.747851 child CPU seconds,
+3718.862073 child wall seconds), then its first 3D P1 child was stopped after
+5.053372 wall /0.046982 CPU seconds by RESOURCE_HEADROOM_LOST. No P1 model or
+trainer epoch existed. The historical watchdog omitted the exception text, so
+the exact past guard cause is unavailable; current load/RAM/disk pass all guards.
+Detailed guard-rejection logging is now implemented; no guard is bypassed.
+
+The serial post-training checks passed 61/61 in 38.86 seconds. Six completed 2D
+iteration prefixes were certified without modifying interrupted originals. The
+augmented 2D P2 completed all nine fits on 25 trees from 13 distinct TRAIN roots;
+all-feasible and successful-only Q weights match bit-for-bit for all three seeds.
+3D final fitting/preparation correctly stopped because its R1 supervision does
+not yet exist. Nothing was presented as a completed 3D cycle or held-out result.
+
+Continuation 002 uses the latest cumulative controller ledger, reuses all earlier
+root outcomes, and resumes 3D before any new evaluation. Certified 3D R0 prefixes
+are now available before any P1 epoch; include them prospectively in that first
+3D P1 fit, identically for O0/O1 and policy-edge controls. This differs from 2D,
+whose P1/R1 had completed before prefix recovery was implemented. The difference
+is recorded as data availability, not an observation-feature effect. Teacher,
+root registry, query caps, epochs, seeds and aggregate ceilings remain fixed.
+
+The final evaluation proposal will expand the original unexecuted VAL/TEST root
+lists to 15/25 roots per domain before opening outcomes, retaining the earlier
+roots and excluding known own TEST-exposed source components. Primary protocols,
+Q and P2 edge-filter controls use all three model seeds; secondary policy-evolution
+and clean-only data controls use seed 0 with explicitly matched paired analysis.
+The proposal requires separate authorization; it is not part of E16 approval.

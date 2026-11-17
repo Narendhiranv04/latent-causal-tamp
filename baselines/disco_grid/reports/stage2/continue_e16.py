@@ -27,7 +27,7 @@ def charged_totals(costs,overhead):
     return dict(costs,cpu_s=costs['cpu_s']+overhead['cpu_s'],wall_s=costs['wall_s']+overhead['wall_s'],shared_controller_charge=overhead)
 
 
-def run(engine,out,controller_commit):
+def run(engine,out,controller_commit,continuation_id="001",prior_ledger=None,include_r0_prefixes=None):
     began=time.monotonic()
     sys.path.insert(0,str(engine));CA=importlib.import_module('campaign');C=CA.C;D=CA.D;J=CA.J;P=CA.P
     if not (out/'CONTROLLER_COMPLETE.json').exists():raise RuntimeError('Original controller not reconciled/complete')
@@ -44,12 +44,14 @@ def run(engine,out,controller_commit):
         if not (p.parent/'WATCHDOG_ACCOUNTING.json').exists():raise ValueError('Unreconciled child attempt')
     for p in out.glob('training/*/attempts/*/START.json'):
         if not (p.parent/'WATCHDOG_ACCOUNTING.json').exists():raise ValueError('Unreconciled fit attempt')
-    ledger=out/'continuation_001';ledger.mkdir(exist_ok=False)
+    ledger=out/f'continuation_{continuation_id}';ledger.mkdir(exist_ok=False)
     J.atomic_json(ledger/'manifest.json',dict(controller_source_commit=controller_commit,controller_sha256=D.sha256_file(__file__),
         original_manifest_sha256=D.sha256_file(out/'manifest.json'),original_engine_commit=original['source_commit'],
-        original_controller_complete_sha256=D.sha256_file(out/'CONTROLLER_COMPLETE.json'),
+        original_controller_complete_sha256=D.sha256_file(out/'CONTROLLER_COMPLETE.json'),prior_ledger=str(prior_ledger) if prior_ledger else None,prior_ledger_sha256=D.sha256_file(prior_ledger) if prior_ledger else None,include_r0_prefixes=str(include_r0_prefixes) if include_r0_prefixes else None,
         reason='Replace fixed 55-second bookkeeping cutoff by measured conservative aggregate charging; no limit increase'))
-    prior=read(out/'CONTROLLER_COMPLETE.json')['controller_overhead'];phase=None
+    prior=read(prior_ledger or out/'CONTROLLER_COMPLETE.json')['controller_overhead'];phase=None
+    historical=[out/'CONTROLLER_COMPLETE.json']+list(out.glob('continuation_*/COMPLETE.json'))+list(out.glob('known_prefix_fit*/COMPLETE.json'))
+    if prior['cpu_s']+1e-6<max(read(p)['controller_overhead']['cpu_s'] for p in historical):raise ValueError('Prior controller ledger omits charged CPU')
     original_accounting=CA.accounting
     def raw_jobs():return sum(original_accounting(out,d)['wall_s'] for d in ('2d','3d'))+original_accounting(out,training=True)['wall_s']
     jobs_before=raw_jobs()
@@ -63,13 +65,18 @@ def run(engine,out,controller_commit):
         # It is reported separately and must not be summed as physical CPU cost.
         return charged_totals(costs,oh)
     def resources(root,e):
-        r=C.require_headroom()
+        try:r=C.require_headroom()
+        except RuntimeError as error:
+            J.atomic_json(ledger/'RESOURCE_REJECTION.json',dict(phase=phase,error=str(error),resources=C.resources()));raise
         if sum(p.stat().st_size for p in root.rglob('*') if p.is_file())>e['new_disk_ceiling_gib']*2**30:raise RuntimeError('CAMPAIGN_DISK_LIMIT')
-        if phase=='training' and charged(out,training=True)['cpu_s']+live_child_cpu()>=e['neural_training']['cpu_s_cap']-6:raise RuntimeError('AGGREGATE_FIT_CPU_LIMIT')
+        if phase=='training' and charged(out,training=True)['cpu_s']+live_child_cpu()>=e['neural_training']['cpu_s_cap']-6:
+            J.atomic_json(ledger/'RESOURCE_REJECTION.json',dict(phase=phase,error='AGGREGATE_FIT_CPU_LIMIT',charged=charged(out,training=True),live_child_cpu=live_child_cpu()));raise RuntimeError('AGGREGATE_FIT_CPU_LIMIT')
         J.atomic_json(ledger/'CONTROLLER_OVERHEAD.json',overhead());return r
     original_headroom=C.manifest_headroom
     def bounded_headroom(m):
-        r=original_headroom(m)
+        try:r=original_headroom(m)
+        except RuntimeError as error:
+            J.atomic_json(ledger/'RESOURCE_REJECTION.json',dict(phase='collection',error=str(error),resources=C.resources()));raise
         if charged(out,m['domain'])['cpu_s']+live_child_cpu()>=envelope['domains'][m['domain']]['aggregate_cpu_s']-6:raise RuntimeError('AGGREGATE_COLLECTION_CPU_LIMIT')
         return r
     C.manifest_headroom=bounded_headroom
@@ -104,6 +111,11 @@ def run(engine,out,controller_commit):
                         rows.append(status)
                         if status['clean']:clean.append(status['tree'])
                         J.atomic_json(ledger/f'coverage_{dom}_R{rnd}.json',rows)
+                    if dom=='3d' and rnd==0 and include_r0_prefixes:
+                        if list((out/'training/3d_P1Q1').glob('*/trainer.pt')):raise RuntimeError('R0 eligibility cannot change after any P1 epoch')
+                        recovered=read(include_r0_prefixes)['records']
+                        added=[r['destination'] for r in recovered if r['status']=='CERTIFIED_COMPLETED_ITERATION_PREFIX' and Path(r['destination']).parent.parent.name==dom and Path(r['destination']).parent.name=='R0']
+                        clean.extend(sorted(added));J.atomic_json(ledger/'3d_R0_FIT_SOURCES.json',dict(trees=clean,added_certified_prefixes=added,physical_queries=0,eligibility_changed_before_any_P1_epoch=True))
                     if not clean:raise RuntimeError('NO_COMPLETED_PHYSICAL_TREES')
                     streams.append(clean);fit=out/f'training/{dom}_P{rnd+1}Q{rnd+1}'
                     phase='training'
@@ -115,4 +127,4 @@ def run(engine,out,controller_commit):
                 print(dom,'BLOCKED',str(error),flush=True)
         J.atomic_json(ledger/'COMPLETE.json',dict(controller_overhead=overhead(),neural_charged_cost_upper_bound=charged(out,training=True)))
 if __name__=='__main__':
-    p=argparse.ArgumentParser();p.add_argument('--engine',type=Path,required=True);p.add_argument('--out',type=Path,required=True);p.add_argument('--controller-commit',required=True);a=p.parse_args();run(a.engine,a.out,a.controller_commit)
+    p=argparse.ArgumentParser();p.add_argument('--engine',type=Path,required=True);p.add_argument('--out',type=Path,required=True);p.add_argument('--controller-commit',required=True);p.add_argument('--continuation-id',default='001');p.add_argument('--prior-ledger',type=Path);p.add_argument('--include-r0-prefixes',type=Path);a=p.parse_args();run(a.engine,a.out,a.controller_commit,a.continuation_id,a.prior_ledger,a.include_r0_prefixes)

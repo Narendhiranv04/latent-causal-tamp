@@ -106,3 +106,34 @@ def test_deployment_cannot_silently_transfer_o0_checkpoint(tmp_path):
     path=tmp_path/'o0.pt';torch.save(dict(domain='2d',hidden=16,state_dict=net.state_dict(),scalers=SCALERS),path)
     job=dict(policy=str(path),policy_sha256=D.sha256_file(path),schema=P.O1,domain='2d',mode='distilled',use_value=False)
     with pytest.raises(ValueError,match='Deployment schema mismatch'):PE.load_proposal(job)
+
+
+def test_reference_motion_excludes_unexecuted_failed_plan(tmp_path):
+    import numpy as np
+    toy=ToyEnv();st=toy.reset('fixture');j=J.QueryJournal(tmp_path)
+    a=toy.transition(st,(1,5));a.witness_ids=['abc'];path=tmp_path/'witnesses/witnesses/ab/abc.npz';path.parent.mkdir(parents=True)
+    np.savez(path,q=np.array([[0.,0.,0.],[1.,0.,0.],[1.,2.,0.]]))
+    j.start(1,'transition',E.RepairEnv.clone_or_serialize(st),dict(parent_state_hash=st.state_hash()));j.finish(a)
+    j.start(2,'transition',E.RepairEnv.clone_or_serialize(a.next_state),dict(parent_state_hash=a.next_state.state_hash()))
+    j.finish(E.StepResult('PHYSICALLY_FAILED','GRASP_FAILED','GRASP_FAILED',(2,6),None,witness_ids=['unexecuted_full_plan']))
+    cost=PE.reference_motion_cost(tmp_path)
+    assert cost['reference_joint_path_rad']==3. and cost['coverage']=='PARTIAL_EXECUTION_PREFIX'
+    assert len(cost['sources'])==1 and not cost['missing_witnesses']
+
+
+def test_release_rule_selection_uses_val_only_and_fixed_missing_denominator():
+    sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'reports/stage2'))
+    import release_evaluation as RE
+    jobs=[];outcomes=[]
+    for dom in ('2d','3d'):
+        for eta in RE.ETAS:
+            for arm in ('O0_P2Q2','O0_closed_P2Q2','O1_closed_P2Q2'):
+                for k in ('0','1','NONE'):
+                    jid=f'{dom}_{eta}_{arm}_{k}'
+                    jobs.append(dict(id=jid,domain=dom,split='val',arm=arm,K_legacy=k,rule={'abstain_eta':eta}))
+                    status='NOOP' if k=='0' else 'ABSTAIN' if k=='NONE' and eta else 'REPAIR'
+                    outcomes.append(dict(job_id=jid,status=status,verified=int(k!='NONE')))
+    selected=RE.select_eta(jobs,outcomes)
+    assert selected['selected_eta']=={'2d':.08,'3d':.08}
+    with pytest.raises(ValueError,match='VAL'):RE.select_eta([dict(jobs[0],split='test')],[])
+    with pytest.raises(PermissionError):RE.validate({'status':'REQUESTED_NOT_AUTHORIZED'})

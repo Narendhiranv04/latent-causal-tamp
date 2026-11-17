@@ -27,11 +27,11 @@ def job_identity(job):
 
 def model_configs(campaign,dom):
     tr=campaign/'training';p1=tr/f'{dom}_P1Q1';clean=tr/f'{dom}_P2Q2';known=tr/f'{dom}_P2Q2_knownprefix'
-    p2=known if (campaign/f'known_prefix_fit/{dom}_COMPLETE.json').exists() else clean
+    p2=known if any(campaign.glob(f'known_prefix_fit*/{dom}_COMPLETE.json')) else clean
     if not (p1/'COMPLETE.json').exists() or not (p2/'COMPLETE.json').exists():raise ValueError('Missing completed full iterative cycle')
     return dict(O0_P0=(None,P.O0,False,'p0'),O0_P1=(p1,P.O0,False,'distilled'),O0_P1Q1=(p1,P.O0,True,'distilled'),
         O0_P2=(p2,P.O0,False,'distilled'),O0_P2Q2=(p2,P.O0,True,'distilled'),O0_P2_success_onlyQ2=(p2,P.O0,True,'distilled'),
-        O0_P2_clean_onlyQ2=(clean,P.O0,True,'distilled'),O0_closed_P2Q2=(p2,P.O0,True,'distilled'),O1_closed_P2Q2=(p2,P.O1,True,'distilled'))
+        O0_P1_success_onlyQ1=(p1,P.O0,True,'distilled'),O0_P2_clean_onlyQ2=(clean,P.O0,True,'distilled'),O0_closed_P2Q2=(p2,P.O0,True,'distilled'),O1_closed_P2Q2=(p2,P.O1,True,'distilled'))
 
 
 def make(campaign,cohorts_path,out):
@@ -83,13 +83,14 @@ def make(campaign,cohorts_path,out):
             for dom in ('2d','3d'):
                 roots=cohorts['domains'][dom]['validation_roots' if split=='val' else 'exploratory_test_roots'];roots_manifest[dom]=roots
                 # Primary protocols precede diagnostics and secondary ablations.
-                arms=['O0_P2Q2','O0_closed_P2Q2','O1_closed_P2Q2','O0_P0','O0_P1','O0_P1Q1','O0_P2','O0_P2_success_onlyQ2','O0_P2_clean_onlyQ2']
+                arms=['O0_P2Q2','O0_closed_P2Q2','O1_closed_P2Q2','O0_P2','O0_P2_success_onlyQ2','O0_P0','O0_P1','O0_P1Q1','O0_P1_success_onlyQ1','O0_P2_clean_onlyQ2']
                 for arm in arms:
                     if split=='val' and eta!=0. and arm not in ('O0_P2Q2','O0_closed_P2Q2','O1_closed_P2Q2'):continue
                     for r in root_order(roots):
                         row=rows[dom][r['root_id']]
                         if row['split']!=split or C.input_hash(row)!=r['input_sha256']:raise ValueError('Frozen root/cohort mismatch')
-                        for seed in network_seeds:
+                        arm_seeds=network_seeds if split=='val' or arm in ('O0_P2Q2','O0_closed_P2Q2','O1_closed_P2Q2','O0_P2','O0_P2_success_onlyQ2') else (0,)
+                        for seed in arm_seeds:
                             e=models[(dom,arm,seed)];rule=dict(RULE,abstain_eta=eta);protocol='closed_loop' if 'closed' in arm else 'open_loop'
                             job=dict(e,root_id=r['root_id'],root_sha256=r['root_sha256'],input_sha256=r['input_sha256'],family_id=r['family_id'],
                                 K_legacy=r['K_legacy'],split=split,physics_seed=0,protocol=protocol,B=16 if dom=='2d' else 12,rule=rule,

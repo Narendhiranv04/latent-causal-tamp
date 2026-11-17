@@ -4,7 +4,7 @@ Frozen before VAL/TEST. Same P1 initialization, engine, epochs, seeds, Q targets
 and O0/O1 supervision as E16. Retain original clean-only P2 as an ablation. All
 prior/new fits and controller costs count toward the original 1800-second cap.
 """
-import argparse, fcntl, importlib, json, os, pickle, sys, time
+import argparse, fcntl, hashlib, importlib, json, os, pickle, sys, time
 from pathlib import Path
 from continue_e16 import live_child_cpu, charged_totals
 
@@ -12,13 +12,13 @@ from continue_e16 import live_child_cpu, charged_totals
 def read(p):return json.loads(p.read_text())
 
 
-def run(engine,campaign,recovered,controller_commit):
+def run(engine,campaign,recovered,controller_commit,revision="001",prior_ledger=None):
     began=time.monotonic();sys.path.insert(0,str(engine));CA=importlib.import_module('campaign');C=CA.C;D=CA.D;J=CA.J;P=CA.P
-    if not (campaign/'continuation_001/COMPLETE.json').exists():raise RuntimeError('Collection still active')
+    if not (prior_ledger or campaign/'continuation_001/COMPLETE.json').exists():raise RuntimeError('Collection still active')
     approved=read(campaign/'manifest.json')['envelope'];CA.validate_authorization(approved,engine/'reports/stage2/cohorts.json')
-    prior=read(campaign/'continuation_001/COMPLETE.json')['controller_overhead'];original_accounting=CA.accounting
+    prior=read(prior_ledger or campaign/'continuation_001/COMPLETE.json')['controller_overhead'];original_accounting=CA.accounting
     if not recovered.resolve().is_relative_to(campaign.resolve()):raise ValueError('Recovery outside approved disk budget')
-    records=read(recovered/'manifest.json')['records'];out=campaign/'known_prefix_fit';out.mkdir(exist_ok=False)
+    records=read(recovered/'manifest.json')['records'];out=campaign/('known_prefix_fit' if revision=='001' else f'known_prefix_fit_{revision}');out.mkdir(exist_ok=False)
     baseline_wall=original_accounting(campaign,training=True)['wall_s']
     J.atomic_json(out/'manifest.json',dict(controller_commit=controller_commit,script_sha256=D.sha256_file(__file__),
         recovery_manifest_sha256=D.sha256_file(recovered/'manifest.json'),protocol='P2 known-iteration-prefix augmentation frozen before VAL/TEST',
@@ -63,6 +63,14 @@ def run(engine,campaign,recovered,controller_commit):
                     J.atomic_json(out/f'{dom}_NO_AUGMENTATION.json',dict(reason='No recoverable completed iteration prefixes; original P2 retained'));continue
                 fit=campaign/f'training/{dom}_P2Q2_knownprefix';previous=campaign/f'training/{dom}_P1Q1'
                 if not (previous/'COMPLETE.json').exists():raise RuntimeError('Missing fully completed P1; cannot claim full cycle')
+                if (fit/'COMPLETE.json').exists():
+                    scalers=read(D.ABF_ROOT/f'data/q2_{dom}/scalers.json')
+                    for schema,mode in [(P.O0,'all_feasible'),(P.O1,'all_feasible'),(P.O0,'successful_only')]:
+                        parts=[CA.DS.extract_dataset_from_tree_dirs([Path(t) for t in stream],dom,scalers,tree_round=i+1,observation_schema=schema,edges_mode=mode) for i,stream in enumerate(streams)]
+                        dataset=CA.DS.merge_extracted_datasets(parts)
+                        digest=hashlib.sha256(pickle.dumps(dataset,protocol=4)).hexdigest()
+                        for seed in (0,1,2):
+                            if read(fit/f'{schema}_{mode}_s{seed}/resolved_config.json')['dataset_sha256']!=digest:raise ValueError('Completed fit differs from current certified data')
                 CA.dispatch_fit(dom,fit,streams,previous,approved,campaign)
                 import torch
                 for seed in (0,1,2):
@@ -74,4 +82,4 @@ def run(engine,campaign,recovered,controller_commit):
                 J.atomic_json(out/f'{dom}_BLOCKED.json',dict(error=type(error).__name__,reason=str(error),charged_neural_cost_upper_bound=charged(campaign,training=True)))
         J.atomic_json(out/'COMPLETE.json',dict(controller_overhead=overhead(),charged_neural_cost_upper_bound=charged(campaign,training=True)))
 if __name__=='__main__':
-    p=argparse.ArgumentParser();p.add_argument('--engine',type=Path,required=True);p.add_argument('--campaign',type=Path,required=True);p.add_argument('--recovered',type=Path,required=True);p.add_argument('--controller-commit',required=True);a=p.parse_args();run(a.engine,a.campaign,a.recovered,a.controller_commit)
+    p=argparse.ArgumentParser();p.add_argument('--engine',type=Path,required=True);p.add_argument('--campaign',type=Path,required=True);p.add_argument('--recovered',type=Path,required=True);p.add_argument('--controller-commit',required=True);p.add_argument('--revision',default='001');p.add_argument('--prior-ledger',type=Path);a=p.parse_args();run(a.engine,a.campaign,a.recovered,a.controller_commit,a.revision,a.prior_ledger)

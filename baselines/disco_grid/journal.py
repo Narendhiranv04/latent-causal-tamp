@@ -128,7 +128,7 @@ def wait_for_child(proc, seconds, grace_s=5., directory=None, query_wall_s=None,
     start=time.monotonic(); identity=process_identity(proc.pid)
     before=resource.getrusage(resource.RUSAGE_CHILDREN)
     reason=None; peak=0; observed_cpu=None; last_check=start; owned_group=None
-    monitor_error=None
+    monitor_error=None;resource_failure=None
     try:
         while proc.is_alive():
             current_identity=process_identity(proc.pid)
@@ -151,7 +151,7 @@ def wait_for_child(proc, seconds, grace_s=5., directory=None, query_wall_s=None,
             except (FileNotFoundError,ProcessLookupError): pass
             if resource_check and time.monotonic()-last_check>=5:
                 try: resource_check()
-                except RuntimeError: reason='RESOURCE_HEADROOM_LOST'
+                except RuntimeError as error: reason='RESOURCE_HEADROOM_LOST';resource_failure=str(error)
                 last_check=time.monotonic()
             if reason: break
             proc.join(timeout=min(.1,max(0.,seconds-elapsed)))
@@ -185,7 +185,7 @@ def wait_for_child(proc, seconds, grace_s=5., directory=None, query_wall_s=None,
     after=resource.getrusage(resource.RUSAGE_CHILDREN)
     if directory:
         atomic_json(Path(directory)/'WATCHDOG_ACCOUNTING.json',{
-            'reason':reason,'child_identity':identity,'owned_process_group':owned_group,
+            'reason':reason,'resource_failure':resource_failure,'child_identity':identity,'owned_process_group':owned_group,
             'wall_time_start':time.time()-(time.monotonic()-start),'wall_time_end':time.time(),
             'wall_s':time.monotonic()-start,
             'limit_s':seconds,'grace_s':grace_s,'query_wall_s':query_wall_s,
