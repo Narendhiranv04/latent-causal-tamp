@@ -8,6 +8,7 @@ import datetime
 import hashlib
 import json
 import os
+import re
 from pathlib import Path
 import shutil
 import subprocess
@@ -29,7 +30,7 @@ def command(args, cwd=None):
 
 
 def sync(worktree, wait=False, remote=REMOTE, version="v1"):
-    if version not in ("v1","v2","v3","v4"):raise ValueError("Version must be v1, v2, v3 or v4")
+    if not re.fullmatch(r"v[1-9][0-9]*",version):raise ValueError("Version must be v followed by a positive integer")
     worktree=worktree.resolve()
     reports=worktree/'baselines/disco_grid/reports/stage2'
     if command(['git','branch','--show-current'],worktree).strip()!=BRANCH:
@@ -97,6 +98,6 @@ if __name__=='__main__':
     parser.add_argument('worktree',type=Path)
     parser.add_argument('--wait',action='store_true')
     parser.add_argument('--remote',default=REMOTE)
-    parser.add_argument('--version',default='v1',choices=('v1','v2','v3','v4'))
+    parser.add_argument('--version',default='v1')
     args=parser.parse_args()
     print(json.dumps(sync(args.worktree,args.wait,args.remote,args.version),indent=2),flush=True)

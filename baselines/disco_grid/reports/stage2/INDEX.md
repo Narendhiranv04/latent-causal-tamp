@@ -135,3 +135,9 @@ The v3 partial package is archived and pushed at `24fca20b4f`: TEST attempts 412
 - [Root STOP diagnostics](ROOT_STOP_DIAGNOSTICS.json), [failure examples](FAILURE_EXAMPLES.json), and [physical resource totals](PHYSICAL_RESOURCE_TOTALS.json).
 
 Earlier pending-run statements in this index describe preparation history; the measured report and status JSON are current.
+
+## Current continuation, 18 November 03:50 IST
+
+The v4 partial report was pushed as `70977c09c0`; TEST attempts remain 412/525 (2D), 237/525 (3D) at this handoff. The previous 3D phase stopped at load 22.006; no worker remained active. With load recovered to 16.89 and 19.85 GiB available RAM, unattempted identities resumed as `V15_F25_v1_reserved_stable3_20261118_r2`, reusing immutable physical engine `0537d1bd12`, three workers and the same two-core exclusion. 3D has 11686.682902 CPU seconds remaining before startup/supervisor reserves. 2D has insufficient CPU reserve for further physical dispatch. Prior cancelled/unknown attempts are not retried, and VAL selection is unchanged.
+
+[Physical launch](RESERVED_STABLE3_20261118_R2_EVALUATION_LAUNCH.json), [report observer](RESERVED_STABLE3_20261118_R2_FINISH_LAUNCH.json). Canonical numeric tables remain the v4 partial snapshot until v5 publication. No additional training campaign or budget increase is implied.
