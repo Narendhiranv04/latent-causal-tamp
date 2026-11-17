@@ -37,3 +37,26 @@ incorrectly flattened deployment; the complete-repository deployment then passed
 all 17 Stage 2 tests, including the archive registry and aggregate-budget tests.
 The original 30 non-Stage-2 tests passed in the first invocation. Logs retain the
 failed packaging attempt; no archive hash mismatch was observed.
+
+Original controller completed both 2D root rounds: 544 charged intents, 531
+returned results, 19 clean root-rounds and 13 quarantined root-rounds. Collection
+CPU/wall was 3051.344694/3293.410004 s. P1 completed nine fits; P2 had four complete
+fits and saved partial trainer state before the bookkeeping guard fired. Neural
+child CPU/wall was 152.782903/230.399701 s. Controller CPU was 55.070156 s;
+non-child wall gaps were 8.329336 s. The artificial fixed 55-second controller
+cutoff prevented 3D from starting despite substantial approved budget remaining.
+
+`continue_e16.py` is an explicit, separately versioned continuation. It requires
+the original controller's completed accounting, verifies the untouched original
+engine, and charges all prior/new child and controller costs conservatively to
+each relevant envelope. It keeps every original host/load/resource guard and all
+approved ceilings. Live aggregate CPU guards supplement child CPU limits. The
+original engine executes all physical trees and resumes trainer state with its
+unchanged source/data hashes. Completed and quarantined root-rounds are skipped;
+unknown child accounting or ambiguous directories stop continuation. Original
+manifests, interrupted artifacts and engine bytes are preserved.
+
+Evaluation infrastructure has passed 19 tests (17 Stage 2 plus two journal/
+authorization tests); the additional continuation-accounting check and both
+evaluation checks passed 3/3 separately. These tests use analytical fixtures,
+not held-out physical task trials. No evaluation is authorized by E16.
