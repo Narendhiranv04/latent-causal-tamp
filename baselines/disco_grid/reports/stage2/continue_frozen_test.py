@@ -91,7 +91,8 @@ def run(prior,out):
             cpu_s=max(0.,cap-charge['cpu_s']-allowance),active_wall_s=max(0.,wall_cap-charge['active_wall_s']-30),
             adapter_calls=5523-calls,disk_gib=8.)
         if extension:
-            sub.update(disk_gib=2.,cumulative_disk_root=extension['cumulative_disk_root'])
+            # Reserve 0.5 GiB of the 2 GiB approval for deployment and metadata outside this runtime directory.
+            sub.update(disk_gib=1.5,cumulative_disk_root=extension['cumulative_disk_root'])
             if domain=='2d':sub['adapter_calls']=min(sub['adapter_calls'],max(0,extension['initial_adapter_calls']+370-charge['adapter_calls']))
         ep=out/f'{key}_envelope.json';J.atomic_json(ep,sub)
         fragment=out/f'{key}_pool_fragment';phase_cpu=time.process_time();POOL.run(path,ep,fragment)
