@@ -120,7 +120,7 @@ def tree_manifest(m, root, rnd, policy, value):
 
 
 def _slot_worker(out, dom, rnd, roots, slot):
-    os.environ["DISCO_WORKER_SLOT"] = f"{socket.gethostname()}_{slot}"
+    os.environ["DISCO_WORKER_SLOT"] = f"{socket.gethostname()}_{dom}_{slot}"      # unique per host x domain x slot
     m = jr(Path(out) / f"cohort_{dom}.json")
     pol, val = proposal_for(out, dom, rnd)
     for root in roots:
@@ -142,6 +142,10 @@ def _slot_worker(out, dom, rnd, roots, slot):
         try:
             C.execute(td)
             err = None
+        except BlockingIOError:                                           # slot lock busy before any physical call: release claim
+            if not list(td.rglob("queries.jsonl")):
+                shutil.rmtree(td); time.sleep(30); continue
+            raise
         except Exception as e:  # noqa: BLE001
             err = f"{type(e).__name__}: {e}"
         sd = td / root["root_id"]
