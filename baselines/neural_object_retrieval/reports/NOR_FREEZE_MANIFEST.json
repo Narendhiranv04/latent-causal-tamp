@@ -1,0 +1,183 @@
+{
+ "method": "NOR-Grid (adapted Ren & Qureshi ICRA 2024, arXiv:2402.06976)",
+ "commit": "d19de53c918eca3ab7b15aea794120e92f75e47c",
+ "branch": "naren/baseline-sorc-grid",
+ "primary": "models/<dom>/full_s0, policy variant 'full', rule NOR_RULE_V1 (tau 0.5)",
+ "code_sha256": {
+  "graph.py": "3cfef774bdf9102e57873a66bc4febb69ac465ea473d3bffa1e005ff0c581781",
+  "networks.py": "4d72e6e97f137a5e1befc60f6a12c858c1baf1127d757089efe420b1bccddd84",
+  "policy.py": "90bfceeab41273b10b7f2d9be9d27220b744608c3f60e0314950d0ffac23d2c5",
+  "homotopy.py": "34b8ddcba2c094d74c683c5270b1eca3334a20dc1b35b8b6351dfe2bb8a6a7fb",
+  "samples.py": "a73524ef8ce75f5956e13495e1ba0eb4fbb72e0a8e7ae2e46568f2aeffb351ac",
+  "train.py": "7296512672d509a9a7edd3c5a1c3a3795f1b519846f2d35a5630825ad9690ded",
+  "nor_data.py": "a2440ad1be672a49cb0bca528ec0de9b310a6ddfc2318052914d0a6fd2cdef65"
+ },
+ "models": {
+  "2d/full_s0": {
+   "os.pt": "756c6562c9ba9c696795997c29b98569215fbfcd11470dab3c503817b72ddab8",
+   "rp.pt": "4bb56aa245d6b651209845465c854218fdf20e329d38919ffdb92decdeef0ef4",
+   "st.pt": "1ace160fcabf6774d90131f0cfa1206238c5d63db45b16eced67b281879b27b4",
+   "calibration": {
+    "T": 1.024681734684657,
+    "nll_T1": 0.1688460111618042,
+    "nll_T": 0.16883927583694458,
+    "ece_T": 0.061163518161052054,
+    "n_val_endpoints": 1457,
+    "val_pos_rate": 0.41249141097068787,
+    "source": "decided VALIDATION endpoint Y labels of the frozen snapshot (not NOR-Grid outcomes)"
+   }
+  },
+  "2d/full_s1": {
+   "os.pt": "121c928c24daa37b8b458c5d166aeae7698e3646f86cb12e03f2e4ea9be40d68",
+   "rp.pt": "7b320e33713fd58a9ccaebb29132e432b6632a9978348b68e44e1bfbc6aa7d35",
+   "st.pt": "5220badbaea3c123f2429c502b79dc593754e6d01f59ad56487ae9ba2416968b",
+   "calibration": {
+    "T": 1.0069906244565308,
+    "nll_T1": 0.15985797345638275,
+    "nll_T": 0.15985797345638275,
+    "ece_T": 0.040760918710874255,
+    "n_val_endpoints": 1457,
+    "val_pos_rate": 0.41249141097068787,
+    "source": "decided VALIDATION endpoint Y labels of the frozen snapshot (not NOR-Grid outcomes)"
+   }
+  },
+  "2d/full_s2": {
+   "os.pt": "d22eea734b6e18039e357bfd30d1fa42a60767d6a7134dd11baa939f49c11296",
+   "rp.pt": "ee11e43efc2b75c350c81b2d39fa5430328855a271c1b39d32d9ef033d1a2f53",
+   "st.pt": "8bc2fc3e4c1ca2d2720b661beac1382a45d96cabd270f6a77f430c675800cfa1",
+   "calibration": {
+    "T": 1.0986092864209602,
+    "nll_T1": 0.1575346440076828,
+    "nll_T": 0.15693481266498566,
+    "ece_T": 0.028356320557089275,
+    "n_val_endpoints": 1457,
+    "val_pos_rate": 0.41249141097068787,
+    "source": "decided VALIDATION endpoint Y labels of the frozen snapshot (not NOR-Grid outcomes)"
+   }
+  },
+  "2d/nogoal_s0": {
+   "os.pt": "d6049ec43a345b791c2bdca523f3ce90ce705dbf5fdc8af004b520abfef972be",
+   "rp.pt": "f79b3aa07edbdd546e6e351c987822323b4b3244422f60e29763301770dc9a0e",
+   "st.pt": "2605a70bbd4da9be8e49c45ff855d032e3a27114cde2374ae757b3b8a7de8cb0",
+   "calibration": {
+    "T": 1.5295055338113976,
+    "nll_T1": 0.25808772444725037,
+    "nll_T": 0.24031107127666473,
+    "ece_T": 0.07086876174594821,
+    "n_val_endpoints": 1457,
+    "val_pos_rate": 0.41249141097068787,
+    "source": "decided VALIDATION endpoint Y labels of the frozen snapshot (not NOR-Grid outcomes)"
+   }
+  },
+  "3d/full_s0": {
+   "os.pt": "4b387160a689f2fddfc72eaf300ac3c540d0e8998269c29ae31dacb02698c931",
+   "rp.pt": "e790b1f1c252fa82ea7cd24d9ff29917d3f9e0d3e5fb7d3a0a54c4ebe04e4b6f",
+   "st.pt": "2af59f6cbbf200b49c1067a68290795c4af315367dd775699d1274b2d29ffec8",
+   "calibration": {
+    "T": 1.0986092864209602,
+    "nll_T1": 0.2347790151834488,
+    "nll_T": 0.23371544480323792,
+    "ece_T": 0.02665209971100449,
+    "n_val_endpoints": 751,
+    "val_pos_rate": 0.4047936201095581,
+    "source": "decided VALIDATION endpoint Y labels of the frozen snapshot (not NOR-Grid outcomes)"
+   }
+  },
+  "3d/full_s1": {
+   "os.pt": "c104cd535386ad87a7b5136dc31c24909faa6458d757781a35f53ca0cc29e312",
+   "rp.pt": "9920f22924c5c28590d6fcfebdf6350e0d320c2963e01f5c1748f0471f2cf9b9",
+   "st.pt": "dbefdd8abd5a03b587d1b5a56322f24a1de58bfe244c8f304795ccf47486d9eb",
+   "calibration": {
+    "T": 1.2850362391203194,
+    "nll_T1": 0.22195303440093994,
+    "nll_T": 0.21574366092681885,
+    "ece_T": 0.030093650327382804,
+    "n_val_endpoints": 751,
+    "val_pos_rate": 0.4047936201095581,
+    "source": "decided VALIDATION endpoint Y labels of the frozen snapshot (not NOR-Grid outcomes)"
+   }
+  },
+  "3d/full_s2": {
+   "os.pt": "f14238cabfc9e937a0758e765b756c4396230eae6a07f65ae5e3fcfff99347bc",
+   "rp.pt": "60f371ca3343852bfe3fd680e278fc41b0fd60aadcc0ef73de21faaefa03fb86",
+   "st.pt": "138c7d3c4cf37a811b9571809cede85ad6fab6fdff14c6352520c1532fc9d216",
+   "calibration": {
+    "T": 1.1985636558053896,
+    "nll_T1": 0.22378145158290863,
+    "nll_T": 0.22061863541603088,
+    "ece_T": 0.0337046808780192,
+    "n_val_endpoints": 751,
+    "val_pos_rate": 0.4047936201095581,
+    "source": "decided VALIDATION endpoint Y labels of the frozen snapshot (not NOR-Grid outcomes)"
+   }
+  },
+  "3d/nogoal_s0": {
+   "os.pt": "491de84002860348bacad406446368df2f43254c1e8ea3ce40a6ed6e68d3bb67",
+   "rp.pt": "6ed5e252286d4ed5c17ecaace7a4b3e6e0ca66700f1cbfc2e86acd0c5d988463",
+   "st.pt": "5a1b82866b6b8421cc31db4d4d52acdb874c3a416920b3367014e3245920a797",
+   "calibration": {
+    "T": 0.9896049509025536,
+    "nll_T1": 0.26488634943962097,
+    "nll_T": 0.26484209299087524,
+    "ece_T": 0.02610812598117658,
+    "n_val_endpoints": 751,
+    "val_pos_rate": 0.4047936201095581,
+    "source": "decided VALIDATION endpoint Y labels of the frozen snapshot (not NOR-Grid outcomes)"
+   }
+  }
+ },
+ "labels": {
+  "2d": {
+   "file": "/home/naren/sorc_grid/labels/homotopy_2d_train.jsonl",
+   "sha256": "5dc454f6b7859f40f014350d2ba55b7fbcf2fd55392b37ea3b4d4cfa36ee957e"
+  },
+  "3d": {
+   "file": "/home/naren/sorc_grid/labels/homotopy_3d_train.jsonl",
+   "sha256": "e5433eaf545de348829b3134585843edbdd7ec9ea6893d6e3c75a1efa20046d6"
+  }
+ },
+ "tensors": {
+  "2d/full": "ffbfcfb6af7550bed83a828fe15db3f0dd459c9c8ad53d8647f0ad2171cbedda",
+  "2d/nogoal": "2a496eab92fd13d50bd23182d46f8a7caaae7549a156bd7d540feccbc4001344",
+  "3d/full": "39ba3d1a9a3aab12f80dd369902e2006f79592c8a2f673efb3a9d7b1d03a8263",
+  "3d/nogoal": "44186608513df2e10aad486b30d10cff6fcf2153d4a4ad611b59cc085a381a81"
+ },
+ "seals": {
+  "2d_full_s0_both_analytic.jsonl.SEAL.json": "f2f2c19c5d9902c38fcb021a1335d39d5a6509d22894b1a164ed1ab81620b706",
+  "2d_full_s0_both_analytic__valsub.jsonl.SEAL.json": "6849a630ae9c49854855ce797924c1b1ecc6e1e99ff6e860fafdd9f7540b6785",
+  "2d_full_s0_full.jsonl.SEAL.json": "77b191519746a1f201da06375369b4f899f4b2ff17cdbbfd4cb92cb7070d7f27",
+  "2d_full_s0_no_stop.jsonl.SEAL.json": "3488a707d40486afbf44780a6c173e02494f63cf280a32426978d10f3be7fa08",
+  "2d_full_s0_no_stop__valsub.jsonl.SEAL.json": "68be1d8e004e4689b5fbaf6f60a63508539214016a2d0b7eed4d7810539bf211",
+  "2d_full_s0_osnet_only.jsonl.SEAL.json": "fa2407c362cf5ce7d1ec4f48a6544b6cea24a32d3d9db40591285444e4379a7b",
+  "2d_full_s0_osnet_only__valsub.jsonl.SEAL.json": "b29d5e77a63e5de0a16d9cdcf2f9eac72ad4fe29b34214d10732ace00f0473fb",
+  "2d_full_s0_rpnet_only.jsonl.SEAL.json": "3d0ca1e4d68e4f4e89e7c338509d301a9391156f93da9a66741a78f56d9cbb77",
+  "2d_full_s0_rpnet_only__valsub.jsonl.SEAL.json": "bc60d42011dbeafe6375fcaa02715331534c02f8caa14c6d62b28941afbeffd4",
+  "2d_full_s1_full.jsonl.SEAL.json": "8565e2da14aeec54927dfe7b551c34add475b29add88eac5a7cea348a76d5d4f",
+  "2d_full_s2_full.jsonl.SEAL.json": "62516166a3351daf566348820d413c78c16da96947cc30e139d36160616c1378",
+  "2d_nogoal_s0_full.jsonl.SEAL.json": "9dabfd894d42dd378173167de62bb230a61d43ce8c50b83045a2aaf5f7d3838f",
+  "2d_nogoal_s0_full__valsub.jsonl.SEAL.json": "1817a6f516a940c223d4e3742d38a032f46bf1d7288885348dc37e9242ca04cc",
+  "3d_full_s0_both_analytic.jsonl.SEAL.json": "c4fa2179df248c1f8177bcf5a948c19ace066b3a4d2059f8dcf367350457542b",
+  "3d_full_s0_both_analytic__valsub.jsonl.SEAL.json": "187feee634a9cfd683848e504f1caa4309c9ecce06e43651654efda817915ac3",
+  "3d_full_s0_full.jsonl.SEAL.json": "7b657a265478ace3e5d9e08b94c155ec3d40a33108f535d74a2840d09ffb490b",
+  "3d_full_s0_no_stop.jsonl.SEAL.json": "835f66bd5eaac0c74a4d9310b27d55fe41d548406cf8f63880fc4d5a18bab6a3",
+  "3d_full_s0_no_stop__valsub.jsonl.SEAL.json": "6693ed023f5e93522546a62248804bc2888ad5447090a35598cfed45f8343a00",
+  "3d_full_s0_osnet_only.jsonl.SEAL.json": "acd58f28c1e7b42709ea51c437ed47fda10018eb38a1d3f7061ecd0d2885c5b6",
+  "3d_full_s0_osnet_only__valsub.jsonl.SEAL.json": "8371ead7de0209aff553de682bfe08c3a6a64977c0a45a1840ab46ae963e92a9",
+  "3d_full_s0_rpnet_only.jsonl.SEAL.json": "2be6eb5b8faa86e5441d93fb5d9c84cbbd49f7b094f2ef86c679e266e30acb15",
+  "3d_full_s0_rpnet_only__valsub.jsonl.SEAL.json": "9df701b7a158c7232973380d8988e6a6dae4de57ca425023145864fcaeb0484d",
+  "3d_full_s1_full.jsonl.SEAL.json": "d95ed574e2489dc7e509d985c82b282ae4154f8eaa03c409adb4dae00d813bba",
+  "3d_full_s2_full.jsonl.SEAL.json": "bbdac68601a4ecb72f4dbf94aeaa314288168238612c4c449bb7adff27c4a5c4",
+  "3d_nogoal_s0_full.jsonl.SEAL.json": "0971dc9557456adc8ccda21cc6413fd2a124fb2e4106614af7e20591f7ed4ea6",
+  "3d_nogoal_s0_full__valsub.jsonl.SEAL.json": "e5ce4be450f3ad77852144eef3a4b780fce25f031385a8b7590de47c06116bfb"
+ },
+ "valsub_registration": "2b2766057d1024cc0daca5509d52f930132fb7e9723bc211a75a2d7023540c07",
+ "held_out_protocol": [
+  "python3 approach_b_final/benchmark.py public PUBLIC.jsonl --index PRIVATE_INDEX.jsonl      # learner-visible rows only",
+  "python3 baselines/neural_object_retrieval/policy.py predict PUBLIC.jsonl ~/sorc_grid/models/<dom>/full_s0 PRED.jsonl full cuda",
+  "python3 approach_b_final/benchmark.py validate --public PUBLIC.jsonl --predictions PRED.jsonl",
+  "python3 approach_b_final/benchmark.py seal PRED.jsonl --public PUBLIC.jsonl                 # BEFORE any teacher call",
+  "python3 approach_b_final/benchmark.py queries/teach/evaluate/summarize ...                  # unchanged X/Y teachers",
+  "No retraining, recalibration, threshold or variant change after seeing held-out outcomes."
+ ],
+ "not_accessed": "V3.4 1,120-root cohort expansion and historical TEST outcomes were never read"
+}
