@@ -79,8 +79,8 @@ def policy(dom, pub, pred, rid, out):
     r = next(json.loads(l) for l in open(pub) if json.loads(l)["root_id"] == rid)
     p = next(json.loads(l) for l in open(pred) if json.loads(l)["root_id"] == rid)
     inp = r["inputs"]
-    fig, ax = plt.subplots(figsize=(5, 5))
-    xy, pitch = base(ax, inp, dom, title=f"{rid}: {p['decision']}  stop p={p['stop_probs']}")
+    fig, ax = plt.subplots(figsize=(5.6, 6.0))
+    xy, pitch = base(ax, inp, dom, title=f"{rid}: {p['decision']}\nSTOP p per prefix k=0..3: {[round(x, 3) for x in p['stop_probs']]}")
     cells = [int(c) for c in inp["cells0"]]
     for k, (o, d) in enumerate(p["rollout"]):
         a, b = xy[cells[o]], xy[d]
@@ -89,9 +89,9 @@ def policy(dom, pub, pred, rid, out):
         ax.add_patch(plt.Circle(b, pitch * 0.3, fill=False, ec=INK if used else MUTED, ls="--", zorder=7))
         ax.text(*(b + [0, -pitch * 0.45]), str(k + 1), ha="center", fontsize=7, color=INK)
         cells[o] = d
-    fig.text(0.5, 0.01, "hypothetical placements (dashed), not executed motion; solid = selected prefix, dotted = rollout beyond STOP",
+    fig.text(0.5, 0.01, "hypothetical placements (dashed), not executed motion\nsolid = selected prefix, dotted = rollout beyond STOP",
              ha="center", fontsize=6.5, color=MUTED)
-    fig.tight_layout(rect=(0, 0.03, 1, 1)); fig.savefig(out, dpi=150); plt.close(fig)
+    fig.tight_layout(rect=(0, 0.05, 1, 0.97)); fig.savefig(out, dpi=150); plt.close(fig)
 
 
 if __name__ == "__main__":
