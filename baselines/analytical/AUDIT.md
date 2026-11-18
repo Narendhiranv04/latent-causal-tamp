@@ -59,3 +59,44 @@ Not reproduced in either domain (see ADAPTATIONS.md): continuous object poses, p
 subset, multi-object goal sequencing, non-monotone moves. In 2D the obstacle-ignorant arm sweeps cover most of the 8 x 8 board
 (43-63 of 64 cells on the TRAIN roots inspected), so planned-path blockers are a weak screen there; this is a property of the 3R arm, not
 a defect, and is why `t_paths` (planned / linear / both) is a grid hyperparameter.
+
+## 6. Smoke runs (TRAIN only; sealed, then independently verified)
+
+6 TRAIN roots per domain (2 x K1, 2 x K2, 2 x K3; `index.py`, salt `ANALYTICAL_SMOKE_V1`), config `paper`, seed 0, 120 CPU-s budget
+(60 s read by `run.py cut`), commit `c2e4196355` (manifests: clean tree; DISCO `e33dfe35a5`, NOR `58d2e4c84a`), laptop, <= 2 runs at a
+time, nice 10, OMP 1. Predictions sealed (`*.SEAL.json`) before any teacher call, then `eval.sh` -> `benchmark.py` queries / teach
+(unchanged finalized teachers, env2d / env3d, 1 worker) / evaluate / summarize. Outputs: `~/analytical_baselines/smoke/final/runs{2d,3d}`
+(hashes in `reports/smoke_predictions.sha256`), tables `reports/smoke_train_{2d,3d}.md`.
+
+| domain | method | Task (120 s) | Task (60 s cut) | committed REPAIRs verified X = Y = 1 | CPU / root mean (median) s | physical calls / root | transitions | connector | Y | ref plans |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 2D | E-M4M | 5/6 | 3/6 | 5/5 | 61.4 (85.3) | 71.8 | 47.8 | 9.5 | 8.5 | 6 |
+| 2D | MO-SeGMan | 2/6 | 2/6 | 2/2 | 61.6 (58.4) | 35.0 | 21.7 | 4.0 | 3.3 | 6 |
+| 2D | MS-MCTS | 3/6 | 3/6 | 3/3 | 23.3 (28.7) | 13.3 | 11.3 | 0.5 | 1.5 | 0 |
+| 3D | E-M4M | 4/6 | 3/6 | 4/4 | 73.5 (91.3) | 21.7 | 6.0 | 1.8 | 2.8 | 11 |
+| 3D | MO-SeGMan | 2/6 | 2/6 | 2/2 | 90.9 (120.0) | 23.3 | 9.3 | 1.0 | 2.0 | 11 |
+| 3D | MS-MCTS | 3/6 | 2/6 | 3/3 | 90.6 (120.0) | 15.5 | 7.2 | 3.7 | 4.7 | 0 |
+
+Every search-time REPAIR (19/19) was confirmed by the independent teachers (0 FAIL_X, 0 FAIL_Y, 0 UNKNOWN); every non-solved root is
+ABSTAIN (EXHAUSTED or TIMEOUT). 0 capped calls in these runs. Peak RSS ~140 MiB (2D) / ~360 MiB (3D) per process. Six roots per cell:
+these are plumbing checks, not estimates (the CIs are meaningless at n = 6). Decisions within a few CPU-s of the budget are timing
+sensitive (one 2D E-M4M root: TIMEOUT at 120.0 s in a loaded run, SOLVED at 112 s in this one).
+
+Earlier development runs (superseded code, kept under `~/analytical_baselines/smoke/superseded_pre_3bcdf3c/` and `dev/`, TRAIN only)
+showed the same picture; a 6-root TRAIN dev sweep (salt `ANALYTICAL_DEV_V1`, disjoint from the smoke roots) found no difference between
+`t_paths=planned` and `both` for E-M4M (4/6 vs 4/6) and MO-SeGMan (2/6 vs 2/6), so the paper-literal `planned` stays the default.
+
+## 7. Open issues / blockers
+
+1. **Compute**: one VAL pass at 300 CPU-s is <= 751 x 300 s = 62.6 CPU-h per method in 2D and 364 x 300 s = 30.3 CPU-h in 3D
+   (<= 279 CPU-h for 3 methods x 1 seed; smoke means suggest ~40-75 % of the bound, NONE roots typically exhaust the budget).
+   A 4-entry grid x 3 seeds multiplies this by 12; select on a VAL subset first.
+2. **Other hosts** need: this branch; the DISCO stage-2 worktree (`e33dfe35a5`) and the NOR-Grid worktree (`58d2e4c84a`) as siblings
+   (or `ANALYTICAL_WORKTREES` / `DISCO_CODE` / `NOR_CODE`); an `ABF_ROOT` mirror with `mirror/` selection manifests + raw roots and
+   `teacher2d_wt`; FIN3D_CODE / FIN3D_SRC; a MuJoCo 3.16 python for 3D (numpy only, no torch / scipy). `env.sh` takes `L=` for the layout.
+3. **2D obstacle-ignorant sweeps are huge** (3R arm; 43-63 of 64 cells): planned-path blockers are a weak screen in 2D, so E-M4M and
+   MO-SeGMan lean on their terminal checks; MS-MCTS uses linear paths. This is reported, not hidden; `t_paths` is in the grid.
+4. **Not reproduced** (by design, ADAPTATIONS.md): RRT re-plan per critical subset (MO-SeGMan), CBS paths (E-M4M), phi3, continuous
+   poses / pushes, non-monotone moves. The 3D sweep uses one generic column radius for moved objects.
+5. Per-call CPU cap 45 s: a 3D Y query under heavy host load can exceed it (seen once in a development run) -> UNKNOWN, never a label,
+   but a K0 root may then miss its NOOP. Run VAL with host load well below core count.

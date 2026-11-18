@@ -47,6 +47,7 @@ def main(d, dom):
         md.append(f"| {r['run']} | {r['n']} | {r['decisions']} | {r['outcomes']} | {r['task_rate_ci']} | {r['task_by_K']} | "
                   f"{c['cpu_mean_s']} / {c['cpu_median_s']} / {c['cpu_p90_s']} | {c['physical_calls']} | {c['transition_calls']} | "
                   f"{c['connector_calls']} | {c['y_calls']} | {c['ref_plan_calls']} |")
+    md.append("\nCPU is capped at the cut for `_cut` rows; the call columns of `_cut` rows are those of the full source run (an upper bound).")
     (d / f"REPORT_{dom}.json").write_text(json.dumps(rows, indent=1))
     (d / f"REPORT_{dom}.md").write_text("\n".join(md) + "\n")
     print("\n".join(md))
