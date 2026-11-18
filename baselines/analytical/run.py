@@ -93,7 +93,7 @@ def manifest(out, dom, args):
 
 
 def run(args):
-    out = Path(args.out)
+    out = Path(args.out).resolve()                                    # the 2D boot chdirs: absolute paths only
     out.mkdir(parents=True, exist_ok=True)
     rows = [public_row(r) for r in jl(args.public) if r.get("domain", args.domain) == args.domain]
     rows = [r for r in rows if r["domain"] == args.domain]
