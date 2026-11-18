@@ -1,6 +1,7 @@
 #!/bin/bash
 # V3.4 re-target round 1 run: rt_launch.sh BASE DRVDIR PY SRC FDG NAME MAXW CPUS RESERVE
 set -e; B=$1; DRV=$2; PY=$3; SRC=$4; FDG=$5; N=$6; W=$7; C=$8; R=$9
+export CODE3D=$SRC PY3D=$PY   # orchestrator enrichment paths (fix 2026-11-18)
 O=$B/gen/g3_rt1_$N; mkdir -p $O; cp $B/cohort/RT1_SLOTS.txt $O/ONLY_SLOTS; echo $W > $O/WORKERS
 for f in MAX_TEMP_C MIN_FREE_MB; do [ -f $B/gen/g3_rt1_cfg/$f ] && cp $B/gen/g3_rt1_cfg/$f $O/; done
 export V34E_FDG=$FDG V34_RESERVE=$R

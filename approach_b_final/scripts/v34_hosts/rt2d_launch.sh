@@ -1,6 +1,7 @@
 #!/bin/bash
 # V3.4 2D fix run (re-target round 1 + GEOM_V1 fingerprint guard): rt2d_launch.sh BASE DRVDIR PY SRC2D FDG NAME MAXW CPUS RESERVE SLOTS_FILE ORCH(0/1)
 set -e; B=$1; DRV=$2; PY=$3; SRC=$4; FDG=$5; N=$6; W=$7; C=$8; R=$9; SL=${10}; ORCH=${11}
+export CODE2D=$SRC PY2D=$PY   # orchestrator enrichment paths (fix 2026-11-18)
 O=$B/gen/g2_rt1_$N; mkdir -p $O; cp $B/cohort/$SL $O/ONLY_SLOTS; echo $W > $O/WORKERS
 for f in MAX_TEMP_C MIN_FREE_MB; do [ -f $B/gen/g3_rt1_cfg/$f ] && cp $B/gen/g3_rt1_cfg/$f $O/; done
 export V34E_FDG=$FDG V34_RESERVE=$R V34_FP_EXCL=$B/cohort/FPX_2D.txt
