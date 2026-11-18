@@ -154,7 +154,8 @@ def _slot_worker(out, dom, rnd, roots, slot):
         except Exception as e:  # noqa: BLE001
             err = f"{type(e).__name__}: {e}"
         sd = td / root["root_id"]
-        clean = (sd / "checkpoint.pkl").exists() and not (sd / "IN_FLIGHT").exists() and err is None and not (td / "BLOCKED_WALL_LIMIT.json").exists()
+        clean = ((sd / "checkpoint.pkl").exists() and not (sd / "IN_FLIGHT").exists() and not (sd / "ACTIVE_QUERY.json").exists()
+                 and err is None and not (td / "BLOCKED_WALL_LIMIT.json").exists())   # unresolved last query = unreconciled tree
         J.atomic_json(td / "ATTEMPT_COMPLETE.json", dict(root_id=root["root_id"], K_legacy=root["K_legacy"], family_id=root["family_id"],
                       clean=clean, tree=str(sd), error=err, status="COMPLETED" if clean else "QUARANTINED_UNRESOLVED",
                       host=socket.gethostname(), wall_s=round(time.time() - t0, 1),
