@@ -256,8 +256,10 @@ def fit(a):
         trees = []
         for f in sorted((out / f"trees/{dom}/R{rnd}").glob("*/ATTEMPT_COMPLETE.json")):
             s = jr(f)
-            if s["clean"] and s["root_id"] in keep:
+            if s["clean"] and not s.get("cancellation") and s["root_id"] in keep:
                 t = Path(s["tree"])
+                if not t.exists():                                        # trees merged from another host: resolve within this campaign
+                    t = out / f"trees/{dom}/R{rnd}/{s['root_id']}/{s['root_id']}"
                 if a.calls_cap:
                     t2 = out / f"truncated/{dom}/R{rnd}_c{a.calls_cap}/{s['root_id']}"
                     if not (t2 / "nodes.pkl").exists():
