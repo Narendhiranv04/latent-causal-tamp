@@ -77,7 +77,9 @@ def main(dom, n2, outp, n0=1, n3=1):
             seq = [list(map(int, a)) for a in o["seq"]]
             ex = run_order(env, r["root_id"], seq)
             blobs = ex.pop("blobs")
-            lab_x, lab_y = o.get("x"), o.get("legacy_y", meta.get("y_selected_endpoint"))
+            lab_x = o.get("x")
+            ykey = sorted(map(tuple, seq))                                # finalized endpoint Y is keyed by the edit SET (labels["Y"])
+            lab_y = next((y["y"] for y in lab(r, "labels").get("Y", []) if sorted(map(tuple, y["edit"])) == ykey), None)
             executed_all = all(s["status"] == "EXECUTED" for s in ex["steps"]) and len(ex["steps"]) == len(seq)
             unresolved = any(s["status"] == "UNRESOLVED" for s in ex["steps"]) or ex.get("stop", {}).get("status") == "UNRESOLVED"
             disco_x = int(executed_all and ex.get("stop", {}).get("x") == 1)

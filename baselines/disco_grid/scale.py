@@ -186,6 +186,8 @@ def requeue(a):
     n = 0
     for td in sorted(p for p in base.iterdir() if p.is_dir()):
         f = td / "ATTEMPT_COMPLETE.json"
+        if not f.exists() and not getattr(a, "include_inflight", False):
+            continue                                                   # in flight in a live worker: never touched
         if f.exists() and jr(f).get("clean") and not jr(f).get("cancellation"):
             continue                                                   # complete = clean checkpoint AND not cut by any watchdog
         acc = sorted(td.glob("attempts/*/WATCHDOG_ACCOUNTING.json"))
@@ -277,5 +279,6 @@ if __name__ == "__main__":
     g.add_argument("--round", type=int, required=True); g.add_argument("--subset", default="ALL"); g.add_argument("--calls-cap", type=int, default=0)
     s = sp.add_parser("status"); s.add_argument("--out", required=True); s.add_argument("--domain", required=True)
     q = sp.add_parser("requeue"); q.add_argument("--out", required=True); q.add_argument("--domain", required=True); q.add_argument("--round", type=int, required=True)
+    q.add_argument("--include-inflight", action="store_true", help="only when NO worker is running (operator stop)")
     a = ap.parse_args()
     {"freeze": freeze, "run": run, "fit": fit, "status": status, "requeue": requeue}[a.cmd](a)
