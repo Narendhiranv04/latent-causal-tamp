@@ -128,7 +128,8 @@ def assemble(plan_f, collect, out, excl_dirs):
             cand[e["slot_id"]] = [e["root_id"]]
             path_of[e["root_id"]] = LK.parent / e["path"]
             led.setdefault(e["root_id"], {"parent_root_id": None})
-    for sid in [k for k in SL if cand.get(k)]:                       # plan order; first candidate passing every disjointness check wins
+    missing_decl = set(Path(os.environ["V34_MISSING"]).read_text().split()) if os.environ.get("V34_MISSING") else set()
+    for sid in [k for k in SL if cand.get(k) and k not in missing_decl]:   # plan order; declared-MISSING slots stay missing (late fills ignored)
         s = SL[sid]
         dom = s["domain"]
         for rid in cand[sid]:
