@@ -6,7 +6,8 @@
 Requests the slot's 8-factor template (the generator's own `work()`), one attempt = one (name, wave = slot ordinal, slot = attempt) id, so
 construction seeds / root ids are new and deterministic.  An accepted root fills the first unfilled slot (this host's list) with the same
 template and raw_class == observed class; other accepted roots stay in the ledger unused.  Per slot <= CAP attempts (then CAPPED, recorded).
-Env V34_SHARD="a,b/n" restricts to a disjoint slot shard.  Live controls in OUT: STOP (drain), WORKERS (int, <= MAXW), MIN_FREE_MB (default 2500), MAX_TEMP_C (default 95; laptop only).
+Env V34_SHARD="a,b/n" restricts to a disjoint slot shard.  Live controls in OUT: EXTERNAL_SLOTS (slot ids handled elsewhere), REJECT_ROOTS, STOP (drain), WORKERS (int, <= MAXW), MIN_FREE_MB (default 2500), MAX_TEMP_C (default 95; laptop only).
+Env V34_FP_EXCL = file of GEOM_V1 layout fingerprints (historical + cohort): accepted roots with such a layout never fill a slot.
 Each ledger line = the runner's entry + v34 fields; the slot->root assignment is derived from the ledger (resumable, idempotent)."""
 import glob, json, multiprocessing as mp, os, sys, time
 from pathlib import Path
@@ -53,6 +54,35 @@ def guard_ok():
             pass
     t = max(temps, default=0)
     return mem >= ctl("MIN_FREE_MB", 2500) and t <= ctl("MAX_TEMP_C", 95.0), mem, t
+
+
+FPX = set(Path(os.environ["V34_FP_EXCL"]).read_text().split()) if os.environ.get("V34_FP_EXCL") else set()   # amendment 2026-11-18
+_GFP = {}
+
+
+def gfp(rid):
+    """GEOM_V1 layout fingerprint of a root file (= v34_geomfp.geom_fp(contracts.view*(rec))); None if unreadable."""
+    if rid not in _GFP:
+        try:
+            rec = json.loads((OUT / "roots" / f"{rid}.json").read_text())
+            if "scene" in rec:
+                ob = rec["scene"]["objects"]
+                tid = next(i for i, o in enumerate(ob) if o["kind"] == "target" or o["id"] == "t0")
+                cells = [o["cell"] for o in ob]
+                attrs = [[o["radius_m"], float(i == tid), float(o["kind"] == "obstacle"), float(o["id"] in rec["fixed_ids"])] for i, o in enumerate(ob)]
+                goal = rec["goal_cell"]
+            else:
+                ids = [o["id"] for o in rec["objects"]]
+                tid = ids.index("t0")
+                cells = [rec["initial_cells"][o][0] * 6 + rec["initial_cells"][o][1] for o in ids]
+                attrs = [[float(o["shape"] == "box"), float(o["shape"] == "cylinder"), o["size"], o["height"], float(i == tid)] for i, o in enumerate(rec["objects"])]
+                goal = rec["goal"][0] * 6 + rec["goal"][1]
+            objs = sorted([int(c)] + [round(float(a), 6) for a in at] for c, at in zip(cells, attrs))
+            import hashlib
+            _GFP[rid] = hashlib.sha256(json.dumps([objs, int(cells[tid]), int(goal)], separators=(",", ":")).encode()).hexdigest()
+        except Exception:  # noqa: BLE001
+            _GFP[rid] = None
+    return _GFP[rid]
 
 
 def key(spec):
@@ -115,9 +145,14 @@ def main():
                 obs = str(e.get("observed"))
                 cand = [s for s in slots if s["slot_id"] not in filled and key(s["spec"]) == key(e["spec"]) and s["raw_class"] == obs]
                 cand.sort(key=lambda s: (s["slot_id"] != e["v34_slot"], order[s["slot_id"]]))
-                if cand and e["root_id"] not in used:
+                if cand and e["root_id"] not in used and not (FPX and gfp(e["root_id"]) in FPX):   # FP_EXCL: never fill with a used layout
                     filled[cand[0]["slot_id"]] = e["root_id"]
                     used.add(e["root_id"])
+            try:                                                   # slots taken over by another host's driver (rebalancing): never attempted here
+                for sid in (OUT / "EXTERNAL_SLOTS").read_text().split():
+                    filled.setdefault(sid, "EXTERNAL")
+            except OSError:
+                pass
             inflight = {}
             for sid, _, _ in running.values():
                 inflight[sid] = inflight.get(sid, 0) + 1

@@ -59,9 +59,15 @@ def main():
     stf = EO / "SLOT_CHILDREN.json"
     st = json.loads(stf.read_text()) if stf.exists() else {}
     while True:
+        try:                                                           # slots handed to another host are never enriched here
+            ext = set((BASE / "EXTERNAL_SLOTS").read_text().split())
+        except OSError:
+            ext = set()
+        for k in ext:
+            SL.pop(k, None)
         rej_all = {}
         for rnd, store in stores():
-            fm = {k: v for k, v in filled(store).items() if k in SL}
+            fm = {k: v for k, v in filled(store).items() if k in SL and v != "EXTERNAL"}
             todo = {k: v for k, v in fm.items() if st.get(k, {}).get("child") is None and v not in st.get(k, {}).get("rejected", [])}
             if not todo:
                 continue
@@ -108,6 +114,8 @@ def main():
             env = {**os.environ, "V34_ONLY_SLOTS": str(rb / "ONLY_SLOTS")}
             subprocess.Popen(["setsid", "nohup", "bash", str(D / "v34_hosts/gen.sh"), DOM, PLAN, str(rb), f"{NAME}r{k_new}", MAXW, CPUS, GPY, GCODE,
                               "RAW,REPARK,HARD"], env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)
+            subprocess.Popen(["setsid", "nohup", "bash", str(D / "v34_hosts/share_watch.sh"), str(rb), MAXW, os.environ.get("V34_RESERVE", "3")],
+                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)
             for k in need:
                 st[k].setdefault("repl", []).append(k_new)
             stf.write_text(json.dumps(st, indent=1))
