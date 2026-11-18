@@ -1,0 +1,12 @@
+{
+ "scope": "DISCO_FINAL_SCALE_AMENDMENT",
+ "status": "APPROVED",
+ "authorization_text": "User instruction 2026-11-18 (DISCO-Grid continuation): 'Expand actual physically grounded MCTS training coverage, especially successful and unsuccessful K2/K3 trajectories ... First measure realistic 2D/3D MCTS cost and depth-wise coverage using bounded pilots. Then choose an evidence-based, resource-feasible training scale. Compare increasing independent-root and search budgets ... Use at least three independent network seeds.' Session compute rules: gvlab keep 5 threads free; girish (gvcstar) and laptop (pop-os) keep >= 3 threads free; DISCO may use laptop and girish CPU; never disturb other users. TRAIN only; no VAL/TEST outcome is read during collection or fitting.",
+ "gpu": false,
+ "cpu_threads": 1,
+ "hosts": {
+  "gvlab": {"alias": "gvlab", "reserve": 5},
+  "gvcstar": {"alias": "girish-laptop", "reserve": 3},
+  "pop-os": {"alias": "user-laptop", "reserve": 3}
+ }
+}

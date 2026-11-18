@@ -44,6 +44,8 @@ def require_headroom():
     record_path=os.environ.get('DISCO_EXECUTION_AUTHORIZATION')
     record=json.loads(Path(record_path).read_text()) if record_path else {}
     reserve=2 if record.get('scope')=='DISCO_RELEASE_RESERVED_CORES_AMENDMENT' else 3
+    if record.get('scope')==FINAL_SCALE_SCOPE:
+        reserve=int(record['hosts'][r["hostname"]]['reserve'])
     if r["load1"] > r["logical_cpus"]-reserve or r["ram_available"] < 8*2**30 or r["disk_free"] < 20*2**30:
         raise RuntimeError("BLOCKED_RESOURCE: " + json.dumps(r))
     return r
@@ -56,6 +58,15 @@ def execution_host(requested=None):
     supplies the recorded user amendment, whose single host supersedes it.
     """
     path=os.environ.get('DISCO_EXECUTION_AUTHORIZATION')
+    if path and json.loads(Path(path).read_text()).get('scope')==FINAL_SCALE_SCOPE:
+        record=json.loads(Path(path).read_text())
+        if (record.get('status')!='APPROVED' or not record.get('authorization_text') or record.get('gpu') is not False
+                or record.get('cpu_threads')!=1 or socket.gethostname() not in record.get('hosts',{})):
+            raise RuntimeError('BLOCKED_PERMISSION: invalid final-scale authorization or host')
+        host=dict(alias=record['hosts'][socket.gethostname()]['alias'],hostname=socket.gethostname())
+        if requested is not None and requested!=host['alias']:
+            raise RuntimeError('BLOCKED_PERMISSION: requested host differs from recorded authorization')
+        return host
     if path:
         record=json.loads(Path(path).read_text())
         parallel=record.get('scope')=='DISCO_RELEASE_PARALLEL_HOST_AMENDMENT'
@@ -91,6 +102,14 @@ def execution_host(requested=None):
     if requested is not None and requested!=host['alias']:
         raise RuntimeError('BLOCKED_PERMISSION: requested host differs from recorded authorization')
     return host
+
+
+FINAL_SCALE_SCOPE='DISCO_FINAL_SCALE_AMENDMENT'
+
+
+def _final_scale():
+    path=os.environ.get('DISCO_EXECUTION_AUTHORIZATION')
+    return bool(path) and json.loads(Path(path).read_text()).get('scope')==FINAL_SCALE_SCOPE
 
 
 def execution_workers():
@@ -268,8 +287,11 @@ def execute(out):
     manifest=json.loads((out/"manifest.json").read_text())
     require_headroom()
     max_roots,max_calls={"2d":(8,40),"3d":(4,24)}[manifest["domain"]]
+    final_scale=_final_scale()
+    if final_scale:                  # explicitly authorized scaled TRAIN campaign: one root per tree job, larger per-tree caps
+        max_roots,max_calls={"2d":(1,64),"3d":(1,32)}[manifest["domain"]]
     if (len(manifest["roots"])>max_roots or not 0<manifest["per_tree"]["max_sim_calls"]<=max_calls
-        or not 0<manifest["wall_envelope_s"]<=1800 or manifest.get("workers")!=1
+        or not 0<manifest["wall_envelope_s"]<=(3600 if final_scale else 1800) or manifest.get("workers")!=1
         or manifest.get("gpu") is not False or not 0<manifest.get("query_wall_s",0)<=manifest["wall_envelope_s"]):
         raise ValueError("Manifest violates authorized pilot envelope")
     if os.environ.get("CUDA_VISIBLE_DEVICES")!="":
@@ -284,7 +306,8 @@ def execute(out):
         prior+=json.loads((old/"WATCHDOG_ACCOUNTING.json").read_text())["wall_s"]
     remaining=manifest["wall_envelope_s"]-prior
     if remaining<=0: raise RuntimeError("BLOCKED_WALL_LIMIT: aggregate envelope exhausted")
-    with (D.DISCO_ROOT/"active_physical.lock").open("a") as lock:
+    slot=os.environ.get("DISCO_WORKER_SLOT") if final_scale else None   # one physical child per worker slot (final-scale scope only)
+    with (D.DISCO_ROOT/(f"active_physical.{slot}.lock" if slot else "active_physical.lock")).open("a") as lock:
         fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
         attempt=attempts/f"attempt_{len(list(attempts.iterdir())):03d}"
         attempt.mkdir()
