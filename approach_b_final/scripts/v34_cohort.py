@@ -122,6 +122,12 @@ def assemble(plan_f, collect, out, excl_dirs):
     for d in X:
         X[d]["cell_fp"], X[d]["layout_fp"] = X[d]["layout_fp"], set(json.loads((Path(excl_dirs) / f"EXCL{d.upper()}_GEOM.json").read_text())["geom_fp"])
     rows, seen, bad, skipped, regen = [], {"root_id": set(), "seed": set(), "sha": set(), "fp": set()}, collections.Counter(), collections.Counter(), []
+    if os.environ.get("V34_LOCK"):                                    # batch A already sealed/evaluated: its selections are FIXED
+        LK = Path(os.environ["V34_LOCK"])
+        for e in map(json.loads, open(LK)):
+            cand[e["slot_id"]] = [e["root_id"]]
+            path_of[e["root_id"]] = LK.parent / e["path"]
+            led.setdefault(e["root_id"], {"parent_root_id": None})
     for sid in [k for k in SL if cand.get(k)]:                       # plan order; first candidate passing every disjointness check wins
         s = SL[sid]
         dom = s["domain"]
