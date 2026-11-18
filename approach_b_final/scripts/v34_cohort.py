@@ -80,15 +80,15 @@ def layout_fp(v):
 def assemble(plan_f, collect, out, excl_dirs):
     """collect/<host>/{gen/<run>/{STATUS.json,ledger.jsonl,roots/}, enrich/<e>/SLOT_CHILDREN.json + child roots} -> out/{roots/, PRIVATE_INDEX.jsonl,
     COHORT_MANIFEST.json}.  One root per slot: raw kinds = the first filling run (original run before replacement runs, EXTERNAL placeholders
-    ignored); REPARK / HARD = the orchestrator's child.  A re-targeted slot (plan "retarget" history, v34_retarget.py) is filled only from that
-    round's g3_rtN_* / e3_rtN_* runs, so late old-template fills from earlier drivers are never used.  Asserts: no root id / seed / root_sha256 / layout fp shared with history or within."""
+    ignored); REPARK / HARD = the orchestrator's child.  A re-targeted slot (plan "retarget" history, v34_retarget.py) is filled only by a root whose
+    own spec equals the slot's CURRENT template, so late old-template fills from earlier drivers are never used.  Asserts: no root id / seed / root_sha256 / layout fp shared with history or within."""
     import contracts as CT, shutil
     P = json.loads(Path(plan_f).read_text())
     SL = {s["slot_id"]: s for s in P["slots"]}
     collect, out = Path(collect), Path(out)
     (out / "roots").mkdir(parents=True, exist_ok=True)
     path_of, led, cand = {}, {}, collections.defaultdict(list)
-    rt_ok = lambda sid, where: not SL[sid].get("retarget") or f"rt{len(SL[sid]['retarget'])}_" in str(where)  # noqa: E731  re-targeted slots: only that round's runs
+    rt_ok = lambda sid, where: True  # noqa: E731  (re-targeted slots are checked on the root's own template below)
     tkey = lambda sp: json.dumps({k: sp[k] for k in FACT}, sort_keys=True)  # noqa: E731  = v34_gen.key
     work = lambda s: (s["domain"], s["kind"], s["ref_namespace"].startswith("conv"))  # noqa: E731  same construction route (RAW / CONV / NONE_*)
     spares = []
@@ -129,6 +129,9 @@ def assemble(plan_f, collect, out, excl_dirs):
             raw = Path(path_of[rid]).read_bytes()
             rec = json.loads(raw)
             h = hashlib.sha256(raw).hexdigest()
+            if s.get("retarget") and tkey(rec["spec"]) != tkey(s["spec"]):   # re-targeted slot: only roots of its CURRENT template
+                skipped[f"{dom}:old_template"] += 1
+                continue
             v = CT.view2d(rec) if dom == "2d" else CT.view3d(rec)
             fp, cfp, seed = GF.geom_fp(v), layout_fp(v), str(rec["ids"]["construction_seed"])
             hit = [f"{k}:{w}" for k, val, xk in (("root_id", rid, "root_ids"), ("seed", seed, "seeds"), ("sha", h, "root_sha256"), ("fp", fp, "layout_fp"))

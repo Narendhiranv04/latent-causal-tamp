@@ -25,7 +25,8 @@ def main(plan_f, capped_f, out_plan, out_rec):
         if s["repeat"] == 0:
             order.setdefault((s["domain"], s["K"]), []).append(json.loads(json.dumps(s)))   # frozen copy: re-targets must not alter the order
     capped = {k: (v if isinstance(v, dict) else {"attempts": v, "reason": "ATTEMPT_CAP"}) for k, v in capped.items()}
-    bad = {tkey(by[k]) for k in capped}
+    bad = {tkey(by[k]) for k in capped} | {json.dumps([r["from_spec"], r["from_raw_class"]], sort_keys=True)
+                                           for r in P.get("retarget_log", []) if r.get("from_spec")}   # every capped template so far
     used, rec = {json.dumps([r["to_spec"], r["to_raw_class"]], sort_keys=True) for r in P.get("retarget_log", []) if r.get("to_spec")}, []
     for sid in sorted(capped):
         s = by[sid]
