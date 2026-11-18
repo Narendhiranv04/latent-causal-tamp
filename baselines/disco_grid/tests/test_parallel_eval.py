@@ -126,6 +126,25 @@ def test_continuation_never_retries_unknown_or_cancelled_jobs():
     with pytest.raises(ValueError):module.remaining_jobs(jobs,[dict(job_id='0'),dict(job_id='0')])
 
 
+def test_resource_guard_at_phase_start_retains_empty_ledger(tmp_path,monkeypatch):
+    import importlib.util
+    p=Path(__file__).resolve().parents[1]/'reports/stage2/continue_frozen_test.py'
+    spec=importlib.util.spec_from_file_location('boundary_fixture',p)
+    module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+    jobs=tmp_path/'jobs.json';env=tmp_path/'env.json';out=tmp_path/'not_dispatched'
+    J.atomic_json(jobs,dict(jobs=[dict(id='unattempted')]))
+    J.atomic_json(env,dict(workers=3))
+    def blocked(*args):raise RuntimeError('BLOCKED_RESOURCE: synthetic phase-boundary fixture')
+    monkeypatch.setattr(module.POOL,'run',blocked)
+    assert module.run_pool_or_record_startup_guard(jobs,env,out)==[]
+    account=json.loads((out/'ACCOUNTING.json').read_text())
+    assert account['n_attempted']==0 and account['adapter_calls']==0 and account['worker_cpu_s']==0
+    assert account['n_not_run']==1 and (out/'outcomes.jsonl').read_bytes()==b''
+    assert (out/'COMPLETE.json').exists()
+    # A refusal after the output exists cannot be silently reclassified.
+    with pytest.raises(RuntimeError,match='BLOCKED_RESOURCE'):module.run_pool_or_record_startup_guard(jobs,env,out)
+
+
 @pytest.mark.skipif(os.environ.get('DISCO_POOL_INTEGRATION')!='1',reason='Opt-in synthetic process fixture')
 def test_four_supervisors_reserve_two_cores(tmp_path,monkeypatch):
     args,p,excluded=reserved_authorization(tmp_path,monkeypatch)

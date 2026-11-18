@@ -1,0 +1,34 @@
+..........F................................                              [100%]
+=================================== FAILURES ===================================
+________________ test_identical_inflight_sequences_execute_once ________________
+
+tmp_path = PosixPath('/tmp/pytest-of-longhorizon/pytest-8/test_identical_inflight_sequen0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x74aa866d7b80>
+
+    @pytest.mark.skipif(os.environ.get('DISCO_POOL_INTEGRATION')!='1',reason='Opt-in synthetic process fixture on a headroom-qualified host')
+    def test_identical_inflight_sequences_execute_once(tmp_path,monkeypatch):
+        args=fixture(tmp_path,monkeypatch,[job(i,'open_loop') for i in range(3)])
+>       rows=POOL.run(*args,worker_target=fake_trial)
+
+disco_grid_stage2/source/F113_extension_preflight_v1/baselines/disco_grid/tests/test_parallel_eval.py:183: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+disco_grid_stage2/source/F113_extension_preflight_v1/baselines/disco_grid/parallel_eval.py:87: in run
+    C.require_headroom();out.mkdir(parents=True,exist_ok=False)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def require_headroom():
+        r = resources()
+        host=execution_host()
+        if r["hostname"] != host['hostname']:
+            raise RuntimeError("BLOCKED_PERMISSION: actual host differs from explicit execution authorization")
+        record_path=os.environ.get('DISCO_EXECUTION_AUTHORIZATION')
+        record=json.loads(Path(record_path).read_text()) if record_path else {}
+        reserve=2 if record.get('scope')=='DISCO_RELEASE_RESERVED_CORES_AMENDMENT' else 3
+        if r["load1"] > r["logical_cpus"]-reserve or r["ram_available"] < 8*2**30 or r["disk_free"] < 20*2**30:
+>           raise RuntimeError("BLOCKED_RESOURCE: " + json.dumps(r))
+E           RuntimeError: BLOCKED_RESOURCE: {"hostname": "gvcstar", "load1": 21.44873046875, "logical_cpus": 24, "ram_available": 20702707712, "disk_free": 119253925888}
+
+disco_grid_stage2/source/F113_extension_preflight_v1/baselines/disco_grid/collect.py:48: RuntimeError
+=========================== short test summary info ============================
+FAILED disco_grid_stage2/source/F113_extension_preflight_v1/baselines/disco_grid/tests/test_parallel_eval.py::test_identical_inflight_sequences_execute_once
+1 failed, 42 passed in 16.87s

@@ -263,6 +263,17 @@ def report(release, metrics_dir, training_reports):
             'The original global 5523-call ceiling and original 3D CPU/wall limits are retained. '
             'COMPLETION_EXTENSION.json records approval hashes, the exact eligible trial IDs, and the prior release. '
             'This approval contains no new TRAIN collection or retry of an earlier interrupted episode.', '']
+    if (release/'PHASE_BOUNDARY_RECOVERY.json').exists():
+        recovery=read(release/'PHASE_BOUNDARY_RECOVERY.json')
+        lines += ['## Audited phase-boundary recovery', '',
+            'A shared-load refusal occurred after the 2D phase closed and before any 3D pool directory existed. '
+            'The stopped release remains unchanged. A new metadata-only ledger carries all published outcomes and '
+            'durable query counts; no prior episode was retried. The final controller CPU was unavailable, so '
+            f"an affinity-wide elapsed upper bound adds {recovery['additional_controller_upper_charge_s']:.3f} charged CPU seconds. "
+            'This is deliberately conservative and is not measured CPU consumption. Exact child/supervisor subtotals '
+            'and the upper-bound derivation are preserved in PHASE_BOUNDARY_RECOVERY.json. '
+            'Subsequent startup resource refusals now write a zero-attempt phase ledger, allowing the normal '
+            'headroom supervisor to continue without losing a completed preceding phase.', '']
     (metrics_dir / 'FINAL_DISCO_STAGE2_REPORT.md').write_text('\n'.join(lines))
     (metrics_dir / 'PHYSICAL_RESOURCE_TOTALS.json').write_text(json.dumps(physical_cost, indent=2)+'\n')
     statuses = read(training_reports / 'STAGE2_FINAL_STATUS.json')

@@ -15,6 +15,26 @@ def read(p):return json.loads(Path(p).read_text())
 def rows(p):return [json.loads(s) for s in p.read_text().splitlines()]
 
 
+def run_pool_or_record_startup_guard(path,ep,fragment):
+    cpu=time.process_time();start=time.monotonic()
+    try:return POOL.run(path,ep,fragment)
+    except RuntimeError as exc:
+        # Before mkdir/dispatch a resource refusal is a zero-attempt phase,
+        # not a missing physical result. Errors after dispatch still need audit.
+        if not str(exc).startswith('BLOCKED_RESOURCE:') or fragment.exists():raise
+        jobs=read(path)['jobs'];env=read(ep);fragment.mkdir(exist_ok=False)
+        J.atomic_bytes(fragment/'outcomes.jsonl',b'')
+        J.atomic_json(fragment/'manifest.json',dict(jobs_sha256=D.sha256_file(path),envelope=env,
+            status='RESOURCE_GUARD_BEFORE_DISPATCH',physical_attempts=0))
+        own_cpu=time.process_time()-cpu
+        J.atomic_json(fragment/'ACCOUNTING.json',dict(cpu_s=own_cpu,worker_cpu_s=0.,controller_cpu_s=own_cpu,
+            worker_wall_s=0.,active_wall_s=time.monotonic()-start,adapter_calls=0,n_attempted=0,
+            n_frozen_jobs=len(jobs),n_not_run=len(jobs),workers=env['workers'],max_concurrent_trials=0,
+            in_flight_reservations=[],stop_reason=str(exc),cpu_accounting_kind='MEASURED_CONTROLLER_BEFORE_DISPATCH'))
+        J.atomic_json(fragment/'COMPLETE.json',dict(status='RESOURCE_GUARD_BEFORE_DISPATCH',attempted=0,expected=len(jobs)))
+        return []
+
+
 def remaining_jobs(jobs,observed):
     ids=[r['job_id'] for r in observed]
     if len(set(ids))!=len(ids) or not set(ids)<={j['id'] for j in jobs}:
@@ -68,7 +88,7 @@ def run(prior,out):
     out.mkdir(parents=True,exist_ok=False)
     J.atomic_json(out/'APPROVED_ENVELOPE.json',dict(envelope,workers=authorization['workers'],engine=str(engine),
         parallel_authorization=authorization,prior_release=str(prior),source_commit=os.environ['DISCO_SOURCE_COMMIT']))
-    for name in ('SELECTION_FREEZE.json','HOST_MIGRATION.json','ORIGINAL_TRANSFER_INDEX.json','PARALLEL_HANDOFF.json'):
+    for name in ('SELECTION_FREEZE.json','HOST_MIGRATION.json','ORIGINAL_TRANSFER_INDEX.json','PARALLEL_HANDOFF.json','PHASE_BOUNDARY_RECOVERY.json'):
         if (prior/name).exists():J.atomic_bytes(out/name,(prior/name).read_bytes())
     if extension:J.atomic_json(out/'COMPLETION_EXTENSION.json',extension)
     J.atomic_json(out/'RESERVED_CORES_HANDOFF.json',dict(prior_release=str(prior),prior_complete_sha256=D.sha256_file(prior/'COMPLETE.json'),
@@ -95,7 +115,7 @@ def run(prior,out):
             sub.update(disk_gib=1.5,cumulative_disk_root=extension['cumulative_disk_root'])
             if domain=='2d':sub['adapter_calls']=min(sub['adapter_calls'],max(0,extension['initial_adapter_calls']+370-charge['adapter_calls']))
         ep=out/f'{key}_envelope.json';J.atomic_json(ep,sub)
-        fragment=out/f'{key}_pool_fragment';phase_cpu=time.process_time();POOL.run(path,ep,fragment)
+        fragment=out/f'{key}_pool_fragment';phase_cpu=time.process_time();run_pool_or_record_startup_guard(path,ep,fragment)
         own_phase_cpu+=time.process_time()-phase_cpu
         account=read(fragment/'ACCOUNTING.json');fresh_accounts.append(account);calls+=account['adapter_calls']
         combined=out/key;combined.mkdir();positions={j['id']:i for i,j in enumerate(jobs)}
@@ -109,7 +129,7 @@ def run(prior,out):
         J.atomic_bytes(combined/'outcomes.jsonl',''.join(json.dumps(r)+'\n' for r in merged).encode())
         total={k:charge[k]+account[k] for k in ('cpu_s','active_wall_s','adapter_calls','worker_cpu_s','controller_cpu_s','worker_wall_s')}
         total.update(n_attempted=len(merged),n_frozen_jobs=len(jobs),n_not_run=len(jobs)-len(merged),workers=authorization['workers'],
-            prior_charge=charge,new_pool_charge=account,cpu_accounting_kind='MEASURED_SUPERVISORS_AND_REAPED_CHILDREN')
+            prior_charge=charge,new_pool_charge=account,cpu_accounting_kind=charge.get('cpu_accounting_kind','MEASURED_SUPERVISORS_AND_REAPED_CHILDREN'))
         if total['cpu_s']>cap or total['active_wall_s']>wall_cap:raise RuntimeError('Approved phase ceiling exceeded')
         if extension and domain=='2d' and total['adapter_calls']>extension['initial_adapter_calls']+370:
             raise RuntimeError('Approved 2D extension query ceiling exceeded')
