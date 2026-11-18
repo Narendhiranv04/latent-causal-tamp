@@ -117,8 +117,9 @@ def tree_manifest(m, root, rnd, policy, value):
                 snapshot_lock_sha256=D.sha256_file(D.BASE_SNAP / "data_snapshot.lock.json"),
                 source_sha256={p.name: D.sha256_file(p) for p in HERE.glob("*.py")}, teacher_source_sha256=C.teacher_sources(dom),
                 host_allowlist=[socket.gethostname()], workers=1, threads=1, gpu=False, wall_envelope_s=m["tree_wall_s"],
-                cpu_envelope_s=m["tree_wall_s"], rss_limit_kib=3 * 2 ** 20, query_wall_s=m["query_wall_s"],
-                aggregate_adapter_call_ceiling=m["per_tree"]["max_sim_calls"], per_tree=m["per_tree"])
+                cpu_envelope_s=m["tree_wall_s"], rss_limit_kib=3 * 2 ** 20, query_wall_s=int(os.environ.get("SCALE_QUERY_WALL_S", m["query_wall_s"])),
+                aggregate_adapter_call_ceiling=m["per_tree"]["max_sim_calls"], per_tree=m["per_tree"],
+                query_wall_override=bool(os.environ.get("SCALE_QUERY_WALL_S")))
 
 
 def _slot_worker(out, dom, rnd, roots, slot):
