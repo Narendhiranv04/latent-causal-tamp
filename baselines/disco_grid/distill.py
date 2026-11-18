@@ -265,8 +265,14 @@ def distill_policy_and_value(
     device: str = "cuda",
     out_dir: Path | None = None,
     checkpoint_rule: str = "train_family_monitor",
+    resume: bool = False,
+    stop_after_epochs: int | None = None,
 ) -> dict[str, Any]:
-    """Train distilled Policy (`P_r`) and Value (`Q_r`) networks from extracted MCTS tree datasets."""
+    """Train distilled Policy (`P_r`) and Value (`Q_r`) networks from extracted MCTS tree datasets.
+
+    Deterministic epoch-boundary resume (resume=True): train_state_{policy,value}.pt hold model + AdamW moments + permutation
+    generator + torch CPU/CUDA RNG + best loss + curve after every epoch (atomic); the resolved configuration must be identical.
+    stop_after_epochs (testing / bounded jobs) ends each network's loop early at an epoch boundary."""
     if checkpoint_rule not in ("train_family_monitor", "fixed_epochs"):
         raise ValueError("Unknown checkpoint rule")
     dom_l = dom.lower()
@@ -275,14 +281,14 @@ def distill_policy_and_value(
 
     save_dir = Path(out_dir or (D.DISCO_ROOT / "runs/distill" / dom_l / f"{round_name}_s{seed}"))
     save_dir.mkdir(parents=True, exist_ok=True)
-    if any(save_dir.iterdir()):
+    if any(save_dir.iterdir()) and not resume:
         raise FileExistsError(f"Refusing to overwrite distillation run: {save_dir}")
 
     schema = extracted.get("observation_schema", P.O0)
     pol_model, p_ck = P.load_policy_checkpoint(init_policy_ckpt, device=device, observation_schema=schema)
     scalers = p_ck["scalers"]
     pol_model.train()
-    (save_dir / "resolved_config.json").write_text(json.dumps({
+    _rc = json.dumps({
         "domain":dom_l, "observation_schema":schema, "seed":seed, "round":round_name,
         "policy_initialization":str(init_policy_ckpt), "policy_sha256":D.sha256_file(init_policy_ckpt),
         "value_initialization":str(init_value_ckpt) if init_value_ckpt else None,
@@ -292,7 +298,34 @@ def distill_policy_and_value(
         "checkpoint_rule":checkpoint_rule,
         "selection_scope":"fixed epochs or TRAIN-pool monitor, not independent validation",
         "source_sha256":{p.name:D.sha256_file(p) for p in HERE.glob("*.py")},
-    },indent=2))
+    },indent=2)
+    if resume and (save_dir / "resolved_config.json").exists():
+        if (save_dir / "resolved_config.json").read_text() != _rc:
+            raise ValueError("Resume requires the identical resolved distillation configuration")
+    else:
+        (save_dir / "resolved_config.json").write_text(_rc)
+
+    def _rng_state():
+        return {"cpu": torch.get_rng_state(), "cuda": torch.cuda.get_rng_state_all() if torch.cuda.is_available() else None,
+                "numpy": np.random.get_state()}
+
+    def _set_rng(st):
+        torch.set_rng_state(st["cpu"])
+        if st["cuda"] is not None and torch.cuda.is_available():
+            torch.cuda.set_rng_state_all(st["cuda"])
+        np.random.set_state(st["numpy"])
+
+    def _save_train_state(name, model, opt, gen, ep, best, curve):
+        P.save_checkpoint({"epoch": ep, "model": model.state_dict(), "optimizer": opt.state_dict(), "generator": gen.get_state(),
+                           "best": best, "curve": curve, "rng": _rng_state()}, save_dir / f"train_state_{name}.pt")
+
+    def _load_train_state(name, model, opt, gen):
+        f = save_dir / f"train_state_{name}.pt"
+        if not (resume and f.exists()):
+            return 0, math.inf, []
+        st = torch.load(f, map_location=device, weights_only=False)
+        model.load_state_dict(st["model"]); opt.load_state_dict(st["optimizer"]); gen.set_state(st["generator"]); _set_rng(st["rng"])
+        return st["epoch"] + 1, st["best"], st["curve"]
 
     val_model = P.DiscoValueNet(dom_l, h=p_ck.get("hidden", 128), observation_schema=schema).to(device)
     if init_value_ckpt is not None and Path(init_value_ckpt).exists():
@@ -363,8 +396,10 @@ def distill_policy_and_value(
         td_tr, td_va = tensorize_dst(dst_tr), tensorize_dst(dst_va)
         to_tr, to_va = tensorize_obj(obj_tr), tensorize_obj(obj_va)
         gen = torch.Generator(device=device).manual_seed(seed)
+        start_p, best_p_loss, pol_curve = _load_train_state("policy", pol_model, opt_p, gen)
+        end_p = epochs if stop_after_epochs is None else min(epochs, stop_after_epochs)
 
-        for ep in range(epochs):
+        for ep in range(start_p, end_p):
             pol_model.train()
             p_dst = torch.randperm(len(dst_tr), device=device, generator=gen)
             p_obj = torch.randperm(len(obj_tr), device=device, generator=gen)
@@ -414,6 +449,7 @@ def distill_policy_and_value(
                     },
                     save_dir / "policy.pt",
                 )
+            _save_train_state("policy", pol_model, opt_p, gen, ep, best_p_loss, pol_curve)
     else:
         # Preserve previous policy checkpoint if no feasible edges were extracted
         P.save_checkpoint(p_ck, save_dir / "policy.pt")
@@ -436,8 +472,10 @@ def distill_policy_and_value(
 
         tv_tr, tv_va = tensorize_val(val_tr), tensorize_val(val_va)
         gen_v = torch.Generator(device=device).manual_seed(seed + 77)
+        start_v, best_v_loss, val_curve = _load_train_state("value", val_model, opt_v, gen_v)
+        end_v = epochs if stop_after_epochs is None else min(epochs, stop_after_epochs)
 
-        for ep in range(epochs):
+        for ep in range(start_v, end_v):
             val_model.train()
             perm = torch.randperm(len(val_tr), device=device, generator=gen_v)
             tr_bce = []
@@ -475,6 +513,7 @@ def distill_policy_and_value(
                     },
                     save_dir / "value.pt",
                 )
+            _save_train_state("value", val_model, opt_v, gen_v, ep, best_v_loss, val_curve)
 
     stop_pos = sum(1 for r in val_rows if r["is_stop"] and r["value_target"] >= 0.5)
     stop_neg = sum(1 for r in val_rows if r["is_stop"] and r["value_target"] < 0.5)

@@ -195,8 +195,10 @@ class DISCOMCTS:
         self.cumulative_wall_s = 0.0
         self.cumulative_cpu_s = 0.0
         self.save_dir: Path | None = None
+        self._replay: dict[tuple, Any] = {}          # reconciled in-flight results: reused once, never re-executed
+        self.reconcile_log: list[dict[str, Any]] = []
 
-    def _journal_query(self, event: str, kind: str, node: MCTSNode, result=None, action=None):
+    def _journal_query(self, event: str, kind: str, node: MCTSNode, result=None, action=None, reissue: bool = False):
         """Write-ahead charge and result/state snapshot for every physical invocation.
 
         A hard-killed invocation remains a charged unresolved attempt. An in-flight
@@ -207,6 +209,7 @@ class DISCOMCTS:
         item = {"event":event,"kind":kind,"query_id":qid,"parent_id":node.node_id,
                 "root_id":node.obs.root_id,"action":action,
                 "wall_time":time.time(),"process_cpu_s":time.process_time()}
+        if reissue: item["reissue_after_reconcile"] = True
         if result is not None:
             name=f"query_{qid:06d}.pkl"
             tmp=self.save_dir/(name+".tmp")
@@ -219,6 +222,30 @@ class DISCOMCTS:
         with (self.save_dir/"queries.jsonl").open("a") as f:
             f.write(json.dumps(item,sort_keys=True)+"\n")
             f.flush();os.fsync(f.fileno())
+
+    @staticmethod
+    def _replay_key(kind: str, parent_id: int, action) -> tuple:
+        return (kind, int(parent_id), json.dumps(None if action is None else [int(x) for x in action]))
+
+    def _physical(self, kind: str, node: MCTSNode, action, call):
+        """One charged physical invocation (write-ahead journal), or the exact saved result of a query that FINISHED inside an
+        in-flight iteration and was reconciled (already charged; reused once, never re-executed).  A query that STARTED but did not
+        finish before a crash is charged by reconcile() and, if the deterministic replay reaches it again, re-issued explicitly
+        (journal event 'started' with reissue=True)."""
+        k = self._replay_key(kind, node.node_id, action)
+        if k in self._replay:
+            res = self._replay.pop(k)
+            self.reconcile_log.append({"event": "replayed_finished_orphan", "kind": kind, "parent_id": node.node_id, "action": k[2]})
+            return res
+        if kind == "terminal":
+            self.sim_terminal_calls += 1
+        else:
+            self.sim_transition_calls += 1
+        reissue = any(u["key"] == list(k) for u in getattr(self, "_uncertain", []))
+        self._journal_query("started", kind, node, action=action, reissue=reissue)
+        res = call()
+        self._journal_query("finished", kind, node, result=res, action=action)
+        return res
 
     def _increment_visit(self, node: MCTSNode):
         if node.visit_count == 0 and node.first_visit_iter < 0:
@@ -246,10 +273,7 @@ class DISCOMCTS:
         if node.stop_evaluated and node.stop_result is not None:
             return node.stop_result
         state = self.env.restore(node.state_blob)
-        self.sim_terminal_calls += 1
-        self._journal_query("started","terminal",node)
-        stop_res = self.env.terminal_query(state)
-        self._journal_query("finished","terminal",node,result=stop_res)
+        stop_res = self._physical("terminal", node, None, lambda: self.env.terminal_query(state))
         node.stop_evaluated = True
         node.stop_result = stop_res
         node.terminal_z = stop_res.z_outcome
@@ -314,10 +338,7 @@ class DISCOMCTS:
 
         for act in batch:
             node.attempted_actions.append(act)
-            self.sim_transition_calls += 1
-            self._journal_query("started","transition",node,action=act)
-            sr = self.env.transition(parent_state, act)
-            self._journal_query("finished","transition",node,result=sr,action=act)
+            sr = self._physical("transition", node, act, lambda a=act: self.env.transition(parent_state, a))
             self.edge_logs.append({
                 "root_id": node.obs.root_id,
                 "parent_id": node.node_id,
@@ -629,6 +650,15 @@ class DISCOMCTS:
         save_dir = Path(save_dir)
         if (save_dir / "IN_FLIGHT").exists():
             raise ValueError("Unreconciled in-flight physical queries; automatic resume refused")
+        rec_f = save_dir / "RECONCILED.json"
+        if rec_f.exists():
+            rec = json.loads(rec_f.read_text())
+            if not rec.get("resumable"):
+                raise ValueError(f"Reconciled tree is closed ({rec.get('status')}); start an explicitly NEW run instead")
+            for o in rec["finished_orphans"]:
+                with open(save_dir / o["result_blob"], "rb") as f:
+                    self._replay[tuple(o["key"])] = pickle.load(f)
+            self._uncertain = rec["uncertain"]
         with open(save_dir / "checkpoint.pkl", "rb") as f:
             ck = pickle.load(f)
         if ck["version"] != 2:
@@ -643,6 +673,61 @@ class DISCOMCTS:
         self.iteration_traces = ck["iteration_traces"]
         self.cumulative_wall_s = ck["cumulative_wall_s"]
         self.cumulative_cpu_s = ck["cumulative_cpu_s"]
+
+
+def reconcile(save_dir: Path | str, evidence_dirs: list[str] | None = None) -> dict[str, Any]:
+    """Explicit reconciliation of an IN_FLIGHT tree from its saved evidence (never automatic, never silent).
+
+    * last clean checkpoint = the tree state; its counters are exact up to that iteration boundary;
+    * journal entries after that boundary: FINISHED queries become replayable orphans (exact saved result; reused once by the
+      deterministic replay, not re-executed), STARTED-but-unfinished queries are UNCERTAIN: charged now (budget), never labelled,
+      and re-issued explicitly only if the replay reaches them again;
+    * no checkpoint, or in-flight queries without a journal -> CLOSED (not resumable; the root may only be searched again as an
+      explicitly new run).  Other evidence files (teacher witnesses) are inventoried by sha256 only; no label is inferred."""
+    sd = Path(save_dir)
+    inflight = sd / "IN_FLIGHT"
+    if not inflight.exists():
+        raise ValueError("nothing to reconcile: no IN_FLIGHT marker")
+    it = inflight.read_text().strip()
+    ck_f, j_f = sd / "checkpoint.pkl", sd / "queries.jsonl"
+    ck = None
+    if ck_f.exists():
+        with open(ck_f, "rb") as f:
+            ck = pickle.load(f)
+    base = (ck["sim_transition_calls"] + ck["sim_terminal_calls"]) if ck else 0
+    started, finished = {}, {}
+    for e in (map(json.loads, open(j_f)) if j_f.exists() else []):
+        if e["query_id"] > base:
+            (started if e["event"] == "started" else finished)[e["query_id"]] = e
+    key = lambda e: list(DISCOMCTS._replay_key(e["kind"], e["parent_id"], e.get("action")))  # noqa: E731
+    orphans = [{"query_id": q, "kind": e["kind"], "key": key(e), "result_blob": e["result_blob"], "status": e.get("status")}
+               for q, e in sorted(finished.items())]
+    uncertain = [{"query_id": q, "kind": e["kind"], "key": key(e)} for q, e in sorted(started.items()) if q not in finished]
+    inv = []
+    for d in [sd] + [Path(x) for x in (evidence_dirs or [])]:
+        for f in sorted(Path(d).rglob("*")):
+            if f.is_file():
+                inv.append({"path": str(f), "bytes": f.stat().st_size, "sha256": hashlib.sha256(f.read_bytes()).hexdigest()})
+    if ck is None:
+        status, resumable = "CLOSED_NO_CHECKPOINT", False
+    elif not j_f.exists():
+        status, resumable = "CLOSED_UNKNOWN_INFLIGHT_CHARGE", False
+    else:
+        status, resumable = "RECONCILED_TO_CHECKPOINT", True
+        for e in started.values():                                       # charge every in-flight invocation exactly once
+            ck["sim_terminal_calls" if e["kind"] == "terminal" else "sim_transition_calls"] += 1
+        ck["reconciled"] = {"in_flight_iteration": it, "charged": len(started)}
+        tmp = ck_f.with_suffix(".tmp")
+        with tmp.open("wb") as f:
+            pickle.dump(ck, f, protocol=pickle.HIGHEST_PROTOCOL); f.flush(); os.fsync(f.fileno())
+        os.replace(tmp, ck_f)
+    rec = {"status": status, "resumable": resumable, "in_flight_iteration": it, "checkpoint_completed_iterations": ck and ck["completed_iterations"],
+           "charged_calls_at_checkpoint": base if ck else None, "inflight_started": len(started), "finished_orphans": orphans,
+           "uncertain": uncertain, "labels_inferred": 0, "evidence_inventory": inv,
+           "utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())}
+    (sd / "RECONCILED.json").write_text(json.dumps(rec, indent=1))
+    os.replace(inflight, sd / "IN_FLIGHT.reconciled")
+    return rec
 
 
 def load_saved_tree_nodes(tree_dir: Path | str) -> tuple[list[MCTSNode], dict[str, Any]]:

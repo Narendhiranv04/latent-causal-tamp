@@ -358,3 +358,70 @@ def test_physical_query_journal_counts_and_saves_exact_states(tmp_path):
         assert result.status==row["status"]
         if row["kind"]=="transition":
             assert result.next_state.prefix[-1]==tuple(row["action"])
+
+
+class _Crash(BaseException):
+    pass
+
+
+@pytest.mark.parametrize("crash_at", [3, 7, 11])
+def test_reconcile_inflight_replays_finished_reissues_uncertain_once(tmp_path, crash_at):
+    import json
+    full = tree(); full.run_search("fixture", iterations=8, max_sim_calls=60)
+    part = tree()
+    for meth in ("transition", "terminal_query"):
+        f = getattr(part.env, meth)
+        def wrapped(*a, _f=f, **k):
+            if part.env.calls + 1 == crash_at:
+                raise _Crash()                                # hard kill DURING the physical call (journal 'started' written)
+            return _f(*a, **k)
+        setattr(part.env, meth, wrapped)
+    with pytest.raises(_Crash):
+        part.run_search("fixture", iterations=8, max_sim_calls=60, save_dir=tmp_path)
+    assert (tmp_path / "IN_FLIGHT").exists()
+    with pytest.raises(ValueError, match="in-flight"):
+        tree().resume(tmp_path)
+    rec = M.reconcile(tmp_path)
+    if not (tmp_path / "checkpoint.pkl").exists() and rec["status"] == "CLOSED_NO_CHECKPOINT":
+        with pytest.raises(ValueError, match="closed"):
+            tree().resume(tmp_path)
+        return
+    assert rec["status"] == "RECONCILED_TO_CHECKPOINT" and len(rec["uncertain"]) == 1 and rec["labels_inferred"] == 0
+    resumed = tree(); resumed.resume(tmp_path)
+    resumed.run_search("fixture", iterations=8, max_sim_calls=60, save_dir=tmp_path)
+    assert resumed.edge_logs == full.edge_logs and DS.compute_leaf_stats(resumed.nodes) == DS.compute_leaf_stats(full.nodes)
+    total = full.sim_transition_calls + full.sim_terminal_calls
+    assert resumed.sim_transition_calls + resumed.sim_terminal_calls == total + 1          # uncertain call charged twice
+    phys_after = resumed.env.calls
+    assert phys_after == total - rec["charged_calls_at_checkpoint"] - len(rec["finished_orphans"])   # orphans reused, not re-executed
+    rows = [json.loads(x) for x in (tmp_path / "queries.jsonl").read_text().splitlines()]
+    assert sum(1 for r in rows if r.get("reissue_after_reconcile")) == 1
+    assert len([e for e in resumed.reconcile_log if e["event"] == "replayed_finished_orphan"]) == len(rec["finished_orphans"])
+
+
+def test_reconcile_without_checkpoint_is_closed(tmp_path):
+    (tmp_path / "IN_FLIGHT").write_text("0")
+    (tmp_path / "w.npz").write_bytes(b"witness")
+    rec = M.reconcile(tmp_path)
+    assert rec["status"] == "CLOSED_NO_CHECKPOINT" and not rec["resumable"] and rec["evidence_inventory"]
+    with pytest.raises(ValueError, match="closed"):
+        tree().resume(tmp_path)
+
+
+@pytest.mark.parametrize("cut", [1, 3])
+def test_distillation_resume_restores_optimizer_rng_exactly(tmp_path, cut):
+    t = tree(); t.run_search("fixture", iterations=8, max_sim_calls=60)
+    ex = DS.extract_distillation_data_from_tree(t.nodes, "2d", SCALERS, observation_schema=P.O0); ex["domain"] = "2d"
+    torch.manual_seed(0)
+    ck = tmp_path / "init.pt"
+    torch.save({"domain": "2d", "hidden": 16, "scalers": SCALERS, "state_dict": P.DiscoPolicyNet("2d", 16).state_dict()}, ck)
+    kw = dict(epochs=4, batch_size=8, device="cpu", checkpoint_rule="fixed_epochs")
+    DS.distill_policy_and_value("2d", ex, ck, out_dir=tmp_path / "full", **kw)
+    DS.distill_policy_and_value("2d", ex, ck, out_dir=tmp_path / "cut", stop_after_epochs=cut, **kw)
+    with pytest.raises(FileExistsError):
+        DS.distill_policy_and_value("2d", ex, ck, out_dir=tmp_path / "cut", **kw)
+    DS.distill_policy_and_value("2d", ex, ck, out_dir=tmp_path / "cut", resume=True, **kw)
+    for f in ("policy.pt", "value.pt"):
+        a = torch.load(tmp_path / "full" / f, weights_only=False)["state_dict"]
+        b = torch.load(tmp_path / "cut" / f, weights_only=False)["state_dict"]
+        assert all(torch.equal(a[k], b[k]) for k in a), f
