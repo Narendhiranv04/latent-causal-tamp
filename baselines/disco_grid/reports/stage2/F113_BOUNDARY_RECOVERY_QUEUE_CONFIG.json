@@ -1,0 +1,41 @@
+{
+  "upstream_monitor": "/home/longhorizon/disco_grid_stage2/priority_monitor_20261118",
+  "upstream_launch": "/home/longhorizon/disco_grid_stage2/PRIORITY_MONITOR_LAUNCH.json",
+  "extension_root": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/F113_completion_20261118/resume_after_boundary_v2",
+  "disco_root": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid",
+  "request": "/home/longhorizon/disco_grid_stage2/source/F113_boundary_cb38026b7f/baselines/disco_grid/reports/stage2/COMPLETION_RESOURCE_REQUEST.json",
+  "approval": "/home/longhorizon/disco_grid_stage2/source/F113_boundary_cb38026b7f/baselines/disco_grid/reports/stage2/COMPLETION_RESOURCE_APPROVAL.json",
+  "engine": "/home/longhorizon/disco_grid_stage2/source/F113_boundary_cb38026b7f/baselines/disco_grid",
+  "source_commit": "cb38026b7f31bba2a74fc92fcf3f24f856b37a48",
+  "physical_template": [
+    "nice",
+    "-n",
+    "10",
+    "taskset",
+    "-c",
+    "0-21",
+    "timeout",
+    "--signal=INT",
+    "--kill-after=30s",
+    "27000s",
+    "/home/longhorizon/disco_grid_stage2/venv/bin/python",
+    "/home/longhorizon/disco_grid_stage2/source/reserved_cores_0537d1bd12/baselines/disco_grid/reports/stage2/continue_frozen_test.py",
+    "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_reserved_stable3_20261118",
+    "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_reserved_stable3_20261118_r2"
+  ],
+  "report_template": [
+    "nice",
+    "-n",
+    "19",
+    "taskset",
+    "-c",
+    "0-21",
+    "/home/longhorizon/disco_grid_stage2/venv/bin/python",
+    "/home/longhorizon/disco_grid_stage2/source/stable3_reports_fc2b24e1b5/baselines/disco_grid/reports/stage2/finish_physical_release.py",
+    "/home/longhorizon/disco_grid_stage2/RESERVED_STABLE3_20261118_R2_EVALUATION_LAUNCH.json",
+    "/home/longhorizon/disco_grid_stage2/final_reserved_stable3_physical_release_v5",
+    "/home/longhorizon/disco_grid_stage2/source/reserved_cores_0537d1bd12/baselines/disco_grid/reports/stage2"
+  ],
+  "recovered_prior": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/F113_completion_20261118/recovered_phase_boundary_v1",
+  "recovery_proof_sha256": "cba25edb3291a17c17811692072bd43695db829581496dafc5160077fb4ccc71"
+}
