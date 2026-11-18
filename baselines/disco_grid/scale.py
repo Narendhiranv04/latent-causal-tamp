@@ -105,7 +105,9 @@ def proposal_for(out, dom, rnd):
 def tree_manifest(m, root, rnd, policy, value):
     dom = m["domain"]; scal = D.ABF_ROOT / f"data/q2_{dom}/scalers.json"
     cs = m["search_seed_schedule"][rnd]
-    ss = int(hashlib.sha256(f"{TAG}|{dom}|{rnd}|{root['root_id']}|{cs}".encode()).hexdigest()[:8], 16) % (2 ** 31 - 1)
+    att = root.get("attempt", 0)                                          # >0 only for an explicit NEW attempt after an infra quarantine
+    key = f"{TAG}|{dom}|{rnd}|{root['root_id']}|{cs}" + (f"|attempt{att}" if att else "")
+    ss = int(hashlib.sha256(key.encode()).hexdigest()[:8], 16) % (2 ** 31 - 1)
     return dict(version=3, domain=dom, roots=[{k: root[k] for k in ("root_id", "family_id", "root_sha256", "input_sha256", "K_legacy", "split")}],
                 source_commit=os.environ.get("DISCO_SOURCE_COMMIT"), runtime_versions={n: __import__("importlib.metadata", fromlist=["version"]).version(n)
                 for n in ("torch", "numpy", "mujoco")}, permission_envelope="FINAL-SCALE-v1 APPROVED", cohort_seed=cs, search_seed=ss,
@@ -137,7 +139,9 @@ def _slot_worker(out, dom, rnd, roots, slot):
                 C.require_headroom(); break
             except RuntimeError:
                 time.sleep(60)
-        J.atomic_json(td / "manifest.json", tree_manifest(m, root, rnd, pol, val))
+        qdir = Path(out) / f"trees/{dom}/R{rnd}_quarantine"
+        att = len(list(qdir.glob(f"{root['root_id']}.a*"))) if qdir.exists() else 0
+        J.atomic_json(td / "manifest.json", tree_manifest(m, dict(root, attempt=att), rnd, pol, val))
         t0 = time.time()
         try:
             C.execute(td)
@@ -172,6 +176,27 @@ def run(a):
         p.start(); time.sleep(3)
     for p in ps:
         p.join()
+
+
+def requeue(a):
+    """Move every non-clean / incomplete tree of a round to R{r}_quarantine/<root>.a<n> (journal + accounting preserved, ledger entry);
+    the root is then searched again only as an explicitly NEW attempt with a new seed.  Physical outcomes are never imputed."""
+    out = Path(a.out); base = out / f"trees/{a.domain}/R{a.round}"; q = out / f"trees/{a.domain}/R{a.round}_quarantine"; q.mkdir(exist_ok=True)
+    n = 0
+    for td in sorted(p for p in base.iterdir() if p.is_dir()):
+        f = td / "ATTEMPT_COMPLETE.json"
+        if f.exists() and jr(f).get("clean"):
+            continue
+        acc = sorted(td.glob("attempts/*/WATCHDOG_ACCOUNTING.json"))
+        reason = jr(acc[-1]).get("reason") if acc else "NO_ACCOUNTING(operator stop)"
+        k = len(list(q.glob(f"{td.name}.a*")))
+        dst = q / f"{td.name}.a{k}"
+        os.replace(td, dst)
+        with (q / "LEDGER.jsonl").open("a") as lf:
+            lf.write(json.dumps({"root_id": td.name, "moved_to": str(dst), "reason": reason, "had_journal": bool(list(dst.rglob("queries.jsonl"))),
+                                 "utc": time.strftime("%FT%TZ", time.gmtime())}) + "\n")
+        n += 1
+    print(json.dumps({"requeued": n}))
 
 
 def truncate_tree(src, dst, cap):
@@ -250,5 +275,6 @@ if __name__ == "__main__":
     g = sp.add_parser("fit"); g.add_argument("--out", required=True); g.add_argument("--domain", required=True)
     g.add_argument("--round", type=int, required=True); g.add_argument("--subset", default="ALL"); g.add_argument("--calls-cap", type=int, default=0)
     s = sp.add_parser("status"); s.add_argument("--out", required=True); s.add_argument("--domain", required=True)
+    q = sp.add_parser("requeue"); q.add_argument("--out", required=True); q.add_argument("--domain", required=True); q.add_argument("--round", type=int, required=True)
     a = ap.parse_args()
-    {"freeze": freeze, "run": run, "fit": fit, "status": status}[a.cmd](a)
+    {"freeze": freeze, "run": run, "fit": fit, "status": status, "requeue": requeue}[a.cmd](a)

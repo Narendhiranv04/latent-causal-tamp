@@ -112,6 +112,16 @@ def _final_scale():
     return bool(path) and json.loads(Path(path).read_text()).get('scope')==FINAL_SCALE_SCOPE
 
 
+def _final_scale_runtime_check(manifest):
+    """In-flight check for the parallel final-scale campaign: per-host reserve is enforced at ADMISSION (scale.py); while a tree runs
+    only real exhaustion aborts it (RAM < 4 GiB, disk < 20 GiB, load beyond 1.5x logical CPUs).  Parallel sibling trees raising load1
+    must not kill each other (measured failure mode of the single-worker check under parallel execution)."""
+    r=resources()
+    if r["ram_available"]<4*2**30 or r["disk_free"]<20*2**30 or r["load1"]>1.5*r["logical_cpus"]:
+        raise RuntimeError("BLOCKED_RESOURCE: "+json.dumps(r))
+    return r
+
+
 def execution_workers():
     execution_host()
     path=os.environ.get('DISCO_EXECUTION_AUTHORIZATION')
@@ -315,7 +325,8 @@ def execute(out):
         proc=mp.get_context("spawn").Process(target=_execute_worker,args=(out,os.getpid()))
         proc.start()
         # Query journals are below out, watchdog accounting belongs to this parent attempt.
-        cancelled=J.wait_for_child(proc,remaining,directory=out,query_wall_s=manifest["query_wall_s"],resource_check=lambda:manifest_headroom(manifest),cpu_seconds=manifest.get("cpu_envelope_s"),rss_limit_kib=manifest.get("rss_limit_kib"))
+        check=(lambda:_final_scale_runtime_check(manifest)) if final_scale else (lambda:manifest_headroom(manifest))
+        cancelled=J.wait_for_child(proc,remaining,directory=out,query_wall_s=manifest["query_wall_s"],resource_check=check,cpu_seconds=manifest.get("cpu_envelope_s"),rss_limit_kib=manifest.get("rss_limit_kib"))
         os.replace(out/"WATCHDOG_ACCOUNTING.json",attempt/"WATCHDOG_ACCOUNTING.json")
         if cancelled:
             J.atomic_json(out/"BLOCKED_WALL_LIMIT.json",{
