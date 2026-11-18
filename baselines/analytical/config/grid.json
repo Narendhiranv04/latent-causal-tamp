@@ -1,0 +1,116 @@
+{
+ "version": "ANALYTICAL_K3_GRID_V1",
+ "budget_schedule": {
+  "cpu_budgets_s": [
+   60,
+   300
+  ],
+  "primary_cpu_budget_s": 300,
+  "note": "one run per (root, method, config, seed) at the largest budget; smaller budgets are read from the same run (decided_cpu_s <= cut, else ABSTAIN) -- exact because the search never reads its own budget except through the per-call cap, which is identical at every cut",
+  "call_cap_s": 45,
+  "ref_cap_s": 120,
+  "wall_mult": 4,
+  "n_ref": 6,
+  "n_ref_try": 12
+ },
+ "default": {
+  "em4m": {
+   "t_paths": "planned",
+   "ngr": "min",
+   "done_gate": "always"
+  },
+  "mosegman": {
+   "t_paths": "planned",
+   "done_gate": "always",
+   "edt_pct": 75
+  },
+  "msmcts": {
+   "t_paths": "linear",
+   "m_regions": 2,
+   "max_tries": 4
+  }
+ },
+ "grid": {
+  "em4m": [
+   {
+    "name": "paper",
+    "t_paths": "planned",
+    "ngr": "min",
+    "done_gate": "always"
+   },
+   {
+    "name": "both",
+    "t_paths": "both",
+    "ngr": "min",
+    "done_gate": "always"
+   },
+   {
+    "name": "both_screen",
+    "t_paths": "both",
+    "ngr": "min",
+    "done_gate": "screen"
+   },
+   {
+    "name": "union",
+    "t_paths": "planned",
+    "ngr": "union",
+    "done_gate": "always"
+   }
+  ],
+  "mosegman": [
+   {
+    "name": "paper",
+    "t_paths": "planned",
+    "done_gate": "always",
+    "edt_pct": 75
+   },
+   {
+    "name": "both",
+    "t_paths": "both",
+    "done_gate": "always",
+    "edt_pct": 75
+   },
+   {
+    "name": "both_screen",
+    "t_paths": "both",
+    "done_gate": "screen",
+    "edt_pct": 75
+   },
+   {
+    "name": "both_alt3",
+    "t_paths": "both",
+    "done_gate": "always",
+    "edt_pct": 75,
+    "sgfs_attempts": 3
+   }
+  ],
+  "msmcts": [
+   {
+    "name": "paper",
+    "t_paths": "linear",
+    "m_regions": 2,
+    "max_tries": 4
+   },
+   {
+    "name": "both",
+    "t_paths": "both",
+    "m_regions": 2,
+    "max_tries": 4
+   },
+   {
+    "name": "m3",
+    "t_paths": "linear",
+    "m_regions": 3,
+    "max_tries": 6
+   },
+   {
+    "name": "stuck1",
+    "t_paths": "linear",
+    "m_regions": 2,
+    "max_tries": 4,
+    "stuck_depth": 1
+   }
+  ]
+ },
+ "selection_rule": "per method and domain: the grid entry with the highest VAL-subset Task success at the primary budget (ties: lower mean CPU, then grid order); 'paper' is the default when no selection run is made. Seeds 0,1,2."
+}
