@@ -1,7 +1,7 @@
 {
-  "utc": "2026-11-18T05:26:15.581578+00:00",
+  "utc": "2026-11-18T05:39:37.855045+00:00",
   "overall": "PARTIAL",
-  "physical_task_results": "RECOVERED_EXTENSION_QUEUED_FOR_SUSTAINED_HEADROOM",
+  "physical_task_results": "PARTIAL_OR_NOT_RUN",
   "gates": {
     "S2.0": {
       "status": "DONE",
@@ -33,7 +33,7 @@
     },
     "S2.7": {
       "status": "PARTIAL",
-      "reason": "v4 partial snapshot pushed, 2D 412/525 and 3D 237/525 attempts. 2D CPU reserve exhausted; remaining never-attempted frozen 3D identities resumed after load fell to 16.89. Original models, VAL selection, prior outcomes and cumulative budgets unchanged."
+      "reason": "See fixed-denominator metrics, censoring ledger and phase accounting; no unknown outcome imputed as a physical negative."
     },
     "S2.8": {
       "status": "PARTIAL",
@@ -45,9 +45,5 @@
     }
   },
   "generator_sha256": "e1f07d0317dbd263f4c078773dbf56a085e0f0a1bfebfedf76d91397c69eadb6",
-  "report_generator_sha256": "c3a804819d7201549fb1b923c75b8ee55c44a37db3ff476f3447ba1f4b05e307",
-  "current_run": "V15_F25_v1_reserved_stable3_20261118_r2",
-  "workers": 3,
-  "completion_monitor": "Adopts current run, continues only never-attempted frozen identities after sustained headroom, carries cumulative budgets, final report and automatic publication. Additional 2D CPU request is not authorized.",
-  "completion_extension": "48/113 approved identities attempted; 65 remain. Phase-boundary error reconciled in a new audited ledger, prior outcomes unchanged. Fixed pipeline waits for headroom, then resumes only the 65 unattempted identities."
+  "report_generator_sha256": "1ed19f8123f3331db507c5748cfe3173eba64dbb53a7185c18323415051c7176"
 }

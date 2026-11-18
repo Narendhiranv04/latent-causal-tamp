@@ -1,0 +1,398 @@
+{
+  "approved_phases": [
+    "val",
+    "test"
+  ],
+  "approved_utc": "2026-11-17T12:02:07.779433+00:00",
+  "authorization_origin": "Explicit user reply to V15-F25-v1 approval question in Codex session; 510 VAL and at most 1050 TEST trials, 5523 uncached calls; 2D 1h VAL + 3h TEST, 3D 2h VAL + 6h TEST, CPU and active wall.",
+  "authorization_text": "Authorize VAL and TEST for both domains",
+  "cancellation": "Identity-scoped child/session watchdog and parent-death guard; per-query durable evidence; no automatic ambiguous restart",
+  "candidate_sets": {
+    "test_eta0.08.json": {
+      "jobs": 1000,
+      "maximum_uncached_adapter_calls": 3022,
+      "original_sha256": "06e5c53d70cb65e592efb47e7c2cfa1153ed68c6d6e7a874be21bff879290b44",
+      "sha256": "deef9e6cbde05c95507a5ddbf72d0f428572f289d2b9702286ec7ce463388ecf"
+    },
+    "test_eta0.15.json": {
+      "jobs": 1000,
+      "maximum_uncached_adapter_calls": 2995,
+      "original_sha256": "7f450db1c247d5b9dfb454346b298e2b51dc8de45c05a2dbaa87a2c19075ba6d",
+      "sha256": "d0eaa155bf2d98cb1a36beacdaefe083902d660aa6efbda2e482b4a30f3d07a6"
+    },
+    "test_eta0.json": {
+      "jobs": 1050,
+      "maximum_uncached_adapter_calls": 3689,
+      "original_sha256": "acb40349289aef254e51c1f1c00c1adc5beb7ffe14a8c163de330cfca061b402",
+      "sha256": "91bf4eb200da3d8b33fc5ce97aeffcbc2625a392ec436f7e57f7811d6a86fb30"
+    },
+    "val_eta0.08.json": {
+      "jobs": 90,
+      "maximum_uncached_adapter_calls": 362,
+      "original_sha256": "c869a93c9dd87014e3c8cd9a06ee982b63dc756e9f0580f987dd1abee25a96df",
+      "sha256": "39e4be1aff48e568c2086a8d3263acaf7fdcdfedaefbbe2a07d91c2b9bc18c18"
+    },
+    "val_eta0.15.json": {
+      "jobs": 90,
+      "maximum_uncached_adapter_calls": 358,
+      "original_sha256": "b49ea14c806c5dec3954587bf943cd7ecab9e9ed330f78fec154e244226d6048",
+      "sha256": "d92c7ba95c8e0c3f7068c505580f7374823a6b7e5224250088f6ed57f55a8be8"
+    },
+    "val_eta0.json": {
+      "jobs": 330,
+      "maximum_uncached_adapter_calls": 1120,
+      "original_sha256": "50880c333c3b9b2503a3720669dfc8012ffe0dbba82acb0288bb87042c292665",
+      "sha256": "57a7078aa29738093e58ce879235aad41910d092060ff7524e529ba7aace9ed1"
+    }
+  },
+  "ceilings": {
+    "2d": {
+      "test": 53920.067514509996,
+      "val": 3600
+    },
+    "3d": {
+      "test": 21600,
+      "val": 7200
+    }
+  },
+  "checkpoint_manifest_sha256": "0ec9ef1fa46cdb095b4174294da79ec61d760272ba9d6109979c7b6fc06a8e96",
+  "completion_extension": {
+    "approval": {
+      "additional_active_wall_s": 18000,
+      "additional_cpu_s": 43200,
+      "authorization_text": "Authorize frozen 2D completion extension",
+      "global_adapter_call_ceiling": 5523,
+      "gpu": false,
+      "host": "girish-laptop",
+      "maximum_additional_adapter_calls": 370,
+      "new_disk_gib": 2,
+      "no_model_or_VAL_change": true,
+      "no_new_TRAIN_collection": true,
+      "no_retry": true,
+      "query_wall_s": 60,
+      "ram_gib": 4,
+      "remaining_trials": 113,
+      "request_commit": "0c37948f0d",
+      "request_sha256": "0e5776d0bbbcab8fcbd3ab66ea0b73c97a2d3ddf7c1e3f89fa7ecdfd34c68942",
+      "reserved_logical_cpus": [
+        22,
+        23
+      ],
+      "reserved_physical_cores": 2,
+      "scope": "DISCO_ONLY_FROZEN_2D_TEST_CPU_EXTENSION",
+      "status": "APPROVED",
+      "trial_wall_s": 300,
+      "utc": "2026-11-17T22:41:18.157277+00:00",
+      "workers": 3
+    },
+    "approval_path": "/home/longhorizon/disco_grid_stage2/source/F113_extension_7665c3a528/baselines/disco_grid/reports/stage2/COMPLETION_RESOURCE_APPROVAL.json",
+    "approval_sha256": "f3d0acd281f4ee3d3034ee15f551cc90a09449955f219e474c6fb2c7e834a23c",
+    "cumulative_disk_root": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/F113_completion_20261118",
+    "initial_active_wall_s": 2847.19260834693,
+    "initial_adapter_calls": 923,
+    "initial_cpu_s": 10720.067514509998,
+    "job_ids": [
+      "ae6b772729ce4a626695",
+      "1234b53e3d82fe10a42f",
+      "e14bb8428f86ec161b05",
+      "4246e54a03a6f72764e5",
+      "beccd59a6647b247809b",
+      "c5b11bfa851a366edb39",
+      "867518ba7d9d6e628b4d",
+      "b986853d4aa83a624038",
+      "7faaedd8d01c21883b66",
+      "45360912a302ef6984f2",
+      "d203555ccb3d5707d686",
+      "dee0757243372105cc55",
+      "9abcea3afe580c90c7ea",
+      "7c63aba9ebecc38477c1",
+      "9fbcecf2feede74818a9",
+      "cff857454ee2b184cf9f",
+      "0a34a686312e239afaae",
+      "4e4e7e93ade2b1c05c95",
+      "9400cfdfa1e4d40c24cb",
+      "778b22783b099fa2222d",
+      "1e768c5fdd11b363dcfc",
+      "3fdbd1a3827def940d78",
+      "c719d00f7e30c931d412",
+      "c0b737023bf410bbb795",
+      "59bd3e2710b35f665095",
+      "d855b9d31b7ff028f92b",
+      "77cab9d489a69ceea425",
+      "05f87e7e4b1fd59dff55",
+      "0393eaaedeb396ab0f81",
+      "27c276de31861146d85a",
+      "80194a5aae18eb4c722e",
+      "c7ffc531c2c265a15d21",
+      "b10a6082dbdebdb956bf",
+      "b3b78f2d7f1ec1e9b5eb",
+      "bc7686e104258c89c63a",
+      "827d3f716524ad32b1cf",
+      "6734ff4120066e1ff889",
+      "3e267f2d241aeece5008",
+      "3822f012aeb0136433f7",
+      "979908119485658c7f0e",
+      "41f7eb164881aa925c8a",
+      "1fa421dd5cbcc7ad3d03",
+      "c850d0771f9b75821076",
+      "f981e703edc87424c8ca",
+      "75bf6eaed8f7a90d9b15",
+      "bb19143ac02e2849cb3a",
+      "338311ee8e39268fd249",
+      "80023baae30c54511773",
+      "1ebdc06f9ae794a46719",
+      "f9c6401616409f4744df",
+      "3e9be93a2cb668267e16",
+      "1667ba98cef5a87cc387",
+      "e6795545e968b11c8de5",
+      "928d07eb2f3eeca9a995",
+      "798ee30394d909201078",
+      "43b816d552088fe28ea6",
+      "9fe87c700ef0d8dc243b",
+      "9f47d9ef0d4d7428e120",
+      "b9b226625f36967d1f5e",
+      "09efafddfcf2265a9fb0",
+      "50831e33eb110dbbd5e7",
+      "7c28365e38bb58f8eba2",
+      "a0d7f2e52e7ee800f6c9",
+      "4d2a233631f058ddd991",
+      "a07a64688aca90d697f0",
+      "8b0bd253dd17a2a19fd5",
+      "a446b4aa5de5673fbd07",
+      "47e87d8528d0bff74fc5",
+      "43da76c4c2f821ce625b",
+      "56dc05dcadf905db7e3c",
+      "4d700f00916e343cece2",
+      "852941be91d828696640",
+      "736ff2671f3542137915",
+      "a44844525ffd3c29a2ed",
+      "997114edb6ac43c24364",
+      "527378221d8402fc4373",
+      "8b38be3f79b76e7cc123",
+      "14ec44d7461c1ba4b0ae",
+      "4abe4688a41f719c0318",
+      "fe175e9cfaa4dd441ccd",
+      "898bc3defbf017549f5e",
+      "f134e8c80a07b195b11c",
+      "e265db6ba89733b32ac7",
+      "0926f548a98813615e39",
+      "09cbd3e841383e712e74",
+      "09691dc021eb650b0dd2",
+      "6763a2d82484fb892655",
+      "5198a6bd3ffd456dd8b8",
+      "fb7c3f43c8d15f7fb896",
+      "d21396c4a760653ff923",
+      "ed779a6bf518b8cbedc7",
+      "ef69ce97610941ec4205",
+      "e420250fa82543607caf",
+      "93dbd54b48a13f7942be",
+      "020bc054bf0af0299233",
+      "768d82df9ba7a9269efe",
+      "b80d2f37044dfa44b117",
+      "4c3b06dbd0cb6b7ce221",
+      "4eb795ecfb1dec3a341e",
+      "aab822c49a91ed5c39c4",
+      "b658e810c2847fa16bc3",
+      "29bd12ad1d9b4132f609",
+      "843607dadee557567313",
+      "1754d74f888524960e8d",
+      "a77646d2924e1b8e2f45",
+      "19c8878b190ec298a087",
+      "39c9e464ffaa8342348c",
+      "b6d02ac70010545dc556",
+      "96df8f79b2e64b44310e",
+      "9b10b5dba8900ee9b8c7",
+      "a23525223044a516c4a5",
+      "8a4ba9cd5f6708c0a1b3",
+      "120ec0324fb744b07c99"
+    ],
+    "original_complete_sha256": "e658593286c31059eb03b76c79d7c5828ba1f40775151761e09463c46fe9941f",
+    "original_release": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_priority_20261118_1",
+    "original_selection_freeze_sha256": "10a8da3b077b9f4cf3418feadc8b345adfc1524dbbb06e748021b476bdd11bc9",
+    "request_path": "/home/longhorizon/disco_grid_stage2/source/F113_extension_7665c3a528/baselines/disco_grid/reports/stage2/COMPLETION_RESOURCE_REQUEST.json",
+    "request_sha256": "0e5776d0bbbcab8fcbd3ab66ea0b73c97a2d3ddf7c1e3f89fa7ecdfd34c68942"
+  },
+  "cpu_threads": 1,
+  "disk_gib": 10,
+  "engine": "/home/longhorizon/disco_grid_stage2/source/F113_boundary_cb38026b7f/baselines/disco_grid",
+  "exclusions": "No competing method, no new training, no additional machine or GPU. TEST starts only after selection freeze and required VAL coverage.",
+  "final_model_seeds": [
+    0,
+    1,
+    2
+  ],
+  "global_adapter_call_ceiling": 5523,
+  "gpu": false,
+  "host": "girish-laptop",
+  "host_amendment": {
+    "authorization_text": "don't use gvlab since its all occupied. use the girish laptop GPU if needed and its CPU cores.",
+    "cpu_threads": 1,
+    "execution_root": "/home/longhorizon/disco_grid_stage2",
+    "gpu": false,
+    "host": "girish-laptop",
+    "hostname": "gvcstar",
+    "resource_semantics": "Continue the previously approved V15-F25-v1 ceiling, including all gvlab attempts; no reset or expansion. GPU is authorized if needed but unused for physical evaluation.",
+    "revoked_execution_hosts": [
+      "gvlab"
+    ],
+    "scope": "DISCO_RELEASE_HOST_AMENDMENT",
+    "ssh_alias": "girish",
+    "status": "APPROVED",
+    "utc": "2026-11-17T12:23:07.594980+00:00",
+    "workers": 1
+  },
+  "host_amendment_sha256": "9797f789321dcc7c0fe2f904f7705e61b0e29d33e97629918558fa8aaf138608",
+  "id": "V15-F25-v1",
+  "interpretation": "Exploratory held-out cohorts; no untouched confirmation attested; fixed-root denominators retain every unresolved/unexecuted trial",
+  "original_checkpoint_manifest_sha256": "0b5c9ecb78eae4c27abcd7749e5157d3893f0cc7c99f3ae6b43cdd2f7c82ac3f",
+  "original_frozen_preparation_sha256": "92073646fbfd984a10342fb5792ce6bea2b8ce3478e534af9b76eb9d7b51dd17",
+  "original_preparation": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/campaigns/E16_v1_20261117/evaluation_preparation_v3",
+  "parallel_authorization": {
+    "authorization_text": "you can use the girish laptop rest of the cpu cores to speed things up. make sure you have 2 cores free on the girish laptop, other than you can use whatever's available.",
+    "authorized_hosts": {
+      "girish-laptop": "gvcstar",
+      "user-laptop": "pop-os"
+    },
+    "ceilings": {
+      "2d": {
+        "test": 10800,
+        "val": 3600
+      },
+      "3d": {
+        "test": 21600,
+        "val": 7200
+      }
+    },
+    "cpu_affinity": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21
+    ],
+    "cpu_threads": 1,
+    "disk_gib": 10,
+    "global_adapter_call_ceiling": 5523,
+    "gpu": false,
+    "gpu_assessment": "Neural latency sum 846.7ms versus 1747.74s 2D VAL physical phase; preserve frozen CPU inference. Physics and planning are CPU-only.",
+    "gpu_authorized_if_useful": true,
+    "host": "girish-laptop",
+    "hostname": "gvcstar",
+    "inference_device": "frozen CPU",
+    "interpretation": "User amended host/worker placement only. Same aggregate CPU, wall, call, RAM and disk ceilings; no change to models, roots, benchmark, query caps, retries or verification.",
+    "ram_gib": 4,
+    "reserved_logical_cpus": [
+      22,
+      23
+    ],
+    "reserved_physical_cores": 2,
+    "resource_coordination": {
+      "disco_trial_nice": 19,
+      "girish_workers": 3,
+      "load_ceiling": 22,
+      "local_reason": "Observed MemAvailable about 6 GiB below unchanged 8 GiB headroom guard; high swap use. Do not disrupt other methodology work.",
+      "local_worker_allocation": 0,
+      "other_job_observed_workers": {
+        "girish-laptop": 16,
+        "user-laptop": 14
+      },
+      "reserved_from_DISCO": "Physical cores 14 and 15, logical CPUs 22 and 23. Other workloads unchanged; global idleness not guaranteed."
+    },
+    "revoked_execution_hosts": [
+      "gvlab"
+    ],
+    "scheduling_note": "Use three slots after measured four-slot transient load stops; same user authorization, two complete physical cores excluded, original budgets and no-retry rule unchanged.",
+    "scope": "DISCO_RELEASE_RESERVED_CORES_AMENDMENT",
+    "status": "APPROVED",
+    "utc": "2026-11-17T18:24:36.058225+00:00",
+    "workers": 3
+  },
+  "parallel_runner_sha256": "ecbe42428b654298fa7ae5b42d822ce2d325a2b256d7f912435bcac5bf553548",
+  "parallel_source_commit": "bc47221c789f9236a1d940908909d900de43ffcb",
+  "pool_sha256": "9d506aa0d4c250f19cc9b820d912e1a26f739dac8ace9a943af647cdc5f07bbd",
+  "preparation": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/V15_F25_v1_girish_20261117/execution_preparation",
+  "preparation_sha256": "bae2e8321a8481b84aaa8ab39fae30083e191d2bb135a028224c30ff6906fc29",
+  "prior_attempt_charge": {
+    "active_wall_s": 911.0308232307434,
+    "adapter_calls": 109,
+    "attempts": 33,
+    "controller_cpu_s": 911.0308232307434,
+    "cpu_accounting_kind": "CONSERVATIVE_CONTROLLER_ELAPSED_UPPER_BOUND",
+    "cpu_s": 1805.4161872307436,
+    "exact_final_controller_cpu_s": null,
+    "scope": "All original gvlab attempts, including user-cancelled final trial; detached controller CPU charged at elapsed-wall upper bound",
+    "worker_cpu_s": 894.3853640000002,
+    "worker_wall_s": 899.1270242715254
+  },
+  "prior_release": "/home/longhorizon/disco_grid_stage2/rootfs/scratch/nav/disco_grid/stage2/releases/F113_completion_20261118/recovered_phase_boundary_v1",
+  "prospective_control_correction": {
+    "audit": "/scratch/nav/disco_grid/stage2/campaigns/E16_v1_20261117/training_release_v2/CANDIDATE_CONTROL_CORRECTION.json",
+    "heldout_outcomes_used": false,
+    "resource_ceilings_and_primary_models_unchanged": true,
+    "sha256": "3b089805f0b3e6b4d39679a1cb42071400334065850ea06e57d4517af56fd3a4"
+  },
+  "query_wall_s": {
+    "2d": 60,
+    "3d": 120
+  },
+  "ram_gib": 4,
+  "roots_per_domain": {
+    "test": 25,
+    "val": 15
+  },
+  "runner_sha256": "237d96c02c92e5bffd4beddcd039d1cb51b9bd3d4856ff3a2a2fad1475585f80",
+  "scientific_source_sha256": {
+    "ablate.py": "d0d7ca737ac6918a674add2d19c8cb5f458e49e57ae4fe2ae947ab39ac553602",
+    "campaign.py": "f23c785482e2266ec4c61b723a20d0c6f052a3bf992eecbb2e318f17752560e7",
+    "collect.py": "8bdd1b3edc504b32460ab8e690009b07e4816d6e1af7b10622eb142cf94961db",
+    "data.py": "a6d354b668dbfca6f5390f84e8b186cf20b5d02ddae106614762be260efcf4c0",
+    "distill.py": "8a9d97e36b26f0c93f3e8557a65fab49ad6ab42befd6cbcc18e49aa76c4eedcd",
+    "env.py": "ab6a07aec171cb14f8da40aff2e000e312406461b9992099034cebcf51269dac",
+    "evaluate.py": "e537712c6d7d279fde74f789433eaf37cd16565edf194f2d4e8a2be0486439eb",
+    "journal.py": "e9242781ad57a96fe6657688dddd485c4413d6ae92393bd78df7d8e4226f0f5c",
+    "mcts.py": "1e7c7cc0f72ead13425cece0d776255761202fbf97ccd2f447e5a80075830677",
+    "physical_eval.py": "fbbe83ee0b00f7478163dce430675b6e3ff0db9537bd34fd66d1876c6cf64e05",
+    "policy.py": "813ebb7b0676ea3bc5190728d31c0b08026be01d337b6e811d2fbd0edce43a8b",
+    "viz.py": "fce5e62252e6e899917372fa04a88a199d2a1dced844d53ae95121537df00af6"
+  },
+  "scope": "DISCO_RELEASE_EVALUATION",
+  "selection": "VAL O0_P2Q2 task success, then verified K0 NOOP, then explicit NONE abstention; residual ties smaller eta. Apply common selected eta to all Q arms and O0/O1 closed-loop.",
+  "source_commit": "cb38026b7f31bba2a74fc92fcf3f24f856b37a48",
+  "status": "APPROVED",
+  "trial_wall_s": {
+    "2d": 300,
+    "3d": 600
+  },
+  "units": "seconds per domain and phase, CPU and active wall; all attempts and parent overhead charged",
+  "validation_model_seeds": [
+    0
+  ],
+  "wall_ceilings": {
+    "2d": {
+      "test": 20847.19260834693,
+      "val": 3600
+    },
+    "3d": {
+      "test": 21600,
+      "val": 7200
+    }
+  },
+  "workers": 3
+}

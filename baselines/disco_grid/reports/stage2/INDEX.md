@@ -163,3 +163,11 @@ The corrected queue uses immutable source `cb38026b7f` and resumes only the 65 r
 ## User-requested 10-minute status watchdog
 
 A dedicated agent added a persistent read-only observer with 600-second snapshots, process/start-identity and heartbeat checks, immutable source checks, durable status logs and checked desktop notification delivery. The existing 30-second supervisor remains the sole physical recovery authority. [Configuration and relocation qualification](TEN_MINUTE_WATCHDOG_CONFIG.json). No new physical or competing-method jobs are launched by the status observer. User-laptop migration is currently blocked by available RAM <8 GiB and disk <20 GiB; gvlab remains revoked and other hosts have not been qualified/authorized. Timed chat-message delivery is unavailable; desktop acceptance/failure and every update are recorded explicitly. Six observer tests passed.
+
+## Measured physical release
+
+- [Standalone measured report](FINAL_DISCO_STAGE2_REPORT.md), [metrics](FINAL_METRICS.csv), and [paired ablations](ABLATIONS.csv).
+- [Versioned physical evidence package](physical_release_V15_F25_v200/FINISH_COMPLETE.json), [query/state byte inventory](physical_release_V15_F25_v200/physical_evidence_index.json), and [publication hashes](PHYSICAL_RELEASE_PUBLICATION.json).
+- [Root STOP diagnostics](ROOT_STOP_DIAGNOSTICS.json), [failure examples](FAILURE_EXAMPLES.json), and [physical resource totals](PHYSICAL_RESOURCE_TOTALS.json).
+
+Earlier pending-run statements in this index describe preparation history; the measured report and status JSON are current.
