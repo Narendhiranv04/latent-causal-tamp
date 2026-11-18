@@ -80,7 +80,15 @@ def run(config_path,state):
             status('QUEUED_BEHIND_3D',upstream=str(upstream));time.sleep(30)
         prior=Path(M.read(upstream/'FINAL.json')['current_release'])
         root=Path(config['extension_root']);root.mkdir(exist_ok=False)
-        view=root/'approved_prior_view';prepare(prior,config['request'],config['approval'],view)
+        if config.get('recovered_prior'):
+            view=Path(config['recovered_prior'])
+            if M.digest(view/'PHASE_BOUNDARY_RECOVERY.json')!=config['recovery_proof_sha256']:
+                raise ValueError('Recovered prior audit hash changed')
+            if not (view/'COMPLETE.json').exists():raise ValueError('Audited recovered ledger required')
+            if M.read(view/'APPROVED_ENVELOPE.json')['completion_extension']['approval_sha256']!=M.digest(config['approval']):
+                raise PermissionError('Recovered ledger does not carry the same approval')
+        else:
+            view=root/'approved_prior_view';prepare(prior,config['request'],config['approval'],view)
         # Recheck sustained spare capacity without changing the engine guards.
         stable=0;began=time.monotonic()
         while stable<3:
