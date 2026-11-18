@@ -23,7 +23,7 @@ from pathlib import Path
 
 from . import envs
 from .common import Decision
-from .contract import prediction, public_row
+from .contract import legality, prediction, public_row
 from .em4m import EM4M
 from .mosegman import MOSeGMan
 from .msmcts import MSMCTS
@@ -69,6 +69,8 @@ def solve_one(E, row, method, cfg, seed, budget, path=None) -> tuple[dict, dict]
         d = Decision("ABSTAIN", [], f"{type(e).__name__}: {str(e)[:300]}", "ERROR", {"trace": traceback.format_exc()[-1500:],
                                                                                     "phys": ph.stats()})
     cpu = d.stats["phys"]["cpu_s"]
+    if d.kind == "REPAIR" and legality(row["inputs"], row["domain"], d.prefix) is not None:   # never expected (phys rejects illegal)
+        d = Decision("ABSTAIN", [], f"illegal plan {d.prefix} withheld", "ERROR", d.stats)
     pred = prediction(row, d.kind, d.prefix, method=f"{method}:{cfg}", seed=seed, budget_cpu_s=budget, termination=d.termination,
                       decided_cpu_s=cpu, timing_s={"total": cpu})
     stats = {"root_id": row["root_id"], "domain": row["domain"], "method": method, "config": cfg, "seed": seed, "budget_cpu_s": budget,

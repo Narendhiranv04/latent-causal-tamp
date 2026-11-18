@@ -80,7 +80,7 @@ def main(dom, rid, pub, out):
     bad_path.write_text(json.dumps(bad))
     for p in (None, None, str(bad_path)):
         envs.load_root(E, row, p)
-        ph = RealPhys(E, row, budget_s=240, call_cap_s=45)
+        ph = RealPhys(E, row, max_calls=int(os.environ.get("REAL_MAX_CALLS", 16)))   # call-count cap: deterministic stop
         d = EM4M(ph, 0).run()
         runs.append([d.kind, d.prefix, d.termination, d.stats["search"], {k: v for k, v in ph.n.items()}])
     res["deterministic_replay"] = runs[0] == runs[1]
