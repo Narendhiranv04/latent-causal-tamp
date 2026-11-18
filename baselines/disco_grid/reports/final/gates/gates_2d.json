@@ -1,0 +1,1213 @@
+{
+ "domain": "2d",
+ "split": "train",
+ "roots": [
+  {
+   "root_id": "2d-plus2d-srv-w0082-s013",
+   "K": "0",
+   "orders": [],
+   "noop_stop": {
+    "status": "DECIDED",
+    "z": 1,
+    "y": 1,
+    "has_connector_witness": false
+   },
+   "G5_noop_ok": true
+  },
+  {
+   "root_id": "2d-plus2d-w0277-s013",
+   "K": "2",
+   "orders": [
+    {
+     "seq": [
+      [
+       1,
+       63
+      ],
+      [
+       0,
+       62
+      ]
+     ],
+     "label_x": 1,
+     "label_y": 1,
+     "steps": [
+      {
+       "action": [
+        1,
+        63
+       ],
+       "legal_in_obs": true,
+       "status": "EXECUTED",
+       "failure_kind": null,
+       "time_s": 4.49,
+       "moved_left_eligible": true,
+       "dest_left_legal": true,
+       "gripper_released": true,
+       "q_changed": true,
+       "next_hash": "ddd3ffaa5b29fb7a755685c3"
+      },
+      {
+       "action": [
+        0,
+        62
+       ],
+       "legal_in_obs": true,
+       "status": "EXECUTED",
+       "failure_kind": null,
+       "time_s": 2.64,
+       "moved_left_eligible": true,
+       "dest_left_legal": true,
+       "gripper_released": true,
+       "q_changed": true,
+       "next_hash": "2ded4330170aa781d56fd66a"
+      }
+     ],
+     "calls": 3,
+     "stop": {
+      "status": "DECIDED",
+      "success": true,
+      "x": 1,
+      "y": 1,
+      "z": 1,
+      "connector_status": "VERIFIED",
+      "y_status": "VERIFIED",
+      "has_connector_witness": true,
+      "failed_phase": null,
+      "time_s": 1.63
+     },
+     "disco_x": 1,
+     "unresolved": false,
+     "G1_agree": true,
+     "G1_y_agree": true,
+     "G2_restore_same_hash": true,
+     "G3_q_continuity": true,
+     "G6": {
+      "stop_depth1": {
+       "status": "DECIDED",
+       "z": 0,
+       "phase": "target"
+      },
+      "continue_status": "EXECUTED"
+     }
+    },
+    {
+     "seq": [
+      [
+       0,
+       62
+      ],
+      [
+       1,
+       63
+      ]
+     ],
+     "label_x": 0,
+     "label_y": 1,
+     "steps": [
+      {
+       "action": [
+        0,
+        62
+       ],
+       "legal_in_obs": true,
+       "status": "EXECUTED",
+       "failure_kind": null,
+       "time_s": 6.11,
+       "moved_left_eligible": true,
+       "dest_left_legal": true,
+       "gripper_released": true,
+       "q_changed": true,
+       "next_hash": "e4960237b9617a12e7e6925f"
+      },
+      {
+       "action": [
+        1,
+        63
+       ],
+       "legal_in_obs": true,
+       "status": "PHYSICALLY_FAILED",
+       "failure_kind": "CERTIFIED",
+       "time_s": 1.05
+      }
+     ],
+     "calls": 2,
+     "disco_x": 0,
+     "unresolved": false,
+     "G1_agree": true
+    },
+    {
+     "seq": [
+      [
+       1,
+       63
+      ]
+     ],
+     "label_x": 1,
+     "label_y": 0,
+     "steps": [
+      {
+       "action": [
+        1,
+        63
+       ],
+       "legal_in_obs": true,
+       "status": "EXECUTED",
+       "failure_kind": null,
+       "time_s": 0.0,
+       "moved_left_eligible": true,
+       "dest_left_legal": true,
+       "gripper_released": true,
+       "q_changed": true,
+       "next_hash": "ddd3ffaa5b29fb7a755685c3"
+      }
+     ],
+     "calls": 2,
+     "stop": {
+      "status": "DECIDED",
+      "success": false,
+      "x": 1,
+      "y": 0,
+      "z": 0,
+      "connector_status": "VERIFIED",
+      "y_status": "UNKNOWN_PLANNER",
+      "has_connector_witness": true,
+      "failed_phase": "target",
+      "time_s": 0.25
+     },
+     "disco_x": 1,
+     "unresolved": false,
+     "G1_agree": true,
+     "G1_y_agree": true
+    }
+   ]
+  },
+  {
+   "root_id": "2d-plus2d-w0307-s000",
+   "K": "2",
+   "orders": [
+    {
+     "seq": [
+      [
+       0,
+       63
+      ],
+      [
+       1,
+       3
+      ]
+     ],
+     "label_x": 1,
+     "label_y": 1,
+     "steps": [
+      {
+       "action": [
+        0,
+        63
+       ],
+       "legal_in_obs": true,
+       "status": "EXECUTED",
+       "failure_kind": null,
+       "time_s": 6.54,
+       "moved_left_eligible": true,
+       "dest_left_legal": true,
+       "gripper_released": true,
+       "q_changed": true,
+       "next_hash": "460ecb70c1bf4e24aa857629"
+      },
+      {
+       "action": [
+        1,
+        3
+       ],
+       "legal_in_obs": true,
+       "status": "EXECUTED",
+       "failure_kind": null,
+       "time_s": 8.66,
+       "moved_left_eligible": true,
+       "dest_left_legal": true,
+       "gripper_released": true,
+       "q_changed": true,
+       "next_hash": "a42e427167c810edd282af84"
+      }
+     ],
+     "calls": 3,
+     "stop": {
+      "status": "DECIDED",
+      "success": true,
+      "x": 1,
+      "y": 1,
+      "z": 1,
+      "connector_status": "VERIFIED",
+      "y_status": "VERIFIED",
+      "has_connector_witness": true,
+      "failed_phase": null,
+      "time_s": 5.39
+     },
+     "disco_x": 1,
+     "unresolved": false,
+     "G1_agree": true,
+     "G1_y_agree": true,
+     "G2_restore_same_hash": true,
+     "G3_q_continuity": true,
+     "G6": {
+      "stop_depth1": {
+       "status": "DECIDED",
+       "z": 0,
+       "phase": "target"
+      },
+      "continue_status": "EXECUTED"
+     }
+    },
+    {
+     "seq": [
+      [
+       1,
+       3
+      ],
+      [
+       0,
+       63
+      ]
+     ],
+     "label_x": 1,
+     "label_y": 1,
+     "steps": [
+      {
+       "action": [
+        1,
+        3
+       ],
+       "legal_in_obs": true,
+       "status": "EXECUTED",
+       "failure_kind": null,
+       "time_s": 4.69,
+       "moved_left_eligible": true,
+       "dest_left_legal": true,
+       "gripper_released": true,
+       "q_changed": true,
+       "next_hash": "b301d2b23a0ae9bd45c32437"
+      },
+      {
+       "action": [
+        0,
+        63
+       ],
+       "legal_in_obs": true,
+       "status": "EXECUTED",
+       "failure_kind": null,
+       "time_s": 3.66,
+       "moved_left_eligible": true,
+       "dest_left_legal": true,
+       "gripper_released": true,
+       "q_changed": true,
+       "next_hash": "3c9254e453e1b5c0bb9eaa62"
+      }
+     ],
+     "calls": 3,
+     "stop": {
+      "status": "DECIDED",
+      "success": true,
+      "x": 1,
+      "y": 1,
+      "z": 1,
+      "connector_status": "VERIFIED",
+      "y_status": "VERIFIED",
+      "has_connector_witness": true,
+      "failed_phase": null,
+      "time_s": 3.15
+     },
+     "disco_x": 1,
+     "unresolved": false,
+     "G1_agree": true,
+     "G1_y_agree": true,
+     "G2_restore_same_hash": true,
+     "G3_q_continuity": true,
+     "G6": {
+      "stop_depth1": {
+       "status": "DECIDED",
+       "z": 0,
+       "phase": "target"
+      },
+      "continue_status": "EXECUTED"
+     }
+    },
+    {
+     "seq": [
+      [
+       1,
+       3
+      ]
+     ],
+     "label_x": 1,
+     "label_y": 0,
+     "steps": [
+      {
+       "action": [
+        1,
+        3
+       ],
+       "legal_in_obs": true,
+       "status": "EXECUTED",
+       "failure_kind": null,
+       "time_s": 0.0,
+       "moved_left_eligible": true,
+       "dest_left_legal": true,
+       "gripper_released": true,
+       "q_changed": true,
+       "next_hash": "b301d2b23a0ae9bd45c32437"
+      }
+     ],
+     "calls": 2,
+     "stop": {
+      "status": "DECIDED",
+      "success": false,
+      "x": 1,
+      "y": 0,
+      "z": 0,
+      "connector_status": "VERIFIED",
+      "y_status": "CERTIFIED_INFEASIBLE",
+      "has_connector_witness": true,
+      "failed_phase": "target",
+      "time_s": 2.28
+     },
+     "disco_x": 1,
+     "unresolved": false,
+     "G1_agree": true,
+     "G1_y_agree": true
+    }
+   ]
+  },
+  {
+   "root_id": "2d-plus2d-w0252-s003",
+   "K": "2",
+   "orders": [
+    {
+     "seq": [
+      [
+       0,
+       12
+      ],
+      [
+       1,
+       3
+      ]
+     ],
+     "label_x": 1,
+     "label_y": 1,
+     "steps": [
+      {
+       "action": [
+        0,
+        12
+       ],
+       "legal_in_obs": true,
+       "status": "EXECUTED",
+       "failure_kind": null,
+       "time_s": 4.59,
+       "moved_left_eligible": true,
+       "dest_left_legal": true,
+       "gripper_released": true,
+       "q_changed": true,
+       "next_hash": "94eb01d33d4fbe44df21a782"
+      },
+      {
+       "action": [
+        1,
+        3
+       ],
+       "legal_in_obs": true,
+       "status": "EXECUTED",
+       "failure_kind": null,
+       "time_s": 8.16,
+       "moved_left_eligible": true,
+       "dest_left_legal": true,
+       "gripper_released": true,
+       "q_changed": true,
+       "next_hash": "a5f61c146e421ae781fbb792"
+      }
+     ],
+     "calls": 3,
+     "stop": {
+      "status": "DECIDED",
+      "success": true,
+      "x": 1,
+      "y": 1,
+      "z": 1,
+      "connector_status": "VERIFIED",
+      "y_status": "VERIFIED",
+      "has_connector_witness": true,
+      "failed_phase": null,
+      "time_s": 4.03
+     },
+     "disco_x": 1,
+     "unresolved": false,
+     "G1_agree": true,
+     "G1_y_agree": true,
+     "G2_restore_same_hash": true,
+     "G3_q_continuity": true,
+     "G6": {
+      "stop_depth1": {
+       "status": "DECIDED",
+       "z": 0,
+       "phase": "target"
+      },
+      "continue_status": "EXECUTED"
+     }
+    },
+    {
+     "seq": [
+      [
+       1,
+       3
+      ],
+      [
+       0,
+       12
+      ]
+     ],
+     "label_x": 1,
+     "label_y": 1,
+     "steps": [
+      {
+       "action": [
+        1,
+        3
+       ],
+       "legal_in_obs": true,
+       "status": "EXECUTED",
+       "failure_kind": null,
+       "time_s": 7.74,
+       "moved_left_eligible": true,
+       "dest_left_legal": true,
+       "gripper_released": true,
+       "q_changed": true,
+       "next_hash": "091dd244bb3987d43fc0f5d6"
+      },
+      {
+       "action": [
+        0,
+        12
+       ],
+       "legal_in_obs": true,
+       "status": "EXECUTED",
+       "failure_kind": null,
+       "time_s": 7.4,
+       "moved_left_eligible": true,
+       "dest_left_legal": true,
+       "gripper_released": true,
+       "q_changed": true,
+       "next_hash": "83e8ba884aebb89ae0ac9a62"
+      }
+     ],
+     "calls": 3,
+     "stop": {
+      "status": "DECIDED",
+      "success": true,
+      "x": 1,
+      "y": 1,
+      "z": 1,
+      "connector_status": "VERIFIED",
+      "y_status": "VERIFIED",
+      "has_connector_witness": true,
+      "failed_phase": null,
+      "time_s": 4.61
+     },
+     "disco_x": 1,
+     "unresolved": false,
+     "G1_agree": true,
+     "G1_y_agree": true,
+     "G2_restore_same_hash": true,
+     "G3_q_continuity": true,
+     "G6": {
+      "stop_depth1": {
+       "status": "DECIDED",
+       "z": 0,
+       "phase": "target"
+      },
+      "continue_status": "EXECUTED"
+     }
+    },
+    {
+     "seq": [
+      [
+       0,
+       12
+      ]
+     ],
+     "label_x": 1,
+     "label_y": 0,
+     "steps": [
+      {
+       "action": [
+        0,
+        12
+       ],
+       "legal_in_obs": true,
+       "status": "EXECUTED",
+       "failure_kind": null,
+       "time_s": 0.0,
+       "moved_left_eligible": true,
+       "dest_left_legal": true,
+       "gripper_released": true,
+       "q_changed": true,
+       "next_hash": "94eb01d33d4fbe44df21a782"
+      }
+     ],
+     "calls": 2,
+     "stop": {
+      "status": "DECIDED",
+      "success": false,
+      "x": 1,
+      "y": 0,
+      "z": 0,
+      "connector_status": "VERIFIED",
+      "y_status": "CERTIFIED_INFEASIBLE",
+      "has_connector_witness": true,
+      "failed_phase": "target",
+      "time_s": 3.57
+     },
+     "disco_x": 1,
+     "unresolved": false,
+     "G1_agree": true,
+     "G1_y_agree": true
+    }
+   ]
+  },
+  {
+   "root_id": "D2H_ea2c5bc3af",
+   "K": "3",
+   "orders": [
+    {
+     "seq": [
+      [
+       0,
+       28
+      ],
+      [
+       1,
+       47
+      ],
+      [
+       2,
+       55
+      ]
+     ],
+     "label_x": 1,
+     "label_y": 1,
+     "steps": [
+      {
+       "action": [
+        0,
+        28
+       ],
+       "legal_in_obs": true,
+       "status": "EXECUTED",
+       "failure_kind": null,
+       "time_s": 4.4,
+       "moved_left_eligible": true,
+       "dest_left_legal": true,
+       "gripper_released": true,
+       "q_changed": true,
+       "next_hash": "45a6dc1e8abf11c4aa7068c0"
+      },
+      {
+       "action": [
+        1,
+        47
+       ],
+       "legal_in_obs": true,
+       "status": "EXECUTED",
+       "failure_kind": null,
+       "time_s": 41.4,
+       "moved_left_eligible": true,
+       "dest_left_legal": true,
+       "gripper_released": true,
+       "q_changed": true,
+       "next_hash": "973a2cb6e3f21359c7b3c488"
+      },
+      {
+       "action": [
+        2,
+        55
+       ],
+       "legal_in_obs": true,
+       "status": "EXECUTED",
+       "failure_kind": null,
+       "time_s": 10.36,
+       "moved_left_eligible": true,
+       "dest_left_legal": true,
+       "gripper_released": true,
+       "q_changed": true,
+       "next_hash": "32eccde0443f88faeab51c59"
+      }
+     ],
+     "calls": 4,
+     "stop": {
+      "status": "DECIDED",
+      "success": true,
+      "x": 1,
+      "y": 1,
+      "z": 1,
+      "connector_status": "VERIFIED",
+      "y_status": "VERIFIED",
+      "has_connector_witness": true,
+      "failed_phase": null,
+      "time_s": 13.97
+     },
+     "disco_x": 1,
+     "unresolved": false,
+     "G1_agree": true,
+     "G1_y_agree": true,
+     "G2_restore_same_hash": true,
+     "G3_q_continuity": true,
+     "G6": {
+      "stop_depth1": {
+       "status": "DECIDED",
+       "z": 0,
+       "phase": "target"
+      },
+      "continue_status": "EXECUTED"
+     }
+    },
+    {
+     "seq": [
+      [
+       0,
+       28
+      ],
+      [
+       2,
+       55
+      ],
+      [
+       1,
+       47
+      ]
+     ],
+     "label_x": 1,
+     "label_y": 1,
+     "steps": [
+      {
+       "action": [
+        0,
+        28
+       ],
+       "legal_in_obs": true,
+       "status": "EXECUTED",
+       "failure_kind": null,
+       "time_s": 0.0,
+       "moved_left_eligible": true,
+       "dest_left_legal": true,
+       "gripper_released": true,
+       "q_changed": true,
+       "next_hash": "45a6dc1e8abf11c4aa7068c0"
+      },
+      {
+       "action": [
+        2,
+        55
+       ],
+       "legal_in_obs": true,
+       "status": "EXECUTED",
+       "failure_kind": null,
+       "time_s": 1.2,
+       "moved_left_eligible": true,
+       "dest_left_legal": true,
+       "gripper_released": true,
+       "q_changed": true,
+       "next_hash": "ad8518b66ac763e69cb207cb"
+      },
+      {
+       "action": [
+        1,
+        47
+       ],
+       "legal_in_obs": true,
+       "status": "EXECUTED",
+       "failure_kind": null,
+       "time_s": 0.63,
+       "moved_left_eligible": true,
+       "dest_left_legal": true,
+       "gripper_released": true,
+       "q_changed": true,
+       "next_hash": "c73d6a32b0632cdc4f6d918c"
+      }
+     ],
+     "calls": 4,
+     "stop": {
+      "status": "DECIDED",
+      "success": true,
+      "x": 1,
+      "y": 1,
+      "z": 1,
+      "connector_status": "VERIFIED",
+      "y_status": "VERIFIED",
+      "has_connector_witness": true,
+      "failed_phase": null,
+      "time_s": 4.35
+     },
+     "disco_x": 1,
+     "unresolved": false,
+     "G1_agree": true,
+     "G1_y_agree": true,
+     "G2_restore_same_hash": true,
+     "G3_q_continuity": true,
+     "G6": {
+      "stop_depth1": {
+       "status": "DECIDED",
+       "z": 0,
+       "phase": "target"
+      },
+      "continue_status": "EXECUTED"
+     }
+    },
+    {
+     "seq": [
+      [
+       1,
+       47
+      ],
+      [
+       0,
+       28
+      ],
+      [
+       2,
+       55
+      ]
+     ],
+     "label_x": 1,
+     "label_y": 1,
+     "steps": [
+      {
+       "action": [
+        1,
+        47
+       ],
+       "legal_in_obs": true,
+       "status": "EXECUTED",
+       "failure_kind": null,
+       "time_s": 2.7,
+       "moved_left_eligible": true,
+       "dest_left_legal": true,
+       "gripper_released": true,
+       "q_changed": true,
+       "next_hash": "c201d5d2b5bbaedf07705e33"
+      },
+      {
+       "action": [
+        0,
+        28
+       ],
+       "legal_in_obs": true,
+       "status": "EXECUTED",
+       "failure_kind": null,
+       "time_s": 3.08,
+       "moved_left_eligible": true,
+       "dest_left_legal": true,
+       "gripper_released": true,
+       "q_changed": true,
+       "next_hash": "a6c73d5124e8bbe759c535ef"
+      },
+      {
+       "action": [
+        2,
+        55
+       ],
+       "legal_in_obs": true,
+       "status": "EXECUTED",
+       "failure_kind": null,
+       "time_s": 1.53,
+       "moved_left_eligible": true,
+       "dest_left_legal": true,
+       "gripper_released": true,
+       "q_changed": true,
+       "next_hash": "c12ef95877093655105643ff"
+      }
+     ],
+     "calls": 4,
+     "stop": {
+      "status": "DECIDED",
+      "success": true,
+      "x": 1,
+      "y": 1,
+      "z": 1,
+      "connector_status": "VERIFIED",
+      "y_status": "VERIFIED",
+      "has_connector_witness": true,
+      "failed_phase": null,
+      "time_s": 1.82
+     },
+     "disco_x": 1,
+     "unresolved": false,
+     "G1_agree": true,
+     "G1_y_agree": true,
+     "G2_restore_same_hash": true,
+     "G3_q_continuity": true,
+     "G6": {
+      "stop_depth1": {
+       "status": "DECIDED",
+       "z": 0,
+       "phase": "connector"
+      },
+      "continue_status": "EXECUTED"
+     }
+    },
+    {
+     "seq": [
+      [
+       1,
+       47
+      ],
+      [
+       2,
+       55
+      ],
+      [
+       0,
+       28
+      ]
+     ],
+     "label_x": 0,
+     "label_y": 1,
+     "steps": [
+      {
+       "action": [
+        1,
+        47
+       ],
+       "legal_in_obs": true,
+       "status": "EXECUTED",
+       "failure_kind": null,
+       "time_s": 0.0,
+       "moved_left_eligible": true,
+       "dest_left_legal": true,
+       "gripper_released": true,
+       "q_changed": true,
+       "next_hash": "c201d5d2b5bbaedf07705e33"
+      },
+      {
+       "action": [
+        2,
+        55
+       ],
+       "legal_in_obs": true,
+       "status": "PHYSICALLY_FAILED",
+       "failure_kind": "NO_PLAN_FOUND",
+       "time_s": 0.61
+      }
+     ],
+     "calls": 2,
+     "disco_x": 0,
+     "unresolved": false,
+     "G1_agree": true
+    },
+    {
+     "seq": [
+      [
+       2,
+       55
+      ],
+      [
+       0,
+       28
+      ],
+      [
+       1,
+       47
+      ]
+     ],
+     "label_x": 1,
+     "label_y": 1,
+     "steps": [
+      {
+       "action": [
+        2,
+        55
+       ],
+       "legal_in_obs": true,
+       "status": "EXECUTED",
+       "failure_kind": null,
+       "time_s": 5.23,
+       "moved_left_eligible": true,
+       "dest_left_legal": true,
+       "gripper_released": true,
+       "q_changed": true,
+       "next_hash": "5fe99284e46d47b4c31d8b58"
+      },
+      {
+       "action": [
+        0,
+        28
+       ],
+       "legal_in_obs": true,
+       "status": "EXECUTED",
+       "failure_kind": null,
+       "time_s": 1.45,
+       "moved_left_eligible": true,
+       "dest_left_legal": true,
+       "gripper_released": true,
+       "q_changed": true,
+       "next_hash": "d748b1ca19257daabc5af33a"
+      },
+      {
+       "action": [
+        1,
+        47
+       ],
+       "legal_in_obs": true,
+       "status": "EXECUTED",
+       "failure_kind": null,
+       "time_s": 1.54,
+       "moved_left_eligible": true,
+       "dest_left_legal": true,
+       "gripper_released": true,
+       "q_changed": true,
+       "next_hash": "4f9941663cbf9365784d1552"
+      }
+     ],
+     "calls": 4,
+     "stop": {
+      "status": "DECIDED",
+      "success": true,
+      "x": 1,
+      "y": 1,
+      "z": 1,
+      "connector_status": "VERIFIED",
+      "y_status": "VERIFIED",
+      "has_connector_witness": true,
+      "failed_phase": null,
+      "time_s": 4.2
+     },
+     "disco_x": 1,
+     "unresolved": false,
+     "G1_agree": true,
+     "G1_y_agree": true,
+     "G2_restore_same_hash": true,
+     "G3_q_continuity": true,
+     "G6": {
+      "stop_depth1": {
+       "status": "DECIDED",
+       "z": 0,
+       "phase": "target"
+      },
+      "continue_status": "EXECUTED"
+     }
+    },
+    {
+     "seq": [
+      [
+       2,
+       55
+      ],
+      [
+       1,
+       47
+      ],
+      [
+       0,
+       28
+      ]
+     ],
+     "label_x": 1,
+     "label_y": 1,
+     "steps": [
+      {
+       "action": [
+        2,
+        55
+       ],
+       "legal_in_obs": true,
+       "status": "EXECUTED",
+       "failure_kind": null,
+       "time_s": 0.0,
+       "moved_left_eligible": true,
+       "dest_left_legal": true,
+       "gripper_released": true,
+       "q_changed": true,
+       "next_hash": "5fe99284e46d47b4c31d8b58"
+      },
+      {
+       "action": [
+        1,
+        47
+       ],
+       "legal_in_obs": true,
+       "status": "EXECUTED",
+       "failure_kind": null,
+       "time_s": 1.76,
+       "moved_left_eligible": true,
+       "dest_left_legal": true,
+       "gripper_released": true,
+       "q_changed": true,
+       "next_hash": "1fee59cf8b0cd85eb32cca71"
+      },
+      {
+       "action": [
+        0,
+        28
+       ],
+       "legal_in_obs": true,
+       "status": "EXECUTED",
+       "failure_kind": null,
+       "time_s": 1.87,
+       "moved_left_eligible": true,
+       "dest_left_legal": true,
+       "gripper_released": true,
+       "q_changed": true,
+       "next_hash": "b959e40618dbf3c63984da2d"
+      }
+     ],
+     "calls": 4,
+     "stop": {
+      "status": "DECIDED",
+      "success": true,
+      "x": 1,
+      "y": 1,
+      "z": 1,
+      "connector_status": "VERIFIED",
+      "y_status": "VERIFIED",
+      "has_connector_witness": true,
+      "failed_phase": null,
+      "time_s": 1.22
+     },
+     "disco_x": 1,
+     "unresolved": false,
+     "G1_agree": true,
+     "G1_y_agree": true,
+     "G2_restore_same_hash": true,
+     "G3_q_continuity": true,
+     "G6": {
+      "stop_depth1": {
+       "status": "DECIDED",
+       "z": 0,
+       "phase": "target"
+      },
+      "continue_status": "EXECUTED"
+     }
+    },
+    {
+     "seq": [
+      [
+       1,
+       47
+      ],
+      [
+       2,
+       55
+      ]
+     ],
+     "label_x": 0,
+     "label_y": 0,
+     "steps": [
+      {
+       "action": [
+        1,
+        47
+       ],
+       "legal_in_obs": true,
+       "status": "EXECUTED",
+       "failure_kind": null,
+       "time_s": 0.0,
+       "moved_left_eligible": true,
+       "dest_left_legal": true,
+       "gripper_released": true,
+       "q_changed": true,
+       "next_hash": "c201d5d2b5bbaedf07705e33"
+      },
+      {
+       "action": [
+        2,
+        55
+       ],
+       "legal_in_obs": true,
+       "status": "PHYSICALLY_FAILED",
+       "failure_kind": "NO_PLAN_FOUND",
+       "time_s": 0.0
+      }
+     ],
+     "calls": 2,
+     "disco_x": 0,
+     "unresolved": false,
+     "G1_agree": true
+    },
+    {
+     "seq": [
+      [
+       2,
+       55
+      ],
+      [
+       1,
+       47
+      ]
+     ],
+     "label_x": 1,
+     "label_y": 0,
+     "steps": [
+      {
+       "action": [
+        2,
+        55
+       ],
+       "legal_in_obs": true,
+       "status": "EXECUTED",
+       "failure_kind": null,
+       "time_s": 0.0,
+       "moved_left_eligible": true,
+       "dest_left_legal": true,
+       "gripper_released": true,
+       "q_changed": true,
+       "next_hash": "5fe99284e46d47b4c31d8b58"
+      },
+      {
+       "action": [
+        1,
+        47
+       ],
+       "legal_in_obs": true,
+       "status": "EXECUTED",
+       "failure_kind": null,
+       "time_s": 0.0,
+       "moved_left_eligible": true,
+       "dest_left_legal": true,
+       "gripper_released": true,
+       "q_changed": true,
+       "next_hash": "1fee59cf8b0cd85eb32cca71"
+      }
+     ],
+     "calls": 3,
+     "stop": {
+      "status": "DECIDED",
+      "success": false,
+      "x": 1,
+      "y": 0,
+      "z": 0,
+      "connector_status": "VERIFIED",
+      "y_status": "CERTIFIED_INFEASIBLE",
+      "has_connector_witness": true,
+      "failed_phase": "target",
+      "time_s": 1.2
+     },
+     "disco_x": 1,
+     "unresolved": false,
+     "G1_agree": true,
+     "G1_y_agree": true,
+     "G2_restore_same_hash": true,
+     "G3_q_continuity": true,
+     "G6": {
+      "stop_depth1": {
+       "status": "DECIDED",
+       "z": 0,
+       "phase": "target"
+      },
+      "continue_status": "EXECUTED"
+     }
+    }
+   ]
+  }
+ ],
+ "utc_start": "2026-11-18T10:20:47Z",
+ "wall_s": 226.1
+}

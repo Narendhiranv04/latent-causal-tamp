@@ -1,0 +1,95 @@
+{
+ "version": "DISCO_GRID_FREEZE_V1",
+ "freeze_utc": "2026-11-18T20:50Z",
+ "code_commit": "3bfecc9982 (search, fits, predict); predict.py unchanged since",
+ "selection_rule": "highest mean VAL task-success over 3 seeds among final-round (R1) policy+value arms; tie-break none needed",
+ "frozen": {
+  "2d": {
+   "arm": "2d_R1_ALL_succonly",
+   "round": "R1 (R0 trees + R1 trees, warm-start from R0 fits)",
+   "schema": "o0_v1",
+   "data": "successful_only",
+   "variant": "policy_value",
+   "seeds": [
+    0,
+    1,
+    2
+   ],
+   "B": 16,
+   "rule": {
+    "noop_q_gate": 0.55,
+    "stop_q_margin": 0.02,
+    "abstain_eta": 0.0,
+    "policy_stop_thresh": 0.45,
+    "stop_q_min": 0.35,
+    "noop_pol_gate": 0.5
+   },
+   "protocol": "open-loop, one committed sequence per root, no test-time MCTS / simulator",
+   "weights": {
+    "2d_R1_ALL_succonly_s0/policy.pt": "931db57ac425dee91a7ccbbd7ad6e989b33f0037f35f569d52247252f9a2d7c2",
+    "2d_R1_ALL_succonly_s1/policy.pt": "0817377507b20a771866873400c608d6dee3d97578126678fc4aa2ded2715156",
+    "2d_R1_ALL_succonly_s2/policy.pt": "d10d7d0a27a3a6b2f1509b78acc2e9e4ce280eaedfe81d444b3394da5eb2f593",
+    "2d_R1_ALL_succonly_s0/value.pt": "c723c417428f741d0bc293fd9451075635b99460d9ac7c12dfce8ce25ff9d4d3",
+    "2d_R1_ALL_succonly_s1/value.pt": "0131540b8ed778bcbbdb1e45e1f400f3f681303cce3b2b8974122ef32cdf8982",
+    "2d_R1_ALL_succonly_s2/value.pt": "133a4de7f775f8e38b5a7447bd368770084380740aecea31c556903da177f7b2",
+    "2d_R1_ALL_succonly_s0/resolved_config.json": "16fd5ebc1879700f9c0adea19dbd1f550ef7d4e0d13015981e889a4fe1af80cb",
+    "2d_R1_ALL_succonly_s1/resolved_config.json": "f97601b1706baf989e0e5e5f0c83416f7166fb2118e8c21d80a6d78097dbc931",
+    "2d_R1_ALL_succonly_s2/resolved_config.json": "e614406c4dea86c9c3f5b5804ad5cda7f6703cf7bd948b0848283551b8e5d422"
+   },
+   "val_task_mean": 21.06,
+   "val_task_sd": 3.21
+  },
+  "3d": {
+   "arm": "3d_R1_ALL_succonly",
+   "round": "R1 (R0 trees + R1 trees, warm-start from R0 fits)",
+   "schema": "o0_v1",
+   "data": "successful_only",
+   "variant": "policy_value",
+   "seeds": [
+    0,
+    1,
+    2
+   ],
+   "B": 12,
+   "rule": {
+    "noop_q_gate": 0.55,
+    "stop_q_margin": 0.02,
+    "abstain_eta": 0.0,
+    "policy_stop_thresh": 0.45,
+    "stop_q_min": 0.35,
+    "noop_pol_gate": 0.5
+   },
+   "protocol": "open-loop, one committed sequence per root, no test-time MCTS / simulator",
+   "weights": {
+    "3d_R1_ALL_succonly_s0/policy.pt": "7a71b31b5c97b7f562ff73409b80bf91d15751a6985516a877be74c6b3775a86",
+    "3d_R1_ALL_succonly_s1/policy.pt": "e1ff2d817fe6e4283de22062e7b2523356440dca7f1dafbd31ad077b087228ce",
+    "3d_R1_ALL_succonly_s2/policy.pt": "581df0895382f80ca1a65e88c2baa8a37e9e3f4b4b06d9946a5fb4944de2cc96",
+    "3d_R1_ALL_succonly_s0/value.pt": "4eb2f1a2f7a56b5a0bed7ae80d4355b259f99f03459c6bac62fb332a68a5600d",
+    "3d_R1_ALL_succonly_s1/value.pt": "d29daf72b2d6c0f197fc699b32a6a516c14965e5bea79195dc639de2ca322abf",
+    "3d_R1_ALL_succonly_s2/value.pt": "5ad9a8e9f5b4fad7bc02a8f943ec974ab3023768438a8341d9dcdaa55742eadf",
+    "3d_R1_ALL_succonly_s0/resolved_config.json": "7273b9ea41b42fab6f92cbe4108fe0a62456caeb23a5c3978ee325380d5d4b00",
+    "3d_R1_ALL_succonly_s1/resolved_config.json": "23833a0c36f8a1a6ad2f4661eac6ae5245e5df86416cbbff2f1a0b49ec88dea7",
+    "3d_R1_ALL_succonly_s2/resolved_config.json": "2fa98283520e24ab87097877ec1446f00b683b01cf385791019ef574d621f6a8"
+   },
+   "val_task_mean": 36.82,
+   "val_task_sd": 1.64
+  }
+ },
+ "training_data": {
+  "2d": "128 TRAIN roots (R0 117 clean trees + R1 127 clean trees; 1 R1 root excluded at BLOCKED_WALL_LIMIT twice)",
+  "3d": "86 TRAIN roots (R0 86 + R1 86 trees)",
+  "split_hygiene": "cohorts all split=train; dataset-wide 0 root/family/layout/hash split conflicts; 0 overlap with VAL ids and with the V3.4 cohort (1,114)"
+ },
+ "val_verification": {
+  "all_arms_unknown": 0,
+  "sealed_files": 36,
+  "all_seals_match": true
+ },
+ "benchmark_entry": "python predict.py --model-dir reports/final/frozen_models/<D>_R1_ALL_succonly_s<S> --input <benchmark public_<D>.jsonl> --output pred_<D>_s<S>.jsonl --seed <S>  (CPU; defaults = frozen rule/B) -> approach_b_final/benchmark.py seal -> queries -> teach -> evaluate -> summarize",
+ "reproducibility": "laptop re-prediction from the committed weights matches the sealed gvlab VAL predictions (3D s0 5/5, 2D s1 8/8 roots)",
+ "not_run": [
+  "TEST",
+  "V3.4 / expanded benchmark cohort",
+  "O1 closed-loop physical evaluation (needs a separately approved physical_eval envelope)"
+ ]
+}
