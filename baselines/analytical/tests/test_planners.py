@@ -109,7 +109,8 @@ def test_cache_and_accounting():
     assert ph.n["transition_calls"] == 1 and ph.n["transition_cache_hits"] == 2
     assert ph.n["terminal_queries"] == 1 and ph.n["terminal_cache_hits"] == 1
     st = ph.stats()
-    assert st["physical_calls"] == ph.n["transition_calls"] + ph.n["connector_calls"] + ph.n["y_calls"] + ph.n["ref_plan_calls"]
+    assert st["physical_calls"] == (ph.n["transition_calls"] + ph.n["connector_calls"] + ph.n["y_calls"] + ph.n["ref_plan_calls"]
+                                    + ph.n["terminal_capped"])
 
 
 @pytest.mark.parametrize("cls", PLANNERS)
@@ -124,6 +125,7 @@ def test_call_cap_unknown():
     s0 = ph.reset()
     assert ph.step(s0, A, 8) is None and ph.n["capped_calls"] == 1 and ph.n["transition_unknown"] == 1
     assert ph.terminal(s0) is None and ph.n["terminal_unknown"] == 1      # UNKNOWN, not 0
+    assert ph.physical_calls() == 2                                       # interrupted calls are still counted
 
 
 def test_wall_and_call_budgets():
@@ -150,3 +152,10 @@ def test_private_fields_do_not_change_output(cls):
         d = cls(ToyPhys(row=r), 3).run()
         outs.append((d.kind, d.prefix, d.stats["search"]))
     assert outs[0] == outs[1]
+
+
+def test_msmcts_keeps_clearing_when_goal_refuted():
+    """T's paths look clear after moving A and B, but the real task also needs C moved: the refuted goal child must not kill the node."""
+    y = lambda cells: cells[A] not in (1, 2) and cells[B] not in (1, 2) and cells[C] != 10  # noqa: E731
+    d, ph = run(MSMCTS, y_ok=y)
+    assert d.kind == "REPAIR" and {o for o, _ in d.prefix} == {A, B, C} and d.stats["search"]["goal_refuted"] >= 1

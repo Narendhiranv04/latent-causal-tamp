@@ -77,10 +77,11 @@ class MSMCTS(Solver):
         return out
 
     # ------------------------------------------------------------------ Algorithm 2
-    def actions(self, s, n_max):
-        """-> ('goal', None) when O_b is empty, ('move', [(o, cell, next state)...]) or ('dead', None)."""
+    def actions(self, s, n_max, goal=True):
+        """-> ('goal', None) when O_b is empty, ('move', [(o, cell, next state)...]) or ('dead', None).  goal=False (the goal child was
+        refuted by the terminal check): O_b falls back to every feasible object, the paper's no-progress rule."""
         p, tb = self.t_path(s)
-        if p is not None and not tb:
+        if goal and p is not None and not tb:
             return "goal", None
         el = set(self.elig(s))
         if not el:
@@ -132,8 +133,8 @@ class MSMCTS(Solver):
         if kind == "goal":
             if self.done(nd.state, gate="always"):
                 return nd
-            nd.dead = True                                                    # MP refutes T's placement here
-            return None
+            self.st["goal_refuted"] += 1                                      # MP refutes T's placement: keep clearing
+            kind, acts = self.actions(nd.state, self.P["m_regions"], goal=False)
         if kind == "dead":
             nd.dead = True
             return None
@@ -154,7 +155,8 @@ class MSMCTS(Solver):
             if kind == "goal":
                 if self.done(s, gate="always"):
                     return self.reward(seq), seq
-                return -self.P["fail_r"], None
+                self.st["goal_refuted"] += 1
+                kind, acts = self.actions(s, self.P["m_regions"], goal=False)
             if kind == "dead":
                 return -self.P["fail_r"], None
             o, c, s = acts[int(self.rng.integers(len(acts)))]

@@ -60,7 +60,8 @@ class PhysBase:
         return time.time() - self._w0
 
     def physical_calls(self) -> int:
-        return self.n["transition_calls"] + self.n["connector_calls"] + self.n["y_calls"] + self.n["ref_plan_calls"]
+        return (self.n["transition_calls"] + self.n["connector_calls"] + self.n["y_calls"] + self.n["ref_plan_calls"]
+                + self.n["terminal_capped"])                              # an interrupted terminal query returns no accounting
 
     def gate(self):
         if self.budget_s is not None and self.cpu() >= self.budget_s:
@@ -130,6 +131,7 @@ class PhysBase:
         self.n["terminal_queries"] += 1
         res, capped = self._timed(lambda: self._terminal(state))
         z = None if capped else res
+        self.n["terminal_capped"] += int(capped)
         if z is None:
             self.n["terminal_unknown"] += 1
         self._term[k] = z
