@@ -171,12 +171,32 @@ def run(a):
     if a.shard:
         i, n = map(int, a.shard.split("/"))
         roots = [r for r in roots if int(hashlib.sha256(r["root_id"].encode()).hexdigest(), 16) % n == i]
+    if a.roots_file:                                                      # explicit block pre-claimed (CLAIM_REMOTE) on its owner host
+        keep = set(Path(a.roots_file).read_text().split())
+        roots = [r for r in roots if r["root_id"] in keep]
     roots = sorted(roots, key=lambda r: (r["rank_in_K"], r["K_legacy"]))     # smallest ladder subsets complete first
     ps = [mp.get_context("spawn").Process(target=_slot_worker, args=(a.out, a.domain, a.round, roots[w:] + roots[:w], w)) for w in range(a.workers)]
     for p in ps:
         p.start(); time.sleep(3)
     for p in ps:
         p.join()
+
+
+def preclaim(a):
+    """Reserve not-yet-started roots of this host's work list for another host (dir + CLAIM_REMOTE.json): local workers skip them."""
+    out = Path(a.out); m = jr(out / f"cohort_{a.domain}.json")
+    roots = m["roots"]
+    if a.shard:
+        i, n = map(int, a.shard.split("/"))
+        roots = [r for r in roots if int(hashlib.sha256(r["root_id"].encode()).hexdigest(), 16) % n == i]
+    base = out / f"trees/{a.domain}/R{a.round}"
+    free = [r for r in sorted(roots, key=lambda r: (r["rank_in_K"], r["K_legacy"])) if not (base / r["root_id"]).exists()]
+    take = free[-a.n:] if a.n else []                                     # highest ranks: furthest from the local workers' frontier
+    for r in take:
+        (base / r["root_id"]).mkdir(parents=True)
+        J.atomic_json(base / r["root_id"] / "CLAIM_REMOTE.json", {"host": a.host, "utc": time.time()})
+    Path(a.list_out).write_text("\n".join(r["root_id"] for r in take) + "\n")
+    print(json.dumps({"preclaimed": len(take), "free_before": len(free)}))
 
 
 def requeue(a):
@@ -275,10 +295,14 @@ if __name__ == "__main__":
         f.add_argument(k, type=t, default=d, required=d is None)
     r = sp.add_parser("run"); r.add_argument("--out", required=True); r.add_argument("--domain", required=True)
     r.add_argument("--round", type=int, required=True); r.add_argument("--workers", type=int, default=1); r.add_argument("--shard")
+    r.add_argument("--roots-file")
     g = sp.add_parser("fit"); g.add_argument("--out", required=True); g.add_argument("--domain", required=True)
     g.add_argument("--round", type=int, required=True); g.add_argument("--subset", default="ALL"); g.add_argument("--calls-cap", type=int, default=0)
     s = sp.add_parser("status"); s.add_argument("--out", required=True); s.add_argument("--domain", required=True)
     q = sp.add_parser("requeue"); q.add_argument("--out", required=True); q.add_argument("--domain", required=True); q.add_argument("--round", type=int, required=True)
     q.add_argument("--include-inflight", action="store_true", help="only when NO worker is running (operator stop)")
+    c = sp.add_parser("preclaim"); c.add_argument("--out", required=True); c.add_argument("--domain", required=True)
+    c.add_argument("--round", type=int, required=True); c.add_argument("--n", type=int, required=True); c.add_argument("--host", required=True)
+    c.add_argument("--list-out", required=True); c.add_argument("--shard")
     a = ap.parse_args()
-    {"freeze": freeze, "run": run, "fit": fit, "status": status, "requeue": requeue}[a.cmd](a)
+    {"freeze": freeze, "run": run, "fit": fit, "status": status, "requeue": requeue, "preclaim": preclaim}[a.cmd](a)
