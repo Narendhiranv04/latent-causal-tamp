@@ -273,7 +273,11 @@ def fit(a):
     prev = (out / f"training/{dom}_R{a.round - 1}_{a.subset}{f'_c{a.calls_cap}' if a.calls_cap else ''}") if a.round else None
     J.atomic_json(dest / "STREAMS.json", {"streams": streams, "previous": str(prev) if prev else None, "subset": a.subset,
                                           "calls_cap": a.calls_cap, "n_trees": [len(s) for s in streams]})
-    CA.fit_worker(dom, dict(streams=streams, previous=str(prev) if prev else None, controller_pid=os.getpid()), dest, a.round)
+    w = mp.get_context("spawn").Process(target=CA.fit_worker, args=(dom, dict(streams=streams, previous=str(prev) if prev else None,
+                                         controller_pid=os.getpid()), dest, a.round))     # spawned child, exactly like campaign.dispatch_fit
+    w.start(); w.join()
+    if w.exitcode or not (dest / "COMPLETE.json").exists():
+        raise RuntimeError(f"FIT_INCOMPLETE exit={w.exitcode}; trainer checkpoints preserved for exact resume")
     print(json.dumps({"fit": str(dest), "trees_per_round": [len(s) for s in streams]}))
 
 
