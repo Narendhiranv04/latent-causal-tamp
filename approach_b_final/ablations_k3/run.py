@@ -6,7 +6,7 @@ frozen rule noop 0.5 / eta 0.3 / alpha = beta = gamma = 0).  Only the component 
     python run.py predict ARM DOM SPLIT [PART i/k]     -> $K3/runs/predictions/<ARM>/<split>_<dom>.jsonl (resumable, append-only)
     python run.py parity PRED REF                      FULL parity vs the frozen bundle's recorded predictions
     python run.py arms                                 list registered arms
-ARM grammar (registered in ARMS): FULL_s{0,1,2} | E_s* | G_s* | DIRECT_s* | UNIFORM4_r* | TASKFM_s* | NOTASK_s* | SAMPREF_s{1,2} | M1 | C1_r*"""
+ARM grammar: FULL_s{0,1,2} | DREFIT_s* | E_s* | G_s* | DIRECT_s* | UNIFORM4_r* | TASKFM_s* | NOTASK_s* | SAMPREF_s{1,2} | M1 | C1_r*"""
 import hashlib, json, os, sys, time
 from pathlib import Path
 
@@ -33,6 +33,8 @@ def spec(arm, dom):
     D0 = BUNDLE / dom / "scorer_s0.pt"
     if arm.startswith("FULL_"):
         return dict(sampler=("frozen", None), scorer=BUNDLE / dom / f"scorer_s{k}.pt", M=4, c1=None)
+    if name == "DREFIT":                                    # diagnostic: D re-fitted here with the identical procedure (environment control)
+        return dict(sampler=("frozen", None), scorer=TR / "xy" / dom / f"p2_{dom}" / f"D_s{k}" / "model.pt", M=4, c1=None)
     if name in ("E", "G", "DIRECT"):
         return dict(sampler=("frozen", None), scorer=TR / "xy" / dom / f"p2_{dom}" / f"{name}_s{k}" / "model.pt", M=4, c1=None)
     if name == "UNIFORM4":
