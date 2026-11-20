@@ -122,6 +122,12 @@ def predict(arm, dom, split, part=None, dev="cuda"):
     out = K3 / "runs/predictions" / arm
     out.mkdir(parents=True, exist_ok=True)
     fo = out / (f"{split}_{dom}.jsonl" if not part else f"{split}_{dom}.part{part.replace('/', 'of')}.jsonl")
+    import fcntl
+    lk = open(str(fo) + ".lock", "w")
+    try:                                                     # one writer per prediction file (parallel queues never double-write)
+        fcntl.flock(lk, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except BlockingIOError:
+        print(json.dumps({"arm": arm, "dom": dom, "split": split, "busy": True})); return
     done = {r["root_id"] for r in BM.jl(fo)} if fo.exists() else set()
     sp, samp, scor, fm, man, files = load(arm, dom, dev)
     with open(fo, "a") as f:
