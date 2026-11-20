@@ -1,0 +1,14 @@
+{
+ "ablation_ceiling": 43,
+ "enforcement": "every ablation process is started under taskset -c 0-42 (inherited by all children); OMP/MKL/OPENBLAS/NUMEXPR=1; torch threads<=1 in workers",
+ "gpu": "single RTX 5090; one heavy CUDA job at a time",
+ "logical_cpus": 48,
+ "observed_affinity": 43,
+ "phases": {
+  "gpu_fit": "1 controller + 1 CUDA trainer (<=8 threads)",
+  "gpu_scoring": "1-2 GPU scorer processes, 1 thread each",
+  "verification": "<=41 teacher workers + 1-2 controllers"
+ },
+ "pinned_cpu_set": "0-42",
+ "reserved": 5
+}

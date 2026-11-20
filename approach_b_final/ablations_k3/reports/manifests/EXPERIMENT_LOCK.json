@@ -1,0 +1,150 @@
+{
+ "bundle": {
+  "2d/sampler.pt": "a01f25eba31684a78384e8406a2066ed1d3a098899b56f7ec90a4f987af1e918",
+  "2d/scalers.json": "884b35673692a98adf73a6662fdb05e7a489112d6340f32be72e4a1a7e744095",
+  "2d/scorer_s0.pt": "0fa126da80ceecb19ef4d3cf7c21287abc6e5965151b1e4ddc37e0ffe99623d4",
+  "2d/scorer_s1.pt": "ea6dba7a9d054242ff72ada9668f2b16eb0336443ac5f44bc3b141f9b2ffb3af",
+  "2d/scorer_s2.pt": "928a6e2b79c84398ca6c03e2233812db724ca2d694df6bd431d7303446c44097",
+  "3d/sampler.pt": "6a0e26c47781fefe5e9fb84043bf772230b22758cb21f47358836d11e84be472",
+  "3d/scalers.json": "36a94926ddd875cc2271827d1c01bbba65ad487a8c7387cf1d3f827bb916dee6",
+  "3d/scorer_s0.pt": "c02afcbc29a9552fd4631c1fd46dfa196a19029151251078bed9f4e3b72dfde1",
+  "3d/scorer_s1.pt": "88f49a606bd42f76f6d77215082b8dbeb72dec0a602af1396f09de1aa902551e",
+  "3d/scorer_s2.pt": "948ac82026b6ba273cb7f764f9f470a7e4fa0fd23b349ce9598fee5a01d58f40"
+ },
+ "code": {
+  "benchmark.py": "6d3db25d1efc7458b04a77632b99171854ca1a8ed31431ebb0f07915b0a58202",
+  "config/final_protocol.yaml": "720614bd3a891e8227927b89aed206b2f8ab9cd0a0ff8296a3deb90c6c8dd051",
+  "construct.py": "a385eb070dde75893791c01d322ea86d9022db4864f88d233dadad9848b11517",
+  "contracts.py": "4514190f8b3a8512957635055320ac7576c2c75c08af19adc39b3ff6a94ef080",
+  "evaluate.py": "eb57647f5ab6b98fde08b7cd1085672bbab9f1cd371f9d2bfbe0c601402d0130",
+  "exhaustive.py": "a9d5cbba183c45c92660b01d10ad4e95f689b4f12319dc2daccbabe855cceb58",
+  "placement.py": "aa2a44771f996f97a031eb455e1fd4a4de4a0e98c55ca72a7705259805a29ec9",
+  "search.py": "2cf9e96b568632116f476c63ac4b6927ff7938ed22b52ce55eb0c3d2ca4abcf8",
+  "teacher2d.py": "8dd8bc46df40492dd44de80b8481ae601d73dfa4aade6a6d83f8d2eba45045bd",
+  "xy.py": "65ba2718a0d65a6a7e689d46bd4ea619b742cb909e3f1b413d93071f081dd268"
+ },
+ "git": {
+  "note": "rsync copy of the worktree; commit recorded by the launcher"
+ },
+ "hardware": {
+  "affinity_cpus_under_taskset": 43,
+  "cgroup_cpu_max": null,
+  "cuda": "13.0",
+  "cudnn": 91300,
+  "disk_free_gib": 34.4,
+  "gpu": "NVIDIA GeForce RTX 5090, 32607 MiB, 8 MiB, 580.95.05",
+  "hostname": "cstar",
+  "logical_cpus": 48,
+  "ram_gib": 125.3,
+  "torch": "2.9.1+cu130"
+ },
+ "snapshots": {
+  "2d": {
+   "K_status": {
+    "0|NOT_APPLICABLE_K0": 1250,
+    "1|FLAGGED_NO_FINALIZED_X1Y1_ORDER": 23,
+    "1|LEGACY_MINIMAL_AND_FINALIZED_REPAIR_VERIFIED": 777,
+    "2|FLAGGED_NO_FINALIZED_X1Y1_ORDER": 10,
+    "2|LEGACY_MINIMAL_AND_FINALIZED_REPAIR_VERIFIED": 790,
+    "3|FLAGGED_NO_FINALIZED_X1Y1_ORDER": 27,
+    "3|LEGACY_MINIMAL_AND_FINALIZED_REPAIR_VERIFIED": 1123,
+    "NONE|NOT_APPLICABLE_NONE": 1000
+   },
+   "expanded": {
+    "lock_sha256": "963c16b2fd573e5737dacdcb8867b62143a08d54230ceb0d70bd9270f20bf7b2",
+    "path": "/home/projects/long-horizon/naren_workspace/k3abl/abf/snapshot/abf_v32_fb0eef4f5ff433ee",
+    "sha256": "963c16b2fd573e5737dacdcb8867b62143a08d54230ceb0d70bd9270f20bf7b2"
+   },
+   "expanded_added_labels_by_split": {
+    "test": 0,
+    "train": 26991,
+    "val": 0
+   },
+   "mask_counts": {
+    "eval_abstain": {
+     "test": 150,
+     "val": 150
+    },
+    "eval_noop": {
+     "test": 187,
+     "val": 188
+    },
+    "eval_repair": {
+     "test": 405,
+     "val": 404
+    },
+    "eval_task": {
+     "test": 412,
+     "val": 413
+    }
+   },
+   "masks_sha256": "0f646aaad2dbb3865a5f0142a20eb752df474646298574f93152dda3bcffcd2d",
+   "original": {
+    "lock_sha256": "16222ff85eee7e463d10043f1d18e6911d1588b87f41bec8507f1474aa276bcd",
+    "path": "/home/projects/long-horizon/naren_workspace/k3abl/abf/snapshot/abf_9de85710c2a7103f",
+    "sha256": "16222ff85eee7e463d10043f1d18e6911d1588b87f41bec8507f1474aa276bcd"
+   }
+  },
+  "3d": {
+   "K_status": {
+    "0|NOT_APPLICABLE_K0": 511,
+    "1|FLAGGED_NO_FINALIZED_X1Y1_ORDER": 1,
+    "1|LEGACY_MINIMAL_AND_FINALIZED_REPAIR_VERIFIED": 356,
+    "2|FLAGGED_NO_FINALIZED_X1Y1_ORDER": 1,
+    "2|FLAGGED_SHORTER_REPAIR_PROVEN": 2,
+    "2|LEGACY_MINIMAL_AND_FINALIZED_REPAIR_VERIFIED": 609,
+    "3|FLAGGED_NO_FINALIZED_X1Y1_ORDER": 1,
+    "3|FLAGGED_SHORTER_REPAIR_PROVEN": 6,
+    "3|LEGACY_MINIMAL_AND_FINALIZED_REPAIR_VERIFIED": 605,
+    "NONE|NOT_APPLICABLE_NONE": 408
+   },
+   "expanded": {
+    "lock_sha256": "bc03d89646156f0d8ac7975db86080e851ab6fef52f2d83d5012215eecee2132",
+    "path": "/home/projects/long-horizon/naren_workspace/k3abl/abf/snapshot/abf_v32_fb0eef4f5ff433ee",
+    "sha256": "bc03d89646156f0d8ac7975db86080e851ab6fef52f2d83d5012215eecee2132"
+   },
+   "expanded_added_labels_by_split": {
+    "test": 0,
+    "train": 11669,
+    "val": 0
+   },
+   "mask_counts": {
+    "eval_abstain": {
+     "test": 62,
+     "val": 58
+    },
+    "eval_noop": {
+     "test": 67,
+     "val": 85
+    },
+    "eval_repair": {
+     "test": 238,
+     "val": 219
+    },
+    "eval_task": {
+     "test": 241,
+     "val": 220
+    }
+   },
+   "masks_sha256": "0f646aaad2dbb3865a5f0142a20eb752df474646298574f93152dda3bcffcd2d",
+   "original": {
+    "lock_sha256": "1627f34bb2905ba7e399efb14c5ffe18f1f2dea20ca8c895c033e114ff1f2c0f",
+    "path": "/home/projects/long-horizon/naren_workspace/k3abl/abf/snapshot/abf_9de85710c2a7103f",
+    "sha256": "1627f34bb2905ba7e399efb14c5ffe18f1f2dea20ca8c895c033e114ff1f2c0f"
+   }
+  }
+ },
+ "teachers": {
+  "fin3d:code/bwlphys.py": "259652f14dab",
+  "fin3d:code/fin3d.py": "29eb0b29ba76",
+  "fin3d:src/dataset_bd_classquota_without_home_position_no_overpass/code/shelf66_v3/bd_3dt.py": "62dc853ccb50",
+  "fin3d:src/dataset_bd_classquota_without_home_position_no_overpass/code/shelf66_v3/bd_shelf.py": "ef71dcf43c6d",
+  "mirror/rss-placement-ready-v2/gh-yadu-iiith/planar_2d/dataset_bd_classquota/code/latent-causal-tamp/p16_motion.py": "43f4c38c6418",
+  "teacher2d_wt/bxy_teacher.py": "c18ac91c89b9"
+ },
+ "v34_cohort_ids_metadata_only": {
+  "n": 1114,
+  "path": "/home/projects/long-horizon/naren_workspace/k3abl/meta/V34_ROOT_IDS_METADATA_ONLY.json",
+  "sha256": "f575d4dd8a6018a653444361144a492f69f5796cc5e588babe4389cd8a8bca1d"
+ }
+}

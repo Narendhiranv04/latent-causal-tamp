@@ -117,7 +117,7 @@ def scorer(split, dom, specs):
         rows_by[tag] = rows
     TAB.mkdir(parents=True, exist_ok=True)
     (TAB / f"scorer_{split}_{dom}.json").write_text(json.dumps(out, indent=1, default=float))
-    print(json.dumps({t: {k: m[k] for k in ("nll_z", "nll_z_ci", "brier_z", "auroc_z", "ece_z", "order_acc", "order_pairs", "order_rank_ci", "auroc_y", "auroc_x")} for t, m in out.items()}, indent=1, default=float))
+    print(json.dumps({t: {k: m.get(k) for k in ("nll_z", "nll_z_ci", "brier_z", "auroc_z", "ece_z", "order_acc", "order_pairs", "order_rank_ci", "auroc_y", "auroc_x")} for t, m in out.items()}, indent=1, default=float))
 
 
 def placement(split, dom, arms):
