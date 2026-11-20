@@ -1,0 +1,94 @@
+{
+ "gate": "G2 PILOT_GATE (engineering pilot; draft, 2026-11-21 03:50 IST)",
+ "batches": {
+  "girish eng_witness_fg (fastgeom1, v1 search)": {
+   "layouts": 26,
+   "certified": 1
+  },
+  "girish eng_witness_orig (original, v1)": {
+   "layouts": 100,
+   "certified": 1
+  },
+  "girish eng_witness_orig_v2 (original, v2 prefix search)": {
+   "layouts": 98,
+   "certified": 1,
+   "note": "2 stragglers running"
+  },
+  "enigma eng2_witness_k46 (SA v2 layouts, v2 search)": {
+   "layouts": 179,
+   "certified": 5,
+   "by_K": {
+    "4": "4/107",
+    "5": "0/55",
+    "6": "1/17"
+   },
+   "note": "2 stragglers running"
+  },
+  "batch3 girish+enigma (54 new SA layouts)": {
+   "status": "RUNNING"
+  }
+ },
+ "certified_roots": [
+  {
+   "root_id": "ENG_7dcffd4dd3be",
+   "K": 6,
+   "geom": "fastgeom1"
+  },
+  {
+   "root_id": "ENG_8f3cfc3f84b9",
+   "K": 5,
+   "geom": "original"
+  },
+  {
+   "root_id": "ENG_87cbf3c0c3d2",
+   "K": 4,
+   "geom": "original"
+  },
+  {
+   "root_id": "ENG2_9924d1c123f8",
+   "K": 6,
+   "geom": "original"
+  },
+  {
+   "root_id": "ENG2_b629e01dc6e7",
+   "K": 4,
+   "geom": "original"
+  },
+  {
+   "root_id": "ENG2_e3c632c779c0",
+   "K": 4,
+   "geom": "original"
+  },
+  {
+   "root_id": "ENG2_963783c2655b",
+   "K": 4,
+   "geom": "original"
+  },
+  {
+   "root_id": "ENG2_6957d5886e3c",
+   "K": 4,
+   "geom": "original"
+  }
+ ],
+ "yield": {
+  "SA_v2_layouts": "5/179 = 2.8% (K4 3.7%, K5 0%, K6 5.9%)",
+  "all_v2_search": "6/277 = 2.2%"
+ },
+ "failure_modes_v2": {
+  "no verified relocation at step 0": "111/179 enigma, 69/98 girish",
+  "stuck after 1-3 verified steps": "54 enigma, 25 girish",
+  "full-length X=1 but Y=0": "9 enigma (6 certified-infeasible, 3 planner), 3 girish"
+ },
+ "requirement": {
+  "K4": 50,
+  "K6": 50,
+  "K9": "BLOCKED (frozen teacher <= 6 relocations; online_moves = 8 per query)",
+  "K12": "BLOCKED"
+ },
+ "projection_at_current_yield": {
+  "K4_layouts_needed": "~1,350 SA K_lb=4 layouts",
+  "K6_layouts_needed": "~850 SA K_lb=6 layouts (SA yields K_lb=6 for ~8% of seeds)",
+  "teacher_cost": "~60-250 CPU-s per layout -> K4 ~25-90 CPU-h, K6 ~15-60 CPU-h; feasible on girish+enigma+laptop in ~1-2 days if SA supplies enough K_lb=6 layouts"
+ },
+ "verdict": "NOT_PASSED (yield measured; quota infeasible within the pilot budget). Decision needed: (a) scale SA + witness for K4/K6 (~1-2 days), (b) improve witness search (parking-cell priors: certified witnesses reuse edge cells 63/55/47/39/61/62), (c) versioned teacher wrapper for K7-8 / K9-12 (owner approval)."
+}

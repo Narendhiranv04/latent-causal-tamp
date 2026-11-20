@@ -1,0 +1,11 @@
+{"schema": "SCALING2D_LABEL_V1 (draft)",
+ "root": {"root_id": "str (SC2D_<sha12>)", "geom": "original|fastgeom1", "cells0": "[target cell, obstacle cells...]", "goal_cell": "int", "n_objects": "int",
+          "q0": "template q_ref (rad, 3)", "layout_fp_geom_v1": "sha256", "generator": {"name": "gen_sa.py v2", "seed": "int", "table_sha256": "str"}},
+ "certificate": {"K_lb": "int (MINK_STATIC_V1 sound bound)", "witness_set": "[obstacle indices of the bound's minimal goal set]", "bound_version": "MINK_STATIC_V1"},
+ "labels": {"Y0": {"y": "0|1", "teacher_status": "str", "independent_replay": "bool|null"},
+            "witness": {"seq": "[[object id, cell] x K]", "x": "0|1", "x_status": "str", "x_replay": "bool", "y": "0|1", "y_status": "str", "y_replay": "bool"},
+            "tries": "every attempted prefix (seq, x, status, failed phase) -- diagnostic only"},
+ "verdict": "CERTIFIED_MIN_K | WITNESS_ONLY_UNCERTIFIED | NO_WITNESS_FOUND | INVALID_LAYOUT_QREF_COLLISION | NO_BOUND",
+ "K_certified": "int iff verdict == CERTIFIED_MIN_K else null",
+ "teacher": {"x": "BXY_X_TEACHER_V1 c18ac91c89b9", "y": "BXY_Y_TEACHER_V1", "host": "str", "host_parity": "G0 46/46"},
+ "never": ["model outputs", "budget-limited zeros relabelled as infeasible", "K > 6 under the frozen teacher"]}
