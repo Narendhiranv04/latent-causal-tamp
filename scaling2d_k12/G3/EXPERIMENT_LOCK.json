@@ -42,5 +42,54 @@
   "G1/MINK_TABLE_original.json": "eb0419757a292cb97d4671794176891048ebe8174a4a67aa789a833726518c73",
   "G1/QCLEAR_original.json": "7b993da7bcbd3c21e02fcbec95564f0fde475c313ec4285019617762ecb9de28",
   "G1/PARK_PRIOR_TRAIN.json": "f1689ffb286474e7186680014701ede92bc6599655dc0a238134865a806465b8"
- }
+ },
+ "amendments": [
+  {
+   "n": 1,
+   "utc": "2026-11-21T14:05:16Z",
+   "authorised_by": "owner instruction 2026-11-21 ('extend it to 25 objects and get it done for k=12; also try again for more k=9')",
+   "change": "object cap 20 -> 25 (objects still in TRAIN-supported columns 3-7). Applies to a NEW K12 stratum and additional K9 candidates only; release_v1 (17 scenes, <= 20 objects) is unchanged and stays valid.",
+   "generation": "anneal20.py random_init, exactly 25 objects; K12: pairs (61,63),(5,7), run seeds 300-307, 8000 steps, KMIN 12; K9: the 30 other target/goal pairs with full-occupancy ceiling >= 9, run seed 400, 6000 steps, KMIN 9",
+   "selection": "unchanged: novelty vs historical + engineering + release_v1 fingerprints, near-duplicate Jaccard > 0.85, sha256('FINAL|root_id') order, <= 2 per (target, goal) pair per stratum, quota 5 per K (K9: 2 already accepted from (61,63), so (61,63) is full)",
+   "witness": "witness_v3 ALT 8; MAXQ 80 (K9), 120 (K12); acceptance CERTIFIED_MIN_K + G5 LABEL_OK as before",
+   "caveat": "25-object scenes exceed the TRAIN object-count support (<= 20); the frozen model accepts them (dynamic padding) but results on them are out-of-support in object count and must be reported as such"
+  },
+  {
+   "n": 2,
+   "utc": "2026-11-21T14:13:00Z",
+   "authorised_by": "owner request 2026-11-21 'speed things up / use more cores'",
+   "change": "enigma (idle, <=15 cores) added: (a) ENGINEERING K12 witness test on the greedy-pruned 25-object K_lb 12 layout ENG12_17ff1743fd83 (witness_v3 ALT 12, MAXQ 160; never released); (b) 13 SEEDED anneal20 chains (run seeds 500-512, 8000 steps, KMIN 12) starting from that layout as an additional K12 generator. Seeded descendants enter the final pool only through the unchanged novelty filter (exact / Jaccard > 0.85 vs engineering incl. the seed are rejected) and are tagged gen=ANNEAL20_V1 seeded so any K12 acceptance can be split by generator."
+  },
+  {
+   "n": 3,
+   "utc": "2026-11-21T14:25:50Z",
+   "change": "K12 stratum uses witness_v4.py = witness_v3 with an object-diverse ALT candidate list (round-robin over first movers). Reason: on ENG12_17ff1743fd83 (engineering, 25 objects, K_lb 12) v3 spent all ALT=12 candidates on one object o00 (every relocation 0 UNKNOWN_PLANNER) and never tried another first mover. Acceptance unchanged. K4-K9 (release_v1 and the 25-object K9 run) stay on v3.",
+   "witness_v4_sha256": "69dc799e6f7b9122eaf4be8cf2be8a486316ee9f62d63412a88d02a2b686c296"
+  },
+  {
+   "n": 4,
+   "utc": "2026-11-21T14:47:39Z",
+   "change": "K12 witness search -> witness_v5.py (v4 + failure-directed restarts: <= 10 restarts, total MAXQ 1500; parking cells used by failed prefixes penalised, failed movers boosted). Reason: v4 on ENG12_17ff1743fd83 verified 8 relocations, then every 9th move (o10/o11) was planner CERTIFIED_INFEASIBLE: the 8 parked discs walled the arm (the kill-table bound models grasp screens, not the arm sweep). Correction to an earlier note: NOT a teacher budget bug (online-move allowance worked: 9 used). Acceptance unchanged.",
+   "witness_v5_sha256": "b3433c783ddb90a228f1a8001faf4261289b48cb637ce22596812757835d2a82"
+  },
+  {
+   "n": 5,
+   "utc": "2026-11-21T15:04:41Z",
+   "change": "K9 candidate pool frozen at the 2026-11-21 19:40 IST snapshot (224 anneal layouts -> 61 after novelty/near-duplicate filtering; cutoff by time, before any witness verdict; locked sha256 order unchanged). Remaining K9 anneal chains on gvlab2 stopped; their cores reassigned to K12 chains seeded from ENG12_17ff1743fd83 (run seeds 600-621)."
+  },
+  {
+   "n": 6,
+   "utc": "2026-11-21T15:04:41Z",
+   "authorised_by": "owner 2026-11-21: 'use all the resources to get the dataset done; have more objects if needed; try to have 2 or 3 K12 cases, best 5'",
+   "change": "(a) laptop compute allowed for the dataset (<= 29 cores); (b) object cap for K12 raised to 28 (random-init anneal at 27/28 objects, columns 3-7); (c) K12 witness search witness_v6.py = v5 + ALL minimal goal sets of the V2 relaxation as admissible mover sets + seeded tie-break jitter (W6_SEED) for parallel independent searches per layout (any certified result accepted; acceptance unchanged); (d) K12 pair cap raised from 2 to 3 per (target, goal): only the corner pairs (5,7) and (61,63) have a K_lb ceiling >= 12 in columns 3-7, so the 2-per-pair rule caps K12 at 4; layouts within a pair still need occupied-cell Jaccard <= 0.85.",
+   "witness_v6_sha256": "b412cf50c59f9e546c940265bf75dafde8770b003dddd16bc303fee9c027736c",
+   "regression": "witness_v6 re-certifies release_v1 K4 scene FIN_feab230bf7e3 (4 queries)"
+  },
+  {
+   "n": 7,
+   "utc": "2026-11-21T15:59:21Z",
+   "change": "K12 (5,7) candidates searched with witness_v7.py = v6 + endpoint target-Y inside the DFS (a failed Y backtracks; its parking cells penalised). Reason: every (5,7) v6 failure verified all 12 relocations (X = 1) and then Y = 0 (CERTIFIED_INFEASIBLE): parking in the robot-side columns blocks the arm's path to a bottom-row target. Several W6_SEED per layout run in parallel (laptop s1/s2, enigma s1, girish s3); any certified run counts; acceptance unchanged. (61,63) pending candidates continue on v6 (gvlab2).",
+   "witness_v7_sha256": "97d47f83ac2a2ce40d4386582b3a967e0243867494f0e794b3c368632e6541d1"
+  }
+ ]
 }
