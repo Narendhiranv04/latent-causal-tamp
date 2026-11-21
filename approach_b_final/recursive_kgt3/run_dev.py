@@ -32,7 +32,7 @@ def probes(row, M):
     return {"k1_best": {str(o): b for o, b in best.items()}, "ytask_s0": yt, "proposals_s0": {str(o): v for o, v in D.items()}}
 
 
-def main(arm, dev_public, out, device):
+def main(arm, dev_public, out, device, shard=None, reverse=False, no_seal=False):
     out = Path(out); (out / "traces").mkdir(parents=True, exist_ok=True)
     cfg_all = json.loads((HERE / "dev_config.json").read_text())
     assert sha(dev_public) == cfg_all["dev_public_sha256"], "dev_public changed after pre-registration"
@@ -43,7 +43,13 @@ def main(arm, dev_public, out, device):
     M = MD.Frozen(device) if cfg_all["models"][arm] == "frozen" else MD.Random(device)
     DA.install_guard([HERE, HERE.parent, out, Path(sys.executable).resolve().parents[1]])
     preds = []
-    for row in rows:
+    order = list(enumerate(rows))
+    if shard:                                          # helper worker: disjoint subset of scenes (idx % n == i), optional reverse order
+        i_, n_ = map(int, shard.split("/"))
+        order = [(k, r) for k, r in order if k % n_ == i_]
+    if reverse:
+        order = order[::-1]
+    for _, row in order:
         tf = out / "traces" / f"{row['root_id']}.json"
         if tf.exists():                                # RESUME (crash recovery): runs are deterministic; reuse the finished scene
             preds.append(json.loads(tf.read_text())["res"])
@@ -56,6 +62,9 @@ def main(arm, dev_public, out, device):
         (out / "traces" / f"{row['root_id']}.json").write_text(json.dumps({"res": res, "log": log, "probe": pr}))
         preds.append(res)
         print(json.dumps({k: res[k] for k in ("root_id", "decision", "stop", "n_candidates", "rounds")} | {"len": len(res["seq"]), "budget": res["budget"]}), flush=True)
+    if no_seal:                                        # helpers never seal; the main worker seals once all 25 traces exist
+        return
+    preds = [json.loads((out / "traces" / f"{r['root_id']}.json").read_text())["res"] for r in rows]
     with open(out / "predictions.jsonl", "w") as f:
         for p in preds:
             f.write(json.dumps({k: v for k, v in p.items() if k != "cfg"}) + "\n")
@@ -88,6 +97,9 @@ def run_b0(rows, out, device, code_sha):
                       "n_candidates": rec.get("n_scored"), "rounds": 1, "stop": "FROZEN_K3", "budget": {"local": 1, "ytask": 0, "wall_s": round(time.time() - t0, 2)},
                       "model_calls": {}})
         print(json.dumps({"root_id": row["root_id"], "decision": kind, "len": len(seq)}), flush=True)
+    if no_seal:                                        # helpers never seal; the main worker seals once all 25 traces exist
+        return
+    preds = [json.loads((out / "traces" / f"{r['root_id']}.json").read_text())["res"] for r in rows]
     with open(out / "predictions.jsonl", "w") as f:
         for p in preds:
             f.write(json.dumps(p) + "\n")
@@ -98,4 +110,5 @@ def run_b0(rows, out, device, code_sha):
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(); ap.add_argument("arm"); ap.add_argument("dev_public"); ap.add_argument("out"); ap.add_argument("--device", default="cuda")
-    a = ap.parse_args(); main(a.arm, a.dev_public, a.out, a.device)
+    ap.add_argument("--shard"); ap.add_argument("--reverse", action="store_true"); ap.add_argument("--no-seal", action="store_true")
+    a = ap.parse_args(); main(a.arm, a.dev_public, a.out, a.device, a.shard, a.reverse, a.no_seal)
