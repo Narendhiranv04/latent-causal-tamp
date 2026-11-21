@@ -10,8 +10,8 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 import numpy as np  # noqa: E402
 
-COL = {"ours": "#2a78d6", "piginet": "#b4441c", "scnet": "#1baf7a", "grn": "#e07b00"}
-NAME = {"ours": "Ours", "piginet": "PIGINet (no img)", "scnet": "SceneCollisionNet", "grn": "GRN"}
+COL = {"ours": "#2a78d6", "piginet": "#b4441c", "scnet": "#1baf7a", "scnetgrasp": "#0f7a55", "grn": "#e07b00"}
+NAME = {"ours": "Ours", "piginet": "PIGINet (no img)", "scnet": "SceneCollisionNet", "scnetgrasp": "SCNet P(fixed grasp)", "grn": "GRN"}
 INK, MUTED, GRID = "#222222", "#7a7975", "#e6e6e6"
 
 
@@ -24,7 +24,7 @@ def style(ax):
 
 
 def metrics_fig(dom, m, fams, out):
-    coh = m["cohorts"]["STRONG"]
+    coh = m["cohorts"].get("STRONG") or next(iter(m["cohorts"].values()))
     fig, axs = plt.subplots(1, 2, figsize=(9, 0.55 * len(fams) + 1.4), sharey=True)
     for ax, key, title, ref in ((axs[0], "cf_pair_auroc", "CF-pair AUROC (BASE vs CF)", 0.5), (axs[1], "null_retention", "NULL retention (p ≥ 0.5)", None)):
         for i, f in enumerate(fams):
@@ -40,13 +40,13 @@ def metrics_fig(dom, m, fams, out):
         ax.set_title(title, fontsize=10, color=INK, loc="left"); style(ax)
         ax.set_xlim(0.45 if ref else 0.4, 1.06)
     axs[0].set_yticks(range(len(fams))); axs[0].set_yticklabels([NAME[f] for f in fams]); axs[0].invert_yaxis()
-    fig.suptitle(f"{dom.upper()} STRONG triplets (n = {coh['n_triplets']}); seed mean with 95% lineage-bootstrap CI, ticks = seeds s0–s2",
+    fig.suptitle(f"{dom.upper()} {'STRONG' if 'STRONG' in m['cohorts'] else next(iter(m['cohorts']))} triplets (n = {coh['n_triplets']}); seed mean with 95% lineage-bootstrap CI, ticks = seeds s0–s2",
                  fontsize=9.5, color=INK, x=0.01, ha="left")
     fig.tight_layout(); fig.savefig(out, dpi=170); plt.close(fig)
 
 
 def scores_fig(dom, man, S, fams, out):
-    T = [t for t in man["triplets"] if t["cohort"] == "STRONG"]
+    T = [t for t in man["triplets"] if t["cohort"] == "STRONG" or (isinstance(t["cohort"], list) and "GRASP_FLIP" in t["cohort"])]
     fig, axs = plt.subplots(1, len(fams), figsize=(2.6 * len(fams), 3.2), sharey=True)
     axs = np.atleast_1d(axs)
     rng = np.random.default_rng(0)
@@ -57,7 +57,7 @@ def scores_fig(dom, man, S, fams, out):
             ax.scatter(j + rng.uniform(-0.18, 0.18, len(v)), v, s=6, color=COL[f], alpha=0.35, lw=0)
             ax.plot([j - 0.25, j + 0.25], [np.median(v)] * 2, color=INK, lw=2)
         ax.axhline(0.5, color=MUTED, ls=":", lw=1)
-        ax.set_xticks([0, 1, 2]); ax.set_xticklabels(["BASE\n(y=1)", "CF\n(y=0 cert.)", "NULL\n(y=1)"], fontsize=8)
+        ax.set_xticks([0, 1, 2]); ax.set_xticklabels(["BASE\n(y=1)", "CF\n(y=0)", "NULL\n(y=1)"], fontsize=8)
         ax.set_title(NAME[f], fontsize=10, color=INK, loc="left")
         for s in ("top", "right"):
             ax.spines[s].set_visible(False)
@@ -97,7 +97,8 @@ def main(dom, rd, od):
     rd, od = Path(rd), Path(od); od.mkdir(parents=True, exist_ok=True)
     m = json.load(open(rd / f"metrics{dom}.json")); man = json.load(open(rd / f"tripman{dom}.json"))
     S = {json.loads(l)["qid"]: json.loads(l) for l in open(rd / f"scores{dom}.jsonl")}
-    fams = [f for f in ("ours", "piginet", "scnet", "grn") if f + "_seedmean" in m["cohorts"]["STRONG"]["models"]]
+    c0 = m["cohorts"].get("STRONG") or next(iter(m["cohorts"].values()))
+    fams = [f for f in ("ours", "piginet", "scnet", "scnetgrasp", "grn") if f + "_seedmean" in c0["models"]]
     metrics_fig(dom, m, fams, od / f"fig_{dom}_cf_null_metrics.png")
     scores_fig(dom, man, S, fams, od / f"fig_{dom}_score_strips.png")
     if dom == "3d":

@@ -66,6 +66,52 @@ def triplets(dom, jobs_f, lab_f, out_f):
     print(json.dumps({k: man[k] for k in ("n_bases", "funnel", "oracle")}, indent=1))
 
 
+def triplets_ins(jobs_f, lab_f, out_f):
+    """PROP_INS_3D (amendment 4).  BASE: re-verified task y = 1 via g* (its y_grasp = 1 by construction, re-checked).  Per base, CF = first insertion
+    (rank order: edge desc, standoff asc) whose fixed grasp g* FLIPS (y_grasp = 0, paper unit); NULL = first matched off-corridor box of the SAME
+    size with y_grasp = 1 AND task y = 1.  Cohorts: GRASP_FLIP (paper: same grasp, identical pose; task may stay feasible through other grasps) and
+    TASK_FLIP (the CF also makes the whole target task infeasible, task y = 0) -- TASK_FLIP is the subset on which a task-level score SHOULD drop.
+    Oracle (all attempted): paper 'Flip' = P(y_grasp = 0 | CF), paper 'Null' = P(y_grasp = 0 | NULL); task-level analogues too."""
+    J = {j["qid"]: j for j in jl(jobs_f)}
+    L = {r["qid"]: r for r in jl(lab_f)}
+    by = collections.defaultdict(list)
+    for j in J.values():
+        by[j["root_id"]].append(j)
+    acc, fun = [], collections.Counter()
+    for rid, js in sorted(by.items()):
+        b = L.get(f"{rid}|BASE")
+        if not b or b.get("y") != 1 or b.get("y_grasp") != 1:
+            fun["base_not_verified"] += 1
+            continue
+        cfs = sorted((j for j in js if j["kind"] == "CF"), key=lambda j: j["rank"])
+        c = next((j for j in cfs if L.get(j["qid"], {}).get("y_grasp") == 0), None)
+        if c is None:
+            fun["no_grasp_flip" if cfs else "no_corridor_cell"] += 1
+            continue
+        si = c["qid"].rsplit("|", 1)[1]
+        n = next((j for j in sorted((j for j in js if j["kind"] == "NULL" and j["qid"].endswith("|" + si)), key=lambda j: j["rank"])
+                  if L.get(j["qid"], {}).get("y_grasp") == 1 and L[j["qid"]].get("y") == 1), None)
+        if n is None:
+            fun["no_null"] += 1
+            continue
+        lc = L[c["qid"]]
+        coh = ["GRASP_FLIP"] + (["TASK_FLIP"] if lc.get("y") == 0 else [])
+        fun["GRASP_FLIP"] += 1; fun["TASK_FLIP"] += "TASK_FLIP" in coh
+        acc.append({"root_id": rid, "cohort": coh, "base": f"{rid}|BASE", "cf": c["qid"], "null": n["qid"], "base_kind": J[f"{rid}|BASE"].get("base_kind"),
+                    "lineage": rid, "grasp_kind": lc.get("grasp_negative_kind"), "task_y": lc.get("y"), "task_kind": lc.get("negative_kind"),
+                    "standoff_m": c.get("standoff_m"), "box_edge_m": c.get("box_edge_m"), "null_dist_m": n.get("dist_from_cf_m")})
+    orc = {}
+    for kind in ("CF", "NULL"):
+        R = [L[q] for q, j in J.items() if j["kind"] == kind and q in L and L[q].get("y_grasp") is not None]
+        orc[kind] = {"attempted": len(R), "grasp_flip_rate": sum(r["y_grasp"] == 0 for r in R) / max(1, len(R)),
+                     "grasp_flip_certified": sum(r["y_grasp"] == 0 and r.get("grasp_negative_kind") == "CERTIFIED" for r in R) / max(1, len(R)),
+                     "task_flip_rate": sum(r.get("y") == 0 for r in R) / max(1, len(R)),
+                     "errors": sum(1 for q, j in J.items() if j["kind"] == kind and L.get(q, {}).get("y_grasp") is None)}
+    man = {"dom": "3d_ins", "n_bases": len(by), "funnel": dict(fun), "oracle": orc, "cohort_names": ["GRASP_FLIP", "TASK_FLIP"], "triplets": acc}
+    json.dump(man, open(out_f, "w"), indent=1)
+    print(json.dumps({k: man[k] for k in ("n_bases", "funnel", "oracle")}, indent=1))
+
+
 def auroc(pos, neg):
     s = np.concatenate([pos, neg]); r = rankdata(s)
     n1 = len(pos)
@@ -95,10 +141,10 @@ def boot(pB, pC, pN, lin, B=2000, seed=0):
 def metrics(dom, man_f, lab_f, sc_f, out_f):
     man = json.load(open(man_f))
     S = {r["qid"]: r for r in jl(sc_f)}
-    models = sorted(k for k in next(iter(S.values())) if k.startswith(("ours_s", "grn_s", "piginet_s", "scnet_s")))
+    models = sorted(k for k in next(iter(S.values())) if k.startswith(("ours_s", "grn_s", "piginet_s", "scnet_s", "scnetgrasp_s")))
     res = {"dom": dom, "oracle": man["oracle"], "funnel": man["funnel"], "cohorts": {}}
-    for coh in ("STRONG", "BUDGET", "STRONG+BUDGET"):
-        T = [t for t in man["triplets"] if t["cohort"] in coh.split("+")]
+    for coh in man.get("cohort_names", ("STRONG", "BUDGET", "STRONG+BUDGET")):
+        T = [t for t in man["triplets"] if (coh in t["cohort"] if isinstance(t["cohort"], list) else t["cohort"] in coh.split("+"))]
         if not T:
             continue
         lin = np.array([t["lineage"] for t in T])
@@ -126,4 +172,4 @@ def metrics(dom, man_f, lab_f, sc_f, out_f):
 
 if __name__ == "__main__":
     a = sys.argv[1:]
-    {"triplets": lambda: triplets(*a[1:5]), "metrics": lambda: metrics(*a[1:6])}[a[0]]()
+    {"triplets": lambda: triplets(*a[1:5]), "triplets_ins": lambda: triplets_ins(*a[1:4]), "metrics": lambda: metrics(*a[1:6])}[a[0]]()

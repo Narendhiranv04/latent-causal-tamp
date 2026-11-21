@@ -46,7 +46,7 @@ def ours(dom, rows, recs):
     out = {}
     views = []
     for q in rows:
-        inp = view_of(dom, recs[q["path"]], q["cells"])
+        inp = view_of(dom, recs[q["qid"]], q["cells"])
         v, _, _ = XY.make_view(q["qid"], inp["xy0"], inp["attrs"], inp["tid"], inp["goal"], inp["base"], inp["ctx"], [], [], XY._NoGeo)
         views.append((q["qid"], v, inp))
     for s in (0, 1, 2):
@@ -68,7 +68,7 @@ def grn(rows, recs):
     import evaluate_grn as EG
     graphs = []
     for q in rows:
-        rec = recs[q["path"]]
+        rec = recs[q["qid"]]
         cells = {k: tuple(v) for k, v in q["cells"].items()}
         graphs.append(BG.make_graph(rec, cells, tuple(rec["goal"]), 0, None, q["root_id"], "cand", None, None))
     out = {}
@@ -96,7 +96,7 @@ def piginet(rows, recs):
     from piginet import PIGINet, tokens
     S = []
     for q in rows:
-        rec = recs[q["path"]]
+        rec = recs[q["qid"]]
         cells = {k: tuple(v) for k, v in q["cells"].items()}
         goal = tuple(rec["goal"])
         S.append(dict(rid=q["root_id"], kind="D", idx=None, objects=objs_of(rec), cells=cells, plan=[("t0", cells["t0"], goal)], goal=goal, y=0))
@@ -130,7 +130,7 @@ def scnet(rows, recs):
         cells = {k: tuple(v) for k, v in q["cells"].items()}
         assert cells["t0"] == r["start"]                        # target never moved by an edit: grasp poses are those of the base
         seed = int(hashlib.sha256(("CFSCN|" + q["root_id"]).encode()).hexdigest()[:8], 16) % (1 << 30)
-        pts = G.scene_cloud(r["objects"], cells, n_total=8192, seed=seed)
+        pts = G.scene_cloud(objs_of(recs[q["qid"]]), cells, n_total=8192, seed=seed)
         clouds.append(pts); sig[q["qid"]] = hashlib.sha256(pts.tobytes()).hexdigest()[:20]
     out = {}
     for s in (0, 1, 2):
@@ -141,9 +141,11 @@ def scnet(rows, recs):
             ch = rows[i:i + 32]
             f = lambda k: torch.from_numpy(np.stack([R[q["path"]][k] for q in ch])).to(ST.DEV)  # noqa: E731
             zp, zl = m(torch.from_numpy(np.stack(clouds[i:i + 32])).to(ST.DEV), f("pos"), f("R"), f("shift"))
-            p = feasible_logprob(zp, zl).exp().max(1).values.cpu().numpy()
-            for q, x in zip(ch, p):
-                out.setdefault(q["qid"], {})[f"scnet_s{s}"] = float(x)
+            P = feasible_logprob(zp, zl).exp().cpu().numpy()
+            for q, x in zip(ch, P):
+                out.setdefault(q["qid"], {})[f"scnet_s{s}"] = float(x.max())
+                if q.get("grasp_id") is not None:                   # the paper's unit: P(the fixed grasp g* works)
+                    out[q["qid"]][f"scnetgrasp_s{s}"] = float(x[int(q["grasp_id"])])
         del m; torch.cuda.empty_cache()
     return out, sig
 
@@ -151,7 +153,13 @@ def scnet(rows, recs):
 def main(dom, man, outp):
     torch.manual_seed(0)
     rows = [json.loads(l) for l in open(man)]
-    recs = {q["path"]: json.loads(Path(q["path"]).read_text()) for q in rows}
+    raw = {p: json.loads(Path(p).read_text()) for p in {q["path"] for q in rows}}
+    recs = {}                                                     # per state: the record plus any INSERTED objects (PROP_INS_3D, amendment 4)
+    for q in rows:
+        r = raw[q["path"]]
+        if q.get("extra_objects"):
+            r = json.loads(json.dumps(r)); r["objects"] = r["objects"] + q["extra_objects"]
+        recs[q["qid"]] = r
     sc, xy0 = ours(dom, rows, recs)
     gsig = None
     if dom == "3d" and GRN_DIR.name:

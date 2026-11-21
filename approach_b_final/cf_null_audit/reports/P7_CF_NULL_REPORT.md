@@ -1,5 +1,11 @@
 # CF / NULL counterfactual audit: final report (P7)
 
+> **Two intervention families are reported.**
+> - **PROP_V1 (move one obstacle, task-level):** prescribed by `plan.md`. Gives the main table below.
+> - **PROP_INS_3D (paper-faithful corridor insertion at a fixed grasp, arXiv:2611.09130):** added in amendment 4 after the owner asked for the paper's construction; see its own section.
+>
+> They give the same model ranking.
+
 Branch `naren/cf-null-audit`, from `e9fa587c3b`. All compute ran on the laptop: ≤ 29 of 32 cores, the GPU with one model at a time, and no remote compute. No training, tuning or threshold fitting was done; the threshold is 0.5 throughout. The protocol is `reports/PROTOCOL_LOCK.json` (`CF_NULL_PROTOCOL_LOCK_V1`). It has three dated amendments, each registered before the scores or labels it affects:
 1. cf_teacher robustness fix;
 2. PIGINet-noimg and SCNet available;
@@ -59,6 +65,61 @@ By base kind, seed mean, STRONG cohort:
 
 CIs are wide, about ±0.1.
 
+## Paper-faithful family PROP_INS_3D: corridor insertion at a fixed grasp (amendment 4)
+
+The main table above uses the move-one-obstacle family that `plan.md` prescribed. That family does **not** reproduce the paper's construction. arXiv:2611.09130 Sec. 3 / App. F,H:
+- the grasp pose is held fixed;
+- a NEW solid box (edge 1.5–5 cm) goes into the 10 cm approach corridor at a 5–15 cm standoff, and the planner relabels the grasp;
+- NULL is the matched box 30 cm off-corridor or 30 cm back;
+- the paper's "Null" is the oracle false-flip rate.
+
+PROP_INS_3D (`cf_insert.py`) is that construction on our shelf:
+
+| | Paper | PROP_INS_3D |
+|---|---|---|
+| Fixed unit | one grasp pose | the BASE's winning grasp g* (labels `y_grasp` = pick-and-place planned through g*, plus the task Y) |
+| Edit | insert a solid box in the approach corridor | insert a NEW box (edge 4 / 2.5 cm, height = target height: the paper's "resting pillar" form, since our objects stand on the lattice) on the free cell in g*'s corridor (standoff 0.05–0.15 m along −approach, lateral ≤ 3.75 cm). All accepted CFs: edge 4 cm, standoff 6.9–15 cm. |
+| NULL | matched box 30 cm off-corridor / 30 cm back | the same box "30 cm back" (behind the target along the approach axis) first, else off-corridor (lateral ≥ 1.5 pitch). Accepted NULLs: 132 back, 135 lateral, mean 0.28 m from the CF cell. |
+| Labels | RRT-Connect relabel, not certified | teacher planner relabel; every CF flip is a deterministic geometric failure (CERTIFIED) |
+
+**Oracle (all attempted proposals, 287 bases):**
+
+| | Paper (corridor 10 cm) | PROP_INS_3D |
+|---|---|---|
+| CF flip (fixed grasp) | 1.00 | **1.00** (616/616, all CERTIFIED) |
+| CF flip (whole task) | n/a | 0.948 |
+| NULL false-flip (fixed grasp) | 0.02 | **0.150** overall: **0.056** for "30 cm back" (25/448), 0.211 lateral (147/696) |
+
+The NULL false-flip is higher than the paper's. Our shelf is only 45 cm wide, and the arm's carry path to the goal crosses most of it; GraspNet tabletop scenes have far more free space. Every NULL in an accepted triplet is still physically verified feasible (fixed grasp and task).
+
+**Triplets:** 267 GRASP_FLIP (CF makes g* infeasible). 266 of them are also TASK_FLIP; the one exception keeps the task feasible through another grasp. Excluded: 3 bases whose g* re-plan failed, 16 with no feasible NULL, 1 with no free corridor cell. Visibility: the inserted box changes every model's input in 534/534 edited states.
+
+| Model (GRASP_FLIP, n = 267, seed mean) | CF-pair AUROC [95% CI] | NULL retention (%) [95% CI] | flip-rank | CF blocked acc | BASE acc |
+|---|---|---|---|---|---|
+| PIGINet (no image) | **0.985** [0.978, 0.991] | **91.0** [87.6, 94.4] | 0.996 | 0.925 | 0.940 |
+| SceneCollisionNet (max over grasps) | 0.954 [0.937, 0.970] | 79.0 [74.5, 83.9] | 0.989 | 0.951 | 0.816 |
+| SceneCollisionNet, P(g*) (the paper's exact unit) | 0.952 [0.935, 0.969] | 66.3 [60.7, 71.9] | 1.000 | 0.996 | 0.727 |
+| **Ours** | 0.934 [0.917, 0.951] | 84.6 [80.1, 89.1] | 0.996 | 0.779 | 0.869 |
+| GRN | 0.722 [0.701, 0.748] | 39.0 [33.3, 44.6] | 1.000 | 0.712 | 0.614 |
+
+Seeds s0 / s1 / s2:
+
+| Model | AUROC | NULL retention (%) |
+|---|---|---|
+| Ours | .930 / .935 / .907 | 83.1 / 86.9 / 77.5 |
+| PIGINet | .968 / .978 / .986 | 88.8 / 91.0 / 92.5 |
+| SCNet | .948 / .946 / .948 | 79.0 / 79.8 / 74.5 |
+| SCNet-g* | .942 / .940 / .946 | 66.3 / 67.8 / 57.7 |
+| GRN | .737 / .705 / .706 | 44.6 / 41.6 / 33.7 |
+
+TASK_FLIP (n = 266) gives the same values to within ±0.002.
+
+**Reading:**
+- In the paper's GraspNet setting most predictors sit at chance on CF-pair (≈ 0.50). Here every model responds to the inserted box, and PIGINet-noimg nearly separates the pairs.
+- The difference is expected. These baselines were trained on this shelf's task labels, where corridor occupancy decides feasibility. The paper's models were trained on grasp labels that never varied an obstacle at a fixed pose.
+- The ranking is the same as the move-one-obstacle family: PIGINet > SCNet ≥ Ours > GRN on AUROC; PIGINet > Ours > SCNet > GRN on NULL retention.
+- The two families agree in direction, and Ours is not the best model in either.
+
 ## Oracle / dataset quality, 3D (PROP_V1, 288 bases)
 
 | | |
@@ -99,6 +160,19 @@ The 2D teacher seldom *certifies* infeasibility. In the engineering pilot, 18 CF
 **2D must not be mixed into the 3D table.** The 2D K>3 scaling cohort is not included: its release is not final.
 
 ## Proposed paper rows (3D target-feasibility table)
+
+If the table should follow the paper's construction, use the PROP_INS_3D values:
+
+| Method | CF-pair AUROC ↑ | NULL retention (%) ↑ |
+|---|---|---|
+| SceneCollisionNet | 0.954 | 79.0 |
+| PIGINet (no image) | 0.985 | 91.0 |
+| GRN | 0.722 | 39.0 |
+| Ours | 0.934 | 84.6 |
+
+Footnote: n = 267 fixed-grasp corridor-insertion triplets; oracle flip 1.00, NULL false-flip 0.150 (0.056 for "30 cm back").
+
+Move-one-obstacle family (PROP_V1), for reference:
 
 | Method | CF-pair AUROC ↑ | NULL retention (%) ↑ |
 |---|---|---|

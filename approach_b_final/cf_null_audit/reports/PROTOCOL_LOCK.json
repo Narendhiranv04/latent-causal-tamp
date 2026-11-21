@@ -87,6 +87,26 @@
    "code_sha256": {
     "cf_generate.py": "e1f3174cc6541011523958f65d14a4a1dba21ffc7a804d2bf9636a5a8f589f3d"
    }
+  },
+  {
+   "n": 4,
+   "utc": "2026-11-21T14:08:30Z",
+   "authorised_by": "owner request 2026-11-21: check / redo the counterfactual as done in arXiv:2611.09130",
+   "registered_before": "any PROP_INS_3D final label or model score",
+   "change": "NEW, separate 3D intervention family PROP_INS_3D (cf_insert.py), paper-faithful: fixed grasp g* (BASE winning grasp), a NEW solid box inserted into g*'s approach corridor (standoff 0.05-0.15 m, lateral <= pitch/2, edge 4 / 2.5 cm, height = target height: the paper's resting-pillar form on our lattice); NULL = the same box 30 cm back (paper App. F distal control) else off-corridor; labels y_grasp (plan through g*, the paper's unit) and task Y. Cohorts GRASP_FLIP (paper) and TASK_FLIP. PROP_V1 (move-one-obstacle, per plan.md) results are unchanged and reported as a separate family.",
+   "pilot": "20 engineering 3D bases (excluded): CF grasp flip 40/40 (all CERTIFIED geometric), task flip 0.95; NULL false-flip (grasp) lateral-only 0.30 -> back-first 0.24 overall (back 4/40 = 0.10, lateral 14/36 = 0.39); 16-17/20 triplets",
+   "models": "Ours, GRN, PIGINet-noimg, SCNet see the inserted object natively (record objects + cells); SCNet also scored per grasp at g* (scnetgrasp, the paper's exact unit)",
+   "jobs_sha256": "1b2301e5fe1e1e712b322bd900257044bf2f9158826d6688f5c6aab3e49b7ac4",
+   "jobs": {
+    "BASE": 287,
+    "CF": 616,
+    "NULL": 1144
+   },
+   "code_sha256": {
+    "cf_insert.py": "71cd9af7ac1d9b2537d400954c1ebf88cab5b1fc28f7c26d4665c2631a2f811c",
+    "cf_infer.py": "259a3b57e70ff52763d9a0bb1e073c632c34a9c2621c98bd829081eed5e0e689",
+    "cf_report.py": "bc607d82d8f10e66f62606833f245ca32a5a4358885b5275af2bf6d7460e566f"
+   }
   }
  ]
 }
