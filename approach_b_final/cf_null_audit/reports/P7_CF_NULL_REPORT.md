@@ -120,6 +120,41 @@ TASK_FLIP (n = 266) gives the same values to within ±0.002.
 - The ranking is the same as the move-one-obstacle family: PIGINet > SCNet ≥ Ours > GRN on AUROC; PIGINet > Ours > SCNet > GRN on NULL retention.
 - The two families agree in direction, and Ours is not the best model in either.
 
+### Why CF-pair is far above the paper's chance level (diagnostics)
+
+Pooled AUROC, seed mean. Ideal: BASE>CF = 1, NULL>CF = 1, BASE~NULL = 0.5.
+
+| PROP_INS_3D (n = 267) | BASE>CF | NULL>CF (same inserted box, placement only) | BASE~NULL |
+|---|---|---|---|
+| PIGINet | 0.985 | 0.979 | 0.560 |
+| SCNet / SCNet-g* | 0.954 / 0.952 | 0.936 / 0.935 | 0.565 / 0.573 |
+| Ours | 0.934 | 0.917 | 0.540 |
+| GRN | 0.722 | **0.582** | 0.647 |
+| Heuristic: fewer objects in the target's 8-neighbourhood (no learning) | 0.873 | 0.873 | 0.500 |
+| Heuristic: fewer objects (count only) | 0.675 | 0.500 | 0.675 |
+
+PROP_V1 (move family, n = 224):
+
+| Model | BASE>CF | NULL>CF | BASE~NULL |
+|---|---|---|---|
+| Ours | 0.898 | 0.891 | 0.489 |
+| PIGINet | 0.948 | 0.942 | 0.508 |
+| SCNet | 0.901 | 0.906 | 0.531 |
+| GRN | 0.783 | 0.744 | 0.542 |
+| Neighbour heuristic | 0.659 | 0.686 | 0.475 |
+
+**What this shows:**
+1. **Placement, not clutter.** For PIGINet, SCNet and Ours, NULL>CF is close to BASE>CF, and BASE~NULL is close to 0.5. These models separate the blocking box from the same box elsewhere; they are not just penalising an extra object.
+2. **GRN partly is.** Its NULL>CF is only 0.58 under insertion, and it drops on any added object (BASE~NULL 0.65). That is the closest analogue to the paper's finding.
+3. **This domain's CF is easy.** A one-line neighbour-count heuristic reaches 0.873 under insertion. On a 6×6 lattice an object standing next to the target is a strong, simple blocking cue.
+
+**Why the paper sees about 0.50 and we don't:**
+- **Training data.** The paper's GraspNet predictors never saw "same grasp, obstacle in the corridor" contrasts, so they learn pose shortcuts. Our baselines were trained on this shelf's teacher labels, which contain exactly such contrasts: `labels.D` edits and lattice samples are the same scene with obstacles moved or parked, with flipped Y. This is the paper's own Table 6 regime ("train from scratch on CF: 0.991"), not its Table 1 regime.
+- **Visibility.** In the paper the box is about 13 of 2,048 points. Here it is a first-class object: a token for PIGINet, a graph node for GRN, an object row for Ours, and about 450 cloud points for SCNet.
+- **In-distribution edit.** The paper's box floats in the corridor, a configuration absent from training. Ours is a standard obstacle standing on a lattice cell beside the target, like thousands of training obstacles.
+
+So the high values are a property of the domain and training data, not an implementation error: inputs change in 534/534 edited states, labels are never seen by the models, and the constant control is at 0.5. A paper-style **out-of-distribution** stress test would need edits the models never saw, such as an off-lattice box, a size outside the training range, or a floating body. That is a different protocol and has not been run.
+
 ## Oracle / dataset quality, 3D (PROP_V1, 288 bases)
 
 | | |
