@@ -1,0 +1,46 @@
+{
+ "id": "SCALING2D_FINAL_LOCK_V1",
+ "utc": "2026-11-21T10:45:29Z",
+ "quota": {
+  "K4": 5,
+  "K5": 5,
+  "K6": 5,
+  "K9": 5,
+  "K12": 5
+ },
+ "K_definition": "K* = min |sigma| over admissible repairs with X=1 and Y=1 (declared grammar: one move per movable object, target never a corrective move, legal destinations); certified iff K_lb(MINK_STATIC_V2, teacher's full grammar) = K_lb(V1) = |verified witness|",
+ "acceptance": "witness_v3 verdict CERTIFIED_MIN_K: X=1 (independent replay, teacher_long) and Y=1 (independent replay) for the full witness, Y(empty)=0, len(witness)=K_lb_v1=K_lb_v2=stratum K; n_objects<=20; objects in columns 3-7 (TRAIN support)",
+ "generators": {
+  "K4-6": "gen_deep.py (GENDEEP3, parking prior) seeds 20000-29999 (never used before), 20000 steps; layout K_lb must equal the stratum",
+  "K9": "anneal20.py (fixed target/goal, exactly 20 objects) with run seeds >= 100 (never used before), from fresh prune seeds; target/goal pairs with column-3-7 ceiling >= 9",
+  "K12": "same as K9 with KMIN=12; BLOCKED if no 20-object layout with K_lb >= 12 is found (ceiling audit: 13 only at ~37 objects; greedy 20-object max 9)"
+ },
+ "attempt_order": "per stratum, candidate layouts in sha256('FINAL|root_id') order; caps: 150 layouts per K4-6 stratum, 400 for K9, until 5 accepted",
+ "novelty": "layout fingerprint (cells + target + goal) not in G0/HIST_EXCLUSIONS.json, not in any engineering pool (16 old + pilot46 + k9eng) and not a near-duplicate: occupied-cell Jaccard <= 0.85 vs every engineering scene and every earlier accepted final scene",
+ "diversity": "<= 2 accepted scenes per (target cell, goal cell) pair per stratum; reported features: n_objects, redundant objects, parking cells used, witness order",
+ "witness_search": {
+  "K4-6": {
+   "ALT": 8,
+   "MAXQ": 60
+  },
+  "K9": {
+   "ALT": 8,
+   "MAXQ": 80
+  }
+ },
+ "engineering_pool_excluded": "ENG_*, ENG2_*, DEEP_* pilot46, DEEP9_* k9eng (never counted in the final 25)",
+ "code_sha256": {
+  "cert.py": "cfef4dde1e60882b90baf3e2e4439e2c79544cbb988108325e60746daa343a66",
+  "gen_deep.py": "11d5435386bba8c856ae77981ab50df2fdbcccc5da5ef33f0f38f94e383fe2f3",
+  "anneal20.py": "28f9a0f500f51e0b0b05409e7650c6283b0082dd31b2b8ebfe9f759b3bf1ae16",
+  "witness_v3.py": "f752609f386e7c12f1e2b3f538036ac71e6dec6012a36903cf91abc3c81edea4",
+  "teacher_long.py": "af0e9fd4ac94e13d69fec917d185a397aa9b5f5caaf2c3b50a3068a95598f000",
+  "mink.py": "64ccbe1d4706ccb701c3f414e80e5e99f2d4f7fca45e4132f462386e2b1ff8b0",
+  "witness.py": "3a25ef89cb0a5f04c469f6b5bccb5ba24b30539b8307e6f3ed3255d757362bde"
+ },
+ "tables_sha256": {
+  "G1/MINK_TABLE_original.json": "eb0419757a292cb97d4671794176891048ebe8174a4a67aa789a833726518c73",
+  "G1/QCLEAR_original.json": "7b993da7bcbd3c21e02fcbec95564f0fde475c313ec4285019617762ecb9de28",
+  "G1/PARK_PRIOR_TRAIN.json": "f1689ffb286474e7186680014701ede92bc6599655dc0a238134865a806465b8"
+ }
+}
