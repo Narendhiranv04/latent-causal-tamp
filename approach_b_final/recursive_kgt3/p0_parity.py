@@ -13,7 +13,7 @@ BUNDLE = Path.home() / "abf_v34/approach_b_bundle"
 VAL_IN, VAL_PRED = Path.home() / "abf_v34/parity/public_val_2d.jsonl", Path.home() / "abf_v34/parity/pred_val_2d_gpu.jsonl"
 
 
-def main(out, device):
+def main(out, device, shard=None, skip_from=None):
     import torch
     import benchmark as BM
     import exhaustive as EX
@@ -35,8 +35,11 @@ def main(out, device):
         if not all(x["ok"]):
             mism.append({"root": x["root_id"], "decision": x["ok"][0], "moves": x["ok"][1], "proposals": x["ok"][2]})
     with open(pf, "a") as f:
-        for r in DA.jl(VAL_IN):
-            if r["root_id"] in prev:
+        done_ext = {x["root_id"] for x in DA.jl(skip_from) if "ok" in x} if skip_from and Path(skip_from).exists() else set()
+        for k, r in enumerate(DA.jl(VAL_IN)):
+            if r["root_id"] in prev or r["root_id"] in done_ext:
+                continue
+            if shard and k % int(shard.split("/")[1]) != int(shard.split("/")[0]):
                 continue
             root = S.Root(r, "2d")
             D6 = EX.proposals(root, samp, cfg["proposal_seed"])
@@ -54,6 +57,8 @@ def main(out, device):
                 mism.append({"root": r["root_id"], "decision": ok[0], "moves": ok[1], "proposals": ok[2]})
             f.write(json.dumps({"root_id": r["root_id"], "decision": kind, "moves": moves, "p11": p11, "p_noop": rec["p_noop"], "ok": list(ok),
                                 "dp11": e1, "dpnoop": e2}) + "\n"); f.flush()
+    if shard:                                          # shard worker: rows only (merged by p0_merge)
+        return
     syn = {}
     base = DA.jl(VAL_IN)[0]
     import random, copy
@@ -81,4 +86,5 @@ def main(out, device):
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(); ap.add_argument("out"); ap.add_argument("--device", default="cuda")
-    a = ap.parse_args(); main(a.out, a.device)
+    ap.add_argument("--shard"); ap.add_argument("--skip-from")
+    a = ap.parse_args(); main(a.out, a.device, a.shard, a.skip_from)

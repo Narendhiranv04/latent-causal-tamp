@@ -77,7 +77,7 @@ def dev(eval_dir, out_dir):
     rows = [json.loads(l) for l in open(E / "per_scene.jsonl")]
     arms = [a for a in ("REC", "REC2", "FLAT", "RAND") if any(a in r["arms"] for r in rows)]
     for r in rows:
-        fig, axs = plt.subplots(1, len(arms), figsize=(4.2 * len(arms), 4.6))
+        fig, axs = plt.subplots(1, len(arms), figsize=(4.2 * len(arms), 5.0))
         for ax, a in zip(axs, arms):
             x = r["arms"].get(a)
             cells, T0, G0 = r["cells0"], r["T0"], r["G0"]
@@ -99,9 +99,69 @@ def dev(eval_dir, out_dir):
                 ax.set_title(f"{a}: no prediction", fontsize=8)
         fig.text(0.01, 0.01, "red = target, dashed green = goal, orange = mover in some minimal goal set (relaxation label, post-seal), blue ring/arrows = committed plan",
                  fontsize=7, color=MUTED)
-        fig.tight_layout(rect=(0, 0.03, 1, 1)); fig.savefig(O / f"{r['root_id']}.png", dpi=120); plt.close(fig)
+        fig.suptitle(f"{r['root_id']}  (certified K={r['K']}, {r['n_objects']} objects)", fontsize=9, x=0.01, ha="left")
+        fig.tight_layout(rect=(0, 0.03, 1, 0.93)); fig.savefig(O / f"{r['root_id']}.png", dpi=120); plt.close(fig)
     print("wrote", len(rows), "scene figures to", O)
 
 
+def summary(eval_dir, out):
+    import numpy as np
+    S = json.loads((Path(eval_dir) / "DEV_SUMMARY.json").read_text())
+    P = [json.loads(l) for l in open(Path(eval_dir) / "per_scene.jsonl")]
+    arms = ["B0", "FLAT", "RAND", "REC", "REC2"]
+    COL = {"B0": GREY, "FLAT": ORANGE, "RAND": MUTED, "REC": BLUE, "REC2": GREEN}
+    fig, axs = plt.subplots(1, 3, figsize=(17, 5))
+    ax = axs[0]
+    cats = ["SUCCESS", "INGREDIENT", "COMPOSITION", "EXECUTION", "FINAL_Y", "ABSTAIN", "NOOP"]
+    ccol = {"SUCCESS": GREEN, "INGREDIENT": RED, "COMPOSITION": ORANGE, "EXECUTION": BLUE, "FINAL_Y": "#7b5ea7", "ABSTAIN": GREY, "NOOP": "#cccccc"}
+    for i, a in enumerate(arms):
+        left = 0
+        for c in cats:
+            n = sum(1 for r in P if r["arms"][a]["failure"].startswith(c))
+            if n:
+                ax.barh(i, n, left=left, color=ccol[c], edgecolor="white", height=0.6)
+                ax.text(left + n / 2, i, str(n), ha="center", va="center", color="white", fontsize=8)
+                left += n
+    ax.set_yticks(range(len(arms))); ax.set_yticklabels([f"{a}  ({S['arms'][a]['success']}/25)" for a in arms])
+    ax.set_xlabel("DEV scenes (25)"); ax.set_title("Physical outcome of the committed plan (teacher_long)\nfailure class: first applicable in the pre-registered order", fontsize=9, loc="left")
+    for c in cats:
+        ax.bar(0, 0, color=ccol[c], label=c)
+    ax.legend(fontsize=7, loc="upper center", bbox_to_anchor=(0.5, -0.13), ncol=4, frameon=False)
+    for s in ("top", "right"):
+        ax.spines[s].set_visible(False)
+    ax = axs[1]
+    rng = np.random.default_rng(0)
+    for i, a in enumerate(arms):
+        xs = [r["K"] + (i - 2) * 0.13 for r in P]; ys = [r["arms"][a]["len"] + rng.uniform(-0.12, 0.12) for r in P]
+        ax.scatter(xs, ys, s=16, color=COL[a], alpha=0.8, label=a, lw=0)
+    ax.plot([3, 13], [3, 13], color=INK, lw=0.8, ls="--"); ax.text(10.2, 11.2, "|r| = certified K", fontsize=8)
+    ax.set_xlabel("certified minimum K"); ax.set_ylabel("committed plan length |r|"); ax.set_xticks([4, 5, 6, 9, 12]); ax.set_ylim(-0.5, 13)
+    ax.set_title("Committed plans are shorter than the minimum K\n(below the dashed line = guaranteed failure)", fontsize=9, loc="left")
+    ax.legend(fontsize=7, frameon=False, loc="upper left")
+    for s in ("top", "right"):
+        ax.spines[s].set_visible(False)
+    ax = axs[2]
+    items = [("D1 original task: useful-mover rank (U)", S["D1_auroc_U"]), ("D1 original task: witness-mover rank (W)", S["D1_auroc_W"]),
+             ("D2 final h_Y: witness vs random sets", S["D2_hY_witness_vs_random_auroc"]), ("D3 temp-target ŷ at S0 vs static feasibility", S["D3i_ytask_S0_auroc"]),
+             ("D3 temp-target ŷ, REC-logged probes", {"mean": S["D3ii_ytask_logged_auroc"]["REC"]["auroc"], "ci95": None}),
+             ("D4 temp-task enabling-mover rank (S0)", S["D4_tt_blocker_ranking_auroc_S0"])]
+    for i, (lab, v) in enumerate(items):
+        m, ci = v["mean"], v.get("ci95")
+        col = GREEN if ci and ci[0] > 0.5 else (RED if ci else BLUE)
+        if ci:
+            ax.plot(ci, [i, i], color=col, lw=2)
+        ax.plot(m, i, "o", color=col, ms=7)
+        ax.text(1.0, i, f"{m:.2f}" + (f" [{ci[0]:.2f}, {ci[1]:.2f}]" if ci else ""), va="center", fontsize=8)
+    ax.axvline(0.5, color=MUTED, ls=":"); ax.set_xlim(0.3, 1.25); ax.set_yticks(range(len(items))); ax.set_yticklabels([l for l, _ in items], fontsize=8)
+    ax.invert_yaxis(); ax.set_xlabel("AUROC (0.5 = no information); bootstrap 95% CI over scenes")
+    ax.set_title(f"Where the frozen models carry information\nD5: inserted enablers that are true blockers {S['D5_insertion_precision_S0']['true']}/{S['D5_insertion_precision_S0']['all']}", fontsize=9, loc="left")
+    for s in ("top", "right"):
+        ax.spines[s].set_visible(False)
+    fig.suptitle("P3 DEV (25 engineering scenes, K4-K12): recursive vs flat vs random vs frozen K<=3; predictions sealed before labels", fontsize=10.5, x=0.01, ha="left")
+    fig.tight_layout(); fig.savefig(out, dpi=140); plt.close(fig)
+    print("wrote", out)
+
+
 if __name__ == "__main__":
-    {"mock": lambda: mock(sys.argv[2], sys.argv[3]), "dev": lambda: dev(sys.argv[2], sys.argv[3])}[sys.argv[1]]()
+    {"mock": lambda: mock(sys.argv[2], sys.argv[3]), "dev": lambda: dev(sys.argv[2], sys.argv[3]),
+     "summary": lambda: summary(sys.argv[2], sys.argv[3])}[sys.argv[1]]()

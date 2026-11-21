@@ -123,7 +123,8 @@ def main(runs, dev_public, priv_dir, verify_f, tables, out, device):
     VER = {(r["root_id"], json.dumps(r["seq"])): r for r in jl(verify_f)}
     ST = Static(tables)
     pred = {a: {p["root_id"]: p for p in jl(runs / a / "predictions.jsonl")} for a in arms}
-    tr = {a: {rid: json.loads((runs / a / "traces" / f"{rid}.json").read_text()) for rid in pred[a]} for a in arms if (runs / a / "traces").exists()}
+    tr = {a: {rid: json.loads((runs / a / "traces" / f"{rid}.json").read_text()) for rid in pred[a] if (runs / a / "traces" / f"{rid}.json").exists()}
+          for a in arms}
     per, D1u, D1w, recall8, D3i, D4, D2 = [], [], [], [], [], [], []
     D3p, D3n = {"REC": [], "REC2": []}, {"REC": [], "REC2": []}
     import models as MD
