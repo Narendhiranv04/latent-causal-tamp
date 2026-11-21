@@ -44,6 +44,10 @@ def main(arm, dev_public, out, device):
     DA.install_guard([HERE, HERE.parent, out, Path(sys.executable).resolve().parents[1]])
     preds = []
     for row in rows:
+        tf = out / "traces" / f"{row['root_id']}.json"
+        if tf.exists():                                # RESUME (crash recovery): runs are deterministic; reuse the finished scene
+            preds.append(json.loads(tf.read_text())["res"])
+            continue
         c0 = dict(M.c)
         pr = probes(row, M) if arm != "RAND" else None
         log = {"local": [], "ytask": [], "insert": [], "rounds": []}

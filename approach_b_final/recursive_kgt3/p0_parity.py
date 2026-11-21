@@ -27,8 +27,17 @@ def main(out, device):
     cfg = man["config"]
     ref = {r["root_id"]: r for r in DA.jl(VAL_PRED)}
     mism, dp, dn, t0 = [], 0.0, 0.0, time.time()
-    with open(out / "p0_val_pred.jsonl", "w") as f:
+    pf = out / "p0_val_pred.jsonl"
+    prev = {x["root_id"]: x for x in DA.jl(pf) if "ok" in x} if pf.exists() else {}      # RESUME: rows carrying their parity flags
+    pf.write_text("".join(json.dumps(x) + "\n" for x in prev.values()))
+    for x in prev.values():
+        dp = max(dp, x["dp11"]); dn = max(dn, x["dpnoop"])
+        if not all(x["ok"]):
+            mism.append({"root": x["root_id"], "decision": x["ok"][0], "moves": x["ok"][1], "proposals": x["ok"][2]})
+    with open(pf, "a") as f:
         for r in DA.jl(VAL_IN):
+            if r["root_id"] in prev:
+                continue
             root = S.Root(r, "2d")
             D6 = EX.proposals(root, samp, cfg["proposal_seed"])
             rec = EX.score_root(root, D6, scor, [cfg["rule"]], cfg["M"], set(), cfg["chunk"])
@@ -39,10 +48,12 @@ def main(out, device):
             ok = (kind == g["decision"], moves == [[m["object_id"], m["destination_cell"]] for m in g["moves"]],
                   all({str(o): v[:4] for o, v in D6.items()}.get(k) == v for k, v in g["proposals"].items()))
             p11 = d["p11"] if d else None
-            dp = max(dp, abs((p11 or 0) - (g["score_p11"] or 0))); dn = max(dn, abs(rec["p_noop"] - g["p_noop"]))
+            e1, e2 = abs((p11 or 0) - (g["score_p11"] or 0)), abs(rec["p_noop"] - g["p_noop"])
+            dp = max(dp, e1); dn = max(dn, e2)
             if not all(ok):
                 mism.append({"root": r["root_id"], "decision": ok[0], "moves": ok[1], "proposals": ok[2]})
-            f.write(json.dumps({"root_id": r["root_id"], "decision": kind, "moves": moves, "p11": p11, "p_noop": rec["p_noop"]}) + "\n")
+            f.write(json.dumps({"root_id": r["root_id"], "decision": kind, "moves": moves, "p11": p11, "p_noop": rec["p_noop"], "ok": list(ok),
+                                "dp11": e1, "dpnoop": e2}) + "\n"); f.flush()
     syn = {}
     base = DA.jl(VAL_IN)[0]
     import random, copy
