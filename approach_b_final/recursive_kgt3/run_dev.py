@@ -37,6 +37,7 @@ def main(arm, dev_public, out, device):
     cfg_all = json.loads((HERE / "dev_config.json").read_text())
     assert sha(dev_public) == cfg_all["dev_public_sha256"], "dev_public changed after pre-registration"
     rows = DA.jl(dev_public)
+    code_sha = {f: sha(HERE / f) for f in ("data.py", "models.py", "planner.py", "run_dev.py")}      # hashes of the code actually run
     M = MD.Frozen(device) if cfg_all["models"][arm] == "frozen" else MD.Random(device)
     DA.install_guard([HERE, HERE.parent, out, Path(sys.executable).resolve().parents[1]])
     preds = []
@@ -54,7 +55,7 @@ def main(arm, dev_public, out, device):
             f.write(json.dumps({k: v for k, v in p.items() if k != "cfg"}) + "\n")
     seal = {"arm": arm, "utc": time.strftime("%FT%TZ", time.gmtime()), "predictions_sha256": sha(out / "predictions.jsonl"),
             "traces_sha256": hashlib.sha256(b"".join(sha(p).encode() for p in sorted((out / "traces").glob("*.json")))).hexdigest(),
-            "dev_config_sha256": sha(HERE / "dev_config.json"), "code_sha256": {f: sha(HERE / f) for f in ("data.py", "models.py", "planner.py", "run_dev.py")},
+            "dev_config_sha256": sha(HERE / "dev_config.json"), "code_sha256": code_sha,
             "teacher_calls": 0, "labels_read": False}
     (out / "SEAL.json").write_text(json.dumps(seal, indent=1))
     print(json.dumps({"sealed": seal["predictions_sha256"][:16], "n": len(preds)}))

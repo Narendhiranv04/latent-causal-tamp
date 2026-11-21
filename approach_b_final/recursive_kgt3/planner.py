@@ -16,7 +16,8 @@ sys.path.insert(0, str(HERE.parent))
 import data as DA  # noqa: E402
 
 CFG = {"L": 8, "B_loc": 6, "B_top": 6, "B_exp": 4, "B_loc_tt": 4, "D_max": 3, "cap": 12, "theta_done": 0.5, "theta_tt": 0.5, "fallback_hi": 0.9,
-       "lam_X": 1.0, "lam_m": 0.0, "eps": 1e-6, "max_local": 150, "max_ytask": 4000, "max_wall_s": 180.0, "max_rounds": 12, "noop_gate": 0.5}
+       "lam_X": 1.0, "lam_m": 0.0, "eps": 1e-6, "max_local": 150, "max_ytask": 4000, "max_wall_s": 180.0, "max_rounds": 12, "noop_gate": 0.5,
+       "suspect_rule": "threshold", "tt_local_per_insert": None, "tt_rel_gain": None}      # REC2 (deviation D-1) overrides the last three
 
 
 class Budget:
@@ -83,24 +84,36 @@ class Planner:
         return out
 
     # ---------------------------------------------------------------- recursion
-    def solve_tt(self, P, A, d, reserved, rcells, cap, depth):
-        """Enabling sequence e (after P) such that ŷ(A -> d | P+e) >= θ_tt; [] if none within budget/depth.  First success wins."""
-        if self.ytask(P, A, d, reserved, rcells) >= self.cfg["theta_tt"]:
-            return [[]]
-        if depth > self.cfg["D_max"] or cap <= 0 or self.B.out():
+    def _tt_ok(self, y, y0):
+        g = self.cfg["tt_rel_gain"]
+        return y >= self.cfg["theta_tt"] or (g is not None and y0 is not None and y - y0 >= g)
+
+    def _sub_out(self):
+        lim = self.cfg["tt_local_per_insert"]
+        return lim is not None and getattr(self, "_sub0", None) is not None and self.B.local - self._sub0 >= lim
+
+    def solve_tt(self, P, A, d, reserved, rcells, cap, depth, y0=None):
+        """Enabling sequence e (after P) such that ŷ(A -> d | P+e) >= θ_tt (REC2: or ŷ gain >= tt_rel_gain over ŷ before insertion);
+        [] if none within budget/depth (REC2: also a per-insertion local-call cap).  First success wins."""
+        y = self.ytask(P, A, d, reserved, rcells)
+        if y0 is None:
+            y0 = y
+            if y >= self.cfg["theta_tt"]:
+                return [[]]
+        if depth > self.cfg["D_max"] or cap <= 0 or self.B.out() or self._sub_out():
             return []
         h = self.hr(P, (A, d), reserved, rcells)
         for u in self.local(h, min(3, cap), f"TT{A}"):
             for s in self.expand(P, u, reserved | {A}, rcells | {d}, cap, depth):
                 if DA.check_sequence(self.row0, P + s) is not None:
                     continue
-                if self.ytask(P + s, A, d, reserved, rcells) >= self.cfg["theta_tt"]:
+                if self._tt_ok(self.ytask(P + s, A, d, reserved, rcells), y0):
                     return [s]
-                if len(s) < cap and depth < self.cfg["D_max"]:
-                    t = self.solve_tt(P + s, A, d, reserved | {i for i, _ in s}, rcells, cap - len(s), depth + 1)
+                if len(s) < cap and depth < self.cfg["D_max"] and not self._sub_out():
+                    t = self.solve_tt(P + s, A, d, reserved | {i for i, _ in s}, rcells, cap - len(s), depth + 1, y0)
                     if t:
                         return [s + t[0]]
-                if self.B.out():
+                if self.B.out() or self._sub_out():
                     return []
         return []
 
@@ -117,10 +130,18 @@ class Planner:
                 pend = {x for x, _ in u[j + 1:]}; pend_c = {y for _, y in u[j + 1:]}
                 rv = reserved | pend | {x for x, _ in p} | {A}
                 y = ys0[a] if not p else self.ytask(P + p, A, d, rv - {A}, rcells | pend_c)
-                suspect = y < self.cfg["theta_tt"] or (a == amin and y < self.cfg["fallback_hi"])
+                if self.cfg["suspect_rule"] == "min":       # REC2: relative ranking -- only the lowest-ŷ action of u is repaired
+                    suspect = a == amin and y < self.cfg["fallback_hi"]
+                else:
+                    suspect = y < self.cfg["theta_tt"] or (a == amin and y < self.cfg["fallback_hi"])
                 if suspect and not self.B.out():
                     room = cap - len(p) - (len(u) - j)
+                    outer = getattr(self, "_sub0", None)
+                    if depth == 0:
+                        self._sub0 = self.B.local                # per-insertion sub-budget starts at a top-level insertion
                     E = self.solve_tt(P + p, A, d, rv, rcells | pend_c, room, depth + 1) if room > 0 else []
+                    if depth == 0:
+                        self._sub0 = outer
                     for e in E:
                         if e:
                             nxt.append(p + e + [a])

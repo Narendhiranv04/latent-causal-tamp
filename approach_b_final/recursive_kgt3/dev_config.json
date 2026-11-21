@@ -17,7 +17,10 @@
   "max_ytask": 4000,
   "max_wall_s": 180.0,
   "max_rounds": 12,
-  "noop_gate": 0.5
+  "noop_gate": 0.5,
+  "suspect_rule": "threshold",
+  "tt_local_per_insert": null,
+  "tt_rel_gain": null
  },
  "FLAT": {
   "L": 8,
@@ -37,7 +40,10 @@
   "max_ytask": 4000,
   "max_wall_s": 180.0,
   "max_rounds": 12,
-  "noop_gate": 0.5
+  "noop_gate": 0.5,
+  "suspect_rule": "threshold",
+  "tt_local_per_insert": null,
+  "tt_rel_gain": null
  },
  "RAND": {
   "L": 8,
@@ -57,16 +63,51 @@
   "max_ytask": 4000,
   "max_wall_s": 180.0,
   "max_rounds": 12,
-  "noop_gate": 0.5
+  "noop_gate": 0.5,
+  "suspect_rule": "threshold",
+  "tt_local_per_insert": null,
+  "tt_rel_gain": null
  },
  "models": {
   "REC": "frozen",
   "FLAT": "frozen",
-  "RAND": "random"
+  "RAND": "random",
+  "REC2": "frozen"
  },
  "bundle_manifest": "~/abf_v34/approach_b_bundle/MANIFEST.json (10/10 sha256 verified)",
  "sampler": "2d/sampler.pt a01f25eb",
  "scorer": "2d/scorer_s0.pt 0fa126da",
  "dev_public_sha256": "70ad98a94e9d4d60956c6f7e756987e06f654d4005ab5357741c833758b24ba0",
- "note": "frozen before any DEV prediction; FLAT B_top=12 matches REC max local calls (12 rounds x 12 = 144 <= 150)"
+ "note": "frozen before any DEV prediction; FLAT B_top=12 matches REC max local calls (12 rounds x 12 = 144 <= 150)",
+ "REC2": {
+  "L": 8,
+  "B_loc": 6,
+  "B_top": 6,
+  "B_exp": 4,
+  "B_loc_tt": 4,
+  "D_max": 2,
+  "cap": 12,
+  "theta_done": 0.5,
+  "theta_tt": 0.5,
+  "fallback_hi": 0.9,
+  "lam_X": 1.0,
+  "lam_m": 0.0,
+  "eps": 1e-06,
+  "max_local": 150,
+  "max_ytask": 4000,
+  "max_wall_s": 180.0,
+  "max_rounds": 12,
+  "noop_gate": 0.5,
+  "suspect_rule": "min",
+  "tt_local_per_insert": 4,
+  "tt_rel_gain": 0.2
+ },
+ "deviations": [
+  {
+   "id": "D-1",
+   "utc_note": "declared after observing ONLY model-side search behaviour on the first DEV scene (no label read)",
+   "observation": "REC (pre-registered) spent all 150 local calls inside round-1 temporary-target recursion (ytask under-confident: almost every action suspected; sub-goals never reach 0.5) and produced 1 candidate",
+   "action": "REC kept unchanged as the pre-registered PRIMARY arm; added REC2 = REC + rank-based suspect rule (only the lowest-\u0177 action of u), per-insertion cap 4 local calls, enabling accepted if \u0177>=0.5 or \u0177 gain>=0.2, D_max=2; same global caps"
+  }
+ ]
 }
