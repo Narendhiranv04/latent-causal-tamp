@@ -1,0 +1,22 @@
+{
+ "id": "K3VAL_PREREG_P1_P4_V1",
+ "registered_before": "any physical outcome of a new argmax query (multipass running; no new teacher call made)",
+ "frozen_inputs": {"candidate_pool": "M4 proposals of the sealed FULL_s0 prediction per root (pool_hash checked)",
+                   "scorers": "FULL_s0..2 = frozen bundle D (pins in config/final_protocol.yaml); E_s0..2 and DIRECT_s0..2 = sealed ablation fits"},
+ "selection_key": "exhaustive.key with alpha=beta=gamma=0: (round(-log max(p,1e-12),12), |r|, displacement, signature); label-blind",
+ "decision_from_scores": "NOOP if p_noop>=gate; else the higher of (argmax repair, NOOP; NOOP wins ties) among those with p>=eta; else ABSTAIN",
+ "physical_queries": "argmax repair of every score variant on every eval_task (K1-K3) root of VAL and TEST; union minus the existing cache; unchanged teachers via benchmark.teach; query list hashed before teaching; no retry; UNKNOWN stays UNKNOWN",
+ "variants": {"A5_knockout": "FULL_s*: p11_w0 = sig(b) sig(a) (w <- 0), NOOP probability unchanged",
+              "D_selectors": {"Y_only": "sig(b_endpoint); permutations of one endpoint tie and are broken by the label-blind key",
+                              "X_marg": "sig(b) sig(a+w) + (1-sig(b)) sig(a)", "X_given_Y1": "sig(a+w)"},
+              "B_models": ["FULL_s0", "FULL_s1", "FULL_s2", "E_s0", "E_s1", "E_s2", "DIRECT_s0", "DIRECT_s1", "DIRECT_s2"]},
+ "B2_threshold_tuning": {"grid": {"noop_gate": [0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], "eta": [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6]},
+                         "split": "VAL only", "unit": "per model checkpoint (seed); D-family tuned identically as the control",
+                         "objective": "mean of task success (K1-K3), correct NOOP (K0), correct ABSTAIN (NONE) = evaluate.tune objective of the frozen rule",
+                         "tie_break": "smallest L1 distance to the registered rule (0.5, 0.3), then lower gate, then lower eta",
+                         "test_use": "tuned rules frozen (hashed) before any TEST metric of a tuned rule is computed; TEST is historically exposed -> exploratory"},
+ "D_decision_protocol": {"primary": "threshold-free repair-forced top-1 physical success on eval_task roots (argmax of each score)",
+                         "secondary": "fixed gating: NOOP/ABSTAIN/REPAIR type taken from FULL_s* under the registered rule; only the repair candidate is replaced by the variant's argmax"},
+ "statistics": "paired root differences, seed-averaged where seeds exist, cluster bootstrap over layout_root_id (2,000, seed 0) with a parent_family_id sensitivity; K1/K2/K3 separately; exploratory unless stated",
+ "multiplicity": "Bonferroni-adjusted 99.86% intervals reported next to 95% for the 36 registered ablation cells; new diagnostics are exploratory"
+}
