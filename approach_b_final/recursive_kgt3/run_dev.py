@@ -38,6 +38,8 @@ def main(arm, dev_public, out, device):
     assert sha(dev_public) == cfg_all["dev_public_sha256"], "dev_public changed after pre-registration"
     rows = DA.jl(dev_public)
     code_sha = {f: sha(HERE / f) for f in ("data.py", "models.py", "planner.py", "run_dev.py")}      # hashes of the code actually run
+    if arm == "B0":                                   # frozen K<=3 one-shot control (benchmark path, DynPad), sealed like every arm
+        return run_b0(rows, out, device, code_sha)
     M = MD.Frozen(device) if cfg_all["models"][arm] == "frozen" else MD.Random(device)
     DA.install_guard([HERE, HERE.parent, out, Path(sys.executable).resolve().parents[1]])
     preds = []
@@ -59,6 +61,35 @@ def main(arm, dev_public, out, device):
             "teacher_calls": 0, "labels_read": False}
     (out / "SEAL.json").write_text(json.dumps(seal, indent=1))
     print(json.dumps({"sealed": seal["predictions_sha256"][:16], "n": len(preds)}))
+
+
+def run_b0(rows, out, device, code_sha):
+    import benchmark as BM
+    import exhaustive as EX
+    import search as S
+    DA.enable_dynpad()
+    samp, scor, man = BM.load_bundle(MD.BUNDLE, "2d", device, 0)
+    cfg = man["config"]
+    DA.install_guard([HERE, HERE.parent, out, Path(sys.executable).resolve().parents[1]])
+    preds = []
+    for row in rows:
+        t0 = time.time()
+        root = S.Root(row, "2d")
+        D6 = EX.proposals(root, samp, cfg["proposal_seed"])
+        rec = EX.score_root(root, D6, scor, [cfg["rule"]], cfg["M"], set(), cfg["chunk"])
+        d = rec["per_M"][str(cfg["M"])]["decisions"][0]
+        kind = "ABSTAIN" if d is None else "NOOP" if d["seq"] == [] else "REPAIR"
+        seq = [list(x) for x in d["seq"]] if kind == "REPAIR" else []
+        preds.append({"root_id": row["root_id"], "arm": "B0", "decision": kind, "seq": seq, "p_noop": rec["p_noop"], "energy": {"hY": None, "p11": d["p11"] if d else None},
+                      "n_candidates": rec.get("n_scored"), "rounds": 1, "stop": "FROZEN_K3", "budget": {"local": 1, "ytask": 0, "wall_s": round(time.time() - t0, 2)},
+                      "model_calls": {}})
+        print(json.dumps({"root_id": row["root_id"], "decision": kind, "len": len(seq)}), flush=True)
+    with open(out / "predictions.jsonl", "w") as f:
+        for p in preds:
+            f.write(json.dumps(p) + "\n")
+    seal = {"arm": "B0", "utc": time.strftime("%FT%TZ", time.gmtime()), "predictions_sha256": sha(out / "predictions.jsonl"),
+            "code_sha256": code_sha, "teacher_calls": 0, "labels_read": False}
+    (out / "SEAL.json").write_text(json.dumps(seal, indent=1))
 
 
 if __name__ == "__main__":
