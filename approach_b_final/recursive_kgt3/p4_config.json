@@ -148,7 +148,7 @@
     "max_rounds": 12,
     "noop_gate": 0.5,
     "suspect_rule": "threshold",
-    "tt_local_per_insert": 3,
+    "tt_local_per_insert": 6,
     "tt_rel_gain": null,
     "agg_X": "mean",
     "stop_on_hY": false,
@@ -157,7 +157,8 @@
     "pace": true,
     "target_seed": false,
     "rho": 0.5,
-    "tt_gain_ratio": 2.0
+    "tt_gain_ratio": 2.0,
+    "ref_gate": true
    },
    "role": "R1 + relative temporary-target gating + fair pacing (round/plan/insertion)"
   },
@@ -185,7 +186,7 @@
     "max_rounds": 12,
     "noop_gate": 0.5,
     "suspect_rule": "threshold",
-    "tt_local_per_insert": 3,
+    "tt_local_per_insert": 6,
     "tt_rel_gain": null,
     "agg_X": "mean",
     "stop_on_hY": false,
@@ -194,7 +195,8 @@
     "pace": true,
     "target_seed": true,
     "rho": 0.5,
-    "tt_gain_ratio": 2.0
+    "tt_gain_ratio": 2.0,
+    "ref_gate": true
    },
    "role": "R2 + target-centric seeding from public target/goal via frozen calls (separate variant)"
   },
@@ -257,7 +259,7 @@
     "max_rounds": 12,
     "noop_gate": 0.5,
     "suspect_rule": "threshold",
-    "tt_local_per_insert": 3,
+    "tt_local_per_insert": 6,
     "tt_rel_gain": null,
     "agg_X": "mean",
     "stop_on_hY": false,
@@ -266,9 +268,18 @@
     "pace": true,
     "target_seed": false,
     "rho": 0.5,
-    "tt_gain_ratio": 2.0
+    "tt_gain_ratio": 2.0,
+    "ref_gate": true
    },
    "role": "random/fair exploration control: R2 search with random proposals/scores/gates, frozen final energy"
   }
- }
+ },
+ "amendments": [
+  {
+   "id": "P4-A1",
+   "gate": "B (mock only; before any P4 DEV run of R1-R3/F/N)",
+   "observation": "R2 failed mock K9, R3 failed K9/K12: the 'lowest-\u0177 action of u' rule always suspects the single action of a 1-action hypothesis (even an easy one), exhausting the 3-call per-insertion cap before nested enablers (T<-o1<-o4<-o6) were reached (8 vs 52 insertions for R1)",
+   "change": "R2/R3/N suspect rule := \u0177(A->d | S_P) < median over movable o of \u0177(o -> top frozen-cVAE destination | S_P) (scene-relative, scale-free, same frozen model); per-insertion cap 3 -> 6"
+  }
+ ]
 }

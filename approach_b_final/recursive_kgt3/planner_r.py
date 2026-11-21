@@ -60,9 +60,13 @@ class PlannerR(PLN.Planner):
         if self.arm == "FLAT" or self.cfg["gate"] != "relative":
             return super().expand(P, u, reserved, rcells, cap, depth)
         ys0 = {a: self.ytask(P, a[0], a[1], reserved | {x for x, _ in u if x != a[0]}, rcells | {y for _, y in u if y != a[1]}) for a in u}
-        top = max(ys0.values())
-        amin = min(u, key=lambda a: ys0[a])
-        suspect = {a for a in u if a == amin or ys0[a] < self.cfg["rho"] * top}
+        if self.cfg.get("ref_gate", False):              # P4-A1: harder than a typical action in the SAME hypothetical scene
+            ref = self.scene_ref(P)
+            suspect = {a for a in u if ys0[a] < ref}
+        else:
+            top = max(ys0.values())
+            amin = min(u, key=lambda a: ys0[a])
+            suspect = {a for a in u if a == amin or ys0[a] < self.cfg["rho"] * top}
         res = [[]]
         for j, a in enumerate(u):
             A, d = a
@@ -91,6 +95,19 @@ class PlannerR(PLN.Planner):
                     seen.add(k); res.append(q)
             res = res[: self.cfg["B_exp"]]
         return res
+
+    def scene_ref(self, P):
+        """Scene-relative reference (P4-A1): median over movable objects o of ŷ(o -> its top frozen-cVAE destination) in scene S_P."""
+        if not hasattr(self, "_ref"):
+            self._ref = {}
+        k = json.dumps(sorted(map(tuple, P)))
+        if k not in self._ref:
+            h = self.hr(P)
+            D = self.M.propose(h)
+            ys = [self.ytask(P, o, v[0], set(), set()) for o, v in D.items() if v]
+            ys.sort()
+            self._ref[k] = ys[len(ys) // 2] if ys else 0.0
+        return self._ref[k]
 
     # ------------------------------------------------------------------ R1 energy (length-neutral stage-X aggregate)
     def energy(self, seqs):
