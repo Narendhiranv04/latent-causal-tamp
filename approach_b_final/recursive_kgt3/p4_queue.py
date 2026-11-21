@@ -17,16 +17,25 @@ def meminfo():
     return m["MemAvailable"], m["SwapTotal"] - m["SwapFree"]
 
 
-def main(arms, dev, p4, maxp, shards, start_gb=6.0, swap_gb=1.0, pause_gb=2.5):
+def main(arms, dev, p4, maxp, shards, start_gb=6.0, swap_gb=4.0, pause_gb=2.5):
     p4 = Path(p4); log = open(p4 / "queue.log", "a")
     say = lambda *a: (log.write(time.strftime("%H:%M:%S ") + " ".join(map(str, a)) + "\n"), log.flush())  # noqa: E731
     jobs = [(a, i) for a in arms for i in range(shards)]
-    run, stopped, cpu = {}, set(), 0
+    run, stopped, cpu, all_paused_since = {}, set(), 0, None
     say("START", arms, "maxp", maxp)
     while jobs or run:
         for k, p in list(run.items()):
             if p.poll() is not None:
                 say("DONE", k, "rc", p.returncode); run.pop(k); stopped.discard(k)
+                if p.returncode != 0:                          # killed / crashed shard: requeue (shards resume per scene)
+                    jobs.append(k); say("REQUEUE", k)
+        if run and len(stopped) == len(run):                   # deadlock breaker: every running worker paused
+            all_paused_since = all_paused_since or time.time()
+            if time.time() - all_paused_since > 60:
+                k = max(stopped, key=lambda k: run[k].pid)
+                run[k].send_signal(signal.SIGCONT); run[k].kill(); say("DEADLOCK_KILL", k); all_paused_since = None
+        else:
+            all_paused_since = None
         avail, swp = meminfo()
         if avail < pause_gb and run:
             k = max((k for k in run if k not in stopped), key=lambda k: run[k].pid, default=None)
@@ -51,5 +60,5 @@ def main(arms, dev, p4, maxp, shards, start_gb=6.0, swap_gb=1.0, pause_gb=2.5):
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(); ap.add_argument("arms"); ap.add_argument("dev"); ap.add_argument("p4")
-    ap.add_argument("--maxp", type=int, default=6); ap.add_argument("--shards", type=int, default=3)
-    a = ap.parse_args(); main(a.arms.split(","), a.dev, a.p4, a.maxp, a.shards)
+    ap.add_argument("--maxp", type=int, default=6); ap.add_argument("--shards", type=int, default=3); ap.add_argument("--swap-gb", type=float, default=4.0)
+    a = ap.parse_args(); main(a.arms.split(","), a.dev, a.p4, a.maxp, a.shards, swap_gb=a.swap_gb)
