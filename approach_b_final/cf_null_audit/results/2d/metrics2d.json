@@ -1,0 +1,817 @@
+{
+ "dom": "2d",
+ "oracle": {
+  "CF": {
+   "attempted": 1788,
+   "y1": 1582,
+   "y0_certified": 58,
+   "y0_budget": 148,
+   "error_or_unknown": 0,
+   "oracle_certified_flip_rate": 0.03243847874720358
+  },
+  "NULL": {
+   "attempted": 1596,
+   "y1": 1568,
+   "y0_certified": 0,
+   "y0_budget": 28,
+   "error_or_unknown": 0,
+   "oracle_false_flip_rate": 0.017543859649122806
+  }
+ },
+ "funnel": {
+  "no_matched_cf_null": 109,
+  "BUDGET": 40,
+  "STRONG": 18
+ },
+ "cohorts": {
+  "STRONG": {
+   "n_triplets": 18,
+   "by_base_kind": {
+    "K0_TEST": 18
+   },
+   "models": {
+    "ours_s0": {
+     "point": {
+      "cf_pair_auroc": 0.8641975308641975,
+      "flip_rank": 1.0,
+      "cf_blocked_acc": 0.7777777777777778,
+      "null_retention": 0.8333333333333334,
+      "null_retention_given_base_pos": 1.0,
+      "base_feasible_acc": 0.7222222222222222,
+      "mean_drop_base_minus_cf": 0.5095011846351554,
+      "median_drop": 0.5423459042831382,
+      "mean_abs_base_null": 0.10689551238384512
+     },
+     "ci95": {
+      "cf_pair_auroc": [
+       0.7808641975308642,
+       0.9537808641975305
+      ],
+      "flip_rank": [
+       1.0,
+       1.0
+      ],
+      "cf_blocked_acc": [
+       0.5555555555555556,
+       0.9444444444444444
+      ],
+      "null_retention": [
+       0.6666666666666666,
+       1.0
+      ],
+      "null_retention_given_base_pos": [
+       1.0,
+       1.0
+      ],
+      "base_feasible_acc": [
+       0.5,
+       0.9444444444444444
+      ],
+      "mean_drop_base_minus_cf": [
+       0.32951807524006854,
+       0.6935528629885993
+      ],
+      "median_drop": [
+       0.10879761539399624,
+       0.8875209148973227
+      ],
+      "mean_abs_base_null": [
+       0.03745428630047374,
+       0.18496181854667762
+      ]
+     }
+    },
+    "ours_s1": {
+     "point": {
+      "cf_pair_auroc": 0.8580246913580247,
+      "flip_rank": 1.0,
+      "cf_blocked_acc": 0.6666666666666666,
+      "null_retention": 0.7777777777777778,
+      "null_retention_given_base_pos": 0.9285714285714286,
+      "base_feasible_acc": 0.7777777777777778,
+      "mean_drop_base_minus_cf": 0.4570659277786844,
+      "median_drop": 0.39580903797832434,
+      "mean_abs_base_null": 0.11887294550736745
+     },
+     "ci95": {
+      "cf_pair_auroc": [
+       0.7777777777777778,
+       0.9475308641975309
+      ],
+      "flip_rank": [
+       1.0,
+       1.0
+      ],
+      "cf_blocked_acc": [
+       0.4444444444444444,
+       0.8888888888888888
+      ],
+      "null_retention": [
+       0.5555555555555556,
+       0.9444444444444444
+      ],
+      "null_retention_given_base_pos": [
+       0.7692307692307693,
+       1.0
+      ],
+      "base_feasible_acc": [
+       0.5555555555555556,
+       0.9444444444444444
+      ],
+      "mean_drop_base_minus_cf": [
+       0.29862817042379297,
+       0.6333477991269117
+      ],
+      "median_drop": [
+       0.11285056546330452,
+       0.8480786420404911
+      ],
+      "mean_abs_base_null": [
+       0.05318886418309477,
+       0.1912900921785169
+      ]
+     }
+    },
+    "ours_s2": {
+     "point": {
+      "cf_pair_auroc": 0.8364197530864198,
+      "flip_rank": 1.0,
+      "cf_blocked_acc": 0.6111111111111112,
+      "null_retention": 0.8888888888888888,
+      "null_retention_given_base_pos": 1.0,
+      "base_feasible_acc": 0.8333333333333334,
+      "mean_drop_base_minus_cf": 0.4151378863906656,
+      "median_drop": 0.29770249128341675,
+      "mean_abs_base_null": 0.06823958042595121
+     },
+     "ci95": {
+      "cf_pair_auroc": [
+       0.7530864197530864,
+       0.941358024691358
+      ],
+      "flip_rank": [
+       1.0,
+       1.0
+      ],
+      "cf_blocked_acc": [
+       0.3888888888888889,
+       0.8333333333333334
+      ],
+      "null_retention": [
+       0.7222222222222222,
+       1.0
+      ],
+      "null_retention_given_base_pos": [
+       1.0,
+       1.0
+      ],
+      "base_feasible_acc": [
+       0.6666666666666666,
+       1.0
+      ],
+      "mean_drop_base_minus_cf": [
+       0.2578475256219261,
+       0.5909850487366887
+      ],
+      "median_drop": [
+       0.061544716358184814,
+       0.6975876092910767
+      ],
+      "mean_abs_base_null": [
+       0.024173436189691224,
+       0.12393856098254517
+      ]
+     }
+    },
+    "ours_seedmean": {
+     "point": {
+      "cf_pair_auroc": 0.8487654320987654,
+      "flip_rank": 1.0,
+      "cf_blocked_acc": 0.6666666666666666,
+      "null_retention": 0.8333333333333334,
+      "null_retention_given_base_pos": 1.0,
+      "base_feasible_acc": 0.7777777777777778,
+      "mean_drop_base_minus_cf": 0.46056833293483507,
+      "median_drop": 0.45246379077434534,
+      "mean_abs_base_null": 0.09800045199140356
+     },
+     "ci95": {
+      "cf_pair_auroc": [
+       0.7685185185185185,
+       0.9444444444444444
+      ],
+      "flip_rank": [
+       1.0,
+       1.0
+      ],
+      "cf_blocked_acc": [
+       0.4444444444444444,
+       0.8888888888888888
+      ],
+      "null_retention": [
+       0.6666666666666666,
+       1.0
+      ],
+      "null_retention_given_base_pos": [
+       1.0,
+       1.0
+      ],
+      "base_feasible_acc": [
+       0.5555555555555556,
+       0.9444444444444444
+      ],
+      "mean_drop_base_minus_cf": [
+       0.29815700559846403,
+       0.6351939524637297
+      ],
+      "median_drop": [
+       0.11449259830017884,
+       0.8457698378091058
+      ],
+      "mean_abs_base_null": [
+       0.04165144178809393,
+       0.15998084365597182
+      ]
+     }
+    },
+    "constant_0.5": {
+     "point": {
+      "cf_pair_auroc": 0.5,
+      "flip_rank": 0.5,
+      "cf_blocked_acc": 0.0,
+      "null_retention": 1.0,
+      "null_retention_given_base_pos": 1.0,
+      "base_feasible_acc": 1.0,
+      "mean_drop_base_minus_cf": 0.0,
+      "median_drop": 0.0,
+      "mean_abs_base_null": 0.0
+     },
+     "ci95": {
+      "cf_pair_auroc": [
+       0.5,
+       0.5
+      ],
+      "flip_rank": [
+       0.5,
+       0.5
+      ],
+      "cf_blocked_acc": [
+       0.0,
+       0.0
+      ],
+      "null_retention": [
+       1.0,
+       1.0
+      ],
+      "null_retention_given_base_pos": [
+       1.0,
+       1.0
+      ],
+      "base_feasible_acc": [
+       1.0,
+       1.0
+      ],
+      "mean_drop_base_minus_cf": [
+       0.0,
+       0.0
+      ],
+      "median_drop": [
+       0.0,
+       0.0
+      ],
+      "mean_abs_base_null": [
+       0.0,
+       0.0
+      ]
+     }
+    }
+   }
+  },
+  "BUDGET": {
+   "n_triplets": 40,
+   "by_base_kind": {
+    "K0_TEST": 40
+   },
+   "models": {
+    "ours_s0": {
+     "point": {
+      "cf_pair_auroc": 0.844375,
+      "flip_rank": 0.95,
+      "cf_blocked_acc": 0.65,
+      "null_retention": 0.8,
+      "null_retention_given_base_pos": 0.9411764705882353,
+      "base_feasible_acc": 0.85,
+      "mean_drop_base_minus_cf": 0.4540709168912144,
+      "median_drop": 0.4402938783168793,
+      "mean_abs_base_null": 0.0810565828520339
+     },
+     "ci95": {
+      "cf_pair_auroc": [
+       0.77121875,
+       0.919390625
+      ],
+      "flip_rank": [
+       0.875,
+       1.0
+      ],
+      "cf_blocked_acc": [
+       0.5,
+       0.8
+      ],
+      "null_retention": [
+       0.675,
+       0.925
+      ],
+      "null_retention_given_base_pos": [
+       0.8529411764705882,
+       1.0
+      ],
+      "base_feasible_acc": [
+       0.725,
+       0.95
+      ],
+      "mean_drop_base_minus_cf": [
+       0.3499565575734596,
+       0.5653872405783477
+      ],
+      "median_drop": [
+       0.2766222059726715,
+       0.6086733043193817
+      ],
+      "mean_abs_base_null": [
+       0.038117040004581215,
+       0.1318913883832283
+      ]
+     }
+    },
+    "ours_s1": {
+     "point": {
+      "cf_pair_auroc": 0.848125,
+      "flip_rank": 0.95,
+      "cf_blocked_acc": 0.725,
+      "null_retention": 0.8,
+      "null_retention_given_base_pos": 0.9393939393939394,
+      "base_feasible_acc": 0.825,
+      "mean_drop_base_minus_cf": 0.46192304398136913,
+      "median_drop": 0.46242978423833847,
+      "mean_abs_base_null": 0.08115131478989497
+     },
+     "ci95": {
+      "cf_pair_auroc": [
+       0.7787343750000001,
+       0.92
+      ],
+      "flip_rank": [
+       0.875,
+       1.0
+      ],
+      "cf_blocked_acc": [
+       0.575,
+       0.85
+      ],
+      "null_retention": [
+       0.675,
+       0.925
+      ],
+      "null_retention_given_base_pos": [
+       0.8484848484848485,
+       1.0
+      ],
+      "base_feasible_acc": [
+       0.7,
+       0.925
+      ],
+      "mean_drop_base_minus_cf": [
+       0.36152877880889717,
+       0.566776633684458
+      ],
+      "median_drop": [
+       0.2597687095403671,
+       0.6886102519929409
+      ],
+      "mean_abs_base_null": [
+       0.045249800801684614,
+       0.12420407016907119
+      ]
+     }
+    },
+    "ours_s2": {
+     "point": {
+      "cf_pair_auroc": 0.81625,
+      "flip_rank": 0.925,
+      "cf_blocked_acc": 0.45,
+      "null_retention": 0.9,
+      "null_retention_given_base_pos": 1.0,
+      "base_feasible_acc": 0.9,
+      "mean_drop_base_minus_cf": 0.33436452705063857,
+      "median_drop": 0.2314385175704956,
+      "mean_abs_base_null": 0.055501691857352854
+     },
+     "ci95": {
+      "cf_pair_auroc": [
+       0.745,
+       0.89
+      ],
+      "flip_rank": [
+       0.825,
+       1.0
+      ],
+      "cf_blocked_acc": [
+       0.3,
+       0.6
+      ],
+      "null_retention": [
+       0.8,
+       0.975
+      ],
+      "null_retention_given_base_pos": [
+       1.0,
+       1.0
+      ],
+      "base_feasible_acc": [
+       0.8,
+       0.975
+      ],
+      "mean_drop_base_minus_cf": [
+       0.22986205658133257,
+       0.44481812892758166
+      ],
+      "median_drop": [
+       0.07534646987915039,
+       0.4756562113761902
+      ],
+      "mean_abs_base_null": [
+       0.029733163450146094,
+       0.08888564416905861
+      ]
+     }
+    },
+    "ours_seedmean": {
+     "point": {
+      "cf_pair_auroc": 0.8425,
+      "flip_rank": 0.975,
+      "cf_blocked_acc": 0.625,
+      "null_retention": 0.875,
+      "null_retention_given_base_pos": 0.9705882352941176,
+      "base_feasible_acc": 0.85,
+      "mean_drop_base_minus_cf": 0.41678616264107404,
+      "median_drop": 0.38047124445438385,
+      "mean_abs_base_null": 0.07186621760677855
+     },
+     "ci95": {
+      "cf_pair_auroc": [
+       0.774375,
+       0.915015625
+      ],
+      "flip_rank": [
+       0.925,
+       1.0
+      ],
+      "cf_blocked_acc": [
+       0.475,
+       0.775
+      ],
+      "null_retention": [
+       0.774375,
+       0.975
+      ],
+      "null_retention_given_base_pos": [
+       0.90625,
+       1.0
+      ],
+      "base_feasible_acc": [
+       0.725,
+       0.95
+      ],
+      "mean_drop_base_minus_cf": [
+       0.316916901114746,
+       0.5217591933556346
+      ],
+      "median_drop": [
+       0.22181882460912072,
+       0.5792766883969307
+      ],
+      "mean_abs_base_null": [
+       0.039414402640541094,
+       0.11159418836027421
+      ]
+     }
+    },
+    "constant_0.5": {
+     "point": {
+      "cf_pair_auroc": 0.5,
+      "flip_rank": 0.5,
+      "cf_blocked_acc": 0.0,
+      "null_retention": 1.0,
+      "null_retention_given_base_pos": 1.0,
+      "base_feasible_acc": 1.0,
+      "mean_drop_base_minus_cf": 0.0,
+      "median_drop": 0.0,
+      "mean_abs_base_null": 0.0
+     },
+     "ci95": {
+      "cf_pair_auroc": [
+       0.5,
+       0.5
+      ],
+      "flip_rank": [
+       0.5,
+       0.5
+      ],
+      "cf_blocked_acc": [
+       0.0,
+       0.0
+      ],
+      "null_retention": [
+       1.0,
+       1.0
+      ],
+      "null_retention_given_base_pos": [
+       1.0,
+       1.0
+      ],
+      "base_feasible_acc": [
+       1.0,
+       1.0
+      ],
+      "mean_drop_base_minus_cf": [
+       0.0,
+       0.0
+      ],
+      "median_drop": [
+       0.0,
+       0.0
+      ],
+      "mean_abs_base_null": [
+       0.0,
+       0.0
+      ]
+     }
+    }
+   }
+  },
+  "STRONG+BUDGET": {
+   "n_triplets": 58,
+   "by_base_kind": {
+    "K0_TEST": 58
+   },
+   "models": {
+    "ours_s0": {
+     "point": {
+      "cf_pair_auroc": 0.8448275862068966,
+      "flip_rank": 0.9655172413793104,
+      "cf_blocked_acc": 0.6896551724137931,
+      "null_retention": 0.8103448275862069,
+      "null_retention_given_base_pos": 0.9574468085106383,
+      "base_feasible_acc": 0.8103448275862069,
+      "mean_drop_base_minus_cf": 0.47127341377726506,
+      "median_drop": 0.4671481642872095,
+      "mean_abs_base_null": 0.089075560982596
+     },
+     "ci95": {
+      "cf_pair_auroc": [
+       0.7859690844233056,
+       0.9063614744351962
+      ],
+      "flip_rank": [
+       0.9137931034482759,
+       1.0
+      ],
+      "cf_blocked_acc": [
+       0.5689655172413793,
+       0.8103448275862069
+      ],
+      "null_retention": [
+       0.7068965517241379,
+       0.9137931034482759
+      ],
+      "null_retention_given_base_pos": [
+       0.893559204440333,
+       1.0
+      ],
+      "base_feasible_acc": [
+       0.7068965517241379,
+       0.9137931034482759
+      ],
+      "mean_drop_base_minus_cf": [
+       0.37692622434922923,
+       0.5653794265049641
+      ],
+      "median_drop": [
+       0.271557342261076,
+       0.6086733043193817
+      ],
+      "mean_abs_base_null": [
+       0.05201702138924859,
+       0.13199005946346382
+      ]
+     }
+    },
+    "ours_s1": {
+     "point": {
+      "cf_pair_auroc": 0.8451248513674198,
+      "flip_rank": 0.9655172413793104,
+      "cf_blocked_acc": 0.7068965517241379,
+      "null_retention": 0.7931034482758621,
+      "null_retention_given_base_pos": 0.9361702127659575,
+      "base_feasible_acc": 0.8103448275862069,
+      "mean_drop_base_minus_cf": 0.4604156630908807,
+      "median_drop": 0.44449377655473654,
+      "mean_abs_base_null": 0.09285802777117953
+     },
+     "ci95": {
+      "cf_pair_auroc": [
+       0.7877452437574316,
+       0.9030915576694412
+      ],
+      "flip_rank": [
+       0.9137931034482759,
+       1.0
+      ],
+      "cf_blocked_acc": [
+       0.5862068965517241,
+       0.8103448275862069
+      ],
+      "null_retention": [
+       0.6896551724137931,
+       0.896551724137931
+      ],
+      "null_retention_given_base_pos": [
+       0.8571428571428571,
+       1.0
+      ],
+      "base_feasible_acc": [
+       0.7068965517241379,
+       0.9137931034482759
+      ],
+      "mean_drop_base_minus_cf": [
+       0.37182963614781456,
+       0.5479532376933467
+      ],
+      "median_drop": [
+       0.2880869060754776,
+       0.5566324293613434
+      ],
+      "mean_abs_base_null": [
+       0.06016845433362599,
+       0.1310977670155337
+      ]
+     }
+    },
+    "ours_s2": {
+     "point": {
+      "cf_pair_auroc": 0.8204518430439952,
+      "flip_rank": 0.9482758620689655,
+      "cf_blocked_acc": 0.5,
+      "null_retention": 0.896551724137931,
+      "null_retention_given_base_pos": 1.0,
+      "base_feasible_acc": 0.8793103448275862,
+      "mean_drop_base_minus_cf": 0.359432121328578,
+      "median_drop": 0.24010828137397766,
+      "mean_abs_base_null": 0.05945482968898683
+     },
+     "ci95": {
+      "cf_pair_auroc": [
+       0.7612886444708681,
+       0.8813986325802616
+      ],
+      "flip_rank": [
+       0.8793103448275862,
+       1.0
+      ],
+      "cf_blocked_acc": [
+       0.3793103448275862,
+       0.6206896551724138
+      ],
+      "null_retention": [
+       0.8103448275862069,
+       0.9655172413793104
+      ],
+      "null_retention_given_base_pos": [
+       1.0,
+       1.0
+      ],
+      "base_feasible_acc": [
+       0.7931034482758621,
+       0.9487068965517218
+      ],
+      "mean_drop_base_minus_cf": [
+       0.2702673671306284,
+       0.4510104406146323
+      ],
+      "median_drop": [
+       0.09517064690589905,
+       0.47429461777210236
+      ],
+      "mean_abs_base_null": [
+       0.03760848461152536,
+       0.0856525783860606
+      ]
+     }
+    },
+    "ours_seedmean": {
+     "point": {
+      "cf_pair_auroc": 0.8397740784780023,
+      "flip_rank": 0.9827586206896551,
+      "cf_blocked_acc": 0.6379310344827587,
+      "null_retention": 0.8620689655172413,
+      "null_retention_given_base_pos": 0.9791666666666666,
+      "base_feasible_acc": 0.8275862068965517,
+      "mean_drop_base_minus_cf": 0.4303737327322412,
+      "median_drop": 0.38195740431547165,
+      "mean_abs_base_null": 0.07997684207097253
+     },
+     "ci95": {
+      "cf_pair_auroc": [
+       0.781807372175981,
+       0.9016275267538643
+      ],
+      "flip_rank": [
+       0.9482758620689655,
+       1.0
+      ],
+      "cf_blocked_acc": [
+       0.5172413793103449,
+       0.7586206896551724
+      ],
+      "null_retention": [
+       0.7758620689655172,
+       0.9482758620689655
+      ],
+      "null_retention_given_base_pos": [
+       0.9347826086956522,
+       1.0
+      ],
+      "base_feasible_acc": [
+       0.7241379310344828,
+       0.9137931034482759
+      ],
+      "mean_drop_base_minus_cf": [
+       0.3395515593445307,
+       0.5188523152560337
+      ],
+      "median_drop": [
+       0.2287354484200478,
+       0.5257991096247375
+      ],
+      "mean_abs_base_null": [
+       0.05173187065851504,
+       0.11200541426336003
+      ]
+     }
+    },
+    "constant_0.5": {
+     "point": {
+      "cf_pair_auroc": 0.5,
+      "flip_rank": 0.5,
+      "cf_blocked_acc": 0.0,
+      "null_retention": 1.0,
+      "null_retention_given_base_pos": 1.0,
+      "base_feasible_acc": 1.0,
+      "mean_drop_base_minus_cf": 0.0,
+      "median_drop": 0.0,
+      "mean_abs_base_null": 0.0
+     },
+     "ci95": {
+      "cf_pair_auroc": [
+       0.5,
+       0.5
+      ],
+      "flip_rank": [
+       0.5,
+       0.5
+      ],
+      "cf_blocked_acc": [
+       0.0,
+       0.0
+      ],
+      "null_retention": [
+       1.0,
+       1.0
+      ],
+      "null_retention_given_base_pos": [
+       1.0,
+       1.0
+      ],
+      "base_feasible_acc": [
+       1.0,
+       1.0
+      ],
+      "mean_drop_base_minus_cf": [
+       0.0,
+       0.0
+      ],
+      "median_drop": [
+       0.0,
+       0.0
+      ],
+      "mean_abs_base_null": [
+       0.0,
+       0.0
+      ]
+     }
+    }
+   }
+  }
+ }
+}

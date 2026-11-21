@@ -1,0 +1,92 @@
+{
+ "id": "CF_NULL_PROTOCOL_LOCK_V1",
+ "utc": "2026-11-21T10:42:28Z",
+ "registered_before": "any final-run teacher label or model score (pilot = 20 engineering bases, excluded)",
+ "query": "original target task from q_ref (target t0 -> goal), one target-Y query per state; never X / p11 / repairs",
+ "intervention": "PROP_V1 (cf_generate.py): move ONE existing non-target obstacle to a free legal cell; N_OBJ=2, N_CF=4, N_NULL=4; objects and cells in sha256 order; NULL displacement-matched to the object's first CF proposal; no model output used",
+ "bases_3d": {
+  "pool": "historical 3D TEST (abf_9de85710c2a7103f): K0 roots with stored Y0=1 not in the pilot, plus one stored Y=1 repair endpoint (labels.D, sha256('CFBASE|root|edit') order) per other TEST root; every base re-verified by the teacher",
+  "file_sha256": "f626ab2d2d76499a5581905da200311c03f4b8eda58b25481217b194f6ad0faa",
+  "n": 288
+ },
+ "bases_2d": {
+  "pool": "historical 2D TEST K0 roots with stored Y0=1; Ours-only diagnostic (no 2D baselines exist)"
+ },
+ "teacher": {
+  "3d": "CF_Y3D_V1 = fin3d.run_y steps + bd_3dt.label negative kind",
+  "2d": "CF_Y2D_V1 = bxy_teacher.y_query on the edited record"
+ },
+ "acceptance": {
+  "strong_triplet": "BASE y=1 (re-verified) AND, for the first object (sha order) that has both, the first CF proposal (rank order) with y=0 and negative_kind CERTIFIED (3D) / CERTIFIED (2D CERTIFIED_INFEASIBLE) AND the first NULL proposal with y=1",
+  "budget_cohort": "same, with the CF y=0 only budget-limited (NO_PLAN_FOUND / UNKNOWN_*); reported separately, never called infeasible",
+  "unknown": "unresolved / execution-error states are excluded and counted, never coerced to 0"
+ },
+ "models": {
+  "ours": "bundle D scorer s0 (primary), s1, s2 -- p_Y = sigmoid(b) empty-edit (XYNet.predict p_noop)",
+  "grn": "yadu/GRN runs/s0..s2 best.pt, native make_graph, sigmoid(action)",
+  "piginet": "BLOCKED (no frozen weights on the laptop)",
+  "scnet": "BLOCKED (no code / weights / prior evaluation locally)"
+ },
+ "metrics": {
+  "cf_pair_auroc": "pooled AUROC over all accepted BASE (pos) vs their CF (neg) scores, sklearn roc_auc_score (midrank ties)",
+  "flip_rank": "mean over triplets of 1[p_B>p_CF]+0.5*1[tie]",
+  "cf_blocked_acc": "fraction of CF with p<0.5",
+  "null_retention": "fraction of NULL with p>=0.5; also conditional on p_B>=0.5; mean |p_B-p_NULL|",
+  "oracle_null_false_flip": "fraction of ALL attempted NULL proposals labelled y=0 (dataset metric, one value)",
+  "threshold": "0.5 (both models output BCE-trained sigmoid probabilities; no tuning)",
+  "ci": "2000 bootstrap replicates, seed 0, over base lineage (layout_root_id; one base per root)",
+  "seeds": "per seed and seed mean"
+ },
+ "stability": "deterministic 25% subset (sha256('CFSTAB|qid')) of accepted CF and NULL re-labelled with planner seed 1",
+ "code_sha256": {
+  "cf_generate.py": "75e89b38e99f486eb0b441793033c9a9a6d78005f8f768a427c9d376fba7d5b2",
+  "cf_teacher.py": "1e8cb033c437d6eaa686d8027c2760d36da1bb5f046dbcb219771f190c0fbea3",
+  "cf_infer.py": "d3f0916f2990a8a44a229a38b3ef42bac1eebbedc4f26dacb34b0cee487245ac"
+ },
+ "amendments": [
+  {
+   "utc": "2026-11-21T10:51:26Z",
+   "what": "cf_teacher.py robustness fix after the first final 3D run crashed with 0 labels written: (1) a queried layout whose cell is still held mid-settle (edits on a repair-endpoint base) is built directly at the queried cells then settled (row flag build_mode=direct; parity of direct vs run_y path checked on conflict-free layouts); (2) per-query exceptions become explicit ERROR rows (excluded, counted). No acceptance rule, proposal, base, metric or model change; no label or score had been read.",
+   "cf_teacher_sha256": "bf79dbb603ce28592d5d0df1ab3b6927ccc3628841766462f18c0779a8ed176b"
+  },
+  {
+   "n": 2,
+   "utc": "2026-11-21T11:46:42Z",
+   "registered_before": "any 3D final-run model score and any 2D final-run label (3D teacher labels still being generated; triplet manifest not sealed)",
+   "change": "models.piginet and models.scnet: BLOCKED -> AVAILABLE. Frozen teammate checkpoints located read-only on blackwell:~/yadu_bd/{piginet_shelf,scn_shelf} (no compute run there), copied to the laptop; no training, tuning or threshold fitting.",
+   "piginet": "PIGINet-noimg runs/noimg_s{0,1,2}/best.pt (config no_image=true). Native 'move T' sample on the edited initial state, sigmoid(plan head), threshold 0.5. The image variant (full_s*) is EXCLUDED: CF/NULL states have no MuJoCo renders and rendering new CLIP features would be a new input pipeline.",
+   "scnet": "SceneCollisionNet runs/adam_s{0,1,2}/best.pt; state score = max over 32 target grasps of P(grasp works) (train_scn.score_states); cloud scene_cloud(objects, edited cells, 8192 pts) seeded per base lineage sha256('CFSCN|root_id') (common random numbers within a triplet); grasp poses / shift rebuilt via cf_scnroots.py (parity 240/240 vs stored roots_scn.pkl).",
+   "adapter_validation": "cf_infer.py on the baselines' own 370 V4 TEST 'move T' queries (labels.original): AUROC PIGINet .9875/.9866/.9879, SCNet .9718/.9693/.9651, GRN .9585/.9564/.9590, Ours .9831/.9823/.9773 -- matches P0 reproductions (PIGINet 0.987, SCNet 0.968 +- 0.003, GRN 0.958).",
+   "checkpoint_sha256": {
+    "piginet_noimg_s0": "3b471d3ddaff6ab7beb9653090289dcf68d90d06645dc72745d17727f8503bb7",
+    "piginet_noimg_s1": "e533494ce7e74b5a9496ba5bec830a3099712ba39834898ee0218548632a5fbb",
+    "piginet_noimg_s2": "d49a37d247335bfda9d53da725acb50f86f66060596c33814d01572251e2be50",
+    "scnet_adam_s0": "097fa00dd8ae5ea8b0bf1175bb3920db580effb8aad037a986e66f5f348bebe0",
+    "scnet_adam_s1": "78e5e3b6fb1bb842e3879ea6b18d390ee9408d8475d67bb36dc73be736f6407c",
+    "scnet_adam_s2": "b2ab223da400a41464b05036095b0665674271266f1d4ff51efadcdeba0e30b3"
+   },
+   "code_sha256": {
+    "cf_infer.py": "6738fb20c23a372e6028a8d8879beee7c42f5a705dfb0eaa8719d96388a621ae",
+    "cf_scnroots.py": "6c2519ebef1d9a3825ffe761873b392c2da7e2c69e79c2669d6e4316781c1bc7",
+    "cf_report.py": "61d741debd77feb3666ba1b447ab180eccfc7f87d0ca9af4ef673c26cd43f486",
+    "cf_generate.py": "bb4e16f28c3c95355bc82d3e58b54654d3c673958d340f861aceb4a403a5305c",
+    "cf_teacher.py": "bf79dbb603ce28592d5d0df1ab3b6927ccc3628841766462f18c0779a8ed176b"
+   }
+  },
+  {
+   "n": 3,
+   "utc": "2026-11-21T11:52:29Z",
+   "registered_before": "any final 2D teacher label or 2D model score",
+   "change": "2D proposal family PROP_V1 -> PROP_V2_2D (cf_generate.proposals_v2_2d: CF cells ranked by the frozen grasp-screen kill tables MINK_TABLE_original; NULL = zero-kill cells, Chebyshev>=2, displacement-matched), N_OBJ 2 -> 4 objects per base (sha order), N_CF = N_NULL = 4.",
+   "reason": "2D engineering pilot (20 bases, excluded from the final): PROP_V1 certified CF flip 2.3% (3/132), NULL false-flip 9.1% (12/132), STRONG 2/20; PROP_V2 (N_OBJ 2) certified CF flip 3.8% (5/132), NULL false-flip 2.5% (3/122), STRONG 2/20, BUDGET 7/20. The 2D teacher rarely certifies infeasibility (screen full-kill CFs: 4/18 CERTIFIED, 11/18 UNKNOWN_PLANNER), so STRONG yield stays low; V2 is kept for its cleaner NULLs and more objects per base raise the chance of a matched triplet. 3D family unchanged (PROP_V1).",
+   "jobs2d_sha256": "11bba4861851828f3db60cf8481d908d4a1019c3ac8cb4a3231e0b6dc06eba8e",
+   "tables_sha256": {
+    "MINK_TABLE_original.json": "eb0419757a292cb97d4671794176891048ebe8174a4a67aa789a833726518c73",
+    "QCLEAR_original.json": "7b993da7bcbd3c21e02fcbec95564f0fde475c313ec4285019617762ecb9de28"
+   },
+   "code_sha256": {
+    "cf_generate.py": "e1f3174cc6541011523958f65d14a4a1dba21ffc7a804d2bf9636a5a8f589f3d"
+   }
+  }
+ ]
+}
