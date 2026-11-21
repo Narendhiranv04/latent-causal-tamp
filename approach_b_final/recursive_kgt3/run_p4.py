@@ -41,6 +41,10 @@ def main(arm, dev_public, out, device, shard=None, reverse=False, no_seal=False)
         res["model_calls"] = {k: M.c.get(k, 0) - c0.get(k, 0) for k in M.c}
         cands = [{"seq": json.loads(k), **v} for k, v in P.cands.items() if v is not None]
         tf.write_text(json.dumps({"res": res, "log": log, "cands": cands}))
+        for c in ("_prop", "_sc", "_yend", "_xc"):        # per-scene caches only (keys are scene-specific): bound worker memory
+            if hasattr(M, c):
+                getattr(M, c).clear()
+        import gc; gc.collect()
         print(json.dumps({k: res[k] for k in ("root_id", "decision", "stop", "n_candidates", "rounds")} | {"len": len(res["seq"]), "budget": res["budget"]}), flush=True)
     if no_seal or not all((out / "traces" / f"{r['root_id']}.json").exists() for r in rows):
         return
