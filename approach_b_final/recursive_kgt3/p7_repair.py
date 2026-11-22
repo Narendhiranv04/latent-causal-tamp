@@ -20,7 +20,8 @@ sys.path.insert(0, str(HERE))
 CFG = {"B": 8, "layers": 24, "cap": 12, "k_s": 6, "k_cvae": 4, "k_park": 4, "eps": 1e-4, "lam_d": 1.0, "PHI_MAX": 2000, "Y_MAX": 300, "keep": 5, "S": 32}
 ARMS = {"FULL": dict(en=1, dr=1, de=1, rb=1), "DEST_ONLY": dict(en=0, dr=0, de=1, rb=0), "OBJSET_ONLY": dict(en=1, dr=1, de=0, rb=0),
         "FLAT": dict(flat=1), "RANDOM": dict(en=1, dr=1, de=1, rb=1, rnd=1), "FULL_phiG": dict(en=1, dr=1, de=1, rb=1, mode="G"),
-        "FULL_phiY": dict(en=1, dr=1, de=1, rb=1, mode="Y")}
+        "FULL_phiY": dict(en=1, dr=1, de=1, rb=1, mode="Y"),
+        "DIAG_NODROP": dict(en=1, dr=0, de=1, rb=1)}       # POST-HOC diagnostic (after the A2 gate); not a pre-registered arm, not eligible for P7B
 
 
 def jl(p):
