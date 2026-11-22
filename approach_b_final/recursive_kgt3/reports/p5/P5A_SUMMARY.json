@@ -1,0 +1,376 @@
+{
+ "stage": "P5A",
+ "evaluator_only": true,
+ "gate": "A-ORDER-RECOVERABLE",
+ "teacher_Y_positive_unique_endpoints": 53,
+ "teacher_Y_positive_static_order_exists": 13,
+ "teacher_Y_positive": {
+  "unique_endpoints": 53,
+  "roots": 17,
+  "static_order_exists": 13,
+  "roots_with_static_order": 6,
+  "static_order_none": 40,
+  "unresolved": 0,
+  "failure_family": {
+   "PICKUP_BLOCKED_BY_UNMOVED+PICK_PLACE_NEVER_JOINT": 2,
+   "PICKUP_BLOCKED_BY_MOVERS+PICKUP_BLOCKED_BY_UNMOVED+PICK_PLACE_NEVER_JOINT+PLACEMENT_BLOCKED_BY_MOVERS": 1,
+   "PICKUP_BLOCKED_BY_UNMOVED": 11,
+   "PICKUP_BLOCKED_BY_MOVERS+PICKUP_BLOCKED_BY_UNMOVED+PICK_PLACE_NEVER_JOINT": 1,
+   "PICKUP_BLOCKED_BY_MOVERS+PICKUP_BLOCKED_BY_UNMOVED": 6,
+   "PICKUP_BLOCKED_BY_UNMOVED+PICK_PLACE_NEVER_JOINT+PLACEMENT_BLOCKED_BY_UNMOVED": 2,
+   "PICKUP_BLOCKED_BY_UNMOVED+PLACEMENT_BLOCKED_BY_MOVERS": 5,
+   "PLACEMENT_BLOCKED_BY_UNMOVED": 5,
+   "PICKUP_BLOCKED_BY_UNMOVED+PLACEMENT_BLOCKED_BY_UNMOVED": 1,
+   "DEPENDENCY_CYCLE": 2,
+   "PICK_PLACE_NEVER_JOINT": 1,
+   "PLACEMENT_BLOCKED_BY_MOVERS": 1,
+   "PICKUP_BLOCKED_BY_MOVERS": 1,
+   "PLACEMENT_BLOCKED_BY_MOVERS+PLACEMENT_BLOCKED_BY_UNMOVED": 1
+  },
+  "never_executable_action_kinds": {
+   "JOINT_NEVER": 7,
+   "PICK_NEVER_STRUCTURAL": 55,
+   "PLACE_NEVER_MOVERS": 10,
+   "PICK_NEVER_MOVERS": 10,
+   "PLACE_NEVER_STRUCTURAL": 15
+  },
+  "frontier_reasons_none": {
+   "BOTH_DEAD": 198,
+   "PLACE_DEAD": 491,
+   "PICK_DEAD": 587
+  },
+  "unmoved_blocked_actions": 70,
+  "unmoved_blocked_actions_by_cause": {
+   "PICK_NEVER_STRUCTURAL:NEEDS_EXTRA_MOVERS": 55,
+   "PLACE_NEVER_STRUCTURAL:NEEDS_EXTRA_MOVERS": 15
+  },
+  "endpoints_any_never_executable_action": 38,
+  "endpoints_all_never_executable_are_pickup_by_unmoved": 11,
+  "by_K": {
+   "4": {
+    "endpoints": 17,
+    "static_order_exists": 7,
+    "roots": 5,
+    "roots_with_static_order": 3
+   },
+   "5": {
+    "endpoints": 2,
+    "static_order_exists": 2,
+    "roots": 2,
+    "roots_with_static_order": 2
+   },
+   "6": {
+    "endpoints": 6,
+    "static_order_exists": 4,
+    "roots": 2,
+    "roots_with_static_order": 1
+   },
+   "9": {
+    "endpoints": 27,
+    "static_order_exists": 0,
+    "roots": 7,
+    "roots_with_static_order": 0
+   },
+   "12": {
+    "endpoints": 1,
+    "static_order_exists": 0,
+    "roots": 1,
+    "roots_with_static_order": 0
+   }
+  },
+  "committed_order_status": {
+   "NOT_COMMITTED": 34,
+   "FAIL_BOTH": 1,
+   "FAIL_PLACE": 9,
+   "FAIL_PICK": 9
+  },
+  "reference_order_status": {
+   "FAIL_BOTH": 4,
+   "FAIL_PLACE": 22,
+   "FAIL_PICK": 24,
+   "STATIC_VALID": 3
+  },
+  "teacher_x_on_static_valid_orders": {
+   "UNKNOWN_PLANNER": 4
+  },
+  "by_m": {
+   "12": 27,
+   "11": 8,
+   "10": 4,
+   "6": 5,
+   "7": 3,
+   "9": 6
+  },
+  "reach_all_moves_but_final_dead": 0,
+  "static_endpoint_false": 0,
+  "brute_force_checked": 5,
+  "brute_force_agree": 5,
+  "sub_assignment_brute_checks": 144,
+  "sub_assignment_brute_agree": 144,
+  "committed": {
+   "unique_endpoints": 19,
+   "roots": 13,
+   "static_order_exists": 4,
+   "roots_with_static_order": 3,
+   "static_order_none": 15,
+   "unresolved": 0,
+   "failure_family": {
+    "PICKUP_BLOCKED_BY_MOVERS+PICKUP_BLOCKED_BY_UNMOVED+PICK_PLACE_NEVER_JOINT+PLACEMENT_BLOCKED_BY_MOVERS": 1,
+    "PICKUP_BLOCKED_BY_UNMOVED": 5,
+    "PICKUP_BLOCKED_BY_UNMOVED+PICK_PLACE_NEVER_JOINT": 1,
+    "PICKUP_BLOCKED_BY_MOVERS+PICKUP_BLOCKED_BY_UNMOVED": 3,
+    "PICKUP_BLOCKED_BY_UNMOVED+PLACEMENT_BLOCKED_BY_MOVERS": 1,
+    "DEPENDENCY_CYCLE": 1,
+    "PLACEMENT_BLOCKED_BY_UNMOVED": 1,
+    "PLACEMENT_BLOCKED_BY_MOVERS": 1,
+    "PICKUP_BLOCKED_BY_MOVERS": 1
+   },
+   "never_executable_action_kinds": {
+    "JOINT_NEVER": 2,
+    "PLACE_NEVER_MOVERS": 3,
+    "PICK_NEVER_MOVERS": 5,
+    "PICK_NEVER_STRUCTURAL": 25,
+    "PLACE_NEVER_STRUCTURAL": 2
+   },
+   "unmoved_blocked_actions": 27,
+   "unmoved_blocked_actions_by_cause": {
+    "PICK_NEVER_STRUCTURAL:NEEDS_EXTRA_MOVERS": 25,
+    "PLACE_NEVER_STRUCTURAL:NEEDS_EXTRA_MOVERS": 2
+   },
+   "endpoints_any_never_executable_action": 14,
+   "endpoints_all_never_executable_are_pickup_by_unmoved": 5,
+   "committed_order_status": {
+    "FAIL_BOTH": 1,
+    "FAIL_PLACE": 9,
+    "FAIL_PICK": 9
+   },
+   "reference_order_status": {
+    "FAIL_BOTH": 1,
+    "FAIL_PLACE": 9,
+    "FAIL_PICK": 9
+   },
+   "teacher_x_on_static_valid_orders": {},
+   "by_m": {
+    "12": 9,
+    "11": 6,
+    "10": 3,
+    "7": 1
+   },
+   "reach_all_moves_but_final_dead": 0,
+   "static_endpoint_false": 0,
+   "brute_force_checked": 0,
+   "brute_force_agree": 0,
+   "sub_assignment_brute_checks": 57,
+   "sub_assignment_brute_agree": 57
+  },
+  "pool_only": {
+   "unique_endpoints": 34,
+   "roots": 16,
+   "static_order_exists": 9,
+   "roots_with_static_order": 5,
+   "static_order_none": 25,
+   "unresolved": 0,
+   "failure_family": {
+    "PICKUP_BLOCKED_BY_UNMOVED+PICK_PLACE_NEVER_JOINT": 1,
+    "PICKUP_BLOCKED_BY_UNMOVED": 6,
+    "PICKUP_BLOCKED_BY_MOVERS+PICKUP_BLOCKED_BY_UNMOVED+PICK_PLACE_NEVER_JOINT": 1,
+    "PICKUP_BLOCKED_BY_MOVERS+PICKUP_BLOCKED_BY_UNMOVED": 3,
+    "PICKUP_BLOCKED_BY_UNMOVED+PICK_PLACE_NEVER_JOINT+PLACEMENT_BLOCKED_BY_UNMOVED": 2,
+    "PICKUP_BLOCKED_BY_UNMOVED+PLACEMENT_BLOCKED_BY_MOVERS": 4,
+    "PLACEMENT_BLOCKED_BY_UNMOVED": 4,
+    "PICKUP_BLOCKED_BY_UNMOVED+PLACEMENT_BLOCKED_BY_UNMOVED": 1,
+    "DEPENDENCY_CYCLE": 1,
+    "PICK_PLACE_NEVER_JOINT": 1,
+    "PLACEMENT_BLOCKED_BY_MOVERS+PLACEMENT_BLOCKED_BY_UNMOVED": 1
+   },
+   "never_executable_action_kinds": {
+    "JOINT_NEVER": 5,
+    "PICK_NEVER_STRUCTURAL": 30,
+    "PICK_NEVER_MOVERS": 5,
+    "PLACE_NEVER_STRUCTURAL": 13,
+    "PLACE_NEVER_MOVERS": 7
+   },
+   "unmoved_blocked_actions": 43,
+   "unmoved_blocked_actions_by_cause": {
+    "PICK_NEVER_STRUCTURAL:NEEDS_EXTRA_MOVERS": 30,
+    "PLACE_NEVER_STRUCTURAL:NEEDS_EXTRA_MOVERS": 13
+   },
+   "endpoints_any_never_executable_action": 24,
+   "endpoints_all_never_executable_are_pickup_by_unmoved": 6,
+   "committed_order_status": {
+    "NOT_COMMITTED": 34
+   },
+   "reference_order_status": {
+    "FAIL_BOTH": 3,
+    "FAIL_PLACE": 13,
+    "FAIL_PICK": 15,
+    "STATIC_VALID": 3
+   },
+   "teacher_x_on_static_valid_orders": {
+    "UNKNOWN_PLANNER": 4
+   },
+   "by_m": {
+    "12": 18,
+    "6": 5,
+    "7": 2,
+    "9": 6,
+    "11": 2,
+    "10": 1
+   },
+   "reach_all_moves_but_final_dead": 0,
+   "static_endpoint_false": 0,
+   "brute_force_checked": 5,
+   "brute_force_agree": 5,
+   "sub_assignment_brute_checks": 87,
+   "sub_assignment_brute_agree": 87
+  }
+ },
+ "static_endpoint_positive_unverified": {
+  "unique_endpoints": 2127,
+  "roots": 25,
+  "static_order_exists": 473,
+  "roots_with_static_order": 12,
+  "static_order_none": 1654,
+  "unresolved": 0,
+  "failure_family": {
+   "PICKUP_BLOCKED_BY_MOVERS+PICKUP_BLOCKED_BY_UNMOVED": 236,
+   "PICKUP_BLOCKED_BY_UNMOVED": 326,
+   "PICKUP_BLOCKED_BY_UNMOVED+PICK_PLACE_NEVER_JOINT": 115,
+   "PICKUP_BLOCKED_BY_UNMOVED+PLACEMENT_BLOCKED_BY_UNMOVED": 87,
+   "PICKUP_BLOCKED_BY_MOVERS+PICKUP_BLOCKED_BY_UNMOVED+PLACEMENT_BLOCKED_BY_MOVERS": 25,
+   "PICKUP_BLOCKED_BY_UNMOVED+PLACEMENT_BLOCKED_BY_MOVERS": 67,
+   "PICKUP_BLOCKED_BY_UNMOVED+PLACEMENT_BLOCKED_BY_MOVERS+PLACEMENT_BLOCKED_BY_UNMOVED": 11,
+   "PICKUP_BLOCKED_BY_MOVERS+PICKUP_BLOCKED_BY_UNMOVED+PLACEMENT_BLOCKED_BY_UNMOVED": 7,
+   "PICKUP_BLOCKED_BY_MOVERS+PICKUP_BLOCKED_BY_UNMOVED+PICK_PLACE_NEVER_JOINT": 84,
+   "PICKUP_BLOCKED_BY_UNMOVED+PICK_PLACE_NEVER_JOINT+PLACEMENT_BLOCKED_BY_UNMOVED": 18,
+   "PICKUP_BLOCKED_BY_MOVERS+PICKUP_BLOCKED_BY_UNMOVED+PICK_PLACE_NEVER_JOINT+PLACEMENT_BLOCKED_BY_MOVERS": 8,
+   "PICKUP_BLOCKED_BY_UNMOVED+PICK_PLACE_NEVER_JOINT+PLACEMENT_BLOCKED_BY_MOVERS": 20,
+   "PICKUP_BLOCKED_BY_MOVERS+PICKUP_BLOCKED_BY_UNMOVED+PICK_PLACE_NEVER_JOINT+PLACEMENT_BLOCKED_BY_UNMOVED": 6,
+   "PICKUP_BLOCKED_BY_MOVERS": 54,
+   "PICK_PLACE_NEVER_JOINT": 56,
+   "PICKUP_BLOCKED_BY_MOVERS+PICK_PLACE_NEVER_JOINT": 3,
+   "PLACEMENT_BLOCKED_BY_MOVERS": 177,
+   "PICK_PLACE_NEVER_JOINT+PLACEMENT_BLOCKED_BY_MOVERS": 9,
+   "PICKUP_BLOCKED_BY_MOVERS+PICK_PLACE_NEVER_JOINT+PLACEMENT_BLOCKED_BY_UNMOVED": 2,
+   "DEPENDENCY_CYCLE": 130,
+   "PICKUP_BLOCKED_BY_MOVERS+PLACEMENT_BLOCKED_BY_MOVERS": 9,
+   "PICKUP_BLOCKED_BY_UNMOVED+PICK_PLACE_NEVER_JOINT+PLACEMENT_BLOCKED_BY_MOVERS+PLACEMENT_BLOCKED_BY_UNMOVED": 3,
+   "PICKUP_BLOCKED_BY_MOVERS+PLACEMENT_BLOCKED_BY_UNMOVED": 7,
+   "PLACEMENT_BLOCKED_BY_UNMOVED": 156,
+   "PICK_PLACE_NEVER_JOINT+PLACEMENT_BLOCKED_BY_UNMOVED": 11,
+   "PLACEMENT_BLOCKED_BY_MOVERS+PLACEMENT_BLOCKED_BY_UNMOVED": 27
+  },
+  "never_executable_action_kinds": {
+   "PICK_NEVER_STRUCTURAL": 2087,
+   "PICK_NEVER_MOVERS": 549,
+   "JOINT_NEVER": 354,
+   "PLACE_NEVER_STRUCTURAL": 426,
+   "PLACE_NEVER_MOVERS": 385
+  },
+  "frontier_reasons_none": {
+   "PICK_DEAD": 20669,
+   "PLACE_DEAD": 21325,
+   "BOTH_DEAD": 11879
+  },
+  "unmoved_blocked_actions": 2513,
+  "unmoved_blocked_actions_by_cause": {
+   "PICK_NEVER_STRUCTURAL:NEEDS_EXTRA_MOVERS": 2087,
+   "PLACE_NEVER_STRUCTURAL:NEEDS_EXTRA_MOVERS": 426
+  },
+  "endpoints_any_never_executable_action": 1524,
+  "endpoints_all_never_executable_are_pickup_by_unmoved": 326,
+  "by_K": {
+   "4": {
+    "endpoints": 823,
+    "static_order_exists": 361,
+    "roots": 8,
+    "roots_with_static_order": 5
+   },
+   "5": {
+    "endpoints": 155,
+    "static_order_exists": 32,
+    "roots": 4,
+    "roots_with_static_order": 4
+   },
+   "6": {
+    "endpoints": 159,
+    "static_order_exists": 80,
+    "roots": 4,
+    "roots_with_static_order": 3
+   },
+   "9": {
+    "endpoints": 943,
+    "static_order_exists": 0,
+    "roots": 8,
+    "roots_with_static_order": 0
+   },
+   "12": {
+    "endpoints": 47,
+    "static_order_exists": 0,
+    "roots": 1,
+    "roots_with_static_order": 0
+   }
+  },
+  "committed_order_status": {
+   "NOT_COMMITTED": 2125,
+   "FAIL_PLACE": 2
+  },
+  "reference_order_status": {
+   "FAIL_PICK": 1054,
+   "FAIL_BOTH": 185,
+   "FAIL_PLACE": 883,
+   "STATIC_VALID": 5
+  },
+  "teacher_x_on_static_valid_orders": {
+   "UNKNOWN_PLANNER": 1
+  },
+  "by_m": {
+   "12": 1231,
+   "9": 381,
+   "11": 244,
+   "10": 126,
+   "6": 84,
+   "3": 4,
+   "7": 17,
+   "8": 31,
+   "5": 8,
+   "4": 1
+  },
+  "reach_all_moves_but_final_dead": 0,
+  "static_endpoint_false": 0,
+  "brute_force_checked": 97,
+  "brute_force_agree": 97,
+  "sub_assignment_brute_checks": 6090,
+  "sub_assignment_brute_agree": 6090
+ },
+ "excluded_endpoints": {
+  "not_Y_positive_by_any_evidence": 2727,
+  "teacher_Y_negative": 76
+ },
+ "witness_control": {
+  "n": 25,
+  "witness_order_static_valid": 25,
+  "witness_assignment_dp_exists": 25,
+  "brute_agree_or_m_gt_6": 25,
+  "failing_roots": [],
+  "teacher_replay_basis": "witness = teacher try with x=1 (and y=1 where final) from CERTIFIED_MIN_K construction records (dev_build.py); no new teacher query in P5A"
+ },
+ "brute_force_ok": true,
+ "ranking_diagnostic": {
+  "endpoints_with_multiple_pool_orders": 530,
+  "of_which_any_pool_order_static_valid": 2,
+  "of_which_lowest_energy_order_static_valid": 1
+ },
+ "static_vs_teacher_X_phase": {
+  "teacher_earlier": 30,
+  "same_step": 23,
+  "static_valid_teacher_fail": 5
+ },
+ "repair_type_teacher_none": {
+  "teacher_none_endpoints": 40,
+  "m_eq_12_cap": 22,
+  "any_pickup_blocked_by_unmoved (needs object-set expansion)": 29,
+  "only_destination_type_causes (destination repair could suffice)": 11
+ },
+ "scope": "static object-arrangement abstraction only (MINK_STATIC_V2); an existing static order is NOT a robot-motion proof; a missing static order is a statement under this abstraction, not a physical impossibility certificate"
+}
