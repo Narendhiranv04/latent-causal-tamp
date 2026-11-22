@@ -177,3 +177,18 @@ Let N be the number of cohort roots (target 24).
 6. Run the evaluator **once**; write the report and `P7AR_DECISION.md`; commit and push; **STOP**.
 
 No teacher, training, labels or dataset generation; no release_v2; no edits to checkpoints, budgets or other worktrees; no merge.
+
+## Amendment R1 (2026-11-22; before any new-root selection, build, P4 run or prediction)
+
+**λ_sub changes from 1.0 to 0.3**, equal to λ_e.
+
+**Evidence:** synthetic fixture only (the 12-move cap plus one single-blocker enabler).
+- With λ_sub = 1.0, a substitution costs λ_e + λ_sub = 1.3 nats of overhead (plus the replaced move's term).
+- Executing a still-blocked one-blocker move costs only 1 nat.
+- So the atomic substitution could never fire for a single blocker, which defeats the cap mechanism the handoff requires.
+
+**Unchanged:** substitution still charges the replaced move's *current* term plus w_TR·TR(r), so it is never cheaper than executing r. It remains allowed only at the cap, one replacement per enabler.
+
+No DEV label was consulted. The old-DEV debug run (3 roots) checked runtime, stops, budgets and public funnel counts only.
+
+**Logging clarification:** `sub_log` records substitution children *considered*. The evaluator counts actual replacements in committed plans (anchor movers missing from the plan).
