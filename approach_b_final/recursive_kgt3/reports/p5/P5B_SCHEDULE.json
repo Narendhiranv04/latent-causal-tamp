@@ -1,0 +1,3707 @@
+{
+ "stage": "P5B",
+ "frozen_utc": "2026-11-22T05:03:47Z",
+ "caps": {
+  "teacher_calls": 32,
+  "workers": 2,
+  "wall_s": 1800,
+  "confirm_reserve": 4,
+  "per_root_endpoints": 2
+ },
+ "p5a_per_endpoint_sha256": "830216abc4a43389298a085f241de9e53440eda176b74539e8d828cf34205853",
+ "verify_sha256": "19682ee3d9a40d99d9e03e592f56c4f1fb25b5095031fa09fbaa4cbf9c552a55",
+ "selection_rules": [
+  "S1 per root (6 roots): first endpoint = committed-origin if any, smallest m, then signature",
+  "S2 second endpoint = opposite origin if available, smallest m, then signature (max 2 per root)",
+  "T1/T2: P5A deterministic DP static order of first/second endpoints (root coverage first)",
+  "T3/T4: static-valid orders with the smallest different feasible first mover (good-mask completion, smallest index)",
+  "T5: matched original order (committed, else lowest-energy pool order) - descriptive control only",
+  "exact (root, ordered seq) already teacher-tested in P4 verify.jsonl -> reused, no call",
+  "execution strictly in queue order until 28 main calls; no adaptive selection by outcome",
+  "confirmation reserve 4 calls: for the first 2 X-VERIFIED endpoints (queue order), a fresh-process X repeat and a fresh Y; inserted at queue front when triggered; never used for new candidates",
+  "stop: call cap, 1800 s batch wall (running jobs terminated -> ABORTED_CAP = UNKNOWN), or any hash/scope mismatch"
+ ],
+ "selected_endpoints": [
+  {
+   "root_id": "ENG2_01bacd0a7b91",
+   "endpoint_signature": "[[0, 28], [1, 52], [4, 13], [5, 20], [6, 34], [7, 12], [8, 44], [9, 63], [10, 61], [11, 3], [12, 55], [15, 39]]",
+   "m": 12,
+   "rank": 0,
+   "origin": "committed"
+  },
+  {
+   "root_id": "ENG2_52b2736b5a89",
+   "endpoint_signature": "[[0, 6], [1, 63], [4, 55], [5, 38], [7, 36], [8, 29], [9, 4], [11, 7], [12, 12], [13, 37], [15, 47], [16, 5]]",
+   "m": 12,
+   "rank": 0,
+   "origin": "committed"
+  },
+  {
+   "root_id": "ENG2_52b2736b5a89",
+   "endpoint_signature": "[[0, 6], [1, 63], [5, 38], [7, 36], [9, 4], [11, 7], [12, 12], [13, 37], [16, 5]]",
+   "m": 9,
+   "rank": 1,
+   "origin": "pool_only"
+  },
+  {
+   "root_id": "ENG2_b629e01dc6e7",
+   "endpoint_signature": "[[0, 4], [1, 63], [3, 54], [8, 29], [9, 5], [10, 28]]",
+   "m": 6,
+   "rank": 0,
+   "origin": "pool_only"
+  },
+  {
+   "root_id": "ENG2_b629e01dc6e7",
+   "endpoint_signature": "[[0, 5], [1, 63], [3, 54], [7, 7], [8, 12], [9, 4], [10, 34], [12, 21], [13, 24]]",
+   "m": 9,
+   "rank": 1,
+   "origin": "pool_only"
+  },
+  {
+   "root_id": "ENG2_e3c632c779c0",
+   "endpoint_signature": "[[0, 55], [1, 54], [2, 5], [3, 44], [6, 62], [8, 7], [9, 28], [10, 37], [13, 29], [14, 6]]",
+   "m": 10,
+   "rank": 0,
+   "origin": "committed"
+  },
+  {
+   "root_id": "ENG2_e3c632c779c0",
+   "endpoint_signature": "[[0, 55], [1, 36], [2, 46], [3, 44], [6, 6], [8, 45], [9, 54], [10, 28], [14, 29]]",
+   "m": 9,
+   "rank": 1,
+   "origin": "pool_only"
+  },
+  {
+   "root_id": "ENG2_fdf500024486",
+   "endpoint_signature": "[[0, 62], [1, 39], [2, 38], [4, 12], [5, 8], [6, 31], [7, 28], [8, 47], [9, 0], [11, 20], [13, 35], [14, 63]]",
+   "m": 12,
+   "rank": 0,
+   "origin": "pool_only"
+  },
+  {
+   "root_id": "ENG_8f3cfc3f84b9",
+   "endpoint_signature": "[[1, 28], [2, 20], [3, 46], [5, 54], [7, 3], [9, 47], [10, 55], [11, 63], [13, 30], [14, 0], [15, 39], [16, 16]]",
+   "m": 12,
+   "rank": 0,
+   "origin": "pool_only"
+  }
+ ],
+ "skipped": [],
+ "queue": [
+  {
+   "qid": "q00",
+   "tier": "T1_DP_ORDER_FIRST_ENDPOINT",
+   "root_id": "ENG2_01bacd0a7b91",
+   "K_certified": 5,
+   "endpoint_signature": "[[0, 28], [1, 52], [4, 13], [5, 20], [6, 34], [7, 12], [8, 44], [9, 63], [10, 61], [11, 3], [12, 55], [15, 39]]",
+   "m": 12,
+   "endpoint_origin": "committed",
+   "source_arms": [
+    "R3"
+   ],
+   "seq": [
+    [
+     15,
+     39
+    ],
+    [
+     1,
+     52
+    ],
+    [
+     9,
+     63
+    ],
+    [
+     4,
+     13
+    ],
+    [
+     5,
+     20
+    ],
+    [
+     11,
+     3
+    ],
+    [
+     0,
+     28
+    ],
+    [
+     12,
+     55
+    ],
+    [
+     7,
+     12
+    ],
+    [
+     6,
+     34
+    ],
+    [
+     10,
+     61
+    ],
+    [
+     8,
+     44
+    ]
+   ],
+   "static_status": "STATIC_VALID",
+   "reuse_existing_X": false,
+   "y_reuse_seq": [
+    [
+     9,
+     63
+    ],
+    [
+     6,
+     34
+    ],
+    [
+     7,
+     12
+    ],
+    [
+     11,
+     3
+    ],
+    [
+     8,
+     44
+    ],
+    [
+     12,
+     55
+    ],
+    [
+     10,
+     61
+    ],
+    [
+     15,
+     39
+    ],
+    [
+     4,
+     13
+    ],
+    [
+     0,
+     28
+    ],
+    [
+     5,
+     20
+    ],
+    [
+     1,
+     52
+    ]
+   ],
+   "y_reuse_teacher": "BXY_Y_TEACHER_V2_LONG"
+  },
+  {
+   "qid": "q01",
+   "tier": "T1_DP_ORDER_FIRST_ENDPOINT",
+   "root_id": "ENG2_52b2736b5a89",
+   "K_certified": 6,
+   "endpoint_signature": "[[0, 6], [1, 63], [4, 55], [5, 38], [7, 36], [8, 29], [9, 4], [11, 7], [12, 12], [13, 37], [15, 47], [16, 5]]",
+   "m": 12,
+   "endpoint_origin": "committed",
+   "source_arms": [
+    "R2",
+    "R3"
+   ],
+   "seq": [
+    [
+     1,
+     63
+    ],
+    [
+     4,
+     55
+    ],
+    [
+     7,
+     36
+    ],
+    [
+     11,
+     7
+    ],
+    [
+     0,
+     6
+    ],
+    [
+     12,
+     12
+    ],
+    [
+     16,
+     5
+    ],
+    [
+     9,
+     4
+    ],
+    [
+     5,
+     38
+    ],
+    [
+     8,
+     29
+    ],
+    [
+     13,
+     37
+    ],
+    [
+     15,
+     47
+    ]
+   ],
+   "static_status": "STATIC_VALID",
+   "reuse_existing_X": false,
+   "y_reuse_seq": [
+    [
+     7,
+     36
+    ],
+    [
+     1,
+     63
+    ],
+    [
+     16,
+     5
+    ],
+    [
+     11,
+     7
+    ],
+    [
+     12,
+     12
+    ],
+    [
+     9,
+     4
+    ],
+    [
+     5,
+     38
+    ],
+    [
+     13,
+     37
+    ],
+    [
+     0,
+     6
+    ],
+    [
+     8,
+     29
+    ],
+    [
+     4,
+     55
+    ],
+    [
+     15,
+     47
+    ]
+   ],
+   "y_reuse_teacher": "BXY_Y_TEACHER_V2_LONG"
+  },
+  {
+   "qid": "q02",
+   "tier": "T1_DP_ORDER_FIRST_ENDPOINT",
+   "root_id": "ENG2_b629e01dc6e7",
+   "K_certified": 4,
+   "endpoint_signature": "[[0, 4], [1, 63], [3, 54], [8, 29], [9, 5], [10, 28]]",
+   "m": 6,
+   "endpoint_origin": "pool_only",
+   "source_arms": [
+    "R2",
+    "R3"
+   ],
+   "seq": [
+    [
+     1,
+     63
+    ],
+    [
+     0,
+     4
+    ],
+    [
+     3,
+     54
+    ],
+    [
+     8,
+     29
+    ],
+    [
+     9,
+     5
+    ],
+    [
+     10,
+     28
+    ]
+   ],
+   "static_status": "STATIC_VALID",
+   "reuse_existing_X": false,
+   "y_reuse_seq": [
+    [
+     3,
+     54
+    ],
+    [
+     9,
+     5
+    ],
+    [
+     0,
+     4
+    ],
+    [
+     8,
+     29
+    ],
+    [
+     1,
+     63
+    ],
+    [
+     10,
+     28
+    ]
+   ],
+   "y_reuse_teacher": "BXY_Y_TEACHER_V1"
+  },
+  {
+   "qid": "q03",
+   "tier": "T1_DP_ORDER_FIRST_ENDPOINT",
+   "root_id": "ENG2_e3c632c779c0",
+   "K_certified": 4,
+   "endpoint_signature": "[[0, 55], [1, 54], [2, 5], [3, 44], [6, 62], [8, 7], [9, 28], [10, 37], [13, 29], [14, 6]]",
+   "m": 10,
+   "endpoint_origin": "committed",
+   "source_arms": [
+    "R3"
+   ],
+   "seq": [
+    [
+     0,
+     55
+    ],
+    [
+     1,
+     54
+    ],
+    [
+     2,
+     5
+    ],
+    [
+     8,
+     7
+    ],
+    [
+     14,
+     6
+    ],
+    [
+     3,
+     44
+    ],
+    [
+     6,
+     62
+    ],
+    [
+     9,
+     28
+    ],
+    [
+     10,
+     37
+    ],
+    [
+     13,
+     29
+    ]
+   ],
+   "static_status": "STATIC_VALID",
+   "reuse_existing_X": false,
+   "y_reuse_seq": [
+    [
+     1,
+     54
+    ],
+    [
+     0,
+     55
+    ],
+    [
+     6,
+     62
+    ],
+    [
+     9,
+     28
+    ],
+    [
+     10,
+     37
+    ],
+    [
+     8,
+     7
+    ],
+    [
+     3,
+     44
+    ],
+    [
+     2,
+     5
+    ],
+    [
+     14,
+     6
+    ],
+    [
+     13,
+     29
+    ]
+   ],
+   "y_reuse_teacher": "BXY_Y_TEACHER_V2_LONG"
+  },
+  {
+   "qid": "q04",
+   "tier": "T1_DP_ORDER_FIRST_ENDPOINT",
+   "root_id": "ENG2_fdf500024486",
+   "K_certified": 4,
+   "endpoint_signature": "[[0, 62], [1, 39], [2, 38], [4, 12], [5, 8], [6, 31], [7, 28], [8, 47], [9, 0], [11, 20], [13, 35], [14, 63]]",
+   "m": 12,
+   "endpoint_origin": "pool_only",
+   "source_arms": [
+    "R3"
+   ],
+   "seq": [
+    [
+     11,
+     20
+    ],
+    [
+     1,
+     39
+    ],
+    [
+     5,
+     8
+    ],
+    [
+     14,
+     63
+    ],
+    [
+     0,
+     62
+    ],
+    [
+     4,
+     12
+    ],
+    [
+     8,
+     47
+    ],
+    [
+     7,
+     28
+    ],
+    [
+     6,
+     31
+    ],
+    [
+     2,
+     38
+    ],
+    [
+     9,
+     0
+    ],
+    [
+     13,
+     35
+    ]
+   ],
+   "static_status": "STATIC_VALID",
+   "reuse_existing_X": false,
+   "y_reuse_seq": [
+    [
+     2,
+     38
+    ],
+    [
+     7,
+     28
+    ],
+    [
+     6,
+     31
+    ],
+    [
+     4,
+     12
+    ],
+    [
+     1,
+     39
+    ],
+    [
+     0,
+     62
+    ],
+    [
+     5,
+     8
+    ],
+    [
+     13,
+     35
+    ],
+    [
+     11,
+     20
+    ],
+    [
+     9,
+     0
+    ],
+    [
+     8,
+     47
+    ],
+    [
+     14,
+     63
+    ]
+   ],
+   "y_reuse_teacher": "BXY_Y_TEACHER_V2_LONG"
+  },
+  {
+   "qid": "q05",
+   "tier": "T1_DP_ORDER_FIRST_ENDPOINT",
+   "root_id": "ENG_8f3cfc3f84b9",
+   "K_certified": 5,
+   "endpoint_signature": "[[1, 28], [2, 20], [3, 46], [5, 54], [7, 3], [9, 47], [10, 55], [11, 63], [13, 30], [14, 0], [15, 39], [16, 16]]",
+   "m": 12,
+   "endpoint_origin": "pool_only",
+   "source_arms": [
+    "R2",
+    "R3"
+   ],
+   "seq": [
+    [
+     1,
+     28
+    ],
+    [
+     15,
+     39
+    ],
+    [
+     2,
+     20
+    ],
+    [
+     9,
+     47
+    ],
+    [
+     10,
+     55
+    ],
+    [
+     5,
+     54
+    ],
+    [
+     7,
+     3
+    ],
+    [
+     11,
+     63
+    ],
+    [
+     3,
+     46
+    ],
+    [
+     13,
+     30
+    ],
+    [
+     14,
+     0
+    ],
+    [
+     16,
+     16
+    ]
+   ],
+   "static_status": "STATIC_VALID",
+   "reuse_existing_X": false,
+   "y_reuse_seq": [
+    [
+     1,
+     28
+    ],
+    [
+     11,
+     63
+    ],
+    [
+     5,
+     54
+    ],
+    [
+     13,
+     30
+    ],
+    [
+     10,
+     55
+    ],
+    [
+     7,
+     3
+    ],
+    [
+     2,
+     20
+    ],
+    [
+     15,
+     39
+    ],
+    [
+     14,
+     0
+    ],
+    [
+     9,
+     47
+    ],
+    [
+     3,
+     46
+    ],
+    [
+     16,
+     16
+    ]
+   ],
+   "y_reuse_teacher": "BXY_Y_TEACHER_V2_LONG"
+  },
+  {
+   "qid": "q06",
+   "tier": "T2_DP_ORDER_SECOND_ENDPOINT",
+   "root_id": "ENG2_52b2736b5a89",
+   "K_certified": 6,
+   "endpoint_signature": "[[0, 6], [1, 63], [5, 38], [7, 36], [9, 4], [11, 7], [12, 12], [13, 37], [16, 5]]",
+   "m": 9,
+   "endpoint_origin": "pool_only",
+   "source_arms": [
+    "R2",
+    "R3"
+   ],
+   "seq": [
+    [
+     1,
+     63
+    ],
+    [
+     7,
+     36
+    ],
+    [
+     11,
+     7
+    ],
+    [
+     0,
+     6
+    ],
+    [
+     12,
+     12
+    ],
+    [
+     16,
+     5
+    ],
+    [
+     9,
+     4
+    ],
+    [
+     5,
+     38
+    ],
+    [
+     13,
+     37
+    ]
+   ],
+   "static_status": "STATIC_VALID",
+   "reuse_existing_X": false,
+   "y_reuse_seq": [
+    [
+     7,
+     36
+    ],
+    [
+     1,
+     63
+    ],
+    [
+     16,
+     5
+    ],
+    [
+     11,
+     7
+    ],
+    [
+     12,
+     12
+    ],
+    [
+     9,
+     4
+    ],
+    [
+     5,
+     38
+    ],
+    [
+     13,
+     37
+    ],
+    [
+     0,
+     6
+    ]
+   ],
+   "y_reuse_teacher": "BXY_Y_TEACHER_V2_LONG"
+  },
+  {
+   "qid": "q07",
+   "tier": "T2_DP_ORDER_SECOND_ENDPOINT",
+   "root_id": "ENG2_b629e01dc6e7",
+   "K_certified": 4,
+   "endpoint_signature": "[[0, 5], [1, 63], [3, 54], [7, 7], [8, 12], [9, 4], [10, 34], [12, 21], [13, 24]]",
+   "m": 9,
+   "endpoint_origin": "pool_only",
+   "source_arms": [
+    "F"
+   ],
+   "seq": [
+    [
+     1,
+     63
+    ],
+    [
+     0,
+     5
+    ],
+    [
+     3,
+     54
+    ],
+    [
+     7,
+     7
+    ],
+    [
+     8,
+     12
+    ],
+    [
+     9,
+     4
+    ],
+    [
+     10,
+     34
+    ],
+    [
+     12,
+     21
+    ],
+    [
+     13,
+     24
+    ]
+   ],
+   "static_status": "STATIC_VALID",
+   "reuse_existing_X": false,
+   "y_reuse_seq": [
+    [
+     1,
+     63
+    ],
+    [
+     3,
+     54
+    ],
+    [
+     10,
+     34
+    ],
+    [
+     12,
+     21
+    ],
+    [
+     13,
+     24
+    ],
+    [
+     7,
+     7
+    ],
+    [
+     0,
+     5
+    ],
+    [
+     8,
+     12
+    ],
+    [
+     9,
+     4
+    ]
+   ],
+   "y_reuse_teacher": "BXY_Y_TEACHER_V2_LONG"
+  },
+  {
+   "qid": "q08",
+   "tier": "T2_DP_ORDER_SECOND_ENDPOINT",
+   "root_id": "ENG2_e3c632c779c0",
+   "K_certified": 4,
+   "endpoint_signature": "[[0, 55], [1, 36], [2, 46], [3, 44], [6, 6], [8, 45], [9, 54], [10, 28], [14, 29]]",
+   "m": 9,
+   "endpoint_origin": "pool_only",
+   "source_arms": [
+    "R3"
+   ],
+   "seq": [
+    [
+     0,
+     55
+    ],
+    [
+     1,
+     36
+    ],
+    [
+     2,
+     46
+    ],
+    [
+     8,
+     45
+    ],
+    [
+     3,
+     44
+    ],
+    [
+     6,
+     6
+    ],
+    [
+     9,
+     54
+    ],
+    [
+     10,
+     28
+    ],
+    [
+     14,
+     29
+    ]
+   ],
+   "static_status": "STATIC_VALID",
+   "reuse_existing_X": false,
+   "y_reuse_seq": [
+    [
+     1,
+     36
+    ],
+    [
+     0,
+     55
+    ],
+    [
+     2,
+     46
+    ],
+    [
+     8,
+     45
+    ],
+    [
+     9,
+     54
+    ],
+    [
+     6,
+     6
+    ],
+    [
+     3,
+     44
+    ],
+    [
+     10,
+     28
+    ],
+    [
+     14,
+     29
+    ]
+   ],
+   "y_reuse_teacher": "BXY_Y_TEACHER_V2_LONG"
+  },
+  {
+   "qid": "q09",
+   "tier": "T3_ALT_FIRST_MOVER_A",
+   "root_id": "ENG2_01bacd0a7b91",
+   "K_certified": 5,
+   "endpoint_signature": "[[0, 28], [1, 52], [4, 13], [5, 20], [6, 34], [7, 12], [8, 44], [9, 63], [10, 61], [11, 3], [12, 55], [15, 39]]",
+   "m": 12,
+   "endpoint_origin": "committed",
+   "source_arms": [
+    "R3"
+   ],
+   "seq": [
+    [
+     1,
+     52
+    ],
+    [
+     6,
+     34
+    ],
+    [
+     9,
+     63
+    ],
+    [
+     4,
+     13
+    ],
+    [
+     8,
+     44
+    ],
+    [
+     11,
+     3
+    ],
+    [
+     12,
+     55
+    ],
+    [
+     7,
+     12
+    ],
+    [
+     15,
+     39
+    ],
+    [
+     10,
+     61
+    ],
+    [
+     0,
+     28
+    ],
+    [
+     5,
+     20
+    ]
+   ],
+   "static_status": "STATIC_VALID",
+   "reuse_existing_X": false,
+   "y_reuse_seq": [
+    [
+     9,
+     63
+    ],
+    [
+     6,
+     34
+    ],
+    [
+     7,
+     12
+    ],
+    [
+     11,
+     3
+    ],
+    [
+     8,
+     44
+    ],
+    [
+     12,
+     55
+    ],
+    [
+     10,
+     61
+    ],
+    [
+     15,
+     39
+    ],
+    [
+     4,
+     13
+    ],
+    [
+     0,
+     28
+    ],
+    [
+     5,
+     20
+    ],
+    [
+     1,
+     52
+    ]
+   ],
+   "y_reuse_teacher": "BXY_Y_TEACHER_V2_LONG"
+  },
+  {
+   "qid": "q10",
+   "tier": "T3_ALT_FIRST_MOVER_A",
+   "root_id": "ENG2_52b2736b5a89",
+   "K_certified": 6,
+   "endpoint_signature": "[[0, 6], [1, 63], [4, 55], [5, 38], [7, 36], [8, 29], [9, 4], [11, 7], [12, 12], [13, 37], [15, 47], [16, 5]]",
+   "m": 12,
+   "endpoint_origin": "committed",
+   "source_arms": [
+    "R2",
+    "R3"
+   ],
+   "seq": [
+    [
+     4,
+     55
+    ],
+    [
+     1,
+     63
+    ],
+    [
+     5,
+     38
+    ],
+    [
+     12,
+     12
+    ],
+    [
+     11,
+     7
+    ],
+    [
+     7,
+     36
+    ],
+    [
+     0,
+     6
+    ],
+    [
+     8,
+     29
+    ],
+    [
+     13,
+     37
+    ],
+    [
+     16,
+     5
+    ],
+    [
+     15,
+     47
+    ],
+    [
+     9,
+     4
+    ]
+   ],
+   "static_status": "STATIC_VALID",
+   "reuse_existing_X": false,
+   "y_reuse_seq": [
+    [
+     7,
+     36
+    ],
+    [
+     1,
+     63
+    ],
+    [
+     16,
+     5
+    ],
+    [
+     11,
+     7
+    ],
+    [
+     12,
+     12
+    ],
+    [
+     9,
+     4
+    ],
+    [
+     5,
+     38
+    ],
+    [
+     13,
+     37
+    ],
+    [
+     0,
+     6
+    ],
+    [
+     8,
+     29
+    ],
+    [
+     4,
+     55
+    ],
+    [
+     15,
+     47
+    ]
+   ],
+   "y_reuse_teacher": "BXY_Y_TEACHER_V2_LONG"
+  },
+  {
+   "qid": "q11",
+   "tier": "T3_ALT_FIRST_MOVER_A",
+   "root_id": "ENG2_52b2736b5a89",
+   "K_certified": 6,
+   "endpoint_signature": "[[0, 6], [1, 63], [5, 38], [7, 36], [9, 4], [11, 7], [12, 12], [13, 37], [16, 5]]",
+   "m": 9,
+   "endpoint_origin": "pool_only",
+   "source_arms": [
+    "R2",
+    "R3"
+   ],
+   "seq": [
+    [
+     7,
+     36
+    ],
+    [
+     1,
+     63
+    ],
+    [
+     11,
+     7
+    ],
+    [
+     0,
+     6
+    ],
+    [
+     12,
+     12
+    ],
+    [
+     13,
+     37
+    ],
+    [
+     16,
+     5
+    ],
+    [
+     9,
+     4
+    ],
+    [
+     5,
+     38
+    ]
+   ],
+   "static_status": "STATIC_VALID",
+   "reuse_existing_X": false,
+   "y_reuse_seq": [
+    [
+     7,
+     36
+    ],
+    [
+     1,
+     63
+    ],
+    [
+     16,
+     5
+    ],
+    [
+     11,
+     7
+    ],
+    [
+     12,
+     12
+    ],
+    [
+     9,
+     4
+    ],
+    [
+     5,
+     38
+    ],
+    [
+     13,
+     37
+    ],
+    [
+     0,
+     6
+    ]
+   ],
+   "y_reuse_teacher": "BXY_Y_TEACHER_V2_LONG"
+  },
+  {
+   "qid": "q12",
+   "tier": "T3_ALT_FIRST_MOVER_A",
+   "root_id": "ENG2_b629e01dc6e7",
+   "K_certified": 4,
+   "endpoint_signature": "[[0, 4], [1, 63], [3, 54], [8, 29], [9, 5], [10, 28]]",
+   "m": 6,
+   "endpoint_origin": "pool_only",
+   "source_arms": [
+    "R2",
+    "R3"
+   ],
+   "seq": [
+    [
+     3,
+     54
+    ],
+    [
+     1,
+     63
+    ],
+    [
+     0,
+     4
+    ],
+    [
+     8,
+     29
+    ],
+    [
+     9,
+     5
+    ],
+    [
+     10,
+     28
+    ]
+   ],
+   "static_status": "STATIC_VALID",
+   "reuse_existing_X": false,
+   "y_reuse_seq": [
+    [
+     3,
+     54
+    ],
+    [
+     9,
+     5
+    ],
+    [
+     0,
+     4
+    ],
+    [
+     8,
+     29
+    ],
+    [
+     1,
+     63
+    ],
+    [
+     10,
+     28
+    ]
+   ],
+   "y_reuse_teacher": "BXY_Y_TEACHER_V1"
+  },
+  {
+   "qid": "q13",
+   "tier": "T3_ALT_FIRST_MOVER_A",
+   "root_id": "ENG2_b629e01dc6e7",
+   "K_certified": 4,
+   "endpoint_signature": "[[0, 5], [1, 63], [3, 54], [7, 7], [8, 12], [9, 4], [10, 34], [12, 21], [13, 24]]",
+   "m": 9,
+   "endpoint_origin": "pool_only",
+   "source_arms": [
+    "F"
+   ],
+   "seq": [
+    [
+     3,
+     54
+    ],
+    [
+     1,
+     63
+    ],
+    [
+     0,
+     5
+    ],
+    [
+     7,
+     7
+    ],
+    [
+     8,
+     12
+    ],
+    [
+     9,
+     4
+    ],
+    [
+     10,
+     34
+    ],
+    [
+     12,
+     21
+    ],
+    [
+     13,
+     24
+    ]
+   ],
+   "static_status": "STATIC_VALID",
+   "reuse_existing_X": false,
+   "y_reuse_seq": [
+    [
+     1,
+     63
+    ],
+    [
+     3,
+     54
+    ],
+    [
+     10,
+     34
+    ],
+    [
+     12,
+     21
+    ],
+    [
+     13,
+     24
+    ],
+    [
+     7,
+     7
+    ],
+    [
+     0,
+     5
+    ],
+    [
+     8,
+     12
+    ],
+    [
+     9,
+     4
+    ]
+   ],
+   "y_reuse_teacher": "BXY_Y_TEACHER_V2_LONG"
+  },
+  {
+   "qid": "q14",
+   "tier": "T3_ALT_FIRST_MOVER_A",
+   "root_id": "ENG2_e3c632c779c0",
+   "K_certified": 4,
+   "endpoint_signature": "[[0, 55], [1, 54], [2, 5], [3, 44], [6, 62], [8, 7], [9, 28], [10, 37], [13, 29], [14, 6]]",
+   "m": 10,
+   "endpoint_origin": "committed",
+   "source_arms": [
+    "R3"
+   ],
+   "seq": [
+    [
+     3,
+     44
+    ],
+    [
+     0,
+     55
+    ],
+    [
+     1,
+     54
+    ],
+    [
+     6,
+     62
+    ],
+    [
+     8,
+     7
+    ],
+    [
+     9,
+     28
+    ],
+    [
+     10,
+     37
+    ],
+    [
+     13,
+     29
+    ],
+    [
+     14,
+     6
+    ],
+    [
+     2,
+     5
+    ]
+   ],
+   "static_status": "STATIC_VALID",
+   "reuse_existing_X": false,
+   "y_reuse_seq": [
+    [
+     1,
+     54
+    ],
+    [
+     0,
+     55
+    ],
+    [
+     6,
+     62
+    ],
+    [
+     9,
+     28
+    ],
+    [
+     10,
+     37
+    ],
+    [
+     8,
+     7
+    ],
+    [
+     3,
+     44
+    ],
+    [
+     2,
+     5
+    ],
+    [
+     14,
+     6
+    ],
+    [
+     13,
+     29
+    ]
+   ],
+   "y_reuse_teacher": "BXY_Y_TEACHER_V2_LONG"
+  },
+  {
+   "qid": "q15",
+   "tier": "T3_ALT_FIRST_MOVER_A",
+   "root_id": "ENG2_e3c632c779c0",
+   "K_certified": 4,
+   "endpoint_signature": "[[0, 55], [1, 36], [2, 46], [3, 44], [6, 6], [8, 45], [9, 54], [10, 28], [14, 29]]",
+   "m": 9,
+   "endpoint_origin": "pool_only",
+   "source_arms": [
+    "R3"
+   ],
+   "seq": [
+    [
+     1,
+     36
+    ],
+    [
+     0,
+     55
+    ],
+    [
+     2,
+     46
+    ],
+    [
+     6,
+     6
+    ],
+    [
+     8,
+     45
+    ],
+    [
+     3,
+     44
+    ],
+    [
+     9,
+     54
+    ],
+    [
+     10,
+     28
+    ],
+    [
+     14,
+     29
+    ]
+   ],
+   "static_status": "STATIC_VALID",
+   "reuse_existing_X": false,
+   "y_reuse_seq": [
+    [
+     1,
+     36
+    ],
+    [
+     0,
+     55
+    ],
+    [
+     2,
+     46
+    ],
+    [
+     8,
+     45
+    ],
+    [
+     9,
+     54
+    ],
+    [
+     6,
+     6
+    ],
+    [
+     3,
+     44
+    ],
+    [
+     10,
+     28
+    ],
+    [
+     14,
+     29
+    ]
+   ],
+   "y_reuse_teacher": "BXY_Y_TEACHER_V2_LONG"
+  },
+  {
+   "qid": "q16",
+   "tier": "T3_ALT_FIRST_MOVER_A",
+   "root_id": "ENG2_fdf500024486",
+   "K_certified": 4,
+   "endpoint_signature": "[[0, 62], [1, 39], [2, 38], [4, 12], [5, 8], [6, 31], [7, 28], [8, 47], [9, 0], [11, 20], [13, 35], [14, 63]]",
+   "m": 12,
+   "endpoint_origin": "pool_only",
+   "source_arms": [
+    "R3"
+   ],
+   "seq": [
+    [
+     4,
+     12
+    ],
+    [
+     11,
+     20
+    ],
+    [
+     9,
+     0
+    ],
+    [
+     14,
+     63
+    ],
+    [
+     1,
+     39
+    ],
+    [
+     0,
+     62
+    ],
+    [
+     5,
+     8
+    ],
+    [
+     8,
+     47
+    ],
+    [
+     7,
+     28
+    ],
+    [
+     6,
+     31
+    ],
+    [
+     2,
+     38
+    ],
+    [
+     13,
+     35
+    ]
+   ],
+   "static_status": "STATIC_VALID",
+   "reuse_existing_X": false,
+   "y_reuse_seq": [
+    [
+     2,
+     38
+    ],
+    [
+     7,
+     28
+    ],
+    [
+     6,
+     31
+    ],
+    [
+     4,
+     12
+    ],
+    [
+     1,
+     39
+    ],
+    [
+     0,
+     62
+    ],
+    [
+     5,
+     8
+    ],
+    [
+     13,
+     35
+    ],
+    [
+     11,
+     20
+    ],
+    [
+     9,
+     0
+    ],
+    [
+     8,
+     47
+    ],
+    [
+     14,
+     63
+    ]
+   ],
+   "y_reuse_teacher": "BXY_Y_TEACHER_V2_LONG"
+  },
+  {
+   "qid": "q17",
+   "tier": "T3_ALT_FIRST_MOVER_A",
+   "root_id": "ENG_8f3cfc3f84b9",
+   "K_certified": 5,
+   "endpoint_signature": "[[1, 28], [2, 20], [3, 46], [5, 54], [7, 3], [9, 47], [10, 55], [11, 63], [13, 30], [14, 0], [15, 39], [16, 16]]",
+   "m": 12,
+   "endpoint_origin": "pool_only",
+   "source_arms": [
+    "R2",
+    "R3"
+   ],
+   "seq": [
+    [
+     2,
+     20
+    ],
+    [
+     1,
+     28
+    ],
+    [
+     11,
+     63
+    ],
+    [
+     16,
+     16
+    ],
+    [
+     15,
+     39
+    ],
+    [
+     9,
+     47
+    ],
+    [
+     7,
+     3
+    ],
+    [
+     10,
+     55
+    ],
+    [
+     5,
+     54
+    ],
+    [
+     3,
+     46
+    ],
+    [
+     13,
+     30
+    ],
+    [
+     14,
+     0
+    ]
+   ],
+   "static_status": "STATIC_VALID",
+   "reuse_existing_X": false,
+   "y_reuse_seq": [
+    [
+     1,
+     28
+    ],
+    [
+     11,
+     63
+    ],
+    [
+     5,
+     54
+    ],
+    [
+     13,
+     30
+    ],
+    [
+     10,
+     55
+    ],
+    [
+     7,
+     3
+    ],
+    [
+     2,
+     20
+    ],
+    [
+     15,
+     39
+    ],
+    [
+     14,
+     0
+    ],
+    [
+     9,
+     47
+    ],
+    [
+     3,
+     46
+    ],
+    [
+     16,
+     16
+    ]
+   ],
+   "y_reuse_teacher": "BXY_Y_TEACHER_V2_LONG"
+  },
+  {
+   "qid": "q18",
+   "tier": "T4_ALT_FIRST_MOVER_B",
+   "root_id": "ENG2_01bacd0a7b91",
+   "K_certified": 5,
+   "endpoint_signature": "[[0, 28], [1, 52], [4, 13], [5, 20], [6, 34], [7, 12], [8, 44], [9, 63], [10, 61], [11, 3], [12, 55], [15, 39]]",
+   "m": 12,
+   "endpoint_origin": "committed",
+   "source_arms": [
+    "R3"
+   ],
+   "seq": [
+    [
+     5,
+     20
+    ],
+    [
+     6,
+     34
+    ],
+    [
+     11,
+     3
+    ],
+    [
+     15,
+     39
+    ],
+    [
+     1,
+     52
+    ],
+    [
+     9,
+     63
+    ],
+    [
+     4,
+     13
+    ],
+    [
+     0,
+     28
+    ],
+    [
+     12,
+     55
+    ],
+    [
+     10,
+     61
+    ],
+    [
+     8,
+     44
+    ],
+    [
+     7,
+     12
+    ]
+   ],
+   "static_status": "STATIC_VALID",
+   "reuse_existing_X": false,
+   "y_reuse_seq": [
+    [
+     9,
+     63
+    ],
+    [
+     6,
+     34
+    ],
+    [
+     7,
+     12
+    ],
+    [
+     11,
+     3
+    ],
+    [
+     8,
+     44
+    ],
+    [
+     12,
+     55
+    ],
+    [
+     10,
+     61
+    ],
+    [
+     15,
+     39
+    ],
+    [
+     4,
+     13
+    ],
+    [
+     0,
+     28
+    ],
+    [
+     5,
+     20
+    ],
+    [
+     1,
+     52
+    ]
+   ],
+   "y_reuse_teacher": "BXY_Y_TEACHER_V2_LONG"
+  },
+  {
+   "qid": "q19",
+   "tier": "T4_ALT_FIRST_MOVER_B",
+   "root_id": "ENG2_52b2736b5a89",
+   "K_certified": 6,
+   "endpoint_signature": "[[0, 6], [1, 63], [4, 55], [5, 38], [7, 36], [8, 29], [9, 4], [11, 7], [12, 12], [13, 37], [15, 47], [16, 5]]",
+   "m": 12,
+   "endpoint_origin": "committed",
+   "source_arms": [
+    "R2",
+    "R3"
+   ],
+   "seq": [
+    [
+     5,
+     38
+    ],
+    [
+     1,
+     63
+    ],
+    [
+     4,
+     55
+    ],
+    [
+     12,
+     12
+    ],
+    [
+     11,
+     7
+    ],
+    [
+     7,
+     36
+    ],
+    [
+     0,
+     6
+    ],
+    [
+     8,
+     29
+    ],
+    [
+     13,
+     37
+    ],
+    [
+     16,
+     5
+    ],
+    [
+     15,
+     47
+    ],
+    [
+     9,
+     4
+    ]
+   ],
+   "static_status": "STATIC_VALID",
+   "reuse_existing_X": false,
+   "y_reuse_seq": [
+    [
+     7,
+     36
+    ],
+    [
+     1,
+     63
+    ],
+    [
+     16,
+     5
+    ],
+    [
+     11,
+     7
+    ],
+    [
+     12,
+     12
+    ],
+    [
+     9,
+     4
+    ],
+    [
+     5,
+     38
+    ],
+    [
+     13,
+     37
+    ],
+    [
+     0,
+     6
+    ],
+    [
+     8,
+     29
+    ],
+    [
+     4,
+     55
+    ],
+    [
+     15,
+     47
+    ]
+   ],
+   "y_reuse_teacher": "BXY_Y_TEACHER_V2_LONG"
+  },
+  {
+   "qid": "q20",
+   "tier": "T4_ALT_FIRST_MOVER_B",
+   "root_id": "ENG2_52b2736b5a89",
+   "K_certified": 6,
+   "endpoint_signature": "[[0, 6], [1, 63], [5, 38], [7, 36], [9, 4], [11, 7], [12, 12], [13, 37], [16, 5]]",
+   "m": 9,
+   "endpoint_origin": "pool_only",
+   "source_arms": [
+    "R2",
+    "R3"
+   ],
+   "seq": [
+    [
+     11,
+     7
+    ],
+    [
+     1,
+     63
+    ],
+    [
+     7,
+     36
+    ],
+    [
+     0,
+     6
+    ],
+    [
+     12,
+     12
+    ],
+    [
+     13,
+     37
+    ],
+    [
+     16,
+     5
+    ],
+    [
+     9,
+     4
+    ],
+    [
+     5,
+     38
+    ]
+   ],
+   "static_status": "STATIC_VALID",
+   "reuse_existing_X": false,
+   "y_reuse_seq": [
+    [
+     7,
+     36
+    ],
+    [
+     1,
+     63
+    ],
+    [
+     16,
+     5
+    ],
+    [
+     11,
+     7
+    ],
+    [
+     12,
+     12
+    ],
+    [
+     9,
+     4
+    ],
+    [
+     5,
+     38
+    ],
+    [
+     13,
+     37
+    ],
+    [
+     0,
+     6
+    ]
+   ],
+   "y_reuse_teacher": "BXY_Y_TEACHER_V2_LONG"
+  },
+  {
+   "qid": "q21",
+   "tier": "T4_ALT_FIRST_MOVER_B",
+   "root_id": "ENG2_b629e01dc6e7",
+   "K_certified": 4,
+   "endpoint_signature": "[[0, 4], [1, 63], [3, 54], [8, 29], [9, 5], [10, 28]]",
+   "m": 6,
+   "endpoint_origin": "pool_only",
+   "source_arms": [
+    "R2",
+    "R3"
+   ],
+   "seq": [
+    [
+     8,
+     29
+    ],
+    [
+     1,
+     63
+    ],
+    [
+     3,
+     54
+    ],
+    [
+     9,
+     5
+    ],
+    [
+     0,
+     4
+    ],
+    [
+     10,
+     28
+    ]
+   ],
+   "static_status": "STATIC_VALID",
+   "reuse_existing_X": false,
+   "y_reuse_seq": [
+    [
+     3,
+     54
+    ],
+    [
+     9,
+     5
+    ],
+    [
+     0,
+     4
+    ],
+    [
+     8,
+     29
+    ],
+    [
+     1,
+     63
+    ],
+    [
+     10,
+     28
+    ]
+   ],
+   "y_reuse_teacher": "BXY_Y_TEACHER_V1"
+  },
+  {
+   "qid": "q22",
+   "tier": "T4_ALT_FIRST_MOVER_B",
+   "root_id": "ENG2_b629e01dc6e7",
+   "K_certified": 4,
+   "endpoint_signature": "[[0, 5], [1, 63], [3, 54], [7, 7], [8, 12], [9, 4], [10, 34], [12, 21], [13, 24]]",
+   "m": 9,
+   "endpoint_origin": "pool_only",
+   "source_arms": [
+    "F"
+   ],
+   "seq": [
+    [
+     8,
+     12
+    ],
+    [
+     1,
+     63
+    ],
+    [
+     0,
+     5
+    ],
+    [
+     3,
+     54
+    ],
+    [
+     7,
+     7
+    ],
+    [
+     9,
+     4
+    ],
+    [
+     10,
+     34
+    ],
+    [
+     12,
+     21
+    ],
+    [
+     13,
+     24
+    ]
+   ],
+   "static_status": "STATIC_VALID",
+   "reuse_existing_X": false,
+   "y_reuse_seq": [
+    [
+     1,
+     63
+    ],
+    [
+     3,
+     54
+    ],
+    [
+     10,
+     34
+    ],
+    [
+     12,
+     21
+    ],
+    [
+     13,
+     24
+    ],
+    [
+     7,
+     7
+    ],
+    [
+     0,
+     5
+    ],
+    [
+     8,
+     12
+    ],
+    [
+     9,
+     4
+    ]
+   ],
+   "y_reuse_teacher": "BXY_Y_TEACHER_V2_LONG"
+  },
+  {
+   "qid": "q23",
+   "tier": "T4_ALT_FIRST_MOVER_B",
+   "root_id": "ENG2_e3c632c779c0",
+   "K_certified": 4,
+   "endpoint_signature": "[[0, 55], [1, 54], [2, 5], [3, 44], [6, 62], [8, 7], [9, 28], [10, 37], [13, 29], [14, 6]]",
+   "m": 10,
+   "endpoint_origin": "committed",
+   "source_arms": [
+    "R3"
+   ],
+   "seq": [
+    [
+     6,
+     62
+    ],
+    [
+     0,
+     55
+    ],
+    [
+     1,
+     54
+    ],
+    [
+     2,
+     5
+    ],
+    [
+     8,
+     7
+    ],
+    [
+     9,
+     28
+    ],
+    [
+     14,
+     6
+    ],
+    [
+     3,
+     44
+    ],
+    [
+     10,
+     37
+    ],
+    [
+     13,
+     29
+    ]
+   ],
+   "static_status": "STATIC_VALID",
+   "reuse_existing_X": false,
+   "y_reuse_seq": [
+    [
+     1,
+     54
+    ],
+    [
+     0,
+     55
+    ],
+    [
+     6,
+     62
+    ],
+    [
+     9,
+     28
+    ],
+    [
+     10,
+     37
+    ],
+    [
+     8,
+     7
+    ],
+    [
+     3,
+     44
+    ],
+    [
+     2,
+     5
+    ],
+    [
+     14,
+     6
+    ],
+    [
+     13,
+     29
+    ]
+   ],
+   "y_reuse_teacher": "BXY_Y_TEACHER_V2_LONG"
+  },
+  {
+   "qid": "q24",
+   "tier": "T4_ALT_FIRST_MOVER_B",
+   "root_id": "ENG2_e3c632c779c0",
+   "K_certified": 4,
+   "endpoint_signature": "[[0, 55], [1, 36], [2, 46], [3, 44], [6, 6], [8, 45], [9, 54], [10, 28], [14, 29]]",
+   "m": 9,
+   "endpoint_origin": "pool_only",
+   "source_arms": [
+    "R3"
+   ],
+   "seq": [
+    [
+     6,
+     6
+    ],
+    [
+     0,
+     55
+    ],
+    [
+     1,
+     36
+    ],
+    [
+     2,
+     46
+    ],
+    [
+     8,
+     45
+    ],
+    [
+     3,
+     44
+    ],
+    [
+     9,
+     54
+    ],
+    [
+     10,
+     28
+    ],
+    [
+     14,
+     29
+    ]
+   ],
+   "static_status": "STATIC_VALID",
+   "reuse_existing_X": false,
+   "y_reuse_seq": [
+    [
+     1,
+     36
+    ],
+    [
+     0,
+     55
+    ],
+    [
+     2,
+     46
+    ],
+    [
+     8,
+     45
+    ],
+    [
+     9,
+     54
+    ],
+    [
+     6,
+     6
+    ],
+    [
+     3,
+     44
+    ],
+    [
+     10,
+     28
+    ],
+    [
+     14,
+     29
+    ]
+   ],
+   "y_reuse_teacher": "BXY_Y_TEACHER_V2_LONG"
+  },
+  {
+   "qid": "q25",
+   "tier": "T4_ALT_FIRST_MOVER_B",
+   "root_id": "ENG2_fdf500024486",
+   "K_certified": 4,
+   "endpoint_signature": "[[0, 62], [1, 39], [2, 38], [4, 12], [5, 8], [6, 31], [7, 28], [8, 47], [9, 0], [11, 20], [13, 35], [14, 63]]",
+   "m": 12,
+   "endpoint_origin": "pool_only",
+   "source_arms": [
+    "R3"
+   ],
+   "seq": [
+    [
+     9,
+     0
+    ],
+    [
+     11,
+     20
+    ],
+    [
+     4,
+     12
+    ],
+    [
+     14,
+     63
+    ],
+    [
+     1,
+     39
+    ],
+    [
+     0,
+     62
+    ],
+    [
+     5,
+     8
+    ],
+    [
+     8,
+     47
+    ],
+    [
+     7,
+     28
+    ],
+    [
+     6,
+     31
+    ],
+    [
+     2,
+     38
+    ],
+    [
+     13,
+     35
+    ]
+   ],
+   "static_status": "STATIC_VALID",
+   "reuse_existing_X": false,
+   "y_reuse_seq": [
+    [
+     2,
+     38
+    ],
+    [
+     7,
+     28
+    ],
+    [
+     6,
+     31
+    ],
+    [
+     4,
+     12
+    ],
+    [
+     1,
+     39
+    ],
+    [
+     0,
+     62
+    ],
+    [
+     5,
+     8
+    ],
+    [
+     13,
+     35
+    ],
+    [
+     11,
+     20
+    ],
+    [
+     9,
+     0
+    ],
+    [
+     8,
+     47
+    ],
+    [
+     14,
+     63
+    ]
+   ],
+   "y_reuse_teacher": "BXY_Y_TEACHER_V2_LONG"
+  },
+  {
+   "qid": "q26",
+   "tier": "T4_ALT_FIRST_MOVER_B",
+   "root_id": "ENG_8f3cfc3f84b9",
+   "K_certified": 5,
+   "endpoint_signature": "[[1, 28], [2, 20], [3, 46], [5, 54], [7, 3], [9, 47], [10, 55], [11, 63], [13, 30], [14, 0], [15, 39], [16, 16]]",
+   "m": 12,
+   "endpoint_origin": "pool_only",
+   "source_arms": [
+    "R2",
+    "R3"
+   ],
+   "seq": [
+    [
+     7,
+     3
+    ],
+    [
+     1,
+     28
+    ],
+    [
+     11,
+     63
+    ],
+    [
+     13,
+     30
+    ],
+    [
+     14,
+     0
+    ],
+    [
+     15,
+     39
+    ],
+    [
+     9,
+     47
+    ],
+    [
+     3,
+     46
+    ],
+    [
+     2,
+     20
+    ],
+    [
+     10,
+     55
+    ],
+    [
+     5,
+     54
+    ],
+    [
+     16,
+     16
+    ]
+   ],
+   "static_status": "STATIC_VALID",
+   "reuse_existing_X": false,
+   "y_reuse_seq": [
+    [
+     1,
+     28
+    ],
+    [
+     11,
+     63
+    ],
+    [
+     5,
+     54
+    ],
+    [
+     13,
+     30
+    ],
+    [
+     10,
+     55
+    ],
+    [
+     7,
+     3
+    ],
+    [
+     2,
+     20
+    ],
+    [
+     15,
+     39
+    ],
+    [
+     14,
+     0
+    ],
+    [
+     9,
+     47
+    ],
+    [
+     3,
+     46
+    ],
+    [
+     16,
+     16
+    ]
+   ],
+   "y_reuse_teacher": "BXY_Y_TEACHER_V2_LONG"
+  },
+  {
+   "qid": "q27",
+   "tier": "T5_ORIGINAL_ORDER_CONTROL",
+   "root_id": "ENG2_01bacd0a7b91",
+   "K_certified": 5,
+   "endpoint_signature": "[[0, 28], [1, 52], [4, 13], [5, 20], [6, 34], [7, 12], [8, 44], [9, 63], [10, 61], [11, 3], [12, 55], [15, 39]]",
+   "m": 12,
+   "endpoint_origin": "committed",
+   "source_arms": [
+    "R3"
+   ],
+   "seq": [
+    [
+     9,
+     63
+    ],
+    [
+     6,
+     34
+    ],
+    [
+     7,
+     12
+    ],
+    [
+     11,
+     3
+    ],
+    [
+     8,
+     44
+    ],
+    [
+     12,
+     55
+    ],
+    [
+     10,
+     61
+    ],
+    [
+     15,
+     39
+    ],
+    [
+     4,
+     13
+    ],
+    [
+     0,
+     28
+    ],
+    [
+     5,
+     20
+    ],
+    [
+     1,
+     52
+    ]
+   ],
+   "static_status": "FAIL_PLACE",
+   "reuse_existing_X": true,
+   "y_reuse_seq": [
+    [
+     9,
+     63
+    ],
+    [
+     6,
+     34
+    ],
+    [
+     7,
+     12
+    ],
+    [
+     11,
+     3
+    ],
+    [
+     8,
+     44
+    ],
+    [
+     12,
+     55
+    ],
+    [
+     10,
+     61
+    ],
+    [
+     15,
+     39
+    ],
+    [
+     4,
+     13
+    ],
+    [
+     0,
+     28
+    ],
+    [
+     5,
+     20
+    ],
+    [
+     1,
+     52
+    ]
+   ],
+   "y_reuse_teacher": "BXY_Y_TEACHER_V2_LONG"
+  },
+  {
+   "qid": "q28",
+   "tier": "T5_ORIGINAL_ORDER_CONTROL",
+   "root_id": "ENG2_52b2736b5a89",
+   "K_certified": 6,
+   "endpoint_signature": "[[0, 6], [1, 63], [4, 55], [5, 38], [7, 36], [8, 29], [9, 4], [11, 7], [12, 12], [13, 37], [15, 47], [16, 5]]",
+   "m": 12,
+   "endpoint_origin": "committed",
+   "source_arms": [
+    "R2",
+    "R3"
+   ],
+   "seq": [
+    [
+     7,
+     36
+    ],
+    [
+     1,
+     63
+    ],
+    [
+     16,
+     5
+    ],
+    [
+     11,
+     7
+    ],
+    [
+     12,
+     12
+    ],
+    [
+     9,
+     4
+    ],
+    [
+     5,
+     38
+    ],
+    [
+     13,
+     37
+    ],
+    [
+     0,
+     6
+    ],
+    [
+     8,
+     29
+    ],
+    [
+     4,
+     55
+    ],
+    [
+     15,
+     47
+    ]
+   ],
+   "static_status": "FAIL_PLACE",
+   "reuse_existing_X": true,
+   "y_reuse_seq": [
+    [
+     7,
+     36
+    ],
+    [
+     1,
+     63
+    ],
+    [
+     16,
+     5
+    ],
+    [
+     11,
+     7
+    ],
+    [
+     12,
+     12
+    ],
+    [
+     9,
+     4
+    ],
+    [
+     5,
+     38
+    ],
+    [
+     13,
+     37
+    ],
+    [
+     0,
+     6
+    ],
+    [
+     8,
+     29
+    ],
+    [
+     4,
+     55
+    ],
+    [
+     15,
+     47
+    ]
+   ],
+   "y_reuse_teacher": "BXY_Y_TEACHER_V2_LONG"
+  },
+  {
+   "qid": "q29",
+   "tier": "T5_ORIGINAL_ORDER_CONTROL",
+   "root_id": "ENG2_52b2736b5a89",
+   "K_certified": 6,
+   "endpoint_signature": "[[0, 6], [1, 63], [5, 38], [7, 36], [9, 4], [11, 7], [12, 12], [13, 37], [16, 5]]",
+   "m": 9,
+   "endpoint_origin": "pool_only",
+   "source_arms": [
+    "R2",
+    "R3"
+   ],
+   "seq": [
+    [
+     7,
+     36
+    ],
+    [
+     1,
+     63
+    ],
+    [
+     16,
+     5
+    ],
+    [
+     11,
+     7
+    ],
+    [
+     12,
+     12
+    ],
+    [
+     9,
+     4
+    ],
+    [
+     5,
+     38
+    ],
+    [
+     13,
+     37
+    ],
+    [
+     0,
+     6
+    ]
+   ],
+   "static_status": "FAIL_PLACE",
+   "reuse_existing_X": true,
+   "y_reuse_seq": [
+    [
+     7,
+     36
+    ],
+    [
+     1,
+     63
+    ],
+    [
+     16,
+     5
+    ],
+    [
+     11,
+     7
+    ],
+    [
+     12,
+     12
+    ],
+    [
+     9,
+     4
+    ],
+    [
+     5,
+     38
+    ],
+    [
+     13,
+     37
+    ],
+    [
+     0,
+     6
+    ]
+   ],
+   "y_reuse_teacher": "BXY_Y_TEACHER_V2_LONG"
+  },
+  {
+   "qid": "q30",
+   "tier": "T5_ORIGINAL_ORDER_CONTROL",
+   "root_id": "ENG2_b629e01dc6e7",
+   "K_certified": 4,
+   "endpoint_signature": "[[0, 4], [1, 63], [3, 54], [8, 29], [9, 5], [10, 28]]",
+   "m": 6,
+   "endpoint_origin": "pool_only",
+   "source_arms": [
+    "R2",
+    "R3"
+   ],
+   "seq": [
+    [
+     3,
+     54
+    ],
+    [
+     9,
+     5
+    ],
+    [
+     0,
+     4
+    ],
+    [
+     8,
+     29
+    ],
+    [
+     1,
+     63
+    ],
+    [
+     10,
+     28
+    ]
+   ],
+   "static_status": "STATIC_VALID",
+   "reuse_existing_X": true,
+   "y_reuse_seq": [
+    [
+     3,
+     54
+    ],
+    [
+     9,
+     5
+    ],
+    [
+     0,
+     4
+    ],
+    [
+     8,
+     29
+    ],
+    [
+     1,
+     63
+    ],
+    [
+     10,
+     28
+    ]
+   ],
+   "y_reuse_teacher": "BXY_Y_TEACHER_V1"
+  },
+  {
+   "qid": "q31",
+   "tier": "T5_ORIGINAL_ORDER_CONTROL",
+   "root_id": "ENG2_b629e01dc6e7",
+   "K_certified": 4,
+   "endpoint_signature": "[[0, 5], [1, 63], [3, 54], [7, 7], [8, 12], [9, 4], [10, 34], [12, 21], [13, 24]]",
+   "m": 9,
+   "endpoint_origin": "pool_only",
+   "source_arms": [
+    "F"
+   ],
+   "seq": [
+    [
+     1,
+     63
+    ],
+    [
+     3,
+     54
+    ],
+    [
+     10,
+     34
+    ],
+    [
+     12,
+     21
+    ],
+    [
+     13,
+     24
+    ],
+    [
+     7,
+     7
+    ],
+    [
+     0,
+     5
+    ],
+    [
+     8,
+     12
+    ],
+    [
+     9,
+     4
+    ]
+   ],
+   "static_status": "STATIC_VALID",
+   "reuse_existing_X": true,
+   "y_reuse_seq": [
+    [
+     1,
+     63
+    ],
+    [
+     3,
+     54
+    ],
+    [
+     10,
+     34
+    ],
+    [
+     12,
+     21
+    ],
+    [
+     13,
+     24
+    ],
+    [
+     7,
+     7
+    ],
+    [
+     0,
+     5
+    ],
+    [
+     8,
+     12
+    ],
+    [
+     9,
+     4
+    ]
+   ],
+   "y_reuse_teacher": "BXY_Y_TEACHER_V2_LONG"
+  },
+  {
+   "qid": "q32",
+   "tier": "T5_ORIGINAL_ORDER_CONTROL",
+   "root_id": "ENG2_e3c632c779c0",
+   "K_certified": 4,
+   "endpoint_signature": "[[0, 55], [1, 54], [2, 5], [3, 44], [6, 62], [8, 7], [9, 28], [10, 37], [13, 29], [14, 6]]",
+   "m": 10,
+   "endpoint_origin": "committed",
+   "source_arms": [
+    "R3"
+   ],
+   "seq": [
+    [
+     1,
+     54
+    ],
+    [
+     0,
+     55
+    ],
+    [
+     6,
+     62
+    ],
+    [
+     9,
+     28
+    ],
+    [
+     10,
+     37
+    ],
+    [
+     8,
+     7
+    ],
+    [
+     3,
+     44
+    ],
+    [
+     2,
+     5
+    ],
+    [
+     14,
+     6
+    ],
+    [
+     13,
+     29
+    ]
+   ],
+   "static_status": "FAIL_PLACE",
+   "reuse_existing_X": true,
+   "y_reuse_seq": [
+    [
+     1,
+     54
+    ],
+    [
+     0,
+     55
+    ],
+    [
+     6,
+     62
+    ],
+    [
+     9,
+     28
+    ],
+    [
+     10,
+     37
+    ],
+    [
+     8,
+     7
+    ],
+    [
+     3,
+     44
+    ],
+    [
+     2,
+     5
+    ],
+    [
+     14,
+     6
+    ],
+    [
+     13,
+     29
+    ]
+   ],
+   "y_reuse_teacher": "BXY_Y_TEACHER_V2_LONG"
+  },
+  {
+   "qid": "q33",
+   "tier": "T5_ORIGINAL_ORDER_CONTROL",
+   "root_id": "ENG2_e3c632c779c0",
+   "K_certified": 4,
+   "endpoint_signature": "[[0, 55], [1, 36], [2, 46], [3, 44], [6, 6], [8, 45], [9, 54], [10, 28], [14, 29]]",
+   "m": 9,
+   "endpoint_origin": "pool_only",
+   "source_arms": [
+    "R3"
+   ],
+   "seq": [
+    [
+     1,
+     36
+    ],
+    [
+     0,
+     55
+    ],
+    [
+     2,
+     46
+    ],
+    [
+     8,
+     45
+    ],
+    [
+     9,
+     54
+    ],
+    [
+     6,
+     6
+    ],
+    [
+     3,
+     44
+    ],
+    [
+     10,
+     28
+    ],
+    [
+     14,
+     29
+    ]
+   ],
+   "static_status": "STATIC_VALID",
+   "reuse_existing_X": true,
+   "y_reuse_seq": [
+    [
+     1,
+     36
+    ],
+    [
+     0,
+     55
+    ],
+    [
+     2,
+     46
+    ],
+    [
+     8,
+     45
+    ],
+    [
+     9,
+     54
+    ],
+    [
+     6,
+     6
+    ],
+    [
+     3,
+     44
+    ],
+    [
+     10,
+     28
+    ],
+    [
+     14,
+     29
+    ]
+   ],
+   "y_reuse_teacher": "BXY_Y_TEACHER_V2_LONG"
+  },
+  {
+   "qid": "q34",
+   "tier": "T5_ORIGINAL_ORDER_CONTROL",
+   "root_id": "ENG2_fdf500024486",
+   "K_certified": 4,
+   "endpoint_signature": "[[0, 62], [1, 39], [2, 38], [4, 12], [5, 8], [6, 31], [7, 28], [8, 47], [9, 0], [11, 20], [13, 35], [14, 63]]",
+   "m": 12,
+   "endpoint_origin": "pool_only",
+   "source_arms": [
+    "R3"
+   ],
+   "seq": [
+    [
+     2,
+     38
+    ],
+    [
+     7,
+     28
+    ],
+    [
+     6,
+     31
+    ],
+    [
+     4,
+     12
+    ],
+    [
+     1,
+     39
+    ],
+    [
+     0,
+     62
+    ],
+    [
+     5,
+     8
+    ],
+    [
+     13,
+     35
+    ],
+    [
+     11,
+     20
+    ],
+    [
+     9,
+     0
+    ],
+    [
+     8,
+     47
+    ],
+    [
+     14,
+     63
+    ]
+   ],
+   "static_status": "FAIL_PLACE",
+   "reuse_existing_X": true,
+   "y_reuse_seq": [
+    [
+     2,
+     38
+    ],
+    [
+     7,
+     28
+    ],
+    [
+     6,
+     31
+    ],
+    [
+     4,
+     12
+    ],
+    [
+     1,
+     39
+    ],
+    [
+     0,
+     62
+    ],
+    [
+     5,
+     8
+    ],
+    [
+     13,
+     35
+    ],
+    [
+     11,
+     20
+    ],
+    [
+     9,
+     0
+    ],
+    [
+     8,
+     47
+    ],
+    [
+     14,
+     63
+    ]
+   ],
+   "y_reuse_teacher": "BXY_Y_TEACHER_V2_LONG"
+  },
+  {
+   "qid": "q35",
+   "tier": "T5_ORIGINAL_ORDER_CONTROL",
+   "root_id": "ENG_8f3cfc3f84b9",
+   "K_certified": 5,
+   "endpoint_signature": "[[1, 28], [2, 20], [3, 46], [5, 54], [7, 3], [9, 47], [10, 55], [11, 63], [13, 30], [14, 0], [15, 39], [16, 16]]",
+   "m": 12,
+   "endpoint_origin": "pool_only",
+   "source_arms": [
+    "R2",
+    "R3"
+   ],
+   "seq": [
+    [
+     1,
+     28
+    ],
+    [
+     11,
+     63
+    ],
+    [
+     5,
+     54
+    ],
+    [
+     13,
+     30
+    ],
+    [
+     10,
+     55
+    ],
+    [
+     7,
+     3
+    ],
+    [
+     2,
+     20
+    ],
+    [
+     15,
+     39
+    ],
+    [
+     14,
+     0
+    ],
+    [
+     9,
+     47
+    ],
+    [
+     3,
+     46
+    ],
+    [
+     16,
+     16
+    ]
+   ],
+   "static_status": "FAIL_PLACE",
+   "reuse_existing_X": true,
+   "y_reuse_seq": [
+    [
+     1,
+     28
+    ],
+    [
+     11,
+     63
+    ],
+    [
+     5,
+     54
+    ],
+    [
+     13,
+     30
+    ],
+    [
+     10,
+     55
+    ],
+    [
+     7,
+     3
+    ],
+    [
+     2,
+     20
+    ],
+    [
+     15,
+     39
+    ],
+    [
+     14,
+     0
+    ],
+    [
+     9,
+     47
+    ],
+    [
+     3,
+     46
+    ],
+    [
+     16,
+     16
+    ]
+   ],
+   "y_reuse_teacher": "BXY_Y_TEACHER_V2_LONG"
+  }
+ ],
+ "main_calls_needed": 27,
+ "main_call_budget": 28,
+ "queue_truncated_to_budget": []
+}
