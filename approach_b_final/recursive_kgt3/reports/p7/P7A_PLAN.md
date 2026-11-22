@@ -116,3 +116,21 @@ So placements are not confined to the old top-4.
 No teacher call, training, dataset generation, release_v2 access, or P7B/P7C execution.
 
 **Minimal code:** `p7_repair.py` (public; reuses `data.HypoRoot`, `data.check_sequence`, `models.Frozen.ytask/propose/y_end`), `p7_eval.py` (evaluator; reuses P5A `Chk`, `run_order`, `classify`), and `tests/test_p7_repair.py`.
+
+## Amendment A1 (2026-11-22; before any DEV run, after a cost analysis on the code only)
+
+The full branching is about 100 children per state. With beam width 8 and up to 14 layers, that is about 10,000 counted frozen step scores per endpoint, far above Φ_MAX = 2,000. Under the original text, every recursive arm would exhaust its budget after about two layers, and FLAT (where every state counts as a candidate) would win by construction.
+
+**Change:** in each layer, children are pre-ranked by a **free public geometric pre-score**, (parent path cost − log φ_G(step) + h(child)). Only the top S = 32 receive the counted step score φ (mode P, G or Y) or the drop price. The rest are pruned.
+
+**Unchanged:** Φ_MAX, Y_MAX, B, the arms, the metrics and the gate. The rule is identical for every arm, including FLAT and RANDOM. Geometry evaluations are logged, not charged.
+
+**Final scoring:** up to 4 × keep = 20 extra φ / ŷ_end requests may be spent on scoring the final candidates, identically for every arm. They are counted in `used`.
+
+## Amendment A2 (2026-11-22; before any DEV run): numeric gate
+
+"Credible advantage" means the following, computed on the union of method and diagnostic endpoints, **excluding** the exposed root ENG2_e3c632c779c0, with matched budget:
+- **Paired comparison:** on top-1 static-order validity, *or* on top-1 static-order existence (whether the selected assignment admits any static order), FULL's wins minus losses must be ≥ 3 against FLAT.
+- The same must hold against RANDOM.
+
+**PROCEED** requires a credible advantage over **both** FLAT and RANDOM. Otherwise the gate is **REVISE**. Any synthetic fixture failure means **BLOCKED**.
