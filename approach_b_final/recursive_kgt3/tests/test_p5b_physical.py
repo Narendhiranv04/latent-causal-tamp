@@ -125,3 +125,11 @@ def test_worker_error_fails_closed(tmp_path):
     B.run(str(f), "code", "priv", str(tmp_path / "run"), job=err_job, yk=mock_yk, ctx_name="fork")
     L = A.jl(tmp_path / "run/ledger.jsonl")
     assert sum(1 for x in L if x["event"] == "LAUNCH") == 1 and any(x["event"] == "HARNESS_ABORT" for x in L)
+
+
+def test_xclass_never_turns_unknown_into_negative():
+    assert B.xclass("VERIFIED", None, 1) == "VERIFIED_FEASIBLE"
+    assert B.xclass("VERIFIED", None, 0) != "VERIFIED_FEASIBLE"               # replay failure etc. is not a positive
+    assert B.xclass("UNKNOWN_PLANNER", "NO_PLAN_FOUND", 0) == "UNKNOWN_PLANNER"
+    assert B.xclass("CERTIFIED_INFEASIBLE", "CERTIFIED", 0) == "CERTIFIED_INFEASIBLE_SCOPED"
+    assert B.xclass("ABORTED_CAP", None, None) == "UNKNOWN_ABORTED_CAP"

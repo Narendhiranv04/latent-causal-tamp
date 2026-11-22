@@ -1,0 +1,110 @@
+{
+ "stage": "P5B",
+ "schedule_sha256": "08f2857e48be1ad85428708e4a3a8eb6fe3ce93231db59a597565a69e7de9f3d",
+ "verdict": "PHYSICAL_ORDER_RECOVERED",
+ "unique_endpoints_scheduled": 9,
+ "unique_roots": 6,
+ "distinct_ordered_queries": 36,
+ "executed_or_reused": 36,
+ "new_teacher_X_calls": 27,
+ "reused_P4_rows": 9,
+ "X_class_new_calls": {
+  "UNKNOWN_PLANNER": 26,
+  "VERIFIED_FEASIBLE": 1
+ },
+ "X_class_all": {
+  "UNKNOWN_PLANNER": 32,
+  "VERIFIED_FEASIBLE": 1,
+  "CERTIFIED_INFEASIBLE_SCOPED": 3
+ },
+ "X_class_by_tier": {
+  "T1_DP_ORDER_FIRST_ENDPOINT": {
+   "UNKNOWN_PLANNER": 6
+  },
+  "T2_DP_ORDER_SECOND_ENDPOINT": {
+   "UNKNOWN_PLANNER": 3
+  },
+  "T3_ALT_FIRST_MOVER_A": {
+   "UNKNOWN_PLANNER": 9
+  },
+  "T4_ALT_FIRST_MOVER_B": {
+   "UNKNOWN_PLANNER": 8,
+   "VERIFIED_FEASIBLE": 1
+  },
+  "T5_ORIGINAL_ORDER_CONTROL": {
+   "CERTIFIED_INFEASIBLE_SCOPED": 3,
+   "UNKNOWN_PLANNER": 6
+  }
+ },
+ "X_positive_queries": 1,
+ "X_positive_endpoints": 1,
+ "X_positive_roots": 1,
+ "joint_XY_successes": 1,
+ "joint_XY_roots": 1,
+ "decided_same_endpoint_contrasts": 1,
+ "decided_contrast_endpoints": [
+  [
+   "ENG2_e3c632c779c0",
+   "[[0, 55], [1, 54], [2, 5], [3, 44], [6, 62], [8, 7], [9, 28], [10, 37], [13, 29], [14, 6]]"
+  ]
+ ],
+ "failed_phase_new": {
+  "relocation:3": 5,
+  "relocation:1": 4,
+  "relocation:2": 5,
+  "relocation:0": 8,
+  "relocation:4": 4,
+  "none": 1
+ },
+ "relocations_completed_new": [
+  3,
+  3,
+  1,
+  2,
+  0,
+  4,
+  2,
+  1,
+  2,
+  3,
+  4,
+  2,
+  1,
+  1,
+  4,
+  2,
+  0,
+  0,
+  0,
+  4,
+  0,
+  3,
+  0,
+  10,
+  0,
+  0,
+  3
+ ],
+ "unknown_subchannels_new (planner/lookup inside aggregate UNKNOWN; never a negative)": {
+  "{'planner': 'UNRESOLVED', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}": 16,
+  "{'planner': 'CERTIFIED_INFEASIBLE', 'lookup': 'UNKNOWN_NO_LIBRARY_WITNESS'}": 10
+ },
+ "resources": {
+  "teacher_calls_batch2": 29,
+  "confirm_calls": 2,
+  "void_batch1_launches": 27,
+  "wall_s_batch2": 379.1,
+  "wall_s_void_batch1": 15.0,
+  "teacher_process_cpu_s_sum": 650.2,
+  "teacher_query_wall_s_sum": 652.0,
+  "workers": 2,
+  "caps": {
+   "teacher_calls": 32,
+   "workers": 2,
+   "wall_s": 1800,
+   "confirm_reserve": 4,
+   "per_root_endpoints": 2
+  },
+  "cap_events": []
+ }
+}

@@ -245,8 +245,138 @@ def run(sched_f, code, priv, rundir, dry=False, job=None, yk=None, ctx_name="spa
     print(json.dumps({"calls": calls, "wall_s": round(time.time() - t0, 1)}))
 
 
+# -------------------------------------------------------------------------------------------------------------------------------- report
+def xclass(status, negk, y):
+    if y == 1 and status == "VERIFIED":
+        return "VERIFIED_FEASIBLE"
+    if negk == "CERTIFIED":
+        return "CERTIFIED_INFEASIBLE_SCOPED"            # teacher's certificate for this fixed order given its own chosen prefix trajectory
+    return str(status) if str(status).startswith("UNKNOWN") else "UNKNOWN_" + str(status)
+
+
+def report(sched_f, ledger_f, void_f, verify, dev_public, out):
+    from collections import Counter
+    S = json.loads(Path(sched_f).read_text()); L = jl(ledger_f); V = jl(void_f)
+    ver = {(r["root_id"], json.dumps(r["seq"])): r for r in jl(verify)}
+    res = {}
+    for x in L:
+        if x["event"] == "RESULT":
+            res[(x["qid"], x["kind"], bool(x.get("confirm")))] = x
+    rows = []
+    for q in S["queue"]:
+        base = {k: q[k] for k in ("qid", "tier", "root_id", "K_certified", "endpoint_signature", "m", "endpoint_origin", "source_arms", "seq", "static_status")}
+        if q["reuse_existing_X"]:
+            v = ver[(q["root_id"], json.dumps(q["seq"]))]
+            x = {"evidence": "P4_EXISTING_TEACHER_ROW", "teacher": v["x_teacher"], "teacher_status": v["x_status"], "negative_kind": v["x_negative_kind"],
+                 "failed_phase": v["x_phase"], "y": v["x"], "independent_replay": v["x_replay"], "new_call": False}
+        elif (q["qid"], "X", False) in res:
+            r = res[(q["qid"], "X", False)]
+            x = {"evidence": "P5B_NEW_TEACHER_CALL", "new_call": True, **{k: r.get(k) for k in ("teacher", "teacher_status", "negative_kind", "failed_phase", "y",
+                 "independent_replay", "replay_why", "connector_how", "budget_spent", "budget", "process_cpu_s", "virtual_cpu_s", "wall_s", "detail")},
+                 "relocations_completed": len(r.get("steps") or []), "witness_files": bool(r.get("witness_relocations"))}
+        else:
+            x = {"evidence": "NOT_EXECUTED", "new_call": False, "teacher_status": "NOT_RUN", "y": None}
+        ph = x.get("failed_phase") or ""
+        xc = xclass(x.get("teacher_status"), x.get("negative_kind"), x.get("y")) if x["evidence"] != "NOT_EXECUTED" else "NOT_RUN"
+        conf = {k: res.get((q["qid"], k, True)) for k in ("X", "Y")}
+        yv = {"Y_source": "P4_VERIFIED_REUSED_Y2_KEY_MATCH", "Y": 1, "Y_teacher": q["y_reuse_teacher"]}
+        if conf["Y"]:
+            yv |= {"Y_fresh_status": conf["Y"].get("teacher_status"), "Y_fresh": conf["Y"].get("y")}
+        rows.append(base | {"X": x, "X_class": xc, "failed_step": int(ph.split(":")[1]) if ph.startswith("relocation:") else None,
+                            "connector": "FAILED" if ph.startswith("connector") else ("OK" if xc == "VERIFIED_FEASIBLE" else "NOT_REACHED"),
+                            **yv, "X_confirm_fresh_process": (conf["X"] or {}).get("teacher_status"),
+                            "joint_XY": xc == "VERIFIED_FEASIBLE" and yv["Y"] == 1 and yv.get("Y_fresh", 1) == 1, "evaluator_only": True})
+    ex = [r for r in rows if r["X"]["evidence"] != "NOT_EXECUTED"]
+    new = [r for r in rows if r["X"]["new_call"]]
+    by_ep = {}
+    for r in ex:
+        by_ep.setdefault((r["root_id"], r["endpoint_signature"]), []).append(r)
+    decided = [k for k, R in by_ep.items() if any(r["X_class"] == "VERIFIED_FEASIBLE" for r in R) and any(r["X_class"] == "CERTIFIED_INFEASIBLE_SCOPED" for r in R)]
+    pos = [r for r in rows if r["X_class"] == "VERIFIED_FEASIBLE"]
+    calls = sum(1 for x in L if x["event"] == "LAUNCH")
+    Sm = {"stage": "P5B", "schedule_sha256": sha(sched_f), "verdict": "PHYSICAL_ORDER_RECOVERED" if any(r["joint_XY"] for r in rows) else "NO_PHYSICAL_WITNESS_UNDER_CAP",
+          "unique_endpoints_scheduled": len({(q["root_id"], q["endpoint_signature"]) for q in S["queue"]}), "unique_roots": len({q["root_id"] for q in S["queue"]}),
+          "distinct_ordered_queries": len(rows), "executed_or_reused": len(ex), "new_teacher_X_calls": len(new), "reused_P4_rows": sum(1 for r in rows if r["X"]["evidence"] == "P4_EXISTING_TEACHER_ROW"),
+          "X_class_new_calls": dict(Counter(r["X_class"] for r in new)), "X_class_all": dict(Counter(r["X_class"] for r in ex)),
+          "X_class_by_tier": {t: dict(Counter(r["X_class"] for r in ex if r["tier"] == t)) for t in sorted({r["tier"] for r in ex})},
+          "X_positive_queries": len(pos), "X_positive_endpoints": len({(r["root_id"], r["endpoint_signature"]) for r in pos}), "X_positive_roots": len({r["root_id"] for r in pos}),
+          "joint_XY_successes": sum(r["joint_XY"] for r in rows), "joint_XY_roots": len({r["root_id"] for r in rows if r["joint_XY"]}),
+          "decided_same_endpoint_contrasts": len(decided), "decided_contrast_endpoints": [list(k) for k in decided],
+          "failed_phase_new": dict(Counter((r["X"].get("failed_phase") or "none").split(":")[0] + (":" + str(r["failed_step"]) if r["failed_step"] is not None else "") for r in new)),
+          "relocations_completed_new": [r["X"].get("relocations_completed") for r in new],
+          "unknown_subchannels_new (planner/lookup inside aggregate UNKNOWN; never a negative)": dict(Counter(str(r["X"].get("detail")) for r in new if r["X_class"].startswith("UNKNOWN"))),
+          "resources": {"teacher_calls_batch2": calls, "confirm_calls": sum(1 for x in L if x["event"] == "LAUNCH" and x.get("confirm")),
+                        "void_batch1_launches": sum(1 for x in V if x["event"] == "LAUNCH"),
+                        "wall_s_batch2": next((x["wall_s"] for x in L if x["event"] == "BATCH_END" and not x.get("void")), None),
+                        "wall_s_void_batch1": next((x["wall_s"] for x in V if x["event"] == "BATCH_END"), None),
+                        "teacher_process_cpu_s_sum": round(sum(r["X"].get("process_cpu_s") or 0 for r in new), 1),
+                        "teacher_query_wall_s_sum": round(sum(r["X"].get("wall_s") or 0 for r in new), 1), "workers": S["caps"]["workers"],
+                        "caps": S["caps"], "cap_events": [x["event"] for x in L if x["event"] in ("WALL_CAP", "CALL_CAP", "HARNESS_ABORT")]}}
+    o = Path(out)
+    (o / "P5B_ATTEMPTS.jsonl").write_text("".join(json.dumps(r) + "\n" for r in rows))
+    (o / "P5B_SUMMARY.json").write_text(json.dumps(Sm, indent=1))
+    figure_b(rows, {r["root_id"]: r for r in jl(dev_public)}, o / "p5b_orders.png")
+    print(json.dumps({k: Sm[k] for k in ("verdict", "new_teacher_X_calls", "X_class_new_calls", "joint_XY_successes", "decided_same_endpoint_contrasts")}))
+
+
+def figure_b(rows, pub, out):
+    """STATIC-ONLY order diagrams on real DEV geometry: original order vs P5A DP order per scheduled endpoint, annotated with teacher X."""
+    import matplotlib; matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    from p4_viz import grid, BLUE, RED, GREEN
+    eps = []
+    for r in rows:
+        if r["tier"].startswith("T1") or r["tier"].startswith("T2"):
+            ctl = next((c for c in rows if c["tier"].startswith("T5") and c["endpoint_signature"] == r["endpoint_signature"] and c["root_id"] == r["root_id"]), None)
+            eps.append((r, ctl))
+    fig, axs = plt.subplots(2, (len(eps) + 1) // 2, figsize=(4.6 * ((len(eps) + 1) // 2), 12.5))
+    for ax, (r, c) in zip(axs.flat, eps):
+        inp = pub[r["root_id"]]["inputs"]; c0 = [int(x) for x in inp["cells0"]]
+        ok = [a for a in rows if a["endpoint_signature"] == r["endpoint_signature"] and a["root_id"] == r["root_id"] and a["X_class"] == "VERIFIED_FEASIBLE"]
+        grid(ax, c0, int(inp["tid"]), int(inp["goal_cell"]), ([(c["seq"], RED, -0.12)] if c else []) + [(r["seq"], BLUE, 0.12)] + [(a["seq"], GREEN, 0.0) for a in ok], [])
+        alts = [a["X_class"].replace("CERTIFIED_INFEASIBLE_SCOPED", "CERT_NEG").replace("VERIFIED_FEASIBLE", "X=1") for a in rows
+                if a["endpoint_signature"] == r["endpoint_signature"] and a["root_id"] == r["root_id"] and a["tier"][:2] in ("T3", "T4")]
+        ax.set_title(f"{r['root_id']} K={r['K_certified']} m={r['m']} ({r['endpoint_origin']})\n"
+                     f"red original [{c['static_status'] if c else '-'}] teacher: {c['X_class'] if c else '-'}\n"
+                     f"blue P5A DP order [STATIC_VALID] teacher: {r['X_class']}\nalt orders: {', '.join(alts) or '-'}"
+                     + (f"\ngreen = teacher-VERIFIED order {ok[0]['qid']} (X=1, replayed)" if ok else ""), fontsize=6.8, loc="left")
+    for ax in list(axs.flat)[len(eps):]:
+        ax.axis("off")
+    fig.suptitle("P5B — STATIC-ONLY order diagrams (arrows = planned moves, not executed trajectories); labels = independent teacher X outcome", fontsize=10, y=0.995)
+    fig.tight_layout(rect=(0, 0, 1, 0.97), h_pad=3.0); fig.savefig(out, dpi=120); plt.close(fig)
+
+
+def gif(ledger_f, code, priv, rundir, qid, gdir):
+    """Motion GIF ONLY from the teacher's stored witness arrays of an executed VERIFIED X (+ its fresh Y): reuses scaling2d_k12/gif_physical
+    _render unchanged except the header text ('certified min' is false for a reordered plan).  Construction witness never drawn."""
+    import shutil, types
+    _teacher_path(code)
+    R = {(x["qid"], x["kind"]): x for x in jl(ledger_f) if x["event"] == "RESULT"}
+    x, y = R[(qid, "X")], R.get((qid + "c", "Y"))
+    assert x["teacher_status"] == "VERIFIED" and x["independent_replay"] and y and y["teacher_status"] == "VERIFIED"
+    w = Path(rundir) / "gif_witnesses"
+    for d in (f"{qid}X", f"{qid}YC"):
+        shutil.copytree(Path(rundir) / "witnesses" / d / "witnesses", w / "witnesses", dirs_exist_ok=True)
+    tw = [f.stem for f in (Path(rundir) / "witnesses" / f"{qid}YC" / "witnesses").rglob("*.npz")]
+    assert len(tw) == 1
+    pv = next(r for r in jl(Path(priv) / "dev_private.jsonl") if r["root_id"] == x["root_id"])
+    src = (Path(code) / "gif_physical.py").read_text()
+    old = 'hdr = f"{k}  K={len(seq)} (certified min)  {len(ids)} objects"'
+    assert old in src
+    src = src.replace(old, f'hdr = f"{{k}}  P5B reordered order, {len(x["steps"])} moves (certified K={pv["K"]})"')
+    src = src.replace("done: X = 1, Y = 1 (independently replayed)", "done: X = 1 (replayed, fresh-process repeat identical), Y = 1 (fresh query)")
+    M = types.ModuleType("gif_p5b"); M.__file__ = str(Path(code) / "gif_physical.py"); exec(compile(src, M.__file__, "exec"), M.__dict__)
+    m = {"seq": [[st["object"], st["dest"]] for st in x["steps"]], "steps_witness": [st["witness"] for st in x["steps"]],
+         "witness_connector": x["witness_connector"], "target_witness": tw[0]}
+    print(json.dumps(M._render(({k: pv["layout"][k] for k in pv["layout"] if k != "witness_set"}, m, str(w), gdir))))
+
+
 if __name__ == "__main__":
     if sys.argv[1] == "schedule":
         schedule(*sys.argv[2:7])
     elif sys.argv[1] == "run":
         run(*sys.argv[2:6], dry="--dry-run" in sys.argv)
+    elif sys.argv[1] == "gif":
+        gif(*sys.argv[2:8])
+    elif sys.argv[1] == "report":
+        report(*sys.argv[2:8])
