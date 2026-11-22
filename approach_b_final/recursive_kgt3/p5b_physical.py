@@ -219,6 +219,8 @@ def run(sched_f, code, priv, rundir, dry=False, job=None, yk=None, ctx_name="spa
                     except Exception as e:                    # noqa: BLE001
                         r = {"qid": q["qid"], "kind": kind, "teacher_status": "WORKER_ERROR", "detail": repr(e)[:300]}
                     say(event="RESULT", confirm=conf, **r)
+                    if r.get("teacher_status") == "WORKER_ERROR":   # fail closed: a harness defect must not consume the call cap
+                        say(event="HARNESS_ABORT", qid=q["qid"], pending=[(x["qid"], k) for k, x in pending]); pending = []
                     if kind == "X" and not conf and r.get("y") == 1 and len(conf_eps) < 2 and q["endpoint_signature"] not in conf_eps \
                             and conf_used + 2 <= S["caps"]["confirm_reserve"]:
                         conf_eps.add(q["endpoint_signature"]); conf_used += 2

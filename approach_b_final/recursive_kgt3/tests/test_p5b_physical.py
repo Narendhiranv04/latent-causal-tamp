@@ -114,3 +114,14 @@ def test_wall_cap_cumulative_across_resume(tmp_path):
     B.run(str(f), "code", "priv", str(tmp_path / "run"), job=mock_job, yk=mock_yk, ctx_name="fork")
     L = A.jl(tmp_path / "run/ledger.jsonl")
     assert any(x["event"] == "WALL_CAP" for x in L) and not any(x["event"] == "RESULT" for x in L)
+
+
+def err_job(a):
+    raise AttributeError("module 'planner' has no attribute 'plan'")
+
+
+def test_worker_error_fails_closed(tmp_path):
+    f = mk_sched(tmp_path, [q(i, i) for i in range(6)], workers=1)
+    B.run(str(f), "code", "priv", str(tmp_path / "run"), job=err_job, yk=mock_yk, ctx_name="fork")
+    L = A.jl(tmp_path / "run/ledger.jsonl")
+    assert sum(1 for x in L if x["event"] == "LAUNCH") == 1 and any(x["event"] == "HARNESS_ABORT" for x in L)
