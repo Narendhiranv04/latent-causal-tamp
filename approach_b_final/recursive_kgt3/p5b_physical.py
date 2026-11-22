@@ -128,8 +128,19 @@ def schedule(p5a, verify, dev_public, tables, out):
 _W = {}
 
 
-def _boot(code):
+def _teacher_path(code):
+    """Teacher modules must never resolve to this folder (it has its own planner.py / data.py / models.py): drop it from sys.path and
+    evict any already-imported shadowing modules before booting the frozen teacher.  (P5B batch-1 harness defect, see report.)"""
+    sys.path[:] = [p for p in sys.path if Path(p or ".").resolve() != HERE]
+    for m in ("planner", "data", "models", "geometry", "motion"):
+        f = getattr(sys.modules.get(m), "__file__", None) or ""
+        if f and Path(f).resolve().parent == HERE:
+            del sys.modules[m]
     sys.path.insert(0, code)
+
+
+def _boot(code):
+    _teacher_path(code)
     import mink as MK
     MK.boot("original")
     import teacher_long as TL
@@ -154,7 +165,7 @@ def tjob(a):
 
 def ykeys(code, priv, q):
     """Order-invariance check (pure function, no teacher call): Y2 key of the scheduled order == key of the P4 VERIFIED Y row."""
-    sys.path.insert(0, code)
+    _teacher_path(code)
     import mink as MK
     MK.boot("original")
     import bxy_teacher as BT
