@@ -1,0 +1,308 @@
+{
+ "stage": "P7A-R",
+ "evaluator_only": true,
+ "run_once": true,
+ "roots": 24,
+ "predictions_sha256": "05d48ebccd3c856b6818c0c3eea00b87ad4f700d6ecdb3795e6c93794b7f312e",
+ "by_K": {
+  "4": 8,
+  "5": 8,
+  "6": 8
+ },
+ "primary_static_valid": {
+  "ORIG": 0,
+  "DEST_ONLY": 0,
+  "FULL_R": 0,
+  "FULL_R_GEOM": 0,
+  "FLAT_STRONG": 0,
+  "RANDOM_MATCHED": 0
+ },
+ "secondary": {
+  "ORIG": {
+   "static_order_exists": 5,
+   "final_target_live": 12,
+   "novel_enabler_roots": 0,
+   "novel_and_valid_roots": 0,
+   "mean_len": 7.71,
+   "mean_retention": 1.0,
+   "mean_dest_changed": 0.0,
+   "roots_with_any_top5_valid": 0,
+   "valid_by_K": {}
+  },
+  "DEST_ONLY": {
+   "static_order_exists": 5,
+   "final_target_live": 5,
+   "novel_enabler_roots": 0,
+   "novel_and_valid_roots": 0,
+   "mean_len": 8.04,
+   "mean_retention": 1.0,
+   "mean_dest_changed": 6.96,
+   "roots_with_any_top5_valid": 1,
+   "valid_by_K": {}
+  },
+  "FULL_R": {
+   "static_order_exists": 5,
+   "final_target_live": 10,
+   "novel_enabler_roots": 11,
+   "novel_and_valid_roots": 0,
+   "mean_len": 8.29,
+   "mean_retention": 0.997,
+   "mean_dest_changed": 4.67,
+   "roots_with_any_top5_valid": 0,
+   "valid_by_K": {}
+  },
+  "FULL_R_GEOM": {
+   "static_order_exists": 4,
+   "final_target_live": 13,
+   "novel_enabler_roots": 9,
+   "novel_and_valid_roots": 0,
+   "mean_len": 8.67,
+   "mean_retention": 1.0,
+   "mean_dest_changed": 2.92,
+   "roots_with_any_top5_valid": 0,
+   "valid_by_K": {}
+  },
+  "FLAT_STRONG": {
+   "static_order_exists": 1,
+   "final_target_live": 2,
+   "novel_enabler_roots": 24,
+   "novel_and_valid_roots": 0,
+   "mean_len": 7.96,
+   "mean_retention": 0.596,
+   "mean_dest_changed": 4.79,
+   "roots_with_any_top5_valid": 2,
+   "valid_by_K": {}
+  },
+  "RANDOM_MATCHED": {
+   "static_order_exists": 14,
+   "final_target_live": 15,
+   "novel_enabler_roots": 11,
+   "novel_and_valid_roots": 0,
+   "mean_len": 8.25,
+   "mean_retention": 1.0,
+   "mean_dest_changed": 6.04,
+   "roots_with_any_top5_valid": 1,
+   "valid_by_K": {}
+  }
+ },
+ "paired_FULL_R_vs": {
+  "FLAT_STRONG": {
+   "wins": 0,
+   "losses": 0,
+   "net": 0,
+   "exists_net": 4,
+   "root_bootstrap_net_95": [
+    0,
+    0
+   ]
+  },
+  "RANDOM_MATCHED": {
+   "wins": 0,
+   "losses": 0,
+   "net": 0,
+   "exists_net": -9,
+   "root_bootstrap_net_95": [
+    0,
+    0
+   ]
+  },
+  "ORIG": {
+   "wins": 0,
+   "losses": 0,
+   "net": 0,
+   "exists_net": 0,
+   "root_bootstrap_net_95": [
+    0,
+    0
+   ]
+  },
+  "DEST_ONLY": {
+   "wins": 0,
+   "losses": 0,
+   "net": 0,
+   "exists_net": 0,
+   "root_bootstrap_net_95": [
+    0,
+    0
+   ]
+  },
+  "FULL_R_GEOM": {
+   "wins": 0,
+   "losses": 0,
+   "net": 0,
+   "exists_net": 1,
+   "root_bootstrap_net_95": [
+    0,
+    0
+   ]
+  }
+ },
+ "gate": {
+  "rule": "net >= 3 vs each of FLAT_STRONG, RANDOM_MATCHED, ORIG, DEST_ONLY and >= 2 roots with novel enabler AND static-valid",
+  "nets": {
+   "FLAT_STRONG": 0,
+   "RANDOM_MATCHED": 0,
+   "ORIG": 0,
+   "DEST_ONLY": 0
+  },
+  "novel_valid_roots": 0,
+  "decision": "BLOCKED_FROZEN_KGT3",
+  "learned_contribution": {
+   "FULL_R_valid": 0,
+   "FULL_R_GEOM_valid": 0,
+   "note": "if GEOM >= FULL_R any success is an analytical geometry baseline"
+  }
+ },
+ "funnel": {
+  "FULL_R": {
+   "stage_object_counts": {
+    "suspect": 443,
+    "generated": 443,
+    "scored": 434,
+    "survivor": 289,
+    "complete": 312,
+    "top5": 55,
+    "committed": 13
+   },
+   "generated_enabler_actions": 47528,
+   "suspects_last_seen_at": {
+    "scored": 110,
+    "survivor": 12,
+    "complete": 257,
+    "top5": 42,
+    "committed": 13,
+    "generated": 9
+   }
+  },
+  "FULL_R_GEOM": {
+   "stage_object_counts": {
+    "suspect": 441,
+    "generated": 441,
+    "scored": 430,
+    "survivor": 285,
+    "complete": 327,
+    "top5": 40,
+    "committed": 11
+   },
+   "generated_enabler_actions": 45338,
+   "suspects_last_seen_at": {
+    "complete": 287,
+    "scored": 92,
+    "survivor": 11,
+    "committed": 11,
+    "generated": 11,
+    "top5": 29
+   }
+  },
+  "RANDOM_MATCHED": {
+   "stage_object_counts": {
+    "suspect": 465,
+    "generated": 465,
+    "scored": 459,
+    "survivor": 373,
+    "complete": 404,
+    "top5": 50,
+    "committed": 14
+   },
+   "generated_enabler_actions": 64720,
+   "suspects_last_seen_at": {
+    "scored": 44,
+    "complete": 354,
+    "survivor": 11,
+    "top5": 36,
+    "committed": 14,
+    "generated": 6
+   }
+  }
+ },
+ "resource_ledger": {
+  "DEST_ONLY": {
+   "model_calls": 45921,
+   "geo_evals": 666278,
+   "expansions": 45921,
+   "layers": 374,
+   "wall_s": 58.6,
+   "stops": {
+    "BEAM_EMPTY": 48
+   },
+   "caps_per_endpoint": {
+    "model": 6000,
+    "yend": 200,
+    "geo": 3000000,
+    "layers": 24
+   }
+  },
+  "FULL_R": {
+   "model_calls": 63963,
+   "geo_evals": 1429024,
+   "expansions": 99335,
+   "layers": 742,
+   "wall_s": 86.4,
+   "stops": {
+    "BEAM_EMPTY": 48
+   },
+   "caps_per_endpoint": {
+    "model": 6000,
+    "yend": 200,
+    "geo": 3000000,
+    "layers": 24
+   }
+  },
+  "FULL_R_GEOM": {
+   "model_calls": 0,
+   "geo_evals": 1328868,
+   "expansions": 94854,
+   "layers": 737,
+   "wall_s": 7.8,
+   "stops": {
+    "BEAM_EMPTY": 48
+   },
+   "caps_per_endpoint": {
+    "model": 6000,
+    "yend": 200,
+    "geo": 3000000,
+    "layers": 24
+   }
+  },
+  "FLAT_STRONG": {
+   "model_calls": 110249,
+   "geo_evals": 1175588,
+   "expansions": 110249,
+   "layers": 374,
+   "wall_s": 101.6,
+   "stops": {
+    "BEAM_EMPTY": 48
+   },
+   "caps_per_endpoint": {
+    "model": 6000,
+    "yend": 200,
+    "geo": 3000000,
+    "layers": 24
+   }
+  },
+  "RANDOM_MATCHED": {
+   "model_calls": 83202,
+   "geo_evals": 1648718,
+   "expansions": 117244,
+   "layers": 755,
+   "wall_s": 118.5,
+   "stops": {
+    "BEAM_EMPTY": 48
+   },
+   "caps_per_endpoint": {
+    "model": 6000,
+    "yend": 200,
+    "geo": 3000000,
+    "layers": 24
+   }
+  }
+ },
+ "committed_atomic_replacements": {
+  "ORIG": 0,
+  "DEST_ONLY": 0,
+  "FULL_R": 1,
+  "FULL_R_GEOM": 0,
+  "FLAT_STRONG": 72,
+  "RANDOM_MATCHED": 0
+ }
+}
