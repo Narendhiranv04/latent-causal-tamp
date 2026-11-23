@@ -225,7 +225,9 @@ def _real():
     import torch
     if not torch.cuda.is_available():
         pytest.skip("no CUDA")
-    import run as RUN
+    import importlib.util  # load by path: ../mcts_sets/run.py has the same module name
+    spec = importlib.util.spec_from_file_location("fds_run", HERE / "run.py")
+    RUN = importlib.util.module_from_spec(spec); spec.loader.exec_module(RUN)
     return RUN
 
 
