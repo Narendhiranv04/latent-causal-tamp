@@ -166,7 +166,7 @@ def uct(pool, O, seed=0, key="", c=0.5, pw=None, max_iter=None, **_):
     while it < max_iter:
         it += 1
         if root.done:
-            return "EXHAUSTED", it
+            return "EXHAUSTED", it, root
         node, path = root, [root]
         while True:                                                     # selection / expansion
             terminal = node.stop or len(node.A) == pool.kmax
@@ -198,7 +198,7 @@ def uct(pool, O, seed=0, key="", c=0.5, pw=None, max_iter=None, **_):
         if r is None:                                                   # cannot afford all orders: terminal blocked for good
             node.done = True
             if O.left() < 1:
-                return "BUDGET", it
+                return "BUDGET", it, root
             r = 0.0
         else:
             node.done = True                                            # terminal value is deterministic: never re-scored
@@ -207,8 +207,8 @@ def uct(pool, O, seed=0, key="", c=0.5, pw=None, max_iter=None, **_):
         for n in reversed(path[:-1]):
             n.done = not n.untried and all(k.done for k in n.kids)
         if O.left() < 1:
-            return "BUDGET", it
-    return "ITER_GUARD", it
+            return "BUDGET", it, root
+    return "ITER_GUARD", it, root
 
 
 ARMS = {"EXACT_K2": exact, "RAND_SET": rand_set, "BEAM_SET": beam_set, "UCT_SET": uct, "PW_UCT_SET": uct}
@@ -218,7 +218,7 @@ def run_arm(arm, D, score_fn, budget, rule, key, seed=0, disp=None, params=None)
     """One arm on one root -> decision record with every counter.  `key` = public root id (seeds the arm's PRNG only)."""
     t0 = time.perf_counter(); pool = Pool(D); O = Oracle(score_fn, budget, disp)
     out = ARMS[arm](pool, O, seed=seed, key=key, **(params or {}))
-    stop, iters = (out if isinstance(out, tuple) else (out, None))
+    stop, iters = (out[:2] if isinstance(out, tuple) else (out, None))
     pick = choose(O.candidates(), rule)
     dec = "ABSTAIN" if pick is None else "NOOP" if pick["seq"] == [] else "REPAIR"
     n_sets = sum(1 for _ in pool.sets())

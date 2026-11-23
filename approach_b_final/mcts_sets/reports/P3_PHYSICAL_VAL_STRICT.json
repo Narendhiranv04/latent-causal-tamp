@@ -1,0 +1,766 @@
+{
+ "roots": {
+  "0": 147,
+  "NONE": 128,
+  "1": 96,
+  "2": 95
+ },
+ "arms": {
+  "EXACT_K2@None": {
+   "K1": {
+    "n": 96,
+    "decided": 76,
+    "unknown": 20,
+    "correct": 62,
+    "rate": 0.8158,
+    "outcomes": {
+     "UNKNOWN": 20,
+     "SUCCESS": 62,
+     "NOOP": 7,
+     "FAIL_Y": 3,
+     "FAIL_X": 4
+    }
+   },
+   "K2": {
+    "n": 95,
+    "decided": 72,
+    "unknown": 23,
+    "correct": 58,
+    "rate": 0.8056,
+    "outcomes": {
+     "SUCCESS": 58,
+     "FAIL_Y": 8,
+     "UNKNOWN": 23,
+     "FAIL_X": 6
+    }
+   },
+   "K1K2": {
+    "n": 191,
+    "decided": 148,
+    "unknown": 43,
+    "correct": 120,
+    "rate": 0.8108,
+    "outcomes": {
+     "UNKNOWN": 43,
+     "SUCCESS": 120,
+     "FAIL_Y": 11,
+     "NOOP": 7,
+     "FAIL_X": 10
+    }
+   },
+   "K0_noop": {
+    "n": 147,
+    "decided": 147,
+    "unknown": 0,
+    "correct": 142,
+    "rate": 0.966,
+    "outcomes": {
+     "NOOP": 142,
+     "SUCCESS": 3,
+     "UNKNOWN": 2
+    }
+   },
+   "NONE_abstain": {
+    "n": 128,
+    "decided": 128,
+    "unknown": 0,
+    "correct": 124,
+    "rate": 0.9688,
+    "outcomes": {
+     "ABSTAIN": 124,
+     "UNKNOWN": 1,
+     "SUCCESS": 3
+    }
+   },
+   "median_scored_K1K2": 817
+  },
+  "UCT_SET@256": {
+   "K1": {
+    "n": 96,
+    "decided": 76,
+    "unknown": 20,
+    "correct": 63,
+    "rate": 0.8289,
+    "outcomes": {
+     "UNKNOWN": 20,
+     "SUCCESS": 63,
+     "NOOP": 7,
+     "FAIL_Y": 2,
+     "FAIL_X": 4
+    }
+   },
+   "K2": {
+    "n": 95,
+    "decided": 74,
+    "unknown": 21,
+    "correct": 58,
+    "rate": 0.7838,
+    "outcomes": {
+     "SUCCESS": 58,
+     "UNKNOWN": 21,
+     "FAIL_Y": 8,
+     "FAIL_X": 8
+    }
+   },
+   "K1K2": {
+    "n": 191,
+    "decided": 150,
+    "unknown": 41,
+    "correct": 121,
+    "rate": 0.8067,
+    "outcomes": {
+     "UNKNOWN": 41,
+     "SUCCESS": 121,
+     "FAIL_Y": 10,
+     "NOOP": 7,
+     "FAIL_X": 12
+    }
+   },
+   "K0_noop": {
+    "n": 147,
+    "decided": 147,
+    "unknown": 0,
+    "correct": 142,
+    "rate": 0.966,
+    "outcomes": {
+     "NOOP": 142,
+     "SUCCESS": 3,
+     "UNKNOWN": 2
+    }
+   },
+   "NONE_abstain": {
+    "n": 128,
+    "decided": 128,
+    "unknown": 0,
+    "correct": 124,
+    "rate": 0.9688,
+    "outcomes": {
+     "ABSTAIN": 124,
+     "UNKNOWN": 1,
+     "SUCCESS": 3
+    }
+   },
+   "median_scored_K1K2": 256
+  },
+  "PW_UCT_SET@256": {
+   "K1": {
+    "n": 96,
+    "decided": 77,
+    "unknown": 19,
+    "correct": 62,
+    "rate": 0.8052,
+    "outcomes": {
+     "UNKNOWN": 19,
+     "SUCCESS": 62,
+     "NOOP": 7,
+     "FAIL_Y": 4,
+     "FAIL_X": 4
+    }
+   },
+   "K2": {
+    "n": 95,
+    "decided": 76,
+    "unknown": 19,
+    "correct": 61,
+    "rate": 0.8026,
+    "outcomes": {
+     "SUCCESS": 61,
+     "FAIL_Y": 7,
+     "UNKNOWN": 19,
+     "FAIL_X": 8
+    }
+   },
+   "K1K2": {
+    "n": 191,
+    "decided": 153,
+    "unknown": 38,
+    "correct": 123,
+    "rate": 0.8039,
+    "outcomes": {
+     "UNKNOWN": 38,
+     "SUCCESS": 123,
+     "FAIL_Y": 11,
+     "NOOP": 7,
+     "FAIL_X": 12
+    }
+   },
+   "K0_noop": {
+    "n": 147,
+    "decided": 147,
+    "unknown": 0,
+    "correct": 142,
+    "rate": 0.966,
+    "outcomes": {
+     "NOOP": 142,
+     "UNKNOWN": 3,
+     "SUCCESS": 2
+    }
+   },
+   "NONE_abstain": {
+    "n": 128,
+    "decided": 128,
+    "unknown": 0,
+    "correct": 124,
+    "rate": 0.9688,
+    "outcomes": {
+     "ABSTAIN": 124,
+     "UNKNOWN": 1,
+     "SUCCESS": 3
+    }
+   },
+   "median_scored_K1K2": 256
+  },
+  "BEAM_SET@256": {
+   "K1": {
+    "n": 96,
+    "decided": 75,
+    "unknown": 21,
+    "correct": 61,
+    "rate": 0.8133,
+    "outcomes": {
+     "UNKNOWN": 21,
+     "SUCCESS": 61,
+     "NOOP": 7,
+     "FAIL_Y": 3,
+     "FAIL_X": 4
+    }
+   },
+   "K2": {
+    "n": 95,
+    "decided": 70,
+    "unknown": 25,
+    "correct": 55,
+    "rate": 0.7857,
+    "outcomes": {
+     "SUCCESS": 55,
+     "UNKNOWN": 25,
+     "FAIL_Y": 8,
+     "FAIL_X": 6,
+     "ABSTAIN": 1
+    }
+   },
+   "K1K2": {
+    "n": 191,
+    "decided": 145,
+    "unknown": 46,
+    "correct": 116,
+    "rate": 0.8,
+    "outcomes": {
+     "UNKNOWN": 46,
+     "SUCCESS": 116,
+     "FAIL_Y": 11,
+     "NOOP": 7,
+     "FAIL_X": 10,
+     "ABSTAIN": 1
+    }
+   },
+   "K0_noop": {
+    "n": 147,
+    "decided": 147,
+    "unknown": 0,
+    "correct": 142,
+    "rate": 0.966,
+    "outcomes": {
+     "NOOP": 142,
+     "SUCCESS": 3,
+     "UNKNOWN": 2
+    }
+   },
+   "NONE_abstain": {
+    "n": 128,
+    "decided": 128,
+    "unknown": 0,
+    "correct": 124,
+    "rate": 0.9688,
+    "outcomes": {
+     "ABSTAIN": 124,
+     "UNKNOWN": 1,
+     "SUCCESS": 3
+    }
+   },
+   "median_scored_K1K2": 255
+  },
+  "RAND_SET@256": {
+   "K1": {
+    "n": 96,
+    "decided": 75,
+    "unknown": 21,
+    "correct": 57,
+    "rate": 0.76,
+    "outcomes": {
+     "UNKNOWN": 21,
+     "SUCCESS": 57,
+     "NOOP": 7,
+     "FAIL_Y": 5,
+     "FAIL_X": 6
+    }
+   },
+   "K2": {
+    "n": 95,
+    "decided": 70,
+    "unknown": 25,
+    "correct": 53,
+    "rate": 0.7571,
+    "outcomes": {
+     "SUCCESS": 53,
+     "FAIL_Y": 11,
+     "UNKNOWN": 25,
+     "FAIL_X": 6
+    }
+   },
+   "K1K2": {
+    "n": 191,
+    "decided": 145,
+    "unknown": 46,
+    "correct": 110,
+    "rate": 0.7586,
+    "outcomes": {
+     "UNKNOWN": 46,
+     "SUCCESS": 110,
+     "FAIL_Y": 16,
+     "NOOP": 7,
+     "FAIL_X": 12
+    }
+   },
+   "K0_noop": {
+    "n": 147,
+    "decided": 147,
+    "unknown": 0,
+    "correct": 142,
+    "rate": 0.966,
+    "outcomes": {
+     "NOOP": 142,
+     "UNKNOWN": 2,
+     "FAIL_X": 1,
+     "SUCCESS": 2
+    }
+   },
+   "NONE_abstain": {
+    "n": 128,
+    "decided": 128,
+    "unknown": 0,
+    "correct": 124,
+    "rate": 0.9688,
+    "outcomes": {
+     "ABSTAIN": 124,
+     "UNKNOWN": 1,
+     "SUCCESS": 3
+    }
+   },
+   "median_scored_K1K2": 256
+  },
+  "UCT_SET@64": {
+   "K1": {
+    "n": 96,
+    "decided": 76,
+    "unknown": 20,
+    "correct": 61,
+    "rate": 0.8026,
+    "outcomes": {
+     "UNKNOWN": 20,
+     "SUCCESS": 61,
+     "FAIL_X": 5,
+     "NOOP": 7,
+     "FAIL_Y": 3
+    }
+   },
+   "K2": {
+    "n": 95,
+    "decided": 59,
+    "unknown": 36,
+    "correct": 34,
+    "rate": 0.5763,
+    "outcomes": {
+     "UNKNOWN": 36,
+     "SUCCESS": 34,
+     "FAIL_Y": 16,
+     "FAIL_X": 8,
+     "ABSTAIN": 1
+    }
+   },
+   "K1K2": {
+    "n": 191,
+    "decided": 135,
+    "unknown": 56,
+    "correct": 95,
+    "rate": 0.7037,
+    "outcomes": {
+     "UNKNOWN": 56,
+     "SUCCESS": 95,
+     "FAIL_Y": 19,
+     "FAIL_X": 13,
+     "NOOP": 7,
+     "ABSTAIN": 1
+    }
+   },
+   "K0_noop": {
+    "n": 147,
+    "decided": 147,
+    "unknown": 0,
+    "correct": 142,
+    "rate": 0.966,
+    "outcomes": {
+     "NOOP": 142,
+     "UNKNOWN": 3,
+     "SUCCESS": 2
+    }
+   },
+   "NONE_abstain": {
+    "n": 128,
+    "decided": 128,
+    "unknown": 0,
+    "correct": 124,
+    "rate": 0.9688,
+    "outcomes": {
+     "ABSTAIN": 124,
+     "UNKNOWN": 2,
+     "SUCCESS": 2
+    }
+   },
+   "median_scored_K1K2": 64
+  },
+  "PW_UCT_SET@64": {
+   "K1": {
+    "n": 96,
+    "decided": 71,
+    "unknown": 25,
+    "correct": 55,
+    "rate": 0.7746,
+    "outcomes": {
+     "UNKNOWN": 25,
+     "SUCCESS": 55,
+     "NOOP": 7,
+     "FAIL_X": 5,
+     "FAIL_Y": 4
+    }
+   },
+   "K2": {
+    "n": 95,
+    "decided": 63,
+    "unknown": 32,
+    "correct": 41,
+    "rate": 0.6508,
+    "outcomes": {
+     "UNKNOWN": 32,
+     "FAIL_Y": 14,
+     "SUCCESS": 41,
+     "FAIL_X": 8
+    }
+   },
+   "K1K2": {
+    "n": 191,
+    "decided": 134,
+    "unknown": 57,
+    "correct": 96,
+    "rate": 0.7164,
+    "outcomes": {
+     "UNKNOWN": 57,
+     "SUCCESS": 96,
+     "FAIL_Y": 18,
+     "NOOP": 7,
+     "FAIL_X": 13
+    }
+   },
+   "K0_noop": {
+    "n": 147,
+    "decided": 147,
+    "unknown": 0,
+    "correct": 142,
+    "rate": 0.966,
+    "outcomes": {
+     "NOOP": 142,
+     "UNKNOWN": 3,
+     "SUCCESS": 2
+    }
+   },
+   "NONE_abstain": {
+    "n": 128,
+    "decided": 128,
+    "unknown": 0,
+    "correct": 124,
+    "rate": 0.9688,
+    "outcomes": {
+     "ABSTAIN": 124,
+     "UNKNOWN": 2,
+     "SUCCESS": 2
+    }
+   },
+   "median_scored_K1K2": 64
+  },
+  "BEAM_SET@64": {
+   "K1": {
+    "n": 96,
+    "decided": 75,
+    "unknown": 21,
+    "correct": 58,
+    "rate": 0.7733,
+    "outcomes": {
+     "UNKNOWN": 21,
+     "SUCCESS": 58,
+     "NOOP": 7,
+     "FAIL_Y": 4,
+     "FAIL_X": 6
+    }
+   },
+   "K2": {
+    "n": 95,
+    "decided": 72,
+    "unknown": 23,
+    "correct": 48,
+    "rate": 0.6667,
+    "outcomes": {
+     "SUCCESS": 48,
+     "UNKNOWN": 23,
+     "FAIL_Y": 13,
+     "FAIL_X": 7,
+     "ABSTAIN": 4
+    }
+   },
+   "K1K2": {
+    "n": 191,
+    "decided": 147,
+    "unknown": 44,
+    "correct": 106,
+    "rate": 0.7211,
+    "outcomes": {
+     "UNKNOWN": 44,
+     "SUCCESS": 106,
+     "FAIL_Y": 17,
+     "NOOP": 7,
+     "FAIL_X": 13,
+     "ABSTAIN": 4
+    }
+   },
+   "K0_noop": {
+    "n": 147,
+    "decided": 147,
+    "unknown": 0,
+    "correct": 142,
+    "rate": 0.966,
+    "outcomes": {
+     "NOOP": 142,
+     "UNKNOWN": 3,
+     "SUCCESS": 2
+    }
+   },
+   "NONE_abstain": {
+    "n": 128,
+    "decided": 128,
+    "unknown": 0,
+    "correct": 124,
+    "rate": 0.9688,
+    "outcomes": {
+     "ABSTAIN": 124,
+     "UNKNOWN": 1,
+     "SUCCESS": 3
+    }
+   },
+   "median_scored_K1K2": 63
+  },
+  "RAND_SET@64": {
+   "K1": {
+    "n": 96,
+    "decided": 80,
+    "unknown": 16,
+    "correct": 63,
+    "rate": 0.7875,
+    "outcomes": {
+     "UNKNOWN": 16,
+     "SUCCESS": 63,
+     "NOOP": 7,
+     "FAIL_Y": 4,
+     "FAIL_X": 6
+    }
+   },
+   "K2": {
+    "n": 95,
+    "decided": 63,
+    "unknown": 32,
+    "correct": 38,
+    "rate": 0.6032,
+    "outcomes": {
+     "FAIL_Y": 17,
+     "SUCCESS": 38,
+     "UNKNOWN": 32,
+     "FAIL_X": 8
+    }
+   },
+   "K1K2": {
+    "n": 191,
+    "decided": 143,
+    "unknown": 48,
+    "correct": 101,
+    "rate": 0.7063,
+    "outcomes": {
+     "UNKNOWN": 48,
+     "FAIL_Y": 21,
+     "SUCCESS": 101,
+     "FAIL_X": 14,
+     "NOOP": 7
+    }
+   },
+   "K0_noop": {
+    "n": 147,
+    "decided": 147,
+    "unknown": 0,
+    "correct": 142,
+    "rate": 0.966,
+    "outcomes": {
+     "NOOP": 142,
+     "UNKNOWN": 3,
+     "SUCCESS": 2
+    }
+   },
+   "NONE_abstain": {
+    "n": 128,
+    "decided": 128,
+    "unknown": 0,
+    "correct": 124,
+    "rate": 0.9688,
+    "outcomes": {
+     "ABSTAIN": 124,
+     "UNKNOWN": 1,
+     "SUCCESS": 3
+    }
+   },
+   "median_scored_K1K2": 64
+  }
+ },
+ "paired": {
+  "UCT_SET@256 - EXACT_K2@None": {
+   "n_pairs": 140,
+   "diff": 0.0143,
+   "ci95": [
+    -0.0143,
+    0.0429
+   ],
+   "wins": 3,
+   "losses": 1
+  },
+  "UCT_SET@256 - BEAM_SET@256": {
+   "n_pairs": 138,
+   "diff": 0.0217,
+   "ci95": [
+    -0.0145,
+    0.0652
+   ],
+   "wins": 5,
+   "losses": 2
+  },
+  "UCT_SET@256 - RAND_SET@256": {
+   "n_pairs": 134,
+   "diff": 0.0522,
+   "ci95": [
+    0.0,
+    0.1045
+   ],
+   "wins": 10,
+   "losses": 3
+  },
+  "PW_UCT_SET@256 - EXACT_K2@None": {
+   "n_pairs": 141,
+   "diff": 0.0071,
+   "ci95": [
+    -0.0142,
+    0.0285
+   ],
+   "wins": 2,
+   "losses": 1
+  },
+  "PW_UCT_SET@256 - BEAM_SET@256": {
+   "n_pairs": 139,
+   "diff": 0.0072,
+   "ci95": [
+    -0.0288,
+    0.0432
+   ],
+   "wins": 4,
+   "losses": 3
+  },
+  "PW_UCT_SET@256 - RAND_SET@256": {
+   "n_pairs": 137,
+   "diff": 0.0365,
+   "ci95": [
+    -0.0146,
+    0.0876
+   ],
+   "wins": 9,
+   "losses": 4
+  },
+  "UCT_SET@64 - EXACT_K2@None": {
+   "n_pairs": 118,
+   "diff": -0.0932,
+   "ci95": [
+    -0.1695,
+    -0.0254
+   ],
+   "wins": 4,
+   "losses": 15
+  },
+  "UCT_SET@64 - BEAM_SET@64": {
+   "n_pairs": 114,
+   "diff": -0.0439,
+   "ci95": [
+    -0.1316,
+    0.0439
+   ],
+   "wins": 12,
+   "losses": 17
+  },
+  "UCT_SET@64 - RAND_SET@64": {
+   "n_pairs": 117,
+   "diff": -0.0342,
+   "ci95": [
+    -0.1197,
+    0.0513
+   ],
+   "wins": 9,
+   "losses": 13
+  },
+  "PW_UCT_SET@64 - EXACT_K2@None": {
+   "n_pairs": 119,
+   "diff": -0.0588,
+   "ci95": [
+    -0.1261,
+    0.0084
+   ],
+   "wins": 6,
+   "losses": 13
+  },
+  "PW_UCT_SET@64 - BEAM_SET@64": {
+   "n_pairs": 117,
+   "diff": -0.0342,
+   "ci95": [
+    -0.1282,
+    0.0515
+   ],
+   "wins": 12,
+   "losses": 16
+  },
+  "PW_UCT_SET@64 - RAND_SET@64": {
+   "n_pairs": 117,
+   "diff": 0.0171,
+   "ci95": [
+    -0.0684,
+    0.1026
+   ],
+   "wins": 13,
+   "losses": 11
+  }
+ },
+ "decision": {
+  "UCT_SET": {
+   "a_noninferior_vs_exact": true,
+   "b_efficiency_25pct": false,
+   "c_better_than_beam_and_random": false,
+   "class": "INCONCLUSIVE"
+  },
+  "PW_UCT_SET": {
+   "a_noninferior_vs_exact": true,
+   "b_efficiency_25pct": false,
+   "c_better_than_beam_and_random": false,
+   "class": "INCONCLUSIVE"
+  }
+ },
+ "max_unknown_frac_primary": 0.2408
+}
