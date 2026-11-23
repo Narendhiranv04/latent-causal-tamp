@@ -1,0 +1,317 @@
+{
+ "roots": 600,
+ "split": "EVAL",
+ "EXACT_K2": {
+  "median_scored": 1232.0,
+  "mean_scored": 1564.7,
+  "p90_scored": 4047,
+  "median_wall_s": 0.0478,
+  "p90_wall_s": 0.2134
+ },
+ "arms": {
+  "BEAM_SET@16": {
+   "agree_with_exact": 0.5667,
+   "mean_reward_regret": 0.4929,
+   "mean_sel_logp_regret_when_both_repair": 0.2464,
+   "median_scored": 16.0,
+   "mean_sets": 14.0,
+   "median_wall_s_replay": 0.00041,
+   "p90_wall_s_replay": 0.0012,
+   "stops": {
+    "BUDGET": 570,
+    "EXHAUSTED": 30
+   },
+   "decisions": {
+    "ABSTAIN": 300,
+    "NOOP": 149,
+    "REPAIR": 151
+   },
+   "runs": 600
+  },
+  "BEAM_SET@64": {
+   "agree_with_exact": 0.6733,
+   "mean_reward_regret": 0.2959,
+   "mean_sel_logp_regret_when_both_repair": 0.1099,
+   "median_scored": 63.0,
+   "mean_sets": 47.4,
+   "median_wall_s_replay": 0.00054,
+   "p90_wall_s_replay": 0.00131,
+   "stops": {
+    "BUDGET": 538,
+    "EXHAUSTED": 62
+   },
+   "decisions": {
+    "REPAIR": 243,
+    "NOOP": 149,
+    "ABSTAIN": 208
+   },
+   "runs": 600
+  },
+  "BEAM_SET@256": {
+   "agree_with_exact": 0.8483,
+   "mean_reward_regret": 0.0612,
+   "mean_sel_logp_regret_when_both_repair": 0.0476,
+   "median_scored": 255.0,
+   "mean_sets": 123.8,
+   "median_wall_s_replay": 0.00112,
+   "p90_wall_s_replay": 0.00178,
+   "stops": {
+    "BUDGET": 436,
+    "EXHAUSTED": 164
+   },
+   "decisions": {
+    "REPAIR": 268,
+    "NOOP": 149,
+    "ABSTAIN": 183
+   },
+   "runs": 600
+  },
+  "BEAM_SET@1024": {
+   "agree_with_exact": 0.985,
+   "mean_reward_regret": 0.0058,
+   "mean_sel_logp_regret_when_both_repair": 0.0033,
+   "median_scored": 827.0,
+   "mean_sets": 347.0,
+   "median_wall_s_replay": 0.00276,
+   "p90_wall_s_replay": 0.00373,
+   "stops": {
+    "BUDGET": 233,
+    "EXHAUSTED": 367
+   },
+   "decisions": {
+    "REPAIR": 281,
+    "NOOP": 149,
+    "ABSTAIN": 170
+   },
+   "runs": 600
+  },
+  "PW_UCT_SET@16": {
+   "agree_with_exact": 0.545,
+   "mean_reward_regret": 0.3914,
+   "mean_sel_logp_regret_when_both_repair": 0.2537,
+   "median_scored": 16.0,
+   "mean_sets": 8.0,
+   "median_wall_s_replay": 0.00053,
+   "p90_wall_s_replay": 0.00149,
+   "stops": {
+    "BUDGET": 1710,
+    "EXHAUSTED": 90
+   },
+   "decisions": {
+    "ABSTAIN": 772,
+    "REPAIR": 581,
+    "NOOP": 447
+   },
+   "runs": 1800
+  },
+  "PW_UCT_SET@64": {
+   "agree_with_exact": 0.6039,
+   "mean_reward_regret": 0.2537,
+   "mean_sel_logp_regret_when_both_repair": 0.1229,
+   "median_scored": 64.0,
+   "mean_sets": 30.8,
+   "median_wall_s_replay": 0.00077,
+   "p90_wall_s_replay": 0.00166,
+   "stops": {
+    "BUDGET": 1614,
+    "EXHAUSTED": 186
+   },
+   "decisions": {
+    "REPAIR": 691,
+    "ABSTAIN": 662,
+    "NOOP": 447
+   },
+   "runs": 1800
+  },
+  "PW_UCT_SET@256": {
+   "agree_with_exact": 0.7522,
+   "mean_reward_regret": 0.134,
+   "mean_sel_logp_regret_when_both_repair": 0.0474,
+   "median_scored": 256.0,
+   "mean_sets": 108.5,
+   "median_wall_s_replay": 0.00177,
+   "p90_wall_s_replay": 0.00265,
+   "stops": {
+    "BUDGET": 1308,
+    "EXHAUSTED": 492
+   },
+   "decisions": {
+    "REPAIR": 772,
+    "NOOP": 447,
+    "ABSTAIN": 581
+   },
+   "runs": 1800
+  },
+  "PW_UCT_SET@1024": {
+   "agree_with_exact": 0.9628,
+   "mean_reward_regret": 0.0449,
+   "mean_sel_logp_regret_when_both_repair": 0.0074,
+   "median_scored": 1024.0,
+   "mean_sets": 360.2,
+   "median_wall_s_replay": 0.0058,
+   "p90_wall_s_replay": 0.00718,
+   "stops": {
+    "BUDGET": 957,
+    "EXHAUSTED": 843
+   },
+   "decisions": {
+    "REPAIR": 834,
+    "NOOP": 447,
+    "ABSTAIN": 519
+   },
+   "runs": 1800
+  },
+  "RAND_SET@16": {
+   "agree_with_exact": 0.5428,
+   "mean_reward_regret": 0.3855,
+   "mean_sel_logp_regret_when_both_repair": 0.2648,
+   "median_scored": 16.0,
+   "mean_sets": 8.0,
+   "median_wall_s_replay": 0.00067,
+   "p90_wall_s_replay": 0.00218,
+   "stops": {
+    "BUDGET": 1710,
+    "EXHAUSTED": 90
+   },
+   "decisions": {
+    "ABSTAIN": 757,
+    "REPAIR": 596,
+    "NOOP": 447
+   },
+   "runs": 1800
+  },
+  "RAND_SET@64": {
+   "agree_with_exact": 0.5822,
+   "mean_reward_regret": 0.2479,
+   "mean_sel_logp_regret_when_both_repair": 0.149,
+   "median_scored": 64.0,
+   "mean_sets": 31.1,
+   "median_wall_s_replay": 0.00078,
+   "p90_wall_s_replay": 0.00227,
+   "stops": {
+    "BUDGET": 1613,
+    "EXHAUSTED": 187
+   },
+   "decisions": {
+    "ABSTAIN": 649,
+    "REPAIR": 704,
+    "NOOP": 447
+   },
+   "runs": 1800
+  },
+  "RAND_SET@256": {
+   "agree_with_exact": 0.6756,
+   "mean_reward_regret": 0.137,
+   "mean_sel_logp_regret_when_both_repair": 0.0626,
+   "median_scored": 256.0,
+   "mean_sets": 109.3,
+   "median_wall_s_replay": 0.00129,
+   "p90_wall_s_replay": 0.00271,
+   "stops": {
+    "BUDGET": 1306,
+    "EXHAUSTED": 494
+   },
+   "decisions": {
+    "REPAIR": 780,
+    "NOOP": 447,
+    "ABSTAIN": 573
+   },
+   "runs": 1800
+  },
+  "RAND_SET@1024": {
+   "agree_with_exact": 0.9117,
+   "mean_reward_regret": 0.0468,
+   "mean_sel_logp_regret_when_both_repair": 0.0118,
+   "median_scored": 1024.0,
+   "mean_sets": 362.1,
+   "median_wall_s_replay": 0.00323,
+   "p90_wall_s_replay": 0.00457,
+   "stops": {
+    "BUDGET": 930,
+    "EXHAUSTED": 870
+   },
+   "decisions": {
+    "REPAIR": 825,
+    "NOOP": 447,
+    "ABSTAIN": 528
+   },
+   "runs": 1800
+  },
+  "UCT_SET@16": {
+   "agree_with_exact": 0.5472,
+   "mean_reward_regret": 0.3927,
+   "mean_sel_logp_regret_when_both_repair": 0.2728,
+   "median_scored": 16.0,
+   "mean_sets": 8.2,
+   "median_wall_s_replay": 0.00053,
+   "p90_wall_s_replay": 0.00148,
+   "stops": {
+    "BUDGET": 1710,
+    "EXHAUSTED": 90
+   },
+   "decisions": {
+    "ABSTAIN": 760,
+    "REPAIR": 593,
+    "NOOP": 447
+   },
+   "runs": 1800
+  },
+  "UCT_SET@64": {
+   "agree_with_exact": 0.5933,
+   "mean_reward_regret": 0.2481,
+   "mean_sel_logp_regret_when_both_repair": 0.1379,
+   "median_scored": 64.0,
+   "mean_sets": 31.5,
+   "median_wall_s_replay": 0.00108,
+   "p90_wall_s_replay": 0.00199,
+   "stops": {
+    "BUDGET": 1614,
+    "EXHAUSTED": 186
+   },
+   "decisions": {
+    "ABSTAIN": 657,
+    "REPAIR": 696,
+    "NOOP": 447
+   },
+   "runs": 1800
+  },
+  "UCT_SET@256": {
+   "agree_with_exact": 0.7922,
+   "mean_reward_regret": 0.1143,
+   "mean_sel_logp_regret_when_both_repair": 0.0364,
+   "median_scored": 256.0,
+   "mean_sets": 109.1,
+   "median_wall_s_replay": 0.00216,
+   "p90_wall_s_replay": 0.00463,
+   "stops": {
+    "BUDGET": 1308,
+    "EXHAUSTED": 492
+   },
+   "decisions": {
+    "REPAIR": 792,
+    "NOOP": 447,
+    "ABSTAIN": 561
+   },
+   "runs": 1800
+  },
+  "UCT_SET@1024": {
+   "agree_with_exact": 0.9789,
+   "mean_reward_regret": 0.038,
+   "mean_sel_logp_regret_when_both_repair": 0.0036,
+   "median_scored": 1024.0,
+   "mean_sets": 360.4,
+   "median_wall_s_replay": 0.00622,
+   "p90_wall_s_replay": 0.00972,
+   "stops": {
+    "BUDGET": 957,
+    "EXHAUSTED": 843
+   },
+   "decisions": {
+    "REPAIR": 841,
+    "NOOP": 447,
+    "ABSTAIN": 512
+   },
+   "runs": 1800
+  }
+ }
+}

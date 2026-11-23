@@ -88,6 +88,63 @@ def model(evalf, split="EVAL"):
     return out
 
 
+PRIMARY = [("EXACT_K2", None), ("UCT_SET", 256), ("PW_UCT_SET", 256), ("BEAM_SET", 256), ("RAND_SET", 256)]
+SECONDARY = [("UCT_SET", 64), ("PW_UCT_SET", 64), ("BEAM_SET", 64), ("RAND_SET", 64)]
+
+
+def decided(lab, k):
+    """A cached label decides the outcome iff Y = 0, or Y = 1 with X in {0, 1} (v32b_phys.outcome semantics)."""
+    xv, yv = lab.get(k, (None, None))
+    return yv == 0 or (yv == 1 and xv in (0, 1))
+
+
+def picks(rec, arms):
+    rs = {(x["arm"], x["budget"]): x for x in rec["results"] if x["seed"] == 0}
+    return {f"{a}@{b}": rs[(a, b)] for a, b in arms}
+
+
+def manifest(evalf, private, caches, out, cap=1200):
+    """Evaluator side: unique (root, ordered sequence) of REPAIR decisions on primary EVAL roots (K1/K2), minus decided cached labels;
+    whole-root sha256('MCTS_P3|'+root) order if the cap binds (primary first, then secondary with the remaining cap)."""
+    sys.path.insert(0, str(HERE.parent / "scripts"))
+    import v32b_phys as V
+    lab = {}
+    for c in caches:
+        for k, v in V.labels("2d", c).items():
+            if k not in lab or (None in lab[k] and None not in v):
+                lab[k] = v
+    priv = {e["root_id"]: e for e in jl(private)}
+    R = [r for r in jl(evalf) if r["split"] == "EVAL" and str(priv[r["root_id"]]["K"]) in ("1", "2")]
+    order = sorted(R, key=lambda r: hashlib.sha256(("MCTS_P3|" + r["root_id"]).encode()).hexdigest())
+    plan, used, stat = {}, set(), collections.Counter()
+    for tier, arms in (("primary", PRIMARY), ("secondary", SECONDARY)):
+        for r in order:
+            need = set()
+            for name, x in picks(r, arms).items():
+                if x["decision"] == "REPAIR":
+                    k = (r["root_id"], json.dumps(x["seq"]))
+                    stat[f"{tier}_repair_decisions"] += 1
+                    if decided(lab, k):
+                        stat[f"{tier}_cached"] += 1
+                    elif k not in used:
+                        need.add(k)
+            if len(used) + len(need) > cap:
+                stat[f"{tier}_roots_not_covered"] += 1; continue
+            used |= need; plan.setdefault(r["root_id"], set()).update(need); stat[f"{tier}_roots_covered"] += 1
+    jobs = []
+    for rid, ks in sorted(plan.items()):
+        if not ks:
+            continue
+        e = priv[rid]
+        jobs.append({"root_id": rid, "dom": "2D", "path": e["path"], "geom": e.get("geom", "original"), "ids": e["ids"],
+                     "seqs": [[[e["ids"][o], int(c)] for o, c in json.loads(k[1])] for k in sorted(ks)]})
+    Path(out).write_text("".join(json.dumps(j) + "\n" for j in jobs))
+    S = {"primary_roots": len(R), "new_queries": sum(len(j["seqs"]) for j in jobs), "roots_with_queries": len(jobs), "cap": cap, **stat,
+         "cache_sha256": {c: hashlib.sha256(Path(c).read_bytes()).hexdigest() for c in caches}, "eval_sha256": hashlib.sha256(Path(evalf).read_bytes()).hexdigest(),
+         "jobs_sha256": hashlib.sha256(Path(out).read_bytes()).hexdigest()}
+    print(json.dumps(S)); return S
+
+
 if __name__ == "__main__":
     c = sys.argv[1]
     if c == "tune":
@@ -95,3 +152,6 @@ if __name__ == "__main__":
     elif c == "model":
         r = model(sys.argv[2], None if len(sys.argv) < 4 or sys.argv[3] == "ALL" else sys.argv[3])
         Path(sys.argv[4] if len(sys.argv) > 4 else REP / "MODEL_SUMMARY.json").write_text(json.dumps(r, indent=1)); print(json.dumps(r)[:3000])
+    elif c == "manifest":
+        S = manifest(sys.argv[2], sys.argv[3], sys.argv[4].split(","), sys.argv[5])
+        (REP / "P3_MANIFEST.json").write_text(json.dumps(S, indent=1))
