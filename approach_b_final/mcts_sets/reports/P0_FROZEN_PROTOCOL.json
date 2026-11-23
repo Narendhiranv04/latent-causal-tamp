@@ -1,0 +1,112 @@
+{
+ "branch": "naren/rss27-mcts-sets-klt3",
+ "parent": "e9fa587c3b9dd850f1fbbc454b20e4e00a35c4eb",
+ "branch_heads_verified_2026_11_23": {
+  "naren/k3-postablation-validation": "e9fa587c3b9dd850f1fbbc454b20e4e00a35c4eb",
+  "naren/approach-b-v3-4-final-benchmark": "c72eb1ef759a6817d557f06250f644a217233475",
+  "naren/k3-ablation-gvlab2-20261120": "4aee798929968c6b34d911adcbb622d72bb69fa9",
+  "naren/kgt3-exec-composition": "171eb65cc42a234892a0fd8cba8969823b4426ce",
+  "naren/disco-grid-final": "56b71743e932efe6627307d8346098bda0985de8",
+  "naren/analytical-baselines-k3-finalize": "7ae0e54b7d843780bf8880f9e8375c1621316975",
+  "naren/order-dependency-audit": "8e1c1a247e9c0d6af4925e30eb8436e8f126489a"
+ },
+ "bundle": {
+  "path": "/home/naren/abf_v34/approach_b_bundle",
+  "manifest_sha256": "147645eeb96a7e5e00584c9b5059e1917e5758a293bc3cc23dfba8d737622420",
+  "files_2d": {
+   "2d/sampler.pt": "a01f25eba31684a78384e8406a2066ed1d3a098899b56f7ec90a4f987af1e918",
+   "2d/scorer_s0.pt": "0fa126da80ceecb19ef4d3cf7c21287abc6e5965151b1e4ddc37e0ffe99623d4",
+   "2d/scorer_s1.pt": "ea6dba7a9d054242ff72ada9668f2b16eb0336443ac5f44bc3b141f9b2ffb3af",
+   "2d/scorer_s2.pt": "928a6e2b79c84398ca6c03e2233812db724ca2d694df6bd431d7303446c44097",
+   "2d/scalers.json": "884b35673692a98adf73a6662fdb05e7a489112d6340f32be72e4a1a7e744095"
+  },
+  "all_2d_hashes_match": true,
+  "config": {
+   "M": 4,
+   "propose_top": 6,
+   "n_z": 64,
+   "proposal_rule": "S1",
+   "proposal_seed": 0,
+   "K_max": 3,
+   "B_cap": null,
+   "chunk": 8192,
+   "rule": {
+    "noop_gate": 0.5,
+    "eta": 0.3,
+    "alpha": 0.0,
+    "beta": 0.0,
+    "gamma": 0.0
+   }
+  }
+ },
+ "planner_K_max": 2,
+ "rule": {
+  "noop_gate": 0.5,
+  "eta": 0.3,
+  "alpha": 0.0,
+  "beta": 0.0,
+  "gamma": 0.0
+ },
+ "proposals": "EX.proposals: S1, 64 draws, top-6 -> top-4 prefix, torch.Generator(cuda).manual_seed(0)",
+ "public_val_2d": {
+  "path": "/home/naren/abf_v34/parity/public_val_2d.jsonl",
+  "sha256": "2c88f69b270aa0a2f0a945d5ac96ac772e388c046857a308ac441a08c7482d4b",
+  "n": 751,
+  "equals_k3abl_public_val_2d": true
+ },
+ "evaluator_only": {
+  "private_index": {
+   "source": "gvlab2:k3abl/runs/public/private_val_2d.jsonl",
+   "sha256": "3799c729c0690eae9ef008d338f487f64f2de2bd6edd4e84aad6986c1d193de0",
+   "K_counts": {
+    "1": 120,
+    "2": 120,
+    "0": 188,
+    "NONE": 150,
+    "3": 173
+   }
+  },
+  "teacher_caches": {
+   "k3abl": {
+    "sha256": "697beed1e3078ac7b08ae5d33156d43ddc4ff0e5b2ef2df1bc6099726abed369"
+   },
+   "k3val": {
+    "sha256": "54876e1049dc0fdc392d2373866e47333ebded871ec3f1ff5f32016b9b4b6c79"
+   }
+  },
+  "outcome_rule": "scripts/v32b_phys.outcome: SUCCESS iff Y=1 and X=1; FAIL_Y (Y=0); FAIL_X (Y=1,X=0); else UNKNOWN (never a failure)"
+ },
+ "split": {
+  "rule": "DEV iff sha256('MCTS_DEV|'+root_id) < 2^256/5 (K-blind)",
+  "counts": {
+   "DEV": 151,
+   "EVAL": 600
+  },
+  "K_strata_evaluator_side": {
+   "DEV": {
+    "1": 24,
+    "2": 25,
+    "0": 41,
+    "NONE": 22,
+    "3": 39
+   },
+   "EVAL": {
+    "1": 96,
+    "2": 95,
+    "0": 147,
+    "NONE": 128,
+    "3": 134
+   }
+  }
+ },
+ "protected_not_used": [
+  "V3.4 fresh cohort ~/abf_v34/final (not read)",
+  "historical TEST",
+  "release_v2"
+ ],
+ "host": {
+  "laptop": "pop-os",
+  "gpu": "NVIDIA GeForce RTX 5060 Laptop GPU",
+  "torch": "2.9.1+cu128"
+ }
+}

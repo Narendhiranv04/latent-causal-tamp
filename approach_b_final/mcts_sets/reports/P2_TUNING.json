@@ -1,0 +1,157 @@
+{
+ "criterion": "DEV pilot -> per-arm hyper-parameters by a FIXED model-only criterion: mean agreement with EXACT_K2's committed decision over\n         budgets {16,64,256,1024} x seeds; ties -> lower mean best-reward regret, then grid order.  Writes reports/P2_FROZEN_PARAMS.json.\nmodel    EVAL predictions (model-only): agreement / regret / coverage / scorer counts / wall time per arm x budget, paired by root.\nmanifest sealed predictions + teacher caches -> exact unique (root, ordered sequence) query manifest, deduplicated (evaluator side).\nphysical evaluator results -> verified success by K stratum, paired root bootstrap vs controls (after teacher verification only).",
+ "roots": 151,
+ "pilot_sha256": "da9ac1ad1a83abfcf6976b668295196e2093bbef0a9431e98b70de52bf5aa731",
+ "table": {
+  "UCT_SET": [
+   {
+    "params": {
+     "c": 0.1
+    },
+    "agree": 0.6976,
+    "reward_regret": 0.1899,
+    "agree_B1024": 0.9779,
+    "agree_B16": 0.5055,
+    "agree_B256": 0.766,
+    "agree_B64": 0.5408,
+    "n": 1812
+   },
+   {
+    "params": {
+     "c": 0.3
+    },
+    "agree": 0.6849,
+    "reward_regret": 0.1925,
+    "agree_B1024": 0.9581,
+    "agree_B16": 0.5055,
+    "agree_B256": 0.7351,
+    "agree_B64": 0.5408,
+    "n": 1812
+   },
+   {
+    "params": {
+     "c": 1.0
+    },
+    "agree": 0.6645,
+    "reward_regret": 0.1959,
+    "agree_B1024": 0.9426,
+    "agree_B16": 0.5055,
+    "agree_B256": 0.6711,
+    "agree_B64": 0.5386,
+    "n": 1812
+   }
+  ],
+  "PW_UCT_SET": [
+   {
+    "params": {
+     "c": 0.3,
+     "pw": [
+      1.0,
+      0.5
+     ]
+    },
+    "agree": 0.6496,
+    "reward_regret": 0.2172,
+    "agree_B1024": 0.894,
+    "agree_B16": 0.5011,
+    "agree_B256": 0.6534,
+    "agree_B64": 0.5497,
+    "n": 1812
+   },
+   {
+    "params": {
+     "c": 0.3,
+     "pw": [
+      2.0,
+      0.5
+     ]
+    },
+    "agree": 0.6783,
+    "reward_regret": 0.1973,
+    "agree_B1024": 0.9448,
+    "agree_B16": 0.5055,
+    "agree_B256": 0.7042,
+    "agree_B64": 0.5585,
+    "n": 1812
+   },
+   {
+    "params": {
+     "c": 0.3,
+     "pw": [
+      1.0,
+      0.7
+     ]
+    },
+    "agree": 0.6777,
+    "reward_regret": 0.1985,
+    "agree_B1024": 0.9581,
+    "agree_B16": 0.4967,
+    "agree_B256": 0.7042,
+    "agree_B64": 0.5519,
+    "n": 1812
+   }
+  ],
+  "BEAM_SET": [
+   {
+    "params": {
+     "w": 4
+    },
+    "agree": 0.707,
+    "reward_regret": 0.212,
+    "agree_B1024": 0.8742,
+    "agree_B16": 0.5232,
+    "agree_B256": 0.8411,
+    "agree_B64": 0.5894,
+    "n": 604
+   },
+   {
+    "params": {
+     "w": 8
+    },
+    "agree": 0.7318,
+    "reward_regret": 0.2046,
+    "agree_B1024": 0.9536,
+    "agree_B16": 0.5232,
+    "agree_B256": 0.8609,
+    "agree_B64": 0.5894,
+    "n": 604
+   },
+   {
+    "params": {
+     "w": 16
+    },
+    "agree": 0.7417,
+    "reward_regret": 0.2015,
+    "agree_B1024": 0.9934,
+    "agree_B16": 0.5232,
+    "agree_B256": 0.8609,
+    "agree_B64": 0.5894,
+    "n": 604
+   },
+   {
+    "params": {
+     "w": 32
+    },
+    "agree": 0.7417,
+    "reward_regret": 0.2015,
+    "agree_B1024": 0.9934,
+    "agree_B16": 0.5232,
+    "agree_B256": 0.8609,
+    "agree_B64": 0.5894,
+    "n": 604
+   }
+  ],
+  "RAND_SET": [
+   {
+    "params": {},
+    "agree": 0.6369,
+    "reward_regret": 0.1982,
+    "agree_B1024": 0.8808,
+    "agree_B16": 0.5011,
+    "agree_B256": 0.6313,
+    "agree_B64": 0.5342,
+    "n": 1812
+   }
+  ]
+ }
+}

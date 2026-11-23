@@ -1,0 +1,66 @@
+{
+ "bundle_manifest_sha256": "147645eeb96a7e5e00584c9b5059e1917e5758a293bc3cc23dfba8d737622420",
+ "bundle_files_checked": [
+  "2d/sampler.pt",
+  "2d/scalers.json",
+  "2d/scorer_s0.pt",
+  "2d/scorer_s1.pt",
+  "2d/scorer_s2.pt"
+ ],
+ "config": {
+  "M": 4,
+  "propose_top": 6,
+  "n_z": 64,
+  "proposal_rule": "S1",
+  "proposal_seed": 0,
+  "K_max": 3,
+  "B_cap": null,
+  "chunk": 8192,
+  "rule": {
+   "noop_gate": 0.5,
+   "eta": 0.3,
+   "alpha": 0.0,
+   "beta": 0.0,
+   "gamma": 0.0
+  }
+ },
+ "public_sha256": "2c88f69b270aa0a2f0a945d5ac96ac772e388c046857a308ac441a08c7482d4b",
+ "frozen_pred_sha256": "1cb9388564893a86e34d49b08ceb09fae58bf159b1a62e6e657b1eddfde79d22",
+ "torch": "2.9.1+cu128",
+ "device": "NVIDIA GeForce RTX 5060 Laptop GPU",
+ "public_row_keys": [
+  "domain",
+  "inputs",
+  "root_id"
+ ],
+ "public_input_keys": [
+  "attrs",
+  "base",
+  "cell_xy",
+  "cells0",
+  "ctx",
+  "goal",
+  "goal_cell",
+  "grid",
+  "ids",
+  "legal_cells",
+  "q_ref",
+  "tid",
+  "xy0"
+ ],
+ "public_has_private_fields": false,
+ "k_le_3_parity_vs_frozen_v34": {
+  "n": 40,
+  "proposals_equal": 40,
+  "decision_equal": 40,
+  "max_abs_dp11": 0.0,
+  "max_abs_dpnoop": 0.0,
+  "mismatch": []
+ },
+ "scorer_batch_invariance": {
+  "roots": 12,
+  "sequences": 4576,
+  "max_abs_dp11_batch_vs_single": 6.556510925292969e-07,
+  "max_abs_dp11_batch_vs_shuffled": 5.364418029785156e-07
+ }
+}
