@@ -229,6 +229,24 @@ def model(files, out):
     Path(out).write_text(json.dumps(S, indent=1)); return S
 
 
+def seal(files, out_gz):
+    """Canonical sealed predictions: every EVAL root, every arm / budget / seed decision (scored_sets dropped) -> gz + sha256 manifest."""
+    import gzip, subprocess
+    R = load(files)
+    rows = [json.dumps({**{k: v for k, v in r.items() if k != "results"}, "results": [{k: v for k, v in x.items() if k != "scored_sets"} for x in r["results"]]},
+                       sort_keys=True) for r in R]
+    with gzip.open(out_gz, "wt") as fh:
+        fh.write("\n".join(rows) + "\n")
+    canon = hashlib.sha256("\n".join(json.dumps({"root_id": r["root_id"], "d": [(x["arm"], x["budget"], x["seed"], x["decision"], x["seq"]) for x in r["results"]]})
+                                       for r in R).encode()).hexdigest()
+    S = {"roots": len(R), "splits": dict(collections.Counter(r["split"] for r in R)), "decisions_sha256": canon,
+         "predictions_gz_sha256": hashlib.sha256(Path(out_gz).read_bytes()).hexdigest(),
+         "code_sha256": {f: hashlib.sha256((HERE / f).read_bytes()).hexdigest() for f in ("domain.py", "fsearch.py", "run.py", "analyze.py")},
+         "frozen_params_sha256": hashlib.sha256((REP / "P2_FROZEN_PARAMS.json").read_bytes()).hexdigest(),
+         "git_head_at_seal": subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True, cwd=HERE).stdout.strip()}
+    return S
+
+
 # ------------------------------------------------------------------------------------------------------------------- P3 / P4 physical
 PRIMARY = ["EXACT4@None", "EXACT6@None", "EXACT_FULL@None", "RAND_FULL@1024", "BEAM_SEEDED4@1024", "BEAM_FULL@1024", "PW_MCTS_SEEDED4@1024",
            "PW_MCTS_FULL@1024"]
@@ -459,6 +477,9 @@ if __name__ == "__main__":
         tune(a[1].split(","))
     elif a[0] == "model":
         model(a[1].split(","), a[2])
+    elif a[0] == "seal":
+        S = seal(a[1].split(","), a[2]); S["manifest"] = manifest(a[1], a[3], a[4].split(","), a[5])
+        (REP / "P3_SEAL.json").write_text(json.dumps(S, indent=1)); print(json.dumps(S, indent=1))
     elif a[0] == "manifest":
         manifest(a[1], a[2], a[3].split(","), a[4])
     elif a[0] == "physical":
