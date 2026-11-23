@@ -427,4 +427,5 @@ def run_arm(arm, dom, score_fn, budget, rule, key, seed=0, disp=None, params=Non
             "sets_by_max_tier": {str(k): v for k, v in sorted(tiers.items())}, "actions_scored": len(acts),
             "actions_scored_off4": sum(dom.tier[a] > 1 for a in acts), "objects_scored": len({a[0] for a in acts}),
             "first_off4_at": first_off4, "tier_events": st.events, "batch_sizes": [min(O.bs[1:], default=0), max(O.bs[1:], default=0)],
-            "params": p, "wall_s": round(time.perf_counter() - t0, 6), **extra}
+            "params": p, "wall_s": round(time.perf_counter() - t0, 6), "final_level": st.level,
+            "scored_sets": [[list(a) for a in A] for A, _, _ in O.log] if kind != "exact" else None, **extra}
