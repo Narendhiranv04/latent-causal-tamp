@@ -34,3 +34,24 @@ python analyze.py manifest ~/fds_runs/frozen_eval.*.jsonl PRIVATE CACHES JOBS.js
 python analyze.py physical EVALFILES PRIVATE CACHES+NEW FAMILIES reports/P3_PHYSICAL
 python analyze.py attribution EVALFILES PRIVATE CACHES+NEW GENLAB reports/P3_PHYSICAL_PER_ROOT.jsonl reports/P4_ATTRIBUTION.json
 ```
+
+## Result
+
+**EXPANSION_NOT_ESTABLISHED (INCONCLUSIVE). Keep EXACT4.**
+
+On VAL K1/K2 development roots:
+- **Seeded MCTS vs EXACT4:** PW_MCTS_SEEDED4@1024 − EXACT4 = +1.4 pp strict [−2.1, +5.0]. EXACT4's strict UNKNOWN rate is 22.5 %.
+- **Speed:** seeded MCTS takes 0.170 s against EXACT4's 0.027 s.
+- **No arm adds value:** neither seeding nor MCTS beats the matched controls.
+- **The full-domain model optimum is physically worse** than top-4: −4.4 pp strict, −5.8 pp operational.
+- **Conclusion:** X/Y misranking of out-of-pool sets dominates cVAE destination recall.
+
+See `reports/P4_FINAL_DECISION.md`.
+
+## Reports, in order
+
+1. **P0:** `P0_SOURCE_AUDIT.md`, `P0_FROZEN_PROTOCOL.json`, `P0_PARITY.json`, `P0_GAPS.md`
+2. **P1:** `P1_RECALL.md` / `.json`, `P1_FIGURES.json`, `figures/p1_root_*.png`
+3. **P2:** `P2_TUNING_PREREG.md`, `P2_TUNING.json`, `P2_FROZEN_PARAMS.json`, `P2_TESTS.json`, `P2_LOW_SINGLETON_FIXTURE.json`, `MODEL_SUMMARY_DEV.json`, `MODEL_SUMMARY_EVAL.json`, `P2_BUDGET_LATENCY_LIVE.json`, `P2_LIVE_REPLAY_PARITY.json`, `P2_MODEL_ONLY.md`, `figures/p2_*.png`
+4. **P3:** `P3_PREREG.md`, `P3_SEAL.json`, `P3_EVAL_PREDICTIONS.jsonl.gz`, `P3_QUERY_MANIFEST.jsonl`, `P3_PHYSICAL.md` / `.json`, `P3_PHYSICAL_PER_ROOT.jsonl`
+5. **P4:** `P4_FINAL_DECISION.md`, `P4_ATTRIBUTION.json`, `P4_WINLOSS_VS_EXACT4.json`, `figures/p4_physical_success.png`

@@ -1,0 +1,56 @@
+{
+ "new_tests": [
+  "tests/test_full.py::test_universe_tiers_prior_support",
+  "tests/test_full.py::test_zero_mass_cell_stays_reachable",
+  "tests/test_full.py::test_initial_top4_only_and_exact_unlock_thresholds[BEAM_SEEDED4]",
+  "tests/test_full.py::test_initial_top4_only_and_exact_unlock_thresholds[PW_MCTS_SEEDED4]",
+  "tests/test_full.py::test_early_tier_exhaustion_unlocks_without_charge[BEAM_SEEDED4]",
+  "tests/test_full.py::test_early_tier_exhaustion_unlocks_without_charge[PW_MCTS_SEEDED4]",
+  "tests/test_full.py::test_reopen_after_unlock_and_full_reachability",
+  "tests/test_full.py::test_same_domain_and_schedule_for_seeded_arms",
+  "tests/test_full.py::test_off4_only_winning_pair_found_with_adequate_budget[RAND_FULL]",
+  "tests/test_full.py::test_off4_only_winning_pair_found_with_adequate_budget[BEAM_SEEDED4]",
+  "tests/test_full.py::test_off4_only_winning_pair_found_with_adequate_budget[BEAM_FULL]",
+  "tests/test_full.py::test_off4_only_winning_pair_found_with_adequate_budget[BEAM_FULL_UNIFORM]",
+  "tests/test_full.py::test_off4_only_winning_pair_found_with_adequate_budget[PW_MCTS_SEEDED4]",
+  "tests/test_full.py::test_off4_only_winning_pair_found_with_adequate_budget[PW_MCTS_FULL]",
+  "tests/test_full.py::test_off4_only_winning_pair_found_with_adequate_budget[PW_MCTS_UNIFORM]",
+  "tests/test_full.py::test_low_singleton_high_pair[BEAM_SEEDED4]",
+  "tests/test_full.py::test_low_singleton_high_pair[BEAM_FULL]",
+  "tests/test_full.py::test_low_singleton_high_pair[PW_MCTS_SEEDED4]",
+  "tests/test_full.py::test_low_singleton_high_pair[PW_MCTS_FULL]",
+  "tests/test_full.py::test_budget_all_orders_or_nothing_and_accounting",
+  "tests/test_full.py::test_noop_gate_and_abstain",
+  "tests/test_full.py::test_limits_and_determinism",
+  "tests/test_full.py::test_batching_is_cache_invariant",
+  "tests/test_full.py::test_exact_full_matches_bruteforce_and_choose_is_frozen",
+  "tests/test_full.py::test_no_teacher_private_or_intermediate_scene_access",
+  "tests/test_full.py::test_real_roots_top6_parity_legal_domain_and_exact4_matches_sealed_old_predictions"
+ ],
+ "new_summary": [
+  "26 passed in 5.82s"
+ ],
+ "historical_mcts_sets_tests": "13 passed in 0.75s",
+ "low_singleton_fixture": {
+  "BEAM_FULL": {
+   "budget": 600,
+   "found_of_8_seeds": 8,
+   "ordered_sequences_in_domain": 4032
+  },
+  "BEAM_SEEDED4": {
+   "budget": 600,
+   "found_of_8_seeds": 8,
+   "ordered_sequences_in_domain": 4032
+  },
+  "PW_MCTS_FULL": {
+   "budget": 600,
+   "found_of_8_seeds": 1,
+   "ordered_sequences_in_domain": 4032
+  },
+  "PW_MCTS_SEEDED4": {
+   "budget": 600,
+   "found_of_8_seeds": 3,
+   "ordered_sequences_in_domain": 4032
+  }
+ }
+}
