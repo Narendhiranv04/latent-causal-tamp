@@ -25,9 +25,10 @@ QUOTA = {("4", "B2C2"): 10, ("5", "B2C3"): 10}          # amendment A1 (2026-11-
 STYLE = {"B3C1": (3, 1), "B2C2": (2, 2), "B3C2": (3, 2), "B2C3": (2, 3)}
 CHAIN_S = 900.0                     # chain-stage wall cap per layout (construction keeps the generator's own CONSTRUCT_S / CONSTRUCT_S_K)
 GEN_WALL = 1200
-GEN_CODE = "K45_GEN_V3 (A1: K_b=2 strata only, most-constrained mover first; 2026-11-26 IST: enabler parking avoids the target corridor; target-plans-after-parking check; movers = first tight set passing bd_3dt_plus.independent)"                     # fin3d administrative wall per certification sequence (UNRESOLVED_ADMIN -> rejected, never a label)
+GEN_CODE = "K45_GEN_V5 (A3: enablers may block the place side; most-constrained alternative parking cell; A2: probe only known-feasible azimuths, largest generator blocker, 12 candidate cells; A1: K_b=2 strata only, most-constrained mover first; 2026-11-26 IST: enabler parking avoids the target corridor; target-plans-after-parking check; movers = first tight set passing bd_3dt_plus.independent)"                     # fin3d administrative wall per certification sequence (UNRESOLVED_ADMIN -> rejected, never a label)
 RESERVE_H = 0.6                     # dispatch headroom per running layout (CPU-h)
 G = {}
+BIG = {"shape": "cylinder", "size": 0.018, "height": 0.18}     # A2: the largest ordinary blocker of the generator's ranges (cylinder 0.013-0.018, height <= 0.18)
 
 
 # ------------------------------------------------------------------------------------------------------------- worker
@@ -94,17 +95,29 @@ def chain(c, n_chain, rng, t0, movers):
         e = A.build(allo, cc); A.settle(e, cc)
         return e
 
-    def azim(e, name, dst):
+    def azim(e, name, dst, only=None):
+        """Feasible azimuths of name -> dst; with `only`, grasps of other azimuths are not planned (bd_3dt_plus.still_feasible's rule)."""
         i = e.obj_id(name); e.objects[i]["pos"] = e.obj_pos(i); q0 = e.q_now(); ok = set()
         for g in TS.grasp_poses(e.objects[i], e.table_z):
-            if g["azimuth_deg"] not in ok and e.plan_pick_place(name, tuple(dst), g, q_start=q0)["feasible"]:
-                ok.add(g["azimuth_deg"])
+            a = g["azimuth_deg"]
+            if (only is None or a in only) and a not in ok and e.plan_pick_place(name, tuple(dst), g, q_start=q0)["feasible"]:
+                ok.add(a)
         return ok
 
     def plans(extra, name, dst):
         e = scene(extra)
         return A.query(e, name, list(dst))[0] is not None
     added = []
+    occ_all = {tuple(v) for v in cells.values()} | {src, goal}
+    for B in list(queue):                                                      # A3: most-constrained parking cell among the generator's alternatives
+        alts = [tuple(x) for x in c["alt_parking"].get(B, [])[:3] if tuple(x) not in occ_all and tuple(x) not in {park[o] for o in park if o != B}]
+        best = None
+        for pB in alts:
+            fb = azim(scene([]), B, pB)
+            if fb and (best is None or len(fb) < len(best[1])):
+                best = (pB, fb)
+        if best:
+            park[B] = best[0]
     Fm = {B: azim(scene(added), B, park[B]) for B in queue}
     queue.sort(key=lambda B: (len(Fm[B]) == 0, len(Fm[B]), B))                 # amendment A1: most-constrained blocker first
     while left > 0:
@@ -116,16 +129,19 @@ def chain(c, n_chain, rng, t0, movers):
                 raise A.Reject("CHAIN_NO_TARGET_LEFT")
         B = queue.pop(0)
         bcell = tuple(cells[B]) if B in cells else next(p for x, p in added if x["id"] == B)
-        F = azim(scene(added), B, park[B])
+        F = Fm[B] if B in Fm and not added else azim(scene(added), B, park[B])
         if not F:
             continue
         occ = {tuple(v) for v in cells.values()} | {p for _, p in added} | set(park.values()) | avoid
-        cand = sorted((x for x in itertools.product(range(A.GRID["R"]), range(A.GRID["C"])) if x not in occ and 1 <= A.cheb(x, bcell) <= 2),
-                      key=lambda x: (A.cheb(x, bcell), x))[:8]
+        cand = sorted((x for x in itertools.product(range(A.GRID["R"]), range(A.GRID["C"]))
+                       if x not in occ and (1 <= A.cheb(x, bcell) <= 2 or A.cheb(x, park[B]) == 1)),           # A3: pick side or place side
+                      key=lambda x: (min(A.cheb(x, bcell), A.cheb(x, park[B])), x))[:14]
         probe = {}
         for x in cand:
-            pr = {**P.PROBE, "id": "pz", "color": "red"}
-            probe[x] = F - azim(scene(added + [(pr, x)]), B, park[B])
+            if time.time() - t0 > CHAIN_S:
+                raise A.Reject("CHAIN_TIME_CAP")
+            pr = {**BIG, "id": "pz", "color": "red"}
+            probe[x] = F - azim(scene(added + [(pr, x)]), B, park[B], only=F)
         pick, need = [], set(F)
         while need and len(pick) < left:
             x = max((x for x in cand if x not in pick), key=lambda x: (len(probe[x] & need), -A.cheb(x, bcell), x), default=None)
@@ -137,7 +153,7 @@ def chain(c, n_chain, rng, t0, movers):
         news = []
         for j, x in enumerate(pick):
             nid = f"o{len(objs) - 1 + len(added) + j:02d}"
-            news.append(({"id": nid, "shape": P.PROBE["shape"], "size": P.PROBE["size"], "height": float(rng.uniform(0.12, 0.16)),
+            news.append(({"id": nid, "shape": BIG["shape"], "size": BIG["size"], "height": BIG["height"],
                           "color": A.COLORS[(len(objs) + len(added) + j) % len(A.COLORS)]}, x))
         if plans(added + news, B, park[B]):
             continue                                                            # real obstacles do not block B
@@ -289,10 +305,10 @@ def proc_cpu(pid):
 
 
 def items():
-    """Deterministic attempt list per stratum (fixed seeds); dispatch order interleaves strata."""
+    """Deterministic attempt list per stratum (fixed seeds); dispatch order interleaves strata.  A2 attempts are numbered from 100."""
     out = {k: [] for k in QUOTA}
     for (K, style) in QUOTA:
-        for n in range(40):
+        for n in range(300, 500):
             rid = f"3ds66-k45-{style.lower()}-{n:03d}"
             out[(K, style)].append({"root_id": rid, "K": int(K), "style": style, "seed": int(hashlib.sha256(("K45GEN|" + rid).encode()).hexdigest()[:8], 16), "n": n})
     return out
@@ -319,11 +335,14 @@ def main(outdir, workers, cpu_lo):
             if ar.ready():
                 r = ar.get(); running.pop(rid)
                 f.write(json.dumps(r) + "\n"); f.flush(); os.fsync(f.fileno())
-                used["layouts"] += 1; used["jobs"] += r.get("jobs", 0); used["cpu_s"] += r.get("cpu_s", 0)
                 acc[k] += bool(r.get("accepted"))
                 print(f"{time.strftime('%H:%M:%S')} {rid} {r.get('reason')} cpu={r.get('cpu_s')} acc={dict((f'{a}{b}', v) for (a, b), v in acc.items())} "
                       f"used={used['layouts']}L/{used['jobs']}J/{used['cpu_s'] / 3600:.2f}h", flush=True)
-        cpu_h = (used["cpu_s"] + sum(time.time() - t for _, _, t in running.values())) / 3600     # wall of running layouts as CPU upper proxy
+        allr = [json.loads(l) for l in open(led) if l.strip()]                     # re-read: results of a draining earlier dispatcher count too
+        used["cpu_s"] = sum(d.get("cpu_s", 0) for d in allr); used["jobs"] = sum(d.get("jobs", 0) for d in allr); used["layouts"] = len(allr)
+        old = os.environ.get("K45_OLD_LOG")
+        reserve = float(os.environ.get("K45_OLD_RESERVE_H", "0")) if old and "GEN_DONE" not in open(old).read() else 0.0
+        cpu_h = (used["cpu_s"] + sum(time.time() - t for _, _, t in running.values())) / 3600 + reserve   # running wall = CPU upper proxy
         if cpu_h >= CAPS["cpu_h"] - 0.05 or used["jobs"] >= CAPS["jobs"] - 5:
             stop_reason = "CAP_HARD_STOP"; pool.terminate(); break
         open_k = [k for k in QUOTA if acc[k] + sum(1 for (_, kk, _) in running.values() if kk == k) * 0.4 < QUOTA[k] and ptr[k] < len(queue[k])]
@@ -390,8 +409,237 @@ def assemble(gen_dir, out_dir):
 import collections  # noqa: E402
 
 
+# ============================================================================== amendment A4 (owner 2026-11-26): historical-unexposed K4 + derived K5
+def parent_info(rec):
+    """-> (witness order [[o, [r, c]], ...], ids already chained (blocked by an enabler), enabler ids, family id) for a K4 parent root."""
+    if "k45" in rec:                                                            # fresh K45 root
+        cb = rec["construction"].get("chain_blocks", {})
+        return rec["k45"]["witness"]["order"], set(cb.values()), set(cb), rec["ids"]["parent_family_id"]
+    m = next(b for b in rec["labels"]["B"] if b.get("role") == "minimal" and b.get("y") == 1)   # historical: the generator's verified minimal B
+    return [[o, list(d)] for o, d in m["sequence"]], set(), set(), rec["ids"].get("parent_family_id") or rec["ids"]["root_id"]
+
+
+def certify(rec, orders, K, out):
+    """Initial target y = 0; continuous witness (first order that verifies X, then its endpoint Y); (K-1)-subset shorter probe."""
+    A = G["A"]
+    cells = rec["initial_cells"]
+    y0 = job_y(rec, cells)
+    out["initial"] = {"y": y0.get("y"), "status": y0.get("status"), "resolution": y0.get("resolution"), "kind": initial_kind(rec)}
+    if y0.get("resolution") != "EVALUATED" or y0.get("y") != 0:
+        raise A.Reject("INITIAL_NOT_INFEASIBLE" if y0.get("y") == 1 else "INITIAL_UNRESOLVED")
+    wit = None
+    for order in orders:
+        x = job_x(rec, order)
+        out.setdefault("x_tries", []).append({"order": order, "x": x.get("x"), "status": x.get("status"), "phase": x.get("phase"), "resolution": x.get("resolution")})
+        if x.get("x") == 1:
+            y = job_y(rec, {**{k: list(v) for k, v in cells.items()}, **{o: d for o, d in order}})
+            out["witness_y"] = {"y": y.get("y"), "status": y.get("status"), "resolution": y.get("resolution")}
+            if y.get("y") == 1:
+                wit = {"order": order, "x_witnesses": x["witnesses"], "y_witnesses": y["witnesses"], "dq_ready": x.get("dq_ready")}
+            break
+    if wit is None:
+        raise A.Reject("NO_VERIFIED_TARGET_LENGTH_WITNESS")
+    short = []
+    for j in range(K):
+        sub = [m for i, m in enumerate(wit["order"]) if i != j]
+        y = job_y(rec, {**{k: list(v) for k, v in cells.items()}, **{o: d for o, d in sub}})
+        r = {"omit": wit["order"][j][0], "y": y.get("y"), "resolution": y.get("resolution"), "status": y.get("status")}
+        if y.get("y") == 1:
+            x = job_x(rec, sub); r.update(x=x.get("x"), x_status=x.get("status"))
+        short.append(r)
+    shorter = any(r.get("y") == 1 and r.get("x") == 1 for r in short)
+    return wit, short, shorter
+
+
+def attempt_x(item):
+    """A4 item: kind RECERT (historical K4, re-certified unchanged) or DERIVE (parent K4 + ONE enabler -> witness length 5)."""
+    t0, c0 = time.time(), time.process_time(); cnt0 = dict(G["cnt"]); j0 = G["jobs"]
+    out = {**item, "accepted": False}
+    import numpy as np
+    try:
+        A, P = G["A"], G["P"]
+        rec = json.loads(Path(item["parent_path"]).read_text())
+        order, chained, enablers, fam = parent_info(rec)
+        if item["kind"] == "RECERT":
+            rec = json.loads(json.dumps(rec))
+            wit, short, shorter = certify(rec, [order], 4, out)
+            K = 4; extra = {"source": "HISTORICAL_UNEXPOSED_K4", "historical_verified_K": rec.get("verified_K")}
+        else:
+            rng = np.random.default_rng(item["seed"])
+            objs, cells = list(rec["objects"]), {o: list(v) for o, v in rec["initial_cells"].items()}
+            src, goal = tuple(rec["target_src"]), tuple(rec["goal"])
+            park = {o: tuple(d) for o, d in order}
+            TS = A.env()["TS"]
+
+            def scene(extra=()):
+                cc = {**cells, **{x["id"]: list(p) for x, p in extra}}
+                e = A.build(objs + [x for x, _ in extra], cc); A.settle(e, cc); return e
+
+            def azim(e, name, dst, only=None):
+                i = e.obj_id(name); e.objects[i]["pos"] = e.obj_pos(i); q0 = e.q_now(); ok = set()
+                for g in TS.grasp_poses(e.objects[i], e.table_z):
+                    a = g["azimuth_deg"]
+                    if (only is None or a in only) and a not in ok and e.plan_pick_place(name, tuple(dst), g, q_start=q0)["feasible"]:
+                        ok.add(a)
+                return ok
+            cand_B = [o for o, _ in order if o not in chained]
+            F = {B: azim(scene(), B, park[B]) for B in cand_B}
+            cand_B = sorted([B for B in cand_B if F[B]], key=lambda B: (len(F[B]), B))
+            if not cand_B:
+                raise A.Reject("DERIVE_NO_FEASIBLE_MOVER")
+            B = cand_B[item["j"] % len(cand_B)]
+            bcell = tuple(cells[B])
+            route = set(P.line(src, goal)) | {(r + a, cc + b) for r, cc in P.line(src, goal) for a in (-1, 0, 1) for b in (-1, 0, 1)}
+            avoid = {src, goal} | {(0, k) for k in range(A.GRID["C"])}
+            park_avoid = avoid | P.hand_zone(src) | P.hand_zone(goal) | route
+            occ = {tuple(v) for v in cells.values()} | set(park.values()) | avoid
+            cand = sorted((x for x in itertools.product(range(A.GRID["R"]), range(A.GRID["C"])) if x not in occ and (1 <= A.cheb(x, bcell) <= 2 or A.cheb(x, park[B]) == 1)),
+                          key=lambda x: (min(A.cheb(x, bcell), A.cheb(x, park[B])), x))[:14]
+            nid = f"o{len(objs) - 1:02d}"
+            while any(o["id"] == nid for o in objs):
+                nid = f"o{int(nid[1:]) + 1:02d}"
+            new = {"id": nid, **BIG, "color": A.COLORS[len(objs) % len(A.COLORS)]}
+            hit = None
+            for x in cand:
+                if time.time() - t0 > CHAIN_S:
+                    raise A.Reject("DERIVE_TIME_CAP")
+                if azim(scene([(new, x)]), B, park[B], only=F[B]):
+                    continue                                                    # ONE enabler must cover every feasible azimuth of B
+                pk = next((q for q in P.parking_cells(x, park_avoid, occ | {x}, 4) if A.query(scene([(new, x)]), nid, list(q))[0] is not None), None)
+                if pk is None:
+                    continue
+                if A.query(scene([(new, tuple(pk))]), B, list(park[B]))[0] is None:
+                    continue
+                e = A.build(objs + [new], {**cells, nid: list(x)}); A.settle(e, {**cells, **{o: list(d) for o, d in park.items()}, nid: list(pk)})
+                if A.query(e, "t0", list(goal))[0] is None:
+                    continue
+                hit = (x, tuple(pk)); break
+            if hit is None:
+                raise A.Reject("DERIVE_NO_SINGLE_COVER")
+            x, pk = hit
+            objs.append(new); cells[nid] = list(x)
+            idx = [o for o, _ in order].index(B)
+            o1 = order[:idx] + [[nid, list(pk)]] + order[idx:]
+            o2 = [[nid, list(pk)]] + order
+            Gm = A.env()
+            rec = {**{k: rec[k] for k in ("goal", "target_src") if k in rec}, "ids": {"root_id": item["root_id"], "construction_seed": item["seed"], "parent_family_id": fam,
+                   "parent_root_id": rec["ids"]["root_id"], "config_hash": Gm["config_hash"], "teacher_version": A.TEACHER_VERSION, "robot_protocol": Gm["protocol"]},
+                   "domain": "3ds66", "objects": objs, "initial_cells": cells, "geometry": Gm["geometry"], "source_files": Gm["source_files"],
+                   "construction": {"generator": "K45_DERIVE_V1 (parent K4 + one enabler)", "parent_root_id": rec["ids"]["root_id"], "enabler": nid, "blocks": B,
+                                    "enabler_cell": list(x), "enabler_parking": list(pk), "parent_chained": sorted(chained)}}
+            wit, short, shorter = certify(rec, [o1, o2] if o2 != o1 else [o1], 5, out)
+            K = 5; extra = {"source": "DERIVED_FROM_K4_PARENT", "parent_root_id": rec["construction"]["parent_root_id"]}
+        rec["k45"] = {"witness": wit, "initial": out["initial"], "shorter_probe": short, "label": f"SHORTER_WITNESSED_LE_{K - 1}" if shorter else f"WITNESS_LEN_{K}_MIN_UNKNOWN", **extra}
+        Path(item["out"], "roots").mkdir(parents=True, exist_ok=True)
+        tmp = Path(item["out"], "roots", item["root_id"] + ".json.tmp"); tmp.write_text(json.dumps(rec, default=G["bc"]._jd)); os.replace(tmp, tmp.with_suffix(""))
+        out.update(accepted=not shorter, label=rec["k45"]["label"], n_objects=len(rec["objects"]), reason="ACCEPTED" if not shorter else "SHORTER_WITNESSED")
+    except Exception as e:  # noqa: BLE001
+        out["reason"] = (str(e)[:160] if type(e).__name__ == "Reject" else f"ERROR:{type(e).__name__}:{str(e)[:160]}")
+        if type(e).__name__ != "Reject":
+            out["trace"] = traceback.format_exc()[-800:]
+    out.update(code="K45_GEN_A4", cpu_s=round(time.process_time() - c0, 1), wall_s=round(time.time() - t0, 1), jobs=G["jobs"] - j0,
+               planner_calls={k: G["cnt"][k] - cnt0[k] for k in cnt0}, utc=time.strftime("%FT%TZ", time.gmtime()))
+    return out
+
+
+def run_items(items_file, outdir, workers, cpu_lo, cap_h, k5_quota=10):
+    """A4 dispatcher for an explicit item list (one host); per-host CPU cap with running-wall headroom; stops DERIVE dispatch at k5_quota."""
+    out = Path(outdir); out.mkdir(parents=True, exist_ok=True)
+    led = out / "ledger_a4.jsonl"
+    done = {json.loads(l)["root_id"] for l in open(led)} if led.exists() else set()
+    todo = [it for it in json.loads(Path(items_file).read_text()) if it["root_id"] not in done]
+    os.sched_setaffinity(0, set(range(int(cpu_lo), int(cpu_lo) + int(workers))))
+    pool = mp.get_context("spawn").Pool(int(workers), initializer=boot, initargs=(str(out / "store"),), maxtasksperchild=3)
+    running, f, i = {}, open(led, "a"), 0
+    while True:
+        allr = [json.loads(l) for l in open(led) if l.strip()]
+        k5 = sum(1 for d in allr if d.get("accepted") and d["kind"] == "DERIVE")
+        for rid, (ar, t) in list(running.items()):
+            if ar.ready():
+                r = ar.get(); running.pop(rid)
+                f.write(json.dumps(r) + "\n"); f.flush(); os.fsync(f.fileno())
+                print(f"{time.strftime('%H:%M:%S')} {rid} {r.get('reason')} cpu={r.get('cpu_s')} jobs={r.get('jobs')}", flush=True)
+        cpu_h = (sum(d.get("cpu_s", 0) for d in allr) + sum(time.time() - t for _, t in running.values())) / 3600
+        if cpu_h >= float(cap_h) - 0.05:
+            pool.terminate(); print("A4_DONE CAP_HARD_STOP", flush=True); break
+        while i < len(todo) and todo[i]["kind"] == "DERIVE" and k5 >= k5_quota:
+            i += 1
+        if i < len(todo) and len(running) < int(workers) and cpu_h + (len(running) + 1) * 0.5 < float(cap_h) and not (out / "STOP").exists():
+            it = {**todo[i], "out": str(out)}; i += 1
+            running[it["root_id"]] = (pool.apply_async(attempt_x, (it,)), time.time()); continue
+        if not running:
+            print("A4_DONE", "ALL" if i >= len(todo) else "STOP_OR_CAP", f"cpu_h={cpu_h:.2f}", flush=True); break
+        time.sleep(5)
+    for rid, (_, t) in running.items():
+        f.write(json.dumps({"root_id": rid, "kind": "?", "accepted": False, "reason": "CENSORED_AT_CAP", "cpu_s": round(time.time() - t, 1)}) + "\n")
+    f.close()
+
+
+def assemble2(sources, out_dir):
+    """A4 roster (LOCAL): K4 = fresh accepted (attempt order) then re-certified historical-unexposed K4 (sha order) up to 10;
+    K5 = accepted derived roots, first pass one per parent (fresh parents first, then historical), then fill by (parent order, j), up to 10.
+    Checks: never in the 3D TRAIN/VAL/TEST snapshot, never in the V3.4 cohort, distinct root ids / sha / GEOM_V1 fp within the roster."""
+    import shutil
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    sys.path.insert(0, str(Path.home() / "Desktop/boltzmann_lfd/.claude/worktrees/approach-b-v3-4-final-benchmark/approach_b_final/scripts"))
+    import benchmark as BM
+    import contracts as CT
+    import v34_geomfp as GF
+    out = Path(out_dir); (out / "roots").mkdir(parents=True, exist_ok=True)
+    snap = {json.loads(l)["root_id"] for l in open(Path.home() / "abf_v32/snap_out/snapshot/abf_v32_fb0eef4f5ff433ee/data3d.jsonl")}
+    coh = {json.loads(l)["root_id"] for l in open(Path.home() / "abf_v34/final/PRIVATE_INDEX.jsonl")}
+    led = []
+    for src in sources.split(","):
+        d = Path(src)
+        for f in ("ledger.jsonl", "ledger_a4.jsonl"):
+            if (d / f).exists():
+                led += [{**json.loads(l), "_dir": str(d)} for l in open(d / f) if l.strip()]
+    acc = [x for x in led if x.get("accepted")]
+    fresh = sorted((x for x in acc if x.get("style") == "B2C2" and "kind" not in x), key=lambda x: x["n"])
+    hist = sorted((x for x in acc if x.get("kind") == "RECERT"), key=lambda x: hashlib.sha256(("K45_HIST|" + x["root_id"]).encode()).hexdigest())
+    porder = [x["root_id"] for x in fresh] + [x["root_id"] for x in hist] + sorted({x["parent_id"] for x in acc if x.get("kind") == "DERIVE"})
+    der = [x for x in acc if x.get("kind") == "DERIVE"]
+    der.sort(key=lambda x: (porder.index(x["parent_id"]) if x["parent_id"] in porder else 99, x["j"]))
+    k5, seenp = [], set()
+    for x in der:                                                                # first pass: one child per parent
+        if x["parent_id"] not in seenp and len(k5) < 10:
+            k5.append(x); seenp.add(x["parent_id"])
+    for x in der:
+        if x not in k5 and len(k5) < 10:
+            k5.append(x)
+    picks = [("4", "FRESH", x) for x in fresh][:10]
+    picks += [("4", "HISTORICAL_UNEXPOSED", x) for x in hist][:max(0, 10 - len(picks))]
+    picks += [("5", "DERIVED", x) for x in k5]
+    rows, fps, issues = [], set(), collections.Counter()
+    for K, src_kind, x in picks:
+        p = Path(x["_dir"]) / "roots" / f"{x['root_id']}.json"
+        raw = p.read_bytes(); rec = json.loads(raw); h = hashlib.sha256(raw).hexdigest()
+        v = CT.view3d(rec); fp = GF.geom_fp(v)
+        if x["root_id"] in snap or x["root_id"] in coh:
+            issues["exposed"] += 1; continue
+        if fp in fps:
+            issues["dup_fp"] += 1
+        fps.add(fp)
+        shutil.copyfile(p, out / "roots" / p.name)
+        rows.append({"root_id": x["root_id"], "domain": "3d", "K": K, "source": src_kind, "label": rec["k45"]["label"], "path": f"roots/{p.name}",
+                     "abs_path": str(out / "roots" / p.name), "root_sha256": h, "layout_fp": fp, "parent_family_id": rec["ids"].get("parent_family_id"),
+                     "parent_root_id": rec["ids"].get("parent_root_id"), "n_objects": len(rec["objects"]), "ids": v["ids"]})
+    with open(out / "PRIVATE_INDEX.jsonl", "w") as f:
+        for r in rows:
+            f.write(json.dumps(r) + "\n")
+    BM.public(str(out / "PUBLIC.jsonl"), index=str(out / "PRIVATE_INDEX.jsonl"))
+    return {"admitted": len(rows), "by_K_source": dict(collections.Counter(f"K{r['K']}|{r['source']}" for r in rows)), "issues": dict(issues),
+            "labels": dict(collections.Counter(r["label"] for r in rows)), "n_objects": dict(collections.Counter(r["n_objects"] for r in rows)),
+            "k5_parents": dict(collections.Counter(r["parent_root_id"] for r in rows if r["K"] == "5")),
+            "available": {"fresh_K4": len(fresh), "recert_K4": len(hist), "derived_K5": len(der)}}
+
+
 if __name__ == "__main__":
-    if sys.argv[1] == "assemble":
+    if sys.argv[1] == "assemble2":
+        print(json.dumps(assemble2(sys.argv[2], sys.argv[3]), indent=1))
+    elif sys.argv[1] == "run_items":
+        run_items(*sys.argv[2:7])
+    elif sys.argv[1] == "assemble":
         print(json.dumps(assemble(sys.argv[2], sys.argv[3]), indent=1))
     elif sys.argv[1] == "smoke":                                                 # one layout in-process (counts toward the ledger of OUT)
         boot(str(Path(sys.argv[2]) / "store"))
