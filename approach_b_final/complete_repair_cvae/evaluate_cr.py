@@ -584,21 +584,21 @@ def cpu_used(dom):
     return sum(r.get("cpu_s", 0) for r in rows), sum(len(r["results"]) for r in rows), rows
 
 
-def teach(dom, workers=16, cpu0=8, batch_q=120, first=None, headroom_s=None):
+def teach(dom, workers=16, cpu0=8, batch_q=120, first=None, headroom_s=None, tag=""):
     """Dispatch the sealed manifest's jobs to the UNCHANGED teachers (benchmark.teach, V3.4 laptop envs) in batches; before each batch, stop if
     recorded CPU + the batch's projected CPU + headroom would exceed the authorized cap.  first = profile only the first N jobs."""
     import os, subprocess, time
     L = D.H / "abf_v3_laptop"
-    jobs = jl(P4 / f"jobs_{dom}.jsonl")
-    man = json.loads((REP / "P4_QUERY_MANIFEST.json").read_text())
-    assert D.sha(P4 / f"jobs_{dom}.jsonl") == man["domains"][dom]["jobs_sha256"], "jobs file changed after manifest"
+    jobs = jl(P4 / f"jobs{tag}_{dom}.jsonl")
+    man = json.loads((REP / ("P4_QUERY_MANIFEST.json" if not tag else "P4_QUERY_MANIFEST_SECONDARY.json")).read_text())
+    assert D.sha(P4 / f"jobs{tag}_{dom}.jsonl") == man["domains"][dom]["jobs_sha256"], "jobs file changed after manifest"
     (P4 / "cache").mkdir(parents=True, exist_ok=True)
     env = {**os.environ, "ABF_ROOT": str(L / "root"), "V3OUT": str(P4 / "teach_out"), "FIN3D_CODE": str(L / "gen/final3d_v4/code"),
            "FIN3D_SRC": str(L / "gen/final3d_v4/src/dataset_bd_classquota_without_home_position_no_overpass"), "FIN3D_STORE": str(P4 / "store3d"),
            "MUJOCO_GL": "disable", "OMP_NUM_THREADS": "1", "PYTHONDONTWRITEBYTECODE": "1", "CUDA_VISIBLE_DEVICES": ""}
     log = open(P4 / f"teach_{dom}.log", "a")
-    done_roots = {r["root"] for r in cpu_used(dom)[2]}
-    todo = [j for j in jobs if j["root_id"] not in done_roots][: first or None]
+    have = {(r["root"], json.dumps(x["seq"])) for r in cpu_used(dom)[2] for x in r["results"]}
+    todo = [j for j in jobs if any((j["root_id"], json.dumps([[j["ids"].index(o), c] for o, c in s_])) not in have for s_ in j["seqs"])][: first or None]
     head = headroom_s if headroom_s is not None else workers * (900 if dom == "2d" else 300)
     i = 0
     while i < len(todo):
@@ -613,7 +613,7 @@ def teach(dom, workers=16, cpu0=8, batch_q=120, first=None, headroom_s=None):
         if proj > CAP_H[dom] * 3600:
             log.write(f"{time.strftime('%FT%TZ', time.gmtime())} STOP_CAP used={used:.0f}s projected={proj:.0f}s\n"); log.flush()
             break
-        bf = P4 / f"batch_{dom}.jsonl"
+        bf = P4 / f"batch{tag}_{dom}.jsonl"
         with open(bf, "w") as f:
             for j in batch:
                 f.write(json.dumps(j) + "\n")
@@ -624,6 +624,51 @@ def teach(dom, workers=16, cpu0=8, batch_q=120, first=None, headroom_s=None):
         log.write(f"{time.strftime('%FT%TZ', time.gmtime())} BATCH_DONE wall={time.time() - t0:.0f}s\n"); log.flush()
     used, nq, rows = cpu_used(dom)
     print(json.dumps({"dom": dom, "cpu_h": round(used / 3600, 3), "queries_done": nq, "roots_done": len(rows), "jobs_roots": len(jobs)}))
+
+
+
+def manifest_secondary(cap=450):
+    """Secondary physical tier (after primary coverage is complete): K1-K3 REPAIR picks of C1_common_gate, then C4, then C3, lacking an exact-key
+    label, whole roots by sha256('CRCVAE_QSEC_V1|root') within tier, capped at (cap - primary queries)."""
+    prim = json.loads((REP / "P4_QUERY_MANIFEST.json").read_text())
+    out = {"primary_manifest_sha256": D.sha(REP / "P4_QUERY_MANIFEST.json"), "domains": {}}
+    for dom in ("2d", "3d"):
+        assert D.sha(P3 / f"pred_{dom}.jsonl") == json.loads((REP / "P3_SEAL.json").read_text())["domains"][dom]["records_sha256"]
+        used, nq, _ = cpu_used(dom)
+        assert nq == prim["domains"][dom]["queries"], (dom, "primary teacher coverage incomplete", nq)
+        left = cap - nq
+        lab, ros = labels(dom), roster(dom)
+        need = collections.defaultdict(dict)
+        tiers = ("S1_C1_common_gate", "S2_C4", "S3_C3")
+        for r in jl(P3 / f"pred_{dom}.jsonl"):
+            if ros[r["root_id"]]["K"] not in ("1", "2", "3"):
+                continue
+            for arm, t in zip(("C1_common_gate", "C4", "C3"), tiers):
+                x = r[arm]
+                if x["decision"] == "REPAIR" and (r["root_id"], json.dumps(x["seq"])) not in lab:
+                    k = json.dumps(x["seq"])
+                    need[r["root_id"]][k] = min(t, need[r["root_id"]].get(k, t))
+        keep, n = [], 0
+        for t in tiers:
+            for rid in sorted({rid for rid, v in need.items() if t in v.values()}, key=lambda x: D.stratum_hash("CRCVAE_QSEC_V1", x)):
+                js = [(rid, k, t) for k, tt in need[rid].items() if tt == t]
+                if n + len(js) <= left:
+                    keep += js; n += len(js)
+        allj = [(rid, k, t) for rid, v in need.items() for k, t in v.items()]
+        idx = {e["root_id"]: e for e in jl(V34 / "final" / "PRIVATE_INDEX.jsonl")}
+        byroot = collections.defaultdict(list)
+        for rid, k, t in keep:
+            byroot[rid].append(k)
+        with open(P4 / f"jobs2_{dom}.jsonl", "w") as f:
+            for rid in sorted(byroot):
+                e = idx[rid]
+                f.write(json.dumps({"root_id": rid, "dom": dom.upper(), "path": str((V34 / "final" / e["path"]).resolve()), "geom": e.get("geom", "original"),
+                                    "seqs": [[[e["ids"][o], c] for o, c in json.loads(k)] for k in sorted(byroot[rid])], "ids": e["ids"]}) + "\n")
+        out["domains"][dom] = {"remaining_cap": left, "queries": len(keep), "by_tier": dict(collections.Counter(t for _, _, t in keep)),
+                               "needed_by_tier": dict(collections.Counter(t for _, _, t in allj)), "dropped": len(allj) - len(keep),
+                               "jobs_sha256": D.sha(P4 / f"jobs2_{dom}.jsonl"), "primary_cpu_h": round(used / 3600, 3)}
+    wj(REP / "P4_QUERY_MANIFEST_SECONDARY.json", out)
+    print(json.dumps(out["domains"]))
 
 
 if __name__ == "__main__":
@@ -641,7 +686,9 @@ if __name__ == "__main__":
     elif cmd == "freeze":
         freeze()
     elif cmd == "teach":
-        teach(sys.argv[2], first=int(sys.argv[3]) if len(sys.argv) > 3 else None)
+        teach(sys.argv[2], first=int(sys.argv[3]) if len(sys.argv) > 3 and sys.argv[3] != "0" else None, tag=sys.argv[4] if len(sys.argv) > 4 else "")
+    elif cmd == "manifest2":
+        manifest_secondary()
     elif cmd == "per_root":
         per_root()
     elif cmd == "stats":
