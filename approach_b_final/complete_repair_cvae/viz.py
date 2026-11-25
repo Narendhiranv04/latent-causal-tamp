@@ -227,7 +227,7 @@ def p5_examples(n_per=2):
             for j, arm in enumerate(("C0", "C1", "C2")):
                 x = by[k][arm]
                 draw_scene(axs[i, j], dom, pubs[dom][k[1]], x["seq"] if x["decision"] == "REPAIR" else None,
-                           f"{cat} | K{x['K']} {k[1][:20]}\n{arm}: {x['decision']} -> {x['strict']}" + (f" [{(x['status'] or [''])[0][:24]}]" if x["status"] else ""))
+                           f"{cat} | K{x['K']} {k[1][:20]}\n{arm}: {x['decision']} -> {x['strict']}" + (f"\nX {x['status'][0].split(':')[-1][:18]} | Y {x['status'][1].split(':')[-1][:18]}" if x["status"] else ""))
         kind = "TOP-DOWN SCHEMATIC of shelf cells (not a render)" if dom == "3d" else "planar 8x8 lattice"
         fig.suptitle(f"P5 {dom.upper()} examples [{kind}], chosen by sha256 within category; strict teacher outcome", fontsize=9)
         fig.tight_layout(rect=(0, 0, 1, 0.98)); save(fig, f"p5_examples_{dom}.png")

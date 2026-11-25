@@ -418,7 +418,8 @@ def per_root():
                     "y_empty_gt": None if gt0 is None else gt0["strict"][1], "n_movable": r["n_movable"],
                     "known_legacy": len(leg), "known_finalized": len(fin[rid]),
                     "CR_pool_has_known": bool(pool & known), "CR_pool_has_known_set": bool(pool_sets & {json.dumps(sorted(map(tuple, json.loads(s)))) for s in known}),
-                    "C0_pool_has_known": any(inC0(s) for s in known), "CR_pool_unique": len(r["pool"]), "C0_n_scored": r["C0"]["n_scored"]}
+                    "C0_pool_has_known": any(inC0(s) for s in known), "CR_pool_unique": len(r["pool"]), "C0_n_scored": r["C0"]["n_scored"],
+                    "CR_pool_has_legacy": bool(pool & leg), "C0_pool_has_legacy": any(inC0(s) for s in leg)}
             for arm in ARMS + ("C1_common_gate", "C3", "C4"):
                 if arm not in r:
                     continue
@@ -671,6 +672,48 @@ def manifest_secondary(cap=450):
     print(json.dumps(out["domains"]))
 
 
+
+def attribution():
+    """Failure attribution on K1-K3 (strict), pool coverage of known witnesses (lower bounds), 3D negative reasons, pick characteristics."""
+    R = jl(REP / "P5_PER_ROOT.jsonl")
+    out = {}
+    for dom in ("2d", "3d"):
+        o = {}
+        for arm in ("C0", "C1", "C2", "C1_common_gate", "C3", "C4"):
+            X = [x for x in R if x["domain"] == dom and x["arm"] == arm and x["K"] in ("1", "2", "3")]
+            if not X:
+                continue
+            cat = collections.Counter()
+            for x in X:
+                if x["strict"] == "SUCCESS":
+                    continue
+                if x["decision"] != "REPAIR":
+                    cat["gate_" + x["decision"]] += 1
+                    continue
+                pool_known = x["CR_pool_has_known"] if arm in ("C1", "C2", "C1_common_gate", "C3") else x["C0_pool_has_known"]
+                cat[f"{x['strict']}|known_witness_in_pool={pool_known}"] += 1
+            neg = collections.Counter()
+            for x in X:
+                if x["strict"] in ("FAIL_X", "FAIL_Y") and x["status"]:
+                    sx, sy = x["status"]
+                    neg[f"X:{sx} | Y:{sy}"] += 1
+            o[arm] = {"n": len(X), "non_success": dict(cat), "decided_negative_status": dict(neg.most_common()),
+                      "pick_len": dict(collections.Counter(x["len"] for x in X)), "pick_in_C0_top4_pool": sum(bool(x["pick_in_C0_pool"]) for x in X),
+                      "pick_is_known_witness": sum(bool(x["pick_is_known"]) for x in X)}
+        base = [x for x in R if x["domain"] == dom and x["arm"] == "C0" and x["K"] in ("1", "2", "3")]
+        o["coverage"] = {f"K{K}": {"n": sum(x["K"] == K for x in base), "has_known_witness": sum(x["K"] == K and (x["known_legacy"] + x["known_finalized"]) > 0 for x in base),
+                                   "CR_pool_has_known": sum(x["K"] == K and x["CR_pool_has_known"] for x in base),
+                                   "CR_pool_has_known_assignment": sum(x["K"] == K and x["CR_pool_has_known_set"] for x in base),
+                                   "C0_pool_has_known": sum(x["K"] == K and x["C0_pool_has_known"] for x in base),
+                                   "has_legacy_witness": sum(x["K"] == K and x["known_legacy"] > 0 for x in base),
+                                   "CR_pool_has_legacy": sum(x["K"] == K and x["CR_pool_has_legacy"] for x in base),
+                                   "C0_pool_has_legacy": sum(x["K"] == K and x["C0_pool_has_legacy"] for x in base)} for K in ("1", "2", "3")}
+        out[dom] = o
+    wj(REP / "P5_ATTRIBUTION.json", out)
+    print(json.dumps({d: {a: v["non_success"] for a, v in o.items() if a in ("C0", "C1", "C2")} for d, o in out.items()}, indent=0))
+    print(json.dumps({d: o["coverage"] for d, o in out.items()}))
+
+
 if __name__ == "__main__":
     cmd = sys.argv[1]
     if cmd == "devids":
@@ -689,6 +732,8 @@ if __name__ == "__main__":
         teach(sys.argv[2], first=int(sys.argv[3]) if len(sys.argv) > 3 and sys.argv[3] != "0" else None, tag=sys.argv[4] if len(sys.argv) > 4 else "")
     elif cmd == "manifest2":
         manifest_secondary()
+    elif cmd == "attribution":
+        attribution()
     elif cmd == "per_root":
         per_root()
     elif cmd == "stats":
