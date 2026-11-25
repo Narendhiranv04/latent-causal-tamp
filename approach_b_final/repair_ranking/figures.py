@@ -144,5 +144,32 @@ def p1():
     return {k: v[0] for k, v in pick.items()}
 
 
+
+def p2():
+    R = json.loads((rr.REP / "P2_RESULTS.json").read_text()); ch = R["selection"]["family_choices"]
+    rules = [f"{f}@{ch[f]}" for f in ("F2", "F3a", "F3b", "F5")]
+    fig, ax = plt.subplots(1, 2, figsize=(11, 3.6))
+    for k, (part, col) in enumerate((("DEV_CAL", BLUE), ("DEV_AUDIT", ORANGE))):
+        v = [R[part][r]["paired_conc_delta_vs_F0"] for r in rules]
+        y = np.arange(len(rules)) + (k - 0.5) * 0.35
+        ax[0].errorbar([x[0] for x in v], y, xerr=[[x[0] - x[1] for x in v], [x[2] - x[0] for x in v]], fmt="o", color=col, label=f"{part} (n={R[part]['F0']['roots']} roots)", capsize=3)
+    ax[0].axvline(0, ls=":", color=MUTED); ax[0].set_yticks(range(len(rules)), rules); ax[0].invert_yaxis(); ax[0].legend(fontsize=7, frameon=False)
+    ax[0].set_xlabel("paired within-root concordance change vs F0 (95% family CI)"); ax[0].set_title("rules tuned on DEV_CAL; DEV_AUDIT evaluated once", fontsize=9)
+    e = R["DEV_CAL_end_to_end"]; a = R["DEV_AUDIT_end_to_end"]
+    names = ["F0"] + [r for r in rules if r in e]
+    for k, (src, col, part) in enumerate(((e, BLUE, "DEV_CAL"), (a, ORANGE, "DEV_AUDIT"))):
+        vals = [src[n]["d12"]["decided_success_rate"] for n in names]; un = [src[n]["d12"]["unresolved"] for n in names]
+        x = np.arange(len(names)) + (k - 0.5) * 0.38
+        ax[1].bar(x, vals, 0.36, color=col, label=part)
+        for xi, v_, u in zip(x, vals, un):
+            ax[1].text(xi, v_ + 0.01, f"{u} unres.", ha="center", fontsize=6.5, color=MUTED, rotation=90)
+    ax[1].set_xticks(range(len(names)), names, fontsize=8); ax[1].set_ylim(0.5, 1.0); ax[1].set_ylabel("decided success rate (cached labels)")
+    ax[1].set_title("EXACT12 pool end-to-end (unresolved picks excluded; not paired)", fontsize=9); ax[1].legend(fontsize=7, frameon=False)
+    for a_ in ax:
+        a_.spines[["top", "right"]].set_visible(False)
+    fig.suptitle("P2: frozen-scorer inference rules (exact-contract labels, exposed VAL; development evidence)", fontsize=8.5, color=MUTED)
+    _save(fig, "p2_rules_cal_vs_audit.png")
+
+
 if __name__ == "__main__":
     globals()[sys.argv[1]]()
