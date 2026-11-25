@@ -1,0 +1,126 @@
+{
+ "n_train_roots": 3500,
+ "train_sources": {
+  "ORIGINAL_SELECTED": 2563,
+  "NEW_DEPENDENCE_SEEKING": 366,
+  "NEW_HARD_ORDER": 571
+ },
+ "X_labels_by_max_tier_and_len": {
+  "R7_12|len1": 384,
+  "R7_12|len2": 1348,
+  "R7_12|len3": 3372,
+  "T4|len1": 929,
+  "T4|len2": 1187,
+  "T4|len3": 1595,
+  "T56|len1": 208,
+  "T56|len2": 603,
+  "T56|len3": 1550,
+  "TAIL|len1": 804,
+  "TAIL|len2": 3222,
+  "TAIL|len3": 5348
+ },
+ "X_labels_by_kind_and_max_tier": {
+  "OMISSION_YNEG|R7_12": 644,
+  "OMISSION_YNEG|T4": 862,
+  "OMISSION_YNEG|T56": 345,
+  "OMISSION_YNEG|TAIL": 319,
+  "ONPOLICY_COLLECT|R7_12": 433,
+  "ONPOLICY_COLLECT|T4": 122,
+  "ONPOLICY_COLLECT|T56": 82,
+  "ONPOLICY_COLLECT|TAIL": 6496,
+  "ONPOLICY_COVERAGE|R7_12": 43,
+  "ONPOLICY_COVERAGE|T4": 10,
+  "ONPOLICY_COVERAGE|T56": 4,
+  "ONPOLICY_COVERAGE|TAIL": 404,
+  "SELECTED_ASSIGNMENT_ORDER|R7_12": 2374,
+  "SELECTED_ASSIGNMENT_ORDER|T4": 1687,
+  "SELECTED_ASSIGNMENT_ORDER|T56": 1021,
+  "SELECTED_ASSIGNMENT_ORDER|TAIL": 1428,
+  "V32C_EXHAUSTIVE_CANDIDATE|R7_12": 1097,
+  "V32C_EXHAUSTIVE_CANDIDATE|T4": 483,
+  "V32C_EXHAUSTIVE_CANDIDATE|T56": 526,
+  "V32C_EXHAUSTIVE_CANDIDATE|TAIL": 583,
+  "V3_DIRECT_CANDIDATE|R7_12": 513,
+  "V3_DIRECT_CANDIDATE|T4": 547,
+  "V3_DIRECT_CANDIDATE|T56": 383,
+  "V3_DIRECT_CANDIDATE|TAIL": 144
+ },
+ "X_labels_by_K_and_max_tier": {
+  "K0|R7_12": 56,
+  "K0|T4": 72,
+  "K0|T56": 27,
+  "K0|TAIL": 24,
+  "K1|R7_12": 749,
+  "K1|T4": 720,
+  "K1|T56": 311,
+  "K1|TAIL": 2703,
+  "K2|R7_12": 1001,
+  "K2|T4": 999,
+  "K2|T56": 530,
+  "K2|TAIL": 2899,
+  "K3|R7_12": 3165,
+  "K3|T4": 1863,
+  "K3|T56": 1454,
+  "K3|TAIL": 3701,
+  "KNONE|R7_12": 133,
+  "KNONE|T4": 57,
+  "KNONE|T56": 39,
+  "KNONE|TAIL": 47
+ },
+ "joint_class_counts (x, y of endpoint; ? = endpoint Y not labelled)": {
+  "x1_y1": 6394,
+  "x0_y1": 5096,
+  "x0_y0": 5095,
+  "x1_y0": 3965
+ },
+ "grammar": {
+  "legal_original_grammar": 20550
+ },
+ "per_root_label_nodes": {
+  "median": 6.0,
+  "mean": 12.131714285714287,
+  "p90": 27.0,
+  "max": 279,
+  "C_median_nodes_per_root (rank-loss scale, fixed before training)": 6
+ },
+ "decided_Z_root_classes": {
+  "no_decided_Z": 1417,
+  "roots_with_Z+_and_Z-": 1719,
+  "Z+_only": 219,
+  "Z-_only": 145
+ },
+ "legal_action_support_by_tier (objects x cells, TRAIN S0)": {
+  "T4": 125624,
+  "T56": 62812,
+  "R7_12": 188436,
+  "TAIL": 1166518
+ },
+ "label_share_vs_support_by_max_tier": {
+  "T4": {
+   "labels": 3711,
+   "share_labels": 0.1805839416058394,
+   "share_legal_actions": 0.08139485159292208
+  },
+  "T56": {
+   "labels": 2361,
+   "share_labels": 0.11489051094890511,
+   "share_legal_actions": 0.04069742579646104
+  },
+  "R7_12": {
+   "labels": 5104,
+   "share_labels": 0.2483698296836983,
+   "share_legal_actions": 0.12209227738938311
+  },
+  "TAIL": {
+   "labels": 9374,
+   "share_labels": 0.45615571776155717,
+   "share_legal_actions": 0.7558154452212338
+  },
+  "OUTSIDE": {
+   "labels": 0,
+   "share_labels": 0.0,
+   "share_legal_actions": 0.0
+  }
+ },
+ "note": "x / y are finalized snapshot labels (UNKNOWN absent = missing); rank = frozen S1 marginal on the TRAIN root S0; OUTSIDE = destination not in the original-grammar legal set (e.g. vacated or occupied cell) or object not movable"
+}
