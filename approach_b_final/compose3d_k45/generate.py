@@ -485,11 +485,24 @@ def attempt_x(item):
                         ok.add(a)
                 return ok
             cand_B = [o for o, _ in order if o not in chained]
-            F = {B: azim(scene(), B, park[B]) for B in cand_B}
-            cand_B = sorted([B for B in cand_B if F[B]], key=lambda B: (len(F[B]), B))
-            if not cand_B:
-                raise A.Reject("DERIVE_NO_FEASIBLE_MOVER")
-            B = cand_B[item["j"] % len(cand_B)]
+            if item.get("mode") == "v2":                                     # A5: attempt j = (blocker j % n, destination (j // n) % 3)
+                B = sorted(cand_B)[item["j"] % len(cand_B)]
+                occ0 = {tuple(v) for v in cells.values()} | {src, goal} | {park[o] for o in park if o != B}
+                alts = [park[B]] + [tuple(x) for x in rec.get("alt_parking", {}).get(B, []) if tuple(x) not in occ0 and tuple(x) != park[B]][:2]
+                dk = (item["j"] // len(cand_B)) % 3
+                if dk >= len(alts):
+                    raise A.Reject("DERIVE_NO_SUCH_DESTINATION")
+                park[B] = alts[dk]
+                F = {B: azim(scene(), B, park[B])}
+                if not F[B]:
+                    raise A.Reject("DERIVE_MOVER_INFEASIBLE_AT_DESTINATION")
+                order = [[o, list(park[o])] for o, _ in order]
+            else:
+                F = {B: azim(scene(), B, park[B]) for B in cand_B}
+                cand_B = sorted([B for B in cand_B if F[B]], key=lambda B: (len(F[B]), B))
+                if not cand_B:
+                    raise A.Reject("DERIVE_NO_FEASIBLE_MOVER")
+                B = cand_B[item["j"] % len(cand_B)]
             bcell = tuple(cells[B])
             route = set(P.line(src, goal)) | {(r + a, cc + b) for r, cc in P.line(src, goal) for a in (-1, 0, 1) for b in (-1, 0, 1)}
             avoid = {src, goal} | {(0, k) for k in range(A.GRID["C"])}
@@ -556,6 +569,7 @@ def run_items(items_file, outdir, workers, cpu_lo, cap_h, k5_quota=10):
     while True:
         allr = [json.loads(l) for l in open(led) if l.strip()]
         k5 = sum(1 for d in allr if d.get("accepted") and d["kind"] == "DERIVE")
+        k5_quota = int(os.environ.get("K45_K5_NEED", k5_quota))
         for rid, (ar, t) in list(running.items()):
             if ar.ready():
                 r = ar.get(); running.pop(rid)
