@@ -46,5 +46,103 @@ def p0():
     _save(fig, "p0_train_rank_support.png")
 
 
+
+def _rel(ax, y, p, label, color, bins=10):
+    y, p = np.asarray(y, float), np.asarray(p, float)
+    e = np.linspace(0, 1, bins + 1); k = np.clip(np.digitize(p, e) - 1, 0, bins - 1)
+    xs = [p[k == b].mean() for b in range(bins) if (k == b).sum() >= 15]; ys = [y[k == b].mean() for b in range(bins) if (k == b).sum() >= 15]
+    ax.plot(xs, ys, "o-", color=color, lw=2, ms=5, label=label)
+
+
+def p1():
+    import pickle
+    import search as S
+    sys.path.insert(0, str(rr.ABF / "full_domain_sets"))
+    import domain as DM
+    from figs import scene
+    roots = pickle.loads((rr.PRIV / "p1_val_table.pkl").read_bytes()); tr = pickle.loads((rr.PRIV / "p1_train_table.pkl").read_bytes())
+    K12 = [r for r in roots if r["K"] in ("1", "2")]
+    # (a) reliability by factor and tier
+    fig, ax = plt.subplots(1, 3, figsize=(13, 3.9))
+    ys, ps, xs, p1s, y11, p11, tt = [], [], [], [], [], [], []
+    for r in K12:
+        sc = r["sc"]["s0"]
+        for i, v in r["known"].items():
+            if v["y"] is not None:
+                ys.append(v["y"]); ps.append(sc["py"][i])
+            if v["y"] == 1 and v["x"] is not None:
+                xs.append(v["x"]); p1s.append(sc["px1"][i])
+            if v["z"] is not None:
+                y11.append(v["z"]); p11.append(sc["p11"][i]); tt.append(r["info"][i]["max_tier"])
+    trL = [c for c in tr if len(c["seq"]) <= 2 and c["z"] is not None]
+    _rel(ax[0], ys, ps, "pY vs Y (VAL)", BLUE); _rel(ax[0], xs, p1s, "pX1 vs X | Y=1 (VAL)", ORANGE)
+    _rel(ax[0], [c["z"] for c in trL], [c["p11"] for c in trL], "p11 vs Z (TRAIN, in-sample)", MUTED)
+    ax[0].set_title("factor reliability, K1/K2 labelled candidates", fontsize=9)
+    y11, p11, tt = np.array(y11), np.array(p11), np.array(tt)
+    for t, c in zip(TIERS, [BLUE, GREEN, ORANGE, RED]):
+        m = tt == t
+        _rel(ax[1], y11[m], p11[m], f"{t} (n={m.sum()})", c, bins=6)
+    ax[1].set_title("p11 vs verified Z by worst destination rank (VAL)", fontsize=9)
+    for a in ax[:2]:
+        a.plot([0, 1], [0, 1], ":", color=MUTED, lw=1); a.set_xlabel("predicted"); a.set_ylabel("observed rate"); a.legend(fontsize=7, frameon=False)
+        a.spines[["top", "right"]].set_visible(False)
+    R = json.loads((rr.REP / "P1_RANKING.json").read_text())["VAL"]
+    names = [("frozen_p11_s0", "p11 (frozen)"), ("pY_only", "pY only"), ("pX1_only", "pX1 only"), ("cvae_prior_only_control", "cVAE prior only"), ("random_control", "random")]
+    v = [R[k]["concordance"] for k, _ in names]
+    ax[2].barh(range(len(v)), [x[0] for x in v], xerr=[[x[0] - x[1] for x in v], [x[2] - x[0] for x in v]], color=[BLUE, BLUE, ORANGE, MUTED, MUTED], height=0.6)
+    ax[2].axvline(0.5, ls=":", color=MUTED); ax[2].set_yticks(range(len(v)), [n for _, n in names], fontsize=8); ax[2].invert_yaxis()
+    ax[2].set_xlabel("within-root concordance Z+ vs Z- (root-macro, 95% family CI)"); ax[2].set_title(f"ranking known candidates ({R['frozen_p11_s0']['roots']} K1/K2 roots)", fontsize=9)
+    ax[2].spines[["top", "right"]].set_visible(False)
+    fig.suptitle("P1: exact-contract labels on exposed VAL (development evidence); labelled candidates are selection-biased (picked by earlier methods)", fontsize=8.5, color=MUTED)
+    _save(fig, "p1_calibration_ranking.png")
+    # (b) tier-pair concordance heatmap
+    tp = R["frozen_p11_s0"]["by_tier_pair"]
+    M = np.full((4, 4), np.nan); N = np.zeros((4, 4), int)
+    for k, d in tp.items():
+        a, b = k.split("|"); i, j = TIERS.index(a[4:]), TIERS.index(b[4:]); M[i, j] = d["root_macro_conc"]; N[i, j] = d["pairs"]
+    fig, ax = plt.subplots(figsize=(5.2, 4.2))
+    ax.imshow(M, cmap="RdBu", vmin=0, vmax=1)
+    for i in range(4):
+        for j in range(4):
+            if not np.isnan(M[i, j]):
+                ax.text(j, i, f"{M[i, j]:.2f}\n({N[i, j]})", ha="center", va="center", fontsize=8, color=INK)
+    ax.set_xticks(range(4), ["1-4", "5-6", "7-12", ">12"]); ax.set_yticks(range(4), ["1-4", "5-6", "7-12", ">12"])
+    ax.set_xlabel("worst rank of the verified FAILURE"); ax.set_ylabel("worst rank of the verified SUCCESS")
+    ax.set_title("P(p11 success > p11 failure), same root\n(blue = correct order; cells with >= 20 pairs)", fontsize=9)
+    _save(fig, "p1_tier_pair_concordance.png")
+    # (c) four real scenes
+    per = {r["root_id"]: r for r in rr.jl(rr.FDS_REP / "P3_PHYSICAL_PER_ROOT.jsonl")}
+    pub = {r["root_id"]: r for r in rr.public_val()}
+    T = {r["root_id"]: r for r in roots}
+    order = sorted(per, key=lambda r: rr.hx("XYRR_FIG|", r))
+    pick = {}
+    for rid in order:
+        e4, ef, ms = per[rid]["EXACT4@None"], per[rid]["EXACT_FULL@None"], per[rid]["PW_MCTS_SEEDED4@1024"]
+        if per[rid]["K"] not in ("1", "2"):
+            continue
+        if e4["strict"] == "FAIL_X":
+            pick.setdefault("EXACT4 FAIL_X (Y verified, execution failed)", (rid, e4))
+        if e4["strict"] == "FAIL_Y":
+            pick.setdefault("EXACT4 FAIL_Y (endpoint does not restore task)", (rid, e4))
+        if ms["strict"] == "SUCCESS" and "OFF4" in (ms.get("pick_stratum") or "") and e4["strict"] != "SUCCESS":
+            pick.setdefault("off-top-4 rescue (seeded MCTS) where EXACT4 failed", (rid, ms))
+        if ef["strict"] in ("FAIL_X", "FAIL_Y") and "OFF4" in (ef.get("pick_stratum") or "") and e4["strict"] == "SUCCESS":
+            pick.setdefault("off-top-4 harmful replacement (EXACT_FULL) where EXACT4 succeeded", (rid, ef))
+    fig, axs = plt.subplots(1, 4, figsize=(20, 5.6))
+    samp, _, _ = rr.bundle()
+    cv = rr.cvae_table(list(pub.values()), samp, "val")
+    for ax, (title, (rid, e)) in zip(axs, pick.items()):
+        row = pub[rid]; dom = DM.Domain(cv[rid]["raw"], cv[rid]["D6"], 0.25)
+        seq = e["seq"] or []
+        x = rr.readout(rr.load_net(rr.scorer_path(0)), [(row, [seq])])[0]["rows"][0] if seq else {}
+        rk = [dom.rank.get((o, d), -1) + 1 for o, d in seq]
+        scene(ax, row, dom, obj=seq[0][0] if seq else None, arrows=[(o, d, BLUE if i == 0 else ORANGE) for i, (o, d) in enumerate(seq)],
+              title=f"{title}\nK{per[rid]['K']}  verified: {e['strict']}  ranks {rk}\np11 {x.get('p11', 0):.2f}  pY {x.get('py', 0):.2f}  pX1 {x.get('px1', 0):.2f}")
+    fig.suptitle("P1 real VAL scenes (public inputs; outcome = exact-contract teacher). Rings: top-4 (solid) / ranks 5-6 (dashed) of the first moved object; heat = frozen cVAE prior; green square = goal; red = target",
+                 fontsize=8.5, color=MUTED)
+    _save(fig, "p1_real_scenes.png")
+    return {k: v[0] for k, v in pick.items()}
+
+
 if __name__ == "__main__":
     globals()[sys.argv[1]]()

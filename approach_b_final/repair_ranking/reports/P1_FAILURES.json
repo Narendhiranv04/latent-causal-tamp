@@ -1,0 +1,77 @@
+{
+ "high_conf_false_positives_p11>=0.8_VAL_K1K2": {
+  "threshold": 0.8,
+  "counts": {
+   "FAIL_X (x=0, y=1)": 156,
+   "tier_T4": 183,
+   "len1": 76,
+   "len2": 321,
+   "FAIL_Y (y=0)": 206,
+   "tier_R7_12": 53,
+   "tier_T56": 22,
+   "x=0, y unresolved": 35,
+   "tier_TAIL": 139
+  },
+  "median_pY": 0.9516034535009305,
+  "median_pX1": 0.9757923222315148
+ },
+ "coverage_VAL_K1K2": {
+  "roots": 240,
+  "roots_with_known_success": 222,
+  "roots_with_known_success_in_D4": 219,
+  "roots_with_known_success_in_D6": 219,
+  "roots_with_ONLY_off_D4_known_success": 3,
+  "decided_positive_by_max_tier": {
+   "T4": 1329,
+   "TAIL": 538,
+   "R7_12": 220,
+   "T56": 167
+  },
+  "decided_negative_by_max_tier": {
+   "T4": 679,
+   "R7_12": 72,
+   "T56": 34,
+   "TAIL": 201
+  },
+  "positive_rate_by_max_tier": {
+   "T4": 0.6619,
+   "T56": 0.8308,
+   "R7_12": 0.7534,
+   "TAIL": 0.728
+  },
+  "note": "lower bounds: labelled candidates are those some earlier method selected; absence of a known witness is not a pool miss"
+ },
+ "decomposition": {
+  "EXACT4": {
+   "categories": {
+    "SUCCESS": 145,
+    "UNRESOLVED (no decided label for the pick)": 58,
+    "RANKING_FAILURE (verified success scored lower)|FAIL_X": 12,
+    "NOOP_WITH_SCORED_KNOWN_SUCCESS (gate / admission)": 7,
+    "RANKING_FAILURE (verified success scored lower)|FAIL_Y": 9,
+    "RETRIEVAL_OR_POOL_MISS (known success only outside the pool)|FAIL_X": 1,
+    "FAILURE_NO_KNOWN_WITNESS|FAIL_X": 5,
+    "FAILURE_NO_KNOWN_WITNESS|FAIL_Y": 2,
+    "RETRIEVAL_OR_POOL_MISS (known success only outside the pool)|FAIL_Y": 1
+   }
+  },
+  "EXACT6": {
+   "categories": {
+    "SUCCESS": 141,
+    "RANKING_FAILURE (verified success scored lower)|FAIL_Y": 11,
+    "UNRESOLVED (no decided label for the pick)": 58,
+    "RANKING_FAILURE (verified success scored lower)|FAIL_X": 14,
+    "NOOP_WITH_SCORED_KNOWN_SUCCESS (gate / admission)": 7,
+    "RETRIEVAL_OR_POOL_MISS (known success only outside the pool)|FAIL_X": 1,
+    "FAILURE_NO_KNOWN_WITNESS|FAIL_X": 6,
+    "FAILURE_NO_KNOWN_WITNESS|FAIL_Y": 1,
+    "RETRIEVAL_OR_POOL_MISS (known success only outside the pool)|FAIL_Y": 1
+   }
+  }
+ },
+ "pool_rule_parity_vs_sealed_EVAL": {
+  "roots": 600,
+  "EXACT4_pool_rule_equals_sealed": 600,
+  "EXACT6_pool_rule_equals_sealed": 600
+ }
+}
