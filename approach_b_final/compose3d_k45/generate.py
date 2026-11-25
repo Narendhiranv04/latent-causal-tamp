@@ -452,7 +452,9 @@ def certify(rec, orders, K, out):
 
 
 def attempt_x(item):
-    """A4 item: kind RECERT (historical K4, re-certified unchanged) or DERIVE (parent K4 + ONE enabler -> witness length 5)."""
+    """A4 item: kind RECERT (historical K4, re-certified unchanged) or DERIVE (parent K4 + ONE enabler -> witness length 5); FRESH -> attempt()."""
+    if item["kind"] == "FRESH":
+        return {**attempt(item), "kind": "FRESH"}
     t0, c0 = time.time(), time.process_time(); cnt0 = dict(G["cnt"]); j0 = G["jobs"]
     out = {**item, "accepted": False}
     import numpy as np
@@ -562,7 +564,8 @@ def run_items(items_file, outdir, workers, cpu_lo, cap_h, k5_quota=10):
         cpu_h = (sum(d.get("cpu_s", 0) for d in allr) + sum(time.time() - t for _, t in running.values())) / 3600
         if cpu_h >= float(cap_h) - 0.05:
             pool.terminate(); print("A4_DONE CAP_HARD_STOP", flush=True); break
-        while i < len(todo) and todo[i]["kind"] == "DERIVE" and k5 >= k5_quota:
+        k4f = sum(1 for d in allr if d.get("accepted") and d["kind"] == "FRESH")
+        while i < len(todo) and ((todo[i]["kind"] == "DERIVE" and k5 >= k5_quota) or (todo[i]["kind"] == "FRESH" and k4f >= int(os.environ.get("K45_K4_NEED", "99")))):
             i += 1
         if i < len(todo) and len(running) < int(workers) and cpu_h + (len(running) + 1) * 0.5 < float(cap_h) and not (out / "STOP").exists():
             it = {**todo[i], "out": str(out)}; i += 1
