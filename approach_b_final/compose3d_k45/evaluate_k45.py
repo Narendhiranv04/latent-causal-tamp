@@ -145,9 +145,14 @@ def job(j):
             x = {"x": None, "resolution": "NOT_APPLICABLE"}
         out["X"] = x
         if j.get("y_cells") is not None:
-            out["Y"] = F.capped(run_y_g, rec, j["y_cells"])
+            yc = j["y_cells"] if j["y_cells"] != "ENDPOINT" else {**{k: list(v) for k, v in rec["initial_cells"].items()}, **{o: list(d) for o, d in j["order"]}}
+            out["Y"] = F.capped(run_y_g, rec, yc)
         if j.get("replay") and x.get("x") == 1 and out.get("Y", {}).get("y") == 1:
             out["REPLAY"] = F.capped(replay, rec, x, out["Y"])
+            if j.get("fixture") == "drop_inner_connectors":                     # negative control: skip intermediate q_ref returns
+                last = max(i for i, s in enumerate(x["trace"]) if s["kind"] == "connector")
+                bad = {**x, "trace": [s for i, s in enumerate(x["trace"]) if s["kind"] == "move" or i == last]}
+                out["FIXTURE_DISCONNECTED"] = F.capped(replay, rec, bad, out["Y"])
     except Exception as e:  # noqa: BLE001
         out["error"] = f"{type(e).__name__}: {str(e)[:200]}"; out["trace"] = traceback.format_exc()[-600:]
     out.update(cpu_s=round(time.process_time() - c0, 1), wall_s=round(time.time() - t0, 1), planner_calls={k: W["cnt"][k] - cnt0[k] for k in cnt0},
@@ -213,6 +218,73 @@ def outcome(r):
     if xv == 0:
         return "FAIL_X"
     return "UNKNOWN"
+
+
+PRIV = Path.home() / "k45_private"
+GV = "/home/projects/long-horizon/naren_workspace/k45"
+ARMS = ["B0", "B1", "B2", "B3", "B4"]
+
+
+def seal(pred, public, out):
+    """Seal the public-only predictions (before ANY physical evaluation of them)."""
+    recs = [json.loads(l) for l in open(pred)]
+    for r in recs:
+        assert sorted(p["arm"] for p in r["plans"]) == ARMS, "one committed plan per root and arm"
+    s = {"predictions": Path(pred).name, "sha256": sha(pred), "n_roots": len(recs), "public_sha256": sha(public),
+         "decisions": dict(collections.Counter(f"{p['arm']}:{p['decision']}:{len(p['seq'] or [])}" for r in recs for p in r["plans"])),
+         "sealed_utc": time.strftime("%FT%TZ", time.gmtime())}
+    Path(out).write_text(json.dumps(s, indent=1))
+    return s
+
+
+def ids_of(public):
+    return {r["root_id"]: r["inputs"]["ids"] for r in map(json.loads, open(public))}
+
+
+def cell_rc(c):
+    return [int(c) // 6, int(c) % 6]
+
+
+def primary_jobs(pred, public, index):
+    """Unique (root, ordered seq, boundary set) physical jobs of the sealed REPAIR plans; Y once per endpoint; fixed order (root, arm)."""
+    ids = ids_of(public); idx = {e["root_id"]: e for e in map(json.loads, open(index))}
+    jobs, seen, yseen, plan_job = [], {}, set(), {}
+    for r in sorted((json.loads(l) for l in open(pred)), key=lambda r: r["root_id"]):
+        rid = r["root_id"]
+        for p in sorted(r["plans"], key=lambda p: p["arm"]):
+            if p["decision"] != "REPAIR":
+                continue
+            seq = p["seq"]; m = len(seq)
+            bounds = [m] if p["arm"] in ("B0", "B1") else [int(x) for x in itertools.accumulate(p["partition"] or [m])]
+            order = [[ids[rid][int(o)], cell_rc(d)] for o, d in seq]
+            key = f"primary|{rid}|{json.dumps(order)}|{json.dumps(bounds)}"
+            ep = json.dumps(sorted(order))
+            if key not in seen:
+                seen[key] = True
+                jobs.append({"key": key, "root_id": rid, "mode": "continuous" if bounds == [m] else "chunked", "path": f"{GV}/gen/roots/{rid}.json",
+                             "order": order, "bounds": bounds, "replay": True, "y_cells": "ENDPOINT" if (rid, ep) not in yseen else None, "y_endpoint": ep})
+                yseen.add((rid, ep))
+            plan_job[(rid, p["arm"])] = key
+    return jobs, plan_job
+
+
+def merged(results):
+    """Per job outcome with the endpoint Y shared across jobs of the same (root, endpoint)."""
+    by = {r["key"]: r for r in results if "key" in r}
+    ys = {}
+    for k, r in by.items():
+        if r.get("Y") is not None:
+            ys[(r["root_id"], json.dumps(sorted(json.loads(k.split("|")[2]))))] = r["Y"]
+    out = {}
+    for k, r in by.items():
+        if r.get("censored"):
+            out[k] = {**r, "X": {}, "Y": {}}; continue
+        y = r.get("Y") or ys.get((r["root_id"], json.dumps(sorted(json.loads(k.split("|")[2])))))
+        out[k] = {**r, "Y": y or {}}
+    return out
+
+
+import itertools  # noqa: E402
 
 
 if __name__ == "__main__":

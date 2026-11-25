@@ -56,7 +56,22 @@ def spec_for(K_b, rng):
             "distractor_role": ["near_T", "near_goal", "near_path", "far"][int(rng.integers(4))], "start_pose": "home"}
 
 
-def chain(c, n_chain, rng, t0):
+def movers_of(c):
+    """The route construction's minimal repair: blockers cutting a tight feasible grasp (the fewest cuts), in the generator's order."""
+    F0 = c["empty_solve"]["feasible_azimuths"]
+    cut = {tuple(g["cell"]): set(g["blocks_azimuths"]) for g in c["greedy"]}
+    cell_to = {tuple(v): o for o, v in c["cells"].items()}
+    n = {a: sum(a in v for v in cut.values()) for a in F0}
+    out = []
+    for a in F0:
+        if n[a] == min(n.values()):
+            S = tuple(cell_to[x] for x in cut if a in cut[x])
+            if S not in out:
+                out.append(S)
+    return out, min(n.values())
+
+
+def chain(c, n_chain, rng, t0, movers):
     """Add exactly n_chain enabling obstacles.  For a mover B (route blockers in order, then depth 2 on chain obstacles): F_B = azimuths whose
     grasp plans B -> its parking cell in the FULL current scene; probe free cells within Chebyshev 2 of B's source with one standard obstacle
     (bd_3dt_plus.PROBE, the smallest intended blocker) and greedily cover F_B with <= the remaining chain budget; then verify with the real
@@ -66,9 +81,9 @@ def chain(c, n_chain, rng, t0):
     TS = A.env()["TS"]
     objs, cells = list(c["objs"]), {o: list(v) for o, v in c["cells"].items()}
     src, goal = tuple(c["src"]), tuple(c["goal"])
-    park = {o: tuple(c["parking"][o][0]) for o in c["intended"]}
+    park = {o: tuple(c["parking"][o][0]) for o in movers}
     avoid = {src, goal} | {(0, k) for k in range(A.GRID["C"])}
-    blocked_by, left, queue = {}, n_chain, list(c["intended"])
+    blocked_by, left, queue = {}, n_chain, list(movers)
 
     def scene(extra):
         allo = objs + [x for x, _ in extra]
@@ -101,7 +116,7 @@ def chain(c, n_chain, rng, t0):
             continue
         occ = {tuple(v) for v in cells.values()} | {p for _, p in added} | set(park.values()) | avoid
         cand = sorted((x for x in itertools.product(range(A.GRID["R"]), range(A.GRID["C"])) if x not in occ and 1 <= A.cheb(x, bcell) <= 2),
-                      key=lambda x: (A.cheb(x, bcell), x))[:10]
+                      key=lambda x: (A.cheb(x, bcell), x))[:8]
         probe = {}
         for x in cand:
             pr = {**P.PROBE, "id": "pz", "color": "red"}
@@ -190,7 +205,12 @@ def attempt(item):
         spec = spec_for(K_b, rng)
         out["spec"] = spec
         c = P.construct(spec, seed, rid)
-        objs, cells, blocked_by, park = chain(c, n_chain, rng, time.time())
+        mv_all, kmin = movers_of(c)
+        out["route"] = {"K_by_construction": kmin, "tight_sets": [list(m) for m in mv_all]}
+        if kmin != K_b or not mv_all or len(mv_all[0]) != K_b:
+            raise A.Reject(f"ROUTE_K_MISMATCH:{kmin}")
+        movers = list(mv_all[0])
+        objs, cells, blocked_by, park = chain(c, n_chain, rng, time.time(), movers)
         Gm = A.env()
         rec = {"ids": {"root_id": rid, "construction_seed": seed, "parent_family_id": "k45-" + hashlib.sha256(rid.encode()).hexdigest()[:10],
                        "config_hash": Gm["config_hash"], "teacher_version": A.TEACHER_VERSION, "robot_protocol": Gm["protocol"]},
@@ -207,7 +227,7 @@ def attempt(item):
             raise A.Reject("INITIAL_NOT_INFEASIBLE" if y0.get("y") == 1 else "INITIAL_UNRESOLVED")
         wit = None
         for alt in (False, True):
-            order = [[o, list(park[o])] for o in order_of(c["intended"], blocked_by, alt)]
+            order = [[o, list(park[o])] for o in order_of(movers, blocked_by, alt)]
             assert len(order) == K
             x = job_x(rec, order)
             out.setdefault("x_tries", []).append({"order": order, "x": x.get("x"), "status": x.get("status"), "phase": x.get("phase"), "resolution": x.get("resolution")})

@@ -176,4 +176,5 @@ def b2(fz, row0, rule):
     except CapReached as e:
         stop = f"CAP:{e}"
     pick, why = choose(row0, cands, rule)
-    return plan_out("B2", row0, pick, why, {"n_candidates": len(cands) - 1, "greedy_trace": trace, "cap_stop": stop or ("WALL" if time.perf_counter() >= t_end else None)}, fz, t0)
+    return plan_out("B2", row0, pick, why, {"n_candidates": len(cands) - 1, "greedy_trace": trace,
+                                            "pool_keys": sorted({json.dumps(sorted(map(list, c["seq"]))) for c in cands if c["seq"]}), "cap_stop": stop or ("WALL" if time.perf_counter() >= t_end else None)}, fz, t0)

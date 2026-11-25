@@ -164,7 +164,8 @@ def b4(fz, row0, rule):
     pick, why = CP.choose(row0, cands, rule)
     ins = [x for x in (pick or {}).get("trace", []) if x.get("inserted")]
     return CP.plan_out("B4", row0, pick, why, {"n_candidates": len(cands) - 1, "pool": len(pool), "ranked": ranked, "cap_stop": stop, "b4": dict(cx.n),
-                                               "pick_insertions": ins, "pick_edges": (pick or {}).get("edges")}, fz, t0)
+                                               "pick_insertions": ins, "pick_edges": (pick or {}).get("edges"),
+                                               "pool_keys": sorted({json.dumps(sorted(map(list, c["seq"]))) for c in pool.values()})}, fz, t0)
 
 
 def respecting(seq, edges):
