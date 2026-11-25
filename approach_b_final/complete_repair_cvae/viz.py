@@ -128,17 +128,42 @@ def p2():
         c = json.loads(f.read_text())
         a = 0 if c["dom"] == "2d" else 1
         st = [x["step"] for x in c["curve"]]
-        lab = f"{c['tag']} s{c['seed']}"
-        axs[a, 0].plot(st, [x["val_neg_elbo"] for x in c["curve"]], label=lab)
-        axs[a, 0].plot(st, [x["train_nll"] + x["train_kl"] for x in c["curve"]], ls=":", alpha=0.6)
-        axs[a, 1].plot(st, [x["val_kl"] for x in c["curve"]], label=lab)
-        axs[a, 2].plot(st, [x["val_dec_ce"] for x in c["curve"]], label=lab)
-        axs[a, 0].axvline(c["best_step"], color="k", lw=0.4)
+        lab, col = f"{c['tag']} s{c['seed']}", f"C{c['seed']}"
+        axs[a, 0].plot(st, [x["val_neg_elbo"] for x in c["curve"]], label=lab, color=col)
+        axs[a, 0].plot(st, [x["train_nll"] + x["train_kl"] for x in c["curve"]], ls=":", alpha=0.6, color=col)
+        axs[a, 1].plot(st, [x["val_kl"] for x in c["curve"]], label=lab, color=col)
+        axs[a, 2].plot(st, [x["val_dec_ce"] for x in c["curve"]], label=lab, color=col)
+        axs[a, 0].axvline(c["best_step"], color=col, lw=0.6)
     for a, dom in enumerate(("2D", "3D")):
         axs[a, 0].set_title(f"{dom} -ELBO (VAL solid, TRAIN dotted)"); axs[a, 1].set_title(f"{dom} VAL KL"); axs[a, 2].set_title(f"{dom} VAL decision CE")
         for ax in axs[a]:
             ax.set_xlabel("optimizer step"); ax.legend(fontsize=6)
+    fig.tight_layout()
     save(fig, "p2_curves.png")
+
+
+
+def p2dev():
+    fig, axs = plt.subplots(2, 3, figsize=(14, 7))
+    for a, dom in enumerate(("2d", "3d")):
+        f = D.HERE / "reports" / f"P2_DEV_{dom}.json"
+        if not f.exists():
+            continue
+        r = json.loads(f.read_text())
+        ag, bs = r["agg"], r["budgets"]
+        for name, ls in (("order", "-"), ("assignment", "--"), ("objset", ":")):
+            axs[a, 0].plot(bs, [ag[f"recall_{name}@{b}"]["rate"] for b in bs], ls, marker="o", label=f"CR {name}")
+        axs[a, 0].axhline(ag["C0_recall_assignment"]["rate"], color="k", lw=1, label="C0 top-4 exhaustive (order = assignment)")
+        axs[a, 0].set_xscale("log", base=2); axs[a, 0].set_xticks(bs, [str(b) for b in bs]); axs[a, 0].set_ylim(0, 1.02)
+        axs[a, 0].set_title(f"{dom.upper()} VAL known-witness recall vs raw draws (lower bound)", fontsize=8); axs[a, 0].legend(fontsize=6)
+        axs[a, 1].plot(bs, [ag[f"unique@{b}"]["mean"] for b in bs], marker="o", label="unique legal sequences")
+        axs[a, 1].plot(bs, [ag[f"dup_rate@{b}"]["mean"] * b for b in bs], marker="s", label="duplicate draws")
+        axs[a, 1].axhline(ag["C0_n_scored"]["mean"], color="k", lw=1, label=f"C0 scored (mean {ag['C0_n_scored']['mean']:.0f})")
+        axs[a, 1].set_xscale("log", base=2); axs[a, 1].set_yscale("log"); axs[a, 1].set_title(f"{dom.upper()} pool size per root", fontsize=8); axs[a, 1].legend(fontsize=6)
+        L = r["pool_length_dist"]
+        axs[a, 2].bar([1, 2, 3], [L.get(str(k), 0) / sum(L.values()) for k in (1, 2, 3)])
+        axs[a, 2].set_title(f"{dom.upper()} main-pool repair length (off-top-4 action rate {r['off_top4_action_rate']:.2f})", fontsize=8)
+    save(fig, "p2_dev_pools.png")
 
 
 if __name__ == "__main__":
@@ -149,3 +174,5 @@ if __name__ == "__main__":
         p1({"2d": Path(sys.argv[2]), "3d": Path(sys.argv[3])} if len(sys.argv) > 3 else None)
     elif cmd == "p2":
         p2()
+    elif cmd == "p2dev":
+        p2dev()

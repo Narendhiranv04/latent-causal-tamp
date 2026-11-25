@@ -9,10 +9,12 @@ teacher are read here (allowlist: public rows {root_id, domain, inputs}, the bun
   C2 / CR+XY   the SAME pool (hash checked) scored once by the frozen X/Y; exhaustive.Selectors with the production rule
 
     python infer.py predict DOM PUBLIC.jsonl CKPT OUT.jsonl [--budgets 64,256,1024] [--main 256] [--L 64] [--c0] [--ids F]
-    python infer.py parity  DOM PUBLIC.jsonl ARCHIVED_PRED.jsonl IDS.json OUT.json"""
+    python infer.py parity  DOM PUBLIC.jsonl ARCHIVED_PRED.jsonl IDS.json OUT.json
+    python infer.py timing  DOM PUBLIC.jsonl CKPT OUT.json --ids IDS.json [--caps 0.05,0.25,1.0] [--main 256]
+  C3 / C4 (secondary, --controls with --c0): count-matched CR+XY continuing the same stream; C0-budgeted hash-stratified subset"""
 from __future__ import annotations
 
-import argparse, hashlib, json, math, os, sys, time
+import argparse, hashlib, itertools, json, math, os, sys, time
 from pathlib import Path
 
 import numpy as np
@@ -68,6 +70,13 @@ def c0(root, samp, scor, man):
             "timing_s": {"proposal": round(t1 - t0, 5), "construct_score_select": round(t2 - t1, 5), "total": round(t2 - t0, 5)}}
 
 
+def c0_props(root, samp, man):
+    """DEV-only shortcut: C0's top-4 proposals and exact ordered-pool size (enumerated, not scored); no decision."""
+    D6 = EX.proposals(root, samp, man["config"]["proposal_seed"])
+    n = sum(1 for _ in EX.stream(D6, man["config"]["M"]))
+    return {"props_only": True, "decision": None, "proposals": {str(k): v[:man["config"]["M"]] for k, v in D6.items()}, "n_scored": n}
+
+
 # ------------------------------------------------------------------------------------------------ CR pool, C1, C2
 def make_pool(m, dom, row, b1, bmax, seed):
     """-> raw trajectory index per draw (-1 = no candidate), unique legal sequences (first-appearance order), timing."""
@@ -77,7 +86,7 @@ def make_pool(m, dom, row, b1, bmax, seed):
     sync(); t1 = time.time()
     o, d, n = o.cpu().numpy(), d.cpu().numpy(), n.cpu().numpy()
     enc = {k: v[0].cpu().numpy() for k, v in b1.items()}
-    uniq, idx, first, bad = [], {}, [], 0
+    uniq, idx, first, bad, fdraw = [], {}, [], 0, []
     for i in range(bmax):
         if n[i] == 0:
             first.append(-1); continue
@@ -86,9 +95,9 @@ def make_pool(m, dom, row, b1, bmax, seed):
             bad += 1; first.append(-2); continue
         k = seq_key(s)
         if k not in idx:
-            idx[k] = len(uniq); uniq.append(s)
+            idx[k] = len(uniq); uniq.append(s); fdraw.append(i)
         first.append(idx[k])
-    return {"traj": first, "uniq": uniq, "illegal": bad, "sample_s": round(t1 - t0, 5)}
+    return {"traj": first, "uniq": uniq, "first_draw": fdraw, "illegal": bad, "sample_s": round(t1 - t0, 5)}
 
 
 def prefix(P, b):
@@ -157,7 +166,123 @@ def common_gate(c1r, c2r, seqs):
     return {"decision": "REPAIR", "seq": br["seq"]} if br else {"decision": "ABSTAIN", "seq": None}
 
 
-def predict(dom, public, ckpt, outp, budgets=(64, 256, 1024), main=256, L=64, seed=0, do_c0=False, ids=None, dev=None):
+# ------------------------------------------------------------------------------------------------ secondary accounting controls
+def c3(m, dom, row, b1, root, scor, target, seed=0, cap=4096, block=1024):
+    """CR+XY count-matched: continue the SAME pool stream (block 0 = the main pool's 1,024 draws) until `target` unique legal sequences or `cap`
+    raw draws; the first `target` uniques in first-appearance order are scored once by X/Y with the production selector."""
+    gen = torch.Generator(device=b1["tok"].device).manual_seed(seed_of("CRPOOL", row["root_id"], seed))
+    enc = {k: v[0].cpu().numpy() for k, v in b1.items()}
+    uniq, seen, raw = [], set(), 0
+    sync(); t0 = time.time()
+    while raw < cap and len(uniq) < target:
+        o, d, n = (x.cpu().numpy() for x in m.sample(b1, block, gen))
+        for i in range(block):
+            raw += 1
+            if n[i] and len(uniq) < target:
+                s = [[int(o[i, t]), int(d[i, t])] for t in range(n[i])]
+                k = seq_key(s)
+                if k not in seen and not D.static_legal(enc, s):
+                    seen.add(k); uniq.append(s)
+            if len(uniq) >= target:
+                break
+    sync(); ts = time.time() - t0
+    r = c2(scor, root, uniq)
+    return {**{k: r[k] for k in ("decision", "seq", "score", "p_noop", "n_scored", "select_s")}, "raw_draws": raw, "target": target,
+            "underfilled": len(uniq) < target, "sample_s": round(ts, 5), "pool_hash": pool_hash(uniq)}
+
+
+def c4(root, samp, scor, man, target):
+    """C0-budgeted: the C0 ordered pool (top-4, all legal orders), deterministic subset of size `target`: within k = 1 / 2 / 3 ordered by
+    sha256('CRC4|root|seq'), then round-robin over k; scored by X/Y with the production selector.  No score is looked at before selection."""
+    D6 = EX.proposals(root, samp, man["config"]["proposal_seed"])
+    byk = {1: [], 2: [], 3: []}
+    for s, _ in EX.stream(D6, man["config"]["M"]):
+        byk[len(s)].append([list(map(int, a)) for a in s])
+    for k in byk:
+        byk[k].sort(key=lambda s: D.stratum_hash(f"CRC4|{root.id}", seq_key(s)))
+    sel, i = [], 0
+    while len(sel) < target and any(i < len(v) for v in byk.values()):
+        for k in (1, 2, 3):
+            if i < len(byk[k]) and len(sel) < target:
+                sel.append(byk[k][i])
+        i += 1
+    r = c2(scor, root, sel)
+    return {**{k: r[k] for k in ("decision", "seq", "score", "p_noop", "n_scored", "select_s")}, "target": target, "available": sum(map(len, byk.values())),
+            "by_k": [sum(len(s) == k for s in sel) for k in (1, 2, 3)]}
+
+
+def capped_select(root, scor, seq_iter, t0, cap, chunk):
+    """Score sequences from an iterator in chunks while elapsed < cap (a chunk started before the cap is finished); production selector over
+    the fully scored candidates.  -> decision, number scored, completed flag."""
+    sel = EX.Selectors([RULE])
+    noop = scor.score(root, [[]])[0]["p11"]
+    n, done, buf = 0, True, []
+    it = iter(seq_iter)
+    while True:
+        if time.time() - t0 > cap:
+            done = next(it, None) is None
+            break
+        buf = [tuple(tuple(a) for a in s) for s in itertools.islice(it, chunk)]
+        if not buf:
+            break
+        sc = scor.score(root, [list(map(list, q)) for q in buf])
+        p = np.array([x["p11"] for x in sc], float)
+        sel.update(buf, p, np.array([len(q) for q in buf]), np.array([root.displacement(list(q)) for q in buf], float), np.zeros(len(buf)),
+                   np.zeros(len(buf), int), {})
+        n += len(buf)
+    d = sel.finish(noop)[4][0]
+    sync()
+    return {"decision": "ABSTAIN" if d is None else "NOOP" if d["seq"] == [] else "REPAIR", "seq": None if d is None else d["seq"], "n_scored": n,
+            "completed": done, "wall_s": round(time.time() - t0, 5)}
+
+
+def timing(dom, public, ckpt, ids, outp, caps=(None,), repeats=3, main=256, L=64, dev=None):
+    """Live CUDA-synchronized uncached timing of the natural pipelines (C0; CR pool of `main` draws + C1; same pool + C2) and wall-capped
+    C0 / CR+XY, 1 warm-up + `repeats` repeats per root.  Timing replays draw `main` raw samples directly (not a 1,024 prefix)."""
+    dev = dev or os.environ.get("CR_DEVICE", "cuda")
+    m, _ = load_cr(ckpt, dev)
+    samp, scor, man = BM.load_bundle(D.BUNDLE, dom, dev, 0)
+    musd = D.scalers(dom)
+    rows = [r for r in map(json.loads, open(public)) if r["domain"] == dom and r["root_id"] in ids]
+    out = []
+    for r in rows:
+        root = S.Root(r, dom)
+        rec = {"root_id": r["root_id"], "n_movable": len(root.movable), "natural": {}, "capped": {}}
+        for rep in range(repeats + 1):
+            sync(); t0 = time.time()
+            x0 = c0(root, samp, scor, man)
+            t_c0 = time.time() - t0
+            sync(); t0 = time.time()
+            b1 = enc_t(dom, r, dev, musd)
+            P = make_pool(m, dom, r, b1, main, 0)
+            seqs = prefix(P, main)[0]
+            t_pool = time.time() - t0
+            x1 = c1(m, root, b1, seqs, L, 0)
+            t_c1 = time.time() - t0
+            x2 = c2(scor, root, seqs)
+            t_c2 = t_pool + x2["select_s"]
+            if rep:
+                for k, v in (("C0", t_c0), ("C1", t_c1), ("C2", t_c2), ("pool", t_pool)):
+                    rec["natural"].setdefault(k, []).append(round(v, 5))
+        rec.update({"C0_n_scored": x0["n_scored"], "C2_n_scored": x2["n_scored"], "C1_decoder_passes": x1["decoder_passes"]})
+        for cap in caps:
+            if cap is None:
+                continue
+            t0 = time.time()
+            D6 = EX.proposals(root, samp, man["config"]["proposal_seed"])
+            a = capped_select(root, scor, (s for s, _ in EX.stream(D6, man["config"]["M"])), t0, cap, 512)
+            t0 = time.time()
+            b1 = enc_t(dom, r, dev, musd)
+            P = make_pool(m, dom, r, b1, main, 0)
+            b = capped_select(root, scor, prefix(P, main)[0], t0, cap, 32)
+            rec["capped"][str(cap)] = {"C0": {**a, "same_as_natural": a["seq"] == x0["seq"]}, "C2": {**b, "same_as_natural": b["seq"] == x2["seq"]}}
+        out.append(rec)
+    Path(outp).write_text(json.dumps({"dom": dom, "device": torch.cuda.get_device_name(0) if dev.startswith("cuda") else "cpu",
+                                      "repeats": repeats, "main": main, "L": L, "rows": out}, indent=1))
+    print(json.dumps({"out": str(outp), "n": len(out)}), flush=True)
+
+
+def predict(dom, public, ckpt, outp, budgets=(64, 256, 1024), main=256, L=64, seed=0, do_c0=False, ids=None, dev=None, controls=False):
     dev = dev or os.environ.get("CR_DEVICE", "cuda")
     m, ck = load_cr(ckpt, dev)
     samp, scor, man = BM.load_bundle(D.BUNDLE, dom, dev, 0)
@@ -179,11 +304,16 @@ def predict(dom, public, ckpt, outp, budgets=(64, 256, 1024), main=256, L=64, se
             r2 = c2(scor, root, seqs)
             rec = {"root_id": r["root_id"], "domain": dom, "seed": seed, "ckpt_sha256": ck_sha, "main_budget": main,
                    "pool_hash": {str(b): pool_hash(pools[b][0]) for b in budgets}, "pool_acct": {str(b): pools[b][1] for b in budgets},
-                   "pool": seqs, "first_draw": first, "sample_s_bmax": P["sample_s"], "bmax": max(budgets),
+                   "pool": seqs, "pool_bmax": P["uniq"], "pool_bmax_first_draw": P["first_draw"], "first_draw": first, "sample_s_bmax": P["sample_s"], "bmax": max(budgets),
                    "C1": r1, "C2": r2, "C2_pool_hash": pool_hash(seqs), "C1_common_gate": common_gate(r1, r2, seqs),
                    "n_movable": len(root.movable), "n_objects": len(root.ids), "teacher_calls": 0}
-            if do_c0:
+            if do_c0 == "props":
+                rec["C0"] = c0_props(root, samp, man)
+            elif do_c0:
                 rec["C0"] = c0(root, samp, scor, man)
+            if controls and do_c0:
+                rec["C3"] = c3(m, dom, r, b1, root, scor, rec["C0"]["n_scored"], seed)
+                rec["C4"] = c4(root, samp, scor, man, len(seqs))
             f.write(json.dumps(rec) + "\n"); f.flush()
     print(json.dumps({"out": str(outp), "n": sum(1 for _ in open(outp))}), flush=True)
 
@@ -213,12 +343,16 @@ def parity(dom, public, archived, ids_file, out, dev=None):
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("cmd", choices=["predict", "parity"]); ap.add_argument("dom"); ap.add_argument("args", nargs="+")
+    ap.add_argument("cmd", choices=["predict", "parity", "timing"]); ap.add_argument("dom"); ap.add_argument("args", nargs="+")
     ap.add_argument("--budgets", default="64,256,1024"); ap.add_argument("--main", type=int, default=256); ap.add_argument("--L", type=int, default=64)
-    ap.add_argument("--c0", action="store_true"); ap.add_argument("--ids")
+    ap.add_argument("--c0", action="store_true"); ap.add_argument("--c0props", action="store_true"); ap.add_argument("--ids"); ap.add_argument("--controls", action="store_true")
+    ap.add_argument("--caps", default="")
     A = ap.parse_args()
     if A.cmd == "predict":
         ids = set(json.loads(Path(A.ids).read_text())[A.dom]) if A.ids else None
-        predict(A.dom, *A.args[:3], tuple(int(x) for x in A.budgets.split(",")), A.main, A.L, 0, A.c0, ids)
+        predict(A.dom, *A.args[:3], tuple(int(x) for x in A.budgets.split(",")), A.main, A.L, 0, "props" if A.c0props else A.c0, ids, controls=A.controls)
+    elif A.cmd == "timing":
+        ids = set(json.loads(Path(A.ids).read_text())[A.dom])
+        timing(A.dom, A.args[0], A.args[1], ids, A.args[2], tuple(float(x) for x in A.caps.split(",") if x) or (None,), main=A.main, L=A.L)
     else:
         parity(A.dom, *A.args[:4])

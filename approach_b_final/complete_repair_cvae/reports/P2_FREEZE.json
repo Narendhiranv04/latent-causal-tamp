@@ -1,0 +1,87 @@
+{
+ "commit": "f49b5f3dd3230bb15fbf5f270c936c235b6195af",
+ "checkpoints": {
+  "2d": {
+   "path": "/home/naren/cr_cvae_runs/models/2d/cr_s0/model.pt",
+   "sha256": "fc9a565e40373193c7cf5def62f7c6fc9067a7ff966239cdb0a76b177b0c3848",
+   "best_step": 600
+  },
+  "3d": {
+   "path": "/home/naren/cr_cvae_runs/models/3d/cr_s0/model.pt",
+   "sha256": "f3edbc314dd7c526d8b049182fc87e8d491870c41a554755d1e263f96168289a",
+   "best_step": 532
+  }
+ },
+ "seed_checkpoints": {
+  "2d_s1": {
+   "path": "/home/naren/cr_cvae_runs/models/2d/cr_s1/model.pt",
+   "sha256": "07e36941aa0d74330219a2b9bc1416f15c3b14209682b7920601f98fe57bf339",
+   "best_step": 630
+  },
+  "2d_s2": {
+   "path": "/home/naren/cr_cvae_runs/models/2d/cr_s2/model.pt",
+   "sha256": "c8cdaf1326d02a92711b3cdff958a46dab55861a14b4f1ec281f431e75f84933",
+   "best_step": 660
+  },
+  "3d_s1": {
+   "path": "/home/naren/cr_cvae_runs/models/3d/cr_s1/model.pt",
+   "sha256": "6ae640c42ddbf7b67de02fae5d17c9ac285022ae9214a3b58a4c781bc73c536e",
+   "best_step": 760
+  },
+  "3d_s2": {
+   "path": "/home/naren/cr_cvae_runs/models/3d/cr_s2/model.pt",
+   "sha256": "e7f5463eae7eb01c81d606fdf32429cb9388fcafce658f72569cc84b044ec64f",
+   "best_step": 684
+  }
+ },
+ "inference": {
+  "budgets": [
+   64,
+   256,
+   1024
+  ],
+  "main_budget": 256,
+  "L": 64,
+  "pool_seed": 0,
+  "pool_rng": "torch.Generator(device).manual_seed(sha256('CRPOOL|root|0')[:15])",
+  "lik_rng": "sha256('CRLIK|root|0')",
+  "device": "NVIDIA GeForce RTX 5060 Laptop GPU",
+  "c3_cap_raw": 4096,
+  "c4": "sha256('CRC4|root|seq') within k, round-robin k=1,2,3",
+  "wall_caps_s": [
+   0.05,
+   0.25,
+   1.0
+  ],
+  "decision_head_ties": [
+   "NOOP",
+   "ABSTAIN",
+   "REPAIR"
+  ]
+ },
+ "rule": {
+  "noop_gate": 0.5,
+  "eta": 0.3,
+  "alpha": 0.0,
+  "beta": 0.0,
+  "gamma": 0.0
+ },
+ "bundle_manifest_sha256": "147645eeb96a7e5e00584c9b5059e1917e5758a293bc3cc23dfba8d737622420",
+ "remedy": "NOT TRIGGERED (see P2_TRAIN.json)",
+ "arms_primary": [
+  "C0",
+  "C1",
+  "C2"
+ ],
+ "arms_secondary": [
+  "C1_common_gate",
+  "C3",
+  "C4",
+  "C1_first_draw"
+ ],
+ "roster": {
+  "2d": "5128c22e16d829d254ecec61b8b0a47c922bca3889f21d1c0043e9baa28b89ce",
+  "3d": "0ae42e4147d29a96e97228b2ee9190fc1a7f0fdc8e9e4bb8dc25ec9e70e4075b"
+ },
+ "prereg_sha256": "df4be0c37bf1681360747962328bb1906f6bcde234dee918b3b3e52c7ac9994e"
+}
