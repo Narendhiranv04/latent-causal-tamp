@@ -17,7 +17,7 @@ from __future__ import annotations
 import collections, hashlib, json, os, sys, time, traceback
 from pathlib import Path
 
-EVAL_CAPS = {"jobs": 200, "cpu_h": 12.0, "workers": 16, "primary": 100}
+EVAL_CAPS = {"jobs": 200, "cpu_h": 24.0, "workers": 36, "primary": 100}   # owner raise 2026-11-26 01:25 IST (was 12 h / 16)
 TOL_Q = 0.02
 W = {}
 
@@ -285,6 +285,82 @@ def merged(results):
 
 
 import itertools  # noqa: E402
+
+
+# ------------------------------------------------------------------------------------------------------------- P4 / P5 summaries
+def cp_interval(k, n, a=0.05):
+    from scipy.stats import beta
+    if n == 0:
+        return [None, None]
+    return [0.0 if k == 0 else float(beta.ppf(a / 2, k, n - k + 1)), 1.0 if k == n else float(beta.ppf(1 - a / 2, k + 1, n - k))]
+
+
+def mcnemar_exact(b, c):
+    from scipy.stats import binomtest
+    return None if b + c == 0 else float(binomtest(b, b + c, 0.5).pvalue)
+
+
+def arm_outcomes(pred, results, index):
+    """Per root x arm: decision, strict outcome (NOOP -> FAIL by the certified initial-target label of the root, ABSTAIN -> no success),
+    X / Y / replay statuses, boundary failure phase, logical-conjunction and operational views."""
+    idx = {e["root_id"]: e for e in map(json.loads, open(index))}
+    jobs, pj = primary_jobs(pred, PRIV / "cohort/PUBLIC.jsonl", index)
+    R = merged(results)
+    out = []
+    for r in sorted((json.loads(l) for l in open(pred)), key=lambda r: r["root_id"]):
+        for p in r["plans"]:
+            rec = {"root_id": r["root_id"], "K": idx[r["root_id"]]["K"], "label": idx[r["root_id"]]["label"], "arm": p["arm"], "decision": p["decision"],
+                   "m": len(p["seq"] or []), "partition": p.get("partition"), "latency_s": p.get("latency_s")}
+            if p["decision"] == "NOOP":
+                rec.update(strict="FAIL_Y", note="NOOP: certified initial target label y=0 (generation), no new job")
+            elif p["decision"] == "ABSTAIN":
+                rec.update(strict="ABSTAIN")
+            else:
+                j = R.get(pj[(r["root_id"], p["arm"])])
+                rec["strict"] = outcome(j)
+                if j:
+                    x, y = j.get("X") or {}, j.get("Y") or {}
+                    rec.update(x=x.get("x"), x_phase=x.get("phase"), x_status=x.get("status"), x_res=x.get("resolution"), y=y.get("y"), y_status=y.get("status"),
+                               replay=(j.get("REPLAY") or {}).get("replay"), replay_failure=(j.get("REPLAY") or {}).get("failure"), job=j["key"], mode=j["mode"],
+                               boundaries=[(t.get("after_move"), t.get("ok")) for t in x.get("trace", []) if t.get("kind") == "connector"])
+            rec["success_replayed"] = rec["strict"] == "SUCCESS" and rec.get("replay") == 1
+            out.append(rec)
+    return out
+
+
+def summarize(rows, arms=ARMS):
+    S = {}
+    for K in ("4", "5", "all"):
+        for a in arms:
+            rr = [x for x in rows if x["arm"] == a and (K == "all" or x["K"] == K)]
+            c = collections.Counter(x["strict"] for x in rr)
+            n, s, u = len(rr), c["SUCCESS"], c["UNKNOWN"]
+            f = n - s - u
+            S[f"{a}|K{K}"] = {"N": n, "counts": dict(c), "verified_success": s, "replayed_success": sum(x["success_replayed"] for x in rr),
+                              "all_root_lower": [s, n], "all_root_CI": cp_interval(s, n), "decided_only": [s, s + f], "decided_CI": cp_interval(s, s + f),
+                              "upper_with_unknown": [s + u, n], "unknown": u, "noop": c["NOOP"] + sum(1 for x in rr if x["decision"] == "NOOP"),
+                              "abstain": c["ABSTAIN"], "mean_moves_repair": (sum(x["m"] for x in rr if x["decision"] == "REPAIR") / max(1, sum(x["decision"] == "REPAIR" for x in rr))),
+                              "long_repairs(m>3)": sum(1 for x in rr if x["m"] > 3), "long_successes(m>3)": sum(1 for x in rr if x["m"] > 3 and x["strict"] == "SUCCESS"),
+                              "median_latency_s": sorted(x["latency_s"] for x in rr)[len(rr) // 2] if rr else None}
+    return S
+
+
+def paired(rows, a, b):
+    by = collections.defaultdict(dict)
+    for x in rows:
+        by[x["root_id"]][x["arm"]] = x["strict"]
+    w = l = t = u = 0
+    for rid, d in by.items():
+        A, B = d.get(a), d.get(b)
+        if "UNKNOWN" in (A, B):
+            u += 1
+        elif (A == "SUCCESS") and (B != "SUCCESS"):
+            w += 1
+        elif (B == "SUCCESS") and (A != "SUCCESS"):
+            l += 1
+        else:
+            t += 1
+    return {"contrast": f"{a} vs {b}", "wins": w, "losses": l, "ties_decided": t, "pairs_with_unknown": u, "exact_mcnemar_p": mcnemar_exact(w, l)}
 
 
 if __name__ == "__main__":

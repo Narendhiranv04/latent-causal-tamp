@@ -20,11 +20,12 @@ from __future__ import annotations
 import hashlib, itertools, json, multiprocessing as mp, os, signal, sys, time, traceback
 from pathlib import Path
 
-CAPS = {"layouts": 120, "jobs": 1000, "cpu_h": 24.0, "workers": 16}
-QUOTA = {("4", "B3C1"): 5, ("4", "B2C2"): 5, ("5", "B3C2"): 5, ("5", "B2C3"): 5}
+CAPS = {"layouts": 200, "jobs": 1000, "cpu_h": 60.0, "workers": 36}   # owner raise 2026-11-26 01:25 IST (was 120 / 24 h / 16)
+QUOTA = {("4", "B2C2"): 10, ("5", "B2C3"): 10}          # amendment A1 (2026-11-26, pre-seal): K_b = 3 routes dropped (ROUTE_TIME_CAP), see P1_COHORT.md
 STYLE = {"B3C1": (3, 1), "B2C2": (2, 2), "B3C2": (3, 2), "B2C3": (2, 3)}
 CHAIN_S = 900.0                     # chain-stage wall cap per layout (construction keeps the generator's own CONSTRUCT_S / CONSTRUCT_S_K)
-GEN_WALL = 1200                     # fin3d administrative wall per certification sequence (UNRESOLVED_ADMIN -> rejected, never a label)
+GEN_WALL = 1200
+GEN_CODE = "K45_GEN_V3 (A1: K_b=2 strata only, most-constrained mover first; 2026-11-26 IST: enabler parking avoids the target corridor; target-plans-after-parking check; movers = first tight set passing bd_3dt_plus.independent)"                     # fin3d administrative wall per certification sequence (UNRESOLVED_ADMIN -> rejected, never a label)
 RESERVE_H = 0.6                     # dispatch headroom per running layout (CPU-h)
 G = {}
 
@@ -83,6 +84,8 @@ def chain(c, n_chain, rng, t0, movers):
     src, goal = tuple(c["src"]), tuple(c["goal"])
     park = {o: tuple(c["parking"][o][0]) for o in movers}
     avoid = {src, goal} | {(0, k) for k in range(A.GRID["C"])}
+    route = set(P.line(src, goal)) | {(r + a, cc + b) for r, cc in P.line(src, goal) for a in (-1, 0, 1) for b in (-1, 0, 1)}
+    park_avoid = avoid | P.hand_zone(src) | P.hand_zone(goal) | route          # = the route generator's own parking exclusion (base_avoid)
     blocked_by, left, queue = {}, n_chain, list(movers)
 
     def scene(extra):
@@ -102,6 +105,8 @@ def chain(c, n_chain, rng, t0, movers):
         e = scene(extra)
         return A.query(e, name, list(dst))[0] is not None
     added = []
+    Fm = {B: azim(scene(added), B, park[B]) for B in queue}
+    queue.sort(key=lambda B: (len(Fm[B]) == 0, len(Fm[B]), B))                 # amendment A1: most-constrained blocker first
     while left > 0:
         if time.time() - t0 > CHAIN_S:
             raise A.Reject("CHAIN_TIME_CAP")
@@ -139,7 +144,7 @@ def chain(c, n_chain, rng, t0, movers):
         occ2 = occ | set(pick)
         pk = {}
         for x, p in news:
-            spot = next((q for q in P.parking_cells(p, avoid | P.hand_zone(src) | P.hand_zone(goal), occ2 | set(pk.values()), 4)
+            spot = next((q for q in P.parking_cells(p, park_avoid, occ2 | set(pk.values()), 4)
                          if plans(added + news, x["id"], q)), None)
             if spot is None:
                 break
@@ -154,6 +159,9 @@ def chain(c, n_chain, rng, t0, movers):
         left -= len(news)
     for x, p in added:
         objs.append(x); cells[x["id"]] = list(p)
+    e = A.build(objs, cells); A.settle(e, {**cells, **{o: list(park[o]) for o in park}})   # every mover + enabler parked: target must plan
+    if A.query(e, "t0", list(goal))[0] is None:
+        raise A.Reject("CHAIN_PARKING_BLOCKS_TARGET")
     return objs, cells, blocked_by, park
 
 
@@ -209,7 +217,13 @@ def attempt(item):
         out["route"] = {"K_by_construction": kmin, "tight_sets": [list(m) for m in mv_all]}
         if kmin != K_b or not mv_all or len(mv_all[0]) != K_b:
             raise A.Reject(f"ROUTE_K_MISMATCH:{kmin}")
-        movers = list(mv_all[0])
+        movers = None
+        for S in mv_all:                                                       # the generator's own rule: first tight set passing independent()
+            if P.independent(c["objs"], c["cells"], {o: c["parking"][o][0] for o in S}, list(S), tuple(c["goal"])):
+                movers = list(S); break
+        if movers is None:
+            raise A.Reject("ROUTE_NO_INDEPENDENT_TIGHT_SET")
+        out["route"]["movers"] = movers
         objs, cells, blocked_by, park = chain(c, n_chain, rng, time.time(), movers)
         Gm = A.env()
         rec = {"ids": {"root_id": rid, "construction_seed": seed, "parent_family_id": "k45-" + hashlib.sha256(rid.encode()).hexdigest()[:10],
@@ -260,7 +274,7 @@ def attempt(item):
         out["reason"] = (str(e)[:160] if type(e).__name__ == "Reject" else f"ERROR:{type(e).__name__}:{str(e)[:160]}")
         if type(e).__name__ != "Reject":
             out["trace"] = traceback.format_exc()[-800:]
-    out.update(cpu_s=round(time.process_time() - c0, 1), wall_s=round(time.time() - t0, 1), jobs=G["jobs"] - j0,
+    out.update(code=GEN_CODE, cpu_s=round(time.process_time() - c0, 1), wall_s=round(time.time() - t0, 1), jobs=G["jobs"] - j0,
                planner_calls={k: G["cnt"][k] - cnt0[k] for k in cnt0}, utc=time.strftime("%FT%TZ", time.gmtime()))
     return out
 
@@ -293,7 +307,8 @@ def main(outdir, workers, cpu_lo):
     pool = mp.get_context("spawn").Pool(workers, initializer=boot, initargs=(str(out / "store"),), maxtasksperchild=4)
     queue = items(); ptr = {k: 0 for k in queue}
     for d in done:
-        ptr[(str(d["K"]), d["style"])] = max(ptr[(str(d["K"]), d["style"])], d["n"] + 1)
+        if (str(d["K"]), d["style"]) in ptr and "n" in d:
+            ptr[(str(d["K"]), d["style"])] = max(ptr[(str(d["K"]), d["style"])], d["n"] + 1)
     acc = {k: sum(1 for d in done if d.get("accepted") and (str(d["K"]), d["style"]) == k) for k in QUOTA}
     used = {"layouts": len(done), "jobs": sum(d.get("jobs", 0) for d in done), "cpu_s": sum(d.get("cpu_s", 0) for d in done)}
     running, f = {}, open(led, "a")
@@ -331,8 +346,54 @@ def main(outdir, workers, cpu_lo):
     print("GEN_DONE", stop_reason, flush=True)
 
 
+def assemble(gen_dir, out_dir):
+    """LOCAL (laptop): admitted roster = per stratum the ACCEPTED attempts in fixed attempt order, first QUOTA; disjointness vs history and V3.4
+    (root id, construction seed, sha256, GEOM_V1 layout fp); private index + roots; public rows via benchmark.public.  No learned model."""
+    import shutil
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    sys.path.insert(0, str(Path.home() / "Desktop/boltzmann_lfd/.claude/worktrees/approach-b-v3-4-final-benchmark/approach_b_final/scripts"))
+    import benchmark as BM
+    import contracts as CT
+    import v34_geomfp as GF
+    gen, out = Path(gen_dir), Path(out_dir)
+    (out / "roots").mkdir(parents=True, exist_ok=True)
+    led = [json.loads(l) for l in open(gen / "ledger.jsonl") if l.strip()]
+    A3 = Path.home() / "abf_v34"
+    X = json.loads((A3 / "excl/EXCL3D.json").read_text()); XG = set(json.loads((A3 / "excl/EXCL3D_GEOM.json").read_text())["geom_fp"])
+    coh = [json.loads(l) for l in open(A3 / "final/PRIVATE_INDEX.jsonl")]
+    hist = {"rid": set(map(str, X["root_ids"])) | {c["root_id"] for c in coh}, "seed": set(map(str, X["seeds"])) | {str(c["construction_seed"]) for c in coh},
+            "sha": set(map(str, X["root_sha256"])) | {c["root_sha256"] for c in coh}, "fp": XG | {c["layout_fp"] for c in coh}}
+    rows, skip, seen = [], collections.Counter(), set()
+    for (K, style), q in QUOTA.items():
+        acc = sorted((d for d in led if d.get("accepted") and str(d["K"]) == K and d["style"] == style), key=lambda d: d["n"])
+        for d in acc:
+            if sum(1 for r in rows if r["K"] == K and r["style"] == style) >= q:
+                skip["over_quota"] += 1; continue
+            raw = (gen / "roots" / f"{d['root_id']}.json").read_bytes(); rec = json.loads(raw)
+            h = hashlib.sha256(raw).hexdigest(); v = CT.view3d(rec); fp = GF.geom_fp(v)
+            hit = [k for k, val in (("rid", d["root_id"]), ("seed", str(rec["ids"]["construction_seed"])), ("sha", h), ("fp", fp)) if val in hist[k]] + (["dup_fp"] if fp in seen else [])
+            if hit:
+                skip["|".join(hit)] += 1; continue
+            seen.add(fp)
+            shutil.copyfile(gen / "roots" / f"{d['root_id']}.json", out / "roots" / f"{d['root_id']}.json")
+            rows.append({"root_id": d["root_id"], "domain": "3d", "K": K, "style": style, "label": rec["k45"]["label"], "path": f"roots/{d['root_id']}.json",
+                         "abs_path": str(out / "roots" / f"{d['root_id']}.json"), "root_sha256": h, "layout_fp": fp, "construction_seed": rec["ids"]["construction_seed"],
+                         "parent_family_id": rec["ids"]["parent_family_id"], "n_objects": len(rec["objects"]), "attempt": d["n"], "ids": v["ids"]})
+    with open(out / "PRIVATE_INDEX.jsonl", "w") as f:
+        for r in rows:
+            f.write(json.dumps(r) + "\n")
+    BM.public(str(out / "PUBLIC.jsonl"), index=str(out / "PRIVATE_INDEX.jsonl"))
+    return {"admitted": len(rows), "by_stratum": dict(collections.Counter(f"K{r['K']}|{r['style']}" for r in rows)), "skipped": dict(skip),
+            "labels": dict(collections.Counter(r["label"] for r in rows)), "n_objects": dict(collections.Counter(r["n_objects"] for r in rows))}
+
+
+import collections  # noqa: E402
+
+
 if __name__ == "__main__":
-    if sys.argv[1] == "smoke":                                                 # one layout in-process (counts toward the ledger of OUT)
+    if sys.argv[1] == "assemble":
+        print(json.dumps(assemble(sys.argv[2], sys.argv[3]), indent=1))
+    elif sys.argv[1] == "smoke":                                                 # one layout in-process (counts toward the ledger of OUT)
         boot(str(Path(sys.argv[2]) / "store"))
         it = {**items()[(sys.argv[3], sys.argv[4])][int(sys.argv[5])], "out": sys.argv[2]}
         r = attempt(it)
