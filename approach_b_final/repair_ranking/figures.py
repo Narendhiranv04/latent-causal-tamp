@@ -171,5 +171,51 @@ def p2():
     _save(fig, "p2_rules_cal_vs_audit.png")
 
 
+
+def p3():
+    Cn = json.loads((rr.REP / "P3_COUNTS.json").read_text())["by_category_and_tier"]
+    fig, ax = plt.subplots(1, 2, figsize=(11, 3.6))
+    for a, keys, title in ((ax[0], ["HIGHCONF", "DEST", "OBJSET", "ORDER", "RANDOM"], "by acquisition category"),
+                           (ax[1], ["T4", "T56", "R7_12", "TAIL"], "by worst frozen-cVAE rank (1-4, 5-6, 7-12, >12)")):
+        z1 = [Cn[k].get("z_1", 0) for k in keys]; z0 = [Cn[k].get("z_0", 0) for k in keys]; zu = [Cn[k].get("z_None", 0) for k in keys]
+        x = np.arange(len(keys))
+        a.bar(x, z1, color=GREEN, label="verified success (Z=1)"); a.bar(x, z0, bottom=z1, color=RED, label="verified failure (Z=0)")
+        a.bar(x, zu, bottom=np.add(z1, z0), color="#d0d7de", label="unresolved (missing)")
+        for xi, p, n in zip(x, z1, np.add(z1, z0)):
+            a.text(xi, n + max(zu) * 0.05 + 5, f"{p / n:.0%}", ha="center", fontsize=8, color=INK)
+        a.set_xticks(x, [k.lower() for k in keys], fontsize=8); a.set_title(title, fontsize=9); a.spines[["top", "right"]].set_visible(False)
+    ax[0].set_ylabel("new TRAIN ordered queries"); ax[0].legend(fontsize=7, frameon=False)
+    fig.suptitle("P3: 1,794 new exact-contract TRAIN labels (359 roots); % = decided success; TRAIN only, not evaluation", fontsize=8.5, color=MUTED)
+    _save(fig, "p3_new_train_labels.png")
+
+
+
+def p4():
+    R = json.loads((rr.REP / "P4_ABLATION.json").read_text())
+    arms = ["A1", "A2", "A3", "A4"]; cols = {"A1": MUTED, "A2": BLUE, "A3": ORANGE, "A4": GREEN}
+    fig, ax = plt.subplots(1, 3, figsize=(14, 3.8))
+    for j, part in enumerate(("DEV_CAL", "DEV_AUDIT")):
+        for i, a in enumerate(arms):
+            for s in (0, 1, 2):
+                c = R["contrasts"].get(f"{part}|s{s}|{a}-A0")
+                if c:
+                    y = i + (s - 1) * 0.15
+                    ax[j].errorbar(c["conc"][0], y, xerr=[[c["conc"][0] - c["conc"][1]], [c["conc"][2] - c["conc"][0]]], fmt="o", color=cols[a], capsize=2, ms=4)
+        ax[j].axvline(0, ls=":", color=MUTED); ax[j].set_yticks(range(4), ["A1 orig NLL", "A2 aug NLL", "A3 orig NLL+rank", "A4 aug NLL+rank"]); ax[j].invert_yaxis()
+        ax[j].set_xlabel("paired concordance change vs A0 (95% family CI)"); ax[j].set_title(f"{part} (3 seeds per arm)", fontsize=9)
+        ax[j].spines[["top", "right"]].set_visible(False)
+    ax[1].set_yticklabels([])
+    for a in arms:
+        for s in (0, 1, 2):
+            f = rr.OUT / "p4" / f"{a}_s{s}" / "curve.json"
+            if f.exists():
+                cv = json.loads(f.read_text())["curve"]
+                ax[2].plot([c["epoch"] for c in cv], [c["nll"] for c in cv], color=cols[a], lw=1.2, alpha=0.8, label=a if s == 0 else None)
+    ax[2].set_xlabel("epoch (-1 = A0 warm start)"); ax[2].set_ylabel("DEV_CAL exact NLL of cached labels (per root)"); ax[2].legend(fontsize=7, frameon=False)
+    ax[2].set_title("augmented data lowers held-out NLL; ranking barely moves", fontsize=9); ax[2].spines[["top", "right"]].set_visible(False)
+    fig.suptitle("P4: warm-start controlled training of arm D (TRAIN only); selection DEV_CAL, DEV_AUDIT once; exposed VAL = development evidence", fontsize=8.5, color=MUTED)
+    _save(fig, "p4_learning_contrasts.png")
+
+
 if __name__ == "__main__":
     globals()[sys.argv[1]]()
