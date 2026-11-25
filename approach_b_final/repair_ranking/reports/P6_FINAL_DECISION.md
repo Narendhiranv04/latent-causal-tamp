@@ -67,5 +67,5 @@
 | Teacher host | gvlab2, 32 workers on cores 8–39 (16 free); 2026-11-25 04:40–05:12Z | ≤ 32 workers |
 | GPU training | 0.31 GPU-h (12 fits, RTX 5060) | 8 h |
 | GPU inference | about 0.5 GPU-h (readouts of 2.7 M VAL + 2.0 M D12 sequences, DEV predictions, timing) | 4 h |
-| Storage | about 1.4 GB (private tables, checkpoints, caches) | 20 GiB |
+| Storage | about 1.1 GB (984 MB private tables and caches, 159 MB checkpoints and runs) | 20 GiB |
 | Protected TEST | not opened | – |
