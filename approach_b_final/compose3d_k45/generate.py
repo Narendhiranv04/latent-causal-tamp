@@ -412,9 +412,13 @@ import collections  # noqa: E402
 # ============================================================================== amendment A4 (owner 2026-11-26): historical-unexposed K4 + derived K5
 def parent_info(rec):
     """-> (witness order [[o, [r, c]], ...], ids already chained (blocked by an enabler), enabler ids, family id) for a K4 parent root."""
-    if "k45" in rec:                                                            # fresh K45 root
-        cb = rec["construction"].get("chain_blocks", {})
-        return rec["k45"]["witness"]["order"], set(cb.values()), set(cb), rec["ids"]["parent_family_id"]
+    if "k45" in rec:                                                            # fresh or derived K45 root
+        con = rec.get("construction", {})
+        cb = dict(con.get("chain_blocks", {}))
+        if con.get("enabler"):
+            cb[con["enabler"]] = con["blocks"]
+        chained = set(cb.values()) | set(con.get("parent_chained", []))
+        return rec["k45"]["witness"]["order"], chained, set(cb), rec["ids"]["parent_family_id"]
     m = next(b for b in rec["labels"]["B"] if b.get("role") == "minimal" and b.get("y") == 1)   # historical: the generator's verified minimal B
     return [[o, list(d)] for o, d in m["sequence"]], set(), set(), rec["ids"].get("parent_family_id") or rec["ids"]["root_id"]
 
@@ -537,22 +541,25 @@ def attempt_x(item):
             o1 = order[:idx] + [[nid, list(pk)]] + order[idx:]
             o2 = [[nid, list(pk)]] + order
             Gm = A.env()
-            rec = {**{k: rec[k] for k in ("goal", "target_src") if k in rec}, "ids": {"root_id": item["root_id"], "construction_seed": item["seed"], "parent_family_id": fam,
+            rec = {**{k: rec[k] for k in ("goal", "target_src", "alt_parking") if k in rec}, "ids": {"root_id": item["root_id"], "construction_seed": item["seed"], "parent_family_id": fam,
                    "parent_root_id": rec["ids"]["root_id"], "config_hash": Gm["config_hash"], "teacher_version": A.TEACHER_VERSION, "robot_protocol": Gm["protocol"]},
                    "domain": "3ds66", "objects": objs, "initial_cells": cells, "geometry": Gm["geometry"], "source_files": Gm["source_files"],
                    "construction": {"generator": "K45_DERIVE_V1 (parent K4 + one enabler)", "parent_root_id": rec["ids"]["root_id"], "enabler": nid, "blocks": B,
                                     "enabler_cell": list(x), "enabler_parking": list(pk), "parent_chained": sorted(chained)}}
-            wit, short, shorter = certify(rec, [o1, o2] if o2 != o1 else [o1], 5, out)
-            K = 5; extra = {"source": "DERIVED_FROM_K4_PARENT", "parent_root_id": rec["construction"]["parent_root_id"]}
+            K = len(order) + 1
+            rec["construction"]["parent_chained"] = sorted(chained | {B})
+            wit, short, shorter = certify(rec, [o1, o2] if o2 != o1 else [o1], K, out)
+            extra = {"source": f"DERIVED_FROM_K{K - 1}_PARENT", "parent_root_id": rec["construction"]["parent_root_id"]}
         rec["k45"] = {"witness": wit, "initial": out["initial"], "shorter_probe": short, "label": f"SHORTER_WITNESSED_LE_{K - 1}" if shorter else f"WITNESS_LEN_{K}_MIN_UNKNOWN", **extra}
         Path(item["out"], "roots").mkdir(parents=True, exist_ok=True)
         tmp = Path(item["out"], "roots", item["root_id"] + ".json.tmp"); tmp.write_text(json.dumps(rec, default=G["bc"]._jd)); os.replace(tmp, tmp.with_suffix(""))
-        out.update(accepted=not shorter, label=rec["k45"]["label"], n_objects=len(rec["objects"]), reason="ACCEPTED" if not shorter else "SHORTER_WITNESSED")
+        out.update(accepted=not shorter, label=rec["k45"]["label"], n_objects=len(rec["objects"]), reason="ACCEPTED" if not shorter else "SHORTER_WITNESSED",
+                   K_child=K, child_path=str(Path(item["out"], "roots", item["root_id"] + ".json")))
     except Exception as e:  # noqa: BLE001
         out["reason"] = (str(e)[:160] if type(e).__name__ == "Reject" else f"ERROR:{type(e).__name__}:{str(e)[:160]}")
         if type(e).__name__ != "Reject":
             out["trace"] = traceback.format_exc()[-800:]
-    out.update(code="K45_GEN_A4", cpu_s=round(time.process_time() - c0, 1), wall_s=round(time.time() - t0, 1), jobs=G["jobs"] - j0,
+    out.update(code="K45_GEN_A6", cpu_s=round(time.process_time() - c0, 1), wall_s=round(time.time() - t0, 1), jobs=G["jobs"] - j0,
                planner_calls={k: G["cnt"][k] - cnt0[k] for k in cnt0}, utc=time.strftime("%FT%TZ", time.gmtime()))
     return out
 
@@ -568,13 +575,17 @@ def run_items(items_file, outdir, workers, cpu_lo, cap_h, k5_quota=10):
     running, f, i = {}, open(led, "a"), 0
     while True:
         allr = [json.loads(l) for l in open(led) if l.strip()]
-        k5 = sum(1 for d in allr if d.get("accepted") and d["kind"] == "DERIVE")
+        k5 = sum(1 for d in allr if d.get("accepted") and d["kind"] == "DERIVE" and d.get("K_child", 5) == 5)
         k5_quota = int(os.environ.get("K45_K5_NEED", k5_quota))
         for rid, (ar, t) in list(running.items()):
             if ar.ready():
                 r = ar.get(); running.pop(rid)
                 f.write(json.dumps(r) + "\n"); f.flush(); os.fsync(f.fileno())
-                print(f"{time.strftime('%H:%M:%S')} {rid} {r.get('reason')} cpu={r.get('cpu_s')} jobs={r.get('jobs')}", flush=True)
+                print(f"{time.strftime('%H:%M:%S')} {rid} {r.get('reason')} K={r.get('K_child')} cpu={r.get('cpu_s')} jobs={r.get('jobs')}", flush=True)
+                if os.environ.get("K45_SPAWN") and r.get("accepted") and r.get("kind") == "DERIVE" and r.get("K_child") == 4:   # A6: K4 child -> 12 K5 attempts
+                    kids = [{"root_id": f"{rid}-k5v2j{j}", "kind": "DERIVE", "mode": "v2", "parent_id": rid, "j": j, "parent_path": r["child_path"],
+                             "seed": int(hashlib.sha256(("K45_DERIVE|" + rid + str(j)).encode()).hexdigest()[:8], 16)} for j in range(12)]
+                    todo[i:i] = kids
         cpu_h = (sum(d.get("cpu_s", 0) for d in allr) + sum(time.time() - t for _, t in running.values())) / 3600
         if cpu_h >= float(cap_h) - 0.05:
             pool.terminate(); print("A4_DONE CAP_HARD_STOP", flush=True); break
