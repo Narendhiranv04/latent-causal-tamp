@@ -573,6 +573,59 @@ def freeze(main=256, L=64, caps=(0.05, 0.25, 1.0)):
     print(json.dumps(fr["checkpoints"]))
 
 
+
+CAP_H = {"2d": 8.0, "3d": 16.0}
+
+
+def cpu_used(dom):
+    """Teacher CPU seconds recorded by the workers (process_time per job) in this study's cache, and query count."""
+    f = P4 / "cache" / f"verify_{dom}.jsonl"
+    rows = jl(f) if f.exists() else []
+    return sum(r.get("cpu_s", 0) for r in rows), sum(len(r["results"]) for r in rows), rows
+
+
+def teach(dom, workers=16, cpu0=8, batch_q=120, first=None, headroom_s=None):
+    """Dispatch the sealed manifest's jobs to the UNCHANGED teachers (benchmark.teach, V3.4 laptop envs) in batches; before each batch, stop if
+    recorded CPU + the batch's projected CPU + headroom would exceed the authorized cap.  first = profile only the first N jobs."""
+    import os, subprocess, time
+    L = D.H / "abf_v3_laptop"
+    jobs = jl(P4 / f"jobs_{dom}.jsonl")
+    man = json.loads((REP / "P4_QUERY_MANIFEST.json").read_text())
+    assert D.sha(P4 / f"jobs_{dom}.jsonl") == man["domains"][dom]["jobs_sha256"], "jobs file changed after manifest"
+    (P4 / "cache").mkdir(parents=True, exist_ok=True)
+    env = {**os.environ, "ABF_ROOT": str(L / "root"), "V3OUT": str(P4 / "teach_out"), "FIN3D_CODE": str(L / "gen/final3d_v4/code"),
+           "FIN3D_SRC": str(L / "gen/final3d_v4/src/dataset_bd_classquota_without_home_position_no_overpass"), "FIN3D_STORE": str(P4 / "store3d"),
+           "MUJOCO_GL": "disable", "OMP_NUM_THREADS": "1", "PYTHONDONTWRITEBYTECODE": "1", "CUDA_VISIBLE_DEVICES": ""}
+    log = open(P4 / f"teach_{dom}.log", "a")
+    done_roots = {r["root"] for r in cpu_used(dom)[2]}
+    todo = [j for j in jobs if j["root_id"] not in done_roots][: first or None]
+    head = headroom_s if headroom_s is not None else workers * (900 if dom == "2d" else 300)
+    i = 0
+    while i < len(todo):
+        batch, n = [], 0
+        while i < len(todo) and n + len(todo[i]["seqs"]) <= batch_q:
+            batch.append(todo[i]); n += len(todo[i]["seqs"]); i += 1
+        if not batch:
+            batch, i = [todo[i]], i + 1
+        used, nq, rows = cpu_used(dom)
+        per_q = used / nq if nq else (26.6 if dom == "2d" else 35.2)
+        proj = used + per_q * sum(len(j["seqs"]) for j in batch) + head
+        if proj > CAP_H[dom] * 3600:
+            log.write(f"{time.strftime('%FT%TZ', time.gmtime())} STOP_CAP used={used:.0f}s projected={proj:.0f}s\n"); log.flush()
+            break
+        bf = P4 / f"batch_{dom}.jsonl"
+        with open(bf, "w") as f:
+            for j in batch:
+                f.write(json.dumps(j) + "\n")
+        t0 = time.time()
+        log.write(f"{time.strftime('%FT%TZ', time.gmtime())} BATCH roots={len(batch)} queries={sum(len(j['seqs']) for j in batch)} used_cpu_s={used:.0f}\n"); log.flush()
+        subprocess.run(["nice", "-n", "10", str(L / f"env{dom}" / "bin" / "python"), "benchmark.py", "teach", dom, str(bf), str(P4 / "cache"), str(workers), str(cpu0)],
+                       cwd=D.ABF, env=env, stdout=log, stderr=log, check=True)
+        log.write(f"{time.strftime('%FT%TZ', time.gmtime())} BATCH_DONE wall={time.time() - t0:.0f}s\n"); log.flush()
+    used, nq, rows = cpu_used(dom)
+    print(json.dumps({"dom": dom, "cpu_h": round(used / 3600, 3), "queries_done": nq, "roots_done": len(rows), "jobs_roots": len(jobs)}))
+
+
 if __name__ == "__main__":
     cmd = sys.argv[1]
     if cmd == "devids":
@@ -587,6 +640,8 @@ if __name__ == "__main__":
         manifest()
     elif cmd == "freeze":
         freeze()
+    elif cmd == "teach":
+        teach(sys.argv[2], first=int(sys.argv[3]) if len(sys.argv) > 3 else None)
     elif cmd == "per_root":
         per_root()
     elif cmd == "stats":

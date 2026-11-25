@@ -1,0 +1,220 @@
+{
+ "freeze": {
+  "commit": "02108f9e283f9edbc50d6245236abb84451d4395",
+  "checkpoints": {
+   "2d": {
+    "path": "/home/naren/cr_cvae_runs/models/2d/cr_s0/model.pt",
+    "sha256": "fc9a565e40373193c7cf5def62f7c6fc9067a7ff966239cdb0a76b177b0c3848",
+    "best_step": 600
+   },
+   "3d": {
+    "path": "/home/naren/cr_cvae_runs/models/3d/cr_s0/model.pt",
+    "sha256": "f3edbc314dd7c526d8b049182fc87e8d491870c41a554755d1e263f96168289a",
+    "best_step": 532
+   }
+  },
+  "seed_checkpoints": {
+   "2d_s1": {
+    "path": "/home/naren/cr_cvae_runs/models/2d/cr_s1/model.pt",
+    "sha256": "07e36941aa0d74330219a2b9bc1416f15c3b14209682b7920601f98fe57bf339",
+    "best_step": 630
+   },
+   "2d_s2": {
+    "path": "/home/naren/cr_cvae_runs/models/2d/cr_s2/model.pt",
+    "sha256": "c8cdaf1326d02a92711b3cdff958a46dab55861a14b4f1ec281f431e75f84933",
+    "best_step": 660
+   },
+   "3d_s1": {
+    "path": "/home/naren/cr_cvae_runs/models/3d/cr_s1/model.pt",
+    "sha256": "6ae640c42ddbf7b67de02fae5d17c9ac285022ae9214a3b58a4c781bc73c536e",
+    "best_step": 760
+   },
+   "3d_s2": {
+    "path": "/home/naren/cr_cvae_runs/models/3d/cr_s2/model.pt",
+    "sha256": "e7f5463eae7eb01c81d606fdf32429cb9388fcafce658f72569cc84b044ec64f",
+    "best_step": 684
+   }
+  },
+  "inference": {
+   "budgets": [
+    64,
+    256,
+    1024
+   ],
+   "main_budget": 256,
+   "L": 64,
+   "pool_seed": 0,
+   "pool_rng": "torch.Generator(device).manual_seed(sha256('CRPOOL|root|0')[:15])",
+   "lik_rng": "sha256('CRLIK|root|0')",
+   "device": "NVIDIA GeForce RTX 5060 Laptop GPU",
+   "c3_cap_raw": 4096,
+   "c4": "sha256('CRC4|root|seq') within k, round-robin k=1,2,3",
+   "wall_caps_s": [
+    0.05,
+    0.25,
+    1.0
+   ],
+   "decision_head_ties": [
+    "NOOP",
+    "ABSTAIN",
+    "REPAIR"
+   ]
+  },
+  "rule": {
+   "noop_gate": 0.5,
+   "eta": 0.3,
+   "alpha": 0.0,
+   "beta": 0.0,
+   "gamma": 0.0
+  },
+  "bundle_manifest_sha256": "147645eeb96a7e5e00584c9b5059e1917e5758a293bc3cc23dfba8d737622420",
+  "remedy": "NOT TRIGGERED (see P2_TRAIN.json)",
+  "arms_primary": [
+   "C0",
+   "C1",
+   "C2"
+  ],
+  "arms_secondary": [
+   "C1_common_gate",
+   "C3",
+   "C4",
+   "C1_first_draw"
+  ],
+  "roster": {
+   "2d": "5128c22e16d829d254ecec61b8b0a47c922bca3889f21d1c0043e9baa28b89ce",
+   "3d": "0ae42e4147d29a96e97228b2ee9190fc1a7f0fdc8e9e4bb8dc25ec9e70e4075b"
+  },
+  "prereg_sha256": "df4be0c37bf1681360747962328bb1906f6bcde234dee918b3b3e52c7ac9994e"
+ },
+ "freeze_sha256": "4cfdd27dc98899568a8fb20bb3ff87f718ade50d7445a050463ac43e1c3a462d",
+ "domains": {
+  "2d": {
+   "n": 210,
+   "records_sha256": "e930c5d10a5b0e07772953f48461d48fb74acf43e56dcd400e8efc00b85e06b8",
+   "public_sha256": "8424eb7480438c9f58965342a051801ec4892bb9ecc0ae886b9f8fc859e51a78",
+   "files": {
+    "sealed_C0_2d.jsonl": {
+     "sha256": "583300b6ebc408f50681b26ff9a9302ca67680e523d3c162f20456e5f84f22f4",
+     "validate": {
+      "VALID_REPAIR": 147,
+      "VALID_NOOP": 33,
+      "VALID_ABSTAIN": 30,
+      "MISSING": 0
+     }
+    },
+    "sealed_C1_2d.jsonl": {
+     "sha256": "3ea140bc7764fa54fa763590d920d50aeb6432a6411b5fa508669aff855c2f56",
+     "validate": {
+      "VALID_REPAIR": 147,
+      "VALID_NOOP": 33,
+      "VALID_ABSTAIN": 30,
+      "MISSING": 0
+     }
+    },
+    "sealed_C2_2d.jsonl": {
+     "sha256": "68f1799b2ed5c40ae485a7680139cd0e6deca3bf280dcf0df822a1d12224ef5b",
+     "validate": {
+      "VALID_REPAIR": 146,
+      "VALID_NOOP": 33,
+      "VALID_ABSTAIN": 31,
+      "MISSING": 0
+     }
+    },
+    "sealed_C1_common_gate_2d.jsonl": {
+     "sha256": "59a6e45c38397517ba014037bcb046d0fea24cd4a300783bac684bc977d168d2",
+     "validate": {
+      "VALID_REPAIR": 177,
+      "VALID_NOOP": 33,
+      "MISSING": 0
+     }
+    },
+    "sealed_C3_2d.jsonl": {
+     "sha256": "4252b1d8584492247f296c6f12fc4ff1b09f8104086381a35b349b545ff2f9a1",
+     "validate": {
+      "VALID_REPAIR": 146,
+      "VALID_NOOP": 33,
+      "VALID_ABSTAIN": 31,
+      "MISSING": 0
+     }
+    },
+    "sealed_C4_2d.jsonl": {
+     "sha256": "ab5836410638c0557eb307e4a7238f2398c4605ee80bb9ce27d5ef417cabf623",
+     "validate": {
+      "VALID_REPAIR": 131,
+      "VALID_NOOP": 33,
+      "VALID_ABSTAIN": 46,
+      "MISSING": 0
+     }
+    }
+   },
+   "C1_C2_pool_hash_identical": true,
+   "C0_equals_V34_sealed": 210,
+   "pool_hashes_sha256": "28fcecb5b912bccd68769e4abd075397ca854fada47da57b639d4dcdbd01af77"
+  },
+  "3d": {
+   "n": 210,
+   "records_sha256": "5e2ae8b4fd59a23229304aa1ac549961c549f5b08984562fe14c85f571f288b4",
+   "public_sha256": "fe9c950be43d073a6d6be89b810dbefd0e25acf619189a37b8f6d90f24231629",
+   "files": {
+    "sealed_C0_3d.jsonl": {
+     "sha256": "67f31e6635b5b7e3155196b90a81660ced491de0241c81acc7366d408f478adb",
+     "validate": {
+      "VALID_REPAIR": 150,
+      "VALID_ABSTAIN": 25,
+      "VALID_NOOP": 35,
+      "MISSING": 0
+     }
+    },
+    "sealed_C1_3d.jsonl": {
+     "sha256": "5bc500c4eace1e28b008e3ecff1bbeb769696049e709deac7101eb6f61318c20",
+     "validate": {
+      "VALID_REPAIR": 153,
+      "VALID_ABSTAIN": 31,
+      "VALID_NOOP": 26,
+      "MISSING": 0
+     }
+    },
+    "sealed_C2_3d.jsonl": {
+     "sha256": "19a69ef04cf6820e634f98ca37b271463cc3df5b874d303a2a168d617baabb28",
+     "validate": {
+      "VALID_REPAIR": 148,
+      "VALID_ABSTAIN": 27,
+      "VALID_NOOP": 35,
+      "MISSING": 0
+     }
+    },
+    "sealed_C1_common_gate_3d.jsonl": {
+     "sha256": "44683741ff5c856db59b0e7c9c14e63367bbf8d67be677fef91570f44a6c5e81",
+     "validate": {
+      "VALID_REPAIR": 175,
+      "VALID_NOOP": 35,
+      "MISSING": 0
+     }
+    },
+    "sealed_C3_3d.jsonl": {
+     "sha256": "67a7137e5739aac8e503758df3a0716909d089c4a463d92fc9c8a522db8aebf8",
+     "validate": {
+      "VALID_REPAIR": 149,
+      "VALID_ABSTAIN": 26,
+      "VALID_NOOP": 35,
+      "MISSING": 0
+     }
+    },
+    "sealed_C4_3d.jsonl": {
+     "sha256": "06e6d2301635a038dc6163836b8ac9b0da9cc72fa3bd207b1936777632a51998",
+     "validate": {
+      "VALID_REPAIR": 147,
+      "VALID_ABSTAIN": 28,
+      "VALID_NOOP": 35,
+      "MISSING": 0
+     }
+    }
+   },
+   "C1_C2_pool_hash_identical": true,
+   "C0_equals_V34_sealed": 210,
+   "pool_hashes_sha256": "26d7a54fe1be4bd922af9fb3134d8259bc4b80ceb34d7a5b814959045a8690ec"
+  }
+ },
+ "sealed_utc": "2026-11-25T20:29:35Z",
+ "statement": "sealed before any physical teacher call on these predictions; checkpoints, budgets, rule and roster frozen in P2_FREEZE"
+}

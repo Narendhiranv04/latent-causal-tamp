@@ -166,6 +166,73 @@ def p2dev():
     save(fig, "p2_dev_pools.png")
 
 
+
+ARMC = {"C0": "#1f77b4", "C1": "#ff7f0e", "C2": "#2ca02c", "C3": "#9467bd", "C4": "#8c564b", "C1_common_gate": "#e377c2"}
+
+
+def p5():
+    st = json.loads((D.HERE / "reports/P5_STATS.json").read_text())
+    fig, axs = plt.subplots(1, 2, figsize=(13, 4.2))
+    for a, dom in enumerate(("2d", "3d")):
+        A = st["domains"][dom]["arms"]
+        arms = [x for x in ("C0", "C1", "C2", "C1_common_gate", "C3", "C4") if x in A]
+        grps = ["K1", "K2", "K3", "K1-3"]
+        w = 0.8 / len(arms)
+        for j, arm in enumerate(arms):
+            v = [A[arm][g]["all_root_strict_pct"] for g in grps]
+            hi = [A[arm][g]["bounds_pct"][1] - A[arm][g]["all_root_strict_pct"] for g in grps]
+            axs[a].bar(np.arange(4) + (j - len(arms) / 2 + 0.5) * w, v, w, color=ARMC[arm], label=arm, yerr=[np.zeros(4), hi], capsize=2,
+                       alpha=1.0 if arm in ("C0", "C1", "C2") else 0.5)
+        axs[a].set_xticks(range(4), grps); axs[a].set_ylim(0, 100); axs[a].set_ylabel("verified task success, % of roots (strict)")
+        axs[a].set_title(f"{dom.upper()} locked V3.4 roster (50 per K); bar = verified, whisker = + UNKNOWN/UNQUERIED", fontsize=8)
+        axs[a].legend(fontsize=6, ncol=2)
+    fig.tight_layout(); save(fig, "p5_success_by_K.png")
+    fig, ax = plt.subplots(figsize=(8, 4.5))
+    rows = []
+    for dom in ("2d", "3d"):
+        for c, v in st["domains"][dom]["contrasts"].items():
+            if v["all_root_strict"]:
+                rows.append((f"{dom.upper()} {c}", v["all_root_strict"], v["complete_case"]))
+    for i, (lab, x, cc) in enumerate(rows):
+        ax.errorbar(x["delta_pp"], i, xerr=[[x["delta_pp"] - x["ci95_pp"][0]], [x["ci95_pp"][1] - x["delta_pp"]]], fmt="o", color="k")
+        if cc:
+            ax.plot(cc["delta_pp"], i + 0.2, "x", color="grey")
+    ax.axvline(0, color="r", lw=0.8); ax.set_yticks(range(len(rows)), [r[0] for r in rows], fontsize=7)
+    ax.set_xlabel("paired difference in verified K1-K3 success, pp (95 % family-cluster bootstrap); x = complete-case")
+    fig.tight_layout(); save(fig, "p5_contrasts.png")
+
+
+def p5_examples(n_per=2):
+    """Real roster scenes: for each (domain, category) the first n_per roots by sha256('CRVIZ5|root'): C0 / C1 / C2 picks with strict outcomes."""
+    R = [json.loads(l) for l in open(D.HERE / "reports/P5_PER_ROOT.jsonl")]
+    by = {}
+    for x in R:
+        by.setdefault((x["domain"], x["root_id"]), {})[x["arm"]] = x
+    pubs = {d: {json.loads(l)["root_id"]: json.loads(l) for l in open(D.RUNS / "p3" / f"public_{d}.jsonl")} for d in ("2d", "3d")}
+    cats = {"C2 wins over C1": lambda a: a["C2"]["strict"] == "SUCCESS" and a["C1"]["strict"] != "SUCCESS",
+            "C1 wins over C2": lambda a: a["C1"]["strict"] == "SUCCESS" and a["C2"]["strict"] != "SUCCESS",
+            "C0 wins over C2": lambda a: a["C0"]["strict"] == "SUCCESS" and a["C2"]["strict"] != "SUCCESS",
+            "C2 wins over C0": lambda a: a["C2"]["strict"] == "SUCCESS" and a["C0"]["strict"] != "SUCCESS",
+            "all fail": lambda a: all(a[k]["strict"] != "SUCCESS" for k in ("C0", "C1", "C2"))}
+    for dom in ("2d", "3d"):
+        sel = []
+        for cat, f in cats.items():
+            ks = sorted((k for k, a in by.items() if k[0] == dom and a["C0"]["K"] in ("1", "2", "3") and f(a)), key=lambda k: D.stratum_hash("CRVIZ5", k[1]))
+            sel += [(cat, k) for k in ks[:n_per]]
+        if not sel:
+            continue
+        fig, axs = plt.subplots(len(sel), 3, figsize=(9, 3.1 * len(sel)))
+        axs = np.atleast_2d(axs)
+        for i, (cat, k) in enumerate(sel):
+            for j, arm in enumerate(("C0", "C1", "C2")):
+                x = by[k][arm]
+                draw_scene(axs[i, j], dom, pubs[dom][k[1]], x["seq"] if x["decision"] == "REPAIR" else None,
+                           f"{cat} | K{x['K']} {k[1][:20]}\n{arm}: {x['decision']} -> {x['strict']}" + (f" [{(x['status'] or [''])[0][:24]}]" if x["status"] else ""))
+        kind = "TOP-DOWN SCHEMATIC of shelf cells (not a render)" if dom == "3d" else "planar 8x8 lattice"
+        fig.suptitle(f"P5 {dom.upper()} examples [{kind}], chosen by sha256 within category; strict teacher outcome", fontsize=9)
+        fig.tight_layout(rect=(0, 0, 1, 0.98)); save(fig, f"p5_examples_{dom}.png")
+
+
 if __name__ == "__main__":
     cmd = sys.argv[1]
     if cmd == "p0":
@@ -176,3 +243,5 @@ if __name__ == "__main__":
         p2()
     elif cmd == "p2dev":
         p2dev()
+    elif cmd == "p5":
+        p5(); p5_examples()
