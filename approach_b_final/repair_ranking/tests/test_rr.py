@@ -87,3 +87,70 @@ def test_legal_grammar():
     assert not rr.legal_k2(r, [[mv[0], R.cells0[mv[1]]]])                # vacated / originally occupied cell
     assert not rr.legal_k2(r, [[mv[0], R.goal]]) and not rr.legal_k2(r, [[R.tid, L[0]]])
     assert not rr.legal_k2(r, [[mv[0], L[0]], [mv[1], L[1]], [mv[2] if len(mv) > 2 else mv[1], L[2]]])
+
+
+# ------------------------------------------------------------------------------------------------ P2-P4 contracts
+def test_rank_loss_zero_when_separated_positive_on_inversion_and_gradients():
+    import numpy as np
+    import torch
+    import train_rank as T
+    cfg = dict(T.CFG)
+    b = {"parent": torch.tensor([0, 1, 2])}
+    chunk = [{"v": {"x_seqs": [1, 2, 3]}, "z": [1, 0, None]}]
+    for a_pos, a_neg, want_zero in ((5.0, -5.0, True), (-5.0, 5.0, False)):
+        C = {"b": torch.zeros(3, requires_grad=True), "a": torch.tensor([a_pos, a_neg, 0.0], requires_grad=True), "w": torch.zeros(3, requires_grad=True)}
+        L = T.rank_loss(C, b, chunk, np.random.default_rng(0), cfg)
+        assert (float(L[0]) == 0.0) == want_zero
+        if not want_zero:
+            L.sum().backward()
+            assert C["a"].grad[0] < 0 < C["a"].grad[1] and C["w"].grad.abs().sum() > 0      # gradients on the actual coefficients
+            assert C["a"].grad[2] == 0                                                       # unlabelled (missing) node gets no rank gradient
+    C = {"b": torch.zeros(3), "a": torch.zeros(3), "w": torch.zeros(3)}
+    assert float(T.rank_loss(C, b, [{"v": {"x_seqs": [1, 2, 3]}, "z": [1, 1, None]}], np.random.default_rng(0), cfg)[0]) == 0.0   # no pair -> 0
+
+
+def test_logsigmoid_score_finite_at_extreme_logits():
+    import torch
+    import torch.nn.functional as F
+    s = F.logsigmoid(torch.tensor([-200.0, 200.0])) + F.logsigmoid(torch.tensor([-300.0, 300.0]))
+    assert torch.isfinite(s).all()
+
+
+def test_pool_matches_construct_assignments():
+    import construct as CO
+    import diagnostics as D
+    D6 = {0: [1, 2, 3, 4, 5, 6], 2: [2, 7, 8, 9, 10, 11], 5: [1, 7, 12, 13, 14, 15]}
+    mine = {json.dumps(sorted(map(tuple, s))) for s in D.pool(D6, 4)}
+    ref = {json.dumps(sorted(a)) for k in (1, 2) for a in CO.assignments({o: v[:4] for o, v in D6.items()}, k)}
+    assert mine == ref
+    assert len(D.pool(D6, 4)) == sum(1 for s in D.pool(D6, 4) if len(s) == 1) + 2 * sum(1 for k in [2] for a in CO.assignments({o: v[:4] for o, v in D6.items()}, k))
+
+
+def test_monotone_calibration_preserves_ranking():
+    import numpy as np
+    import calibration as CA
+    p = np.array([0.2, 0.9, 0.5, 0.97])
+    u = 1.7 * CA.logit(p) - 0.4
+    assert list(np.argsort(-u)) == list(np.argsort(-p))
+
+
+def test_run_eval_is_planner_only():
+    src = (HERE / "run_eval.py").read_text().split('"""', 2)[2]                 # code only (module docstring excluded)
+    for bad in ("strict_labels", "verify_2d", "private", "labels", "K_legacy", "masks", "witness", "teach", "import rr"):
+        assert bad not in src.replace("PUBLIC", ""), bad
+
+
+def test_p3_manifest_contract():
+    m = HERE / "reports/P3_MANIFEST.jsonl"
+    if not m.exists() or not rr.SNAP.exists():
+        pytest.skip("manifest / snapshot unavailable")
+    man = [json.loads(l) for l in open(m)]
+    assert len(man) == 1800 and len({(x["root_id"], json.dumps(x["seq"])) for x in man}) == 1800
+    import collections
+    assert dict(collections.Counter(x["category"] for x in man)) == {"HIGHCONF": 540, "DEST": 450, "OBJSET": 360, "ORDER": 270, "RANDOM": 180}
+    tr = {r["root_id"]: r for r in rr.snapshot_rows("train")}
+    assert all(x["root_id"] in tr for x in man)                                              # TRAIN only
+    for x in man[:300]:
+        r = tr[x["root_id"]]
+        assert rr.legal_k2(r, x["seq"])
+        assert json.dumps(x["seq"]) not in {json.dumps([[int(i), int(c)] for i, c in q["seq"]]) for q in r["labels"]["X"]}   # not already labelled

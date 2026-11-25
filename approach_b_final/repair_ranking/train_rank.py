@@ -209,6 +209,79 @@ def train(arm, seed):
     print(json.dumps({"arm": arm, "seed": seed, "best": best, "s": round(time.time() - t0, 1)}))
 
 
+def pick_epoch(curve, a0):
+    """Prereg: eligible epochs (D4 top-1, K0 NOOP, NONE ABSTAIN, K3 top-1 >= A0 - 0.03), highest top-1, tie NLL (1e-3), earlier epoch."""
+    el = [c for c in curve if c["epoch"] >= 0 and all((c[k] if c[k] is not None else 1) >= (a0[k] if a0[k] is not None else 0) - 0.03
+                                                      for k in ("top1_d4", "k0_noop", "none_abstain", "k3_top1"))]
+    if not el:
+        return None
+    top = max(c["top1"] for c in el)
+    near = [c for c in el if c["top1"] >= top - 1e-3]
+    lo = min(c["nll"] for c in near)
+    return min((c for c in near if c["nll"] <= lo + 1e-3), key=lambda c: c["epoch"])
+
+
+def select():
+    import diagnostics as D
+    pub = {r["root_id"]: r for r in rr.public_val()}
+    cal, aud = dev_light("DEV_CAL"), dev_light("DEV_AUDIT")
+    a0net = rr.load_net(rr.scorer_path(0))
+    A0 = {"DEV_CAL": dev_eval(a0net, cal, pub), "DEV_AUDIT": dev_eval(a0net, aud, pub)}
+    a0c = {k: v for k, v in A0["DEV_CAL"].items() if k != "per_root"}
+    runs, ev = {}, {}
+    for arm in ARMS:
+        for seed in (0, 1, 2):
+            f = P4 / f"{arm}_s{seed}" / "curve.json"
+            if not f.exists():
+                continue
+            d = json.loads(f.read_text()); c = pick_epoch(d["curve"], a0c)
+            runs[f"{arm}_s{seed}"] = {"selected_epoch": None if c is None else c["epoch"], "dev_cal_at_selected": c, "epochs_run": len(d["curve"]) - 1,
+                                      "wall_s": d.get("wall_s"), "gpu_peak_mib": d.get("gpu_peak_mib"), "pair_roots": d.get("pair_roots"),
+                                      "ckpt": None if c is None else str(P4 / f"{arm}_s{seed}" / f"ep{c['epoch']:02d}.pt"),
+                                      "ckpt_sha256": None if c is None else rr.sha(P4 / f"{arm}_s{seed}" / f"ep{c['epoch']:02d}.pt")}
+            if c is not None:
+                net = rr.load_net(runs[f"{arm}_s{seed}"]["ckpt"])
+                ev[f"{arm}_s{seed}"] = {"DEV_CAL": dev_eval(net, cal, pub), "DEV_AUDIT": dev_eval(net, aud, pub)}
+    arm_mean = {}
+    for arm in ARMS:
+        ks = [k for k in ev if k.startswith(arm + "_")]
+        if ks:
+            arm_mean[arm] = {m: float(np.mean([ev[k]["DEV_CAL"][m] for k in ks if ev[k]["DEV_CAL"][m] is not None])) for m in ("top1", "conc", "nll", "top1_d4", "k3_top1", "k0_noop", "none_abstain")}
+            arm_mean[arm]["seeds"] = len(ks)
+            arm_mean[arm]["DEV_AUDIT"] = {m: float(np.mean([ev[k]["DEV_AUDIT"][m] for k in ks if ev[k]["DEV_AUDIT"][m] is not None])) for m in ("top1", "conc", "nll", "top1_d4", "k3_top1", "k0_noop", "none_abstain")}
+            arm_mean[arm]["top1_sd"] = float(np.std([ev[k]["DEV_CAL"]["top1"] for k in ks]))
+
+    def paired(a, b, part):
+        pa, pb = a[part]["per_root"], b[part]["per_root"]
+        com = sorted(set(pa) & set(pb)); fam = [pa[r]["family"] for r in com]
+        return {"conc": D.cboot([pa[r]["conc"] - pb[r]["conc"] for r in com], fam), "top1": D.cboot([pa[r]["top1"] - pb[r]["top1"] for r in com], fam), "roots": len(com)}
+    con = {}
+    for part in ("DEV_CAL", "DEV_AUDIT"):
+        for s in (0, 1, 2):
+            g = lambda a: ev.get(f"{a}_s{s}")  # noqa: E731
+            for name, a, b in (("A1-A0", "A1", None), ("A2-A1", "A2", "A1"), ("A3-A1", "A3", "A1"), ("A4-A2", "A4", "A2"), ("A4-A3", "A4", "A3"), ("A4-A0", "A4", None), ("A3-A0", "A3", None), ("A2-A0", "A2", None)):
+                x, y = g(a), (A0 if b is None else g(b))
+                if x and y:
+                    con[f"{part}|s{s}|{name}"] = paired(x, y, part)
+    best = max(arm_mean, key=lambda a: (arm_mean[a]["top1"], -arm_mean[a]["nll"])) if arm_mean else None
+    fin = f"{best}_s0" if best and f"{best}_s0" in ev else None
+    q = {}
+    if fin:
+        pc = paired(ev[fin], A0, "DEV_CAL"); pa = paired(ev[fin], A0, "DEV_AUDIT")
+        q = {"DEV_CAL_conc_delta": pc["conc"], "DEV_CAL_top1": ev[fin]["DEV_CAL"]["top1"], "A0_DEV_CAL_top1": A0["DEV_CAL"]["top1"],
+             "qualifies": pc["conc"][1] > 0 and ev[fin]["DEV_CAL"]["top1"] >= A0["DEV_CAL"]["top1"], "DEV_AUDIT_conc_delta": pa["conc"]}
+        au, a0a = ev[fin]["DEV_AUDIT"], A0["DEV_AUDIT"]
+        q["DEV_AUDIT_veto"] = pa["conc"][0] < 0 or au["top1"] < a0a["top1"] - 0.03 or any((au[k] or 0) < (a0a[k] or 0) - 0.03 for k in ("top1_d4", "k0_noop", "none_abstain", "k3_top1"))
+        q["A_star"] = fin if q["qualifies"] and not q["DEV_AUDIT_veto"] else None
+    strip = lambda e: {p: {k: v for k, v in e[p].items() if k != "per_root"} for p in e}  # noqa: E731
+    res = {"A0": strip(A0), "runs": runs, "evals": {k: strip(v) for k, v in ev.items()}, "arm_mean_over_seeds": arm_mean, "contrasts": con,
+           "best_arm_by_DEV_CAL": best, "finalist_checkpoint": fin, "finalist": q, "cfg": CFG}
+    rr.wjson(rr.REP / "P4_ABLATION.json", res)
+    print(json.dumps({"arm_mean": {a: {k: round(v, 4) if isinstance(v, float) else v for k, v in m.items() if k != "DEV_AUDIT"} for a, m in arm_mean.items()}, "finalist": q}, indent=1, default=str))
+
+
 if __name__ == "__main__":
     if sys.argv[1] in ARMS:
         train(sys.argv[1], int(sys.argv[2]))
+    elif sys.argv[1] == "select":
+        select()
