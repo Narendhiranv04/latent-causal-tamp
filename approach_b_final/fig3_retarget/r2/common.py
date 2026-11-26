@@ -59,12 +59,8 @@ def auroc(y, p):
     pos, neg = p[y == 1], p[y == 0]
     if not len(pos) or not len(neg):
         return None
-    r = np.argsort(np.argsort(np.concatenate([pos, neg]), kind="stable"), kind="stable").astype(float)
-    allv = np.concatenate([pos, neg])                                   # average ranks for ties
-    for v in np.unique(allv):
-        m = allv == v
-        if m.sum() > 1:
-            r[m] = r[m].mean()
+    from scipy.stats import rankdata
+    r = rankdata(np.concatenate([pos, neg])) - 1.0                      # average ranks for ties (0-based)
     return float((r[:len(pos)].sum() - len(pos) * (len(pos) - 1) / 2) / (len(pos) * len(neg)))
 
 
