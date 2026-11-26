@@ -55,6 +55,22 @@ def plan(arm, seed):
     (O4 / "plans_3d.json").write_text(json.dumps(out, indent=1))
 
 
+def r24_runs():
+    """Exact R2.4 X_CHUNKED + endpoint-Y runs on DEV_ORDER_3D (r24/jobs_24_3d.json + phys_24_3d.jsonl), keyed like jobs24.archive."""
+    J = json.loads((C.FIG3 / "r24" / "jobs_24_3d.json").read_text())
+    J = J if isinstance(J, list) else [x for v in J.values() for x in v]
+    R = {json.loads(l)["key"]: json.loads(l) for l in open(C.FIG3 / "r24" / "phys_24_3d.jsonl")}
+    out = {}
+    for j in J:
+        r = R.get(j["key"])
+        if not r or r.get("censored") or r.get("error") or j.get("cells0") or not j.get("y"):
+            continue
+        X, Y = r.get("X") or {}, r.get("Y") or {}
+        out[(j["root_id"], J24.nk(j["order"]), J24.nk(j["bounds"]))] = {"x": X.get("x"), "y": Y.get("y"), "src": "R2.4:" + j["key"], "phase": str(X.get("phase") or ""),
+                                                                         "teacher_status": X.get("status"), "replay": (r.get("REPLAY") or {}).get("replay")}
+    return out
+
+
 def _chunk_px(T, order, part):
     S, out, i = set(), [], 0
     for g in part:
@@ -66,6 +82,7 @@ def jobs(cap, label="FORMAL"):
     P = json.loads((O4 / "plans_3d.json").read_text())
     rows = {json.loads(l)["root_id"]: json.loads(l) for l in open(C.R2 / "r23" / "roster_3d.jsonl")}
     A = J24.archive("3d", rows)
+    A.update(r24_runs())                                               # R2.4's own executed runs (the archived A-DP arm lives here)
     seen, units, jb, sel = {}, 0, [], []
     for arm in ("S-DP", "RANDOM", "F0-DP"):
         for rid in sorted(P, key=lambda r: hashlib.sha256(f"R3.4|{r}".encode()).hexdigest()):
@@ -90,7 +107,7 @@ def jobs(cap, label="FORMAL"):
     for f in (jf, sf):
         (O4 / (f.name + ".SEAL")).write_text(K.sha(f))
     import collections
-    print(json.dumps({"queued": len(jb), "by": collections.Counter((s["arm"], s["status"]) for s in sel)}, default=str))
+    print(json.dumps({"queued": len(jb), "by": collections.Counter(f"{s['arm']}:{s['status']}" for s in sel)}))
 
 
 def analyze():
@@ -109,7 +126,7 @@ def analyze():
             res[tuple(s["key"])] = {"x": x, "y": y, "succ": ok if x is not None else None, "phase": (r.get("X") or {}).get("phase"),
                                     "status": (r.get("X") or {}).get("status"), "cpu_s": r.get("cpu_s"), "src": "R3.4"}
         elif s["status"] == "REUSED":
-            res[tuple(s["key"])] = {"x": s["x"], "y": s["y"], "succ": s["x"] == 1 and s["y"] == 1, "phase": s.get("phase"),
+            res[tuple(s["key"])] = {"x": s["x"], "y": s["y"], "succ": s["x"] == 1 and s["y"] == 1 and s.get("replay", 1) == 1, "phase": s.get("phase"),
                                     "status": s.get("teacher_status"), "src": s.get("src")}
     rows = {json.loads(l)["root_id"]: json.loads(l) for l in open(C.R2 / "r23" / "roster_3d.jsonl")}
     wit = {}
