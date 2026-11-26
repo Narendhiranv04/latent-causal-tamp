@@ -623,21 +623,24 @@ def assemble2(sources, out_dir):
             if (d / f).exists():
                 led += [{**json.loads(l), "_dir": str(d)} for l in open(d / f) if l.strip()]
     acc = [x for x in led if x.get("accepted")]
-    fresh = sorted((x for x in acc if x.get("style") == "B2C2" and "kind" not in x), key=lambda x: x["n"])
-    hist = sorted((x for x in acc if x.get("kind") == "RECERT"), key=lambda x: hashlib.sha256(("K45_HIST|" + x["root_id"]).encode()).hexdigest())
-    porder = [x["root_id"] for x in fresh] + [x["root_id"] for x in hist] + sorted({x["parent_id"] for x in acc if x.get("kind") == "DERIVE"})
-    der = [x for x in acc if x.get("kind") == "DERIVE"]
-    der.sort(key=lambda x: (porder.index(x["parent_id"]) if x["parent_id"] in porder else 99, x["j"]))
+    kof = lambda x: 4 if (x.get("style") == "B2C2" or x.get("kind") in ("RECERT", "FRESH")) else int(x.get("K_child") or 5)  # noqa: E731
+    fresh = sorted((x for x in acc if x.get("style") == "B2C2"), key=lambda x: x["n"])
+    rec4 = sorted((x for x in acc if x.get("kind") == "RECERT"), key=lambda x: hashlib.sha256(("K45_HIST|" + x["root_id"]).encode()).hexdigest())
+    der4 = sorted((x for x in acc if x.get("kind") == "DERIVE" and kof(x) == 4), key=lambda x: hashlib.sha256(("K45_D4|" + x["root_id"]).encode()).hexdigest())
+    der5 = [x for x in acc if x.get("kind") == "DERIVE" and kof(x) == 5]
+    k4 = ([("4", "FRESH", x) for x in fresh] + [("4", "HISTORICAL_UNEXPOSED", x) for x in rec4] + [("4", "DERIVED_FROM_UNEXPOSED_K3", x) for x in der4])[:10]
+    porder = [x["root_id"] for x in fresh] + [x["root_id"] for x in rec4] + [x["root_id"] for x in der4]
+    k4ids = {x["root_id"] for _, _, x in k4}
+    der5.sort(key=lambda x: (x["parent_id"] in k4ids, porder.index(x["parent_id"]) if x["parent_id"] in porder else 999, x["parent_id"], x.get("j", 0), x["root_id"]))
     k5, seenp = [], set()
-    for x in der:                                                                # first pass: one child per parent
+    for x in der5:                                                               # first pass: one child per parent (lineage diversity)
         if x["parent_id"] not in seenp and len(k5) < 10:
             k5.append(x); seenp.add(x["parent_id"])
-    for x in der:
+    for x in der5:
         if x not in k5 and len(k5) < 10:
             k5.append(x)
-    picks = [("4", "FRESH", x) for x in fresh][:10]
-    picks += [("4", "HISTORICAL_UNEXPOSED", x) for x in hist][:max(0, 10 - len(picks))]
-    picks += [("5", "DERIVED", x) for x in k5]
+    picks = k4 + [("5", "DERIVED_FROM_K4_PARENT", x) for x in k5]
+    fresh, hist, der = fresh, rec4, der5
     rows, fps, issues = [], set(), collections.Counter()
     for K, src_kind, x in picks:
         p = Path(x["_dir"]) / "roots" / f"{x['root_id']}.json"
@@ -659,7 +662,7 @@ def assemble2(sources, out_dir):
     return {"admitted": len(rows), "by_K_source": dict(collections.Counter(f"K{r['K']}|{r['source']}" for r in rows)), "issues": dict(issues),
             "labels": dict(collections.Counter(r["label"] for r in rows)), "n_objects": dict(collections.Counter(r["n_objects"] for r in rows)),
             "k5_parents": dict(collections.Counter(r["parent_root_id"] for r in rows if r["K"] == "5")),
-            "available": {"fresh_K4": len(fresh), "recert_K4": len(hist), "derived_K5": len(der)}}
+            "available": {"fresh_K4": len(fresh), "recert_K4": len(hist), "derived_K4": len(der4), "derived_K5": len(der)}}
 
 
 if __name__ == "__main__":
