@@ -70,5 +70,89 @@ def r30(lab_path):
     fig.savefig(FIG / "R3_0_audit.png", dpi=160); print(FIG / "R3_0_audit.png")
 
 
+def draw_scene(ax, row, pre, chunk, title, lab=None, px=None):
+    """Top-down scene from PUBLIC inputs (schematic footprints at the canonical prefix; arrows = the queried chunk, numbered by order)."""
+    from matplotlib.patches import Circle, Rectangle
+    inp = row["inputs"]; xy = [list(p) for p in inp["xy0"]]; cell = inp["cell_xy"]
+    for o, d in pre:
+        xy[int(o)] = cell[str(int(d))]
+    xs = [cell[c][0] for c in cell]; ys = [cell[c][1] for c in cell]
+    for c in inp["legal_cells"]:
+        x, y = cell[str(c)]
+        ax.add_patch(Rectangle((x - 0.035, y - 0.035), 0.07, 0.07, fc="none", ec=GRID, lw=0.4))
+    gx, gy = inp["goal"]
+    ax.add_patch(Rectangle((gx - 0.035, gy - 0.035), 0.07, 0.07, fc="#f3e8c8", ec=ORANGE, lw=0.8, ls="--"))
+    moved = {int(o) for o, _ in pre}; mv = {int(o) for o, _ in chunk}
+    for i, (x, y) in enumerate(xy):
+        a = inp["attrs"][i]
+        r = a[2] if len(a) == 5 else a[0]
+        is_t = (a[4] if len(a) == 5 else a[1]) > 0.5
+        fc = RED if is_t else (GREEN if i in moved else ("#9fb7d6" if i not in mv else BLUE))
+        if len(a) == 5 and a[0] > 0.5:
+            ax.add_patch(Rectangle((x - r, y - r), 2 * r, 2 * r, fc=fc, ec="white", lw=0.6, zorder=3))
+        else:
+            ax.add_patch(Circle((x, y), r, fc=fc, ec="white", lw=0.6, zorder=3))
+    for k, (o, d) in enumerate(chunk):
+        x0, y0 = xy[int(o)]; x1, y1 = cell[str(int(d))]
+        ax.annotate("", (x1, y1), (x0, y0), arrowprops=dict(arrowstyle="-|>", color=INK, lw=1.0), zorder=4)
+        ax.text(x1, y1, str(k + 1), fontsize=7, ha="center", va="center", color="white", zorder=5,
+                bbox=dict(boxstyle="circle,pad=0.15", fc=INK, ec="none"))
+    bx, by = inp["base"]
+    x0, x1, y0, y1 = min(xs) - 0.05, max(xs) + 0.05, min(ys) - 0.05, max(ys) + 0.05
+    ax.annotate("base", (min(max(bx, x0), x1), min(max(by, y0), y1)), fontsize=6, color=MUTED, ha="left", va="center")
+    ax.set_xlim(x0, x1); ax.set_ylim(y0, y1)
+    ax.set_aspect("equal"); ax.set_xticks([]); ax.set_yticks([]); ax.grid(False)
+    tag = "" if lab is None else (" | X=1" if lab == 1 else " | X=0")
+    ax.set_title(title.replace(": ", "\n", 1) + ", " + tag.strip(" |") + ("" if px is None else f", F0 pX = {px:.2f}"), fontsize=7.5, loc="left", color=GREEN if lab == 1 else RED if lab == 0 else INK)
+
+
+def r31(lab_path, rows_path):
+    import collections
+    L = [json.loads(l) for l in open(lab_path)]
+    rows = json.loads(Path(rows_path).read_text())
+    fig = plt.figure(figsize=(13, 7.4))
+    gs = fig.add_gridspec(2, 5, height_ratios=[0.8, 1.35], hspace=0.32, wspace=0.12, left=0.05, right=0.99, top=0.95, bottom=0.05)
+    ax = fig.add_subplot(gs[0, :2])
+    cats = [("h0", "m1"), ("h0", "m2-3"), ("h>=1", "m1"), ("h>=1", "m2-3")]
+    for si, sp in enumerate(("TRAIN_SCALE", "VAL_SCALE")):
+        for ci, (h, m) in enumerate(cats):
+            S = [e for e in L if e["split"] == sp and (e["h"] == 0) == (h == "h0") and (e["m"] == 1) == (m == "m1") and e["label"] in (0, 1)]
+            pos, neg = sum(e["label"] for e in S), sum(1 - e["label"] for e in S)
+            x = ci + (si - 0.5) * 0.38
+            ax.bar(x, pos, 0.34, color=BLUE if si == 0 else "#8fb3dc"); ax.bar(x, neg, 0.34, bottom=pos, color=RED if si == 0 else "#e6a09a")
+            ax.text(x, pos + neg + 2, f"{pos}/{neg}", ha="center", fontsize=6.5, color=MUTED)
+    ax.set_xticks(range(4)); ax.set_xticklabels([f"{h}, {m}" for h, m in cats])
+    ax.set_ylabel("exact local labels (executable / not)")
+    ax.set_title("(a) R3.1 3D yield: dark = TRAIN_SCALE, light = VAL_SCALE; blue executable, red not", loc="left", fontsize=9)
+    ax2 = fig.add_subplot(gs[0, 3:])
+    st = collections.Counter((e["h"] > 0, e["status"].split(":")[0][:28]) for e in L if e["label"] == 0)
+    items = sorted(st.items(), key=lambda t: -t[1])[:8]
+    ax2.barh(range(len(items)), [v for _, v in items], color=[RED if not k[0] else ORANGE for k, _ in items])
+    ax2.set_yticks(range(len(items))); ax2.set_yticklabels([("h>=1: " if k[0] else "h0: ") + k[1] for k, _ in items], fontsize=7)
+    ax2.invert_yaxis(); ax2.set_xlabel("non-executable chunks"); ax2.set_title("(b) teacher failure cause of negative labels", loc="left", fontsize=9)
+    by = collections.defaultdict(dict)
+    for e in L:
+        by[(e["root_id"], e["template"])][(json.dumps(e["prefix"]), json.dumps(e["chunk"]))] = e
+    ex = []
+    neg = sorted([e for e in L if e["h"] == 0 and e["m"] == 1 and e["label"] == 0], key=lambda e: -e["f0_px"])
+    if neg:
+        ex.append((neg[0], "blocked first grasp"))
+    for e in L:                                                     # same action before (T1) / after (T2) a relocation, discordant
+        if e["template"] == "T2" and e["h"] == 1:
+            t1 = [x for x in L if x["root_id"] == e["root_id"] and x["template"] == "T1" and x["chunk"] == e["chunk"]]
+            if t1 and t1[0]["label"] != e["label"]:
+                ex += [(t1[0], "same action at S0"), (e, "after one relocation")]; break
+    for e in L:                                                     # matched permutation pair, discordant
+        if e["template"] == "T5":
+            t4 = [x for x in L if x["root_id"] == e["root_id"] and x["template"] == "T4"]
+            if t4 and t4[0]["label"] != e["label"]:
+                ex += [(t4[0], "set, order A"), (e, "same set, order B")]; break
+    for k, (e, t) in enumerate(ex[:5]):
+        a = fig.add_subplot(gs[1, k])
+        draw_scene(a, rows[e["root_id"]], e["base"] + e["prefix"], e["chunk"], f"{t}: h={e['h']}, N={e['N']}", e["label"], e["f0_px"])
+    fig.text(0.01, 0.01, "Scenes: top-down footprints at true scale from public inputs (red = target, green = already moved, blue = queried mover, dashed = goal cell; 'base' marks the robot-base side); X labels are exact teacher outcomes (chunk + connector to q_ref).", fontsize=7, color=MUTED)
+    fig.savefig(FIG / "R3_1_data_3d.png", dpi=160); print(FIG / "R3_1_data_3d.png")
+
+
 if __name__ == "__main__":
-    {"r30": lambda: r30(sys.argv[2])}[sys.argv[1]]()
+    {"r30": lambda: r30(sys.argv[2]), "r31": lambda: r31(sys.argv[2], sys.argv[3])}[sys.argv[1]]()

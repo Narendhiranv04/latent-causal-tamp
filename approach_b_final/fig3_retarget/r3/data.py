@@ -16,7 +16,7 @@ Templates per scene (chunked teacher runs; every chunk ends with the planned + e
   T5 [perm(C)]           another permutation of C (same endpoint)       -> C' @ h0
   T6 [r | t1 t2 t3]      r in R u P; triple from P u R                   -> r @ h0, triple @ h1
   T7 [b' | x]            b' = b's object, alternative destination        -> b' @ h0, x @ h1           (changed destination)
-    python data.py build OUT_PREFIX N_TRAIN N_VAL     (GPU: proposals + frozen pX for H)  -> jobs_31_3d.json (+ SEAL), scenes_31_3d.json
+    python data.py build N_TRAIN N_VAL     (GPU: proposals + frozen pX for H)  -> jobs_31_3d.json (+ SEAL), scenes_31_3d.json
     python data.py labels                              -> labels_31_3d.jsonl (+ frozen readouts)"""
 from __future__ import annotations
 
@@ -200,28 +200,63 @@ def build(n_train, n_val):
                       "W_scenes": sum(s["W"] for s in scenes), "seal": K.sha(jf)[:16]}))
 
 
-def labels():
+def build2d(n_scenes, jobs_per=("T2", "T3", "T6", "T7"), lo=13, hi=20):
+    """2D local-X diagnostic (R3.1 3B, <= 60 X-only queries): clean original-VAL families, N in [lo, hi], K_legacy != 0, one root per family;
+    S0 scenes only (the 2D teacher has no static start override); templates with an h0 and an h1 label each."""
+    from models import Frozen
+    fz = Frozen("2d"); fz.caps = {}
+    rows = C.snapshot_rows("2d", snap=C.SNAP_TRAIN)
+    pg = {}
+    for sp in ("val",):
+        for l in open(C.PRIV / f"private_{sp}_2d.jsonl"):
+            e = json.loads(l); pg[e.get("root_id", e.get("evaluation_group_id"))] = (e["path"], e.get("geom", "original"))
+    lin = json.loads((K.O / "lineage_2d.json").read_text())
+    el = [e for e in lin["eligible"]["val"] if lo <= e["N"] <= hi and str(e["K"]) not in ("0", "None") and e["root_id"] in pg]
+    el.sort(key=lambda e: hk("scene2d", e["root_id"]))
+    seen, sel = set(), []
+    for e in el:
+        if e["fam"] not in seen and len(sel) < int(n_scenes):
+            seen.add(e["fam"]); sel.append(e)
+    jobs, scenes = [], []
+    for e in sel:
+        rid = e["root_id"]; row0 = rows[rid]; ids = row0["inputs"]["ids"]
+        S = Scene(fz, row0, rid, "VAL_DIAG", pg[rid][0], rows, False)
+        T = [t for t in S.jobs(k3=False) if t[0] in jobs_per]
+        scenes.append({"root_id": rid, "fam": e["fam"], "split": "VAL_DIAG", "N": e["N"], "K": e["K"], "n_jobs": len(T)})
+        for t, seq, bounds, src in T:
+            jobs.append({"key": f"R31D|{rid}|{t}|{json.dumps(seq)}|{json.dumps(bounds)}", "root_id": rid, "fam": e["fam"], "split": "VAL_DIAG", "template": t,
+                         "scene_type": "S0", "base": [], "seq_idx": [list(a) for a in seq], "src": src, "path": pg[rid][0], "geom": pg[rid][1],
+                         "kind": "X_CHUNKED", "seq": [[ids[o], int(d)] for o, d in seq], "bounds": bounds})
+    assert len(jobs) <= K.CEIL["2d"]["R3.1_diag"][0], len(jobs)
+    jf = K.O / "jobs_31_2d.json"; jf.write_text(json.dumps(jobs, indent=1))
+    (K.O / "scenes_31_2d.json").write_text(json.dumps(scenes, indent=1))
+    (K.O / "jobs_31_2d.json.SEAL").write_text(K.sha(jf))
+    import collections
+    print(json.dumps({"jobs": len(jobs), "scenes": len(scenes), "templates": collections.Counter(j["template"] for j in jobs), "seal": K.sha(jf)[:16]}))
+
+
+def labels(dom="3d"):
     """Exact chunk labels from the R3.1 runs (labels.chunks_of contract; UNKNOWN never negative) + frozen readouts at the start scene."""
     from models import Frozen
-    rows = C.snapshot_rows("3d", snap=C.SNAP_TRAIN)
-    jobs = json.loads((K.O / "jobs_31_3d.json").read_text())
-    R = {json.loads(l)["key"]: json.loads(l) for l in open(K.O / "phys_31_3d.jsonl")}
+    rows = C.snapshot_rows(dom, snap=C.SNAP_TRAIN)
+    jobs = json.loads((K.O / f"jobs_31_{dom}.json").read_text())
+    R = {json.loads(l)["key"]: json.loads(l) for l in open(K.O / f"phys_31_{dom}.jsonl")}
     out = []
     for j in jobs:
         r = R.get(j["key"])
         if not r or r.get("censored") or r.get("error"):
             continue
         X = r.get("X") or {}
-        for c in LB.chunks_of(j["seq"], j["bounds"], X, unknown=LB._unknown(X)):
+        for c in LB.chunks_of(j.get("seq_idx") or j["seq"], j["bounds"], X, unknown=LB._unknown(X)):
             out.append({"root_id": j["root_id"], "fam": j["fam"], "split": j["split"], "scene_type": j["scene_type"], "template": j["template"],
                         "key": j["key"], "base": j["base"], "prefix": c["prefix"], "chunk": c["chunk"], "h": c["prefix_len"], "m": len(c["chunk"]),
                         "label": c["label"], "kind": c["kind"], "connector_fail": c["connector_fail"], "N": len(rows[j["root_id"]]["inputs"]["ids"]),
-                        "status": str(X.get("status") or ""), "phase": X.get("phase"), "src": j["src"][0] if c["prefix_len"] == 0 else j["src"][-1]})
-    fz = Frozen("3d"); fz.caps = {}
+                        "status": str(X.get("teacher_status") or X.get("status") or ""), "phase": X.get("phase") or X.get("failed_phase"), "src": j["src"][0] if c["prefix_len"] == 0 else j["src"][-1]})
+    fz = Frozen(dom); fz.caps = {}
     for e in out:
         sc = fz.score(V.rebase(rows[e["root_id"]], e["base"] + e["prefix"]), [e["chunk"]])[0]
         e.update({f"f0_{k}": sc[k] for k in ("px", "px1", "px0", "py", "p11")})
-    with open(K.O / "labels_31_3d.jsonl", "w") as f:
+    with open(K.O / f"labels_31_{dom}.jsonl", "w") as f:
         for e in out:
             f.write(json.dumps(e) + "\n")
     import collections
@@ -229,4 +264,4 @@ def labels():
 
 
 if __name__ == "__main__":
-    {"build": lambda: build(*sys.argv[2:4]), "labels": labels}[sys.argv[1]]()
+    {"build": lambda: build(*sys.argv[2:4]), "build2d": lambda: build2d(sys.argv[2]), "labels": lambda: labels(sys.argv[2] if len(sys.argv) > 2 else "3d")}[sys.argv[1]]()
