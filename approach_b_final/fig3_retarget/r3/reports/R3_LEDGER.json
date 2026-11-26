@@ -45,10 +45,56 @@
    "queries": 0,
    "note": "not triggered (2D decision INCONCLUSIVE)"
   },
-  "2d_gen": "running (see R3_DECISION)",
+  "2d_gen": {
+   "layouts": 139,
+   "queries": 1325,
+   "cpu_h": 6.17,
+   "static_cpu_h": 3.14,
+   "witness_cpu_h": 3.02,
+   "smoke_cpu_s": 15.5,
+   "cap": [
+    400,
+    4000,
+    24.0
+   ],
+   "accepted": {
+    "4": 10,
+    "5": 11,
+    "6": 14
+   },
+   "cohort": "30 (10 per L, all CERTIFIED_MIN_K)"
+  },
   "gpu_h": 0.01,
   "errors": 0,
   "censored": 0,
   "retries": 0
+ },
+ "R3.2_R3.3": {
+  "3d": {
+   "teacher_jobs": 0,
+   "gpu_train_s": 190,
+   "arms": [
+    "F1 s0/s1",
+    "F2 s0/s1",
+    "G1 s0/s1",
+    "M1 s0/s1",
+    "G1s s0/s1",
+    "M1s s0/s1"
+   ],
+   "gate": "no PASS (G1s s0 misses FPR drop 0.130 < 0.15)"
+  },
+  "2d": "not run (diagnostic INCONCLUSIVE)"
+ },
+ "R3.4": "not started (local gate unresolved)",
+ "R3.5": "not started (local gate unresolved)",
+ "totals": {
+  "3d_jobs": 622,
+  "3d_cpu_h": 3.0,
+  "2d_queries": 1393,
+  "2d_cpu_h": 6.36,
+  "gpu_h_approx": 0.15,
+  "max_workers": 16,
+  "storage_mb": 45,
+  "host": "gvlab2"
  }
 }

@@ -154,5 +154,107 @@ def r31(lab_path, rows_path):
     fig.savefig(FIG / "R3_1_data_3d.png", dpi=160); print(FIG / "R3_1_data_3d.png")
 
 
+def r32(d):
+    import numpy as np
+    d = Path(d)
+    G = {**json.loads((d / "eval/gate_3d_F1.json").read_text()), **json.loads((d / "eval/gate_3d_F2G1M1.json").read_text()), **json.loads((d / "eval/gate_3d.json").read_text())}
+    H = json.loads((d / "eval/hard_3d.json").read_text())
+    arms = [("F0", "F0", MUTED), ("F1_s0", "F1 head", BLUE), ("F2_s0", "F2 full", GREEN), ("M1s_s0", "M1s MLP+rel. geom.", ORANGE), ("G1s_s0", "G1s graph", RED)]
+    fig, ax = plt.subplots(1, 4, figsize=(15, 3.9), gridspec_kw={"width_ratios": [1.25, 1, 1, 1.1]})
+    strata = [("h0", "h=0"), ("h>=1", "h>=1"), ("h>=1_m23", "h>=1, m=2-3")]
+    for ai, (k, nm, c) in enumerate(arms):
+        for si, (st, _) in enumerate(strata):
+            v = G[k]["strata"][st]; x = si + (ai - 2) * 0.16
+            ax[0].bar(x, v["auroc"], 0.15, color=c, label=nm if si == 0 else None)
+            if v.get("auroc_ci"):
+                ax[0].plot([x, x], v["auroc_ci"], color=INK, lw=0.8)
+            s1 = G.get(k.replace("_s0", "_s1"), {}).get("strata", {}).get(st)
+            if s1 and k != "F0":
+                ax[0].plot([x], [s1["auroc"]], "o", ms=3, color=INK)
+    ax[0].axhline(0.75, color=RED, ls="--", lw=0.8); ax[0].set_ylim(0.4, 1.12)
+    ax[0].set_xticks(range(3)); ax[0].set_xticklabels([n for _, n in strata]); ax[0].set_ylabel("VAL_SCALE AUROC (marginal pX, family CI)")
+    ax[0].legend(frameon=False, fontsize=6.5, loc="upper center", ncol=3); ax[0].set_title("(a) local gate panel (bars seed 0, dots seed 1)", loc="left", fontsize=9)
+    for k, nm, c in arms:
+        P = [json.loads(l) for l in open(d / "eval" / f"pred_3d_{k if k != 'F0' else 'F0_sNone'}.jsonl")]
+        P = [e for e in P if e["h"] == 0 and e["m"] == 1]
+        y = np.array([e["label"] for e in P]); p = np.array([e["px"] for e in P]); o = np.argsort(-p)
+        tpr = np.concatenate([[0], np.cumsum(y[o]) / y.sum()]); fpr = np.concatenate([[0], np.cumsum(1 - y[o]) / (1 - y).sum()])
+        ax[1].plot(fpr, tpr, color=c, lw=1.4, label=f"{nm}: FPR@TPR.8 = {G[k]['fpr_first_relocation']['fpr']:.2f}")
+    ax[1].axhline(0.8, color=MUTED, ls=":", lw=0.8); ax[1].set_xlabel("FPR"); ax[1].set_ylabel("TPR")
+    ax[1].set_title("(b) VAL_SCALE first relocations (h=0, m=1)\ngate needs FPR drop >= 0.15 vs F0 (0.22)", loc="left", fontsize=9)
+    ax[1].legend(frameon=False, fontsize=6.5, loc="lower right")
+    for k, nm, c in [("F1_s0", "F1 (lr 1e-4)", BLUE), ("F2_s0", "F2 (lr 3e-5)", GREEN), ("G1_s0", "G1 (lr 1e-4, under-fit)", "#e6a09a"), ("M1s_s0", "M1s (lr 1e-3)", ORANGE), ("G1s_s0", "G1s (lr 1e-3)", RED)]:
+        cv = json.loads((d / f"3d_{k}" / "curve.json").read_text())["curve"]
+        ax[2].plot([c_["epoch"] for c_ in cv], [c_["val_fam_nll"] for c_ in cv], color=c, lw=1.2, label=nm)
+    ax[2].axhline(G["F0"]["val_fam_nll"], color=MUTED, ls=":", lw=0.8); ax[2].text(1, G["F0"]["val_fam_nll"] + 0.01, "F0", color=MUTED, fontsize=7)
+    ax[2].set_xlabel("epoch (-1 = init)"); ax[2].set_ylabel("VAL_SCALE family-mean X NLL"); ax[2].legend(frameon=False, fontsize=6.5)
+    ax[2].set_title("(c) early-stopping criterion", loc="left", fontsize=9)
+    hk = [("all", "all"), ("h0_m1", "h0, m1"), ("h>=1", "h>=1"), ("h>=1_m23", "h>=1, m2-3")]
+    for ai, (k, nm, c) in enumerate(arms):
+        hh = H[k if k != "F0" else "F0_sNone"]
+        for si, (st, _) in enumerate(hk):
+            x = si + (ai - 2) * 0.16
+            ax[3].bar(x, hh[st]["auroc"], 0.15, color=c)
+            if hh[st].get("auroc_ci"):
+                ax[3].plot([x, x], hh[st]["auroc_ci"], color=INK, lw=0.8)
+    ax[3].axhline(0.5, color=MUTED, ls=":", lw=0.8); ax[3].set_ylim(0, 1.0)
+    ax[3].set_xticks(range(4)); ax[3].set_xticklabels([n for _, n in hk], fontsize=7.5)
+    ax[3].set_title("(d) DIAGNOSTIC ONLY: R2.4 exposed K4/K5 panel\n(never used for training or selection)", loc="left", fontsize=9)
+    fig.tight_layout()
+    fig.savefig(FIG / "R3_2_3_training.png", dpi=160); print(FIG / "R3_2_3_training.png")
+
+
+def coh2d(wit_path, lay_path):
+    """2D DEV_ORDER cohort: accepted witnesses on the 8x8 cell grid (schematic cell positions; teacher-verified X = 1, Y = 1, Y(empty) = 0)."""
+    from matplotlib.patches import Circle, Rectangle
+    import collections
+    W = [json.loads(l) for l in open(wit_path)]
+    lay = {}
+    for l in open(lay_path):
+        L = json.loads(l); lay[L["root_id"]] = L
+    acc = []
+    for r in W:
+        ok = [t for t in r.get("tries", []) if t.get("final") and t.get("x") == 1 and t.get("y") == 1 and t.get("x_replay") and t.get("y_replay")]
+        if ok and (r.get("Y0") or {}).get("y") == 0 and 4 <= len(ok[0]["seq"]) <= 6:
+            acc.append((len(ok[0]["seq"]), r, ok[0]))
+    fig = plt.figure(figsize=(14, 6.4))
+    gs = fig.add_gridspec(2, 4, width_ratios=[1.3, 1, 1, 1], hspace=0.35, wspace=0.15, left=0.05, right=0.99, top=0.92, bottom=0.06)
+    ax = fig.add_subplot(gs[:, 0])
+    vs = collections.Counter((r["K_lb"], r["verdict"]) for r in W)
+    ks = (4, 5, 6); cats = [("CERTIFIED_MIN_K", GREEN, "certified min-K"), ("WITNESS_ONLY_UNCERTIFIED", ORANGE, "witness, min unknown"), ("NO_WITNESS_FOUND", RED, "no witness (bounded)")]
+    bot = [0, 0, 0]
+    for v, c, nm in cats:
+        h = [vs.get((k, v), 0) for k in ks]
+        ax.bar(range(3), h, bottom=bot, color=c, label=nm); bot = [a + b for a, b in zip(bot, h)]
+    other = [sum(n for (k, v), n in vs.items() if k == kk and v not in [c[0] for c in cats]) for kk in ks]
+    ax.bar(range(3), other, bottom=bot, color=MUTED, label="other / invalid")
+    ax.set_xticks(range(3)); ax.set_xticklabels([f"K_lb = {k}" for k in ks]); ax.set_ylabel("candidate layouts witnessed")
+    ax.legend(frameon=False, fontsize=7); ax.set_title("(a) 2D cohort search outcomes", loc="left", fontsize=9)
+    ex = []
+    for L in (4, 5, 6):
+        ex += sorted([a for a in acc if a[0] == L], key=lambda a: a[1]["root_id"])[:2]
+    for i, (Lw, r, t) in enumerate(ex[:6]):
+        a = fig.add_subplot(gs[i // 3, 1 + i % 3])
+        Lr = lay[r["root_id"]]; cells = Lr["cells0"]; P = lambda c: (c % 8, c // 8)  # noqa: E731
+        for c in range(64):
+            a.add_patch(Rectangle((c % 8 - 0.5, c // 8 - 0.5), 1, 1, fc="none", ec=GRID, lw=0.4))
+        gx, gy = P(Lr["goal_cell"]); a.add_patch(Rectangle((gx - 0.5, gy - 0.5), 1, 1, fc="#f3e8c8", ec=ORANGE, lw=0.9, ls="--"))
+        moved = {o for o, _ in t["seq"]}
+        for j, c in enumerate(cells):
+            nm = "t0" if j == 0 else f"o{j - 1:02d}"
+            x, y = P(c)
+            a.add_patch(Circle((x, y), 0.3, fc=RED if j == 0 else (BLUE if nm in moved else "#9fb7d6"), ec="white", lw=0.5, zorder=3))
+        for k, (o, d) in enumerate(t["seq"]):
+            j = 0 if o == "t0" else int(o[1:]) + 1
+            (x0, y0), (x1, y1) = P(cells[j]), P(int(d))
+            a.annotate("", (x1, y1), (x0, y0), arrowprops=dict(arrowstyle="-|>", color=INK, lw=0.9), zorder=4)
+            a.text(x1, y1, str(k + 1), fontsize=6.5, ha="center", va="center", color="white", zorder=5, bbox=dict(boxstyle="circle,pad=0.12", fc=INK, ec="none"))
+        a.set_xlim(-0.6, 7.6); a.set_ylim(-0.6, 7.6); a.set_aspect("equal"); a.set_xticks([]); a.set_yticks([]); a.grid(False)
+        a.set_title(f"{r['root_id']}: L = {Lw}, N = {r['n_objects']}\n{r['verdict']}", fontsize=7.5, loc="left")
+    fig.text(0.05, 0.005, "Schematic 8x8 cell grid (red = target, dashed = goal cell, blue = witness movers, numbers = witness order). Each witness: frozen BXY X = 1 and Y = 1, "
+             "both independently replayed; Y(empty) = 0 certified.", fontsize=7, color=MUTED)
+    fig.savefig(FIG / "R3_1_cohort_2d.png", dpi=160); print(FIG / "R3_1_cohort_2d.png")
+
+
 if __name__ == "__main__":
-    {"r30": lambda: r30(sys.argv[2]), "r31": lambda: r31(sys.argv[2], sys.argv[3])}[sys.argv[1]]()
+    {"r30": lambda: r30(sys.argv[2]), "r31": lambda: r31(sys.argv[2], sys.argv[3]), "r32": lambda: r32(sys.argv[2]), "coh2d": lambda: coh2d(sys.argv[2], sys.argv[3])}[sys.argv[1]]()

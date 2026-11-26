@@ -63,13 +63,20 @@ Every label uses the R2.4 contract (`labels.chunks_of`):
 
 ## 2D — long-witness development cohort (DEV_ORDER_2D)
 
-This stage is **running**. Generator: k3scale `gen_deep.py`, unchanged, with string seeds `R3COH2D|i`, run under `gen2d.py`.
-- Static stage: 200 seeds × 8,000 steps, no teacher. It has produced 94 candidate layouts so far (K_lb 4 / 5 / 6).
-- Witness stage: `witness_v3.py`, unchanged, under the 400-layout / 4,000-query / 24 CPU-h caps. It follows when the static stage ends.
+**Static stage.** k3scale `gen_deep.py`, unchanged, with string seeds `R3COH2D|i` for i = 0–199, 8,000 steps each. It produced 292 candidate layouts (K_lb 4 / 5 / 6: 129 / 98 / 65) for 3.14 CPU-h, with no teacher calls.
 
-Results will be added to `R3_DECISION.md`. Release_v2 is never read.
+**Witness stage.** `witness_v3.py`, unchanged (frozen ≤ 6-relocation BXY teacher, MAXQ 10). Candidates ran in sha256 priority order, N 9–15 first, in two passes. The second pass ran after the static stage completed, to close L = 6.
+- It used 139 layouts, 1,325 queries and 3.02 CPU-h.
+- 35 were accepted, all CERTIFIED_MIN_K.
+- 104 were NO_WITNESS_FOUND under the bounded search. That is not evidence of infeasibility.
 
-## Figure
+**Cohort.** The first 10 accepted per L are listed in `r31/DEV_ORDER_2D_cohort.json`. All 30 are CERTIFIED_MIN_K: L = K_lb(V1) = K_lb(V2), X = 1 and Y = 1 independently replayed, Y(empty) = 0. N ranges 14–20; only 4 are in 9–15. 5 more certified roots are held in reserve.
+
+Release_v2 was never read. Disjointness rests on the separate string-seed namespace.
+
+## Figures
+
+`figures/R3_1_cohort_2d.png` shows the 2D cohort search outcomes and six certified witnesses.
 
 `figures/R3_1_data_3d.png`:
 - (a) Yield by h × m and split.

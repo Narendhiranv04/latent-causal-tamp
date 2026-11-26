@@ -90,7 +90,7 @@ def witness(layouts, outp, workers, cpu_lo, maxq=10):
                 queue.append(strata[k][i])
     pool = get_context("spawn").Pool(int(workers), maxtasksperchild=4)
     running, f, qi = {}, open(outp, "a"), 0
-    worst = maxq + 4
+    maxq = int(maxq); worst = maxq + 4
     while True:
         for k, (ar, t) in list(running.items()):
             if ar.ready():
