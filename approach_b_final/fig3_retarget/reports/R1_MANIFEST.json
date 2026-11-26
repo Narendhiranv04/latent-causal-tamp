@@ -1,0 +1,95 @@
+{
+ "stage": "R1",
+ "branch": "naren/rss27-fig3-retarget-home",
+ "base_commit": "fac59ecd1f836a22b9ed7956e9d9f277678e1456",
+ "contract": [
+  "instruction-phase-md/recursive_experiment/fig3_recursive_scaling_plan.md",
+  "instruction-phase-md/recursive_experiment/fig3_R1_dual_domain_amendment.md",
+  "owner note 2026-11-26: reuse TT_ADAPTER_V1 / C3b / C4 (e9fa587c3b)"
+ ],
+ "decisions": {
+  "shared_implementation": "PASS",
+  "adapter_3d": "PASS",
+  "adapter_2d": "PASS (mechanics); intermediate-connector rate open (1/3 UNKNOWN_TRANSIT in smoke)"
+ },
+ "source_sha256": {
+  "fig3_retarget/jobs.py": "372a0707f85b65e8ef068f87d4d14e1fc15fdbce70a10d37e8d4fcbacef000f8",
+  "fig3_retarget/models.py": "7d8e408e2af4fc377b851a88b0af047e83969baa8ecb77a6b13bc4e7d9098846",
+  "fig3_retarget/physical2d.py": "218fec27df468ddf4a13257a6c41dc033cb52f11911ae46f1ea4430f7c3559a8",
+  "fig3_retarget/physical3d.py": "91597b8da9be2ddfa1c687f1b3911c040ef2fdf74e77e1b59aa2044bf2a84524",
+  "fig3_retarget/rank.py": "422d512653f256a4ab0ed97fe5755a0cd1db45a0f966c843e81b65d918d262cf",
+  "fig3_retarget/recursive.py": "2cff359c5792a56f3d604f622498d13a6da7bf14dcfbcbe95859538bb48e7a7e",
+  "fig3_retarget/run.py": "176fa7f15ebb6037ff449d25bec8968dd290f906e0557150c02ab6dd5d739c90",
+  "fig3_retarget/tests/test_fig3.py": "963c78be5850a65f259bd6b78a5f8dd14e1dd3ede5fed818d5942cf564091028",
+  "fig3_retarget/tt_adapter.py": "4d93446f82821efb1bdf46234876571798a3d71bec6680b0486ca159b5e31ae6",
+  "fig3_retarget/tt_retarget_ref.py": "b51054f0eacd1b64d0b9b4c75d11e757823ebfca45405c0f6d34d496949fe3cf",
+  "fig3_retarget/views.py": "13b305c60628375621e9131451e7871d40b15f376879d23afa3d3e9012b35630",
+  "fig3_retarget/viz.py": "0e90479b0502db1644af30361d9e11d0479bc6d06094de0af7c3a5688e840aa2"
+ },
+ "reused_sources": {
+  "validation_k3/ttarget.py@e9fa587c3b": "bd2831d72c4601cb150dc895f05d70501491a554904f41ba54ba5ddf8049da2e",
+  "validation_k3/retarget.py@e9fa587c3b": "b51054f0eacd1b64d0b9b4c75d11e757823ebfca45405c0f6d34d496949fe3cf",
+  "compose3d_k45/evaluate_k45.py (unchanged)": "384e41546cc81c2b95f501d5bc742d5d27bd2fdfe5d8ff5eee71ed096cc96cef"
+ },
+ "bundle_manifest_sha256": "147645eeb96a7e5e00584c9b5059e1917e5758a293bc3cc23dfba8d737622420",
+ "config": {
+  "recursive": "recursive.CFG (m_max 2d 6 / 3d 5; n_seeds 8; repairs_per_action 2; variants 4; depth 3; temp_readouts 256; repair_expansions 96 (24/seed); exhaustive_max_groups 4096; beam 8; admit beats_empty (temporary pY); wall_s 180; x/y unique 100k)",
+  "rule": "noop_gate 0.5, eta 0.3 (B0 only)"
+ },
+ "teachers": {
+  "3d": {
+   "fin3d.py": "29eb0b29ba7623cdfae0eeb7ac2f63b97a83ce2653959ebf0b3bbef4696c64d3",
+   "config_hash": "8d521b1f6d23db23",
+   "connector": "CONNECTOR_TO_QREADY_V1"
+  },
+  "2d": {
+   "bxy_teacher.py": "c18ac91c89b95db46346eb49c3117b4ddc303d0f06c07a0d7a4aa31358f8ba3b",
+   "bd_2d.py": "eb97136c204b3b0e358f643fac708a3cbef15bfdf38a158730561c154ab4af11"
+  }
+ },
+ "run_artifacts_sha256_gvlab2": {
+  "runs/p3d.jsonl": "64f0573cb336e50b4543854b7987e38e232bcf423e79622115c8584d3f8c27bf",
+  "runs/p3d_tt.jsonl": "ff1b23cecf10922898fb50326a02150de9a46cf0a698380cfa798cace8365186",
+  "runs/p2d.jsonl": "aa310bfd883813fef3b0ef1485986618075f89cde2f590236530801a18453287",
+  "runs/p2d_tt.jsonl": "9fbec5015d3d42ea7a1fca3485473b8cf3e6ada0467d89a46c68324961874055",
+  "runs/p2d_fix.jsonl": "d801f0f4ba2d36132e21691a3eedcfd5ce7d250a75e2658fef611761370bfc8f",
+  "runs/parity3d.json": "47dded04825c21a64c9a0990f29e0b636559649b389ffb3b000dfd2583ea216e",
+  "runs/parity2d.json": "e396e888fa876e2cc618bf50594417bd72ad04cf7934bd9de30c37631f7f0f9f",
+  "runs/b4hist3d_pred.jsonl": "37a5892f10df7fa1f57edf13bbc459ef9adef49fc9432ca587f9fc19d13fa123"
+ },
+ "data": {
+  "3d": "20 exposed K4/K5 cohort roots (2 used physically), 364 VAL DEV rows (6 parity)",
+  "2d": "3 exposed TRAIN raw roots (physical), 751 VAL DEV rows (8 parity, 2 demo)",
+  "protected": "release_v2 and historical TEST not opened"
+ },
+ "resources": {
+  "gpu_h": 0.06,
+  "teacher_3d": {
+   "jobs": 19,
+   "cpu_h": 0.059
+  },
+  "teacher_2d": {
+   "queries": 30,
+   "job_records": 23,
+   "cpu_h": 0.029
+  },
+  "max_concurrent_workers": 8,
+  "storage_mb": 23,
+  "gvlab2_home_free_gb": 34,
+  "hosts": [
+   "gvlab2"
+  ]
+ },
+ "tests": {
+  "fig3": "54/54",
+  "compose3d_k45": "14/14",
+  "full_domain_sets": "26/26",
+  "mcts_sets": "13/13",
+  "repair_ranking": "10 passed, 1 skipped (snapshot unavailable on gvlab2)"
+ },
+ "private_locations": [
+  "~/k45_private/fig3_R1 (laptop, storage only)",
+  "gvlab2:/home/projects/long-horizon/naren_workspace/fig3"
+ ],
+ "next": "R2 requires owner approval (see R1_REPORT.md section 8); STOPPED"
+}

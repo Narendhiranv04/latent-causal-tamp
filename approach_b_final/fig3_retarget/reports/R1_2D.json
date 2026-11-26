@@ -1,0 +1,840 @@
+{
+ "domain": "2d",
+ "teacher": "BXY_X_TEACHER_V1 / BXY_Y_TEACHER_V1 (bxy_teacher sha c18ac91c..., unchanged) + fig3 adapter primitives",
+ "host": "gvlab2 CPU 4-7",
+ "roots": "3 exposed TRAIN raw roots (BD class-quota mirror), verified_K 2, sha-ordered; never release_v2 / VAL / TEST",
+ "fixtures": [
+  {
+   "key": "Y2TB|v-w0266-s013",
+   "kind": "Y_TEMP",
+   "cpu_s": 1.1,
+   "target": "o01",
+   "goal": 63,
+   "edit": [],
+   "y": 1,
+   "y_status": "VERIFIED",
+   "y_path": "generic_goal",
+   "y_replay": true
+  },
+  {
+   "key": "Y2TF|v-w0266-s013",
+   "kind": "Y_TEMP",
+   "cpu_s": 1.3,
+   "target": "o01",
+   "goal": 63,
+   "edit": [
+    [
+     "o00",
+     3
+    ]
+   ],
+   "y": 1,
+   "y_status": "VERIFIED",
+   "y_path": "generic_goal",
+   "y_replay": true
+  },
+  {
+   "key": "X2PAR|v-w0266-s013",
+   "kind": "X_PARITY",
+   "cpu_s": 7.2,
+   "parity": true,
+   "ref": {
+    "x": 1,
+    "status": "VERIFIED",
+    "witnesses": [
+     "2c0ef80bddc3f472592b6587",
+     "2af56f1b41188c191eb96a8e",
+     "3f0172f0c3fada2b9f20467b"
+    ]
+   },
+   "got": {
+    "x": 1,
+    "status": "VERIFIED",
+    "witnesses": [
+     "2c0ef80bddc3f472592b6587",
+     "2af56f1b41188c191eb96a8e",
+     "3f0172f0c3fada2b9f20467b"
+    ]
+   }
+  },
+  {
+   "key": "Y2PAR|v-w0266-s013",
+   "kind": "Y_TEMP_PARITY",
+   "cpu_s": 9.9,
+   "parity": true,
+   "ref": {
+    "y": 1,
+    "teacher_status": "VERIFIED",
+    "witness": "ca15fdad3f8fa5060dd1effe"
+   },
+   "got": {
+    "y": 1,
+    "teacher_status": "VERIFIED",
+    "witness": "ca15fdad3f8fa5060dd1effe"
+   }
+  },
+  {
+   "key": "X2CH11|v-w0266-s013",
+   "kind": "X_CHUNKED",
+   "cpu_s": 10.3,
+   "seq": [
+    [
+     "o00",
+     3
+    ],
+    [
+     "o01",
+     63
+    ]
+   ],
+   "bounds": [
+    1,
+    2
+   ],
+   "x": 1,
+   "x_status": "VERIFIED",
+   "failed_phase": null,
+   "replay": true,
+   "connectors": [
+    {
+     "after_move": 1,
+     "how": "planned"
+    },
+    {
+     "after_move": 2,
+     "how": "direct"
+    }
+   ],
+   "target": "t0",
+   "goal": null,
+   "edit": null,
+   "y": 1,
+   "y_status": "VERIFIED",
+   "y_path": "bd_2d.t_goal",
+   "y_replay": true,
+   "drop_inner_connectors_replay": {
+    "ok": false,
+    "why": "move 1: discontinuous robot state",
+    "removed": 1
+   }
+  },
+  {
+   "key": "X2PAR|v-w0237-s003",
+   "kind": "X_PARITY",
+   "cpu_s": 8.9,
+   "parity": true,
+   "ref": {
+    "x": 1,
+    "status": "VERIFIED",
+    "witnesses": [
+     "343182919ac014355a129596",
+     "215330381d7d9b1eb94bf8d4",
+     "9393a42a29aed16be048207d"
+    ]
+   },
+   "got": {
+    "x": 1,
+    "status": "VERIFIED",
+    "witnesses": [
+     "343182919ac014355a129596",
+     "215330381d7d9b1eb94bf8d4",
+     "9393a42a29aed16be048207d"
+    ]
+   }
+  },
+  {
+   "key": "Y2PAR|v-w0237-s003",
+   "kind": "Y_TEMP_PARITY",
+   "cpu_s": 5.4,
+   "parity": true,
+   "ref": {
+    "y": 1,
+    "teacher_status": "VERIFIED",
+    "witness": "7ff161e7bdea13c2550a1e31"
+   },
+   "got": {
+    "y": 1,
+    "teacher_status": "VERIFIED",
+    "witness": "7ff161e7bdea13c2550a1e31"
+   }
+  },
+  {
+   "key": "Y2TB|v-w0237-s003",
+   "kind": "Y_TEMP",
+   "cpu_s": 1.2,
+   "target": "o01",
+   "goal": 47,
+   "edit": [],
+   "y": 1,
+   "y_status": "VERIFIED",
+   "y_path": "generic_goal",
+   "y_replay": true
+  },
+  {
+   "key": "Y2TF|v-w0237-s003",
+   "kind": "Y_TEMP",
+   "cpu_s": 1.2,
+   "target": "o01",
+   "goal": 47,
+   "edit": [
+    [
+     "o00",
+     39
+    ]
+   ],
+   "y": 1,
+   "y_status": "VERIFIED",
+   "y_path": "generic_goal",
+   "y_replay": true
+  },
+  {
+   "key": "Y2PAR|v-w0269-s002",
+   "kind": "Y_TEMP_PARITY",
+   "cpu_s": 1.6,
+   "parity": true,
+   "ref": {
+    "y": 1,
+    "teacher_status": "VERIFIED",
+    "witness": "e55283aae13237baf80803dd"
+   },
+   "got": {
+    "y": 1,
+    "teacher_status": "VERIFIED",
+    "witness": "e55283aae13237baf80803dd"
+   }
+  },
+  {
+   "key": "X2CH11|v-w0237-s003",
+   "kind": "X_CHUNKED",
+   "cpu_s": 7.9,
+   "seq": [
+    [
+     "o00",
+     39
+    ],
+    [
+     "o01",
+     47
+    ]
+   ],
+   "bounds": [
+    1,
+    2
+   ],
+   "x": 1,
+   "x_status": "VERIFIED",
+   "failed_phase": null,
+   "replay": true,
+   "connectors": [
+    {
+     "after_move": 1,
+     "how": "planned"
+    },
+    {
+     "after_move": 2,
+     "how": "planned"
+    }
+   ],
+   "target": "t0",
+   "goal": null,
+   "edit": null,
+   "y": 1,
+   "y_status": "VERIFIED",
+   "y_path": "bd_2d.t_goal",
+   "y_replay": true,
+   "drop_inner_connectors_replay": {
+    "ok": false,
+    "why": "move 1: discontinuous robot state",
+    "removed": 1
+   }
+  },
+  {
+   "key": "Y2TB|v-w0269-s002",
+   "kind": "Y_TEMP",
+   "cpu_s": 3.3,
+   "target": "o00",
+   "goal": 12,
+   "edit": [],
+   "y": 1,
+   "y_status": "VERIFIED",
+   "y_path": "generic_goal",
+   "y_replay": true
+  },
+  {
+   "key": "X2CH11|v-w0269-s002",
+   "kind": "X_CHUNKED",
+   "cpu_s": 5.2,
+   "seq": [
+    [
+     "o01",
+     13
+    ],
+    [
+     "o00",
+     12
+    ]
+   ],
+   "bounds": [
+    1,
+    2
+   ],
+   "x": 0,
+   "x_status": "UNKNOWN_TRANSIT",
+   "failed_phase": "boundary:1",
+   "replay": null,
+   "connectors": [],
+   "target": "t0",
+   "goal": null,
+   "edit": null,
+   "y": 1,
+   "y_status": "VERIFIED",
+   "y_path": "bd_2d.t_goal",
+   "y_replay": true
+  },
+  {
+   "key": "R2REJ|v-w0266-s013",
+   "kind": "REJECT",
+   "cpu_s": 0.3,
+   "reject": {
+    "target_mover": "moves the original target",
+    "duplicate_object": "duplicate relocation of one object",
+    "illegal_dest": "destination outside the legal supported cells",
+    "fixed_mover": "NO_FIXED_OBJECT_IN_ROOT",
+    "temp_fixed": "NO_FIXED_OBJECT_IN_ROOT",
+    "temp_occupied": "goal not legal or occupied"
+   },
+   "note": null
+  },
+  {
+   "key": "Y2TF|v-w0269-s002",
+   "kind": "Y_TEMP",
+   "cpu_s": 3.6,
+   "target": "o00",
+   "goal": 12,
+   "edit": [
+    [
+     "o01",
+     13
+    ]
+   ],
+   "y": 1,
+   "y_status": "VERIFIED",
+   "y_path": "generic_goal",
+   "y_replay": true
+  },
+  {
+   "key": "X2PAR|v-w0269-s002",
+   "kind": "X_PARITY",
+   "cpu_s": 19.7,
+   "parity": true,
+   "ref": {
+    "x": 1,
+    "status": "VERIFIED",
+    "witnesses": [
+     "dfba93eda794ba87566e957a",
+     "292072d9f3b4145af0c9f20b",
+     "9217aacf1050d676472ea004"
+    ]
+   },
+   "got": {
+    "x": 1,
+    "status": "VERIFIED",
+    "witnesses": [
+     "dfba93eda794ba87566e957a",
+     "292072d9f3b4145af0c9f20b",
+     "9217aacf1050d676472ea004"
+    ]
+   }
+  },
+  {
+   "key": "R2REJFIX|w0266-synthfixed",
+   "kind": "REJECT",
+   "cpu_s": 0.3,
+   "reject": {
+    "target_mover": "moves the original target",
+    "duplicate_object": "duplicate relocation of one object",
+    "illegal_dest": "destination outside the legal supported cells",
+    "fixed_mover": "moves a fixed object",
+    "temp_fixed": "fixed or unknown temporary target",
+    "temp_occupied": "goal not legal or occupied"
+   },
+   "note": "synthetic copy of a TRAIN root with o09 marked fixed (declared fixture; 0 planner calls)"
+  }
+ ],
+ "tt_crosscheck": [
+  {
+   "key": "Y2TB|v-w0266-s013",
+   "direct_y": 1,
+   "tt_y": 1,
+   "same_label": true,
+   "same_witness": true,
+   "tt_replay": true,
+   "cpu_s": 1.2
+  },
+  {
+   "key": "Y2TF|v-w0266-s013",
+   "direct_y": 1,
+   "tt_y": 1,
+   "same_label": true,
+   "same_witness": true,
+   "tt_replay": true,
+   "cpu_s": 1.4
+  },
+  {
+   "key": "Y2TB|v-w0237-s003",
+   "direct_y": 1,
+   "tt_y": 1,
+   "same_label": true,
+   "same_witness": true,
+   "tt_replay": true,
+   "cpu_s": 1.3
+  },
+  {
+   "key": "Y2TF|v-w0237-s003",
+   "direct_y": 1,
+   "tt_y": 1,
+   "same_label": true,
+   "same_witness": true,
+   "tt_replay": true,
+   "cpu_s": 1.3
+  },
+  {
+   "key": "Y2TB|v-w0269-s002",
+   "direct_y": 1,
+   "tt_y": 1,
+   "same_label": true,
+   "same_witness": false,
+   "tt_replay": true,
+   "cpu_s": 5.5
+  },
+  {
+   "key": "Y2TF|v-w0269-s002",
+   "direct_y": 1,
+   "tt_y": 1,
+   "same_label": true,
+   "same_witness": false,
+   "tt_replay": true,
+   "cpu_s": 5.6
+  }
+ ],
+ "parity_b0": {
+  "n": 8,
+  "decisions_equal": 8,
+  "max_score_abs_diff": 3.338315170964279e-07,
+  "proposals_equal": 8,
+  "device": "NVIDIA GeForce RTX 5090",
+  "rows": [
+   {
+    "root_id": "2d-conv-plus2d-srv-w0054-s005",
+    "decision_equal": true,
+    "score_abs_diff": 1.3779806973257536e-07
+   },
+   {
+    "root_id": "2d-conv-plus2d-srv-w0052-s005",
+    "decision_equal": true,
+    "score_abs_diff": 2.0787907950570172e-08
+   },
+   {
+    "root_id": "2d-conv-plus2d-srv-w0052-s021",
+    "decision_equal": true,
+    "score_abs_diff": 5.853510276487839e-08
+   },
+   {
+    "root_id": "2d-conv-plus2d-srv-w0098-s009",
+    "decision_equal": true,
+    "score_abs_diff": 3.338315170964279e-07
+   },
+   {
+    "root_id": "2d-plus2d-srv-w0164-s007",
+    "decision_equal": true,
+    "score_abs_diff": null
+   },
+   {
+    "root_id": "2d-conv-plus2d-srv-w0055-s017",
+    "decision_equal": true,
+    "score_abs_diff": 1.0613954504190559e-07
+   },
+   {
+    "root_id": "2d-conv-plus2d-srv-w0060-s015",
+    "decision_equal": true,
+    "score_abs_diff": 4.0037410053983535e-08
+   },
+   {
+    "root_id": "2d-conv-plus2d-srv-w0064-s000",
+    "decision_equal": true,
+    "score_abs_diff": 9.383732235690445e-09
+   }
+  ]
+ },
+ "demo": [
+  {
+   "root_id": "2d-conv-plus2d-srv-w0052-s005",
+   "arm": "R-FIG3",
+   "decision": "REPAIR",
+   "seq": [
+    [
+     0,
+     0
+    ],
+    [
+     2,
+     38
+    ]
+   ],
+   "partition": [
+    2
+   ],
+   "E_home": 0.10940283299929787,
+   "n_inserted": 0,
+   "pool": 26,
+   "cap_stop": null,
+   "retargeted_actions": 274,
+   "nonempty_repairs": 161,
+   "not_admitted": 8993,
+   "staged_calls": 4,
+   "max_depth": 4,
+   "temp_readouts": 254,
+   "x_unique": 62340,
+   "y_unique": 26,
+   "latency_s": 3.502,
+   "b0_reference": {
+    "seq": [
+     [
+      0,
+      0
+     ],
+     [
+      2,
+      38
+     ]
+    ],
+    "E_single_chunk": 0.10940280980806553
+   },
+   "physically_verified": "NOT_RUN (R1 demo is model-only)"
+  },
+  {
+   "root_id": "2d-conv-plus2d-srv-w0052-s005",
+   "arm": "R-GATED",
+   "decision": "REPAIR",
+   "seq": [
+    [
+     0,
+     0
+    ],
+    [
+     2,
+     38
+    ]
+   ],
+   "partition": [
+    2
+   ],
+   "E_home": 0.10940283299929787,
+   "n_inserted": 0,
+   "pool": 29,
+   "cap_stop": null,
+   "retargeted_actions": 141,
+   "nonempty_repairs": 64,
+   "not_admitted": 0,
+   "staged_calls": 3,
+   "max_depth": 4,
+   "temp_readouts": 136,
+   "x_unique": 32704,
+   "y_unique": 28,
+   "latency_s": 1.947,
+   "b0_reference": {
+    "seq": [
+     [
+      0,
+      0
+     ],
+     [
+      2,
+      38
+     ]
+    ],
+    "E_single_chunk": 0.10940280980806553
+   },
+   "physically_verified": "NOT_RUN (R1 demo is model-only)"
+  },
+  {
+   "root_id": "2d-conv-plus2d-srv-w0052-s005",
+   "arm": "F-FLAT",
+   "decision": "REPAIR",
+   "seq": [
+    [
+     0,
+     0
+    ],
+    [
+     2,
+     38
+    ]
+   ],
+   "partition": [
+    2
+   ],
+   "E_home": 0.10940283299929787,
+   "n_inserted": 0,
+   "pool": 28,
+   "cap_stop": null,
+   "retargeted_actions": 0,
+   "nonempty_repairs": 0,
+   "not_admitted": 0,
+   "staged_calls": 6,
+   "max_depth": 0,
+   "temp_readouts": 0,
+   "x_unique": 47578,
+   "y_unique": 28,
+   "latency_s": 2.202,
+   "b0_reference": {
+    "seq": [
+     [
+      0,
+      0
+     ],
+     [
+      2,
+      38
+     ]
+    ],
+    "E_single_chunk": 0.10940280980806553
+   },
+   "physically_verified": "NOT_RUN (R1 demo is model-only)"
+  },
+  {
+   "root_id": "2d-conv-plus2d-srv-w0052-s005",
+   "arm": "R-TOPO",
+   "decision": "REPAIR",
+   "seq": [
+    [
+     2,
+     47
+    ],
+    [
+     7,
+     20
+    ],
+    [
+     5,
+     39
+    ]
+   ],
+   "partition": [
+    1,
+    2
+   ],
+   "E_home": 0.06535671648974102,
+   "n_inserted": 0,
+   "pool": 26,
+   "cap_stop": null,
+   "retargeted_actions": 274,
+   "nonempty_repairs": 161,
+   "not_admitted": 8993,
+   "staged_calls": 4,
+   "max_depth": 4,
+   "temp_readouts": 254,
+   "x_unique": 63746,
+   "y_unique": 26,
+   "latency_s": 7.785,
+   "b0_reference": {
+    "seq": [
+     [
+      0,
+      0
+     ],
+     [
+      2,
+      38
+     ]
+    ],
+    "E_single_chunk": 0.10940280980806553
+   },
+   "physically_verified": "NOT_RUN (R1 demo is model-only)"
+  },
+  {
+   "root_id": "2d-conv-plus2d-srv-w0073-s019",
+   "arm": "R-FIG3",
+   "decision": "REPAIR",
+   "seq": [
+    [
+     1,
+     31
+    ],
+    [
+     2,
+     23
+    ]
+   ],
+   "partition": [
+    1,
+    1
+   ],
+   "E_home": 0.48063365972322775,
+   "n_inserted": 0,
+   "pool": 23,
+   "cap_stop": null,
+   "retargeted_actions": 270,
+   "nonempty_repairs": 132,
+   "not_admitted": 37,
+   "staged_calls": 14,
+   "max_depth": 4,
+   "temp_readouts": 256,
+   "x_unique": 35267,
+   "y_unique": 23,
+   "latency_s": 2.619,
+   "b0_reference": {
+    "seq": [
+     [
+      1,
+      31
+     ],
+     [
+      2,
+      23
+     ]
+    ],
+    "E_single_chunk": 0.5873724626517401
+   },
+   "physically_verified": "NOT_RUN (R1 demo is model-only)"
+  },
+  {
+   "root_id": "2d-conv-plus2d-srv-w0073-s019",
+   "arm": "R-GATED",
+   "decision": "REPAIR",
+   "seq": [
+    [
+     1,
+     31
+    ],
+    [
+     2,
+     23
+    ]
+   ],
+   "partition": [
+    1,
+    1
+   ],
+   "E_home": 0.48063365972322775,
+   "n_inserted": 0,
+   "pool": 23,
+   "cap_stop": null,
+   "retargeted_actions": 268,
+   "nonempty_repairs": 130,
+   "not_admitted": 0,
+   "staged_calls": 14,
+   "max_depth": 4,
+   "temp_readouts": 256,
+   "x_unique": 35225,
+   "y_unique": 23,
+   "latency_s": 2.592,
+   "b0_reference": {
+    "seq": [
+     [
+      1,
+      31
+     ],
+     [
+      2,
+      23
+     ]
+    ],
+    "E_single_chunk": 0.5873724626517401
+   },
+   "physically_verified": "NOT_RUN (R1 demo is model-only)"
+  },
+  {
+   "root_id": "2d-conv-plus2d-srv-w0073-s019",
+   "arm": "F-FLAT",
+   "decision": "REPAIR",
+   "seq": [
+    [
+     1,
+     31
+    ],
+    [
+     2,
+     23
+    ]
+   ],
+   "partition": [
+    1,
+    1
+   ],
+   "E_home": 0.48063365972322775,
+   "n_inserted": 0,
+   "pool": 30,
+   "cap_stop": null,
+   "retargeted_actions": 0,
+   "nonempty_repairs": 0,
+   "not_admitted": 0,
+   "staged_calls": 22,
+   "max_depth": 0,
+   "temp_readouts": 0,
+   "x_unique": 38037,
+   "y_unique": 29,
+   "latency_s": 2.455,
+   "b0_reference": {
+    "seq": [
+     [
+      1,
+      31
+     ],
+     [
+      2,
+      23
+     ]
+    ],
+    "E_single_chunk": 0.5873724626517401
+   },
+   "physically_verified": "NOT_RUN (R1 demo is model-only)"
+  },
+  {
+   "root_id": "2d-conv-plus2d-srv-w0073-s019",
+   "arm": "R-TOPO",
+   "decision": "REPAIR",
+   "seq": [
+    [
+     1,
+     31
+    ],
+    [
+     2,
+     23
+    ]
+   ],
+   "partition": [
+    1,
+    1
+   ],
+   "E_home": 0.48063365972322775,
+   "n_inserted": 0,
+   "pool": 23,
+   "cap_stop": null,
+   "retargeted_actions": 270,
+   "nonempty_repairs": 132,
+   "not_admitted": 37,
+   "staged_calls": 14,
+   "max_depth": 4,
+   "temp_readouts": 256,
+   "x_unique": 36677,
+   "y_unique": 23,
+   "latency_s": 7.401,
+   "b0_reference": {
+    "seq": [
+     [
+      1,
+      31
+     ],
+     [
+      2,
+      23
+     ]
+    ],
+    "E_single_chunk": 0.5873724626517401
+   },
+   "physically_verified": "NOT_RUN (R1 demo is model-only)"
+  }
+ ]
+}

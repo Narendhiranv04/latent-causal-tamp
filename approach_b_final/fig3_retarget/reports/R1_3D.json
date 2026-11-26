@@ -1,0 +1,1066 @@
+{
+ "domain": "3d",
+ "teacher": "SHELF66V3 fin3d/bd_3dt/bwlphys config 8d521b1f6d23db23 (unchanged); connector CONNECTOR_TO_QREADY_V1",
+ "host": "gvlab2 CPU 0-3",
+ "fixtures": [
+  {
+   "key": "Y3TF|b2c2-035",
+   "kind": "Y_TARGET",
+   "target": "o01",
+   "goal": [
+    1,
+    0
+   ],
+   "order": null,
+   "bounds": null,
+   "x": null,
+   "x_status": null,
+   "y": 1,
+   "y_status": "VERIFIED",
+   "replay": null,
+   "connectors": [],
+   "cpu_s": 1.5,
+   "planner_calls": {
+    "plan_pick_place": 2,
+    "plan_free_move": 2
+   }
+  },
+  {
+   "key": "Y3PAR|b2c2-035",
+   "kind": "Y_TARGET",
+   "target": "t0",
+   "goal": [
+    2,
+    2
+   ],
+   "order": null,
+   "bounds": null,
+   "x": null,
+   "x_status": null,
+   "y": 1,
+   "y_status": "VERIFIED",
+   "replay": null,
+   "connectors": [],
+   "cpu_s": 3.3,
+   "planner_calls": {
+    "plan_pick_place": 1,
+    "plan_free_move": 2
+   },
+   "witness_equals_reference": true
+  },
+  {
+   "key": "Y3GEN|b2c2-035",
+   "kind": "Y_TARGET",
+   "target": "o00",
+   "goal": [
+    3,
+    5
+   ],
+   "order": null,
+   "bounds": null,
+   "x": null,
+   "x_status": null,
+   "y": 1,
+   "y_status": "VERIFIED",
+   "replay": null,
+   "connectors": [],
+   "cpu_s": 3.9,
+   "planner_calls": {
+    "plan_pick_place": 5,
+    "plan_free_move": 6
+   },
+   "witness_equals_reference": true
+  },
+  {
+   "key": "Y3PAR|b2c2-146",
+   "kind": "Y_TARGET",
+   "target": "t0",
+   "goal": [
+    2,
+    2
+   ],
+   "order": null,
+   "bounds": null,
+   "x": null,
+   "x_status": null,
+   "y": 1,
+   "y_status": "VERIFIED",
+   "replay": null,
+   "connectors": [],
+   "cpu_s": 3.5,
+   "planner_calls": {
+    "plan_pick_place": 1,
+    "plan_free_move": 2
+   },
+   "witness_equals_reference": true
+  },
+  {
+   "key": "Y3TB|b2c2-035",
+   "kind": "Y_TARGET",
+   "target": "o01",
+   "goal": [
+    1,
+    0
+   ],
+   "order": null,
+   "bounds": null,
+   "x": null,
+   "x_status": null,
+   "y": 0,
+   "y_status": "no feasible side grasp",
+   "replay": null,
+   "connectors": [],
+   "cpu_s": 8.3,
+   "planner_calls": {
+    "plan_pick_place": 32,
+    "plan_free_move": 0
+   }
+  },
+  {
+   "key": "Y3GEN|b2c2-146",
+   "kind": "Y_TARGET",
+   "target": "o05",
+   "goal": [
+    4,
+    1
+   ],
+   "order": null,
+   "bounds": null,
+   "x": null,
+   "x_status": null,
+   "y": 1,
+   "y_status": "VERIFIED",
+   "replay": null,
+   "connectors": [],
+   "cpu_s": 2.0,
+   "planner_calls": {
+    "plan_pick_place": 4,
+    "plan_free_move": 4
+   },
+   "witness_equals_reference": true
+  },
+  {
+   "key": "Y3TB|b2c2-146",
+   "kind": "Y_TARGET",
+   "target": "o01",
+   "goal": [
+    3,
+    5
+   ],
+   "order": null,
+   "bounds": null,
+   "x": null,
+   "x_status": null,
+   "y": 1,
+   "y_status": "VERIFIED",
+   "replay": null,
+   "connectors": [],
+   "cpu_s": 6.5,
+   "planner_calls": {
+    "plan_pick_place": 5,
+    "plan_free_move": 6
+   }
+  },
+  {
+   "key": "Y3TF|b2c2-146",
+   "kind": "Y_TARGET",
+   "target": "o01",
+   "goal": [
+    3,
+    5
+   ],
+   "order": null,
+   "bounds": null,
+   "x": null,
+   "x_status": null,
+   "y": 1,
+   "y_status": "VERIFIED",
+   "replay": null,
+   "connectors": [],
+   "cpu_s": 6.1,
+   "planner_calls": {
+    "plan_pick_place": 5,
+    "plan_free_move": 8
+   }
+  },
+  {
+   "key": "X3CH22|b2c2-035",
+   "kind": "X_CHUNKED",
+   "target": null,
+   "goal": null,
+   "order": [
+    [
+     "o00",
+     [
+      3,
+      5
+     ]
+    ],
+    [
+     "o05",
+     [
+      4,
+      1
+     ]
+    ],
+    [
+     "o04",
+     [
+      3,
+      0
+     ]
+    ],
+    [
+     "o01",
+     [
+      1,
+      0
+     ]
+    ]
+   ],
+   "bounds": [
+    2,
+    4
+   ],
+   "x": 1,
+   "x_status": "VERIFIED",
+   "y": 1,
+   "y_status": "VERIFIED",
+   "replay": 1,
+   "connectors": [
+    {
+     "after_move": 2,
+     "ok": true,
+     "dq_ready": 0.00031508084290887695
+    },
+    {
+     "after_move": 4,
+     "ok": true,
+     "dq_ready": 0.0004341951925344034
+    }
+   ],
+   "cpu_s": 30.1,
+   "planner_calls": {
+    "plan_pick_place": 13,
+    "plan_free_move": 22
+   },
+   "drop_inner_connectors_replay": {
+    "replay": 0,
+    "failure": "DISCONNECTED_START",
+    "dq": 1.689722345526394
+   }
+  },
+  {
+   "key": "X3LOC31|b2c2-035",
+   "kind": "X_CHUNKED",
+   "target": null,
+   "goal": null,
+   "order": [
+    [
+     "o00",
+     [
+      3,
+      5
+     ]
+    ],
+    [
+     "o05",
+     [
+      4,
+      1
+     ]
+    ],
+    [
+     "o04",
+     [
+      3,
+      0
+     ]
+    ],
+    [
+     "o01",
+     [
+      1,
+      0
+     ]
+    ]
+   ],
+   "bounds": [
+    3,
+    4
+   ],
+   "x": 1,
+   "x_status": "VERIFIED",
+   "y": 1,
+   "y_status": "VERIFIED",
+   "replay": 1,
+   "connectors": [
+    {
+     "after_move": 3,
+     "ok": true,
+     "dq_ready": 0.00036781846084155134
+    },
+    {
+     "after_move": 4,
+     "ok": true,
+     "dq_ready": 0.0004341951929909271
+    }
+   ],
+   "cpu_s": 29.6,
+   "planner_calls": {
+    "plan_pick_place": 13,
+    "plan_free_move": 22
+   }
+  },
+  {
+   "key": "X3LOC31|b2c2-146",
+   "kind": "X_CHUNKED",
+   "target": null,
+   "goal": null,
+   "order": [
+    [
+     "o05",
+     [
+      4,
+      1
+     ]
+    ],
+    [
+     "o04",
+     [
+      3,
+      0
+     ]
+    ],
+    [
+     "o00",
+     [
+      1,
+      0
+     ]
+    ],
+    [
+     "o01",
+     [
+      3,
+      5
+     ]
+    ]
+   ],
+   "bounds": [
+    3,
+    4
+   ],
+   "x": 1,
+   "x_status": "VERIFIED",
+   "y": 1,
+   "y_status": "VERIFIED",
+   "replay": 1,
+   "connectors": [
+    {
+     "after_move": 3,
+     "ok": true,
+     "dq_ready": 0.00036253617633397184
+    },
+    {
+     "after_move": 4,
+     "ok": true,
+     "dq_ready": 0.00040450625279842
+    }
+   ],
+   "cpu_s": 30.2,
+   "planner_calls": {
+    "plan_pick_place": 19,
+    "plan_free_move": 30
+   }
+  },
+  {
+   "key": "X3CH22|b2c2-146",
+   "kind": "X_CHUNKED",
+   "target": null,
+   "goal": null,
+   "order": [
+    [
+     "o05",
+     [
+      4,
+      1
+     ]
+    ],
+    [
+     "o04",
+     [
+      3,
+      0
+     ]
+    ],
+    [
+     "o00",
+     [
+      1,
+      0
+     ]
+    ],
+    [
+     "o01",
+     [
+      3,
+      5
+     ]
+    ]
+   ],
+   "bounds": [
+    2,
+    4
+   ],
+   "x": 1,
+   "x_status": "VERIFIED",
+   "y": 1,
+   "y_status": "VERIFIED",
+   "replay": 1,
+   "connectors": [
+    {
+     "after_move": 2,
+     "ok": true,
+     "dq_ready": 0.00018800022732712307
+    },
+    {
+     "after_move": 4,
+     "ok": true,
+     "dq_ready": 0.00040450630805421994
+    }
+   ],
+   "cpu_s": 34.0,
+   "planner_calls": {
+    "plan_pick_place": 19,
+    "plan_free_move": 30
+   },
+   "drop_inner_connectors_replay": {
+    "replay": 0,
+    "failure": "DISCONNECTED_START",
+    "dq": 1.303804348855761
+   }
+  },
+  {
+   "key": "X3CONT|b2c2-035",
+   "kind": "X_CHUNKED",
+   "target": null,
+   "goal": null,
+   "order": [
+    [
+     "o00",
+     [
+      3,
+      5
+     ]
+    ],
+    [
+     "o05",
+     [
+      4,
+      1
+     ]
+    ],
+    [
+     "o04",
+     [
+      3,
+      0
+     ]
+    ],
+    [
+     "o01",
+     [
+      1,
+      0
+     ]
+    ]
+   ],
+   "bounds": [
+    4
+   ],
+   "x": 1,
+   "x_status": "VERIFIED",
+   "y": null,
+   "y_status": null,
+   "replay": 1,
+   "connectors": [
+    {
+     "after_move": 4,
+     "ok": true,
+     "dq_ready": 0.00043419519253351524
+    }
+   ],
+   "cpu_s": 23.3,
+   "planner_calls": {
+    "plan_pick_place": 12,
+    "plan_free_move": 18
+   },
+   "trace_equals_reference": true
+  }
+ ],
+ "tt_crosscheck": [
+  {
+   "key": "Y3TF|b2c2-035",
+   "direct_y": 1,
+   "tt_y": 1,
+   "same_label": true,
+   "same_witness": true,
+   "cpu_s": 1.6
+  },
+  {
+   "key": "Y3GEN|b2c2-146",
+   "direct_y": 1,
+   "tt_y": 1,
+   "same_label": true,
+   "same_witness": true,
+   "cpu_s": 2.2
+  },
+  {
+   "key": "Y3GEN|b2c2-035",
+   "direct_y": 1,
+   "tt_y": 1,
+   "same_label": true,
+   "same_witness": true,
+   "cpu_s": 4.0
+  },
+  {
+   "key": "Y3TB|b2c2-035",
+   "direct_y": 0,
+   "tt_y": 0,
+   "same_label": true,
+   "same_witness": true,
+   "cpu_s": 8.2
+  },
+  {
+   "key": "Y3TB|b2c2-146",
+   "direct_y": 1,
+   "tt_y": 1,
+   "same_label": true,
+   "same_witness": true,
+   "cpu_s": 6.5
+  },
+  {
+   "key": "Y3TF|b2c2-146",
+   "direct_y": 1,
+   "tt_y": 1,
+   "same_label": true,
+   "same_witness": true,
+   "cpu_s": 6.1
+  }
+ ],
+ "parity_b0": {
+  "n": 6,
+  "decisions_equal": 6,
+  "max_score_abs_diff": 1.2605858623615518e-07,
+  "device": "NVIDIA GeForce RTX 5090",
+  "proposals_equal_where_archived": "4/4 (NOOP roots archive no proposals)",
+  "rows": [
+   {
+    "root_id": "3ds66-lap-w0000-s009",
+    "decision_equal": true,
+    "score_abs_diff": 1.2605858623615518e-07
+   },
+   {
+    "root_id": "3ds66-lap-w0003-s011",
+    "decision_equal": true,
+    "score_abs_diff": 7.045202021771502e-08
+   },
+   {
+    "root_id": "3ds66-lap-w0007-s020",
+    "decision_equal": true,
+    "score_abs_diff": 6.375608818665057e-08
+   },
+   {
+    "root_id": "3ds66-lap-w0000-s002",
+    "decision_equal": true,
+    "score_abs_diff": 2.381645569649038e-08
+   },
+   {
+    "root_id": "3ds66-lapNt-w0000-s008",
+    "decision_equal": true,
+    "score_abs_diff": null
+   },
+   {
+    "root_id": "3ds66-lap-w0003-s010",
+    "decision_equal": true,
+    "score_abs_diff": 5.476362607836904e-08
+   }
+  ]
+ },
+ "b4_historical": [
+  {
+   "root_id": "3ds66-k45-b2c2-035",
+   "decision": "REPAIR",
+   "seq_equal": true,
+   "decision_equal": true
+  },
+  {
+   "root_id": "3ds66-k45-b2c2-146",
+   "decision": "REPAIR",
+   "seq_equal": true,
+   "decision_equal": true
+  },
+  {
+   "root_id": "3ds66-k45-b2c2-148",
+   "decision": "REPAIR",
+   "seq_equal": true,
+   "decision_equal": true
+  },
+  {
+   "root_id": "3ds66-k45-b2c2-152",
+   "decision": "REPAIR",
+   "seq_equal": true,
+   "decision_equal": true
+  }
+ ],
+ "demo": [
+  {
+   "root_id": "3ds66-k45-b2c2-035",
+   "arm": "R-FIG3",
+   "decision": "REPAIR",
+   "seq": [
+    [
+     6,
+     24
+    ],
+    [
+     2,
+     6
+    ],
+    [
+     5,
+     0
+    ],
+    [
+     1,
+     23
+    ]
+   ],
+   "partition": [
+    1,
+    1,
+    2
+   ],
+   "E_home": 0.10028762111085682,
+   "n_inserted": 2,
+   "pool": 31,
+   "cap_stop": null,
+   "retargeted_actions": 148,
+   "nonempty_repairs": 71,
+   "not_admitted": 2191,
+   "staged_calls": 0,
+   "max_depth": 4,
+   "temp_readouts": 148,
+   "x_unique": 23745,
+   "y_unique": 31,
+   "latency_s": 1.913,
+   "b0_reference": {
+    "seq": [
+     [
+      2,
+      6
+     ],
+     [
+      1,
+      23
+     ]
+    ],
+    "decision": "REPAIR"
+   },
+   "physically_verified": "NOT_RUN (R1 demo is model-only)"
+  },
+  {
+   "root_id": "3ds66-k45-b2c2-035",
+   "arm": "R-GATED",
+   "decision": "REPAIR",
+   "seq": [
+    [
+     6,
+     24
+    ],
+    [
+     2,
+     6
+    ],
+    [
+     5,
+     0
+    ],
+    [
+     1,
+     23
+    ]
+   ],
+   "partition": [
+    1,
+    1,
+    2
+   ],
+   "E_home": 0.10028762111085682,
+   "n_inserted": 2,
+   "pool": 28,
+   "cap_stop": null,
+   "retargeted_actions": 99,
+   "nonempty_repairs": 44,
+   "not_admitted": 0,
+   "staged_calls": 0,
+   "max_depth": 4,
+   "temp_readouts": 99,
+   "x_unique": 13597,
+   "y_unique": 28,
+   "latency_s": 1.068,
+   "b0_reference": {
+    "seq": [
+     [
+      2,
+      6
+     ],
+     [
+      1,
+      23
+     ]
+    ],
+    "decision": "REPAIR"
+   },
+   "physically_verified": "NOT_RUN (R1 demo is model-only)"
+  },
+  {
+   "root_id": "3ds66-k45-b2c2-035",
+   "arm": "F-FLAT",
+   "decision": "REPAIR",
+   "seq": [
+    [
+     5,
+     18
+    ],
+    [
+     2,
+     6
+    ],
+    [
+     1,
+     23
+    ]
+   ],
+   "partition": [
+    1,
+    2
+   ],
+   "E_home": 0.10427146310674819,
+   "n_inserted": 1,
+   "pool": 28,
+   "cap_stop": null,
+   "retargeted_actions": 0,
+   "nonempty_repairs": 0,
+   "not_admitted": 0,
+   "staged_calls": 0,
+   "max_depth": 0,
+   "temp_readouts": 0,
+   "x_unique": 21179,
+   "y_unique": 28,
+   "latency_s": 1.126,
+   "b0_reference": {
+    "seq": [
+     [
+      2,
+      6
+     ],
+     [
+      1,
+      23
+     ]
+    ],
+    "decision": "REPAIR"
+   },
+   "physically_verified": "NOT_RUN (R1 demo is model-only)"
+  },
+  {
+   "root_id": "3ds66-k45-b2c2-035",
+   "arm": "R-TOPO",
+   "decision": "REPAIR",
+   "seq": [
+    [
+     2,
+     6
+    ],
+    [
+     5,
+     18
+    ],
+    [
+     1,
+     11
+    ]
+   ],
+   "partition": [
+    1,
+    2
+   ],
+   "E_home": 0.09355834647772374,
+   "n_inserted": 0,
+   "pool": 31,
+   "cap_stop": null,
+   "retargeted_actions": 148,
+   "nonempty_repairs": 71,
+   "not_admitted": 2191,
+   "staged_calls": 0,
+   "max_depth": 4,
+   "temp_readouts": 148,
+   "x_unique": 24821,
+   "y_unique": 31,
+   "latency_s": 4.902,
+   "b0_reference": {
+    "seq": [
+     [
+      2,
+      6
+     ],
+     [
+      1,
+      23
+     ]
+    ],
+    "decision": "REPAIR"
+   },
+   "physically_verified": "NOT_RUN (R1 demo is model-only)"
+  },
+  {
+   "root_id": "3ds66-k45-b2c2-146",
+   "arm": "R-FIG3",
+   "decision": "REPAIR",
+   "seq": [
+    [
+     5,
+     12
+    ],
+    [
+     6,
+     18
+    ],
+    [
+     1,
+     6
+    ],
+    [
+     2,
+     23
+    ]
+   ],
+   "partition": [
+    1,
+    1,
+    2
+   ],
+   "E_home": 0.10240863036786847,
+   "n_inserted": 2,
+   "pool": 32,
+   "cap_stop": null,
+   "retargeted_actions": 111,
+   "nonempty_repairs": 49,
+   "not_admitted": 3635,
+   "staged_calls": 0,
+   "max_depth": 3,
+   "temp_readouts": 111,
+   "x_unique": 22378,
+   "y_unique": 32,
+   "latency_s": 1.465,
+   "b0_reference": {
+    "seq": [
+     [
+      2,
+      29
+     ],
+     [
+      5,
+      24
+     ],
+     [
+      1,
+      6
+     ]
+    ],
+    "decision": "REPAIR"
+   },
+   "physically_verified": "NOT_RUN (R1 demo is model-only)"
+  },
+  {
+   "root_id": "3ds66-k45-b2c2-146",
+   "arm": "R-GATED",
+   "decision": "REPAIR",
+   "seq": [
+    [
+     2,
+     29
+    ],
+    [
+     6,
+     19
+    ],
+    [
+     5,
+     24
+    ],
+    [
+     1,
+     6
+    ]
+   ],
+   "partition": [
+    1,
+    1,
+    1,
+    1
+   ],
+   "E_home": 0.16953265496613615,
+   "n_inserted": 1,
+   "pool": 27,
+   "cap_stop": null,
+   "retargeted_actions": 80,
+   "nonempty_repairs": 28,
+   "not_admitted": 0,
+   "staged_calls": 0,
+   "max_depth": 3,
+   "temp_readouts": 80,
+   "x_unique": 14182,
+   "y_unique": 27,
+   "latency_s": 1.086,
+   "b0_reference": {
+    "seq": [
+     [
+      2,
+      29
+     ],
+     [
+      5,
+      24
+     ],
+     [
+      1,
+      6
+     ]
+    ],
+    "decision": "REPAIR"
+   },
+   "physically_verified": "NOT_RUN (R1 demo is model-only)"
+  },
+  {
+   "root_id": "3ds66-k45-b2c2-146",
+   "arm": "F-FLAT",
+   "decision": "REPAIR",
+   "seq": [
+    [
+     6,
+     18
+    ],
+    [
+     5,
+     12
+    ],
+    [
+     1,
+     6
+    ],
+    [
+     2,
+     23
+    ]
+   ],
+   "partition": [
+    1,
+    1,
+    2
+   ],
+   "E_home": 0.10141704334479767,
+   "n_inserted": 2,
+   "pool": 27,
+   "cap_stop": null,
+   "retargeted_actions": 0,
+   "nonempty_repairs": 0,
+   "not_admitted": 0,
+   "staged_calls": 0,
+   "max_depth": 0,
+   "temp_readouts": 0,
+   "x_unique": 21099,
+   "y_unique": 27,
+   "latency_s": 1.127,
+   "b0_reference": {
+    "seq": [
+     [
+      2,
+      29
+     ],
+     [
+      5,
+      24
+     ],
+     [
+      1,
+      6
+     ]
+    ],
+    "decision": "REPAIR"
+   },
+   "physically_verified": "NOT_RUN (R1 demo is model-only)"
+  },
+  {
+   "root_id": "3ds66-k45-b2c2-146",
+   "arm": "R-TOPO",
+   "decision": "REPAIR",
+   "seq": [
+    [
+     6,
+     18
+    ],
+    [
+     1,
+     6
+    ],
+    [
+     5,
+     12
+    ],
+    [
+     2,
+     23
+    ]
+   ],
+   "partition": [
+    1,
+    1,
+    2
+   ],
+   "E_home": 0.08295780681679485,
+   "n_inserted": 2,
+   "pool": 32,
+   "cap_stop": null,
+   "retargeted_actions": 111,
+   "nonempty_repairs": 49,
+   "not_admitted": 3635,
+   "staged_calls": 0,
+   "max_depth": 3,
+   "temp_readouts": 111,
+   "x_unique": 23559,
+   "y_unique": 32,
+   "latency_s": 5.203,
+   "b0_reference": {
+    "seq": [
+     [
+      2,
+      29
+     ],
+     [
+      5,
+      24
+     ],
+     [
+      1,
+      6
+     ]
+    ],
+    "decision": "REPAIR"
+   },
+   "physically_verified": "NOT_RUN (R1 demo is model-only)"
+  }
+ ]
+}
