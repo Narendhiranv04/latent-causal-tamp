@@ -292,8 +292,23 @@ def gate(dom, spec):
     print(json.dumps(g, default=str))
 
 
+def data_limited(dom, why):
+    """Support-only decision (no model reads VAL_GATE): writes the guard-bound DATA_LIMITED decision when GATE support stays below the
+    preregistered floor after the preregistered expansion is exhausted."""
+    import guard as GD
+    L = labels(dom, "GATE"); s = support(L)
+    ok = s["mixed_h1_g23"] >= 10 and s["discordant_perm_families"] >= 10 and s["mixed_h0"] >= 10
+    assert not ok, "support adequate: run the gate instead"
+    ms = [(O / f"jobs_{t}_{dom}.json", O / f"phys_{t}_{dom}.jsonl") for t in ("p2", "p2x") if (O / f"jobs_{t}_{dom}.json").exists()]
+    GD.decide(O / f"gate_{dom}.json", {"P2_GATE": "DATA_LIMITED", "support": s, "why": why, "models_read_gate": False},
+              [f for m in ms for f in m] + [O / f"labels_p2_{dom}.jsonl", Path(__file__)], manifests=ms)
+    print(json.dumps({"P2_GATE": "DATA_LIMITED", "support": s}))
+
+
 if __name__ == "__main__":
     a = sys.argv[1]
+    if a == "data_limited":
+        data_limited(sys.argv[2], sys.argv[3])
     if a == "eval":
         eval_(sys.argv[2], sys.argv[3], sys.argv[4:])
     elif a == "fit":
