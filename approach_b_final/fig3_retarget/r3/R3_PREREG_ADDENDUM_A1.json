@@ -1,0 +1,7 @@
+{
+ "id": "R3_PREREG_ADDENDUM_A1", "utc": "2026-11-26", "sealed_before": "any G1s / M1s training",
+ "trigger": "R3.3 G1 and M1 trained with the F1 fine-tuning optimizer (lr 1e-4, <= 40 epochs, patience 8) from RANDOM initialisation under-fit: REPLAY train NLL ~3.4 vs ~2.2 for F0-initialised arms; VAL_SCALE family NLL 0.64-0.69 (chance 0.69). These runs are reported but are not a valid representation test.",
+ "change": "G1s / M1s = identical architectures, data, replay mixture, batch, seeds (0, 1), early-stopping criterion and gate; optimizer = the configuration that trained F0's X from scratch (xy.fit: AdamW lr 1e-3, wd 1e-4, <= 60 epochs, patience 10). G1s and M1s are matched to each other.",
+ "unchanged": "local gate, K<=3 regression, selection rule (smallest passing model; seed with lower VAL_SCALE family NLL), Y path = F0 bitwise",
+ "observed_before_sealing": "F1 / F2 / G1 / M1 VAL_SCALE gate results (all FAIL); F0 already meets the absolute h>=1 threshold on VAL_SCALE (0.826 [0.73, 0.91])"
+}

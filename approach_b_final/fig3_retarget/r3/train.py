@@ -26,7 +26,9 @@ import views as V  # noqa: E402
 
 X_ONLY = ("act", "pairo", "mix", "order_s", "xy")
 CFG = {"F1": {"lr": 1e-4, "trainable": X_ONLY}, "F2": {"lr": 3e-5, "trainable": None},
-       "G1": {"lr": 1e-4, "trainable": "xrel"}, "M1": {"lr": 1e-4, "trainable": "xrel"}}
+       "G1": {"lr": 1e-4, "trainable": "xrel"}, "M1": {"lr": 1e-4, "trainable": "xrel"},
+       # ADDENDUM A1 (R3_PREREG_ADDENDUM_A1.json): randomly initialised X modules with the optimizer that trained F0's X from scratch
+       "G1s": {"lr": 1e-3, "trainable": "xrel", "epochs": 60, "patience": 10, "kind": "G1"}, "M1s": {"lr": 1e-3, "trainable": "xrel", "epochs": 60, "patience": 10, "kind": "M1"}}
 EPOCHS, PATIENCE, BR, BL = 40, 8, 32, 32
 
 
@@ -97,7 +99,7 @@ def make_net(dom, arm, base):
             p.requires_grad_(tr is None or n.split(".")[0] in tr)
         return net
     import xrel
-    return xrel.build(arm, base)
+    return xrel.build(CFG[arm].get("kind", arm), base)
 
 
 @__import__("torch").no_grad()
@@ -154,7 +156,7 @@ def fit(dom, arm, seed):
     v0 = fam_nll(predict(net, va, dev))
     curve, best, bad, t0 = [{"epoch": -1, "val_fam_nll": v0}], (v0, -1), 0, time.time()
     torch.save({"state": net.state_dict(), "arm": arm, "dom": dom, "seed": int(seed), "epoch": -1}, out / "model.pt")
-    for ep in range(EPOCHS):
+    for ep in range(CFG[arm].get("epochs", EPOCHS)):
         net.train(); tl = []
         for k in rng.permutation(len(rb)):
             li = rng.choice(len(tr), size=BL, replace=True, p=wts)
@@ -172,7 +174,7 @@ def fit(dom, arm, seed):
             torch.save({"state": net.state_dict(), "arm": arm, "dom": dom, "seed": int(seed), "epoch": ep}, out / "model.pt")
         else:
             bad += 1
-            if bad >= PATIENCE:
+            if bad >= CFG[arm].get("patience", PATIENCE):
                 break
     info = {"dom": dom, "arm": arm, "seed": int(seed), "curve": curve, "best_val_fam_nll": best[0], "best_epoch": best[1], "wall_s": round(time.time() - t0, 1),
             "gpu_peak_mib": round(torch.cuda.max_memory_allocated() / 2 ** 20, 1), "n_replay": len(rp), "n_local_train_views": len(tr),
