@@ -59,3 +59,10 @@ def jobs(plan_file, public):
         add("mode_control", p["chunk"]["order"], [m])
         add("witness_boundary", p["witness_order"], [2, m])
     return tiers
+
+
+if __name__ == "__main__":
+    if sys.argv[1] == "plans":
+        plans(*sys.argv[2:5])
+    elif sys.argv[1] == "jobs":
+        print(json.dumps({k: len(v) for k, v in jobs(sys.argv[2], sys.argv[3]).items()}))
