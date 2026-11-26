@@ -354,12 +354,17 @@ def families3d():
     return out
 
 
-def construct3d(workers, cpu_lo, max_cpu_h=10.0):
+EXPAND3D = {"GATE": 330, "TRAIN": 180, "SELECT": 90}       # preregistered expansion allocation (fixed before any expansion outcome)
+
+
+def construct3d(workers, cpu_lo, max_cpu_h=10.0, expand=0):
     """Construction dispatcher: per split, families in sha order; a family is dispatched only if the split's remaining budget covers the
     worst case (24 probes + 9 labelled jobs); construction probes are charged to the split.  Ordinary share reserved."""
     import multiprocessing as mp
     os.sched_setaffinity(0, set(range(int(cpu_lo), int(cpu_lo) + int(workers))))
     fams = families3d()
+    if int(expand):
+        CAPS["3d"] = {s: CAPS["3d"][s] + EXPAND3D[s] for s in CAPS["3d"]}
     cap = {s: int(round(CAPS["3d"][s] * (1 - ORD_SHARE))) for s in CAPS["3d"]}
     used = {s: 0 for s in cap}
     outp = O / "construct3d.jsonl"
@@ -390,8 +395,11 @@ def construct3d(workers, cpu_lo, max_cpu_h=10.0):
     print("CONSTRUCT3D_DONE", json.dumps({"used": used, "cpu_h": cpu / 3600}))
 
 
-def build3d():
+def build3d(expand=0):
+    """expand > 0: same rules with the EXPAND3D budgets added; only jobs not in the sealed initial manifest are written (jobs_p2x_3d.json)."""
     import contracts as CT
+    if int(expand):
+        CAPS["3d"] = {s: CAPS["3d"][s] + EXPAND3D[s] for s in CAPS["3d"]}
     import data as DA
     R = [json.loads(l) for l in open(O / "construct3d.jsonl")]
     (O / "rec3d").mkdir(parents=True, exist_ok=True)
@@ -445,8 +453,13 @@ def build3d():
     with open(O / "rows3d_con.jsonl", "w") as f:
         for r in rows:
             f.write(json.dumps(r) + "\n")
-    jf = O / "jobs_p2_3d.json"; jf.write_text(json.dumps(jobs, indent=1))
-    (O / "fams_p2_3d.json").write_text(json.dumps(fams, indent=1))
+    if int(expand):
+        init = {j["key"] for j in json.loads((O / "jobs_p2_3d.json").read_text())}
+        jobs = [j for j in jobs if j["key"] not in init]
+        fams = [f for f in fams if any(j["root_id"] == f["root_id"] for j in jobs)]
+    tag = "p2x" if int(expand) else "p2"
+    jf = O / f"jobs_{tag}_3d.json"; jf.write_text(json.dumps(jobs, indent=1))
+    (O / f"fams_{tag}_3d.json").write_text(json.dumps(fams, indent=1))
     import guard as GD
     s = GD.seal(jf)
     print(json.dumps({"jobs": len(jobs), "used_incl_probes": dict(used), "families": collections.Counter(f"{f['split']}:{f['stratum']}" for f in fams),
@@ -498,5 +511,5 @@ def labels(dom):
 if __name__ == "__main__":
     O.mkdir(parents=True, exist_ok=True)
     a = sys.argv[1]
-    {"prep2d": prep2d, "build2d": lambda: build2d(*sys.argv[2:3]), "build3d": build3d, "labels": lambda: labels(sys.argv[2]),
-     "construct3d": lambda: construct3d(*sys.argv[2:5])}[a]()
+    {"prep2d": prep2d, "build2d": lambda: build2d(*sys.argv[2:3]), "build3d": lambda: build3d(*sys.argv[2:3]), "labels": lambda: labels(sys.argv[2]),
+     "construct3d": lambda: construct3d(*sys.argv[2:6])}[a]()
