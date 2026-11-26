@@ -1,0 +1,649 @@
+{
+ "dom": "2d",
+ "arms": [
+  "REC-ORDERED",
+  "REC-REORDER",
+  "FLAT-INSERT",
+  "GA",
+  "GA-YONLY"
+ ],
+ "roots": [
+  {
+   "root_id": "R3COH2D-00057-K4",
+   "N": 15,
+   "arms": {
+    "REC-ORDERED": {
+     "decision": "REPAIR",
+     "seq": [
+      [
+       10,
+       23
+      ],
+      [
+       6,
+       15
+      ],
+      [
+       5,
+       31
+      ]
+     ],
+     "partition": [
+      3
+     ],
+     "E": 0.621609375916564,
+     "kind": "p11_single",
+     "wall_s": 22.722,
+     "stop": null,
+     "mode": "REC-ORDERED",
+     "n_candidates": 34,
+     "scores": {
+      "x_unique": 206,
+      "scenes": 108,
+      "batches": 108
+     },
+     "per_size": null,
+     "metadata_invariant": true
+    },
+    "REC-REORDER": {
+     "decision": "REPAIR",
+     "seq": [
+      [
+       10,
+       23
+      ],
+      [
+       6,
+       15
+      ],
+      [
+       5,
+       31
+      ]
+     ],
+     "partition": [
+      3
+     ],
+     "E": 0.621609375916564,
+     "kind": "p11_single",
+     "wall_s": 25.429,
+     "stop": null,
+     "mode": "REC-REORDER",
+     "n_candidates": 56,
+     "scores": {
+      "x_unique": 7163,
+      "scenes": 830,
+      "batches": 830
+     },
+     "per_size": null,
+     "metadata_invariant": true
+    },
+    "FLAT-INSERT": {
+     "decision": "REPAIR",
+     "seq": [
+      [
+       10,
+       23
+      ],
+      [
+       6,
+       15
+      ],
+      [
+       5,
+       31
+      ]
+     ],
+     "partition": [
+      3
+     ],
+     "E": 0.621609375916564,
+     "kind": "p11_single",
+     "wall_s": 23.766,
+     "stop": null,
+     "mode": "FLAT-INSERT",
+     "n_candidates": 40,
+     "scores": {
+      "x_unique": 96,
+      "scenes": 72,
+      "batches": 72
+     },
+     "per_size": null,
+     "metadata_invariant": true
+    },
+    "GA": {
+     "decision": "REPAIR",
+     "seq": [
+      [
+       10,
+       23
+      ],
+      [
+       6,
+       15
+      ],
+      [
+       5,
+       31
+      ]
+     ],
+     "partition": [
+      3
+     ],
+     "E": 0.6216096502628229,
+     "kind": "p11_single",
+     "wall_s": 48.679,
+     "stop": null,
+     "mode": "GA-BOUNDED",
+     "n_candidates": 6,
+     "scores": {
+      "x_unique": 305246,
+      "scenes": 10875,
+      "batches": 10875
+     },
+     "per_size": {
+      "1": {
+       "generated": 56,
+       "generation": "enumerated",
+       "kept": 56,
+       "retention": "bounded_union_y_x_div",
+       "dp_optimized": 56
+      },
+      "2": {
+       "generated": 1276,
+       "generation": "enumerated",
+       "kept": 227,
+       "retention": "bounded_union_y_x_div",
+       "dp_optimized": 227
+      },
+      "3": {
+       "generated": 15538,
+       "generation": "enumerated",
+       "kept": 256,
+       "retention": "bounded_union_y_x_div",
+       "dp_optimized": 256
+      },
+      "4": {
+       "generated": 5590,
+       "generation": "beam_extension",
+       "kept": 256,
+       "retention": "bounded_union_y_x_div",
+       "dp_optimized": 256
+      },
+      "5": {
+       "generated": 3925,
+       "generation": "beam_extension",
+       "kept": 256,
+       "retention": "bounded_union_y_x_div",
+       "dp_optimized": 256
+      },
+      "6": {
+       "generated": 2819,
+       "generation": "beam_extension",
+       "kept": 256,
+       "retention": "bounded_union_y_x_div",
+       "dp_optimized": 256
+      }
+     },
+     "metadata_invariant": true
+    },
+    "GA-YONLY": {
+     "decision": "REPAIR",
+     "seq": [
+      [
+       10,
+       23
+      ],
+      [
+       6,
+       15
+      ],
+      [
+       5,
+       31
+      ]
+     ],
+     "partition": [
+      3
+     ],
+     "E": 0.6216096502628229,
+     "kind": "p11_single",
+     "wall_s": 2.19,
+     "stop": null,
+     "mode": "GA-YONLY",
+     "n_candidates": 6,
+     "scores": {
+      "x_unique": 7781,
+      "scenes": 372,
+      "batches": 372
+     },
+     "per_size": {
+      "1": {
+       "generated": 56,
+       "generation": "enumerated",
+       "kept": 4,
+       "retention": "yonly_top4",
+       "dp_optimized": 4
+      },
+      "2": {
+       "generated": 1276,
+       "generation": "enumerated",
+       "kept": 4,
+       "retention": "yonly_top4",
+       "dp_optimized": 4
+      },
+      "3": {
+       "generated": 15538,
+       "generation": "enumerated",
+       "kept": 4,
+       "retention": "yonly_top4",
+       "dp_optimized": 4
+      },
+      "4": {
+       "generated": 5514,
+       "generation": "beam_extension",
+       "kept": 4,
+       "retention": "yonly_top4",
+       "dp_optimized": 4
+      },
+      "5": {
+       "generated": 3857,
+       "generation": "beam_extension",
+       "kept": 4,
+       "retention": "yonly_top4",
+       "dp_optimized": 4
+      },
+      "6": {
+       "generated": 2894,
+       "generation": "beam_extension",
+       "kept": 4,
+       "retention": "yonly_top4",
+       "dp_optimized": 4
+      }
+     },
+     "metadata_invariant": true
+    }
+   },
+   "fields_row": [
+    "domain",
+    "inputs",
+    "root_id"
+   ],
+   "fields_inputs": [
+    "attrs",
+    "base",
+    "cell_xy",
+    "cells0",
+    "ctx",
+    "goal",
+    "goal_cell",
+    "ids",
+    "legal_cells",
+    "q_ref",
+    "tid",
+    "xy0"
+   ],
+   "relabel": {
+    "proposals_equal": true,
+    "max_abs_dpx": 3.5196228598266543e-08,
+    "max_abs_dp11": 8.707160170553629e-11
+   }
+  },
+  {
+   "root_id": "R3COH2D-00082-K4",
+   "N": 15,
+   "arms": {
+    "REC-ORDERED": {
+     "decision": "REPAIR",
+     "seq": [
+      [
+       11,
+       15
+      ],
+      [
+       3,
+       31
+      ],
+      [
+       7,
+       23
+      ]
+     ],
+     "partition": [
+      3
+     ],
+     "E": 1.2194755001655895,
+     "kind": "p11_single",
+     "wall_s": 29.071,
+     "stop": null,
+     "mode": "REC-ORDERED",
+     "n_candidates": 31,
+     "scores": {
+      "x_unique": 196,
+      "scenes": 99,
+      "batches": 99
+     },
+     "per_size": null,
+     "metadata_invariant": true
+    },
+    "REC-REORDER": {
+     "decision": "REPAIR",
+     "seq": [
+      [
+       11,
+       15
+      ],
+      [
+       3,
+       31
+      ],
+      [
+       7,
+       23
+      ]
+     ],
+     "partition": [
+      3
+     ],
+     "E": 1.2194755001655895,
+     "kind": "p11_single",
+     "wall_s": 31.772,
+     "stop": null,
+     "mode": "REC-REORDER",
+     "n_candidates": 53,
+     "scores": {
+      "x_unique": 7073,
+      "scenes": 778,
+      "batches": 778
+     },
+     "per_size": null,
+     "metadata_invariant": true
+    },
+    "FLAT-INSERT": {
+     "decision": "REPAIR",
+     "seq": [
+      [
+       11,
+       15
+      ],
+      [
+       3,
+       31
+      ],
+      [
+       7,
+       23
+      ]
+     ],
+     "partition": [
+      3
+     ],
+     "E": 1.2194755001655895,
+     "kind": "p11_single",
+     "wall_s": 34.649,
+     "stop": null,
+     "mode": "FLAT-INSERT",
+     "n_candidates": 44,
+     "scores": {
+      "x_unique": 140,
+      "scenes": 83,
+      "batches": 83
+     },
+     "per_size": null,
+     "metadata_invariant": true
+    },
+    "GA": {
+     "decision": "REPAIR",
+     "seq": [
+      [
+       4,
+       3
+      ],
+      [
+       11,
+       15
+      ],
+      [
+       3,
+       23
+      ],
+      [
+       7,
+       31
+      ]
+     ],
+     "partition": [
+      1,
+      3
+     ],
+     "E": 1.147096169316726,
+     "kind": "ga_dp",
+     "wall_s": 46.924,
+     "stop": null,
+     "mode": "GA-BOUNDED",
+     "n_candidates": 6,
+     "scores": {
+      "x_unique": 298579,
+      "scenes": 10289,
+      "batches": 10289
+     },
+     "per_size": {
+      "1": {
+       "generated": 56,
+       "generation": "enumerated",
+       "kept": 56,
+       "retention": "bounded_union_y_x_div",
+       "dp_optimized": 56
+      },
+      "2": {
+       "generated": 1281,
+       "generation": "enumerated",
+       "kept": 203,
+       "retention": "bounded_union_y_x_div",
+       "dp_optimized": 203
+      },
+      "3": {
+       "generated": 15722,
+       "generation": "enumerated",
+       "kept": 256,
+       "retention": "bounded_union_y_x_div",
+       "dp_optimized": 256
+      },
+      "4": {
+       "generated": 5962,
+       "generation": "beam_extension",
+       "kept": 256,
+       "retention": "bounded_union_y_x_div",
+       "dp_optimized": 256
+      },
+      "5": {
+       "generated": 4635,
+       "generation": "beam_extension",
+       "kept": 256,
+       "retention": "bounded_union_y_x_div",
+       "dp_optimized": 256
+      },
+      "6": {
+       "generated": 3575,
+       "generation": "beam_extension",
+       "kept": 256,
+       "retention": "bounded_union_y_x_div",
+       "dp_optimized": 256
+      }
+     },
+     "metadata_invariant": true
+    },
+    "GA-YONLY": {
+     "decision": "REPAIR",
+     "seq": [
+      [
+       11,
+       15
+      ],
+      [
+       7,
+       23
+      ],
+      [
+       4,
+       31
+      ]
+     ],
+     "partition": [
+      3
+     ],
+     "E": 1.237494629855137,
+     "kind": "p11_single",
+     "wall_s": 2.105,
+     "stop": null,
+     "mode": "GA-YONLY",
+     "n_candidates": 6,
+     "scores": {
+      "x_unique": 6937,
+      "scenes": 361,
+      "batches": 361
+     },
+     "per_size": {
+      "1": {
+       "generated": 56,
+       "generation": "enumerated",
+       "kept": 4,
+       "retention": "yonly_top4",
+       "dp_optimized": 4
+      },
+      "2": {
+       "generated": 1281,
+       "generation": "enumerated",
+       "kept": 4,
+       "retention": "yonly_top4",
+       "dp_optimized": 4
+      },
+      "3": {
+       "generated": 15722,
+       "generation": "enumerated",
+       "kept": 4,
+       "retention": "yonly_top4",
+       "dp_optimized": 4
+      },
+      "4": {
+       "generated": 6382,
+       "generation": "beam_extension",
+       "kept": 4,
+       "retention": "yonly_top4",
+       "dp_optimized": 4
+      },
+      "5": {
+       "generated": 5003,
+       "generation": "beam_extension",
+       "kept": 4,
+       "retention": "yonly_top4",
+       "dp_optimized": 4
+      },
+      "6": {
+       "generated": 3846,
+       "generation": "beam_extension",
+       "kept": 4,
+       "retention": "yonly_top4",
+       "dp_optimized": 4
+      }
+     },
+     "metadata_invariant": true
+    }
+   },
+   "fields_row": [
+    "domain",
+    "inputs",
+    "root_id"
+   ],
+   "fields_inputs": [
+    "attrs",
+    "base",
+    "cell_xy",
+    "cells0",
+    "ctx",
+    "goal",
+    "goal_cell",
+    "ids",
+    "legal_cells",
+    "q_ref",
+    "tid",
+    "xy0"
+   ],
+   "relabel": {
+    "proposals_equal": true,
+    "max_abs_dpx": 3.89270302658673e-08,
+    "max_abs_dp11": 4.15940057136438e-10
+   }
+  }
+ ],
+ "poisoned": [
+  "bd_2d",
+  "bd_3dt",
+  "bd_3dt_plus",
+  "bwlphys",
+  "bxy_teacher",
+  "cert",
+  "evaluate_k45",
+  "fin3d",
+  "generate",
+  "geometry",
+  "mink",
+  "motion",
+  "mujoco",
+  "p15_retarget",
+  "p15_search",
+  "p16_common",
+  "physical2d",
+  "physical3d",
+  "pybullet",
+  "skill",
+  "teacher2d",
+  "teacher_long",
+  "witness_v3"
+ ],
+ "loaded": {
+  "sampler_task_on": true,
+  "sampler_rule": {
+   "name": "S1"
+  },
+  "scorer_vis_dim": 0,
+  "manifest_config": {
+   "M": 4,
+   "propose_top": 6,
+   "n_z": 64,
+   "proposal_rule": "S1",
+   "proposal_seed": 0,
+   "K_max": 3,
+   "B_cap": null,
+   "chunk": 8192,
+   "rule": {
+    "noop_gate": 0.5,
+    "eta": 0.3,
+    "alpha": 0.0,
+    "beta": 0.0,
+    "gamma": 0.0
+   }
+  }
+ },
+ "fields_row_union": [
+  "domain",
+  "inputs",
+  "root_id"
+ ],
+ "fields_inputs_union": [
+  "attrs",
+  "base",
+  "cell_xy",
+  "cells0",
+  "ctx",
+  "goal",
+  "goal_cell",
+  "ids",
+  "legal_cells",
+  "q_ref",
+  "tid",
+  "xy0"
+ ],
+ "row_fields_outside_allowlist": [],
+ "input_fields_outside_allowlist": []
+}

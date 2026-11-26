@@ -126,6 +126,13 @@ def repairs(ctx, T, P, a, pending, protect, room, y0):
             out.append((g, x["p11"], x["py"])); seen.add(s)
         if len(out) == ctx.cfg["repairs_per_action"]:
             break
+    extra = ctx.cfg.get("ylowx_extra", 0)            # KGT3 scaling option (default 0 = historical behaviour): admitted high-temporary-Y repairs
+    if extra:                                        # that ranked low by temporary p11 (low X) are kept for recursive enabling
+        for g, x in sorted(zip(gs, sc), key=lambda t: (-t[1]["py"], len(t[0]), json.dumps(t[0]))):
+            s = tuple(sorted(o for o, _ in g))
+            if extra and s not in seen and x["py"] > y0:
+                out.append((g, x["p11"], x["py"])); seen.add(s); extra -= 1
+                ctx.n["ylowx_extra"] = ctx.n.get("ylowx_extra", 0) + 1
     return out
 
 

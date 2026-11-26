@@ -1,0 +1,260 @@
+"""KGT3 deployable Fig. 3 planners + the isolated assignment-given diagnostic (FIG3_KGT3_PREREG P3 / P4).  Public row + learned models only:
+the released task-conditioned cVAE (fz.proposals), the coupled X/Y scorer (fz.score / y_global / p_noop; F0 or a scaling checkpoint via
+fz.net), views.rebase (hypothetical pose edits, temporary tasks) and the monotone grammar.  No physical module is imported here (tested).
+
+Arms (one sealed plan per root and arm):
+  REC-ORDERED  Fig. 3A: recursive.discover (R-FIG3: ordered seeds <= 3 from the released sampler + p11, every action retargeted on its
+               branch-local pre-action scene, ordered enabling chunks 1..3 by temporary p11, recursion, insertion before the parent) with
+               the scaling option ylowx_extra = 1 (one extra admitted high-temporary-Y repair per action); the recursive ORDER is kept and
+               only the chunk boundaries are optimized (compose.fixed_order_dp, has_multi for length > 3).
+  REC-REORDER  hybrid control: the same pool, grouped subset DP restricted to the candidate's learned PREREQ + LOCAL edges.
+  FLAT-INSERT  control: recursive.discover F-FLAT (original-task insertion, no retargeting), same final scoring.
+  GA-EXACT / GA-BOUNDED   Fig. 3B: complete legal assignments over the INITIAL D4 pool for sizes 1..H; global Y once per assignment; every
+               (exact) or every retained (bounded) assignment gets the grouped subset DP (chunk membership, internal order, sizes).
+  GA-YONLY     control: the same candidate domain, historical Y-only top-4 per size, same DP.
+Final energy: m <= 3 single chunk = -log p11 (exact coupled joint); otherwise sum of -log marginal pX of the anchored chunks - log Y_global.
+Selection: production NOOP gate on p_noop(S0); candidates = the arm's candidates + the production K <= 3 floor (rank.b0 with the PRODUCTION
+F0 scorer and rules, re-scored as one chunk under the arm's model); argmin (round(E, 12), length, chunks, canonical JSON); ABSTAIN if none."""
+from __future__ import annotations
+
+import hashlib, itertools, json, math, random, sys, time
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+sys.path[:0] = [str(HERE), str(HERE.parent), str(HERE.parent.parent)]
+import compose as CP  # noqa: E402
+import construct as CO  # noqa: E402
+import rank as RK  # noqa: E402
+import recursive as RC  # noqa: E402
+import views as V  # noqa: E402
+from models import CapReached  # noqa: E402
+
+CFG = {"H": {"2d": 6, "3d": 5}, "wall_s": 180.0, "x_unique": 1_500_000, "y_unique": 600_000, "assign_per_size": 150_000,
+       "exact_x_est": 1_200_000, "retain": {"y": 96, "x": 96, "div": 64}, "yonly": 4, "rule": {"noop_gate": 0.5, "eta": 0.3},
+       "rec": {"n_seeds": 8, "variants_per_action": 4, "depth": 3, "repair_expansions": 96, "temp_readouts": 256, "repairs_per_action": 2,
+               "ylowx_extra": 1, "exhaustive_max_groups": 50000}}
+
+
+class Budget:
+    def __init__(self, cfg):
+        self.t_end = time.perf_counter() + cfg["wall_s"]
+
+    def tick(self):
+        if time.perf_counter() > self.t_end:
+            raise TimeoutError("hard deadline")
+
+
+def elem(sizes, k):
+    e = [1] + [0] * k
+    for s in sizes:
+        for j in range(k, 0, -1):
+            e[j] += e[j - 1] * s
+    return e[k]
+
+
+def long_energy(T, fz, row0, seq, part, F):
+    """-> E, y_global for an ordered plan whose chunk sum F is known."""
+    yg = fz.y_global(row0, [seq])[0]
+    return F - math.log(max(CP.EPS, yg)), yg
+
+
+def short_options(fz, row0, orders):
+    """Single-chunk exact p11 at S0 for m <= 3 (each permitted order)."""
+    if not orders:
+        return []
+    return [{"seq": o, "partition": [len(o)], "E": -math.log(max(CP.EPS, x["p11"])), "kind": "p11_single", "p11": x["p11"]}
+            for o, x in zip(orders, fz.score(row0, orders))]
+
+
+def cand_of(seq, part, E, **kw):
+    return {"seq": [list(map(int, a)) for a in seq], "partition": list(part), "E": E, **kw}
+
+
+def ckey(c):
+    return (round(c["E"], 12), len(c["seq"]), len(c["partition"]), json.dumps(c["seq"]))
+
+
+# ------------------------------------------------------------------------------------------------ Fig. 3B: global assignments
+def ga(fz, row0, mode, cfg=None, log=None):
+    """mode: AUTO (EXACT when the declared envelope fits, else BOUNDED) | YONLY.  -> candidates, info."""
+    cfg = {**CFG, **(cfg or {})}
+    H = cfg["H"][row0["domain"]]
+    B = Budget(cfg)
+    el = V.eligible(row0)
+    D = {o: sorted(set(v)) for o, v in fz.proposals(row0, el).items() if v}
+    D = {o: [d for d in v if V.legal_seq(row0, [[o, d]], H)] for o, v in D.items()}
+    D = {o: v for o, v in D.items() if v}
+    sizes = [len(v) for v in D.values()]
+    ub = {k: elem(sizes, k) for k in range(1, H + 1)}
+    est_x = sum(ub[k] * sum(math.comb(k, g) * math.factorial(g) for g in range(1, min(3, k) + 1)) for k in ub)
+    exact = mode != "YONLY" and all(v <= cfg["assign_per_size"] for v in ub.values()) and est_x <= cfg["exact_x_est"]
+    info = {"mode": "EXACT" if exact else ("YONLY" if mode == "YONLY" else "BOUNDED"), "D4": {str(o): v for o, v in D.items()},
+            "assign_upper_bound": ub, "est_x": est_x, "per_size": {}}
+    T = CP.Scores(fz, row0, V.rebase)
+    pair_px = None
+    cands, prev = [], []
+    for k in range(1, H + 1):
+        B.tick()
+        if k > len(D):
+            break
+        if ub[k] <= cfg["assign_per_size"]:
+            pool = [tuple(sorted(A)) for A in CO.assignments(D, k)]
+            gen = "enumerated"
+        else:                                                           # declared beam extension of the retained size k-1 sets
+            acts = sorted((o, d) for o, v in D.items() for d in v)
+            pool = sorted({tuple(sorted(A + (a,))) for A in prev for a in acts if a[0] not in {x[0] for x in A} and a[1] not in {x[1] for x in A}})
+            gen = "beam_extension"
+        yg = dict(zip(pool, fz.y_global(row0, [list(map(list, A)) for A in pool]))) if pool else {}
+        if exact:
+            keep, why = pool, "exact"
+        elif mode == "YONLY":
+            keep = sorted(pool, key=lambda A: (-yg[A], A))[:cfg["yonly"]]; why = "yonly_top4"
+            prev = sorted(pool, key=lambda A: (-yg[A], A))[:256]
+        else:
+            if pair_px is None:                                           # first ordered chunk proxy: every ordered pair / single of the pool at S0
+                acts = sorted((o, d) for o, v in D.items() for d in v)
+                req = [(frozenset(), (a,)) for a in acts] + [(frozenset(), (a, b)) for a in acts for b in acts if a[0] != b[0] and a[1] != b[1]]
+                T.need(req); pair_px = True
+            def xproxy(A):
+                c = [T.cost((), (a, b)) for a in A for b in A if a != b] if len(A) >= 2 else [T.cost((), (A[0],))]
+                return min(c)
+            q = cfg["retain"]
+            byY = sorted(pool, key=lambda A: (-yg[A], A))
+            byX = sorted(pool, key=lambda A: (xproxy(A), A))
+            keep = list(dict.fromkeys(byY[:q["y"]] + byX[:q["x"]]))
+            seen = {tuple(sorted(o for o, _ in A)) for A in keep}
+            for A in sorted(pool, key=lambda A: (hashlib.sha256(json.dumps(A).encode()).hexdigest())):
+                if len(keep) >= q["y"] + q["x"] + q["div"]:
+                    break
+                s = tuple(sorted(o for o, _ in A))
+                if s not in seen:
+                    keep.append(A); seen.add(s)
+            prev = keep; why = "bounded_union_y_x_div"
+        if exact:
+            prev = pool
+        info["per_size"][k] = {"generated": len(pool), "generation": gen, "kept": len(keep), "retention": why}
+        best_k = None
+        for i in range(0, len(keep), 256):                               # streamed blocks: requests -> batched scores -> exact DP per assignment
+            B.tick()
+            blk = keep[i:i + 256]
+            T.need({r for A in blk for r in CP.requests(A)})
+            for A in blk:
+                r = CP.grouped_dp(T, A)
+                if r:
+                    F, o, p = r
+                    c = cand_of(o, p, F - math.log(max(CP.EPS, yg[A])), kind="ga_dp", y_global=yg[A], set=[list(a) for a in A])
+                    if best_k is None or ckey(c) < ckey(best_k):
+                        best_k = c
+                if k <= 3:
+                    for c in short_options(fz, row0, [list(map(list, o)) for o in itertools.permutations(A)]):
+                        c.update(set=[list(a) for a in A], y_global=yg[A])
+                        if best_k is None or ckey(c) < ckey(best_k):
+                            best_k = c
+        if best_k:
+            cands.append(best_k)                                         # only the per-size argmin can win the global argmin
+        info["per_size"][k]["dp_optimized"] = len(keep)
+    info["scores"] = dict(T.n)
+    return cands, info
+
+
+# ------------------------------------------------------------------------------------------------ Fig. 3A: recursive retargeting
+def rec(fz, row0, arm, cfg=None):
+    cfg = {**CFG, **(cfg or {})}
+    H = cfg["H"][row0["domain"]]
+    rc = {**cfg["rec"], "m_max": H, "wall_s": cfg["wall_s"] * 0.6, "x_unique": cfg["x_unique"], "y_unique": cfg["y_unique"]}
+    ctx, pool, tree, stop = RC.discover(fz, row0, "F-FLAT" if arm == "FLAT-INSERT" else "R-FIG3", rc)
+    fz.caps = {"x_unique": cfg["x_unique"], "y_unique": cfg["y_unique"]}
+    B = Budget({"wall_s": cfg["wall_s"] * 0.4})
+    T = CP.Scores(fz, row0, V.rebase)
+    cands = []
+    for kk, (P, E, sd) in sorted(pool.items()):
+        B.tick()
+        acts = [tuple(map(int, a)) for a in P]
+        if arm == "REC-REORDER":
+            idx = {V.key(row0, a): a for a in acts}
+            before = [(idx[x], idx[y]) for x, y, k in E if k in ("PREREQ", "LOCAL") and x in idx and y in idx]
+            T.need(CP.requests(acts, before))
+            r = CP.grouped_dp(T, acts, before=before)
+        else:
+            T.need(CP.fixed_requests(acts))
+            r = CP.fixed_order_dp(T, acts)
+        if r:
+            F, o, p = r
+            Eh, yg = long_energy(T, fz, row0, o, p, F)
+            cands.append(cand_of(o, p, Eh, kind="rec_dp", y_global=yg, seed=sd, n_inserted=len(P) - len(sd), edges=sorted(map(list, E))))
+        if len(P) <= 3:
+            orders = [list(map(list, P))] if arm != "REC-REORDER" else [list(map(list, q)) for q in itertools.permutations(acts)]
+            cands += [dict(c, seed=sd, n_inserted=len(P) - len(sd)) for c in short_options(fz, row0, orders)]
+    info = {"pool": len(pool), "stop": stop, "counters": dict(ctx.n), "scores": dict(T.n), "tree": tree}
+    return cands, info
+
+
+# ------------------------------------------------------------------------------------------------ selection
+def select(fz, row0, cands, floor, rule):
+    """Production NOOP gate, then argmin E over the arm's candidates + the production K <= 3 floor (re-scored under the arm's model)."""
+    noop = fz.p_noop(row0)
+    if noop >= rule["noop_gate"]:
+        return None, "NOOP", noop
+    pool = [c for c in cands if c and c["seq"]]
+    if floor and floor.get("seq"):
+        x = fz.score(row0, [floor["seq"]])[0]
+        pool.append({"seq": floor["seq"], "partition": [len(floor["seq"])], "E": -math.log(max(CP.EPS, x["p11"])), "kind": "production_floor"})
+    if not pool:
+        return None, "ABSTAIN", noop
+    return min(pool, key=ckey), "SELECTED", noop
+
+
+def plan(fz, row0, arm, floor, cfg=None):
+    """One sealed plan for (root, arm).  floor = rank.b0 output from the production F0 bundle (computed by the caller once per root)."""
+    cfg = {**CFG, **(cfg or {})}
+    fz.reset(); fz.caps = {"x_unique": cfg["x_unique"], "y_unique": cfg["y_unique"]}
+    t0 = time.perf_counter(); stop = None
+    try:
+        if arm in ("GA", "GA-YONLY"):
+            cands, info = ga(fz, row0, "YONLY" if arm == "GA-YONLY" else "AUTO", cfg)
+        else:
+            cands, info = rec(fz, row0, arm, cfg)
+    except (TimeoutError, CapReached) as e:
+        cands, info, stop = [], {}, f"{type(e).__name__}:{e}"
+    pick, why, noop = select(fz, row0, cands, floor, cfg["rule"])
+    if fz.dev.startswith("cuda"):
+        fz.torch.cuda.synchronize()
+    H = cfg["H"][row0["domain"]]
+    out = {"root_id": row0["root_id"], "arm": arm if arm != "GA" else f"GA-{info.get('mode', 'NA')}", "decision": "NOOP" if why == "NOOP" else ("REPAIR" if pick else "ABSTAIN"),
+           "seq": pick["seq"] if pick else None, "partition": pick["partition"] if pick else None, "E": pick["E"] if pick else None,
+           "kind": pick["kind"] if pick else None, "p_noop": noop, "n_candidates": len(cands), "long": bool(pick and len(pick["seq"]) > 3),
+           "multi_chunk": bool(pick and max(pick["partition"]) >= 2), "H": H, "stop": stop, "info": {k: v for k, v in info.items() if k != "tree"},
+           "tree": info.get("tree"), "counters": dict(fz.c), "wall_s": round(time.perf_counter() - t0, 3)}
+    if pick and pick["kind"] == "production_floor":
+        out["note"] = "unchanged K<=3 production floor selected (short selection, not a long repair)"
+    return out
+
+
+# ------------------------------------------------------------------------------------------------ P3 isolated assignment-given diagnostic
+def assignment_given(fz, row0, A, witness=None, lam=0.0):
+    """ORACLE_DIAGNOSTIC (never a deployment arm): the unordered assignment A is supplied (sorted, order hidden).  -> plans for
+    SEL-DP (grouped DP, has_multi for |A| > 3), RANDOM (sha256('KGT3-P3|' + root) order + best admissible partition) and, when the
+    evaluator passes the witness order, WITNESS (best admissible partition of that order)."""
+    A = sorted(CP._t(A))
+    T = CP.Scores(fz, row0, V.rebase)
+    T.need(CP.requests(A))
+    yg = fz.y_global(row0, [list(map(list, A))])[0]
+    out = {}
+    r = CP.grouped_dp(T, A, lam=lam)
+    out["SEL-DP"] = {"order": r[1], "partition": r[2], "F": r[0]} if r else None
+    rng = random.Random(hashlib.sha256(f"KGT3-P3|{row0['root_id']}".encode()).hexdigest())
+    ro = list(A); rng.shuffle(ro)
+    r = CP.fixed_order_dp(T, ro, lam=lam)
+    out["RANDOM"] = {"order": r[1], "partition": r[2], "F": r[0]} if r else None
+    if witness is not None:
+        r = CP.fixed_order_dp(T, [tuple(map(int, a)) for a in witness], lam=lam)
+        out["WITNESS"] = {"order": r[1], "partition": r[2], "F": r[0]} if r else None
+    for v in out.values():
+        if v:
+            v["E"] = v["F"] - math.log(max(CP.EPS, yg))
+            v["chunk_px"] = []
+            i = 0
+            for g in v["partition"]:
+                v["chunk_px"].append(math.exp(-T.cost(v["order"][:i], v["order"][i:i + g]))); i += g
+    out["y_global"] = yg; out["scores"] = dict(T.n)
+    return out

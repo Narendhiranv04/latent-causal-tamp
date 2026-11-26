@@ -1,0 +1,661 @@
+{
+ "dom": "3d",
+ "arms": [
+  "REC-ORDERED",
+  "REC-REORDER",
+  "FLAT-INSERT",
+  "GA",
+  "GA-YONLY"
+ ],
+ "roots": [
+  {
+   "root_id": "3ds66-k45-b2c2-035",
+   "N": 7,
+   "arms": {
+    "REC-ORDERED": {
+     "decision": "REPAIR",
+     "seq": [
+      [
+       6,
+       24
+      ],
+      [
+       2,
+       6
+      ],
+      [
+       5,
+       0
+      ],
+      [
+       1,
+       23
+      ]
+     ],
+     "partition": [
+      1,
+      1,
+      2
+     ],
+     "E": 0.10028760485544594,
+     "kind": "rec_dp",
+     "wall_s": 1.537,
+     "stop": null,
+     "mode": "REC-ORDERED",
+     "n_candidates": 44,
+     "scores": {
+      "x_unique": 219,
+      "scenes": 116,
+      "batches": 116
+     },
+     "per_size": null,
+     "metadata_invariant": true
+    },
+    "REC-REORDER": {
+     "decision": "REPAIR",
+     "seq": [
+      [
+       2,
+       6
+      ],
+      [
+       5,
+       18
+      ],
+      [
+       1,
+       11
+      ]
+     ],
+     "partition": [
+      1,
+      2
+     ],
+     "E": 0.09355834398287022,
+     "kind": "rec_dp",
+     "wall_s": 2.786,
+     "stop": null,
+     "mode": "REC-REORDER",
+     "n_candidates": 82,
+     "scores": {
+      "x_unique": 2943,
+      "scenes": 512,
+      "batches": 512
+     },
+     "per_size": null,
+     "metadata_invariant": true
+    },
+    "FLAT-INSERT": {
+     "decision": "REPAIR",
+     "seq": [
+      [
+       5,
+       18
+      ],
+      [
+       2,
+       6
+      ],
+      [
+       1,
+       23
+      ]
+     ],
+     "partition": [
+      1,
+      2
+     ],
+     "E": 0.10427142583244992,
+     "kind": "rec_dp",
+     "wall_s": 1.032,
+     "stop": null,
+     "mode": "FLAT-INSERT",
+     "n_candidates": 43,
+     "scores": {
+      "x_unique": 165,
+      "scenes": 93,
+      "batches": 93
+     },
+     "per_size": null,
+     "metadata_invariant": true
+    },
+    "GA": {
+     "decision": "REPAIR",
+     "seq": [
+      [
+       6,
+       18
+      ],
+      [
+       1,
+       23
+      ],
+      [
+       2,
+       6
+      ],
+      [
+       5,
+       0
+      ]
+     ],
+     "partition": [
+      2,
+      1,
+      1
+     ],
+     "E": 0.055797428068415325,
+     "kind": "ga_dp",
+     "wall_s": 76.261,
+     "stop": null,
+     "mode": "GA-EXACT",
+     "n_candidates": 5,
+     "scores": {
+      "x_unique": 364010,
+      "scenes": 18895,
+      "batches": 18895
+     },
+     "per_size": {
+      "1": {
+       "generated": 24,
+       "generation": "enumerated",
+       "kept": 24,
+       "retention": "exact",
+       "dp_optimized": 24
+      },
+      "2": {
+       "generated": 224,
+       "generation": "enumerated",
+       "kept": 224,
+       "retention": "exact",
+       "dp_optimized": 224
+      },
+      "3": {
+       "generated": 1036,
+       "generation": "enumerated",
+       "kept": 1036,
+       "retention": "exact",
+       "dp_optimized": 1036
+      },
+      "4": {
+       "generated": 2488,
+       "generation": "enumerated",
+       "kept": 2488,
+       "retention": "exact",
+       "dp_optimized": 2488
+      },
+      "5": {
+       "generated": 2918,
+       "generation": "enumerated",
+       "kept": 2918,
+       "retention": "exact",
+       "dp_optimized": 2918
+      }
+     },
+     "metadata_invariant": true
+    },
+    "GA-YONLY": {
+     "decision": "REPAIR",
+     "seq": [
+      [
+       2,
+       6
+      ],
+      [
+       1,
+       23
+      ],
+      [
+       5,
+       18
+      ]
+     ],
+     "partition": [
+      2,
+      1
+     ],
+     "E": 0.0852800464736609,
+     "kind": "ga_dp",
+     "wall_s": 0.576,
+     "stop": null,
+     "mode": "GA-YONLY",
+     "n_candidates": 5,
+     "scores": {
+      "x_unique": 1693,
+      "scenes": 132,
+      "batches": 132
+     },
+     "per_size": {
+      "1": {
+       "generated": 24,
+       "generation": "enumerated",
+       "kept": 4,
+       "retention": "yonly_top4",
+       "dp_optimized": 4
+      },
+      "2": {
+       "generated": 224,
+       "generation": "enumerated",
+       "kept": 4,
+       "retention": "yonly_top4",
+       "dp_optimized": 4
+      },
+      "3": {
+       "generated": 1036,
+       "generation": "enumerated",
+       "kept": 4,
+       "retention": "yonly_top4",
+       "dp_optimized": 4
+      },
+      "4": {
+       "generated": 2488,
+       "generation": "enumerated",
+       "kept": 4,
+       "retention": "yonly_top4",
+       "dp_optimized": 4
+      },
+      "5": {
+       "generated": 2918,
+       "generation": "enumerated",
+       "kept": 4,
+       "retention": "yonly_top4",
+       "dp_optimized": 4
+      }
+     },
+     "metadata_invariant": true
+    }
+   },
+   "fields_row": [
+    "domain",
+    "inputs",
+    "root_id"
+   ],
+   "fields_inputs": [
+    "attrs",
+    "base",
+    "cell_xy",
+    "cells0",
+    "ctx",
+    "goal",
+    "goal_cell",
+    "ids",
+    "legal_cells",
+    "q_ref",
+    "tid",
+    "xy0"
+   ],
+   "relabel": {
+    "proposals_equal": true,
+    "max_abs_dpx": 1.5988986024062513e-08,
+    "max_abs_dp11": 2.787432368256404e-10
+   }
+  },
+  {
+   "root_id": "3ds66-k45-b2c2-146",
+   "N": 7,
+   "arms": {
+    "REC-ORDERED": {
+     "decision": "REPAIR",
+     "seq": [
+      [
+       5,
+       12
+      ],
+      [
+       6,
+       18
+      ],
+      [
+       1,
+       6
+      ],
+      [
+       2,
+       23
+      ]
+     ],
+     "partition": [
+      1,
+      1,
+      2
+     ],
+     "E": 0.1024086332813946,
+     "kind": "rec_dp",
+     "wall_s": 1.411,
+     "stop": null,
+     "mode": "REC-ORDERED",
+     "n_candidates": 45,
+     "scores": {
+      "x_unique": 215,
+      "scenes": 113,
+      "batches": 113
+     },
+     "per_size": null,
+     "metadata_invariant": true
+    },
+    "REC-REORDER": {
+     "decision": "REPAIR",
+     "seq": [
+      [
+       6,
+       18
+      ],
+      [
+       1,
+       6
+      ],
+      [
+       5,
+       12
+      ],
+      [
+       2,
+       23
+      ]
+     ],
+     "partition": [
+      1,
+      1,
+      2
+     ],
+     "E": 0.082957779141742,
+     "kind": "rec_dp",
+     "wall_s": 2.566,
+     "stop": null,
+     "mode": "REC-REORDER",
+     "n_candidates": 88,
+     "scores": {
+      "x_unique": 2716,
+      "scenes": 474,
+      "batches": 474
+     },
+     "per_size": null,
+     "metadata_invariant": true
+    },
+    "FLAT-INSERT": {
+     "decision": "REPAIR",
+     "seq": [
+      [
+       6,
+       18
+      ],
+      [
+       5,
+       12
+      ],
+      [
+       1,
+       6
+      ],
+      [
+       2,
+       23
+      ]
+     ],
+     "partition": [
+      1,
+      1,
+      2
+     ],
+     "E": 0.10141704354469042,
+     "kind": "rec_dp",
+     "wall_s": 1.032,
+     "stop": null,
+     "mode": "FLAT-INSERT",
+     "n_candidates": 40,
+     "scores": {
+      "x_unique": 168,
+      "scenes": 93,
+      "batches": 93
+     },
+     "per_size": null,
+     "metadata_invariant": true
+    },
+    "GA": {
+     "decision": "REPAIR",
+     "seq": [
+      [
+       6,
+       18
+      ],
+      [
+       1,
+       6
+      ],
+      [
+       5,
+       12
+      ],
+      [
+       2,
+       23
+      ]
+     ],
+     "partition": [
+      1,
+      1,
+      2
+     ],
+     "E": 0.08295778887018743,
+     "kind": "ga_dp",
+     "wall_s": 81.858,
+     "stop": null,
+     "mode": "GA-EXACT",
+     "n_candidates": 5,
+     "scores": {
+      "x_unique": 397268,
+      "scenes": 19782,
+      "batches": 19782
+     },
+     "per_size": {
+      "1": {
+       "generated": 24,
+       "generation": "enumerated",
+       "kept": 24,
+       "retention": "exact",
+       "dp_optimized": 24
+      },
+      "2": {
+       "generated": 226,
+       "generation": "enumerated",
+       "kept": 226,
+       "retention": "exact",
+       "dp_optimized": 226
+      },
+      "3": {
+       "generated": 1064,
+       "generation": "enumerated",
+       "kept": 1064,
+       "retention": "exact",
+       "dp_optimized": 1064
+      },
+      "4": {
+       "generated": 2633,
+       "generation": "enumerated",
+       "kept": 2633,
+       "retention": "exact",
+       "dp_optimized": 2633
+      },
+      "5": {
+       "generated": 3236,
+       "generation": "enumerated",
+       "kept": 3236,
+       "retention": "exact",
+       "dp_optimized": 3236
+      }
+     },
+     "metadata_invariant": true
+    },
+    "GA-YONLY": {
+     "decision": "REPAIR",
+     "seq": [
+      [
+       6,
+       18
+      ],
+      [
+       1,
+       6
+      ],
+      [
+       5,
+       0
+      ],
+      [
+       2,
+       23
+      ]
+     ],
+     "partition": [
+      1,
+      1,
+      2
+     ],
+     "E": 0.08552766126339245,
+     "kind": "ga_dp",
+     "wall_s": 0.672,
+     "stop": null,
+     "mode": "GA-YONLY",
+     "n_candidates": 5,
+     "scores": {
+      "x_unique": 1973,
+      "scenes": 149,
+      "batches": 149
+     },
+     "per_size": {
+      "1": {
+       "generated": 24,
+       "generation": "enumerated",
+       "kept": 4,
+       "retention": "yonly_top4",
+       "dp_optimized": 4
+      },
+      "2": {
+       "generated": 226,
+       "generation": "enumerated",
+       "kept": 4,
+       "retention": "yonly_top4",
+       "dp_optimized": 4
+      },
+      "3": {
+       "generated": 1064,
+       "generation": "enumerated",
+       "kept": 4,
+       "retention": "yonly_top4",
+       "dp_optimized": 4
+      },
+      "4": {
+       "generated": 2633,
+       "generation": "enumerated",
+       "kept": 4,
+       "retention": "yonly_top4",
+       "dp_optimized": 4
+      },
+      "5": {
+       "generated": 3236,
+       "generation": "enumerated",
+       "kept": 4,
+       "retention": "yonly_top4",
+       "dp_optimized": 4
+      }
+     },
+     "metadata_invariant": true
+    }
+   },
+   "fields_row": [
+    "domain",
+    "inputs",
+    "root_id"
+   ],
+   "fields_inputs": [
+    "attrs",
+    "base",
+    "cell_xy",
+    "cells0",
+    "ctx",
+    "goal",
+    "goal_cell",
+    "ids",
+    "legal_cells",
+    "q_ref",
+    "tid",
+    "xy0"
+   ],
+   "relabel": {
+    "proposals_equal": true,
+    "max_abs_dpx": 3.670036796687981e-08,
+    "max_abs_dp11": 5.679484594428574e-09
+   }
+  }
+ ],
+ "poisoned": [
+  "bd_2d",
+  "bd_3dt",
+  "bd_3dt_plus",
+  "bwlphys",
+  "bxy_teacher",
+  "cert",
+  "evaluate_k45",
+  "fin3d",
+  "generate",
+  "geometry",
+  "mink",
+  "motion",
+  "mujoco",
+  "p15_retarget",
+  "p15_search",
+  "p16_common",
+  "physical2d",
+  "physical3d",
+  "pybullet",
+  "skill",
+  "teacher2d",
+  "teacher_long",
+  "witness_v3"
+ ],
+ "loaded": {
+  "sampler_task_on": true,
+  "sampler_rule": {
+   "name": "S1"
+  },
+  "scorer_vis_dim": 0,
+  "manifest_config": {
+   "M": 4,
+   "propose_top": 6,
+   "n_z": 64,
+   "proposal_rule": "S1",
+   "proposal_seed": 0,
+   "K_max": 3,
+   "B_cap": null,
+   "chunk": 8192,
+   "rule": {
+    "noop_gate": 0.5,
+    "eta": 0.3,
+    "alpha": 0.0,
+    "beta": 0.0,
+    "gamma": 0.0
+   }
+  }
+ },
+ "fields_row_union": [
+  "domain",
+  "inputs",
+  "root_id"
+ ],
+ "fields_inputs_union": [
+  "attrs",
+  "base",
+  "cell_xy",
+  "cells0",
+  "ctx",
+  "goal",
+  "goal_cell",
+  "ids",
+  "legal_cells",
+  "q_ref",
+  "tid",
+  "xy0"
+ ],
+ "row_fields_outside_allowlist": [],
+ "input_fields_outside_allowlist": []
+}
