@@ -107,3 +107,40 @@ def test_xrel_invariance_order_and_y(arm):
     C2 = net.coeffs(b2)
     assert torch.allclose(C1["a"], C2["a"], atol=1e-9) and torch.allclose(C1["w"], C2["w"], atol=1e-9)
     assert all(p.requires_grad is False for p in net.base.parameters())
+
+
+def test_order_table_hides_witness_order():
+    """A2: the R3.4 / R3.4D planners see the assignment only as a sorted set (any input order gives the same Table.A)."""
+    sys.path.insert(0, str(HERE.parent / "r24"))
+    import order as OD
+    W = [[3, 35], [2, 10], [4, 2], [0, 0]]
+    assert OD.Table(None, None, W).A == OD.Table(None, None, list(reversed(W))).A == sorted(tuple(a) for a in W)
+
+
+def test_dense_scene_static_invariants():
+    """A2: DENSE starts move only non-target eligible bodies to free legal non-goal cells; E1 next to the pivot, E2 next to E1; no teacher / model
+    label enters the construction (fz.proposals only supplies the pivot destination)."""
+    if not (K.O / "lineage_3d.json").exists():
+        pytest.skip("gvlab2 artifacts absent")
+    import data as DA
+    import views as V
+    class FZ:
+        def proposals(self, row, objs, m=4):
+            return {}
+    rows = K.C.snapshot_rows("3d", splits=("val",), snap=K.C.SNAP_TRAIN)
+    n = 0
+    for rid, r in list(rows.items())[:60]:
+        if not 5 <= len(r["inputs"]["ids"]) <= 9:
+            continue
+        S = DA.DenseScene(FZ(), r, rid, True)
+        if not S.ok:
+            continue
+        n += 1
+        inp = r["inputs"]; occ0 = {int(c) for c in inp["cells0"]}
+        for o, d in S.base:
+            assert o != inp["tid"] and o in V.eligible(r) and d not in occ0 and d != int(inp["goal_cell"])
+        assert all(DA.cheb(S.cur[e], S.cur[S.M]) == 1 for e in S.E1) and DA.cheb(S.cur[S.E2], S.cur[S.E1[0]]) == 1
+        for t, seq, b, _ in S.jobs():
+            assert len({o for o, _ in seq}) == len(seq) and all(d in S.free for _, d in seq) and b[-1] == len(seq)
+        assert S.base == DA.DenseScene(FZ(), r, rid, True).base          # deterministic
+    assert n >= 5

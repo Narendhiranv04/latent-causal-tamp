@@ -1,0 +1,67 @@
+{
+ "id": "R3_PREREG_ADDENDUM_A2",
+ "utc": "2026-11-27",
+ "authority": "owner instruction continuing R3 from af45f538c3 (R3.3A validation extension <= 200 3D jobs from the unspent R3.1 allocation; R3.4 3D formal or owner-authorized DIAGNOSTIC_ONLY; physical K<=3 regression; 2D R3.1D diagnostic <= 120 queries / 4 CPU-h; 2D R3.4D order pilot <= 180 queries / 5 CPU-h; R3.5 proposal document only)",
+ "sealed_before": "every R3.3A, R3.1D, R3.4D, R3.4 and REGR teacher outcome (manifests, model plans and selections below were computed from frozen models only)",
+ "immutable": {
+  "checkpoints": {"F0": "bundle scorer_3d_s0 c02afcbc29a9552f / scorer_2d_s0 0fa126da80ceecb1", "G1s_s0": "6dae59fd97cb5cd3 (primary, selected in R3.3 by the preregistered seed rule; NOT re-selected)", "M1s_s0": "bb8373a0260dd40c (architecture control)"},
+  "no": ["training", "architecture change", "cVAE / Y / X-Y formulation / teacher contract change", "TEST or release_v2 access", "witness order, teacher labels or privileged outcomes as planner inputs", "merging"],
+  "original_gate": "R3_PREREG R3_2.local_gate on VAL_SCALE stays FAILED for every candidate (af45f538c3); nothing below re-labels it"
+ },
+ "R3_3A_3d": {
+  "question": "Does the G1s improvement over F0 hold on new family-independent validation labels, in particular in dense enabler-chain layouts like the K4/K5 failure regime?",
+  "families": "original-VAL families with no DEV lineage and no physical exposure, not used by any R3.1 scene (TRAIN_SCALE or VAL_SCALE), N 5-9, one root per family, K_legacy >= 1 first (string 'NONE' not demoted, as R3.1), then sha256('R3.3A|scene|root'); strata in the cycle DENSE, DENSE, ORD; the first scene that does not fit closes its stratum",
+  "ORD": "the unchanged R3.1 Scene policy (templates T1-T7, HYPSTART every third ORD scene, k 3/2 alternating); cap 60 jobs",
+  "DENSE": "data.DenseScene (learner-visible cells only; no teacher / model score / label in the construction): pivot M (target-adjacent, most crowded), 1-2 E1 bodies moved next to M, one chain body E2 moved next to E1; templates D1 [M], D2 [E1|M], D3 [E2|E1], D4 [E2|E1 M], D5 [E1 M], D6 [M E1], D7 [R|M] (non-enabling), D8 [E1|M->dM2]; static start at ideal poses (R3.0 HYP parity 12/12); cap 140 jobs",
+  "sealed": {"jobs_33a_3d.json": "fce0dc232829100d", "jobs": 195, "ORD": "56 jobs / 8 families (6 S0, 2 HYPSTART)", "DENSE": "139 jobs / 19 families", "skipped": "1 DENSE_CONSTRUCTION_INFEASIBLE, 2 stratum-closing"},
+  "density_check_before_outcomes": {"mean_occupied_neighbours": {"DENSE": 2.486, "ORD": 1.592, "K45_dev_roots": 1.626}, "target_neighbours": {"DENSE": 2.158, "ORD": 1.875, "K45_dev_roots": 2.25}},
+  "selection_bias_rule": "no example selected by G1s or M1s predictions; ORD keeps R3.1's frozen-F0 'H' source; DENSE uses cVAE / hash only",
+  "budget": {"jobs": 200, "cpu_h": 4.0, "workers": 10, "source": "unspent R3.1 3D allocation (412 jobs / 17.2 CPU-h left); no retries; no continuation until a pass"},
+  "evaluation": {"models": ["F0", "G1s_s0", "M1s_s0"], "panels": ["ORIG_VAL_SCALE", "NEW_ORD", "NEW_DENSE", "NEW = ORD + DENSE", "POOLED = ORIG + NEW"],
+   "metrics": "AUROC (family-cluster 95% CI), AUPRC, NLL, Brier, ECE, matched permutation concordance (T4/T5, D5/D6), first-relocation FPR at each model's own TPR-0.80 threshold with achieved TPR, FPR/TPR at 0.5, FPR at each model's ORIG_VAL_SCALE TPR-0.80 threshold (frozen threshold)",
+   "strata": "h0, h>=1, m1 vs m2-3 at each h, S0 vs static start (HYPSTART / DENSE) at h0, physically reached (h>=1) from S0 vs from static starts, N bins",
+   "code": "evaluate.py gate33a G1s 0 M1s 0"},
+  "decision": {
+   "R3_3A_PASS": "the ORIGINAL four gate components with unchanged thresholds on POOLED for G1s_s0 (support >= 10 mixed families at h0 and h>=1; h>=1 AUROC >= 0.75 with lower CI >= 0.60; paired h>=1 dAUROC vs F0 CI > 0; first-relocation FPR drop >= 0.15) AND two consistency guards on NEW alone (paired h>=1 dAUROC point > 0; FPR drop point > 0), because ORIG VAL_SCALE was used for G1s early stopping and seed selection",
+   "R3_4_FORMAL": "iff R3_3A_PASS",
+   "R3_4_DIAGNOSTIC_ONLY": "iff not R3_3A_PASS, the failure is narrow (support and h>=1 components pass and exactly one of {paired, FPR, guard-paired, guard-FPR} fails) and NEW_DENSE alone shows a positive paired intermediate-X improvement with adequate support (>= 10 mixed families at h>=1 and paired h>=1 dAUROC CI lower bound > 0); the original gate stays failed and R3.5 is not authorized",
+   "else": "3D STOPS before R3.4"}
+ },
+ "R3_4_3d": {
+  "unchanged_from_R3_PREREG": "20 DEV_ORDER_3D roots, R2.4 known assignments (sorted; witness order hidden), exact subset DP (order.dp) with chunks 1-3, marginal local pX on canonical prefix scenes, LAM = -log 0.92, partition scored = partition executed, independent physical execution + endpoint target verification + replay; arms S-DP (G1s_s0), F0-DP (archived R2.4 A-DP), RANDOM (sha256('R3.4|'+root) + G1s best partition), WITNESS (archived split, reference); cap 80 jobs / 4 CPU-h",
+  "plans_sealed": {"r34/plans_3d.json": "ac2c08682a7b3468", "note": "contains G1s and F0 rankings of every order (witness rank computed only by the evaluator in analyze)"},
+  "criterion": "RECOVERED iff S-DP >= 14/20 verified AND S-DP - F0-DP net >= +5 roots with exact one-sided McNemar p < 0.05 AND the formal local gate passed; 10-13 PARTIAL; <= 9 NOT_RECOVERED; in DIAGNOSTIC_ONLY mode the same numbers are reported as diagnostic reference only (job keys 'R34DX', label DIAGNOSTIC_ONLY)",
+  "reported": "per root: verified success, first failing relocation, failure reason, chunk sizes, reference returns, witness-order rank under G1s and F0, paired outcomes S-DP vs F0-DP and vs RANDOM, planning time and physical CPU",
+  "caution": "AUROC gains are not assumed to transfer to physical ordering"
+ },
+ "REGR_3d": {
+  "rule": "R3_PREREG R3_2.k3_regression.physical: released EXACT4 (rank.b0, NOOP gate 0.5, eta 0.3) with the production F0 scorer vs G1s_s0 on the 338 NATURAL_VAL roots (same cVAE proposals)",
+  "selection_sealed": {"regr/select.json": "41d7104201dd7857", "changed": 166, "decisions_F0": {"NOOP": 83, "REPAIR": 209, "ABSTAIN": 46}, "decisions_G1s": {"NOOP": 83, "REPAIR": 207, "ABSTAIN": 48}},
+  "run_iff": "R3.4 runs (formal or diagnostic)",
+  "verification": "changed roots in sha256('R3.REGR|'+root) order; both arms per root (exact v32 / archived reuse first, else one X_CHUNKED [m] + endpoint Y + replay job); a root is queued only if all its jobs fit; cap 60 jobs / 3 CPU-h",
+  "estimator": "panel delta = (changed / 338) x mean paired success delta on the verified (hash-random) changed subset; bootstrap 95% CI over that subset; 'no > 5 pp regression' claimed only if >= 10 verified changed roots and the CI lower bound > -5 pp; otherwise reported as unresolved",
+  "success": "REPAIR: X = 1 and Y = 1 (replayed for new jobs); NOOP: Y(empty) = 1 (v32 label); ABSTAIN: 0"
+ },
+ "R3_1D_2d": {
+  "question": "Does frozen 2D local X discriminate after one or more relocations when the prefix is independently established?",
+  "design": "data.build2dd: per clean original-VAL family (not in the R3.1 diagnostic; N 9-20; K_legacy != 0; one root per family; sha256('R3.1D|scene|root')): prefix p = a v32 X = 1 single relocation (continuous run incl. terminal connector == chunk [p], R3.0 parity); Q1 [p|b] (b = best frozen-pX cVAE single), Q2 [p|r] (random legal), Q3 [p|x y] (pair), Q4 [b] at S0 (before/after contrast)",
+  "states": "all h>=1 states are physically reached after the established prefix; no hypothetical-start scenes in 2D (the 2D teacher has no static start override and no 2D HYP parity was audited)",
+  "sealed": {"jobs_31d_2d.json": "f6d8322f2c868d8d", "roots": 30, "queries": 120},
+  "budget": {"queries": 120, "cpu_h": 4.0, "workers": 3},
+  "labels": "labels.chunks_of; UNKNOWN_PLANNER / UNKNOWN_TRANSIT preserved with reasons, never negatives",
+  "decision": "R3_1_2d.decision rule (>= 10 mixed families at h>=1; PASS if AUROC >= 0.75 and lower CI >= 0.60; DEFICIT if upper CI < 0.70; else INCONCLUSIVE) on the union R2.4 + R3.1 + R3.1D at h>=1; R3.1D alone reported; no 2D training in this tranche"
+ },
+ "R3_4D_2d_pilot": {
+  "label": "DIAGNOSTIC (the 2D local-X support gate is unresolved); order recovery GIVEN the assignment, not repair discovery",
+  "cohort": "sealed DEV_ORDER_2D (30 CERTIFIED_MIN_K roots, 10 each K4/K5/K6); all 30 reported; reserve roots never substituted; no re-prediction after outcomes",
+  "arms": "FX-DP (frozen 2D F0, exact subset DP, chunks 1-3, LAM = -log 0.92), RANDOM (sha256('R3.4D|'+root) + frozen best partition), WITNESS (privileged order + frozen best partition; same chunk-boundary protocol)",
+  "physical": "physical2d X_CHUNKED (connector to q_ref at every boundary, independent replay); endpoint Y once per root (identical endpoint for every arm)",
+  "sealed": {"coh2d/plans.json": "50520dcf899cfab6", "coh2d/jobs.json": "a50f473c75811537", "coh2d/selection.json": "857f063118d9f4ac", "jobs": 90, "queries": 120},
+  "budget": {"queries": 180, "cpu_h": 5.0, "workers": 3},
+  "report": "strict all-root success (UNKNOWN = failure), decided-only, UNKNOWN coverage; by K, N, arm and failure location; paired FX-DP vs RANDOM and WITNESS vs FX-DP (exact McNemar)",
+  "reference": "R3_PREREG R3_4.2d bands used as diagnostic reference only: >= 21/30 (70 %) RECOVERED_REF, 15-20 PARTIAL_REF, <= 14 NOT_RECOVERED_REF; no formal gate pass"
+ },
+ "R3_5": "proposal document only (R3_5_PROPOSED_ADDENDUM), written only if 3D R3.4 or the 2D pilot shows order recovery; no implementation or evaluation",
+ "resources": {"host": "gvlab2 only", "workers_max_combined": 16, "storage_gib": "within the R3 5 GiB", "min_free_gib": 20, "retries": 0,
+  "ledger": "new jobs, CPU-h, GPU-h, UNKNOWN outcomes and physical verification calls tracked per stage in R3_LEDGER.json"}
+}

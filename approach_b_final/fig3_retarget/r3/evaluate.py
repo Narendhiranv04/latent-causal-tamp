@@ -198,8 +198,130 @@ def diag2d():
                       "h0": {p: (v.get("auroc"), v.get("n"), v.get("mixed_families")) for p, v in res["h0"].items()}, "labels": out["labels_r31"], "statuses": dict(st), "cpu_h": out["cpu_h"]}, default=str))
 
 
+# ======================================================================================================== R3.3A (addendum A2)
+S33 = {**STRATA, "h>=1_m1": STRATA["h>=1_m1"], "S0_h0": lambda e: e["h"] == 0 and e["scene_type"] == "S0",
+       "static_h0": lambda e: e["h"] == 0 and e["scene_type"] in ("HYPSTART", "DENSE"), "HYPSTART_h0": lambda e: e["h"] == 0 and e["scene_type"] == "HYPSTART",
+       "DENSE_h0": lambda e: e["h"] == 0 and e["scene_type"] == "DENSE", "reached_h1_from_S0": lambda e: e["h"] >= 1 and e["scene_type"] == "S0",
+       "reached_h1_from_static": lambda e: e["h"] >= 1 and e["scene_type"] != "S0"}
+PANELS = {"ORIG_VAL_SCALE": lambda e: e["panel"] == "ORIG", "NEW_ORD": lambda e: e["panel"] == "ORD", "NEW_DENSE": lambda e: e["panel"] == "DENSE",
+          "NEW": lambda e: e["panel"] in ("ORD", "DENSE"), "POOLED": lambda e: True}
+
+
+def components(st, pr, f0r, fmr):
+    """The ORIGINAL R3_2.local_gate (unchanged thresholds) on one panel."""
+    h1, h0 = st["h>=1"], st["h0"]
+    g = {"support_h0_mixed": h0.get("mixed_families", 0), "support_h1_mixed": h1.get("mixed_families", 0),
+         "support_ok": h0.get("mixed_families", 0) >= 10 and h1.get("mixed_families", 0) >= 10, "h1_auroc": h1.get("auroc"), "h1_ci": h1.get("auroc_ci"),
+         "h1_pass": h1.get("auroc") is not None and h1["auroc"] >= 0.75 and bool(h1.get("auroc_ci")) and h1["auroc_ci"][0] >= 0.60,
+         "paired_h1": pr, "paired_pass": bool(pr and pr["ci95"]) and pr["ci95"][0] > 0,
+         "fpr_drop": (f0r["fpr"] - fmr["fpr"]) if f0r and fmr else None}
+    g["fpr_pass"] = g["fpr_drop"] is not None and g["fpr_drop"] >= 0.15
+    g["PASS"] = bool(g["support_ok"] and g["h1_pass"] and g["paired_pass"] and g["fpr_pass"])
+    return g
+
+
+def gate33a(specs):
+    rows = C.snapshot_rows("3d", snap=C.SNAP_TRAIN)
+    L = [{**e, "panel": "ORIG"} for e in TR.load_labels("3d") if e["split"] == "VAL_SCALE"]
+    L += [{**e, "panel": e["stratum"]} for e in (json.loads(l) for l in open(K.O / "labels_33a_3d.jsonl"))]
+    va, conf = TR.local_views("3d", L, rows)
+    fz, base = TR.f0("3d")
+    nets = [("F0", None, base.to("cuda").eval())] + [(a, s, TR.load("3d", a, s)[1]) for a, s in zip(specs[::2], specs[1::2])]
+    key = lambda e: (e["key"], json.dumps(e["prefix"]), json.dumps(e["chunk"]))  # noqa: E731
+    P = {}
+    for arm, seed, net in nets:
+        m = {key(e): e for e in TR.predict(net, va, "cuda")}
+        P[arm if arm == "F0" else f"{arm}_s{seed}"] = m
+    ks = sorted(P["F0"])
+    od = K.O / "eval"; od.mkdir(parents=True, exist_ok=True)
+    thr0 = {}
+    res = {"labels": len(ks), "val_conflicts_dropped": conf, "panels": {}}
+    for pn, pf in PANELS.items():
+        R = {}
+        for tag in P:
+            X = [P[tag][k] for k in ks if pf(P[tag][k])]
+            X0 = [P["F0"][k] for k in ks if pf(P["F0"][k])]
+            st = {k: C.summary([e for e in X if f(e)], "label", "px", "fam") for k, f in S33.items()}
+            fr = fpr_at_tpr([e for e in X if STRATA["h0_m1"](e)], "px")
+            if pn == "ORIG_VAL_SCALE" and fr:
+                thr0[tag] = fr["threshold"]
+            neg = [e["px"] for e in X if STRATA["h0_m1"](e) and e["label"] == 0]; pos = [e["px"] for e in X if STRATA["h0_m1"](e) and e["label"] == 1]
+            frz = {"threshold_from_ORIG": thr0.get(tag), "fpr": sum(v >= thr0[tag] for v in neg) / len(neg) if neg and tag in thr0 else None,
+                   "tpr": sum(v >= thr0[tag] for v in pos) / len(pos) if pos and tag in thr0 else None}
+            o = {"strata": st, "fpr_first_relocation": fr, "fpr_first_relocation_frozen_ORIG_threshold": frz, "concordance_matched_permutations": concord(X),
+                 "fam_nll": TR.fam_nll(X) if X else None}
+            if tag != "F0":
+                o["paired_vs_F0"] = {k: paired(X0, X, S33[k]) for k in ("all", "h0", "h>=1", "h0_m1", "h>=1_m1", "h>=1_m23", "static_h0", "DENSE_h0")}
+                o["gate"] = components(st, o["paired_vs_F0"]["h>=1"], R["F0"]["fpr_first_relocation"], fr)
+            R[tag] = o
+        res["panels"][pn] = R
+    sel = next(t for t in P if t.startswith("G1s"))
+    Pp, Pn, Pd = (res["panels"][k][sel] for k in ("POOLED", "NEW", "NEW_DENSE"))
+    g = dict(Pp["gate"])
+    g["guard_new_paired_point_gt0"] = (Pn["paired_vs_F0"]["h>=1"]["delta"] or 0) > 0
+    g["guard_new_fpr_drop_gt0"] = (Pn["gate"]["fpr_drop"] or 0) > 0
+    g["R3_3A_PASS"] = bool(g["PASS"] and g["guard_new_paired_point_gt0"] and g["guard_new_fpr_drop_gt0"])
+    failed = [c for c in ("paired_pass", "fpr_pass", "guard_new_paired_point_gt0", "guard_new_fpr_drop_gt0") if not g[c]]
+    g["narrow"] = bool(g["support_ok"] and g["h1_pass"] and len(failed) == 1)
+    dp = Pd["paired_vs_F0"]["h>=1"]
+    g["dense_support_h1_mixed"] = Pd["strata"]["h>=1"].get("mixed_families", 0)
+    g["dense_paired_h1"] = dp
+    g["dense_supports"] = bool(g["dense_support_h1_mixed"] >= 10 and dp["ci95"] and dp["ci95"][0] > 0)
+    g["R3_4_MODE"] = "FORMAL" if g["R3_3A_PASS"] else "DIAGNOSTIC_ONLY" if (g["narrow"] and g["dense_supports"]) else "NOT_AUTHORIZED"
+    g["failed_components"] = failed
+    res["decision"] = {"selected": sel, **g}
+    (od / "gate33a_3d.json").write_text(json.dumps(res, indent=1, default=str))
+    with open(od / "pred33a_3d.jsonl", "w") as f:
+        for k in ks:
+            e = P["F0"][k]
+            f.write(json.dumps({**{c: e[c] for c in ("root_id", "fam", "panel", "h", "m", "N", "scene_type", "template", "label", "chunk", "prefix", "base", "kind", "key")},
+                                **{f"px_{t}": P[t][k]["px"] for t in P}}) + "\n")
+    for pn in PANELS:
+        for t, o in res["panels"][pn].items():
+            st = o["strata"]
+            print(pn, t, json.dumps({"h0": [st["h0"].get("auroc"), st["h0"].get("mixed_families")], "h>=1": [st["h>=1"].get("auroc"), st["h>=1"].get("auroc_ci"), st["h>=1"].get("mixed_families")],
+                                     "fpr": (o["fpr_first_relocation"] or {}).get("fpr"), "paired_h1": (o.get("paired_vs_F0") or {}).get("h>=1"),
+                                     "PASS": (o.get("gate") or {}).get("PASS")}, default=str))
+    print("DECISION", json.dumps(res["decision"], default=str))
+
+
+def diag2dd():
+    """Preregistered 2D frozen-X decision (A2): R3_1_2d.decision rule on the union of R2.4 + R3.1 + R3.1D panels at h >= 1; R3.1D alone reported."""
+    D = [json.loads(l) for l in open(K.O / "labels_31d_2d.jsonl")]
+    D = [{**e, "px": e["f0_px"], "panel": "R3.1D"} for e in D if e["label"] in (0, 1)]
+    A = [json.loads(l) for l in open(K.O / "labels_31_2d.jsonl")]
+    A = [{**e, "px": e["f0_px"], "panel": "R3.1"} for e in A if e["label"] in (0, 1)]
+    B = [json.loads(l) for l in open(C.FIG3 / "r24" / "labels_2d.jsonl")]
+    B = [{**e, "fam": e["root_id"], "panel": "R2.4"} for e in B if e["t"] == "chunk" and e["label"] in (0, 1) and e.get("px") is not None]
+    U = D + A + B
+    res = {k: {p: C.summary([e for e in S if f(e)], "label", "px", "fam") for p, S in (("union", U), ("R3.1D", D), ("R3.1", A), ("R2.4", B))}
+           for k, f in (("h>=1", STRATA["h>=1"]), ("h0", STRATA["h0"]), ("h>=1_m1", STRATA["h>=1_m1"]), ("h>=1_m23", STRATA["h>=1_m23"]))}
+    def dec(u):
+        ci = u.get("auroc_ci")
+        if u.get("mixed_families", 0) < 10 or u.get("auroc") is None:
+            return "INCONCLUSIVE_SUPPORT"
+        if u["auroc"] >= 0.75 and ci and ci[0] >= 0.60:
+            return "PASS"
+        return "DEFICIT" if ci and ci[1] < 0.70 else "INCONCLUSIVE"
+    jobs = json.loads((K.O / "jobs_31d_2d.json").read_text())
+    R = {json.loads(l)["key"]: json.loads(l) for l in open(K.O / "phys_31d_2d.jsonl")}
+    st = collections.Counter(str((r.get("X") or {}).get("teacher_status")) + "@" + str((r.get("X") or {}).get("failed_phase")) for r in R.values())
+    pre = collections.Counter(f"label={e['label']}" for e in (json.loads(l) for l in open(K.O / "labels_31d_2d.jsonl"))
+                              if e["template"] in ("Q1", "Q2", "Q3") and e["h"] == 0)   # established prefix p re-run as chunk 0 (x = 1 expected)
+    out = {"decision_union": dec(res["h>=1"]["union"]), "decision_R3.1D_alone": dec(res["h>=1"]["R3.1D"]), "strata": res, "n_jobs": len(R),
+           "n_sealed": len(jobs), "cpu_h": sum(r.get("cpu_s", 0) for r in R.values()) / 3600, "statuses": dict(st), "prefix_reproduction": dict(pre),
+           "labels_R3.1D": collections.Counter(f"h{min(e['h'], 1)}_y{e['label']}" for e in D)}
+    (K.O / "diag2dd.json").write_text(json.dumps(out, indent=1))
+    print(json.dumps({k: out[k] for k in ("decision_union", "decision_R3.1D_alone", "statuses", "prefix_reproduction", "labels_R3.1D", "cpu_h")}, default=str))
+    print(json.dumps({p: (v.get("auroc"), v.get("auroc_ci"), v.get("n"), v.get("pos"), v.get("mixed_families")) for p, v in res["h>=1"].items()}, default=str))
+
+
 if __name__ == "__main__":
-    if sys.argv[1] == "gate":
+    if sys.argv[1] == "gate33a":
+        gate33a(sys.argv[2:])
+    elif sys.argv[1] == "diag2dd":
+        diag2dd()
+    elif sys.argv[1] == "gate":
         gate(sys.argv[2], sys.argv[3:])
     elif sys.argv[1] == "hard":
         hard(sys.argv[2], sys.argv[3:])

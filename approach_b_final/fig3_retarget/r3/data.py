@@ -235,12 +235,13 @@ def build2d(n_scenes, jobs_per=("T2", "T3", "T6", "T7"), lo=13, hi=20):
     print(json.dumps({"jobs": len(jobs), "scenes": len(scenes), "templates": collections.Counter(j["template"] for j in jobs), "seal": K.sha(jf)[:16]}))
 
 
-def labels(dom="3d"):
-    """Exact chunk labels from the R3.1 runs (labels.chunks_of contract; UNKNOWN never negative) + frozen readouts at the start scene."""
+def labels(dom="3d", tag="31"):
+    """Exact chunk labels from the R3.1 (tag 31) / R3.3A (33a) / R3.1D (31d) runs (labels.chunks_of contract; UNKNOWN never negative) + frozen
+    readouts at the start scene."""
     from models import Frozen
     rows = C.snapshot_rows(dom, snap=C.SNAP_TRAIN)
-    jobs = json.loads((K.O / f"jobs_31_{dom}.json").read_text())
-    R = {json.loads(l)["key"]: json.loads(l) for l in open(K.O / f"phys_31_{dom}.jsonl")}
+    jobs = json.loads((K.O / f"jobs_{tag}_{dom}.json").read_text())
+    R = {json.loads(l)["key"]: json.loads(l) for l in open(K.O / f"phys_{tag}_{dom}.jsonl")}
     out = []
     for j in jobs:
         r = R.get(j["key"])
@@ -251,17 +252,235 @@ def labels(dom="3d"):
             out.append({"root_id": j["root_id"], "fam": j["fam"], "split": j["split"], "scene_type": j["scene_type"], "template": j["template"],
                         "key": j["key"], "base": j["base"], "prefix": c["prefix"], "chunk": c["chunk"], "h": c["prefix_len"], "m": len(c["chunk"]),
                         "label": c["label"], "kind": c["kind"], "connector_fail": c["connector_fail"], "N": len(rows[j["root_id"]]["inputs"]["ids"]),
-                        "status": str(X.get("teacher_status") or X.get("status") or ""), "phase": X.get("phase") or X.get("failed_phase"), "src": j["src"][0] if c["prefix_len"] == 0 else j["src"][-1]})
+                        "status": str(X.get("teacher_status") or X.get("status") or ""), "phase": X.get("phase") or X.get("failed_phase"), "src": j["src"][0] if c["prefix_len"] == 0 else j["src"][-1],
+                        "stratum": j.get("stratum", j["split"])})
     fz = Frozen(dom); fz.caps = {}
     for e in out:
         sc = fz.score(V.rebase(rows[e["root_id"]], e["base"] + e["prefix"]), [e["chunk"]])[0]
         e.update({f"f0_{k}": sc[k] for k in ("px", "px1", "px0", "py", "p11")})
-    with open(K.O / f"labels_31_{dom}.jsonl", "w") as f:
+    with open(K.O / f"labels_{tag}_{dom}.jsonl", "w") as f:
         for e in out:
             f.write(json.dumps(e) + "\n")
     import collections
     print(json.dumps({"labels": len(out), "by": {f"{k}": v for k, v in collections.Counter((e["split"], e["h"] > 0, e["label"]) for e in out).items()}}))
 
 
+# ======================================================================================================== R3.3A (addendum A2)
+def h33(*a):
+    return hashlib.sha256(("R3.3A|" + "|".join(map(str, a))).encode()).hexdigest()
+
+
+def cheb(c, d):
+    return max(abs(int(c) // 6 - int(d) // 6), abs(int(c) % 6 - int(d) % 6))
+
+
+class DenseScene:
+    """DENSE static start (A2): an enabler chain built from learner-visible cells only (no teacher call, no model score, no label).
+    pivot M = eligible body 8-adjacent to the target with the most occupied neighbours (else the most crowded eligible body; ties sha order);
+    E1 (one or two, alternating by scene) = other eligible bodies moved to free cells 8-adjacent to M; E2 = one more body moved to a free cell
+    8-adjacent to E1[0] (not adjacent to M when possible).  Parking cells f = free cells with no occupied neighbour (else any free cell);
+    dM = the first frozen-cVAE proposal for M in a free cell (else a parking cell).  Templates (chunked, every chunk ends at q_ref):
+      D1 [M]          D2 [E1 | M]        D3 [E2 | E1]       D4 [E2 | E1 M]      D5 [E1 M]      D6 [M E1] (permutation of D5)
+      D7 [R | M]  R = eligible body not in the chain and not adjacent to M (non-enabling relocation)      D8 [E1 | M->dM2] (changed destination)"""
+    def __init__(self, fz, row0, rid, two):
+        self.rng = random.Random(h33("dense", rid))
+        inp = row0["inputs"]; tid = inp["tid"]
+        occ = {i: int(c) for i, c in enumerate(inp["cells0"])}
+        el = sorted(V.eligible(row0), key=lambda o: h33("obj", rid, o))
+        nb = lambda c, S: sum(1 for d in S if d != c and cheb(c, d) == 1)  # noqa: E731
+        free0 = set(free_cells(row0))
+        adj_t = [o for o in el if cheb(occ[o], occ[tid]) == 1]
+        cand = adj_t or el
+        self.ok = len(el) >= 3
+        if not self.ok:
+            return
+        M = max(cand, key=lambda o: (nb(occ[o], occ.values()), -cand.index(o)))
+        rest = [o for o in el if o != M]
+        rest.sort(key=lambda o: (cheb(occ[o], occ[M]) == 1, h33("e", rid, o)))          # bodies not already next to M are moved first
+        moves, cur = [], dict(occ)
+        def place(o, near, avoid_near=None):
+            fr = sorted(d for d in free0 if d not in cur.values() and cheb(d, cur[near]) == 1 and d != int(inp["goal_cell"]))
+            pref = [d for d in fr if avoid_near is None or cheb(d, cur[avoid_near]) > 1] or fr
+            if not pref:
+                return False
+            d = pref[self.rng.randrange(len(pref))]
+            moves.append([o, d]); cur[o] = d
+            return True
+        E1 = []
+        for o in rest[:]:
+            if len(E1) >= (2 if two else 1):
+                break
+            if place(o, M):
+                E1.append(o); rest.remove(o)
+        E2 = None
+        for o in rest[:]:
+            if E1 and place(o, E1[0], avoid_near=M):
+                E2 = o; rest.remove(o); break
+        self.ok = bool(E1) and E2 is not None
+        if not self.ok:
+            return
+        self.base, self.M, self.E1, self.E2 = moves, M, E1, E2
+        self.row = V.rebase(row0, moves)
+        self.free = free_cells(self.row)
+        S = set(cur.values())
+        park = [d for d in self.free if nb(d, S) == 0] or list(self.free)
+        self.rng.shuffle(park); self.park = park
+        D = fz.proposals(self.row, V.eligible(self.row), m=4)
+        pm = [int(d) for d in D.get(M, []) if int(d) in self.free]
+        self.R = [o for o in rest if cheb(cur[o], cur[M]) > 1]
+        self.dM = pm[0] if pm else None
+        self.dM2 = pm[1] if len(pm) > 1 else None
+        self.cur = cur
+
+    def jobs(self):
+        used = set()
+        def pk(*avoid):
+            for d in self.park:
+                if d not in avoid and d != self.dM:
+                    return d
+            return None
+        dM = self.dM if self.dM is not None else pk()
+        if dM is None:
+            return []
+        f1 = pk(dM); f2 = pk(dM, f1); fr = pk(dM, f1, f2)
+        dM2 = self.dM2 if self.dM2 not in (None, dM, f1) else pk(dM, f1, f2, fr)
+        M, E1, E2 = self.M, self.E1[0], self.E2
+        A = lambda o, d: [int(o), int(d)]  # noqa: E731
+        T = [("D1", [A(M, dM)], [1], ["PIVOT"])]
+        if f1 is not None:
+            T += [("D2", [A(E1, f1), A(M, dM)], [1, 2], ["E1", "PIVOT"]), ("D5", [A(E1, f1), A(M, dM)], [2], ["E1+PIVOT"]),
+                  ("D6", [A(M, dM), A(E1, f1)], [2], ["PIVOT+E1-perm"])]
+            if f2 is not None:
+                T += [("D3", [A(E2, f2), A(E1, f1)], [1, 2], ["E2", "E1"]), ("D4", [A(E2, f2), A(E1, f1), A(M, dM)], [1, 3], ["E2", "E1+PIVOT"])]
+            if dM2 is not None:
+                T.append(("D8", [A(E1, f1), A(M, dM2)], [1, 2], ["E1", "PIVOT-altdest"]))
+        if self.R and fr is not None:
+            T.append(("D7", [A(self.R[0], fr), A(M, dM)], [1, 2], ["R-nonenabling", "PIVOT"]))
+        return [t for t in T if len({o for o, _ in t[1]}) == len(t[1]) and len({d for _, d in t[1]}) == len(t[1])]
+
+
+def build33a(n_ord=60, n_dense=140):
+    """R3.3A sealed schedule: new clean ORIGINAL-VAL families only (not in R3.1 scenes, no DEV lineage, no physical exposure), N 5-9, one root per
+    family, K_legacy >= 1 first then sha256('R3.3A|scene|root'); strata assigned in the cycle DENSE, DENSE, ORD until each job cap is full.
+    ORD = the unchanged R3.1 Scene policy (T1-T7, HYPSTART every third ORD scene, k = 3 / 2 alternating)."""
+    from models import Frozen
+    fz = Frozen("3d"); fz.caps = {}
+    rows = C.snapshot_rows("3d", snap=C.SNAP_TRAIN)
+    paths = raw_paths("3d")
+    lin = json.loads((K.O / "lineage_3d.json").read_text())
+    used = {s["fam"] for s in json.loads((K.O / "scenes_31_3d.json").read_text())}
+    el = [e for e in lin["eligible"]["val"] if NMIN <= e["N"] <= NMAX and e["fam"] not in used]
+    el.sort(key=lambda e: (str(e["K"]) in ("0", "None"), h33("scene", e["root_id"])))
+    seen, fams = set(), []
+    for e in el:
+        if e["fam"] not in seen:
+            seen.add(e["fam"]); fams.append(e)
+    jobs, scenes, cnt, cyc, skipped, closed = [], [], {"ORD": 0, "DENSE": 0}, 0, [], set()
+    caps = {"ORD": int(n_ord), "DENSE": int(n_dense)}
+    for e in fams:
+        open_ = [s for s in ("DENSE", "ORD") if s not in closed]
+        if not open_:
+            break
+        want = ("DENSE", "DENSE", "ORD")[cyc % 3]
+        st = want if want in open_ else open_[0]
+        rid = e["root_id"]; row0 = rows[rid]; ids = row0["inputs"]["ids"]
+        rec = json.loads(Path(paths[rid]).read_text())
+        ns = sum(1 for s in scenes if s["stratum"] == st)
+        if st == "ORD":
+            S = Scene(fz, row0, rid, "VAL_33A", paths[rid], rows, ns % 3 == 2)
+            T = S.jobs(k3=ns % 2 == 0); base = S.base; stype = "HYPSTART" if S.base else "S0"; info = {}
+        else:
+            S = DenseScene(fz, row0, rid, ns % 2 == 0)
+            if not S.ok:
+                skipped.append({"root_id": rid, "why": "DENSE_CONSTRUCTION_INFEASIBLE"}); continue
+            T = S.jobs(); base = S.base; stype = "DENSE"
+            info = {"pivot": S.M, "E1": S.E1, "E2": S.E2, "dM": S.dM}
+        if not T:
+            skipped.append({"root_id": rid, "why": "NO_TEMPLATES"}); continue
+        if cnt[st] + len(T) > caps[st]:                        # first scene that does not fit closes the stratum (deterministic)
+            closed.add(st); skipped.append({"root_id": rid, "why": f"{st}_CLOSED_CAP"}); continue
+        cyc += 1; cnt[st] += len(T)
+        cells0 = None
+        if base:
+            cells0 = {k: list(v) for k, v in rec["initial_cells"].items()}
+            for o, d in base:
+                cells0[ids[o]] = cell(d)
+        scenes.append({"root_id": rid, "fam": e["fam"], "split": "VAL_33A", "stratum": st, "N": e["N"], "K": e["K"], "scene_type": stype, "base": base,
+                       "n_jobs": len(T), **info})
+        for t, seq, bounds, src in T:
+            j = {"key": f"R33A|{rid}|{t}|{json.dumps(seq)}|{json.dumps(bounds)}", "root_id": rid, "fam": e["fam"], "split": "VAL_33A", "stratum": st,
+                 "template": t, "scene_type": stype, "base": base, "seq": [list(a) for a in seq], "src": src, "path": paths[rid], "kind": "X_CHUNKED",
+                 "order": [[ids[o], cell(d)] for o, d in seq], "bounds": bounds, "y": None}
+            if cells0:
+                j["cells0"] = cells0
+            jobs.append(j)
+    assert len(jobs) <= 200, len(jobs)
+    jf = K.O / "jobs_33a_3d.json"; jf.write_text(json.dumps(jobs, indent=1))
+    (K.O / "scenes_33a_3d.json").write_text(json.dumps({"scenes": scenes, "skipped": skipped}, indent=1))
+    (K.O / "jobs_33a_3d.json.SEAL").write_text(K.sha(jf))
+    import collections
+    print(json.dumps({"jobs": len(jobs), "by_stratum": cnt, "scenes": collections.Counter(s["stratum"] for s in scenes),
+                      "scene_types": collections.Counter(s["scene_type"] for s in scenes), "templates": collections.Counter(j["template"] for j in jobs),
+                      "skipped": len(skipped), "seal": K.sha(jf)[:16]}))
+
+
+# ======================================================================================================== R3.1D 2D diagnostic (addendum A2)
+def build2dd(n_roots=30, lo=9, hi=20):
+    """Matched suffix queries after an INDEPENDENTLY ESTABLISHED executable prefix: p = an original v32 X = 1 single relocation of the root
+    (continuous run incl. its terminal connector == chunk [p] under the R3.0 parity x_query == x_chunked({m})), sha-chosen.  Per root:
+      Q1 [p | b]   b = best frozen-pX cVAE single (T1 rule)        Q2 [p | r]   r = random legal single
+      Q3 [p | x y] pair from P u R                                 Q4 [b]       the same b at S0 (before / after contrast)
+    Clean original-VAL families not in the R3.1 diagnostic, N in [lo, hi], K_legacy != 0, one root per family, sha256('R3.1D|scene|root')."""
+    from models import Frozen
+    fz = Frozen("2d"); fz.caps = {}
+    rows = C.snapshot_rows("2d", snap=C.SNAP_TRAIN)
+    pg = {}
+    for l in open(C.PRIV / "private_val_2d.jsonl"):
+        e = json.loads(l); pg[e.get("root_id", e.get("evaluation_group_id"))] = (e["path"], e.get("geom", "original"))
+    lin = json.loads((K.O / "lineage_2d.json").read_text())
+    used = {s["fam"] for s in json.loads((K.O / "scenes_31_2d.json").read_text())}
+    hd = lambda *a: hashlib.sha256(("R3.1D|" + "|".join(map(str, a))).encode()).hexdigest()  # noqa: E731
+    el = [e for e in lin["eligible"]["val"] if lo <= e["N"] <= hi and str(e["K"]) not in ("0", "None") and e["root_id"] in pg and e["fam"] not in used]
+    el = [e for e in el if any(q["x"] == 1 and len(q["seq"]) == 1 for q in rows[e["root_id"]]["labels"]["X"])]
+    el.sort(key=lambda e: hd("scene", e["root_id"]))
+    seen, jobs, scenes = set(), [], []
+    for e in el:
+        if e["fam"] in seen or len(scenes) >= int(n_roots):
+            continue
+        rid = e["root_id"]; row0 = rows[rid]; ids = row0["inputs"]["ids"]
+        ps = sorted((q["seq"] for q in row0["labels"]["X"] if q["x"] == 1 and len(q["seq"]) == 1), key=lambda s: hd("p", rid, json.dumps(s)))
+        p = [list(map(int, ps[0][0]))]
+        S = Scene(fz, row0, rid, "VAL_31D", pg[rid][0], rows, False)
+        c0 = int(row0["inputs"]["cells0"][p[0][0]])
+        legal = lambda a: a[0] != p[0][0] and a[1] != p[0][1] and a[1] != c0  # noqa: E731
+        S.P = [a for a in S.P if legal(a)]; S.R = [a for a in S.R if legal(a)]
+        b = max(S.P, key=lambda a: (S.px.get(a, -1), a)) if S.P else None
+        r = S.draw(("R",), avoid=[b] if b else [])
+        xy_ = S.draw(("P", "R"), n=2)
+        T = []
+        if b:
+            T += [("Q1", p + [list(b)], [1, 2], ["V32", "P"]), ("Q4", [list(b)], [1], ["P"])]
+        if r:
+            T.append(("Q2", p + [list(r[0])], [1, 2], ["V32", "R"]))
+        if xy_:
+            T.append(("Q3", p + [list(a) for a in xy_], [1, 3], ["V32", "PR"]))
+        if len(T) < 4:
+            continue
+        seen.add(e["fam"])
+        scenes.append({"root_id": rid, "fam": e["fam"], "split": "VAL_31D", "N": e["N"], "K": e["K"], "prefix": p, "n_jobs": len(T)})
+        for t, seq, bounds, src in T:
+            jobs.append({"key": f"R31DD|{rid}|{t}|{json.dumps(seq)}|{json.dumps(bounds)}", "root_id": rid, "fam": e["fam"], "split": "VAL_31D", "template": t,
+                         "scene_type": "S0", "base": [], "seq_idx": [list(map(int, a)) for a in seq], "src": src, "path": pg[rid][0], "geom": pg[rid][1],
+                         "kind": "X_CHUNKED", "seq": [[ids[o], int(d)] for o, d in seq], "bounds": bounds})
+    assert len(jobs) <= 120, len(jobs)
+    jf = K.O / "jobs_31d_2d.json"; jf.write_text(json.dumps(jobs, indent=1))
+    (K.O / "scenes_31d_2d.json").write_text(json.dumps(scenes, indent=1))
+    (K.O / "jobs_31d_2d.json.SEAL").write_text(K.sha(jf))
+    import collections
+    print(json.dumps({"jobs": len(jobs), "scenes": len(scenes), "N": collections.Counter(s["N"] for s in scenes), "seal": K.sha(jf)[:16]}))
+
+
 if __name__ == "__main__":
-    {"build": lambda: build(*sys.argv[2:4]), "build2d": lambda: build2d(sys.argv[2]), "labels": lambda: labels(sys.argv[2] if len(sys.argv) > 2 else "3d")}[sys.argv[1]]()
+    {"build": lambda: build(*sys.argv[2:4]), "build2d": lambda: build2d(sys.argv[2]), "build33a": lambda: build33a(*sys.argv[2:4]),
+     "build2dd": lambda: build2dd(*sys.argv[2:3]),
+     "labels": lambda: labels(*(sys.argv[2:4] or ["3d"]))}[sys.argv[1]]()
