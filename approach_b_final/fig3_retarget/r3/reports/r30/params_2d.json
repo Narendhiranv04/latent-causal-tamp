@@ -1,0 +1,86 @@
+{
+ "dom": "2d",
+ "arm": "D",
+ "modules": [
+  "act",
+  "cost",
+  "ctxn",
+  "edit_head",
+  "edit_proj",
+  "enc",
+  "jt",
+  "mix",
+  "order_s",
+  "pairo",
+  "pooln",
+  "scene",
+  "xy"
+ ],
+ "grad_to": {
+  "b": [
+   "ctxn",
+   "edit_head",
+   "edit_proj",
+   "enc",
+   "pooln",
+   "scene"
+  ],
+  "a": [
+   "act",
+   "edit_head",
+   "edit_proj",
+   "enc",
+   "mix",
+   "order_s",
+   "pairo",
+   "pooln"
+  ],
+  "w": [
+   "act",
+   "ctxn",
+   "edit_head",
+   "edit_proj",
+   "enc",
+   "mix",
+   "pairo",
+   "pooln",
+   "xy"
+  ],
+  "J": [
+   "act",
+   "cost",
+   "ctxn",
+   "edit_head",
+   "edit_proj",
+   "enc",
+   "jt",
+   "mix",
+   "pairo",
+   "pooln"
+  ]
+ },
+ "x_only_modules": [
+  "act",
+  "mix",
+  "order_s",
+  "pairo",
+  "xy"
+ ],
+ "shared_x_y_modules": [
+  "ctxn",
+  "edit_head",
+  "edit_proj",
+  "enc",
+  "pooln"
+ ],
+ "y_only_modules": [
+  "scene"
+ ],
+ "inactive": [],
+ "params": {
+  "total": 465925,
+  "x_only": 247170,
+  "shared": 136064
+ },
+ "probe_root": "2d-conv-plus2d-srv-w0119-s016"
+}
