@@ -274,6 +274,42 @@ def conn_traj(out):
     fig.tight_layout(); fig.savefig(Path(out) / "R2_2_connector_trajectories.png", dpi=150); plt.close(fig)
 
 
+def r23(out):
+    R = Path("/home/projects/long-horizon/naren_workspace/fig3/r2/r23")
+    doms = [d for d in ("2d", "3d") if (R / f"R2_3_{d}.json").exists()]
+    fig, axs = plt.subplots(2, len(doms), figsize=(6 * len(doms), 7.4), squeeze=False)
+    stages = ["kept_to_final", "lost_at_final_ranking", "proposed_but_not_composed", "in_D4_S0_lost_in_search", "not_proposed", "no_known_ingredients"]
+    cols = [C, "#8250df", A, "#bf8700", B, MUTED]
+    for j, dom in enumerate(doms):
+        d = json.loads((R / f"R2_3_{dom}.json").read_text())
+        arms = list(d["arms"])
+        ax = axs[0, j]
+        for i, a in enumerate(arms):
+            s = d["arms"][a]
+            ax.bar(i, s["strict_lower"], 0.6, color=A)
+            ax.bar(i, s["upper"] - s["strict_lower"], 0.6, bottom=s["strict_lower"], color="#d0d7de")
+            ax.text(i, s["strict_lower"] + 0.01, f"{s['verified']}/{s['roots']}", ha="center", fontsize=7, color=INK)
+        ax.set_xticks(range(len(arms))); ax.set_xticklabels(arms, fontsize=7, rotation=30, ha="right"); ax.set_ylim(0, 1)
+        ax.set_title(f"{dom.upper()}: verified X=1 & Y=1 (blue) + unknown / not run (grey)", fontsize=8.5, loc="left", color=INK)
+        ax.set_ylabel("fraction of roots (all-root denominator)", fontsize=8, color=MUTED); _style(ax)
+        ax = axs[1, j]
+        for i, a in enumerate(arms):
+            f = d["funnel"][a]; bot = 0
+            for st, c in zip(stages, cols):
+                v = f.get(st, 0)
+                if v:
+                    ax.bar(i, v, 0.6, bottom=bot, color=c, label=st if i == 0 or st not in [t.get_label() for t in ax.patches] else None); bot += v
+        hs = [plt.Rectangle((0, 0), 1, 1, color=c) for c in cols]
+        ax.legend(hs, stages, fontsize=6.5, frameon=False, loc="upper left", bbox_to_anchor=(1.0, 1.0))
+        ax.set_xticks(range(len(arms))); ax.set_xticklabels(arms, fontsize=7, rotation=30, ha="right")
+        ax.set_title(f"{dom.upper()}: first stage where the known useful ingredient set is lost (" + ("3D witness" if dom == "3d" else "2D verified K<=3 repairs") + ")",
+                     fontsize=8.5, loc="left", color=INK)
+        ax.set_ylabel("roots", fontsize=8, color=MUTED); _style(ax)
+    fig.suptitle("R2.3 controlled search attribution (development roots; identical ceilings; physical outcomes = exact archived labels or presealed new teacher runs)",
+                 fontsize=9, x=0.01, ha="left", color=INK)
+    fig.tight_layout(); fig.savefig(Path(out) / "R2_3_search_funnel.png", dpi=150); plt.close(fig)
+
+
 if __name__ == "__main__":
     if sys.argv[1] == "audit":
         audit(sys.argv[2], sys.argv[3])
@@ -282,3 +318,5 @@ if __name__ == "__main__":
         for dom in ("2d", "3d"):
             scorer(dom, an, out); matched(dom, an, out, jobs)
         retarget(an, out); rebase(an, out); connectors(an, out); conn_traj(out)
+    elif sys.argv[1] == "r23":
+        r23(sys.argv[2])

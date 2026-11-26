@@ -1,6 +1,10 @@
 {
- "stage": "R2.1+R2.2",
+ "stage": "R2 complete (R2.0-R2.3)",
  "manifest_seals_sha256": {
+  "selection_3d.json": "6f7a27cc424991028be5e6eef315fa8e1cc09e181a240e459a698b0350819b3c",
+  "selection_2d.json": "5c45fab8ed0cb17a44da7c72cda28e5c93e6d28ed70199b4cc1e82a07c2ded97",
+  "jobs_S_3d.json": "843d4547cbb59c0ddf1bcf40492ec4422d3273279206a9a45df754869c384740",
+  "jobs_S_2d.json": "d8c21bb592a5ec10b9029a8201f0d76a62c3bc3253b3314896205793af58857d",
   "panel_C_3d.json": "6180fec83b0827b2e519250b5c9adc468751c6b4d4368ffae8f04e6c6b54b92a",
   "panel_C_2d.json": "d243206f857b8dd24f867a1aff1acbee1bd3c4825d49e799a6f1c72f40ed7723",
   "jobs_OM_3d.json": "9409453364bf28c12be6cff84638e5fe1fbdc42b83ffa7ce32f2fa892f60ae76",
@@ -25,6 +29,12 @@
     "matchedN": 92,
     "omission": 9,
     "connectors": 88
+   },
+   "r23": {
+    "jobs": 36,
+    "queries": 72,
+    "cpu_h": 0.106,
+    "reused_plans": 20
    }
   },
   "3d": {
@@ -34,6 +44,12 @@
     "matchedN": 42,
     "omission": 6,
     "connectors": 36
+   },
+   "r23": {
+    "jobs": 36,
+    "cpu_h": 0.289,
+    "reused_plans": 18,
+    "not_run_budget_plans": 29
    }
   }
  },
@@ -48,7 +64,23 @@
  "retries": 0,
  "censored": 0,
  "remaining": {
-  "2d_queries": 111,
-  "3d_jobs": 36
+  "2d_queries": 39,
+  "3d_jobs": 0
+ },
+ "totals": {
+  "2d": {
+   "queries": 261,
+   "cpu_h": 0.47
+  },
+  "3d": {
+   "jobs": 120,
+   "cpu_h": 0.8
+  },
+  "gpu_s": 1109,
+  "storage_mb": 81
+ },
+ "rosters_sha256": {
+  "roster_2d.jsonl": "880ded0c3bcafd602127be3ed945c2d29a309dcc7a8fc272663576ac6732eb12",
+  "roster_3d.jsonl": "5d1cfc5dbf8ff1181f9e097464a4d1aa39cf7ab0957bdd252999386005423146"
  }
 }
