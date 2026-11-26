@@ -585,7 +585,7 @@ def analyze():
             D["contrasts"][ck] = {"strict": ST.paired(vals(kind, a), vals(kind, b)), "operational": ST.paired(vals(kind, a, "verified_oper"), vals(kind, b, "verified_oper"), n_perm=2000)}
             for K in "123":
                 D["contrasts"][ck][f"K{K}"] = ST.paired({k: v for k, v in vals(kind, a).items() if v[0] == K}, {k: v for k, v in vals(kind, b).items() if v[0] == K}, n_perm=2000)
-            if kind == "arms" and b in ("X", "Y"):
+            if kind == "arms" and a == "J" and b in ("X", "Y"):
                 res["primary"].append({"domain": dom, "contrast": f"J-{b}", **D["contrasts"][ck]["strict"],
                                        "max_unknown_pct": max(D["arms"][f"arms:{z}"]["K1-3"]["unknown_pct"] for z in (a, b)),
                                        "min_evaluable_pct": min(100 - D["arms"][f"arms:{z}"]["K1-3"]["unqueried_pct"] for z in (a, b))})
