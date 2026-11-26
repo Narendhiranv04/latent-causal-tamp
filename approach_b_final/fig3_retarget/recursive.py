@@ -259,8 +259,8 @@ def valid_dag(row0, seq, E):
     return all(pos[x] < pos[y] for x, y, k in E if x in pos and y in pos)
 
 
-def plan(fz, row0, rule, arm, cfg=None):
-    t0 = time.perf_counter()
+def discover(fz, row0, arm, cfg=None):
+    """Seeds + retargeting / flat insertion -> (ctx, pool {json(seq): (seq, edges, seed)}, tree, stop).  No ranking (R2.4 reuses the pool)."""
     fz.reset()
     ctx = Ctx(fz, row0, "R-FIG3" if arm == "R-TOPO" else arm, cfg)
     root = {"action": "ROOT", "children": []}
@@ -292,6 +292,12 @@ def plan(fz, row0, rule, arm, cfg=None):
                     pool.setdefault(json.dumps(P), (P, E, sn["seed"]))
     except (TimeoutError, CapReached) as e:
         stop = f"{type(e).__name__}:{e}"
+    return ctx, pool, root, stop
+
+
+def plan(fz, row0, rule, arm, cfg=None):
+    t0 = time.perf_counter()
+    ctx, pool, root, stop = discover(fz, row0, arm, cfg)
     cands = []
     try:
         for kk, (P, E, sd) in sorted(pool.items()):
