@@ -184,8 +184,12 @@ def chain_queries(S, row, rng):
     return out
 
 
-def build2d():
+def build2d(expand=0):
+    """expand > 0: the preregistered expansion -- the SAME rules with the GATE budget raised by `expand`; only jobs not in the sealed initial
+    manifest are written (jobs_p2x_2d.json)."""
     from models import Frozen
+    if int(expand):
+        CAPS["2d"] = {**CAPS["2d"], "GATE": CAPS["2d"]["GATE"] + int(expand)}
     import data as DA
     S = Screen()
     gen = [json.loads(l) for l in open(O / "rows2d_gen.jsonl")]
@@ -245,9 +249,15 @@ def build2d():
                              "template": t, "group": h("grp", rid, t)[:12], "screen": None, "prefix_kind": "v32_verified" if t.startswith("h1") else "none",
                              "scene_type": "S0", "base": [], "path": pg[rid][0], "geom": pg[rid][1], "kind": "X_CHUNKED",
                              "seq": [[ids[o], int(d)] for o, d in seq], "seq_idx": seq, "bounds": b})
-    assert sum(used.values()) <= 600
-    jf = O / "jobs_p2_2d.json"; jf.write_text(json.dumps(jobs, indent=1))
-    (O / "fams_p2_2d.json").write_text(json.dumps(fams, indent=1))
+    assert sum(used.values()) <= 600 + int(expand)
+    if int(expand):
+        init = {j["key"] for j in json.loads((O / "jobs_p2_2d.json").read_text())}
+        jobs = [j for j in jobs if j["key"] not in init]
+        fams = [f for f in fams if any(j["root_id"] == f["root_id"] for j in jobs)]
+        assert len(jobs) <= int(expand)
+    tag = "p2x" if int(expand) else "p2"
+    jf = O / f"jobs_{tag}_2d.json"; jf.write_text(json.dumps(jobs, indent=1))
+    (O / f"fams_{tag}_2d.json").write_text(json.dumps(fams, indent=1))
     import guard as GD
     s = GD.seal(jf)
     print(json.dumps({"jobs": len(jobs), "used": used, "families": collections.Counter(f"{f['split']}:{f['stratum']}" for f in fams),
@@ -368,10 +378,10 @@ def construct3d(workers, cpu_lo, max_cpu_h=10.0):
                 f.write(json.dumps(r) + "\n"); f.flush(); used[fam["split"]] += r["probes"] + (9 if r["ok"] else 0); cpu += r["cpu_s"]
                 print(time.strftime("%H:%M:%S"), r["root_id"], fam["split"], r["ok"], r.get("why"), r["probes"], r["cpu_s"], used, flush=True)
         resv = collections.Counter(fam["split"] for _, fam, _ in running.values())
-        while qi < len(queue) and used[queue[qi]["split"]] + (resv[queue[qi]["split"]] + 1) * W > cap[queue[qi]["split"]]:
-            qi += 1
-        if qi < len(queue) and len(running) < int(workers) and (cpu + sum(time.time() - t for *_, t in running.values())) / 3600 < float(max_cpu_h):
-            fam = queue[qi]; qi += 1
+        queue = [x for x in queue if used[x["split"]] + W <= cap[x["split"]]]            # a split closes only on its ACTUAL usage
+        nxt = next((i for i, x in enumerate(queue) if used[x["split"]] + (resv[x["split"]] + 1) * W <= cap[x["split"]]), None)
+        if nxt is not None and len(running) < int(workers) and (cpu + sum(time.time() - t for *_, t in running.values())) / 3600 < float(max_cpu_h):
+            fam = queue.pop(nxt)                                                    # in-flight reservations only delay, never skip
             running[fam["root_id"]] = (pool.apply_async(construct_one, (fam,)), fam, time.time()); continue
         if not running:
             break
@@ -456,13 +466,18 @@ def labels(dom):
     """Exact chunk labels of the P2 runs (guard-checked complete manifest)."""
     import guard as GD
     import views as V
-    jf, rf = O / f"jobs_p2_{dom}.json", O / f"phys_p2_{dom}.jsonl"
-    c = GD.complete(jf, rf)
-    if c["status"] != "COMPLETE":
-        raise SystemExit(f"INCOMPLETE {c}")
+    jobs, R, kinds = [], {}, {}
+    for tag in ("p2", "p2x"):
+        jf, rf = O / f"jobs_{tag}_{dom}.json", O / f"phys_{tag}_{dom}.jsonl"
+        if tag == "p2x" and not jf.exists():
+            continue
+        c = GD.complete(jf, rf)
+        if c["status"] != "COMPLETE":
+            raise SystemExit(f"INCOMPLETE {tag} {c}")
+        jobs += json.loads(jf.read_text()); R.update({json.loads(l)["key"]: json.loads(l) for l in open(rf)})
+        kinds[tag] = c["kinds"]
+    c = {"kinds": kinds}
     rows = all_rows(dom)
-    jobs = json.loads(jf.read_text())
-    R = {json.loads(l)["key"]: json.loads(l) for l in open(rf)}
     out = []
     for j in jobs:
         r = R[j["key"]]
@@ -483,5 +498,5 @@ def labels(dom):
 if __name__ == "__main__":
     O.mkdir(parents=True, exist_ok=True)
     a = sys.argv[1]
-    {"prep2d": prep2d, "build2d": build2d, "build3d": build3d, "labels": lambda: labels(sys.argv[2]),
+    {"prep2d": prep2d, "build2d": lambda: build2d(*sys.argv[2:3]), "build3d": build3d, "labels": lambda: labels(sys.argv[2]),
      "construct3d": lambda: construct3d(*sys.argv[2:5])}[a]()
