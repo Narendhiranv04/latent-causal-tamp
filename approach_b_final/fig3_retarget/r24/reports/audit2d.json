@@ -1,0 +1,108 @@
+{
+ "pool": {
+  "x_labels_by_m": {
+   "1": 5439,
+   "2": 12186,
+   "3": 24473
+  },
+  "verified_xy_by_m": {
+   "1": 2186,
+   "2": 4826,
+   "3": 8292
+  }
+ },
+ "raw": {
+  "records": 4251,
+  "verified_K": {
+   "1": 680,
+   "2": 680,
+   "0": 1063,
+   "None": 850,
+   "3": 978
+  },
+  "B_y1_by_len_role": {
+   "1|alternative": 347,
+   "1|alternative_destination": 375,
+   "1|minimal": 680,
+   "1|noop_irrelevant": 130,
+   "1|partial": 8,
+   "1|redundant+1": 631,
+   "1|wrong_destination": 489,
+   "2|alternative": 181,
+   "2|alternative_destination": 80,
+   "2|intended_union": 3,
+   "2|minimal": 680,
+   "2|partial": 7,
+   "2|redundant+1": 532,
+   "2|redundant+2": 433,
+   "2|wrong_destination": 204,
+   "2|wrong_order": 279,
+   "3|alternative": 16,
+   "3|alternative_destination": 2,
+   "3|intended_union": 6,
+   "3|minimal": 978,
+   "3|partial": 3,
+   "3|redundant+1": 260,
+   "3|redundant+2": 442,
+   "3|wrong_destination": 35,
+   "3|wrong_order": 217,
+   "4|alternative_destination": 1,
+   "4|intended_union": 3,
+   "4|partial": 1,
+   "4|redundant+1": 34,
+   "4|redundant+2": 141,
+   "4|wrong_destination": 4,
+   "4|wrong_order": 4,
+   "5|alternative_destination": 1,
+   "5|redundant+1": 1,
+   "5|redundant+2": 22,
+   "5|wrong_order": 1,
+   "6|redundant+2": 1
+  },
+  "fields": {},
+  "candidate_K4plus_roots": [
+   {
+    "split": "train",
+    "root": "2d-plus2d-srv-w0316-s022",
+    "N": 6,
+    "shortest_verified": 4,
+    "verified_K": null,
+    "roles": [
+     "alternative_destination",
+     "partial",
+     "wrong_order"
+    ]
+   },
+   {
+    "split": "val",
+    "root": "2d-plus2d-srv-w0183-s002",
+    "N": 5,
+    "shortest_verified": 4,
+    "verified_K": null,
+    "roles": [
+     "wrong_destination"
+    ]
+   }
+  ],
+  "n_candidate_K4plus": 2,
+  "definition": "shortest y=1 B sequence >= 4 and verified_K not in 0..3 (witnessed length, minimum unknown)"
+ },
+ "fig3_results": {
+  "verified_xy_by_len": {
+   "1": 3,
+   "2": 3,
+   "3": 4,
+   "4": 7,
+   "6": 1
+  },
+  "note": "R2.3 plans are on K3 VAL roots; a verified plan longer than 3 is not a K>3 witness (shorter repairs exist)"
+ },
+ "not_opened": [
+  "TEST indices and records",
+  "release_v2 (protected K4-K12 scaling set)"
+ ],
+ "other_known": {
+  "kgt3_P7A-R": "24 roots, static-only feasibility (no physical execution witnesses) -- [[kgt3-recursive]] / R2.3",
+  "scaling2d_release_v2": "protected; not usable for development"
+ }
+}
