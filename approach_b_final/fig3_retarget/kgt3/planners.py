@@ -153,6 +153,8 @@ def ga(fz, row0, mode, cfg=None, log=None):
         if best_k:
             cands.append(best_k)                                         # only the per-size argmin can win the global argmin
         info["per_size"][k]["dp_optimized"] = len(keep)
+        if not exact:                                                    # evaluator-side coverage audit only (never read by the planner)
+            info.setdefault("retained", {})[k] = [[list(a) for a in A] for A in keep]
     info["scores"] = dict(T.n)
     return cands, info
 
