@@ -1,0 +1,101 @@
+{
+ "version": "XYO_PROTOCOL_V1",
+ "written": "2026-11-26 P0, before any GPU inference or teacher query",
+ "base_commit": "c50a2ebb19893151ac6ad0813a6a7a8dfb7033db",
+ "bundle": {
+  "path": "/home/naren/abf_v34/approach_b_bundle",
+  "manifest_sha256": "147645eeb96a7e5e00584c9b5059e1917e5758a293bc3cc23dfba8d737622420",
+  "scorer": "arm D s0 (coupled), tau=1 (xy.TAU)",
+  "sampler": "scratch_all s0, S1 n_z 64, top-6 -> top-4, proposal seed 0",
+  "M": 4,
+  "K_max": 3
+ },
+ "rule": {
+  "noop_gate": 0.5,
+  "eta": 0.3,
+  "alpha": 0.0,
+  "beta": 0.0,
+  "gamma": 0.0,
+  "note": "same production rule for every arm; NOT equally calibrated thresholds for different events"
+ },
+ "readouts": {
+  "J": "p11 = pY*pX1",
+  "X": "marginal pX = (1-pY)*pX0 + pY*pX1",
+  "Y": "pY(endpoint), one shared value per canonical assignment",
+  "XC": "pX1 (secondary, model/cache-only)",
+  "noop": "pY(empty) for every arm (gate and competing no-op)",
+  "tie_key": "exhaustive.key: (round(-log max(p,1e-12),12), m, D, signature)",
+  "rank_only": "argmax nonempty repair per readout: no gate, eta 0, no no-op"
+ },
+ "pool": "exhaustive.stream(exhaustive.proposals(root, sampler, 0), 4): all legal ordered K1-K3 sequences of the top-4 sets, streamed once, chunk 8192",
+ "roster": {
+  "source": "complete_repair_cvae P0 roster (CRCVAE_COHORT_V1)",
+  "2d_sha256": "5128c22e16d829d254ecec61b8b0a47c922bca3889f21d1c0043e9baa28b89ce",
+  "3d_sha256": "0ae42e4147d29a96e97228b2ee9190fc1a7f0fdc8e9e4bb8dc25ec9e70e4075b",
+  "denominator": "150 K1-K3 per domain; K0 30 / NONE 30 safeguards"
+ },
+ "panel": {
+  "file": "reports/P0_PANEL.json",
+  "sha256": "67594f5f3082d5e60775c19f8c9f2badea5c654667015713e5fe8a76f7af3151",
+  "salt": "XYORDER_PANEL_V1",
+  "per_domain": "10 m=2 + 10 m=3 legacy-witness endpoints, <=1 per root, families first"
+ },
+ "labels": {
+  "2d_strict_decided": [
+   "VERIFIED",
+   "EMPTY",
+   "CERTIFIED_INFEASIBLE",
+   "TERMINAL_STATE_NOT_CLEAR",
+   "Q_REF_NOT_CLEAR_IN_EDITED_SCENE"
+  ],
+  "2d_unresolved": [
+   "UNKNOWN_PLANNER",
+   "UNKNOWN_TRANSIT",
+   "REPLAY_FAILED",
+   "INELIGIBLE",
+   "missing"
+  ],
+  "2d_operational": "stored value (V3.4 convention)",
+  "3d": "resolution EVALUATED -> stored value (0 = teacher-budget-defined failure, not impossibility); UNRESOLVED_* -> UNKNOWN",
+  "join": "X by exact ordered sequence, Y by canonical endpoint; decided conflicts quarantined",
+  "Z": "1 iff X=Y=1; 0 iff a factor decided 0; else UNKNOWN; NOOP/ABSTAIN on K1-K3 unsuccessful"
+ },
+ "queries": {
+  "cap_ordered_requests_per_domain": 400,
+  "tiers": [
+   "T1 primary J/X/Y top-1 on K1-K3 (whole roots, sha256 XYO_Q|root order) <=320",
+   "T2 O-B panel permutations (reserved 80)",
+   "T3 K0/NONE primary REPAIR picks",
+   "T4 rank-only + XC picks from remaining capacity"
+  ],
+  "cpu_hours": {
+   "2d": 8,
+   "3d": 16
+  },
+  "workers": 16,
+  "cores_free_min": 4,
+  "no_retries": true,
+  "profile_first_3d": 20
+ },
+ "statistics": {
+  "primary_contrasts": [
+   "2d J-X",
+   "2d J-Y",
+   "3d J-X",
+   "3d J-Y"
+  ],
+  "metric": "K1-K3 all-root strict verified success, equal-K-stratum weighted (mean of K1,K2,K3 rates)",
+  "ci": "family-cluster bootstrap, 4000 draws seed 0, whole families resampled (no split across strata), stratum weights recomputed per replicate",
+  "p_value": "paired family-level sign-flip randomization of arm labels, 20000 fixed-seed (0) permutations, plus-one correction",
+  "multiplicity": "Holm over the 4 primary contrasts",
+  "established": "Holm p<0.05 AND CI excludes 0 AND UNKNOWN<=20% in both arms AND >=90% roster evaluable",
+  "order_primary": "per domain on the O-B panel: learned pX1 top-order vs canonical and vs analytic random (Holm over 4) only if >=10 mixed groups and >=10 families; else descriptive",
+  "order_mechanistic": "mixed-group X+ vs X- concordance of pX1 (Y=1 groups), family-cluster CI vs 0.5",
+  "exploratory": "everything else (factor diagnostics, rank-only, XC, O-A VAL groups)"
+ },
+ "dev": "VAL (exposed; scorer early-stopped on it) for diagnostics only; protected TEST never opened",
+ "disk": {
+  "new_max_mb": 200,
+  "free_floor_gb": 1.0
+ }
+}
