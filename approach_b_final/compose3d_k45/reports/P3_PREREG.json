@@ -1,0 +1,35 @@
+{
+ "harness_sha256": {
+  "scene.py": "899e816c98260d0d77fabd97969ac3eef69bd4bba9ea6257e3494360e34d8ba9",
+  "models.py": "af5d91421335b4eb133f595987bd90df17cec79f9f721bb0ddbb5e3ef20c9133",
+  "compose.py": "3b8013067ccce343a56f46d5d9ff10130d410179f7f83b6b1c9dcb6f950963ff",
+  "recursive.py": "a7680148ace5ad75ea5e2ea035d7b4b80b386cfb9bd628b4305c2806be03b5d0",
+  "run.py": "86865b2f98d5f5f251992db1b36560619fa780e3ed8db86eac4114b962c41b65"
+ },
+ "bundle_manifest_sha256": "147645eeb96a7e5e00584c9b5059e1917e5758a293bc3cc23dfba8d737622420",
+ "cohort_public_sha256": "5d1cfc5dbf8ff1181f9e097464a4d1aa39cf7ab0957bdd252999386005423146",
+ "budgets": {
+  "x_unique": 100000,
+  "y_unique": 100000,
+  "wall_s": 180,
+  "L": 32,
+  "beam": 6,
+  "local_top": 6,
+  "b4_probe_cap": 32,
+  "b4_readout_cap": 64,
+  "b4_thresholds": [
+   0.5,
+   0.9,
+   0.1
+  ],
+  "depth": 2
+ },
+ "rule": {
+  "noop_gate": 0.5,
+  "eta": 0.3,
+  "long_admission": "exp(H) >= 0.3 (declared heuristic)"
+ },
+ "seed": 0,
+ "inference_device": "gvlab2 RTX 5090 (owner asked to free the laptop); B0 device parity on exposed DEV checked before cohort inference",
+ "physical": "evaluate_k45.run_xb (continuous B0/B1, chunked B2/B3/B4) + run_y + replay; evaluation caps 200 jobs / 24 CPU-h (owner-raised)"
+}

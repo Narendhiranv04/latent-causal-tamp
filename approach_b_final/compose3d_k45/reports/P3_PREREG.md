@@ -7,7 +7,7 @@ This was registered after P0–P2 and **before** any inference on the fresh coho
 - **Bundle:** frozen 3D bundle `~/abf_v34/approach_b_bundle`, hash-checked: S1 TaskCVAE `scratch_all` s0 and coupled X/Y arm D s0. The rule is NOOP gate 0.5, η 0.3, α = β = γ = 0.
 - **Harness:** `scene.py`, `models.py`, `compose.py`, `recursive.py`, `run.py` at the registered commit.
 - **Execution:** seed 0, float32, inference mode; one CUDA generator seeded 0 per proposal call.
-- **Hardware:** laptop RTX 5060.
+- **Hardware:** gvlab2 RTX 5090 (the owner asked to free the laptop). B0 device parity was checked on exposed DEV rows before cohort inference.
 - **Caches:** reset per root × arm, so timings are uncached.
 
 ## Cohort
