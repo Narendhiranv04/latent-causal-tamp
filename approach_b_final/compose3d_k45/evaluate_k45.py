@@ -261,7 +261,7 @@ def primary_jobs(pred, public, index):
             ep = json.dumps(sorted(order))
             if key not in seen:
                 seen[key] = True
-                jobs.append({"key": key, "root_id": rid, "mode": "continuous" if bounds == [m] else "chunked", "path": f"{GV}/gen/roots/{rid}.json",
+                jobs.append({"key": key, "root_id": rid, "mode": "continuous" if bounds == [m] else "chunked", "path": f"{GV}/cohort/roots/{rid}.json",
                              "order": order, "bounds": bounds, "replay": True, "y_cells": "ENDPOINT" if (rid, ep) not in yseen else None, "y_endpoint": ep})
                 yseen.add((rid, ep))
             plan_job[(rid, p["arm"])] = key

@@ -51,7 +51,7 @@ def jobs(plan_file, public):
         o = lambda s: [[I[int(a)], [int(d) // 6, int(d) % 6]] for a, d in s]  # noqa: E731
         m = p["m"]
         add = lambda t, seq, bounds: tiers[t].append({"key": f"oracle_{t}|{rid}|{json.dumps(o(seq))}|{json.dumps(bounds)}", "root_id": rid,  # noqa: E731
-                                                       "mode": "continuous" if bounds == [m] else "chunked", "path": f"{GV}/gen/roots/{rid}.json",
+                                                       "mode": "continuous" if bounds == [m] else "chunked", "path": f"{GV}/cohort/roots/{rid}.json",
                                                        "order": o(seq), "bounds": bounds, "replay": True, "y_cells": "ENDPOINT"})
         add("direct", p["direct"]["order"], [m])
         add("chunk", p["chunk"]["order"], list(itertools.accumulate(p["chunk"]["partition"])))
