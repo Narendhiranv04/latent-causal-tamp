@@ -256,5 +256,200 @@ def coh2d(wit_path, lay_path):
     fig.savefig(FIG / "R3_1_cohort_2d.png", dpi=160); print(FIG / "R3_1_cohort_2d.png")
 
 
+def r33a(d, rows_path):
+    """R3.3A: panel AUROCs, first-relocation FPR, per-label F0 vs G1s, and actual DENSE scenes with teacher outcomes."""
+    import numpy as np
+    d = Path(d)
+    G = json.loads((d / "gate33a_3d.json").read_text())
+    Pr = [json.loads(l) for l in open(d / "pred33a_3d.jsonl")]
+    rows = json.loads(Path(rows_path).read_text())
+    tags = [("F0", MUTED, "F0 (frozen)"), ("G1s_s0", BLUE, "G1s s0 (selected)"), ("M1s_s0", ORANGE, "M1s s0 (MLP control)")]
+    pans = ["ORIG_VAL_SCALE", "NEW_ORD", "NEW_DENSE", "NEW", "POOLED"]
+    fig = plt.figure(figsize=(14, 8.6))
+    gs = fig.add_gridspec(2, 5, height_ratios=[1, 1.15], hspace=0.42, wspace=0.28, left=0.05, right=0.99, top=0.95, bottom=0.09)
+    for si, (stn, ttl) in enumerate((("h0", "(a) h = 0"), ("h>=1", "(b) h >= 1 (physically reached prefix)"))):
+        ax = fig.add_subplot(gs[0, 2 * si:2 * si + 2])
+        for pi, pn in enumerate(pans):
+            for ti, (t, c, nm) in enumerate(tags):
+                v = G["panels"][pn][t]["strata"][stn]
+                if v.get("auroc") is None:
+                    continue
+                x = pi + (ti - 1) * 0.26
+                ax.bar(x, v["auroc"], 0.24, color=c, label=nm if pi == 0 else None)
+                if v.get("auroc_ci"):
+                    ax.plot([x, x], v["auroc_ci"], color=INK, lw=0.9)
+        ax.axhline(0.75, color=RED, ls="--", lw=0.8); ax.axhline(0.5, color=MUTED, ls=":", lw=0.8)
+        ax.set_xticks(range(len(pans))); ax.set_xticklabels([p.replace("_VAL_SCALE", "").replace("NEW_", "NEW ") + f"\n{G['panels'][p]['F0']['strata'][stn].get('mixed_families', 0)} mixed fam."
+                                                             for p in pans], fontsize=7.5)
+        ax.set_ylim(0, 1.02); ax.set_ylabel("marginal pX AUROC (family-cluster 95% CI)")
+        ax.set_title(ttl, loc="left", fontsize=9)
+        if si == 0:
+            ax.legend(frameon=False, fontsize=7, loc="lower left", ncol=3, bbox_to_anchor=(0, 1.06))
+    ax = fig.add_subplot(gs[0, 4])
+    for pi, pn in enumerate(pans):
+        for ti, (t, c, _) in enumerate(tags):
+            f = G["panels"][pn][t]["fpr_first_relocation"]
+            if f:
+                ax.bar(pi + (ti - 1) * 0.26, f["fpr"], 0.24, color=c)
+    lb = []
+    for pn, nm in zip(pans, ["ORIG", "ORD", "DENSE", "NEW", "POOL"]):
+        f0, f1 = G["panels"][pn]["F0"]["fpr_first_relocation"], G["panels"][pn]["G1s_s0"]["fpr_first_relocation"]
+        lb.append(f"{nm}\n{round(f0['fpr'] * f0['n_neg'])} vs {round(f1['fpr'] * f1['n_neg'])}\n/{f0['n_neg']}")
+    ax.set_xticks(range(len(pans))); ax.set_xticklabels(lb, fontsize=6.8)
+    ax.set_ylabel("FPR at own TPR-0.80 threshold"); ax.set_title("(c) first relocations (h0, m1): false\npositives, F0 vs G1s / negatives", loc="left", fontsize=9)
+    ax = fig.add_subplot(gs[1, 0])
+    D = [e for e in Pr if e["panel"] == "DENSE"]
+    for lab, c, mk in ((1, BLUE, "o"), (0, RED, "x")):
+        S = [e for e in D if e["label"] == lab]
+        ax.scatter([e["px_F0"] for e in S], [e["px_G1s_s0"] for e in S], s=14 if mk == "o" else 18, marker=mk, color=c, alpha=0.7, linewidths=0.9,
+                   label=f"{'executable' if lab else 'not executable'} (n={len(S)})")
+    ax.plot([0, 1], [0, 1], color=GRID, lw=0.8); ax.set_xlim(-0.02, 1.02); ax.set_ylim(-0.02, 1.02)
+    ax.set_xlabel("F0 marginal pX"); ax.set_ylabel("G1s marginal pX"); ax.legend(frameon=False, fontsize=6.5, loc="upper left")
+    ax.set_title("(d) NEW_DENSE labels: before (F0)\nvs after (G1s), same labels", loc="left", fontsize=9)
+    by = {}
+    for e in Pr:
+        by.setdefault((e["root_id"], e["template"], e["h"]), e)
+    ex = []
+    neg = sorted([e for e in D if e["h"] == 0 and e["m"] == 1 and e["label"] == 0], key=lambda e: -e["px_F0"])
+    if neg:
+        ex.append((neg[0], "DENSE start, blocked first grasp"))
+    h1 = sorted([e for e in D if e["h"] >= 1], key=lambda e: -abs(e["px_F0"] - e["px_G1s_s0"]))
+    if h1:
+        ex.append((h1[0], "physically reached scene"))
+    for e in D:                                                       # matched permutation D5 / D6, discordant
+        if e["template"] == "D5":
+            b = by.get((e["root_id"], "D6", 0))
+            if b and b["label"] != e["label"]:
+                ex += [(e, "enabler first (D5)"), (b, "pivot first (D6), same set")]; break
+    for k, (e, t) in enumerate(ex[:4]):
+        a = fig.add_subplot(gs[1, 1 + k])
+        draw_scene(a, rows[e["root_id"]], e["base"] + e["prefix"], e["chunk"], f"{t}: h={e['h']}, N={e['N']}", e["label"])
+        a.set_title(a.get_title(loc="left") + f"\nF0 pX {e['px_F0']:.2f} | G1s {e['px_G1s_s0']:.2f} | M1s {e['px_M1s_s0']:.2f}", fontsize=7, loc="left",
+                    color=GREEN if e["label"] == 1 else RED)
+    fig.text(0.01, 0.002, "(e-h) Actual R3.3A scenes: top-down footprints at true scale from public inputs (red = target, green = body placed by the static DENSE construction or by the executed prefix, "
+             "blue = queried mover, dashed = goal).\n"
+             "DENSE starts are static ideal-pose layouts; h >= 1 scenes are physically reached; X labels are actual teacher outcomes (chunk + connector to q_ref).", fontsize=6.8, color=MUTED)
+    fig.savefig(FIG / "R3_3A_validation.png", dpi=160); print(FIG / "R3_3A_validation.png")
+
+
+def _grid8(a, cells, goal, moved_names, order=None, part=None, fail_at=None, title=""):
+    from matplotlib.patches import Circle, Rectangle
+    P = lambda c: (c % 8, c // 8)  # noqa: E731
+    for c in range(64):
+        a.add_patch(Rectangle((c % 8 - 0.5, c // 8 - 0.5), 1, 1, fc="none", ec=GRID, lw=0.4))
+    gx, gy = P(goal); a.add_patch(Rectangle((gx - 0.5, gy - 0.5), 1, 1, fc="#f3e8c8", ec=ORANGE, lw=0.9, ls="--"))
+    for j, c in enumerate(cells):
+        x, y = P(c)
+        a.add_patch(Circle((x, y), 0.3, fc=RED if j == 0 else (BLUE if j in moved_names else "#9fb7d6"), ec="white", lw=0.5, zorder=3))
+    if order:
+        ends, s = set(), 0
+        for g in part:
+            s += g; ends.add(s)
+        for k, (o, d) in enumerate(order):
+            (x0, y0), (x1, y1) = P(cells[o]), P(int(d))
+            bad = fail_at is not None and k == fail_at
+            done = fail_at is not None and k > fail_at
+            a.annotate("", (x1, y1), (x0, y0), arrowprops=dict(arrowstyle="-|>", color=RED if bad else (GRID if done else INK), lw=1.2 if bad else 0.9), zorder=4)
+            a.text(x1, y1, str(k + 1) + ("|" if (k + 1) in ends and k + 1 < len(order) else ""), fontsize=6.3, ha="center", va="center", color="white", zorder=5,
+                   bbox=dict(boxstyle="round,pad=0.12", fc=RED if bad else INK, ec="none"))
+    a.set_xlim(-0.6, 7.6); a.set_ylim(-0.6, 7.6); a.set_aspect("equal"); a.set_xticks([]); a.set_yticks([]); a.grid(False)
+    a.set_title(title, fontsize=7, loc="left")
+
+
+def r34d(d):
+    """2D order pilot: per-root outcome matrix by arm + K, and predicted vs witness orders with chunk boundaries and first failing relocation."""
+    import numpy as np
+    d = Path(d)
+    A = json.loads((d / "R3_4D_2d.json").read_text())
+    P = json.loads((d / "plans.json").read_text())
+    rows = {json.loads(l)["root_id"]: json.loads(l) for l in open(d / "rows.jsonl")}
+    arms = ("FX-DP", "RANDOM", "WITNESS")
+    rids = sorted(P, key=lambda r: (P[r]["K"], r))
+    fig = plt.figure(figsize=(14, 8.2))
+    gs = fig.add_gridspec(2, 4, height_ratios=[0.8, 1.2], hspace=0.42, wspace=0.18, left=0.06, right=0.99, top=0.92, bottom=0.05)
+    ax = fig.add_subplot(gs[0, :3])
+    col = {True: GREEN, False: RED, None: "#c9cdd2"}
+    for i, r in enumerate(rids):
+        for j, a in enumerate(arms):
+            v = A["per_root"][r][a]
+            ax.add_patch(plt.Rectangle((i - 0.45, j - 0.4), 0.9, 0.8, fc=col[v["succ"]], ec="white"))
+            if v["succ"] is not True and v.get("fail_at") is not None:
+                ax.text(i, j, str(v["fail_at"] + 1), ha="center", va="center", fontsize=6.5, color="white")
+            elif v["succ"] is None:
+                ax.text(i, j, "?", ha="center", va="center", fontsize=6.5, color=INK)
+    for k in (4, 5, 6):
+        xs = [i for i, r in enumerate(rids) if P[r]["K"] == k]
+        ax.text(np.mean(xs), 2.75, f"K = {k}", ha="center", fontsize=8, color=INK)
+        if k > 4:
+            ax.axvline(xs[0] - 0.5, color=INK, lw=0.8)
+    ax.set_xlim(-0.6, len(rids) - 0.4); ax.set_ylim(-0.6, 3.0); ax.set_yticks(range(3)); ax.set_yticklabels(arms); ax.set_xticks([]); ax.grid(False)
+    s = A["summary"]["all"]
+    ax.set_title(f"(a) verified order recovery per root: FX-DP {s['FX-DP']['strict_success']}/30, RANDOM {s['RANDOM']['strict_success']}/30, WITNESS {s['WITNESS']['strict_success']}/30\n"
+                 "green = X = 1 replayed and Y = 1; red = certified failure; grey = UNKNOWN; number = first failing relocation", loc="left", fontsize=8.5)
+    ax = fig.add_subplot(gs[0, 3])
+    for j, a in enumerate(arms):
+        v = [A["summary"][f"K{k}"][a]["strict_success"] for k in (4, 5, 6)]
+        ax.bar(np.arange(3) + (j - 1) * 0.26, v, 0.24, color=(BLUE, MUTED, GREEN)[j], label=a)
+    ax.set_xticks(range(3)); ax.set_xticklabels(["K4", "K5", "K6"]); ax.set_ylim(0, 10.5); ax.set_ylabel("verified / 10"); ax.legend(frameon=False, fontsize=7)
+    ax.set_title("(b) verified by certified min K", loc="left", fontsize=9)
+    ex = []
+    for k in (4, 5, 6):
+        c = [r for r in rids if P[r]["K"] == k]
+        c.sort(key=lambda r: (A["per_root"][r]["FX-DP"]["succ"] is not False, A["per_root"][r]["WITNESS"]["succ"] is not True, r))
+        ex.append(c[0])
+    for i, r in enumerate(ex):
+        row = rows[r]; inp = row["inputs"]; ids = inp["ids"]
+        t = ids.index("t0"); perm = [t] + [j for j in range(len(ids)) if j != t]
+        cells = [inp["cells0"][j] for j in perm]; inv = {j: k for k, j in enumerate(perm)}
+        a2 = fig.add_subplot(gs[1, i])
+        v = A["per_root"][r]["FX-DP"]; w = A["per_root"][r]["WITNESS"]
+        o = [[inv[o_], d_] for o_, d_ in P[r]["FX-DP"]["order"]]
+        _grid8(a2, cells, inp["goal_cell"], {inv[o_] for o_, _ in P[r]["assignment"]}, o, P[r]["FX-DP"]["partition"], v.get("fail_at") if v["succ"] is not True else None,
+               f"({'cde'[i]}) {r[8:]}: K {P[r]['K']}, N {P[r]['N']}\nFX-DP: {'VERIFIED' if v['succ'] else v['status'].replace('CERTIFIED_', 'CERT_')}\n"
+               f"witness rank {P[r]['witness_rank']}/{P[r]['n_orders']}; witness arm {'VERIFIED' if w['succ'] else w['status']}")
+    a3 = fig.add_subplot(gs[1, 3])
+    r = ex[0]; row = rows[r]; inp = row["inputs"]; ids = inp["ids"]; t = ids.index("t0"); perm = [t] + [j for j in range(len(ids)) if j != t]
+    inv = {j: k for k, j in enumerate(perm)}; cells = [inp["cells0"][j] for j in perm]
+    w = A["per_root"][r]["WITNESS"]
+    _grid8(a3, cells, inp["goal_cell"], {inv[o_] for o_, _ in P[r]["assignment"]}, [[inv[o_], d_] for o_, d_ in P[r]["WITNESS"]["order"]], P[r]["WITNESS"]["partition"],
+           w.get("fail_at") if w["succ"] is not True else None, f"(f) {r[8:]}: privileged WITNESS order\n(frozen-X partition): {'VERIFIED' if w['succ'] else w['status']}")
+    fig.text(0.01, 0.005, "Schematic 8x8 cell grid (cell positions, not footprints): red = target, dashed = goal, blue = assigned movers; numbers = executed order, '|' = chunk boundary "
+             "(connector to q_ref),\nred arrow = first failing relocation, grey = not reached. Outcomes are actual teacher runs (physical2d X_CHUNKED + independent replay).", fontsize=6.8, color=MUTED)
+    fig.savefig(FIG / "R3_4D_order_2d.png", dpi=160); print(FIG / "R3_4D_order_2d.png")
+
+
+def r31d(d):
+    """2D R3.1D: label outcomes by template and h, and AUROC by panel at h >= 1 (frozen F0)."""
+    import collections
+    d = Path(d)
+    G = json.loads((d / "diag2dd.json").read_text())
+    L = [json.loads(l) for l in open(d / "labels_31d_2d.jsonl")]
+    fig, ax = plt.subplots(1, 3, figsize=(13, 3.6), gridspec_kw={"width_ratios": [1.2, 1.2, 1]})
+    cats = [("Q4", 0, "Q4 [b] h0"), ("Q1", 0, "prefix p (h0)"), ("Q1", 1, "Q1 [p|b] h1"), ("Q2", 1, "Q2 [p|r] h1"), ("Q3", 1, "Q3 [p|x y] h1")]
+    for i, (t, h, nm) in enumerate(cats):
+        S = [e for e in L if (e["template"] == t if t != "Q1" or h else e["template"] in ("Q1", "Q2", "Q3")) and min(e["h"], 1) == h]
+        pos, neg = sum(e["label"] == 1 for e in S), sum(e["label"] == 0 for e in S)
+        ax[0].bar(i, pos, color=BLUE); ax[0].bar(i, neg, bottom=pos, color=RED)
+        ax[0].text(i, pos + neg + 1, f"{pos}/{neg}", ha="center", fontsize=7, color=MUTED)
+    ax[0].set_xticks(range(len(cats))); ax[0].set_xticklabels([c[2] for c in cats], fontsize=7, rotation=15)
+    ax[0].set_ylim(0, ax[0].get_ylim()[1] * 1.12); ax[0].set_ylabel("exact labels (executable / not)"); ax[0].set_title("(a) R3.1D labels (UNKNOWN excluded)", loc="left", fontsize=9)
+    st = sorted(G["statuses"].items(), key=lambda t: -t[1])[:8]
+    ax[1].barh(range(len(st)), [v for _, v in st], color=[GREEN if k.startswith("VERIFIED") else ORANGE if "UNKNOWN" in k else RED for k, _ in st])
+    ax[1].set_yticks(range(len(st))); ax[1].set_yticklabels([k[:40] for k, _ in st], fontsize=6.8); ax[1].invert_yaxis()
+    ax[1].set_xlabel("queries"); ax[1].set_title("(b) teacher status @ failing phase (UNKNOWN kept)", loc="left", fontsize=9)
+    ps = ["R2.4", "R3.1", "R3.1D", "union"]
+    for i, p in enumerate(ps):
+        v = G["strata"]["h>=1"][p]
+        if v.get("auroc") is not None:
+            ax[2].bar(i, v["auroc"], color=BLUE if p != "union" else INK)
+            if v.get("auroc_ci"):
+                ax[2].plot([i, i], v["auroc_ci"], color=INK, lw=0.9)
+        ax[2].text(i, 0.03, f"{v.get('mixed_families', 0)} mixed", ha="center", fontsize=6.5, color="white")
+    ax[2].axhline(0.75, color=RED, ls="--", lw=0.8); ax[2].set_ylim(0, 1.02); ax[2].set_xticks(range(4)); ax[2].set_xticklabels(ps)
+    ax[2].set_title(f"(c) frozen 2D pX AUROC, h >= 1\ndecision (union): {G['decision_union']}", loc="left", fontsize=9)
+    fig.tight_layout(); fig.savefig(FIG / "R3_1D_2d.png", dpi=160); print(FIG / "R3_1D_2d.png")
+
+
 if __name__ == "__main__":
-    {"r30": lambda: r30(sys.argv[2]), "r31": lambda: r31(sys.argv[2], sys.argv[3]), "r32": lambda: r32(sys.argv[2]), "coh2d": lambda: coh2d(sys.argv[2], sys.argv[3])}[sys.argv[1]]()
+    {"r30": lambda: r30(sys.argv[2]), "r31": lambda: r31(sys.argv[2], sys.argv[3]), "r32": lambda: r32(sys.argv[2]), "coh2d": lambda: coh2d(sys.argv[2], sys.argv[3]),
+     "r33a": lambda: r33a(sys.argv[2], sys.argv[3]), "r34d": lambda: r34d(sys.argv[2]), "r31d": lambda: r31d(sys.argv[2])}[sys.argv[1]]()

@@ -85,16 +85,97 @@
   },
   "2d": "not run (diagnostic INCONCLUSIVE)"
  },
- "R3.4": "not started (local gate unresolved)",
- "R3.5": "not started (local gate unresolved)",
+ "R3.4": "3D: NOT_AUTHORIZED by A2 rule (20 unauthorized jobs quarantined); 2D: diagnostic pilot R3.4D run",
+ "R3.5": "not started; no R3.5 proposal (no order recovery in either domain)",
  "totals": {
-  "3d_jobs": 622,
-  "3d_cpu_h": 3.0,
-  "2d_queries": 1393,
-  "2d_cpu_h": 6.36,
-  "gpu_h_approx": 0.15,
+  "3d_jobs": 866,
+  "3d_cpu_h": 4.11,
+  "3d_cpu_h_note": "+ <= 0.2 CPU-h killed in-flight (unrecorded)",
+  "2d_queries": 1633,
+  "2d_cpu_h": 7.08,
+  "gpu_h_approx": 0.2,
   "max_workers": 16,
-  "storage_mb": 45,
+  "storage_mb": 57,
   "host": "gvlab2"
+ },
+ "A2_2026-11-27": {
+  "R3.3A_3d": {
+   "jobs": 195,
+   "cpu_h": 0.76,
+   "cap": [
+    200,
+    4.0
+   ],
+   "source": "unspent R3.1 allocation",
+   "workers": 10,
+   "errors": 0,
+   "censored": 0,
+   "unknown": 0,
+   "retries": 0,
+   "labels": 245,
+   "seal": "fce0dc232829100d",
+   "decision": "R3_3A_PASS false (NEW-panel h>=1 guard fails) -> R3.4 NOT_AUTHORIZED"
+  },
+  "R3.4_3d_UNAUTHORIZED": {
+   "jobs_completed": 20,
+   "cpu_h": 0.197,
+   "inflight_killed_cpu_h_est": "<= 0.2 (shared with REGR)",
+   "cap": [
+    80,
+    4.0
+   ],
+   "status": "dispatched on a partial R3.3A evaluation (process error), stopped by PID 00:46 IST; outcomes QUARANTINED unopened (sha16 0e1ea152f2c1caaa)"
+  },
+  "REGR_3d_UNAUTHORIZED": {
+   "jobs_completed": 29,
+   "cpu_h": 0.151,
+   "cap": [
+    60,
+    3.0
+   ],
+   "status": "stopped with R3.4; outcomes QUARANTINED unopened (sha16 f4933b3f3210df76)"
+  },
+  "R3.1D_2d": {
+   "queries": 120,
+   "cpu_h": 0.302,
+   "cap": [
+    120,
+    4.0
+   ],
+   "workers": 3,
+   "unknown": 28,
+   "errors": 0,
+   "censored": 0,
+   "retries": 0,
+   "seal": "f6d8322f2c868d8d",
+   "decision": "PASS (union 0.829, 18 mixed families)"
+  },
+  "R3.4D_2d": {
+   "x_jobs": 90,
+   "y_queries": 30,
+   "queries": 120,
+   "cpu_h": 0.413,
+   "cap": [
+    180,
+    5.0
+   ],
+   "workers": 3,
+   "unknown_arm_outcomes": {
+    "FX-DP": 10,
+    "RANDOM": 11,
+    "WITNESS": 1
+   },
+   "errors": 0,
+   "censored": 0,
+   "retries": 0,
+   "seal": "a50f473c75811537",
+   "result": "FX-DP 3/30, RANDOM 2/30, WITNESS 29/30 (NOT_RECOVERED_REF)"
+  },
+  "gpu_h": 0.05,
+  "note_gpu": "inference only: R3.3A proposals, plans (R3.4 G1s/F0, 2D cohort), REGR selection, gate33a / diag2dd evaluation; no training",
+  "storage_mb": 12,
+  "max_workers": 16,
+  "host": "gvlab2",
+  "free_gib_at_start": 34
  }
 }
