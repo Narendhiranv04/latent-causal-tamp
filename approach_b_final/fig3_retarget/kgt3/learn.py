@@ -87,6 +87,16 @@ def load(dom, spec):
     if spec in ("G1s_s0", "M1s_s0"):
         a, s = spec.split("_s")
         return TR.load(dom, a, s)
+    if spec.startswith("XL:"):                                           # R5.2 development checkpoint: XL:<name>[@T=<temperature>]
+        import xlearn as XLN
+        name, _, cal = spec[3:].partition("@T=")
+        fz, base = TR.f0(dom)
+        base = base.to("cuda").eval()
+        rep, ctrl = name.split("_")[1][0], name.split("_")[3]
+        net = XLN.make(rep, base, None if ctrl == "base" else ctrl).to("cuda")
+        net.load_state_dict(torch.load(XLN.XL / "ckpt" / name / "model.pt", map_location="cuda", weights_only=False)["state"])
+        net = net.eval()
+        return fz, (XLN.Cal(net, float(cal)) if cal else net)
     arch = spec.split("_")[0]
     fz, base = TR.f0(dom)
     net = make(dom, arch, base)

@@ -226,6 +226,16 @@ def select(fz, row0, cands, floor, rule):
         pool.append({"seq": floor["seq"], "partition": [len(floor["seq"])], "E": -math.log(max(CP.EPS, x["p11"])), "kind": "production_floor"})
     if not pool:
         return None, "ABSTAIN", noop
+    tau = rule.get("S2_tau")
+    if tau is not None:                                                   # R5.3 S2: reliability-threshold shortest (tau from local VAL only)
+        for c in pool:
+            if c.get("F") is None or len(c["seq"]) <= 3:
+                c["rel"] = -math.log(max(CP.EPS, fz.score(row0, [c["seq"]])[0]["px"]))
+            else:
+                c["rel"] = c["F"]
+        ok = [c for c in pool if c["rel"] <= tau]
+        if ok:
+            return min(ok, key=lambda c: (len(c["seq"]),) + ckey(c)), "SELECTED_S2", noop
     return min(pool, key=ckey), "SELECTED", noop
 
 

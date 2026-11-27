@@ -190,6 +190,28 @@ class Ctl(__import__("torch").nn.Module):
         return Cf
 
 
+class Cal(__import__("torch").nn.Module):
+    """R5.3 temperature calibration of the X conditional logits: a' = a / T, (a + w)' = (a + w) / T  (so w' = w / T); Y untouched; marginal pX
+    and p11 are recomputed from the scaled logits by every consumer (the probabilistic contract is preserved)."""
+    def __init__(self, net, T):
+        super().__init__()
+        self.net, self.T = net, float(T)
+
+    def coeffs(self, b):
+        Cf = self.net.coeffs(b)
+        return {**Cf, "a": Cf["a"] / self.T, "w": Cf["w"] / self.T}
+
+
+def fit_temperature(net, va, dev, grid=None):
+    """T minimising VAL family NLL of marginal pX (grid, local VAL labels only)."""
+    import numpy as np
+    import train as TR
+    grid = grid or [float(x) for x in np.round(np.exp(np.linspace(np.log(0.4), np.log(4.0), 41)), 4)]
+    sc = [(TR.fam_nll(TR.predict(Cal(net, T), va, dev)), T) for T in grid]
+    best = min(sc)
+    return {"T": best[1], "val_nll_cal": best[0], "val_nll_raw": TR.fam_nll(TR.predict(net, va, dev)), "grid": sc}
+
+
 def make(rep, base, ctrl=None):
     import torch
     if rep == "A":
@@ -274,7 +296,10 @@ def k3_regression(net, items, dev):
             p11 = torch.sigmoid(Cf["a"]) if direct else py * torch.sigmoid(Cf["a"] + Cf["w"])
             m = lab["succ_q"] >= 0
             ys += lab["succ_q"][m].cpu().tolist(); ps += p11[m].cpu().tolist()
-    return {"root_nll": sum(nll) / max(1, len(items)), "succ_auroc": XY.auroc(np.array(ys), np.array(ps)), "n_roots": len(items), "n_succ_labels": len(ys)}
+    yv, pv = np.array(ys, float), np.clip(np.array(ps, float), 1e-6, 1 - 1e-6)
+    bce = float(-np.mean(yv * np.log(pv) + (1 - yv) * np.log(1 - pv))) if len(yv) else None
+    return {"root_nll": sum(nll) / max(1, len(items)), "succ_auroc": XY.auroc(yv, pv), "succ_bce": bce, "succ_ece": XY.ece(yv, pv) if len(yv) else None,
+            "n_roots": len(items), "n_succ_labels": len(ys)}
 
 
 # ------------------------------------------------------------------------------------------------------------------ training
@@ -301,7 +326,7 @@ def fit(dom, rep, dat, recipe, seed, ctrl, tr, va, rp, k3val, base, dev="cuda"):
     def val_score():
         net.eval()
         if ctrl == "DIRECT":
-            return k3_regression(net, k3val, dev)["root_nll"]
+            return k3_regression(net, k3val, dev)["succ_bce"]           # direct success head: short-sequence success BCE (K <= 3 VAL roots)
         return TR.fam_nll(TR.predict(net, va, dev))
     v0 = val_score(); best, bad, t0 = (v0, -1), 0, time.time()
     curve = [{"epoch": -1, "val": v0}]

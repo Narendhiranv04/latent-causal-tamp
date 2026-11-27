@@ -40,6 +40,15 @@ class Frozen:
             raise CapReached(k)
 
     def proposals(self, row, objs, m=4):
+        """Production: S1 top-m (default m = 4, prop_mode 'S1').  R5.3 opt-in modes (never the production default; self.prop_mode):
+        'TOP8' top-8 of the same marginal; 'ANC64' top-4 + the 4 most frequent other cells of 64 ancestral latent draws per object (bounded
+        local resampling); 'UNIF' top-4 + 4 uniformly random legal cells seeded by the scene (labelled exploration control)."""
+        mode = getattr(self, "prop_mode", "S1")
+        if mode != "S1":
+            return self._proposals_mode(row, objs, mode)
+        return self._s1(row, objs, m)
+
+    def _s1(self, row, objs, m=4):
         import search as S
         k = (V.skey(row), tuple(objs))
         if k not in self._p:
@@ -54,6 +63,39 @@ class Frozen:
         else:
             self.c["cache_hits"] += 1
         return {o: v[:m] for o, v in self._p[k].items()}
+
+    def _proposals_mode(self, row, objs, mode):
+        import collections, hashlib, random
+        k = (mode, V.skey(row), tuple(objs))
+        if k in self._p:
+            self.c["cache_hits"] += 1
+            return self._p[k]
+        base = {o: list(v) for o, v in self._s1(row, objs, 6).items()}
+        if mode == "TOP8":                                                 # top-8 needs the 8-wide marginal (S1 caches top-6)
+            sys.path.insert(0, str(HERE / "kgt3"))
+            import cover as CV
+            P, legal, _, _ = CV.marg(self, row, list(objs))
+            base = {o: (CV.ranking(P[o], legal)[:8] if P.get(o) is not None else []) for o in objs}
+        if mode == "TOP8":
+            out = base
+        elif mode == "ANC64":
+            sys.path.insert(0, str(HERE / "kgt3"))
+            import cover as CV
+            P, legal, U, ev = CV.marg(self, row, list(objs), anc=(64,))
+            self.c["latent_draws"] += 64 * len(objs)
+            out = {}
+            for o in objs:
+                cnt = collections.Counter(d for d in (U.get(64, {}).get(o) or []) if d not in base[o][:4])
+                out[o] = (base[o][:4] + [d for d, _ in sorted(cnt.items(), key=lambda t: (-t[1], t[0]))[:4]]) if base[o] else []
+        elif mode == "UNIF":
+            import search as S
+            R = S.Root(row, self.dom); legal = R.legal_dests(R.cells0)
+            rng = random.Random(hashlib.sha256(("UNIF|" + V.skey(row)).encode()).hexdigest())
+            out = {o: base[o][:4] + rng.sample([d for d in legal if d not in base[o][:4]], min(4, len([d for d in legal if d not in base[o][:4]]))) if base[o] else [] for o in objs}
+        else:
+            raise ValueError(mode)
+        self._p[k] = {int(o): [int(d) for d in v] for o, v in out.items()}
+        return self._p[k]
 
     def score(self, row, seqs):
         import xy as XY

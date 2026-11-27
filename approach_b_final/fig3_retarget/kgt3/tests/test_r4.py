@@ -275,3 +275,16 @@ def test_empty_candidates_abstain(patched, clock):
     fz = _fz(FakeFz({}))
     out = PL.plan(fz, {"domain": "2d", "root_id": "r", "D": {}}, "GA", None, {"wall_s": 10.0})
     assert out["decision"] == "ABSTAIN" and out["seq"] is None and out["n_candidates"] == 0
+
+
+def test_s2_rule_prefers_shortest_reliable_and_falls_back(patched):
+    import planners as PL
+    fz = _fz(FakeFz({}))
+    long_c = {"seq": [[0, 1], [1, 2], [2, 3], [3, 4]], "partition": [2, 2], "E": 0.1, "F": 0.5, "kind": "ga_dp"}
+    short_c = {"seq": [[0, 1], [1, 2]], "partition": [2], "E": 0.9, "kind": "p11_single"}
+    pick, why, _ = PL.select(fz, {"domain": "3d", "root_id": "r", "D": {}}, [long_c, short_c], None, {"noop_gate": 0.5, "S2_tau": 50.0})
+    assert why == "SELECTED_S2" and pick is short_c, "shortest reliable candidate wins"
+    pick, why, _ = PL.select(fz, {"domain": "3d", "root_id": "r", "D": {}}, [long_c, short_c], None, {"noop_gate": 0.5, "S2_tau": -1.0})
+    assert why == "SELECTED" and pick is long_c, "no reliable candidate -> original argmin E"
+    pick, why, _ = PL.select(fz, {"domain": "3d", "root_id": "r", "D": {}}, [long_c, short_c], None, {"noop_gate": 0.5})
+    assert why == "SELECTED" and pick is long_c, "default rule unchanged"
