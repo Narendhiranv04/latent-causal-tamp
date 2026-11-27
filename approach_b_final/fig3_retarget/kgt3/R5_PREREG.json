@@ -1,0 +1,43 @@
+{
+ "name": "LEGOLAS R5.1-R6 development preregistration",
+ "anchor": "85708dcda2 (R5.0 PASS 9b1f3daa49)",
+ "authorization": "owner approval 2026-11-27: gvlab2 + local; <=40 CPU-h, <=10 summed GPU process-h (incl. R5.0 0.52), <=4 GiB, 12 h wall. Local machine has 1.4 GB free on /home (< 20 GiB floor) and no visible GPU: used only for git / figures / reports.",
+ "status": "DEVELOPMENT. Nothing here is confirmation; no TEST / release_v2; production artefacts immutable; final clean training is R7.",
+ "R5_1_data": {
+  "new_2d": {"namespace": "R5.1-2D-F000..069", "n_families": 70, "recipe": "R4.3 witness-first cages + prefix templates (verified relocations of the family's own cage walls; no added bodies) -> h1 g3, h2 g2, h2 g3 matched permutations; nuisance stage kept for density tracking", "teacher": "unchanged BXY primitives, fresh cache per query"},
+  "new_3d": {"namespace": "R5.1 (deep3d NS), first 60 fresh families in sha256('R5.1|fam') order excluding KGT3 and R4.4", "n_families": 60, "recipe": "R4.4 level-2/3 construction, Z search widened to 8 objects x 2 destinations (two irrelevant prefixes -> h2 / h3)", "teacher": "unchanged SHELF66V3"},
+  "split_rule": "new families: VAL iff int(sha256('R5.1-split|' + parent_family)[:8], 16) / 2^32 < 0.40, else TRAIN; fixed before outcomes",
+  "train_sources": ["original v32 TRAIN replay (historical contract, unchanged) = ORIGINAL supervision", "ADDITIONAL (strict: replayed positives + certified negatives only, chunks <= 3): R3.1 TRAIN_SCALE + VAL_SCALE, KGT3 P2 (all splits except 2D GATE), R4.3 (all 60), R4.4 (all 34), R5.1 TRAIN"],
+  "val_sources": ["R5.1 VAL families (fresh)", "2D only: KGT3 P2 2D GATE families (never read by any model; disclosed)"],
+  "permanently_excluded_from_training": ["R4.2/R4.5 3D DEV roots (20)", "coh2d 2D DEV roots (30)", "R6 sparse 2D demonstration families (separate namespace R6-2D-DEMO)"],
+  "support_minima_per_domain": {"val_families": 20, "val_matched_discordant_groups": 30, "val_families_with_h_ge_1_multi_action_labels": 10},
+  "if_minima_fail": "collect additional targeted families in a new namespace (same recipe), bounded by the envelope; else DATA_LIMITED",
+  "historical_audit": "original supervision and R3.1 labels are reported under their historical contracts; strict filtering applies to ADDITIONAL data only and drop counts are reported"
+ },
+ "R5_2_training": {
+  "fixed": ["Y pathway and cVAE frozen (bitwise-asserted)", "observed-data likelihood (xy.batched_log_evidence), marginalising unknown X / Y", "family-balanced local sampling, replay batches as R3", "no O2 ranking loss", "no h / history / provenance features"],
+  "matrix": {"X_representation": ["A: original ordered XYNet X modules (act, pairo, mix, order_s, xy) re-initialised", "M: query-relative MLP (xrel M1)", "G: query-relative GNN (xrel G1)"], "data": ["0: original replay only", "1: original + strict additional local"], "seeds": [0, 1]},
+  "recipe_check": "seed 0, data 1, each representation: R_lo = lr 1e-4, <=60 epochs, patience 10; R_hi = lr 1e-3, <=60 epochs, patience 10 (R3 scratch recipe). Per representation choose the recipe with the lower VAL family NLL; applied to all cells of that representation. Convergence (best epoch < max) recorded; if best epoch == max for the chosen recipe, rerun once with <=120 epochs.",
+  "selection": "primary metric = VAL family-mean marginal-X NLL on strict local VAL labels. Representation order of simplicity A < M < G. Choose the simplest representation whose seed-mean VAL NLL is within max(seed spread of the best, 0.005) of the best seed-mean.",
+  "controls_on_selected_representation": {"order_invariant": "chunk actions canonically sorted at input (orders indistinguishable)", "uncoupled": "w = 0 (pX independent of Y)", "direct_short": "same net trained with BCE on observed short-sequence success (p11 target) from replay success labels only; compared on K<=3 / short metrics only"},
+  "reported": ["VAL NLL, Brier, ECE (10 bins), AUROC, AUPRC by h and g", "matched-pair concordance (family-weighted, ties 0.5, bootstrap)", "K<=3 X regression on original VAL replay roots (NLL / AUROC) and Y bitwise identity", "training curves, best epoch, seed spread, wall, params"],
+  "physical_order_diagnostic": "R4.2 protocol (20 exposed 3D roots, assignment given, one sealed order + partition) for the selected model and the best model of each other representation; diagnostic only, never selection"
+ },
+ "R5_3_scoring": {
+  "models": "selected X per domain (and F0 as control)",
+  "length_audit": "energy by size / partition / chunks, has_multi constrained vs all-singleton-inclusive, terminal Y by number of edits, on DEV roots model-only",
+  "calibration": "temperature T on the X conditional logits (a, a + w) fitted on R5.1 VAL local labels only; marginal pX / p11 recomputed; raw vs calibrated reported",
+  "selection_rules": {"S0": "original (argmin E)", "S1": "argmin E with calibrated X", "S2": "reliability-threshold shortest: among candidates whose calibrated sum-of-chunk -log pX <= tau (tau = 5th percentile of the same statistic on VAL positive multi-chunk local labels, i.e. derived from local VAL only), choose the shortest, ties by E; if none, S1"},
+  "admission_rules": {"A0": "beats_empty (current)", "A1": "temporary pY after group >= temporary no-op pY + m, m chosen on R5.1 VAL temporary-target labels (R4.4 TEMP-style interventions in R5.1 3D) as the smallest m with false-admission <= 0.2", "A2": "A1 + group temporary p11 >= 0.3 (production eta)"},
+  "proposals": {"P0": "frozen top-4 (production)", "P1": "top-8", "P2": "REC local resampling: bounded ancestral <= 64 draws per object on the current hypothetical temporary scene", "U": "uniform legal-destination mixture (exploration control, labelled)"},
+  "choice": "one scoring rule, one admission rule and one proposal setting per domain chosen on DEV model-only diagnostics + local VAL evidence (never on R6 physical outcomes); frozen before R6 plans",
+  "cVAE_recovery_2D": "only if frozen P0-P2 recover < 50% of 2D reference actions within a 64-draw budget: existing TaskCVAE architecture, original staged recipe (placement pretraining then task-conditioned fine-tuning) from fresh initialisation, original + R5.1/R4.3 TRAIN local verified placements (chunk <= 3, verified in their own starting state); family-disjoint VAL; Y frozen; production cVAE untouched; separate checkpoint path"
+ },
+ "R6": {
+  "H": 5, "budget": "planners.CFG unchanged (180 s wall incl. floor + 5 s selection reserve; x_unique 1.5M; y_unique 600k)",
+  "arms": ["B0 (historical production K<=3, production F0)", "H3 (same selected X, rank.b0 K<=3 rule)", "FLAT-INSERT H5", "REC-ORDERED H5 (Fig.3A)", "GA H5 (Fig.3B)"],
+  "roots": {"3d": "20 exposed DEV witness roots (L_ref 4/5)", "2d_dense": "coh2d DEV roots with L_ref 4/5 (K6 excluded by evaluator-only filtering); 10-job pilot, stop if > 50% UNRESOLVED", "2d_sparse_demo": "separately constructed held-out families (namespace R6-2D-DEMO), clearly labelled, never pooled with the dense panel"},
+  "protocol": "plans sealed before any teacher query; one plan per root and arm; no retries / replacement; NOOP / ABSTAIN / TIMEOUT counted as not verified",
+  "gate": "per domain x method: DEV_IMPLEMENTED / DEV_PHYSICALLY_DEMONSTRATED (replay-verified > 3-action success from a non-oracle primary planner) / BLOCKED"
+ }
+}

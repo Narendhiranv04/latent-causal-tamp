@@ -22,7 +22,8 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path[:0] = [str(HERE), str(HERE.parent), str(HERE.parent.parent)]
 NW = Path(os.environ.get("R2_NW", "/home/projects/long-horizon/naren_workspace"))
-OB = NW / "fig3" / "kgt3" / "r4" / "b2d"
+OB = Path(os.environ["B2D_OUT"]) if os.environ.get("B2D_OUT") else NW / "fig3" / "kgt3" / "r4" / "b2d"   # R5.1: r5/b2d (R4.3 untouched)
+PREFIX = os.environ.get("B2D_PREFIX") == "1"                    # R5.1: prefix templates (h >= 1 chunks) from verified wall relocations
 K3S = NW / "k3scale"
 QREF_CELLS = {50, 58}                                                   # cells swept by the robot at q_ref (QCLEAR_original complement)
 R, C, PITCH = 8, 8, 0.08
@@ -287,6 +288,8 @@ class Fam:
                 r3[f"FEB{bd}"] = self.xrun(S2, goal, [A["oF"], A["oE"], A["oB"]], bd, "L3_part", f"L3_FEB_{'-'.join(map(str, bd))}")
             st["L3"] = r3
             S, chain = S2, [A["oF"], A["oE"], A["oB"]]
+        if PREFIX:
+            st["prefix"] = self.prefix(S, goal, chain, st)
         # nuisance after the dependency is established
         occ = set(S.values()) | {goal} | {d for _, d in chain}
         fr = self.free(occ, far=list(occ))
@@ -298,12 +301,50 @@ class Fam:
         st["why"] = "OK"
         return st
 
+    def prefix(self, S, goal, chain, st):
+        """R5.1 local intermediate states: up to two verified relocations Z of the family's own cage walls (no new bodies, density unchanged)
+        precede matched permutations of the dependency chunk -> 3-action chunks after 1 relocation, 2-/3-action chunks after 2.  Every label
+        is a chunk <= 3 of an executed run; the long rollout only supplies the intermediate starting state."""
+        rng = self.rng
+        walls = sorted([k for k in S if k.startswith(("oW", "oV"))], key=lambda k: h(self.fid, "Z", k))
+        Zs = []
+        for w in walls:
+            if len(Zs) == 2:
+                break
+            occ = set(S.values()) | {goal} | {d for _, d in chain} | {d for _, d in Zs}
+            ds = self.free(occ, far=[S["oB"]], r=2)
+            rng.shuffle(ds)
+            d = next((d for d in ds[:2] if self.probe(S, goal, w, d, "Z_free") == "SUCCESS"), None)
+            if d is not None:
+                Zs.append((w, d))
+        out = {"Z": [[w, d] for w, d in Zs]}
+        if not Zs:
+            out["why"] = "NO_VERIFIED_PREFIX"; return out
+        z1 = Zs[0]
+        T = []
+        if st.get("level") == 3:
+            F_, E_, B_ = chain
+            T += [("h1g3", [z1, F_, E_, B_], [1, 4]), ("h1g3", [z1, E_, F_, B_], [1, 4]), ("h1g3", [z1, B_, E_, F_], [1, 4]),
+                  ("h2g2", [z1, F_, E_, B_], [2, 4]), ("h2g2", [z1, F_, B_, E_], [2, 4])]
+            if len(Zs) == 2:
+                T += [("h2g3", [z1, Zs[1], F_, E_, B_], [2, 5]), ("h2g3", [z1, Zs[1], E_, F_, B_], [2, 5])]
+        else:
+            E_, B_ = chain
+            if len(Zs) == 2:
+                T += [("h1g3", [z1, E_, B_, Zs[1]], [1, 4]), ("h1g3", [z1, B_, E_, Zs[1]], [1, 4]),
+                      ("h2g2", [z1, Zs[1], E_, B_], [2, 4]), ("h2g2", [z1, Zs[1], B_, E_], [2, 4])]
+            else:
+                T += [("h1g2", [z1, E_, B_], [1, 3]), ("h1g2", [z1, B_, E_], [1, 3])]
+        for t, seq, bd in T:
+            out[f"{t}:{''.join(o[1] for o, _ in seq)}"] = self.xrun(S, goal, seq, bd, "PFX_" + t, f"PFX_{t}_{''.join(o[1] for o, _ in seq)}")
+        return out
 
-def roster(n):
+
+def roster(n, ns="R4.3-F"):
     import guard as GD
     OB.mkdir(parents=True, exist_ok=True)
     f = OB / "roster.json"
-    f.write_text(json.dumps([{"key": f"R4.3-F{i:03d}"} for i in range(int(n))], indent=1))
+    f.write_text(json.dumps([{"key": f"{ns}{i:03d}"} for i in range(int(n))], indent=1))
     print(GD.seal(f))
 
 
@@ -451,4 +492,4 @@ def rank():
 
 if __name__ == "__main__":
     a = sys.argv[1]
-    {"rank": rank, "analyze": analyze, "audit": audit, "roster": lambda: roster(sys.argv[2]), "work": lambda: work(*sys.argv[2:5]), "one": lambda: print(json.dumps(_one(sys.argv[2]), default=str)[:3000])}[a]()
+    {"rank": rank, "analyze": analyze, "audit": audit, "roster": lambda: roster(*sys.argv[2:4]), "work": lambda: work(*sys.argv[2:5]), "one": lambda: print(json.dumps(_one(sys.argv[2]), default=str)[:3000])}[a]()

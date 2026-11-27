@@ -209,7 +209,7 @@ def test_timeout_midway_keeps_completed_incumbent(patched, clock):
     PL = patched
     D = {i: [10 + i] for i in range(5)}
     fz = _fz(SlowFz(D, 0.5, clock))
-    out = PL.plan(fz, {"domain": "3d", "root_id": "r", "D": D}, "GA", None, {"wall_s": 6.0})
+    out = PL.plan(fz, {"domain": "3d", "root_id": "r", "D": D}, "GA", None, {"wall_s": 6.0, "select_reserve": {"wall_s": 1.0, "x_unique": 64, "y_unique": 8}})
     assert out["stop"] and out["stop"].startswith("TimeoutError")
     assert out["info"]["exhausted"] is False and out["info"]["mode"].endswith("_TIMEOUT")
     assert out["decision"] == "REPAIR" and out["incumbent_from_stop"] and out["n_candidates"] >= 1
@@ -225,7 +225,7 @@ def test_floor_inside_deadline_and_no_budget_left(patched, clock):
         clock[0] += 100.0                                                 # floor consumes the whole budget
         return {"seq": [[0, 10]]}
     out = PL.plan(fz, {"domain": "2d", "root_id": "r", "D": D}, "GA", floor, {"wall_s": 50.0})
-    assert out["floor_wall_s"] == 100.0 and out["stop"].startswith("TimeoutError") and out["kind"] == "production_floor"
+    assert out["floor_wall_s"] == 100.0 and out["stop"].startswith("TimeoutError") and out["kind"] == "production_floor" and not out["floor_external"]
     assert out["wall_s"] >= 100.0 and out["deadline_overrun_s"] >= 50.0 and out["long"] is False
 
 
@@ -241,9 +241,33 @@ def test_cap_stop_then_selection_is_uncapped_and_counted(patched, clock):
             self.c["x_unique"] += len(seqs)
             return super().score(S, seqs)
     fz = _fz(CapFz(D))
-    out = PL.plan(fz, {"domain": "3d", "root_id": "r", "D": D}, "GA", {"seq": [[0, 10]]}, {"x_unique": 40, "wall_s": 1e9})
+    out = PL.plan(fz, {"domain": "3d", "root_id": "r", "D": D}, "GA", {"seq": [[0, 10]]}, {"x_unique": 40 + 64, "wall_s": 1e9})
     assert out["stop"].startswith("CapReached") and out["decision"] in ("REPAIR", "NOOP")
-    assert out["selection_readouts"]["x_unique"] >= 1
+    assert 1 <= out["selection_readouts"]["x_unique"] <= 64, "selection spends only the declared reserve"
+    assert out["counters"]["x_unique"] <= out["caps"]["x_unique"] and out["cap_overrun"]["x_unique"] == 0, "total cap never exceeded"
+
+
+def test_timeout_without_incumbent_is_distinct_from_abstain(patched, clock):
+    PL = patched
+    D = {i: [10 + i] for i in range(5)}
+    fz = _fz(FakeFz(D))
+
+    def floor(t_end):                                                     # floor uses the whole budget and finds no K <= 3 repair
+        clock[0] += 100.0
+        return {"seq": None}
+    out = PL.plan(fz, {"domain": "3d", "root_id": "r", "D": D}, "GA", floor, {"wall_s": 60.0})
+    assert out["budget_stop"] and out["decision"] == "TIMEOUT_NO_INCUMBENT" and out["seq"] is None
+    out2 = PL.plan(_fz(FakeFz({})), {"domain": "3d", "root_id": "r", "D": {}}, "GA", None, {"wall_s": 60.0})
+    assert out2["decision"] == "ABSTAIN" and not out2["budget_stop"]
+
+
+def test_search_deadline_reserves_selection_time(patched, clock):
+    PL = patched
+    D = {i: [10 + i] for i in range(5)}
+    fz = _fz(SlowFz(D, 0.5, clock))
+    out = PL.plan(fz, {"domain": "3d", "root_id": "r", "D": D}, "GA", None, {"wall_s": 6.0, "select_reserve": {"wall_s": 2.0, "x_unique": 64, "y_unique": 8}})
+    assert out["search_wall_s"] <= 6.0 - 2.0 + 0.5 + 1e-9, "search stops at t_end - reserve (+ one batch)"
+    assert out["deadline_overrun_s"] == round(max(0.0, out["wall_s"] - 6.0), 3)
 
 
 def test_empty_candidates_abstain(patched, clock):

@@ -30,8 +30,8 @@ class Scores:
     """Batched, cached marginal-X readouts px(U, ordered chunk) on canonical scenes; shared across assignments of one root (same model).
     rebase(U) -> scene row; score(scene, [chunks]) -> [{"px": ...}].  Counts unique scores, scenes, batches."""
 
-    def __init__(self, fz, row0, rebase):
-        self.fz, self.row0, self.rebase = fz, row0, rebase
+    def __init__(self, fz, row0, rebase, tick=None):
+        self.fz, self.row0, self.rebase, self.tick = fz, row0, rebase, tick       # tick: deadline check before every model batch (R5.1)
         self.px, self.n = {}, {"x_unique": 0, "scenes": 0, "batches": 0, "requested": 0, "cache_hits": 0, "wall_s": 0.0}
         self.dp_lookups = 0
 
@@ -47,6 +47,8 @@ class Scores:
             else:
                 self.n["cache_hits"] += 1
         for U in sorted(by, key=lambda u: json.dumps(sorted(u))):
+            if self.tick:
+                self.tick()
             Cs = sorted(by[U])
             S = self.rebase(self.row0, sorted([list(a) for a in U]))
             for C, x in zip(Cs, self.fz.score(S, [[list(a) for a in c] for c in Cs])):

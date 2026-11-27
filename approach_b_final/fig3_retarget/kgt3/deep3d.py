@@ -22,7 +22,9 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path[:0] = [str(HERE), str(HERE.parent), str(HERE.parent / "r3"), str(HERE.parent / "r24"), str(HERE.parent.parent)]
 import data2 as D2  # noqa: E402
-OD = D2.O / "r4" / "d3d"
+OD = Path(os.environ["D3D_OUT"]) if os.environ.get("D3D_OUT") else D2.O / "r4" / "d3d"      # R5.1: r5/d3d (R4.4 untouched)
+NS = os.environ.get("D3D_NS", "R4.4")                                                       # family-order namespace
+ZTRY = int(os.environ.get("D3D_ZTRY", "4"))                                                 # R5.1: 8 objects x 2 destinations
 BIG = D2.BIG
 
 
@@ -87,14 +89,14 @@ def construct_one(item):
         base = {**c1, **({fid: lvl3[0]} if lvl3 else {})}
         taken = {x, pB, pE} | ({lvl3[0], lvl3[1]} if lvl3 else set())
         Z = []
-        for z in srt([o for o in ids if o not in ("t0", B)], "Z")[:4]:
+        for z in srt([o for o in ids if o not in ("t0", B)], "Z")[:ZTRY]:
             if len(Z) == 2:
                 break
-            cand = srt([d for d in free if d not in taken and cheb(d, cells[B]) >= 2 and cheb(d, x) >= 2], "pZ", z)[:1]
-            if cand and plans(extra, base, z, cand[0]):
-                Z.append((z, cand[0])); taken.add(cand[0])
+            for dz in srt([d for d in free if d not in taken and cheb(d, cells[B]) >= 2 and cheb(d, x) >= 2], "pZ", z)[:1 if ZTRY <= 4 else 2]:
+                if plans(extra, base, z, dz):
+                    Z.append((z, dz)); taken.add(dz); break
         rec2 = {**rec, "objects": objs + extra, "initial_cells": {k: list(v) for k, v in base.items()},
-                "ids": {**rec.get("ids", {}), "root_id": rid + "-R44"},
+                "ids": {**rec.get("ids", {}), "root_id": rid + ("-R44" if NS == "R4.4" else "-R51")},
                 "r44": {"parent_root": rid, "B": B, "pB": list(pB), "E": eid, "x": list(x), "pE": list(pE), "F": fid if lvl3 else None,
                         "y": list(lvl3[0]) if lvl3 else None, "pF": list(lvl3[1]) if lvl3 else None, "Z": [[z, list(d)] for z, d in Z]}}
         out = {"root_id": rid, "ok": True, "level": 3 if lvl3 else 2, "rec": rec2}
@@ -107,8 +109,11 @@ def construct_one(item):
 
 
 def families():
-    used = {json.loads(l)["root_id"] for l in open(D2.O / "construct3d.jsonl")}
-    usedf = {json.loads(l).get("fam") for l in open(D2.O / "construct3d.jsonl")}
+    """Fresh families: never consumed by KGT3 construction nor by R4.4 (R5.1 excludes both)."""
+    prev = [D2.O / "construct3d.jsonl", D2.O / "r4" / "d3d" / "construct.jsonl"]
+    R = [json.loads(l) for p in prev if p.exists() and p != OD / "construct.jsonl" for l in open(p)]
+    used = {r["root_id"] for r in R}
+    usedf = {r.get("fam") for r in R}
     return [f for f in D2.families3d() if f["root_id"] not in used and f["fam"] not in usedf]
 
 
@@ -116,7 +121,7 @@ def construct(workers, cpu_lo, max_cpu_h, nfam):
     import multiprocessing as mp
     os.sched_setaffinity(0, set(range(int(cpu_lo), int(cpu_lo) + int(workers))))
     OD.mkdir(parents=True, exist_ok=True)
-    fams = sorted(families(), key=lambda f: h("R4.4", f["fam"]))[:int(nfam)]
+    fams = sorted(families(), key=lambda f: h(NS, f["fam"]))[:int(nfam)]
     (OD / "roster.json").write_text(json.dumps([{"key": f["root_id"], "fam": f["fam"]} for f in fams], indent=1))
     outp = OD / "construct.jsonl"
     done = {json.loads(l)["root_id"] for l in open(outp)} if outp.exists() else set()
@@ -184,7 +189,7 @@ def jobs():
         rows.append({"root_id": rid2, "domain": "3d", "parent_family_id": r["fam"], "inputs": inp, "path": str(p), "parent_root": r["root_id"], "level": r["level"]})
         cell = lambda rc: int(rc[0]) * 6 + int(rc[1])  # noqa: E731
         for t, seq, b in templates(kg, cell):
-            jb.append({"key": f"R4.4|{rid2}|{t}|{json.dumps(seq)}|{json.dumps(b)}", "root_id": rid2, "fam": r["fam"], "template": t, "path": str(p), "kind": "X_CHUNKED",
+            jb.append({"key": f"{NS}|{rid2}|{t}|{json.dumps(seq)}|{json.dumps(b)}", "root_id": rid2, "fam": r["fam"], "template": t, "path": str(p), "kind": "X_CHUNKED",
                        "order": [[o, [d // 6, d % 6]] for o, d in seq], "seq": [[ids.index(o), d] for o, d in seq], "bounds": b, "y": None})
         c0 = rec["initial_cells"]
         iv = [("baseline", {}), ("beneficial", {kg["E"]: kg["pE"]})]
@@ -193,7 +198,7 @@ def jobs():
         if kg["F"]:
             iv.append(("harmful", {kg["E"]: kg["pE"], kg["F"]: kg["x"]}))
         for tag, ed in iv:
-            jb.append({"key": f"R4.4|{rid2}|TEMP_{tag}", "root_id": rid2, "fam": r["fam"], "template": f"TEMP_{tag}", "path": str(p), "kind": "Y_TARGET",
+            jb.append({"key": f"{NS}|{rid2}|TEMP_{tag}", "root_id": rid2, "fam": r["fam"], "template": f"TEMP_{tag}", "path": str(p), "kind": "Y_TARGET",
                        "cells": {**c0, **ed}, "edit": ed, "target": kg["B"], "goal": kg["pB"]})
     jf = OD / "jobs.json"; jf.write_text(json.dumps(jb, indent=1))
     with open(OD / "rows.jsonl", "w") as f:
