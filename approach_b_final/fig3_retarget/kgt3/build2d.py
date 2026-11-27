@@ -191,10 +191,13 @@ class Fam:
     def free(self, occ, avoid=(), far=(), r=2):
         return [c for c in range(R * C) if c not in occ and c not in QREF_CELLS and c not in avoid and all(cheb(c, f) >= r for f in far)]
 
-    def cage(self, c, occ, avoid):
-        """Static candidate ranking only: walls around cell c (Chebyshev <= 2) added greedily until no statically feasible pick grasp of c
-        is left; -> (walls, E) where E = the wall whose removal restores the most grasps (and which is itself statically pickable)."""
+    def cage(self, c, occ, avoid, kind="pick"):
+        """Static candidate ranking only: walls around cell c (Chebyshev <= 2) added greedily until no statically feasible pick (kind 'pick')
+        or place-at-c (kind 'place') grasp is left; -> (walls, E) where E = the wall whose removal restores the most grasps (and which is itself
+        statically pickable)."""
         K, walls = self.K, []
+        if kind == "place":
+            K = type("KP", (), {"pick_left": staticmethod(lambda cc, o: self.K.place_left(cc, o) if cc == c else self.K.pick_left(cc, o)), "p0": self.K.p0})()
         cand = [x for x in self.free(set(occ) | set(avoid)) if 1 <= cheb(x, c) <= 2]
         while K.pick_left(c, list(occ) + walls) > 0 and len(walls) < 6:
             cand = [x for x in cand if x not in walls]
@@ -301,6 +304,82 @@ class Fam:
         st["why"] = "OK"
         return st
 
+    def ycheck(self, cells, goal, stage):
+        """Production original-task Y (t0 -> goal from q_ref; bd_2d.t_goal path of physical2d.y_temp, its own replay)."""
+        import guard as GD
+        r, p = self.rec(cells, goal, f"y{self.n:02d}")
+        c0 = time.process_time()
+        y = self.P2.y_temp(r, {o: int(c) for o, c in cells.items()}, "t0", int(goal), {})
+        oc = GD.outcome({"Y": y}, "Y")
+        if oc == "SUCCESS" and not y.get("independent_replay"):
+            oc = "OPERATIONAL_FAILURE"
+        self.q.append({"fid": self.fid, "n": self.n, "kind": "Y", "stage": stage, "cells": cells, "y": y.get("y"), "status": y.get("teacher_status"),
+                       "outcome": oc, "cpu_s": round(time.process_time() - c0, 2), "rec": str(p)})
+        self.n += 1
+        return oc
+
+    def run_demo(self):
+        """R6 2D moderate-density DEMONSTRATION root (held-out namespace R6-2D-DEMO; never training / selection): the original target t0 is
+        caged so that two walls B1, B2 must move; each Bi is caged with its own removable enabler Ei (optionally E1 caged by F1).  Accepted
+        iff Y0 (t0 -> goal) is not VERIFIED and the reference repair [(F1,) E1, B1, E2, B2] executes (X with q_ref boundaries + replay) and the
+        endpoint Y is VERIFIED.  L_ref = its length (a verified reference repair, NOT a certified minimum K)."""
+        import itertools
+        rng, K = self.rng, self.K
+        st = {"fid": self.fid, "ok": False, "attempts": []}
+        for attempt in range(4):
+            c = rng.choice([x for x in self.free(set()) if 2 <= x // C <= 5 and 1 <= x % C <= 6])
+            goal = rng.choice([x for x in self.free({c}, far=[c], r=3) if 1 <= x // C <= 6 and 1 <= x % C <= 6])
+            cells = {"t0": c}
+            w1, b = self.cage(c, [], [goal])
+            if w1 is None:
+                st["attempts"].append("NO_TARGET_PICK_CAGE"); continue
+            cells.update({"oB": b, **{f"oW{i}": w for i, w in enumerate(sorted(x for x in w1 if x != b))}})
+            w2, g = self.cage(goal, list(cells.values()), [], kind="place")
+            if w2 is None:
+                st["attempts"].append("NO_GOAL_PLACE_CAGE"); continue
+            cells.update({"oG": g, **{f"oP{i}": w for i, w in enumerate(sorted(x for x in w2 if x != g))}})
+            chain, ok = [], True
+            for Bn, En, tag in (("oB", "oE", "U"), ("oG", "oH", "Q")):
+                occ = [v for k, v in cells.items() if k != Bn]
+                w3, e = self.cage(cells[Bn], occ, [goal])
+                if w3 is None:
+                    ok = False; break
+                cells.update({En: e, **{f"o{tag}{i}": w for i, w in enumerate(sorted(x for x in w3 if x != e))}})
+                chain += [En, Bn]
+            if not ok:
+                st["attempts"].append("NO_ENABLER_CAGE"); continue
+            if attempt % 2 == 1:                                          # optional depth: F enables E (L_ref 5)
+                occ = [v for k, v in cells.items() if k != "oE"]
+                w4, f = self.cage(cells["oE"], occ, [goal])
+                if w4 is not None:
+                    cells.update({"oF": f, **{f"oR{i}": w for i, w in enumerate(sorted(x for x in w4 if x != f))}})
+                    chain = ["oF"] + chain
+            if self.ycheck(cells, goal, "Y0") == "SUCCESS":
+                st["attempts"].append("Y0_VERIFIED"); continue
+            occ, dests, cur = set(cells.values()) | {goal}, {}, dict(cells)
+            for o in chain:                                               # witness-first: each relocation verified in its own intermediate scene
+                fr = self.free(occ | set(dests.values()), far=[cells["t0"], goal], r=2)
+                rng.shuffle(fr)
+                d = next((d for d in fr[:3] if self.probe(cur, goal, o, d, f"DEMO_{o}_free") == "SUCCESS"), None)
+                if d is None:
+                    ok = False; break
+                dests[o] = d; cur[o] = d
+            if not ok:
+                st["attempts"].append("NO_VERIFIED_STEP"); continue
+            seq = [(o, dests[o]) for o in chain]
+            bd = [len(seq) - 2, len(seq)]
+            oc = self.xrun(cells, goal, seq, bd, "DEMO_WITNESS", f"DEMO_W{len(seq)}")
+            if oc != "SUCCESS":
+                st["attempts"].append(f"WITNESS_X_{oc}"); continue
+            yo = self.ycheck({**cells, **dests}, goal, "Y_END")
+            if yo != "SUCCESS":
+                st["attempts"].append(f"WITNESS_Y_{yo}"); continue
+            r, p = self.rec(cells, goal, "ROOT")
+            st.update(ok=True, root=str(p), cells=cells, goal=goal, witness=[[o, d] for o, d in seq], bounds=bd, L_ref=len(seq), N=len(cells))
+            return st
+        st["why"] = "NO_DEMO_ROOT"
+        return st
+
     def prefix(self, S, goal, chain, st):
         """R5.1 local intermediate states: up to two verified relocations Z of the family's own cage walls (no new bodies, density unchanged)
         precede matched permutations of the dependency chunk -> 3-action chunks after 1 relocation, 2-/3-action chunks after 2.  Every label
@@ -352,13 +431,14 @@ def _one(fid):
     t0 = time.process_time()
     try:
         F = Fam(fid)
-        st = F.run()
+        st = F.run_demo() if os.environ.get("B2D_DEMO") == "1" else F.run()
         err = None
     except Exception as e:  # noqa: BLE001
         import traceback
         st, err, F = {"fid": fid, "level": None, "why": "ERROR"}, f"{type(e).__name__}: {str(e)[:200]} {traceback.format_exc()[-400:]}", locals().get("F")
     qs = F.q if F is not None else []
-    rec = {"key": fid, "X": {"x": int(st.get("level") or 0) >= 2, "status": st.get("why")}, "family": st, "n_queries": len(qs), "cpu_s": round(time.process_time() - t0, 1)}
+    okf = bool(st.get("ok")) if os.environ.get("B2D_DEMO") == "1" else int(st.get("level") or 0) >= 2
+    rec = {"key": fid, "X": {"x": okf, "status": st.get("why")}, "family": st, "n_queries": len(qs), "cpu_s": round(time.process_time() - t0, 1)}
     if err:
         rec["error"] = err
     rec["X"]["x"] = int(rec["X"]["x"])
