@@ -314,6 +314,56 @@ def analyze():
     print(json.dumps(out, default=str)[:4000])
 
 
+def rank():
+    """Model-only: frozen X models on the DECIDED matched groups of R4.4 (same family + template = same scene, same destination set, same
+    bounds; SUCCESS vs CERTIFIED_INFEASIBLE).  Energy of a run = sum over its declared chunks of -log marginal pX on the canonical anchored
+    scene (compose.Scores; m <= 3 single chunk at h0 uses the exact joint p11, R4.0).  Family-weighted concordance, ties 0.5, by depth."""
+    import math
+    import numpy as np
+    import compose as CP
+    import guard as GD
+    import learn as LN
+    import views as V
+    J = {j["key"]: j for j in json.loads((OD / "jobs.json").read_text())}
+    R = {json.loads(l)["key"]: json.loads(l) for l in open(OD / "phys.jsonl")}
+    rows = {json.loads(l)["root_id"]: json.loads(l) for l in open(OD / "rows.jsonl")}
+    grp = collections.defaultdict(list)
+    for k, j in J.items():
+        if j["kind"] != "X_CHUNKED":
+            continue
+        oc = GD.outcome(R[k], "X")
+        if oc == "SUCCESS" and (R[k].get("REPLAY") or {}).get("replay") != 1:
+            continue
+        if oc in ("SUCCESS", "CERTIFIED_INFEASIBLE"):
+            grp[(j["root_id"], j["template"])].append((j, oc))
+    grp = {k: v for k, v in grp.items() if len({o for _, o in v}) == 2}
+    out = {}
+    for name, spec in (("F0", "F0"), ("M1s", "M1s_s0"), ("G1s", "G1s_s0"), ("O2", "M1ft_O2_s0")):
+        fz, net = LN.load("3d", spec); fz.net = net; fz.reset(); fz.caps = {}
+        fam = collections.defaultdict(list); depth = collections.defaultdict(list)
+        for (rid, t), v in grp.items():
+            row = {"root_id": rid, "domain": "3d", "inputs": rows[rid]["inputs"]}
+            T = CP.Scores(fz, row, V.rebase)
+            E = []
+            for j, oc in v:
+                seq = [tuple(map(int, a)) for a in j["seq"]]; b = [0] + j["bounds"]
+                if len(seq) <= 3 and len(b) == 2:
+                    e = -math.log(max(CP.EPS, fz.score(row, [list(map(list, seq))])[0]["p11"]))
+                else:
+                    T.need([(frozenset(seq[:s0]), tuple(seq[s0:e0])) for s0, e0 in zip(b[:-1], b[1:])])
+                    e = sum(T.cost(seq[:s0], seq[s0:e0]) for s0, e0 in zip(b[:-1], b[1:]))
+                E.append((e, oc))
+            pr = [1.0 if a < c else 0.5 if a == c else 0.0 for a, oa in E if oa == "SUCCESS" for c, oc2 in E if oc2 != "SUCCESS"]
+            fam[rid].append(sum(pr) / len(pr)); depth[t.split("_")[0]].append(sum(pr) / len(pr))
+        fv = {f: float(np.mean(x)) for f, x in fam.items()}; fs = sorted(fv)
+        rng = np.random.default_rng(0)
+        bs = [float(np.mean([fv[f] for f in rng.choice(fs, len(fs))])) for _ in range(2000)]
+        out[name] = {"families": len(fs), "groups": len(grp), "concordance": float(np.mean(list(fv.values()))), "ci95": [float(np.percentile(bs, 2.5)), float(np.percentile(bs, 97.5))],
+                     "by_depth": {d: [round(float(np.mean(x)), 3), len(x)] for d, x in sorted(depth.items())}}
+        print(name, json.dumps(out[name]), flush=True)
+    (OD / "rank_models.json").write_text(json.dumps(out, indent=1))
+
+
 if __name__ == "__main__":
     a = sys.argv[1]
-    {"construct": lambda: construct(*sys.argv[2:6]), "jobs": jobs, "temp": temp, "analyze": analyze}[a]()
+    {"rank": rank, "construct": lambda: construct(*sys.argv[2:6]), "jobs": jobs, "temp": temp, "analyze": analyze}[a]()

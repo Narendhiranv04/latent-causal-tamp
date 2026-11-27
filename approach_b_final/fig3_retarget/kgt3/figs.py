@@ -251,7 +251,7 @@ def r4d3d():
     """R4.4: 3D intermediate-state coverage matrix, temporary-target physical interventions, frozen-model temporary-target diagnostic."""
     D = json.loads((R4 / "d3d" / "R4_4_deep3d.json").read_text())
     T = json.loads((R4 / "d3d" / "temp_model.json").read_text())["summary"]
-    fig, ax = plt.subplots(1, 3, figsize=(15, 4.2))
+    fig, ax = plt.subplots(1, 3, figsize=(16, 5.0))
     mat = collections.defaultdict(lambda: [0, 0, 0])
     for hh, row in D["coverage_matrix"].items():
         for k, v in row.items():
@@ -270,7 +270,7 @@ def r4d3d():
     ir = T["irrelevant_admitted"]
     ax[2].bar([len(keys)], [ir[0] / max(1, ir[1])], color=RED)
     ax[2].bar([len(keys) + 1], [T["other_proposals_admitted_rate"]], color=RED)
-    ax[2].set_xticks(range(len(keys) + 2)); ax[2].set_xticklabels([l for _, l in keys] + ["irrelevant Z\nadmitted", "other proposals\nadmitted"], fontsize=7)
+    ax[2].set_xticks(range(len(keys) + 2)); ax[2].set_xticklabels([l for _, l in keys] + ["irrelevant Z\nadmitted", "other proposals\nadmitted"], fontsize=7, rotation=35, ha="right")
     ax[2].set(ylim=(0, 1.05), ylabel=f"fraction of {n} verified E-enables-B families", title="(c) frozen-model Fig. 3A assumptions (model-only)")
     for a in ax[1:]:
         a.spines[["top", "right"]].set_visible(False)
@@ -290,14 +290,14 @@ def r4smoke():
         for j, (k, col, lab) in enumerate((("x", GREY, "X = 1"), ("y", ORANGE, "Y = 1 (endpoint)"), ("succ", GREEN, "X, Y, replay"), ("long_succ", BLUE, "success with > 3 actions"))):
             ax[2 * i].bar([a + (j - 1.5) * w for a in range(4)], [S[a][k] for a in arms], width=w, color=col, label=lab)
         ax[2 * i].set_xticks(range(4)); ax[2 * i].set_xticklabels(["flat control", "Fig. 3A REC", "Fig. 3B GA", "B0 (K<=3)"], fontsize=8)
-        ax[2 * i].set(ylabel=f"roots (of {n})", ylim=(0, n + 1), title=f"({'ab'[i]}) {d.upper()} committed repairs, physical outcome"); ax[2 * i].legend(fontsize=7, frameon=False)
+        ax[2 * i].set(ylabel=f"roots (of {n})", ylim=(0, n + 1), title=f"({'abcd'[2 * i]}) {d.upper()} committed repairs, physical outcome"); ax[2 * i].legend(fontsize=7, frameon=False)
         P = D["per_root"]
         for k, arm in enumerate(("REC-ORDERED", "GA")):
             rr = [P[r][arm] for r in P]
-            st = [n, sum(x["length"] > 0 for x in rr), sum(x["length"] > 3 for x in rr), sum(x.get("x") == 1 for x in rr), sum(x["succ"] for x in rr), sum(x["succ"] and x["length"] > 3 for x in rr)]
+            st = [n, sum(x["length"] > 0 for x in rr), sum(x.get("x") == 1 for x in rr), sum(x.get("x") == 1 and x.get("y") == 1 for x in rr), sum(x["succ"] for x in rr), sum(x["succ"] and x["length"] > 3 for x in rr)]
             ax[2 * i + 1].plot(range(6), st, marker="o", color=[GREEN, BLUE][k], label="Fig. 3A REC-ORDERED" if k == 0 else "Fig. 3B GA")
-        ax[2 * i + 1].set_xticks(range(6)); ax[2 * i + 1].set_xticklabels(["roots", "repair\ncommitted", "length > 3", "X = 1", "X, Y,\nreplay", "long\nsuccess"], fontsize=8)
-        ax[2 * i + 1].set(ylabel="roots", title=f"({'cd'[i]}) {d.upper()} failure-stage funnel"); ax[2 * i + 1].legend(fontsize=7, frameon=False)
+        ax[2 * i + 1].set_xticks(range(6)); ax[2 * i + 1].set_xticklabels(["roots", "repair\ncommitted", "X = 1", "X = 1\nand Y = 1", "+ replay", "of which\n> 3 actions"], fontsize=8)
+        ax[2 * i + 1].set(ylabel="roots", title=f"({'abcd'[2 * i + 1]}) {d.upper()} failure-stage funnel"); ax[2 * i + 1].legend(fontsize=7, frameon=False)
     for a in ax:
         a.spines[["top", "right"]].set_visible(False)
     fig.suptitle("R4.5 end-to-end development smoke (exposed DEV roots; one committed plan per planner; witness never given)", fontsize=10, x=0.01, ha="left")

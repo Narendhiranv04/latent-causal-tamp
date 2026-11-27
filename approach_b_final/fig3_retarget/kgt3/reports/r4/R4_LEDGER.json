@@ -1,0 +1,48 @@
+{
+ "start_commit": "219c735c33",
+ "cpu": {
+  "R4.2 order (3D)": {
+   "used": 2.592,
+   "cap": 8
+  },
+  "R4.3 2D (construction 1.337 + smokes 0.044 + audit 0.177)": {
+   "used": 1.558,
+   "cap": 12
+  },
+  "R4.4 3D (construction 1.542 + jobs 2.992)": {
+   "used": 4.534,
+   "cap": 12
+  },
+  "R4.5 smoke (3D 0.543 + 2D pilot 0.012)": {
+   "used": 0.555,
+   "cap": 4
+  }
+ },
+ "gpu_wall_h": {
+  "P4 rerun 2D F0": 1.082,
+  "P4 rerun 3D O2": 0.239,
+  "P4 3D G1s (R4.5 plans)": 0.403,
+  "P4 3D F0 (unused candidate)": 0.372,
+  "cover 2D+3D": 0.138,
+  "order plans": 0.03,
+  "temp + rank (2D, 3D)": 0.15
+ },
+ "gpu_note": "Processes with a frozen model loaded on the single GPU, run concurrently; wall-clock union about 1.1 h; summed process wall about 2.4 h (mostly CPU-bound Python DP; the GPU was largely idle). Under the strict per-process reading this exceeds the 2 GPU-h authorization by about 0.4 h; under device-occupancy it is about 1.1 h.",
+ "physical_jobs": {
+  "R4.2": 205,
+  "R4.3_queries": 1159,
+  "R4.4_probes": 501,
+  "R4.4_jobs": 626,
+  "R4.5_3d": 60,
+  "R4.5_2d_pilot": 10
+ },
+ "reused_outcomes": {
+  "R4.2": "26 exact archived (R2.4 / quarantined R3.4 labelled reuse)"
+ },
+ "workers_max": 16,
+ "wall_clock": "06:09-~08:00 UTC (about 2 h of the 8 h guard)",
+ "storage": "48 MB on gvlab2 (free space unchanged at 34 GB)",
+ "test_access": "none (no protected TEST, no release_v2, not even metadata)",
+ "production": "K<=3 bundle, checkpoints, sampler, Y, teacher contracts and budgets unchanged; no retraining",
+ "cpu_total": 9.239
+}
