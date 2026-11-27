@@ -104,6 +104,13 @@ def local_groups(ctx, T, P, protect, pending, room, task_dest=None, exhaustive=F
     return out
 
 
+def admits(ctx, x, y0):
+    """beats_empty admission (historical default: py > y0).  R5.3 options (defaults off): admit_m (A1: py >= y0 + m) and admit_eta
+    (A2: group temporary p11 >= eta).  Frozen-model quantities only."""
+    m, eta = ctx.cfg.get("admit_m", 0.0), ctx.cfg.get("admit_eta")
+    return x["py"] > y0 and x["py"] >= y0 + m and (eta is None or x["p11"] >= eta)
+
+
 def repairs(ctx, T, P, a, pending, protect, room, y0):
     """Best non-empty enabling groups for temporary task a on T, ranked by temporary p11 (diverse by object set); admission per CFG."""
     if ctx.n["repair_expansions"] >= ctx.cfg["repair_expansions"]:
@@ -118,7 +125,7 @@ def repairs(ctx, T, P, a, pending, protect, room, y0):
     order = sorted(zip(gs, sc), key=lambda t: (-t[1]["p11"], len(t[0]), json.dumps(t[0])))
     out, seen = [], set()
     for g, x in order:
-        if ctx.cfg["admit"] == "beats_empty" and ctx.arm != "R-GATED" and not x["py"] > y0:       # R-GATED keeps the legacy gate only
+        if ctx.cfg["admit"] == "beats_empty" and ctx.arm != "R-GATED" and not admits(ctx, x, y0):  # R-GATED keeps the legacy gate only
             ctx.n["not_admitted"] += 1
             continue
         s = tuple(sorted(o for o, _ in g))
@@ -130,7 +137,7 @@ def repairs(ctx, T, P, a, pending, protect, room, y0):
     if extra:                                        # that ranked low by temporary p11 (low X) are kept for recursive enabling
         for g, x in sorted(zip(gs, sc), key=lambda t: (-t[1]["py"], len(t[0]), json.dumps(t[0]))):
             s = tuple(sorted(o for o, _ in g))
-            if extra and s not in seen and x["py"] > y0:
+            if extra and s not in seen and admits(ctx, x, y0):
                 out.append((g, x["p11"], x["py"])); seen.add(s); extra -= 1
                 ctx.n["ylowx_extra"] = ctx.n.get("ylowx_extra", 0) + 1
     return out

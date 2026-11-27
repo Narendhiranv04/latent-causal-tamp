@@ -288,3 +288,16 @@ def test_s2_rule_prefers_shortest_reliable_and_falls_back(patched):
     assert why == "SELECTED" and pick is long_c, "no reliable candidate -> original argmin E"
     pick, why, _ = PL.select(fz, {"domain": "3d", "root_id": "r", "D": {}}, [long_c, short_c], None, {"noop_gate": 0.5})
     assert why == "SELECTED" and pick is long_c, "default rule unchanged"
+
+
+def test_admission_rules_default_unchanged_and_margins():
+    import recursive as RC
+
+    class C:
+        cfg = {}
+    c = C()
+    assert RC.admits(c, {"py": 0.51, "p11": 0.1}, 0.5) and not RC.admits(c, {"py": 0.5, "p11": 0.9}, 0.5)
+    c.cfg = {"admit_m": 0.1}
+    assert not RC.admits(c, {"py": 0.55, "p11": 0.9}, 0.5) and RC.admits(c, {"py": 0.61, "p11": 0.1}, 0.5)
+    c.cfg = {"admit_m": 0.1, "admit_eta": 0.3}
+    assert not RC.admits(c, {"py": 0.9, "p11": 0.2}, 0.5) and RC.admits(c, {"py": 0.9, "p11": 0.35}, 0.5)
