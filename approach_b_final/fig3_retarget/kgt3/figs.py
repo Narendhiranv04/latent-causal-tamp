@@ -323,5 +323,53 @@ def r4compute():
     fig.tight_layout(); fig.savefig(FIG / "R4_compute.png", dpi=150); print(FIG / "R4_compute.png")
 
 
+R5 = R / "r5"
+
+
+def r5xl():
+    """R5.2 controlled X ablations: VAL NLL matrix (seeds), matched-pair concordance, training curves (chosen recipe), reliability (selected)."""
+    import numpy as np
+    fig, ax = plt.subplots(2, 4, figsize=(19, 8))
+    C = {json.loads(l)["name"]: json.loads(l)["curve"] for l in open(R5 / "xl" / "curves" / "curves.jsonl")}
+    for i, d in enumerate(("2d", "3d")):
+        Rr = jl(R5 / "xl" / f"results_{d}.jsonl")
+        rc = json.loads((R5 / "xl" / f"recipe_{d}.json").read_text())
+        cells = [(rep, dat) for rep in "AMG" for dat in (0, 1)]
+        for j, (rep, dat) in enumerate(cells):
+            v = [r["best_val"] for r in Rr if r["rep"] == rep and r["data"] == dat and r["recipe"] == rc[rep] and not r["ctrl"]]
+            ax[i, 0].bar(j, np.mean(v), color=[GREY, BLUE][dat], edgecolor=INK if rep == "G" else "none")
+            ax[i, 0].scatter([j] * len(v), v, color=INK, s=12, zorder=3)
+        for k, c in enumerate(("ORDINV", "UNCOUPLED")):
+            v = [r["best_val"] for r in Rr if r["ctrl"] == c]
+            ax[i, 0].bar(len(cells) + k, np.mean(v), color=ORANGE); ax[i, 0].scatter([len(cells) + k] * len(v), v, color=INK, s=12, zorder=3)
+        ax[i, 0].set_xticks(range(len(cells) + 2)); ax[i, 0].set_xticklabels([f"{r}{dd}" for r, dd in cells] + ["G1 ord-inv", "G1 uncoupled"], fontsize=7, rotation=30)
+        ax[i, 0].set(ylabel="VAL family NLL (marginal pX)", title=f"({'ae'[i]}) {d.upper()} ablation matrix (0 = original, 1 = + strict local)")
+        for j, (rep, dat) in enumerate(cells):
+            v = [((r.get("val") or {}).get("concordance") or {}).get("concordance") for r in Rr if r["rep"] == rep and r["data"] == dat and r["recipe"] == rc[rep] and not r["ctrl"]]
+            v = [x for x in v if x is not None]
+            ax[i, 1].bar(j, np.mean(v), color=[GREY, BLUE][dat]); ax[i, 1].scatter([j] * len(v), v, color=INK, s=12, zorder=3)
+        ax[i, 1].axhline(0.5, color=MUTED, ls="--", lw=1)
+        ax[i, 1].set_xticks(range(len(cells))); ax[i, 1].set_xticklabels([f"{r}{dd}" for r, dd in cells], fontsize=8)
+        ax[i, 1].set(ylim=(0, 1.05), ylabel="matched-order concordance (VAL)", title=f"({'bf'[i]}) {d.upper()} order ranking on same-endpoint pairs")
+        for rep, col in (("A", GREY), ("M", ORANGE), ("G", BLUE)):
+            for s_ in (0, 1):
+                cv = C.get(f"{d}_{rep}1_{rc[rep]}_base_s{s_}")
+                if cv:
+                    ax[i, 2].plot([c["epoch"] for c in cv], [c["val"] for c in cv], color=col, lw=1.4 if s_ == 0 else 0.8, ls="-" if s_ == 0 else "--", label=f"{rep}1 s{s_}" if s_ == 0 else None)
+        ax[i, 2].set(xlabel="epoch", ylabel="VAL family NLL", title=f"({'cg'[i]}) {d.upper()} learning curves (chosen recipe)"); ax[i, 2].legend(fontsize=7, frameon=False)
+        cal = json.loads((R5 / "r53" / f"calib_{d}.json").read_text())
+        rel = cal["reliability"]
+        ax[i, 3].plot([0, 1], [0, 1], color=MUTED, ls="--", lw=1)
+        ax[i, 3].plot([b["mean_p"] for b in rel], [b["freq"] for b in rel], marker="o", color=BLUE)
+        for b in rel:
+            ax[i, 3].text(b["mean_p"], b["freq"] + 0.03, str(b["n"]), fontsize=6, ha="center", color=MUTED)
+        ax[i, 3].set(xlabel="predicted marginal pX", ylabel="observed X rate", xlim=(0, 1), ylim=(0, 1.08),
+                     title=f"({'dh'[i]}) {d.upper()} reliability, {cal['name']} {'(T = %.2f)' % cal['T'] if cal['adopt'] else '(raw)'}")
+    for a in ax.flat:
+        a.spines[["top", "right"]].set_visible(False)
+    fig.suptitle("R5.2 controlled local-X learning (fresh X heads, frozen Y / cVAE; strict local labels; selection by VAL NLL only)", fontsize=11, x=0.01, ha="left")
+    fig.tight_layout(); fig.savefig(FIG / "R5_2_xlearning.png", dpi=140); print(FIG / "R5_2_xlearning.png")
+
+
 if __name__ == "__main__":
-    {"p2": p2, "p4": p4, "r4cover": r4cover, "r4order": r4order, "r4b2d": r4b2d, "r4d3d": r4d3d, "r4smoke": r4smoke, "r4compute": r4compute}[sys.argv[1]]()
+    {"r5xl": r5xl, "p2": p2, "p4": p4, "r4cover": r4cover, "r4order": r4order, "r4b2d": r4b2d, "r4d3d": r4d3d, "r4smoke": r4smoke, "r4compute": r4compute}[sys.argv[1]]()

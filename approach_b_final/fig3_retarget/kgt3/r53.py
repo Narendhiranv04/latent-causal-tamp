@@ -244,7 +244,36 @@ def proposals(dom, spec):
     print(json.dumps({"summary": summ, "choice": choice}, default=str))
 
 
+def decide():
+    """Apply reports/R5_3_RULES.md mechanically -> r5/r6/config.json (frozen before any R6 plan)."""
+    out = {}
+    for dom in ("2d", "3d"):
+        sel = json.loads((O / "r5" / "xl" / f"selection_{dom}.json").read_text())
+        R = [json.loads(l) for l in open(O / "r5" / "xl" / f"results_{dom}.jsonl")]
+        best = min((r for r in R if r["rep"] == sel["rep"] and r["data"] == 1 and r["recipe"] == sel["recipe"] and not r["ctrl"]), key=lambda r: r["best_val"])
+        cal = json.loads((R53 / f"calib_{dom}.json").read_text())
+        assert cal["name"] == best["name"]
+        spec = "XL:" + best["name"] + (f"@T={cal['T']}" if cal["adopt"] else "")
+        L = jl(R53 / f"length_{dom}_sel{dom}.jsonl")
+        mono = []
+        for r in L:
+            by = {int(k): v["E"] for k, v in r["arms"]["GA"]["by_size"].items()}
+            ks = sorted(by)
+            mono.append(all(by[ks[i + 1]] <= by[ks[i]] + 1e-12 for i in range(len(ks) - 1)) if len(ks) > 1 else False)
+        frac = sum(mono) / max(1, len(mono))
+        rule = "S2" if frac >= 0.8 else ("S1" if cal["adopt"] else "S0")
+        adm = json.loads((R53 / f"admission_{dom}.json").read_text())["choice"]
+        prop = json.loads((R53 / f"proposals_{dom}.json").read_text())["choice"]
+        out[dom] = {"spec": spec, "checkpoint": best["name"], "checkpoint_sha256": best["model_sha256"], "calibration_T": cal["T"] if cal["adopt"] else None,
+                    "selection_rule": rule, "S2_tau": cal["S2_tau"] if rule == "S2" else None, "length_bias_fraction": frac,
+                    "admit_rule": adm["rule"], "admit_m": adm["m"] if adm["rule"] in ("A1", "A2") else 0.0, "admit_eta": 0.3 if adm["rule"] == "A2" else None,
+                    "prop_GA": prop["GA"], "prop_REC": prop["REC"], "cvae_recovery_triggered": prop.get("cvae_recovery_triggered", False)}
+    (O / "r5" / "r6").mkdir(parents=True, exist_ok=True)
+    (O / "r5" / "r6" / "config.json").write_text(json.dumps(out, indent=1))
+    print(json.dumps(out, indent=1))
+
+
 if __name__ == "__main__":
     a = sys.argv[1]
-    {"calib": lambda: calib(*sys.argv[2:4]), "length": lambda: length(*sys.argv[2:6]), "admission": lambda: admission(*sys.argv[2:4]),
+    {"decide": decide, "calib": lambda: calib(*sys.argv[2:4]), "length": lambda: length(*sys.argv[2:6]), "admission": lambda: admission(*sys.argv[2:4]),
      "proposals": lambda: proposals(*sys.argv[2:4])}[a]()

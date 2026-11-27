@@ -66,3 +66,29 @@ The rules:
 ## 5. What R6 physical outcomes can never change
 
 None of the choices above may be revisited after any R6 physical outcome.
+
+## Addendum A (2026-11-27 ~10:55 UTC, before any recovery model was trained)
+
+The 2D cVAE recovery was triggered: the best frozen REC-union witness-action recall was 0.31 < 0.50, and the uniform control reached 0.57.
+
+**Recipe** (existing TaskCVAE architecture and losses, `placement.fit` + `placement.fit_task`, unchanged hyper-parameters):
+1. Q2 placement pretraining from fresh initialisation (`fit 2d q2_2d cvae`, seed 0).
+2. Task-conditioned fine-tuning `q2init_all` (seed 0), initialised from step 1.
+
+**Arms:**
+
+| Arm | Fine-tuning data |
+|---|---|
+| **R-ORIG** | Original V2 snapshot train repair targets only (retrained control, isolates retraining from data) |
+| **R-LOCAL** | Original + local verified single-action repairs from TRAIN families only |
+
+**R-LOCAL local examples** (R4.3 + R5.1 TRAIN; no VAL, demonstration or DEV family):
+- (scene S1, temporary task B → pB, mover E, destination pE): B → pB is CERTIFIED_INFEASIBLE with E present, and VERIFIED + replayed after E → pE (itself VERIFIED + replayed).
+- The analogous (scene S2, task E → pE, mover F, destination pF).
+- Every example is a verified local repair of length 1 for its own task. No long-repair targets, no witness destinations, no DEV roots.
+
+**Isolation and selection:**
+- Separate ABF_ROOT / V3OUT; the production cVAE and historical runs are untouched; Y is frozen.
+- Model selection uses the original recipe's VAL ELBO on the base snapshot.
+
+**Adoption for R6 2D:** adopt R-LOCAL only if, under the frozen R6 proposal mode, its 2D DEV REC-union witness-action recall exceeds the frozen production sampler's by ≥ 0.10. Otherwise the frozen sampler stays and the result is reported. R-ORIG is reported as the retraining control.
