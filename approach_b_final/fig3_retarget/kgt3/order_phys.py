@@ -23,9 +23,12 @@ sys.path[:0] = [str(HERE), str(HERE.parent), str(HERE.parent / "r3"), str(HERE.p
 import common3 as K  # noqa: E402
 import guard as GD  # noqa: E402
 C = K.C
-OD = C.FIG3 / "kgt3" / "r4" / "order3d"
-SPECS = {"F0": "F0", "M1s": "M1s_s0", "G1s": "G1s_s0", "O2": "M1ft_O2_s0"}
-ARMS = ("F0", "M1s", "G1s", "O2", "RANDOM", "WITNESS")
+import os  # noqa: E402
+OD = Path(os.environ["ORD_OUT"]) if os.environ.get("ORD_OUT") else C.FIG3 / "kgt3" / "r4" / "order3d"
+SPECS = ({"F0": "F0", **dict(kv.split("=", 1) for kv in os.environ["ORD_SPECS"].split(","))} if os.environ.get("ORD_SPECS")
+         else {"F0": "F0", "M1s": "M1s_s0", "G1s": "G1s_s0", "O2": "M1ft_O2_s0"})       # R5.2: ORD_SPECS adds the new development heads
+ARMS = tuple(SPECS) + ("RANDOM", "WITNESS")
+PARTITION = os.environ.get("ORD_PARTITION", "1") == "1"
 
 
 def bounds(part):
@@ -89,6 +92,9 @@ def archive():
     A = {}
     srcs = [(C.FIG3 / "r24" / "jobs_24_3d.json", C.FIG3 / "r24" / "phys_24_3d.jsonl", "R2.4"),
             (C.FIG3 / "r3" / "r34" / "jobs_34_3d.json", C.FIG3 / "r3" / "QUARANTINE_unauthorized" / "phys_34_3d.jsonl", "R3.4-QUARANTINED-DIAGNOSTIC")]
+    r42 = C.FIG3 / "kgt3" / "r4" / "order3d"
+    if OD != r42 and (r42 / "jobs.json").exists():                       # R5.2 reuses exact R4.2 runs (same contract)
+        srcs.append((r42 / "jobs.json", r42 / "phys.jsonl", "R4.2"))
     for jf, rf, tag in srcs:
         J = json.loads(jf.read_text()); J = J if isinstance(J, list) else [x for v in J.values() for x in v]
         R = {json.loads(l)["key"]: json.loads(l) for l in open(rf)}
@@ -113,7 +119,7 @@ def jobs(cap):
     for rid in sorted(P, key=lambda r: hashlib.sha256(f"R4.2|{r}".encode()).hexdigest()):
         for arm in ARMS:
             p = P[rid]["arms"][arm]; items.append((rid, arm, "main", p["order"], p["partition"]))
-    for rid in sorted(P, key=lambda r: hashlib.sha256(f"R4.2|{r}".encode()).hexdigest()):  # partition study (after every main job)
+    for rid in (sorted(P, key=lambda r: hashlib.sha256(f"R4.2|{r}".encode()).hexdigest()) if PARTITION else []):  # partition study (after every main job)
         m = len(P[rid]["assignment"])
         for base in ("WITNESS", "G1s"):
             o = P[rid]["arms"][base]["order"]
@@ -195,7 +201,7 @@ def analyze():
         g = sum(res[r][a]["succ"] is True and res[r][b]["succ"] is not True for r in roots)
         l = sum(res[r][a]["succ"] is not True and res[r][b]["succ"] is True for r in roots)
         return {"gain": g, "loss": l, "p_two_sided": binomtest(g, g + l, 0.5).pvalue if g + l else None}
-    paired = {f"{a}_vs_{b}": mc(a, b) for a in ("G1s", "M1s", "O2") for b in ("F0", "RANDOM")}
+    paired = {f"{a}_vs_{b}": mc(a, b) for a in SPECS if a != "F0" for b in ("F0", "RANDOM")}
     paired["F0_vs_RANDOM"] = mc("F0", "RANDOM")
     # physical concordance: within a root, every pair of distinct executed orders of the same set (any study) with different outcomes
     conc = {}
