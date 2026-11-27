@@ -152,7 +152,7 @@ def r4order():
         ax[0].text(i, S[a]["succ"] + 0.3, str(S[a]["succ"]), ha="center", fontsize=8)
     ax[0].set_xticks(range(6)); ax[0].set_xticklabels(arms); ax[0].set_ylim(0, n + 1)
     ax[0].set(ylabel=f"roots (of {n})", title="(a) one committed order + partition per arm"); ax[0].legend(fontsize=7, frameon=False, loc="upper left")
-    ks = sorted({int(k) for a in arms for k in S[a]["first_failed"] if k not in (None, "None")})
+    ks = sorted({int(k) for a in arms for k in S[a]["first_failed"] if k not in (None, "None", "null")})
     bot = [0] * 6
     for j, k in enumerate(ks):
         v = [S[a]["first_failed"].get(str(k), 0) for a in arms]
