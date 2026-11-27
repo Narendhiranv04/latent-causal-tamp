@@ -1,0 +1,109 @@
+{
+ "KGT3_P2_2d": {
+  "labels": 712,
+  "families": 115,
+  "by_split": {
+   "GATE": 530,
+   "SELECT": 53,
+   "TRAIN": 129
+  },
+  "by_h_g_label": {
+   "h0|g2|y1": 122,
+   "h0|g3|y1": 2,
+   "h2|g2|y0": 11,
+   "h0|g2|y0": 85,
+   "h0|g3|y0": 69,
+   "h0|g1|y1": 262,
+   "h1|g2|y0": 39,
+   "h1|g3|y0": 56,
+   "h2|g3|y0": 10,
+   "h2|g2|y1": 2,
+   "h1|g2|y1": 34,
+   "h1|g3|y1": 20
+  },
+  "exposure": "TRAIN/SELECT used for KGT3 training/selection; 3D GATE opened once (R4 strict audit); 2D GATE never read"
+ },
+ "KGT3_P2_3d": {
+  "labels": 621,
+  "families": 128,
+  "by_split": {
+   "GATE": 190,
+   "TRAIN": 313,
+   "SELECT": 118
+  },
+  "by_h_g_label": {
+   "h0|g2|y1": 262,
+   "h0|g2|y0": 82,
+   "h0|g3|y1": 36,
+   "h0|g3|y0": 45,
+   "h0|g1|y1": 96,
+   "h1|g2|y1": 54,
+   "h1|g2|y0": 42,
+   "h0|g1|y0": 4
+  },
+  "exposure": "TRAIN/SELECT used for KGT3 training/selection; 3D GATE opened once (R4 strict audit); 2D GATE never read"
+ },
+ "R4.3_2d": {
+  "families": 60,
+  "runs": 1159,
+  "chunk_labels": {
+   "h0|g1|neg_certified": 175,
+   "h0|g1|pos_prefix_unreplayed": 22,
+   "h0|g1|pos_replayed": 373,
+   "h0|g1|unresolved": 124,
+   "h0|g2|neg_certified": 77,
+   "h0|g2|pos_prefix_unreplayed": 11,
+   "h0|g2|pos_replayed": 88,
+   "h0|g2|unresolved": 9,
+   "h0|g3|neg_certified": 222,
+   "h0|g3|pos_replayed": 31,
+   "h0|g3|unresolved": 27,
+   "h1|g1|pos_prefix_unreplayed": 11,
+   "h1|g1|pos_replayed": 79,
+   "h1|g2|neg_certified": 6,
+   "h1|g2|pos_replayed": 24,
+   "h1|g2|unresolved": 5,
+   "h2|g1|neg_certified": 12,
+   "h2|g1|pos_replayed": 48,
+   "h2|g1|unresolved": 10
+  },
+  "exposure": "development construction; frozen F0 ranked once (R4.3); no training"
+ },
+ "R4.4_3d": {
+  "families": 34,
+  "parent_families": 34,
+  "chunk_labels": {
+   "h0|g1|budget_no_plan": 11,
+   "h0|g1|neg_certified": 41,
+   "h0|g1|pos_prefix_unreplayed": 101,
+   "h0|g1|pos_replayed": 104,
+   "h0|g2|budget_no_plan": 20,
+   "h0|g2|neg_certified": 55,
+   "h0|g2|pos_prefix_unreplayed": 21,
+   "h0|g2|pos_replayed": 38,
+   "h0|g3|budget_no_plan": 23,
+   "h0|g3|neg_certified": 74,
+   "h0|g3|operational_failure": 1,
+   "h0|g3|pos_prefix_unreplayed": 2,
+   "h0|g3|pos_replayed": 22,
+   "h1|g1|pos_prefix_unreplayed": 7,
+   "h1|g1|pos_replayed": 18,
+   "h1|g2|budget_no_plan": 13,
+   "h1|g2|neg_certified": 38,
+   "h1|g2|pos_replayed": 39,
+   "h1|g3|budget_no_plan": 14,
+   "h1|g3|neg_certified": 29,
+   "h1|g3|pos_replayed": 12,
+   "h2|g1|neg_certified": 4,
+   "h2|g1|pos_prefix_unreplayed": 2,
+   "h2|g1|pos_replayed": 2,
+   "h2|g2|neg_certified": 11,
+   "h2|g2|pos_replayed": 9,
+   "h2|g3|budget_no_plan": 4,
+   "h2|g3|neg_certified": 11,
+   "h2|g3|pos_replayed": 1
+  },
+  "exposure": "development construction; frozen F0/M1s/G1s/O2 ranked once (R4.4 rank_models); no training"
+ },
+ "note": "Every root of the R4.2/R4.5 3D panel (20) and the 2D coh2d panel (30) is a permanent development root: never a final confirmation root. R4.3/R4.4 families may become DEVELOPMENT TRAINING only after explicit designation and removal from all selection evidence."
+}

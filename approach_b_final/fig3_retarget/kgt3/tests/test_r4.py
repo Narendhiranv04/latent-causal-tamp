@@ -178,3 +178,76 @@ def test_assignment_given_long_reports_chunk_px(patched):
     for a in ("SEL-DP", "RANDOM", "WITNESS"):
         assert max(out[a]["partition"]) >= 2 and len(out[a]["chunk_px"]) == len(out[a]["partition"])
     assert out["WITNESS"]["order"] == [[3, 13], [2, 12], [1, 11], [0, 10]]
+
+
+# ------------------------------------------------------------------ R5.0: one deadline, incumbents on budget stops, uncapped counted selection
+class SlowFz(FakeFz):
+    """Raises TimeoutError-inducing delay: every score call advances a fake clock by `dt` seconds."""
+    def __init__(self, D, dt, clock):
+        super().__init__(D); self.dt, self.clock = dt, clock
+
+    def score(self, S, seqs):
+        self.clock[0] += self.dt
+        return super().score(S, seqs)
+
+
+@pytest.fixture
+def clock(monkeypatch):
+    import planners as PL
+    t = [1000.0]
+    monkeypatch.setattr(PL.time, "perf_counter", lambda: t[0])
+    return t
+
+
+def _fz(fz):
+    fz.c, fz.caps = {"x_unique": 0, "y_unique": 0}, {}
+    fz.reset = lambda: None
+    return fz
+
+
+def test_timeout_midway_keeps_completed_incumbent(patched, clock):
+    PL = patched
+    D = {i: [10 + i] for i in range(5)}
+    fz = _fz(SlowFz(D, 0.5, clock))
+    out = PL.plan(fz, {"domain": "3d", "root_id": "r", "D": D}, "GA", None, {"wall_s": 6.0})
+    assert out["stop"] and out["stop"].startswith("TimeoutError")
+    assert out["info"]["exhausted"] is False and out["info"]["mode"].endswith("_TIMEOUT")
+    assert out["decision"] == "REPAIR" and out["incumbent_from_stop"] and out["n_candidates"] >= 1
+    assert all(int(k) <= 5 for k in out["info"]["per_size"])
+
+
+def test_floor_inside_deadline_and_no_budget_left(patched, clock):
+    PL = patched
+    D = {0: [10], 1: [11]}
+    fz = _fz(FakeFz(D))
+
+    def floor(t_end):
+        clock[0] += 100.0                                                 # floor consumes the whole budget
+        return {"seq": [[0, 10]]}
+    out = PL.plan(fz, {"domain": "2d", "root_id": "r", "D": D}, "GA", floor, {"wall_s": 50.0})
+    assert out["floor_wall_s"] == 100.0 and out["stop"].startswith("TimeoutError") and out["kind"] == "production_floor"
+    assert out["wall_s"] >= 100.0 and out["deadline_overrun_s"] >= 50.0 and out["long"] is False
+
+
+def test_cap_stop_then_selection_is_uncapped_and_counted(patched, clock):
+    import planners as PL
+    from models import CapReached
+    D = {i: [10 + i] for i in range(4)}
+
+    class CapFz(FakeFz):
+        def score(self, S, seqs):
+            if self.caps.get("x_unique") is not None and self.c["x_unique"] + len(seqs) > self.caps["x_unique"]:
+                raise CapReached("x_unique")
+            self.c["x_unique"] += len(seqs)
+            return super().score(S, seqs)
+    fz = _fz(CapFz(D))
+    out = PL.plan(fz, {"domain": "3d", "root_id": "r", "D": D}, "GA", {"seq": [[0, 10]]}, {"x_unique": 40, "wall_s": 1e9})
+    assert out["stop"].startswith("CapReached") and out["decision"] in ("REPAIR", "NOOP")
+    assert out["selection_readouts"]["x_unique"] >= 1
+
+
+def test_empty_candidates_abstain(patched, clock):
+    PL = patched
+    fz = _fz(FakeFz({}))
+    out = PL.plan(fz, {"domain": "2d", "root_id": "r", "D": {}}, "GA", None, {"wall_s": 10.0})
+    assert out["decision"] == "ABSTAIN" and out["seq"] is None and out["n_candidates"] == 0

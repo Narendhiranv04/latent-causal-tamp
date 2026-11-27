@@ -29,15 +29,21 @@ import recursive as RC  # noqa: E402
 import views as V  # noqa: E402
 from models import CapReached  # noqa: E402
 
-CFG = {"H": {"2d": 6, "3d": 5}, "wall_s": 180.0, "x_unique": 1_500_000, "y_unique": 600_000, "assign_per_size": 150_000,
+CFG = {"H": {"2d": 5, "3d": 5}, "wall_s": 180.0,   # R5: H = 5 in both domains (KGT3 / R4 used 2d: 6)
+       "x_unique": 1_500_000, "y_unique": 600_000, "assign_per_size": 150_000,
        "exact_x_est": 1_200_000, "retain": {"y": 96, "x": 96, "div": 64}, "yonly": 4, "rule": {"noop_gate": 0.5, "eta": 0.3},
        "rec": {"n_seeds": 8, "variants_per_action": 4, "depth": 3, "repair_expansions": 96, "temp_readouts": 256, "repairs_per_action": 2,
                "ylowx_extra": 1, "exhaustive_max_groups": 50000}}
 
 
 class Budget:
+    """R5.0: one absolute deadline (cfg['t_end'], perf_counter) shared by floor, proposal, scoring, composition and selection; else wall_s
+    from now."""
     def __init__(self, cfg):
-        self.t_end = time.perf_counter() + cfg["wall_s"]
+        self.t_end = cfg.get("t_end") or time.perf_counter() + cfg["wall_s"]
+
+    def left(self):
+        return self.t_end - time.perf_counter()
 
     def tick(self):
         if time.perf_counter() > self.t_end:
@@ -75,9 +81,11 @@ def ckey(c):
 
 
 # ------------------------------------------------------------------------------------------------ Fig. 3B: global assignments
-def ga(fz, row0, mode, cfg=None, log=None):
-    """mode: AUTO (EXACT when the declared envelope fits, else BOUNDED) | YONLY.  -> candidates, info."""
+def ga(fz, row0, mode, cfg=None, log=None, sink=None):
+    """mode: AUTO (EXACT when the declared envelope fits, else BOUNDED) | YONLY.  -> candidates, info.
+    sink (R5.0): {'cands': [], 'info': {}} filled progressively so a budget stop keeps every COMPLETED size's incumbent."""
     cfg = {**CFG, **(cfg or {})}
+    sink = sink if sink is not None else {"cands": [], "info": {}}
     H = cfg["H"][row0["domain"]]
     B = Budget(cfg)
     el = V.eligible(row0)
@@ -91,9 +99,11 @@ def ga(fz, row0, mode, cfg=None, log=None):
     exact = mode != "YONLY" and all(v <= cfg["assign_per_size"] for v in ub.values()) and est_x <= cfg["exact_x_est"]
     info = {"mode": "EXACT" if exact else ("YONLY" if mode == "YONLY" else "BOUNDED"), "D4": {str(o): v for o, v in D.items()},
             "assign_upper_bound": ub, "est_distinct_x": est_x, "est_theoretical_dp_lookups": theo, "per_size": {}, "by_size": {}, "exhausted": False}
+    sink["info"] = info
     T = CP.Scores(fz, row0, V.rebase)
+    info["scores_ref"] = T
     pair_px = None
-    cands, prev = [], []
+    cands, prev = sink["cands"], []
     for k in range(1, H + 1):
         B.tick()
         if k > len(D):
@@ -162,19 +172,23 @@ def ga(fz, row0, mode, cfg=None, log=None):
             info.setdefault("retained", {})[k] = [[list(a) for a in A] for A in keep]
     info["exhausted"] = bool(exact)                                     # reached only when every size was completed (timeouts raise before)
     info["scores"] = {**T.n, "dp_lookups": T.dp_lookups}
+    info.pop("scores_ref", None)
     return cands, info
 
 
 # ------------------------------------------------------------------------------------------------ Fig. 3A: recursive retargeting
-def rec(fz, row0, arm, cfg=None):
+def rec(fz, row0, arm, cfg=None, sink=None):
     cfg = {**CFG, **(cfg or {})}
+    sink = sink if sink is not None else {"cands": [], "info": {}}
     H = cfg["H"][row0["domain"]]
-    rc = {**cfg["rec"], "m_max": H, "wall_s": cfg["wall_s"] * 0.6, "x_unique": cfg["x_unique"], "y_unique": cfg["y_unique"], "disp_tiebreak": False}
+    B = Budget(cfg)
+    rc = {**cfg["rec"], "m_max": H, "wall_s": max(0.0, B.left()) * 0.6, "x_unique": cfg["x_unique"], "y_unique": cfg["y_unique"], "disp_tiebreak": False}
     ctx, pool, tree, stop = RC.discover(fz, row0, "F-FLAT" if arm == "FLAT-INSERT" else "R-FIG3", rc)
     fz.caps = {"x_unique": cfg["x_unique"], "y_unique": cfg["y_unique"]}
-    B = Budget({"wall_s": cfg["wall_s"] * 0.4})
     T = CP.Scores(fz, row0, V.rebase)
-    cands = []
+    info = {"pool": len(pool), "stop": stop, "counters": dict(ctx.n), "tree": tree, "scores_ref": T}
+    sink["info"] = info
+    cands = sink["cands"]
     for kk, (P, E, sd) in sorted(pool.items()):
         B.tick()
         acts = [tuple(map(int, a)) for a in P]
@@ -194,7 +208,7 @@ def rec(fz, row0, arm, cfg=None):
             F, o, p = r
             Eh, yg = long_energy(T, fz, row0, o, p, F)
             cands.append(cand_of(o, p, Eh, kind="rec_dp", y_global=yg, seed=sd, n_inserted=len(P) - len(sd), edges=sorted(map(list, E)), F=F, n_chunks=len(p)))
-    info = {"pool": len(pool), "stop": stop, "counters": dict(ctx.n), "scores": dict(T.n), "tree": tree}
+    info["scores"] = dict(T.n); info.pop("scores_ref", None)
     return cands, info
 
 
@@ -214,26 +228,52 @@ def select(fz, row0, cands, floor, rule):
 
 
 def plan(fz, row0, arm, floor, cfg=None):
-    """One sealed plan for (root, arm).  floor = rank.b0 output from the production F0 bundle (computed by the caller once per root)."""
+    """One sealed plan for (root, arm) under ONE deadline (R5.0).
+    floor: either a precomputed rank.b0-style dict {"seq": ...} (historical R4 callers; its cost is NOT in this plan's timing) or a
+    callable floor(deadline) -> dict, executed INSIDE the timed region (cost reported as floor_wall_s; standalone totals include it).
+    Budget stop (TimeoutError / CapReached): every COMPLETED candidate is kept as the incumbent (GA: completed sizes only, mode suffixed
+    _TIMEOUT and exhausted = False; REC: candidates ranked so far); selection then runs with caps lifted and its readouts counted."""
     cfg = {**CFG, **(cfg or {})}
     fz.reset(); fz.caps = {"x_unique": cfg["x_unique"], "y_unique": cfg["y_unique"]}
-    t0 = time.perf_counter(); stop = None
+    t0 = time.perf_counter()
+    cfg = {**cfg, "t_end": cfg.get("t_end") or t0 + cfg["wall_s"]}
+    floor_wall = None
+    if callable(floor):
+        tf = time.perf_counter()
+        floor = floor(cfg["t_end"])
+        floor_wall = round(time.perf_counter() - tf, 3)
+    stop, sink = None, {"cands": [], "info": {}}
     try:
+        if time.perf_counter() >= cfg["t_end"]:
+            raise TimeoutError("no budget left after floor")
         if arm in ("GA", "GA-YONLY"):
-            cands, info = ga(fz, row0, "YONLY" if arm == "GA-YONLY" else "AUTO", cfg)
+            cands, info = ga(fz, row0, "YONLY" if arm == "GA-YONLY" else "AUTO", cfg, sink=sink)
         else:
-            cands, info = rec(fz, row0, arm, cfg)
+            cands, info = rec(fz, row0, arm, cfg, sink=sink)
     except (TimeoutError, CapReached) as e:
-        cands, info, stop = [], {}, f"{type(e).__name__}:{e}"
+        stop = f"{type(e).__name__}:{e}"
+        cands, info = list(sink["cands"]), dict(sink["info"])
+        T = info.pop("scores_ref", None)
+        if T is not None:
+            info["scores"] = {**T.n, "dp_lookups": getattr(T, "dp_lookups", 0)}
+        if info.get("mode") in ("EXACT", "BOUNDED"):
+            info["mode"] = info["mode"] + "_TIMEOUT"
+        info["exhausted"] = False
+    pre = dict(fz.c)
+    caps, fz.caps = fz.caps, {}                                          # selection after a cap stop must not crash; its readouts are counted
     pick, why, noop = select(fz, row0, cands, floor, cfg["rule"])
-    if fz.dev.startswith("cuda"):
+    fz.caps = caps
+    if str(fz.dev).startswith("cuda"):
         fz.torch.cuda.synchronize()
     H = cfg["H"][row0["domain"]]
+    total = round(time.perf_counter() - t0, 3)
     out = {"root_id": row0["root_id"], "arm": arm if arm != "GA" else f"GA-{info.get('mode', 'NA')}", "decision": "NOOP" if why == "NOOP" else ("REPAIR" if pick else "ABSTAIN"),
            "seq": pick["seq"] if pick else None, "partition": pick["partition"] if pick else None, "E": pick["E"] if pick else None,
            "kind": pick["kind"] if pick else None, "p_noop": noop, "n_candidates": len(cands), "long": bool(pick and len(pick["seq"]) > 3),
            "multi_chunk": bool(pick and max(pick["partition"]) >= 2), "H": H, "stop": stop, "info": {k: v for k, v in info.items() if k != "tree"},
-           "tree": info.get("tree"), "counters": dict(fz.c), "wall_s": round(time.perf_counter() - t0, 3)}
+           "tree": info.get("tree"), "counters": dict(fz.c), "selection_readouts": {k: fz.c[k] - pre.get(k, 0) for k in fz.c},
+           "wall_s": total, "floor_wall_s": floor_wall, "arm_wall_s": round(total - (floor_wall or 0.0), 3), "deadline_overrun_s": round(max(0.0, time.perf_counter() - cfg["t_end"]), 3),
+           "incumbent_from_stop": bool(stop and pick)}
     if pick and pick["kind"] == "production_floor":
         out["note"] = "unchanged K<=3 production floor selected (short selection, not a long repair)"
     return out

@@ -8,7 +8,7 @@
     python audit0.py run DOM N_ROOTS ARMS(comma) OUT.json"""
 from __future__ import annotations
 
-import importlib.abc, json, sys, time
+import hashlib, importlib.abc, json, sys, time
 from pathlib import Path
 
 POISON = {"fin3d", "bd_3dt", "bd_3dt_plus", "bwlphys", "bxy_teacher", "teacher2d", "teacher_long", "physical2d", "physical3d", "evaluate_k45",
@@ -82,28 +82,39 @@ def kendall(a, b):
     return s / max(1, n * (n - 1) / 2)
 
 
-def run(dom, n, arms, out):
+SENTINEL_ROW = {"K": 987654, "K_star": 987654, "witness": "SENTINEL_WITNESS", "labels": {"X": "SENTINEL"}, "L_ref": 987654, "split": "SENTINEL"}
+SENTINEL_INPUTS = {"witness_order": "SENTINEL", "blockers": "SENTINEL", "K": 987654, "kill": "SENTINEL"}
+
+
+def run(dom, n, arms, out, spec="F0"):
+    """R5.0: spec selects the X model (F0 | M1s_s0 | G1s_s0 | KGT3 spec) via learn.load; the floor always uses the production F0 bundle.
+    Rows carry SENTINEL evaluator fields (row and inputs level); any read is logged and plans must equal the stripped-row plans and a
+    root-id-renamed row's plans."""
     import random
     import planners as PL
     import rank as RK
-    from models import Frozen
-    fz = Frozen(dom)
+    import learn as LN
+    fz, net = LN.load(dom, spec); fz.net = net
+    fz0, base = LN.load(dom, "F0"); fz0.net = base
     res = {"dom": dom, "arms": arms, "roots": [], "poisoned": sorted(POISON),
            "loaded": {"sampler_task_on": bool(fz.samp.m.task_on), "sampler_rule": fz.samp.rule, "scorer_vis_dim": int(getattr(fz.net, "vis_dim", -1)),
                       "manifest_config": fz.man["config"]}}
     for row in rows_for(dom, n):
         LOG["row"].clear(); LOG["inputs"].clear()
-        tr = TR({**row, "inputs": TD(row["inputs"])})
-        floor = RK.b0(fz, strip(row), PL.CFG["rule"])
+        tr = TR({**row, **SENTINEL_ROW, "inputs": TD({**row["inputs"], **SENTINEL_INPUTS})})
+        fz0.reset(); fz0.caps = {}
+        floor = RK.b0(fz0, strip(row), PL.CFG["rule"])
         floor = {"seq": floor["seq"]} if floor["decision"] == "REPAIR" else None
         rec = {"root_id": row["root_id"], "N": len(row["inputs"]["ids"]), "arms": {}}
         for arm in arms:
             p1 = PL.plan(fz, tr, arm, floor)
             p2 = PL.plan(fz, strip(row), arm, floor)
+            p3 = PL.plan(fz, {**strip(row), "root_id": "RENAMED-" + hashlib.sha256(row["root_id"].encode()).hexdigest()[:8]}, arm, floor)
             rec["arms"][arm] = {"decision": p1["decision"], "seq": p1["seq"], "partition": p1["partition"], "E": p1["E"], "kind": p1["kind"],
                                 "wall_s": p1["wall_s"], "stop": p1["stop"], "mode": p1["arm"], "n_candidates": p1["n_candidates"],
                                 "scores": (p1["info"] or {}).get("scores"), "per_size": (p1["info"] or {}).get("per_size"),
-                                "metadata_invariant": (p1["seq"], p1["partition"], p1["E"]) == (p2["seq"], p2["partition"], p2["E"])}
+                                "metadata_invariant": (p1["seq"], p1["partition"], p1["E"]) == (p2["seq"], p2["partition"], p2["E"]),
+                                "root_id_invariant": (p3["seq"], p3["partition"], p3["E"]) == (p2["seq"], p2["partition"], p2["E"])}
             print(row["root_id"], arm, rec["arms"][arm]["mode"], p1["decision"], p1["partition"], p1["wall_s"], "inv", rec["arms"][arm]["metadata_invariant"], flush=True)
         rec["fields_row"], rec["fields_inputs"] = sorted(LOG["row"]), sorted(LOG["inputs"])
         rng = random.Random(row["root_id"])
@@ -130,8 +141,13 @@ def run(dom, n, arms, out):
     res["fields_inputs_union"] = sorted(set().union(*[set(r["fields_inputs"]) for r in res["roots"]]))
     res["row_fields_outside_allowlist"] = sorted(set(res["fields_row_union"]) - ALLOW_ROW)
     res["input_fields_outside_allowlist"] = sorted(set(res["fields_inputs_union"]) - ALLOW_INPUTS)
+    res["sentinel_fields_read"] = sorted((set(res["fields_row_union"]) & set(SENTINEL_ROW)) | (set(res["fields_inputs_union"]) & set(SENTINEL_INPUTS)))
+    res["all_metadata_invariant"] = all(a["metadata_invariant"] for r in res["roots"] for a in r["arms"].values())
+    res["all_root_id_invariant"] = all(a["root_id_invariant"] for r in res["roots"] for a in r["arms"].values())
+    res["spec"] = spec
     Path(out).write_text(json.dumps(res, indent=1, default=str))
-    print(json.dumps({k: res[k] for k in ("loaded", "fields_row_union", "fields_inputs_union", "row_fields_outside_allowlist", "input_fields_outside_allowlist")}, default=str))
+    print(json.dumps({k: res[k] for k in ("spec", "fields_row_union", "fields_inputs_union", "row_fields_outside_allowlist", "input_fields_outside_allowlist",
+                                          "sentinel_fields_read", "all_metadata_invariant", "all_root_id_invariant")}, default=str))
 
 
 def witness_ids():
@@ -155,6 +171,6 @@ def witness_ids():
 
 if __name__ == "__main__":
     if sys.argv[1] == "run":
-        run(sys.argv[2], sys.argv[3], sys.argv[4].split(","), sys.argv[5])
+        run(sys.argv[2], sys.argv[3], sys.argv[4].split(","), sys.argv[5], *(sys.argv[6:7] or ["F0"]))
     elif sys.argv[1] == "witness_ids":
         Path(sys.argv[2]).write_text(json.dumps(witness_ids(), indent=1))
