@@ -1,0 +1,855 @@
+{
+ "task": "V3.4 3D cohort: is t0 -> goal feasible in the INITIAL scene (no rearrangement)",
+ "label": "1 iff PRIVATE_INDEX K == '0' (verified K0; root labels.original.y = 1); 0 for K1/K2/K3/NONE",
+ "n": 395,
+ "n_pos": 93,
+ "n_neg": 302,
+ "class_counts": {
+  "0": 93,
+  "1": 58,
+  "2": 106,
+  "3": 75,
+  "NONE": 63
+ },
+ "label_checks": {
+  "K0_with_y_empty": 93,
+  "K0_y_empty_eq_1": 93,
+  "root_original_y_agrees": 395,
+  "root_verified_K_agrees": 395,
+  "neg_budget_limited_NO_PLAN_FOUND": 8,
+  "ours_s0_vs_production_pred_p_noop_maxabs": 4.76837158203125e-07
+ },
+ "ci": "Wilson 95% for proportions; AUROC 95% = 2000-replicate cluster bootstrap over parent_family_id (181 families), seed 0",
+ "methods": {
+  "PIGINet_noimg": {
+   "checkpoint_sha256": {
+    "s0": "3b471d3ddaff6ab7beb9653090289dcf68d90d06645dc72745d17727f8503bb7",
+    "s1": "e533494ce7e74b5a9496ba5bec830a3099712ba39834898ee0218548632a5fbb",
+    "s2": "d49a37d247335bfda9d53da725acb50f86f66060596c33814d01572251e2be50"
+   },
+   "seeds": {
+    "s0": {
+     "n": 395,
+     "n_pos": 93,
+     "n_neg": 302,
+     "TP": 83,
+     "FP": 12,
+     "TN": 290,
+     "FN": 10,
+     "TPR": 0.8925,
+     "TPR_ci95_wilson": [
+      0.8133,
+      0.9405
+     ],
+     "TPR_denom": 93,
+     "TNR": 0.9603,
+     "TNR_ci95_wilson": [
+      0.9318,
+      0.9771
+     ],
+     "TNR_denom": 302,
+     "precision": 0.8737,
+     "precision_ci95_wilson": [
+      0.7921,
+      0.9262
+     ],
+     "precision_denom": 95,
+     "accuracy": 0.9443,
+     "accuracy_ci95_wilson": [
+      0.9171,
+      0.9629
+     ],
+     "AUROC": 0.989,
+     "AUROC_ci95_cluster_bootstrap": [
+      0.9764,
+      0.9971
+     ],
+     "n_bootstrap": 2000,
+     "threshold": 0.5,
+     "predicted_feasible": "p >= threshold",
+     "per_class_pred_feasible": {
+      "0": "83/93",
+      "1": "11/58",
+      "2": "1/106",
+      "3": "0/75",
+      "NONE": "0/63"
+     },
+     "sensitivity_excl_budget_limited_negatives": {
+      "n": 387,
+      "TP": 83,
+      "FP": 8,
+      "TN": 286,
+      "FN": 10,
+      "TNR": 0.9728,
+      "AUROC": 0.9912
+     }
+    },
+    "s1": {
+     "n": 395,
+     "n_pos": 93,
+     "n_neg": 302,
+     "TP": 87,
+     "FP": 11,
+     "TN": 291,
+     "FN": 6,
+     "TPR": 0.9355,
+     "TPR_ci95_wilson": [
+      0.8663,
+      0.9701
+     ],
+     "TPR_denom": 93,
+     "TNR": 0.9636,
+     "TNR_ci95_wilson": [
+      0.936,
+      0.9795
+     ],
+     "TNR_denom": 302,
+     "precision": 0.8878,
+     "precision_ci95_wilson": [
+      0.8101,
+      0.9362
+     ],
+     "precision_denom": 98,
+     "accuracy": 0.957,
+     "accuracy_ci95_wilson": [
+      0.9322,
+      0.973
+     ],
+     "AUROC": 0.99,
+     "AUROC_ci95_cluster_bootstrap": [
+      0.9801,
+      0.9966
+     ],
+     "n_bootstrap": 2000,
+     "threshold": 0.5,
+     "predicted_feasible": "p >= threshold",
+     "per_class_pred_feasible": {
+      "0": "87/93",
+      "1": "10/58",
+      "2": "1/106",
+      "3": "0/75",
+      "NONE": "0/63"
+     },
+     "sensitivity_excl_budget_limited_negatives": {
+      "n": 387,
+      "TP": 87,
+      "FP": 8,
+      "TN": 286,
+      "FN": 6,
+      "TNR": 0.9728,
+      "AUROC": 0.9916
+     }
+    },
+    "s2": {
+     "n": 395,
+     "n_pos": 93,
+     "n_neg": 302,
+     "TP": 88,
+     "FP": 19,
+     "TN": 283,
+     "FN": 5,
+     "TPR": 0.9462,
+     "TPR_ci95_wilson": [
+      0.8803,
+      0.9768
+     ],
+     "TPR_denom": 93,
+     "TNR": 0.9371,
+     "TNR_ci95_wilson": [
+      0.9038,
+      0.9594
+     ],
+     "TNR_denom": 302,
+     "precision": 0.8224,
+     "precision_ci95_wilson": [
+      0.7392,
+      0.8833
+     ],
+     "precision_denom": 107,
+     "accuracy": 0.9392,
+     "accuracy_ci95_wilson": [
+      0.9112,
+      0.9588
+     ],
+     "AUROC": 0.986,
+     "AUROC_ci95_cluster_bootstrap": [
+      0.9716,
+      0.995
+     ],
+     "n_bootstrap": 2000,
+     "threshold": 0.5,
+     "predicted_feasible": "p >= threshold",
+     "per_class_pred_feasible": {
+      "0": "88/93",
+      "1": "17/58",
+      "2": "2/106",
+      "3": "0/75",
+      "NONE": "0/63"
+     },
+     "sensitivity_excl_budget_limited_negatives": {
+      "n": 387,
+      "TP": 88,
+      "FP": 14,
+      "TN": 280,
+      "FN": 5,
+      "TNR": 0.9524,
+      "AUROC": 0.9884
+     }
+    }
+   },
+   "primary": "s0",
+   "seed_mean_sd": {
+    "TPR": [
+     0.9247,
+     0.0284
+    ],
+    "TNR": [
+     0.9537,
+     0.0144
+    ],
+    "precision": [
+     0.8613,
+     0.0344
+    ],
+    "accuracy": [
+     0.9468,
+     0.0092
+    ],
+    "AUROC": [
+     0.9883,
+     0.0021
+    ]
+   },
+   "adapter": "cf_infer.piginet: native 'move T' sample on the initial state, plan [(t0, start, goal)], train.predict(use_image=False) = sigmoid(plan head); image variant excluded (no renders)"
+  },
+  "GRN": {
+   "checkpoint_sha256": {
+    "s0": "fa4286e45c93f56fb4c9ab4fadc8f6641257e990aa934585841dc64ae2a11fdc",
+    "s1": "083935282f453b2830a40cd4ace686da585b00fc877c842d77d40765598b91c6",
+    "s2": "aa6689b3c02471fb8ed51be245d674ec3e2a9c440dc0bfda7065fdd8b0def20b"
+   },
+   "seeds": {
+    "s0": {
+     "n": 395,
+     "n_pos": 93,
+     "n_neg": 302,
+     "TP": 77,
+     "FP": 13,
+     "TN": 289,
+     "FN": 16,
+     "TPR": 0.828,
+     "TPR_ci95_wilson": [
+      0.7387,
+      0.8912
+     ],
+     "TPR_denom": 93,
+     "TNR": 0.957,
+     "TNR_ci95_wilson": [
+      0.9278,
+      0.9747
+     ],
+     "TNR_denom": 302,
+     "precision": 0.8556,
+     "precision_ci95_wilson": [
+      0.7684,
+      0.9136
+     ],
+     "precision_denom": 90,
+     "accuracy": 0.9266,
+     "accuracy_ci95_wilson": [
+      0.8965,
+      0.9484
+     ],
+     "AUROC": 0.9611,
+     "AUROC_ci95_cluster_bootstrap": [
+      0.9252,
+      0.9864
+     ],
+     "n_bootstrap": 2000,
+     "threshold": 0.5,
+     "predicted_feasible": "p >= threshold",
+     "per_class_pred_feasible": {
+      "0": "77/93",
+      "1": "12/58",
+      "2": "1/106",
+      "3": "0/75",
+      "NONE": "0/63"
+     },
+     "sensitivity_excl_budget_limited_negatives": {
+      "n": 387,
+      "TP": 77,
+      "FP": 9,
+      "TN": 285,
+      "FN": 16,
+      "TNR": 0.9694,
+      "AUROC": 0.9657
+     }
+    },
+    "s1": {
+     "n": 395,
+     "n_pos": 93,
+     "n_neg": 302,
+     "TP": 77,
+     "FP": 12,
+     "TN": 290,
+     "FN": 16,
+     "TPR": 0.828,
+     "TPR_ci95_wilson": [
+      0.7387,
+      0.8912
+     ],
+     "TPR_denom": 93,
+     "TNR": 0.9603,
+     "TNR_ci95_wilson": [
+      0.9318,
+      0.9771
+     ],
+     "TNR_denom": 302,
+     "precision": 0.8652,
+     "precision_ci95_wilson": [
+      0.779,
+      0.9212
+     ],
+     "precision_denom": 89,
+     "accuracy": 0.9291,
+     "accuracy_ci95_wilson": [
+      0.8995,
+      0.9505
+     ],
+     "AUROC": 0.9586,
+     "AUROC_ci95_cluster_bootstrap": [
+      0.9206,
+      0.9865
+     ],
+     "n_bootstrap": 2000,
+     "threshold": 0.5,
+     "predicted_feasible": "p >= threshold",
+     "per_class_pred_feasible": {
+      "0": "77/93",
+      "1": "10/58",
+      "2": "1/106",
+      "3": "1/75",
+      "NONE": "0/63"
+     },
+     "sensitivity_excl_budget_limited_negatives": {
+      "n": 387,
+      "TP": 77,
+      "FP": 9,
+      "TN": 285,
+      "FN": 16,
+      "TNR": 0.9694,
+      "AUROC": 0.9627
+     }
+    },
+    "s2": {
+     "n": 395,
+     "n_pos": 93,
+     "n_neg": 302,
+     "TP": 73,
+     "FP": 10,
+     "TN": 292,
+     "FN": 20,
+     "TPR": 0.7849,
+     "TPR_ci95_wilson": [
+      0.691,
+      0.8562
+     ],
+     "TPR_denom": 93,
+     "TNR": 0.9669,
+     "TNR_ci95_wilson": [
+      0.9401,
+      0.9819
+     ],
+     "TNR_denom": 302,
+     "precision": 0.8795,
+     "precision_ci95_wilson": [
+      0.7922,
+      0.9332
+     ],
+     "precision_denom": 83,
+     "accuracy": 0.9241,
+     "accuracy_ci95_wilson": [
+      0.8936,
+      0.9463
+     ],
+     "AUROC": 0.9591,
+     "AUROC_ci95_cluster_bootstrap": [
+      0.9146,
+      0.9884
+     ],
+     "n_bootstrap": 2000,
+     "threshold": 0.5,
+     "predicted_feasible": "p >= threshold",
+     "per_class_pred_feasible": {
+      "0": "73/93",
+      "1": "9/58",
+      "2": "1/106",
+      "3": "0/75",
+      "NONE": "0/63"
+     },
+     "sensitivity_excl_budget_limited_negatives": {
+      "n": 387,
+      "TP": 73,
+      "FP": 7,
+      "TN": 287,
+      "FN": 20,
+      "TNR": 0.9762,
+      "AUROC": 0.963
+     }
+    }
+   },
+   "primary": "s0",
+   "seed_mean_sd": {
+    "TPR": [
+     0.8136,
+     0.0249
+    ],
+    "TNR": [
+     0.9614,
+     0.005
+    ],
+    "precision": [
+     0.8668,
+     0.012
+    ],
+    "accuracy": [
+     0.9266,
+     0.0025
+    ],
+    "AUROC": [
+     0.9596,
+     0.0013
+    ]
+   },
+   "adapter": "cf_infer.grn: build_graphs.make_graph(rec, initial cells, goal) -> sigmoid(action head); yadu/GRN 986cce3a; torch_geometric 2.5.2",
+   "adapter_parity_V4_VAL": {
+    "what": "grn_val_parity.py: rebuilt V4 VAL graphs (orig+D+L), action AUROC vs train.log best-epoch val AUROC",
+    "n_graphs": 6447,
+    "missing_roots": 6,
+    "s0": [
+     0.9496,
+     0.9498
+    ],
+    "s1": [
+     0.947,
+     0.9471
+    ],
+    "s2": [
+     0.9496,
+     0.9498
+    ]
+   }
+  },
+  "SCNet": {
+   "checkpoint_sha256": {
+    "s0": "097fa00dd8ae5ea8b0bf1175bb3920db580effb8aad037a986e66f5f348bebe0",
+    "s1": "78e5e3b6fb1bb842e3879ea6b18d390ee9408d8475d67bb36dc73be736f6407c",
+    "s2": "b2ab223da400a41464b05036095b0665674271266f1d4ff51efadcdeba0e30b3"
+   },
+   "seeds": {
+    "s0": {
+     "n": 395,
+     "n_pos": 93,
+     "n_neg": 302,
+     "TP": 72,
+     "FP": 4,
+     "TN": 298,
+     "FN": 21,
+     "TPR": 0.7742,
+     "TPR_ci95_wilson": [
+      0.6793,
+      0.8473
+     ],
+     "TPR_denom": 93,
+     "TNR": 0.9868,
+     "TNR_ci95_wilson": [
+      0.9664,
+      0.9948
+     ],
+     "TNR_denom": 302,
+     "precision": 0.9474,
+     "precision_ci95_wilson": [
+      0.8723,
+      0.9793
+     ],
+     "precision_denom": 76,
+     "accuracy": 0.9367,
+     "accuracy_ci95_wilson": [
+      0.9082,
+      0.9568
+     ],
+     "AUROC": 0.974,
+     "AUROC_ci95_cluster_bootstrap": [
+      0.9557,
+      0.9881
+     ],
+     "n_bootstrap": 2000,
+     "threshold": 0.5,
+     "predicted_feasible": "p >= threshold",
+     "per_class_pred_feasible": {
+      "0": "72/93",
+      "1": "4/58",
+      "2": "0/106",
+      "3": "0/75",
+      "NONE": "0/63"
+     },
+     "sensitivity_excl_budget_limited_negatives": {
+      "n": 387,
+      "TP": 72,
+      "FP": 3,
+      "TN": 291,
+      "FN": 21,
+      "TNR": 0.9898,
+      "AUROC": 0.9759
+     }
+    },
+    "s1": {
+     "n": 395,
+     "n_pos": 93,
+     "n_neg": 302,
+     "TP": 73,
+     "FP": 5,
+     "TN": 297,
+     "FN": 20,
+     "TPR": 0.7849,
+     "TPR_ci95_wilson": [
+      0.691,
+      0.8562
+     ],
+     "TPR_denom": 93,
+     "TNR": 0.9834,
+     "TNR_ci95_wilson": [
+      0.9618,
+      0.9929
+     ],
+     "TNR_denom": 302,
+     "precision": 0.9359,
+     "precision_ci95_wilson": [
+      0.8586,
+      0.9723
+     ],
+     "precision_denom": 78,
+     "accuracy": 0.9367,
+     "accuracy_ci95_wilson": [
+      0.9082,
+      0.9568
+     ],
+     "AUROC": 0.9737,
+     "AUROC_ci95_cluster_bootstrap": [
+      0.9527,
+      0.9885
+     ],
+     "n_bootstrap": 2000,
+     "threshold": 0.5,
+     "predicted_feasible": "p >= threshold",
+     "per_class_pred_feasible": {
+      "0": "73/93",
+      "1": "5/58",
+      "2": "0/106",
+      "3": "0/75",
+      "NONE": "0/63"
+     },
+     "sensitivity_excl_budget_limited_negatives": {
+      "n": 387,
+      "TP": 73,
+      "FP": 4,
+      "TN": 290,
+      "FN": 20,
+      "TNR": 0.9864,
+      "AUROC": 0.9753
+     }
+    },
+    "s2": {
+     "n": 395,
+     "n_pos": 93,
+     "n_neg": 302,
+     "TP": 71,
+     "FP": 3,
+     "TN": 299,
+     "FN": 22,
+     "TPR": 0.7634,
+     "TPR_ci95_wilson": [
+      0.6677,
+      0.8383
+     ],
+     "TPR_denom": 93,
+     "TNR": 0.9901,
+     "TNR_ci95_wilson": [
+      0.9712,
+      0.9966
+     ],
+     "TNR_denom": 302,
+     "precision": 0.9595,
+     "precision_ci95_wilson": [
+      0.8875,
+      0.9861
+     ],
+     "precision_denom": 74,
+     "accuracy": 0.9367,
+     "accuracy_ci95_wilson": [
+      0.9082,
+      0.9568
+     ],
+     "AUROC": 0.973,
+     "AUROC_ci95_cluster_bootstrap": [
+      0.9528,
+      0.9883
+     ],
+     "n_bootstrap": 2000,
+     "threshold": 0.5,
+     "predicted_feasible": "p >= threshold",
+     "per_class_pred_feasible": {
+      "0": "71/93",
+      "1": "3/58",
+      "2": "0/106",
+      "3": "0/75",
+      "NONE": "0/63"
+     },
+     "sensitivity_excl_budget_limited_negatives": {
+      "n": 387,
+      "TP": 71,
+      "FP": 2,
+      "TN": 292,
+      "FN": 22,
+      "TNR": 0.9932,
+      "AUROC": 0.9744
+     }
+    }
+   },
+   "primary": "s0",
+   "seed_mean_sd": {
+    "TPR": [
+     0.7742,
+     0.0108
+    ],
+    "TNR": [
+     0.9868,
+     0.0034
+    ],
+    "precision": [
+     0.9476,
+     0.0118
+    ],
+    "accuracy": [
+     0.9367,
+     0.0
+    ],
+    "AUROC": [
+     0.9736,
+     0.0005
+    ]
+   },
+   "adapter": "cf_infer.scnet: max over the target's 32 teacher grasps of P(grasp works); scene_cloud 8192 pts seeded sha256('CFSCN|root_id'); grasps/shift via cf_scnroots.py (env3d, shelf66_v3 teacher)"
+  },
+  "Ours_productionD": {
+   "checkpoint_sha256": {
+    "s0": "c02afcbc29a9552fd4631c1fd46dfa196a19029151251078bed9f4e3b72dfde1",
+    "s1": "88f49a606bd42f76f6d77215082b8dbeb72dec0a602af1396f09de1aa902551e",
+    "s2": "948ac82026b6ba273cb7f764f9f470a7e4fa0fd23b349ce9598fee5a01d58f40"
+   },
+   "seeds": {
+    "s0": {
+     "n": 395,
+     "n_pos": 93,
+     "n_neg": 302,
+     "TP": 81,
+     "FP": 10,
+     "TN": 292,
+     "FN": 12,
+     "TPR": 0.871,
+     "TPR_ci95_wilson": [
+      0.7879,
+      0.9246
+     ],
+     "TPR_denom": 93,
+     "TNR": 0.9669,
+     "TNR_ci95_wilson": [
+      0.9401,
+      0.9819
+     ],
+     "TNR_denom": 302,
+     "precision": 0.8901,
+     "precision_ci95_wilson": [
+      0.8094,
+      0.9392
+     ],
+     "precision_denom": 91,
+     "accuracy": 0.9443,
+     "accuracy_ci95_wilson": [
+      0.9171,
+      0.9629
+     ],
+     "AUROC": 0.9644,
+     "AUROC_ci95_cluster_bootstrap": [
+      0.9204,
+      0.9913
+     ],
+     "n_bootstrap": 2000,
+     "threshold": 0.5,
+     "predicted_feasible": "p >= threshold",
+     "per_class_pred_feasible": {
+      "0": "81/93",
+      "1": "9/58",
+      "2": "1/106",
+      "3": "0/75",
+      "NONE": "0/63"
+     },
+     "sensitivity_excl_budget_limited_negatives": {
+      "n": 387,
+      "TP": 81,
+      "FP": 7,
+      "TN": 287,
+      "FN": 12,
+      "TNR": 0.9762,
+      "AUROC": 0.9679
+     }
+    },
+    "s1": {
+     "n": 395,
+     "n_pos": 93,
+     "n_neg": 302,
+     "TP": 81,
+     "FP": 10,
+     "TN": 292,
+     "FN": 12,
+     "TPR": 0.871,
+     "TPR_ci95_wilson": [
+      0.7879,
+      0.9246
+     ],
+     "TPR_denom": 93,
+     "TNR": 0.9669,
+     "TNR_ci95_wilson": [
+      0.9401,
+      0.9819
+     ],
+     "TNR_denom": 302,
+     "precision": 0.8901,
+     "precision_ci95_wilson": [
+      0.8094,
+      0.9392
+     ],
+     "precision_denom": 91,
+     "accuracy": 0.9443,
+     "accuracy_ci95_wilson": [
+      0.9171,
+      0.9629
+     ],
+     "AUROC": 0.9764,
+     "AUROC_ci95_cluster_bootstrap": [
+      0.9468,
+      0.9942
+     ],
+     "n_bootstrap": 2000,
+     "threshold": 0.5,
+     "predicted_feasible": "p >= threshold",
+     "per_class_pred_feasible": {
+      "0": "81/93",
+      "1": "9/58",
+      "2": "1/106",
+      "3": "0/75",
+      "NONE": "0/63"
+     },
+     "sensitivity_excl_budget_limited_negatives": {
+      "n": 387,
+      "TP": 81,
+      "FP": 7,
+      "TN": 287,
+      "FN": 12,
+      "TNR": 0.9762,
+      "AUROC": 0.9796
+     }
+    },
+    "s2": {
+     "n": 395,
+     "n_pos": 93,
+     "n_neg": 302,
+     "TP": 77,
+     "FP": 12,
+     "TN": 290,
+     "FN": 16,
+     "TPR": 0.828,
+     "TPR_ci95_wilson": [
+      0.7387,
+      0.8912
+     ],
+     "TPR_denom": 93,
+     "TNR": 0.9603,
+     "TNR_ci95_wilson": [
+      0.9318,
+      0.9771
+     ],
+     "TNR_denom": 302,
+     "precision": 0.8652,
+     "precision_ci95_wilson": [
+      0.779,
+      0.9212
+     ],
+     "precision_denom": 89,
+     "accuracy": 0.9291,
+     "accuracy_ci95_wilson": [
+      0.8995,
+      0.9505
+     ],
+     "AUROC": 0.9735,
+     "AUROC_ci95_cluster_bootstrap": [
+      0.9416,
+      0.993
+     ],
+     "n_bootstrap": 2000,
+     "threshold": 0.5,
+     "predicted_feasible": "p >= threshold",
+     "per_class_pred_feasible": {
+      "0": "77/93",
+      "1": "10/58",
+      "2": "2/106",
+      "3": "0/75",
+      "NONE": "0/63"
+     },
+     "sensitivity_excl_budget_limited_negatives": {
+      "n": 387,
+      "TP": 77,
+      "FP": 8,
+      "TN": 286,
+      "FN": 16,
+      "TNR": 0.9728,
+      "AUROC": 0.9775
+     }
+    }
+   },
+   "primary": "s0",
+   "seed_mean_sd": {
+    "TPR": [
+     0.8567,
+     0.0248
+    ],
+    "TNR": [
+     0.9647,
+     0.0038
+    ],
+    "precision": [
+     0.8818,
+     0.0144
+    ],
+    "accuracy": [
+     0.9392,
+     0.0088
+    ],
+    "AUROC": [
+     0.9714,
+     0.0063
+    ]
+   },
+   "adapter": "cf_infer.ours: XYNet.predict p_noop (empty-edit Y) on contracts.view3d == public inputs; label 'production D (not the final clean model)'"
+  }
+ },
+ "deviations": [
+  "PIGINet/SCNet checkpoints+code copied by the main session (user-approved) to feas/ckpt2 from blackwell:~/yadu_bd/{piginet_shelf,scn_shelf}; all 6 sha256 match CF/NULL lock amendment 2 exactly; inference on the laptop only",
+  "PIGINet image variant excluded (no renders), as in the CF/NULL audit",
+  "SCNet grasp poses rebuilt with cf_scnroots.py in env3d against shelf66_v3 at ~/abf_v34/shelf_6x6_open_sides/.../code/shelf66_v3 (bd_3dt/bd_shelf identical to k45 audit copy); stored-roots parity not re-run (roots_scn.pkl not local)",
+  "GRN code/weights from git origin/yadu/GRN 986cce3a (sha256 match P0); torch_geometric 2.5.2 --no-deps in tmpfs scratch",
+  "8 negatives budget-limited (NO_PLAN_FOUND); counted 0; sensitivity excluding them per seed",
+  "V3.4 roots are new layouts; 348/395 ref_root_ids lie in the V4 VAL split (baseline checkpoint selection), 0 in V4 train"
+ ],
+ "thresholds": "0.5 for every method (CF/NULL lock: BCE-trained sigmoid outputs; SCNet = max-grasp probability)"
+}
