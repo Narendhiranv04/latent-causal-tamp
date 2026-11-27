@@ -342,10 +342,12 @@ def fit(dom, rep, dat, recipe, seed, ctrl, tr, va, rp, k3val, base, dev="cuda"):
                 loss = torch.nn.functional.binary_cross_entropy_with_logits(Cf["a"][m], lab["succ_q"][m].float()) if m.any() else Cf["a"].sum() * 0
             else:
                 loss = -XY.batched_log_evidence(Cf["b"], Cf["a"], Cf["w"], b["parent"], lab["y_obs"], lab["x_obs"], b["s_root"], b["n_roots"]).mean()
+            if not loss.requires_grad:                                    # replay-only batch without any X query (K0 roots): no X gradient
+                continue
             opt.zero_grad(); loss.backward(); torch.nn.utils.clip_grad_norm_(params, 10.0); opt.step()
             tl.append(float(loss.detach()))
         vl = val_score()
-        curve.append({"epoch": ep, "train": float(np.mean(tl)), "val": vl, "s": round(time.time() - t0, 1)})
+        curve.append({"epoch": ep, "train": float(np.mean(tl)) if tl else None, "val": vl, "s": round(time.time() - t0, 1)})
         if vl < best[0] - 1e-5:
             best, bad = (vl, ep), 0
             torch.save({"state": net.state_dict(), "epoch": ep}, out / "model.pt")

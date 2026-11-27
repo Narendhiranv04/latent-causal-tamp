@@ -1,0 +1,105 @@
+{
+ "completion": {
+  "status": "COMPLETE",
+  "why": [],
+  "n_sealed": 887,
+  "n_records": 887,
+  "kinds": {
+   "DONE": 887
+  },
+  "manifest_sha256": "f6ee976a8e8f59d496b98d7e3f3a90f50128ab415573fd59f8585f5a4d048112",
+  "results_sha256": "27ddd3cd8798a67335ee8b97489ee9a80b4b0fd0b522842339b3c5bfe3264b9a"
+ },
+ "construction": {
+  "attempted": 60,
+  "level": {
+   "2": 28,
+   "0": 11,
+   "3": 21
+  },
+  "probes": 888,
+  "cpu_h": 2.363666666666667,
+  "why": {
+   "NO_VERIFIED_LEVEL2": 11
+  }
+ },
+ "outcomes": {
+  "X:CERTIFIED_INFEASIBLE": 401,
+  "X:SUCCESS": 218,
+  "Y:CERTIFIED_INFEASIBLE": 103,
+  "Y:SUCCESS": 37,
+  "X:BUDGET_NO_PLAN": 104,
+  "Y:BUDGET_NO_PLAN": 23,
+  "X:OPERATIONAL_FAILURE": 1
+ },
+ "coverage_matrix": {
+  "h0": {
+   "g1_neg": 57,
+   "g1_pos_replayed": 144,
+   "g2_pos_replayed": 54,
+   "g2_neg": 88,
+   "g1_pos_prefix": 164,
+   "g2_pos_prefix": 39,
+   "g3_pos_replayed": 20,
+   "g3_neg": 95,
+   "g3_pos_prefix": 3
+  },
+  "h1": {
+   "g1_pos_replayed": 32,
+   "g2_pos_replayed": 51,
+   "g2_neg": 59,
+   "g1_pos_prefix": 13,
+   "g3_pos_replayed": 12,
+   "g3_neg": 51,
+   "g1_neg": 9
+  },
+  "h2": {
+   "g2_neg": 16,
+   "g2_pos_replayed": 9,
+   "g3_neg": 18,
+   "g1_neg": 4,
+   "g1_pos_prefix": 3,
+   "g3_pos_replayed": 1,
+   "g1_pos_replayed": 1
+  },
+  "h3": {
+   "g2_neg": 4,
+   "g2_pos_replayed": 2
+  }
+ },
+ "discordant_by_template": {
+  "h0_g2": 21,
+  "h1_g2": 28,
+  "h2_g2": 6,
+  "h1_g3_A|BCD": 3,
+  "h0_g2_FE": 17,
+  "h0_g3": 18,
+  "h1_g3": 8,
+  "h1_g2_FE": 10,
+  "h2_g3": 1,
+  "h2_g3_AB|CDE": 0,
+  "h3_g2": 1,
+  "h3_g2_c3": 1
+ },
+ "interventions": {
+  "TEMP_baseline": {
+   "CERTIFIED_INFEASIBLE": 40,
+   "BUDGET_NO_PLAN": 9
+  },
+  "TEMP_beneficial": {
+   "SUCCESS": 33,
+   "CERTIFIED_INFEASIBLE": 12,
+   "BUDGET_NO_PLAN": 4
+  },
+  "TEMP_irrelevant": {
+   "CERTIFIED_INFEASIBLE": 33,
+   "BUDGET_NO_PLAN": 7,
+   "SUCCESS": 4
+  },
+  "TEMP_harmful": {
+   "CERTIFIED_INFEASIBLE": 18,
+   "BUDGET_NO_PLAN": 3
+  }
+ },
+ "cpu_h_jobs": 4.357944444444445
+}
