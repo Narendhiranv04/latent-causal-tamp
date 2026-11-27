@@ -355,6 +355,54 @@ def work(workers, cpu_lo, max_cpu_h):
     print("B2D_DONE", round(cpu / 3600, 3), "undispatched", len(todo) - i, flush=True)
 
 
+def analyze():
+    """Attempt ledger, construction yield, decided contrasts (certified negatives only), unresolved, chunk coverage matrix, CPU."""
+    import guard as GD
+    c = GD.complete(OB / "roster.json", OB / "families.jsonl")
+    F = [json.loads(l) for l in open(OB / "families.jsonl")]
+    Q = [json.loads(l) for l in open(OB / "queries.jsonl")]
+    fam = collections.Counter(str((f.get("family") or {}).get("level")) + "|" + str((f.get("family") or {}).get("why")) for f in F)
+    att = collections.Counter(a for f in F for a in (f.get("family") or {}).get("attempts", []))
+    l3why = collections.Counter((f.get("family") or {}).get("L3_why") for f in F if (f.get("family") or {}).get("level") == 2)
+    qo = collections.Counter(f"{q['kind']}|{q['outcome']}" for q in Q)
+    stage = collections.Counter(f"{q['stage']}|{q['outcome']}" for q in Q)
+    # matched contrasts: same family + same scene + same destination set, different orders; decided = SUCCESS vs CERTIFIED_INFEASIBLE
+    grp = collections.defaultdict(list)
+    for q in Q:
+        if q["kind"] == "X" and not q["stage"].startswith("PROBE"):
+            grp[(q["fid"], json.dumps(sorted(q["cells"].items())), json.dumps(sorted(map(tuple, q["seq"]))), json.dumps(q["bounds"]) if q["stage"] != "L3_perm" else "perm")].append(q)
+    disc = collections.Counter(); und = collections.Counter()
+    for k, v in grp.items():
+        o = {x["outcome"] for x in v}
+        tag = v[0]["stage"]
+        disc[tag] += ("SUCCESS" in o and "CERTIFIED_INFEASIBLE" in o)
+        und[tag] += any(x in o for x in ("UNRESOLVED", "BUDGET_NO_PLAN", "OPERATIONAL_FAILURE"))
+    mat = collections.Counter()
+    for q in Q:
+        if q["kind"] != "X" or q["stage"].startswith("PROBE"):
+            continue
+        b = [0] + q["bounds"]; ph = str(q.get("phase") or "")
+        fail = int(ph.split(":")[1]) if ph.startswith("relocation") else None
+        for s_, e in zip(b[:-1], b[1:]):
+            if q["outcome"] == "SUCCESS":
+                mat[(s_, e - s_, "pos_replayed")] += 1
+            elif fail is not None and fail >= e:
+                mat[(s_, e - s_, "pos_prefix")] += 1
+            elif fail is not None and s_ <= fail < e and q["outcome"] == "CERTIFIED_INFEASIBLE":
+                mat[(s_, e - s_, "neg_certified")] += 1; break
+            else:
+                mat[(s_, e - s_, "unresolved")] += 1; break
+    nu = collections.Counter(f"{k}:{v}" for f in F for k, v in ((f.get("family") or {}).get("nuisance") or {}).items() if k != "cells")
+    cpu = sum(f.get("cpu_s", 0) for f in F) / 3600
+    out = {"completion": c, "families_attempted": len(F), "families": dict(fam), "level2_or_more": sum(1 for f in F if ((f.get("family") or {}).get("level") or 0) >= 2),
+           "level3": sum(1 for f in F if (f.get("family") or {}).get("level") == 3), "attempt_failures": dict(att), "level3_failure": dict(l3why),
+           "queries": len(Q), "query_outcomes": dict(qo), "by_stage": dict(sorted(stage.items())), "matched_groups": len(grp), "decided_discordant_groups": dict(disc),
+           "groups_with_unresolved": dict(und), "chunk_matrix": {f"h{a}|g{b}|{c_}": v for (a, b, c_), v in sorted(mat.items())}, "nuisance": dict(nu), "cpu_h": cpu,
+           "unresolved_queries": sum(v for k, v in qo.items() if k.endswith(("UNRESOLVED", "BUDGET_NO_PLAN", "OPERATIONAL_FAILURE")))}
+    (OB / "R4_3_build2d.json").write_text(json.dumps(out, indent=1))
+    print(json.dumps(out, indent=1)[:5000])
+
+
 if __name__ == "__main__":
     a = sys.argv[1]
-    {"audit": audit, "roster": lambda: roster(sys.argv[2]), "work": lambda: work(*sys.argv[2:5]), "one": lambda: print(json.dumps(_one(sys.argv[2]), default=str)[:3000])}[a]()
+    {"analyze": analyze, "audit": audit, "roster": lambda: roster(sys.argv[2]), "work": lambda: work(*sys.argv[2:5]), "one": lambda: print(json.dumps(_one(sys.argv[2]), default=str)[:3000])}[a]()
