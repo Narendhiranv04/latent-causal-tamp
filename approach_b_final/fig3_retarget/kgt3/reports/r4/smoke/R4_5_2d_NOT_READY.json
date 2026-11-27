@@ -1,0 +1,20 @@
+{
+ "domain": "2d",
+ "decision": "NOT_READY",
+ "rule": "R4_5_addendum: 2D smoke runs unless the 2D teacher returns UNRESOLVED on >50% of a 10-job pilot",
+ "pilot_jobs": 10,
+ "pilot_status": {
+  "UNKNOWN_PLANNER": 6,
+  "CERTIFIED_INFEASIBLE": 3,
+  "UNKNOWN_TRANSIT": 1
+ },
+ "unresolved_fraction": 0.7,
+ "pilot_successes": 0,
+ "cpu_s": 41.9,
+ "remaining_jobs": "64 sealed jobs NOT_RUN by rule",
+ "reasons": [
+  "2D DEV roots are dense (N 14-20): online-planner incompleteness (R4.3 audit) makes 7/10 pilot runs UNRESOLVED",
+  "the frozen 2D cVAE does not cover the known repairs (R4.1: TOP4 witness action recall .03)",
+  "no 2D model ranks enabling orders (R4.3: F0 concordance .49)"
+ ]
+}

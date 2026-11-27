@@ -278,5 +278,50 @@ def r4d3d():
     fig.tight_layout(); fig.savefig(FIG / "R4_4_deep3d.png", dpi=150); print(FIG / "R4_4_deep3d.png")
 
 
+def r4smoke():
+    """R4.5: end-to-end development smoke per domain (committed plans, no assignment / order / K given) + Fig. 3A / 3B failure funnels."""
+    doms = [d for d in ("3d", "2d") if (R4 / "smoke" / f"R4_5_{d}.json").exists()]
+    fig, ax = plt.subplots(1, 2 * len(doms), figsize=(8.5 * len(doms), 4.0), squeeze=False)
+    ax = ax[0]
+    arms = ["FLAT-INSERT", "REC-ORDERED", "GA", "B0"]
+    for i, d in enumerate(doms):
+        D = json.loads((R4 / "smoke" / f"R4_5_{d}.json").read_text()); S, n = D["summary"], D["n_roots"]
+        w = 0.2
+        for j, (k, col, lab) in enumerate((("x", GREY, "X = 1"), ("y", ORANGE, "Y = 1 (endpoint)"), ("succ", GREEN, "X, Y, replay"), ("long_succ", BLUE, "success with > 3 actions"))):
+            ax[2 * i].bar([a + (j - 1.5) * w for a in range(4)], [S[a][k] for a in arms], width=w, color=col, label=lab)
+        ax[2 * i].set_xticks(range(4)); ax[2 * i].set_xticklabels(["flat control", "Fig. 3A REC", "Fig. 3B GA", "B0 (K<=3)"], fontsize=8)
+        ax[2 * i].set(ylabel=f"roots (of {n})", ylim=(0, n + 1), title=f"({'ab'[i]}) {d.upper()} committed repairs, physical outcome"); ax[2 * i].legend(fontsize=7, frameon=False)
+        P = D["per_root"]
+        for k, arm in enumerate(("REC-ORDERED", "GA")):
+            rr = [P[r][arm] for r in P]
+            st = [n, sum(x["length"] > 0 for x in rr), sum(x["length"] > 3 for x in rr), sum(x.get("x") == 1 for x in rr), sum(x["succ"] for x in rr), sum(x["succ"] and x["length"] > 3 for x in rr)]
+            ax[2 * i + 1].plot(range(6), st, marker="o", color=[GREEN, BLUE][k], label="Fig. 3A REC-ORDERED" if k == 0 else "Fig. 3B GA")
+        ax[2 * i + 1].set_xticks(range(6)); ax[2 * i + 1].set_xticklabels(["roots", "repair\ncommitted", "length > 3", "X = 1", "X, Y,\nreplay", "long\nsuccess"], fontsize=8)
+        ax[2 * i + 1].set(ylabel="roots", title=f"({'cd'[i]}) {d.upper()} failure-stage funnel"); ax[2 * i + 1].legend(fontsize=7, frameon=False)
+    for a in ax:
+        a.spines[["top", "right"]].set_visible(False)
+    fig.suptitle("R4.5 end-to-end development smoke (exposed DEV roots; one committed plan per planner; witness never given)", fontsize=10, x=0.01, ha="left")
+    fig.tight_layout(); fig.savefig(FIG / "R4_5_smoke.png", dpi=150); print(FIG / "R4_5_smoke.png")
+
+
+def r4compute():
+    """Compute breakdown from the R4 ledger (CPU-h per physical stage vs cap; model-only GPU wall)."""
+    L = json.loads((R4 / "R4_LEDGER.json").read_text())
+    fig, ax = plt.subplots(1, 2, figsize=(11, 3.6))
+    st = L["cpu"]
+    names = list(st)
+    ax[0].barh(names, [st[k]["cap"] for k in names], color=GREY, label="authorized cap")
+    ax[0].barh(names, [st[k]["used"] for k in names], color=BLUE, label="used")
+    for i, k in enumerate(names):
+        ax[0].text(st[k]["used"] + 0.1, i, f"{st[k]['used']:.2f}", va="center", fontsize=8)
+    ax[0].set(xlabel="aggregate CPU-hours", title="(a) physical teacher compute"); ax[0].legend(fontsize=7, frameon=False)
+    g = L["gpu_wall_h"]
+    ax[1].barh(list(g), list(g.values()), color=ORANGE)
+    ax[1].set(xlabel="process wall-hours with the GPU model loaded (mostly CPU-bound DP)", title="(b) model-only planning / diagnostics")
+    for a in ax:
+        a.spines[["top", "right"]].set_visible(False)
+    fig.tight_layout(); fig.savefig(FIG / "R4_compute.png", dpi=150); print(FIG / "R4_compute.png")
+
+
 if __name__ == "__main__":
-    {"p2": p2, "p4": p4, "r4cover": r4cover, "r4order": r4order, "r4b2d": r4b2d, "r4d3d": r4d3d}[sys.argv[1]]()
+    {"p2": p2, "p4": p4, "r4cover": r4cover, "r4order": r4order, "r4b2d": r4b2d, "r4d3d": r4d3d, "r4smoke": r4smoke, "r4compute": r4compute}[sys.argv[1]]()
