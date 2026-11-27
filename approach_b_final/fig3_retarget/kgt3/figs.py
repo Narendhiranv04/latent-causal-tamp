@@ -423,5 +423,102 @@ def r53fig():
     fig.tight_layout(); fig.savefig(FIG / "R5_3_scoring.png", dpi=140); print(FIG / "R5_3_scoring.png")
 
 
+def _tree_lines(n, d=0, out=None, budget=28):
+    out = [] if out is None else out
+    if len(out) >= budget:
+        return out
+    if "seed" in n:
+        out.append((d, f"seed {n['seed']}  p11 {n['p11_seed']:.2f}", INK))
+    elif "action" in n and n["action"] != "ROOT":
+        out.append((d, f"retarget {n['action'][0]}->{n['action'][1]}  Y_temp {n.get('y_temp', float('nan')):.2f}" + (f"  [{n['why']}]" if n.get("why") else ""), BLUE))
+        for g in n.get("repairs", []):
+            out.append((d + 1, f"admitted enabler {[tuple(x) for x in g['group']]}  pY_temp {g['py_temp']:.2f}", GREEN))
+            for c in g.get("children", []):
+                _tree_lines(c, d + 2, out, budget)
+    for c in n.get("children", []):
+        _tree_lines(c, d + 1, out, budget)
+    return out
+
+
+def r6fig(pop):
+    """R6 per population: strict / long success by arm, outcome taxonomy, planning latency, an actual logged REC tree and GA composition."""
+    import numpy as np
+    D = json.loads((R5 / "r6" / f"R6_{pop}.json").read_text())
+    P = {r["root_id"]: r for r in jl(R5 / "r6" / f"plans_{pop}.jsonl")}
+    arms = ["B0", "H3", "FLAT-INSERT", "REC-ORDERED", "GA"]
+    S = D["summary"]
+    fig = plt.figure(figsize=(20, 9.5))
+    gs = fig.add_gridspec(2, 4)
+    a0 = fig.add_subplot(gs[0, 0]); a1 = fig.add_subplot(gs[0, 1]); a2 = fig.add_subplot(gs[0, 2]); a3 = fig.add_subplot(gs[0, 3])
+    a4 = fig.add_subplot(gs[1, 0:2]); a5 = fig.add_subplot(gs[1, 2:4])
+    n = D["n_roots"]
+    a0.bar(range(5), [S[a]["succ"] for a in arms], color=[GREY, GREY, ORANGE, GREEN, BLUE], label="strict success (X, Y, replay)")
+    a0.bar(range(5), [S[a]["succ_long"] for a in arms], color="none", edgecolor=INK, hatch="//", label="of which > 3 actions")
+    for i, a in enumerate(arms):
+        lo, hi = S[a]["wilson95"]
+        a0.plot([i, i], [lo * n, hi * n], color=INK, lw=1)
+        a0.text(i, S[a]["succ"] + 0.3, str(S[a]["succ"]), ha="center", fontsize=8)
+    a0.set_xticks(range(5)); a0.set_xticklabels(["B0", "H3", "flat H5", "Fig.3A REC", "Fig.3B GA"], fontsize=8)
+    a0.set(ylabel=f"roots (of {n})", ylim=(0, n + 1), title="(a) strict physical success (95% Wilson)"); a0.legend(fontsize=7, frameon=False)
+    cats = sorted({k for a in arms for k in S[a]["outcomes"]})
+    bot = np.zeros(5)
+    cmap = {"SUCCESS": GREEN, "CERTIFIED_INFEASIBLE": RED, "BUDGET_NO_PLAN": ORANGE, "UNRESOLVED": "#8250df", "OPERATIONAL_FAILURE": MUTED, "UNRUN": "#d0d7de"}
+    for c in cats:
+        v = np.array([S[a]["outcomes"].get(c, 0) for a in arms])
+        a1.bar(range(5), v, bottom=bot, color=cmap.get(c, GREY if c.startswith("NO_REPAIR") else "#57606a"), label=c.replace("NO_REPAIR:", "no repair: "))
+        bot += v
+    a1.set_xticks(range(5)); a1.set_xticklabels(["B0", "H3", "flat", "REC", "GA"], fontsize=8)
+    a1.set(ylabel="roots", title="(b) X outcome taxonomy (Y / replay failures within SUCCESS-X)"); a1.legend(fontsize=6, frameon=False)
+    for i, a in enumerate(arms):
+        w = [P[r]["arms"][a]["wall_s"] for r in P if P[r]["arms"][a].get("wall_s") is not None]
+        a2.scatter(np.full(len(w), i) + np.random.default_rng(i).uniform(-0.15, 0.15, len(w)), w, s=10, color=BLUE, alpha=0.7)
+        if w:
+            a2.plot([i - 0.25, i + 0.25], [np.median(w)] * 2, color=INK, lw=2)
+    a2.set_yscale("log"); a2.set_xticks(range(5)); a2.set_xticklabels(["B0", "H3", "flat", "REC", "GA"], fontsize=8)
+    a2.set(ylabel="model-only planning wall (s, log; floor + selection included)", title="(c) planning latency per root")
+    Lp = {a: collections.Counter(min(x, 5) for x in [len(P[r]["arms"][a]["seq"] or []) for r in P]) for a in arms}
+    for i, a in enumerate(arms):
+        for L in range(0, 6):
+            a3.scatter(i, L, s=12 * Lp[a].get(L, 0), color=BLUE, alpha=0.6)
+    a3.set_xticks(range(5)); a3.set_xticklabels(["B0", "H3", "flat", "REC", "GA"], fontsize=8)
+    a3.set(ylabel="committed repair length (0 = NOOP / ABSTAIN)", title="(d) predicted length distribution")
+    per = D["per_root"]
+    rid = next((r for r in P if per[r]["REC-ORDERED"]["succ"] and per[r]["REC-ORDERED"]["L_pred"] >= 4), next(iter(P)))
+    ra = P[rid]["arms"]["REC-ORDERED"]
+    seq = [tuple(x) for x in (ra["seq"] or [])]
+    tree = ra.get("tree") or {"children": []}
+    lines = []
+    for sd in tree.get("children", []):
+        if any(tuple([V2, d]) in {(f"o{o:02d}" if isinstance(o, int) else o, dd) for o, dd in []} for V2, d in sd.get("seed", [])):
+            pass
+    sel = [sd for sd in tree.get("children", []) if sd.get("repairs") or any(c.get("repairs") for c in sd.get("children", []))][:2] or tree.get("children", [])[:2]
+    for sd in sel:
+        _tree_lines(sd, 0, lines)
+    for k, (d, txt, col) in enumerate(lines[:26]):
+        a4.text(0.01 + 0.03 * d, 0.97 - k * 0.037, ("  " * 0) + ("└ " if d else "") + txt, fontsize=7, color=col, family="monospace", va="top", transform=a4.transAxes)
+    a4.axis("off")
+    a4.set_title(f"(e) Fig. 3A actual logged recursion ({rid[:30]}; committed {len(seq)}-action plan {['%s->%s' % a for a in seq]}, partition {ra['partition']}, "
+                 f"{'SUCCESS' if per[rid]['REC-ORDERED']['succ'] else 'FAIL'})", fontsize=8, loc="left")
+    ga = P[rid]["arms"]["GA"]
+    gseq = ga["seq"] or []
+    x = 0
+    for j, g in enumerate(ga["partition"] or []):
+        for k_ in range(g):
+            o, d_ = gseq[x + k_]
+            a5.add_patch(plt.Rectangle((x + k_ + 0.05, 0.4), 0.9, 0.4, color=BLUE, alpha=0.85))
+            a5.text(x + k_ + 0.5, 0.6, f"{o}->{d_}", ha="center", va="center", color="white", fontsize=8)
+        a5.add_patch(plt.Rectangle((x + 0.02, 0.32), g - 0.04, 0.56, fill=False, ec=INK, lw=1.2))
+        a5.text(x + g - 0.02, 0.92, "q_ref", ha="right", fontsize=7, color=MUTED)
+        x += g
+    a5.set_xlim(-0.2, max(5, x) + 0.2); a5.set_ylim(0, 1.2); a5.axis("off")
+    a5.set_title(f"(f) Fig. 3B committed composition on the same root: mode {ga.get('mode')}, exhausted {ga.get('exhausted')}, "
+                 f"E {ga.get('E') and round(ga['E'], 3)}, {'SUCCESS' if per[rid]['GA']['succ'] else 'FAIL'} (boxes = ordered chunks, q_ref between chunks)", fontsize=8, loc="left")
+    for a in (a0, a1, a2, a3):
+        a.spines[["top", "right"]].set_visible(False)
+    fig.suptitle(f"R6 {pop}: committed plans (no assignment / order / K), physically verified by the unchanged teacher with independent replay; DEVELOPMENT evidence",
+                 fontsize=11, x=0.01, ha="left")
+    fig.tight_layout(); fig.savefig(FIG / f"R6_{pop}.png", dpi=130); print(FIG / f"R6_{pop}.png")
+
+
 if __name__ == "__main__":
-    {"r53fig": r53fig, "r5xl": r5xl, "p2": p2, "p4": p4, "r4cover": r4cover, "r4order": r4order, "r4b2d": r4b2d, "r4d3d": r4d3d, "r4smoke": r4smoke, "r4compute": r4compute}[sys.argv[1]]()
+    {"r6fig": lambda: r6fig(sys.argv[2]), "r53fig": r53fig, "r5xl": r5xl, "p2": p2, "p4": p4, "r4cover": r4cover, "r4order": r4order, "r4b2d": r4b2d, "r4d3d": r4d3d, "r4smoke": r4smoke, "r4compute": r4compute}[sys.argv[1]]()
