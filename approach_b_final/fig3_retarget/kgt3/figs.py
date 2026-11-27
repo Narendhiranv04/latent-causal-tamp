@@ -97,7 +97,7 @@ def p4():
                np.mean([r["arms"]["GA"]["coverage"]["selected_is_witness_set"] for r in Rr])]
         ax[2].bar(np.arange(3) + (j - 0.5) * 0.38, cov, 0.36, color=(ORANGE, BLUE)[j], label=d.upper())
     ax[0].set_xticks(range(5)); ax[0].set_xticklabels(arms, fontsize=7, rotation=15); ax[0].axhline(180, color=RED, ls="--", lw=0.8); ax[0].set_ylabel("planning wall s (CUDA-synced)")
-    ax[0].set_title("(a) planner wall time per root (cap 180 s)", loc="left", fontsize=9)
+    ax[0].set_title("(a) planner wall time per root (cap 180 s)\norange = 2D (30 roots), blue = 3D (20 roots)", loc="left", fontsize=9)
     ax[1].set_xticks(range(5)); ax[1].set_xticklabels(arms, fontsize=7, rotation=15); ax[1].set_ylabel("fraction of roots"); ax[1].legend(frameon=False, fontsize=7)
     ax[1].set_title("(b) selected plan longer than 3 actions\n(model-only; NOT physically verified)", loc="left", fontsize=9)
     ax[2].set_xticks(range(3)); ax[2].set_xticklabels(["witness set in\ninitial D4 pool", "witness set\nDP-optimized", "selected =\nwitness set"], fontsize=7.5)

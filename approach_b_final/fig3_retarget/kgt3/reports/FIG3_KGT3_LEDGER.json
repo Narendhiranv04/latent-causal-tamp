@@ -1,0 +1,82 @@
+{
+ "id": "FIG3_KGT3_LEDGER",
+ "host": "gvlab2",
+ "max_workers_combined": 16,
+ "retries": 0,
+ "P0": {
+  "teacher": 0,
+  "gpu_h": 0.05,
+  "note": "runtime audit 2 roots / domain / 5 arms"
+ },
+ "P1": {
+  "teacher": 0,
+  "gpu_h": 0.1,
+  "quarantine_opened": "DIAGNOSTIC_ONLY copies (49 A2 outcomes)"
+ },
+ "P2": {
+  "2d": {
+   "queries": 1032,
+   "cpu_h": 7.83,
+   "unknown": 644,
+   "errors": 0,
+   "censored": 0,
+   "cap": [
+    1200,
+    20
+   ],
+   "manifests": {
+    "jobs_p2_2d": "3f0010504382e010",
+    "jobs_p2x_2d": "76c5d3eba9a1a49a"
+   }
+  },
+  "3d": {
+   "construction_probes": 515,
+   "construction_cpu_h": 1.22,
+   "runs": 525,
+   "runs_cpu_h": 2.24,
+   "queries_total": 1040,
+   "unknown": 0,
+   "errors": 0,
+   "censored": 0,
+   "cap": [
+    1200,
+    20
+   ],
+   "manifests": {
+    "jobs_p2_3d": "7ebc4f6a861c74e3",
+    "jobs_p2x_3d": "346a66e62322d4c2"
+   }
+  },
+  "gpu_train_h": 0.02,
+  "gpu_eval_h": 0.2,
+  "decisions": {
+   "2d": "DATA_LIMITED",
+   "3d": "DATA_LIMITED"
+  }
+ },
+ "P3": {
+  "status": "NOT_RUN (P2 not passed)",
+  "teacher": 0
+ },
+ "P4": {
+  "teacher": 0,
+  "status": "implemented + unit-tested; model-only accounting on exposed DEV panels (no physical verification)"
+ },
+ "P5": {
+  "status": "NOT_RUN",
+  "teacher": 0,
+  "generation": 0
+ },
+ "exposure": {
+  "new_fresh_panels_opened": [
+   "2D VAL_GATE_NEW never read by a model",
+   "3D VAL_GATE_NEW opened once (M1ft_O2_s0; all arms reported descriptively) -> no longer fresh"
+  ],
+  "exposed_dev_reuse": [
+   "2D DEV_ORDER_2D and 3D DEV_ORDER_3D: P1 model-only analysis and P4 model-only accounting"
+  ],
+  "quarantine": "A2 outcomes opened DIAGNOSTIC_ONLY",
+  "protected": "no TEST / release_v2 access"
+ },
+ "storage_mb": 60
+}
