@@ -229,7 +229,9 @@ def select(fz, row0, cands, floor, rule):
     tau = rule.get("S2_tau")
     if tau is not None:                                                   # R5.3 S2: reliability-threshold shortest (tau from local VAL only)
         for c in pool:
-            if c.get("F") is None or len(c["seq"]) <= 3:
+            if rule.get("S2_stat") == "E":                                # Addendum B: reliability = full energy (X chunks + terminal Y)
+                c["rel"] = c["E"]
+            elif c.get("F") is None or len(c["seq"]) <= 3:
                 c["rel"] = -math.log(max(CP.EPS, fz.score(row0, [c["seq"]])[0]["px"]))
             else:
                 c["rel"] = c["F"]

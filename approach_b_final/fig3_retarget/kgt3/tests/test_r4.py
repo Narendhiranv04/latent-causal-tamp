@@ -301,3 +301,12 @@ def test_admission_rules_default_unchanged_and_margins():
     assert not RC.admits(c, {"py": 0.55, "p11": 0.9}, 0.5) and RC.admits(c, {"py": 0.61, "p11": 0.1}, 0.5)
     c.cfg = {"admit_m": 0.1, "admit_eta": 0.3}
     assert not RC.admits(c, {"py": 0.9, "p11": 0.2}, 0.5) and RC.admits(c, {"py": 0.9, "p11": 0.35}, 0.5)
+
+
+def test_s2_energy_statistic_respects_terminal_y(patched):
+    import planners as PL
+    fz = _fz(FakeFz({}))
+    long_c = {"seq": [[0, 1], [1, 2], [2, 3], [3, 4]], "partition": [2, 2], "E": 0.4, "F": 0.3, "kind": "ga_dp"}
+    one = {"seq": [[0, 1]], "partition": [1], "E": 4.0, "kind": "p11_single"}          # easy move, target still blocked (low p11)
+    pick, why, _ = PL.select(fz, {"domain": "2d", "root_id": "r", "D": {}}, [long_c, one], None, {"noop_gate": 0.5, "S2_tau": 2.0, "S2_stat": "E"})
+    assert pick is long_c and why == "SELECTED_S2"

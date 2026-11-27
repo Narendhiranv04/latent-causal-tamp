@@ -371,5 +371,57 @@ def r5xl():
     fig.tight_layout(); fig.savefig(FIG / "R5_2_xlearning.png", dpi=140); print(FIG / "R5_2_xlearning.png")
 
 
+def r53fig():
+    """R5.3: energy by size (selected X), has_multi binding, S0 vs S2 chosen length, admission true / false rates vs m (paired), proposal coverage."""
+    import numpy as np
+    fig, ax = plt.subplots(2, 4, figsize=(19, 8))
+    for i, d in enumerate(("2d", "3d")):
+        L = jl(R5 / "r53" / f"length_{d}_sel{d}.jsonl")
+        for arm, col in (("GA", BLUE), ("REC-ORDERED", GREEN)):
+            sizes = sorted({int(k) for r in L for k in r["arms"][arm]["by_size"]})
+            ax[i, 0].plot(sizes, [np.median([r["arms"][arm]["by_size"][str(k)]["E"] for r in L if str(k) in r["arms"][arm]["by_size"]]) for k in sizes], marker="o", color=col, label=f"{arm} best E")
+            if arm == "GA":
+                ax[i, 0].plot(sizes, [np.median([-np.log(max(1e-8, r["arms"][arm]["by_size"][str(k)]["y"])) for r in L if str(k) in r["arms"][arm]["by_size"]]) for k in sizes], ls="--", color=ORANGE, label="GA -log Y_global")
+        ax[i, 0].set(xlabel="assignment size", ylabel="median over DEV roots", title=f"({'ae'[i]}) {d.upper()} energy by size (selected X)"); ax[i, 0].legend(fontsize=7, frameon=False)
+        hm = [x for r in L for x in r["arms"]["GA"]["has_multi"]]
+        cfg = json.loads((R5 / "r6" / "config.json").read_text())[d]
+        for k, arm in enumerate(("GA", "REC-ORDERED")):
+            for j, rn in enumerate(("S0", "S2")):
+                lens = [r["arms"][arm]["picks"].get(rn, {}).get("len") for r in L if r["arms"][arm]["picks"].get(rn)]
+                if lens:
+                    c = collections.Counter(lens)
+                    ax[i, 1].bar([x + 0.2 * (2 * k + j) - 0.3 for x in range(1, 6)], [c.get(x, 0) for x in range(1, 6)], width=0.2,
+                                 color=[BLUE, GREEN][k], alpha=1.0 if j == 0 else 0.5, label=f"{arm} {rn}")
+        ax[i, 1].set(xlabel="selected repair length (model-only, DEV)", ylabel="roots",
+                     title=f"({'bf'[i]}) {d.upper()} chosen length; rule = {cfg['selection_rule']}; has_multi binds {sum(x['binds'] for x in hm)}/{len(hm)}")
+        ax[i, 1].legend(fontsize=7, frameon=False)
+        A = json.loads((R5 / "r53" / f"admission_{d}.json").read_text())
+        ms = [0.0, 0.02, 0.05, 0.1, 0.15, 0.2, 0.3]
+        for sp, ls in (("VAL", "-"), ("TRAIN", "--"), ("EXPOSED", ":")):
+            ta = [A[sp][f"A1_m{m}"]["true_admit"] for m in ms]; fa = [A[sp][f"A1_m{m}"]["false_admit"] for m in ms]
+            ax[i, 2].plot(ms, [x if x is not None else np.nan for x in ta], ls=ls, color=GREEN, marker="o", ms=3, label=f"{sp} true admit")
+            if any(x is not None for x in fa):
+                ax[i, 2].plot(ms, [x if x is not None else np.nan for x in fa], ls=ls, color=RED, marker="o", ms=3, label=f"{sp} false admit")
+        ax[i, 2].axvline(A["choice"]["m"], color=MUTED, lw=1)
+        ax[i, 2].set(xlabel="admission margin m (A1)", ylabel="rate (paired families)", ylim=(0, 1.05), title=f"({'cg'[i]}) {d.upper()} admission; chosen {A['choice']['rule']} m={A['choice']['m']}")
+        ax[i, 2].legend(fontsize=6, frameon=False)
+        P = json.loads((R5 / "r53" / f"proposals_{d}.json").read_text())["summary"]
+        rows = [(f"{m}", P[m]) for m in ("S1", "TOP8", "ANC64", "UNIF")]
+        for tag in ("_rec_orig", "_rec_local"):
+            f = R5 / "r53" / f"proposals_{d}{tag}.json"
+            if f.exists():
+                Q = json.loads(f.read_text())["summary"]
+                rows += [(f"{m} {tag[5:].upper()}", Q[m]) for m in Q]
+        ax[i, 3].bar([x - 0.2 for x in range(len(rows))], [v["ga_recall"] for _, v in rows], width=0.4, color=BLUE, label="GA initial pool")
+        ax[i, 3].bar([x + 0.2 for x in range(len(rows))], [v["rec_recall"] for _, v in rows], width=0.4, color=GREEN, label="Fig. 3A recursive union")
+        ax[i, 3].axhline(0.5, color=MUTED, ls="--", lw=1)
+        ax[i, 3].set_xticks(range(len(rows))); ax[i, 3].set_xticklabels([n for n, _ in rows], fontsize=7, rotation=30)
+        ax[i, 3].set(ylabel="witness-action recall (DEV)", ylim=(0, 1.05), title=f"({'dh'[i]}) {d.upper()} proposal coverage (UNIF = labelled control)"); ax[i, 3].legend(fontsize=7, frameon=False)
+    for a in ax.flat:
+        a.spines[["top", "right"]].set_visible(False)
+    fig.suptitle("R5.3 energy, selection, admission and proposals for the selected X (model-only on DEV; admission paired on physical labels)", fontsize=11, x=0.01, ha="left")
+    fig.tight_layout(); fig.savefig(FIG / "R5_3_scoring.png", dpi=140); print(FIG / "R5_3_scoring.png")
+
+
 if __name__ == "__main__":
-    {"r5xl": r5xl, "p2": p2, "p4": p4, "r4cover": r4cover, "r4order": r4order, "r4b2d": r4b2d, "r4d3d": r4d3d, "r4smoke": r4smoke, "r4compute": r4compute}[sys.argv[1]]()
+    {"r53fig": r53fig, "r5xl": r5xl, "p2": p2, "p4": p4, "r4cover": r4cover, "r4order": r4order, "r4b2d": r4b2d, "r4d3d": r4d3d, "r4smoke": r4smoke, "r4compute": r4compute}[sys.argv[1]]()

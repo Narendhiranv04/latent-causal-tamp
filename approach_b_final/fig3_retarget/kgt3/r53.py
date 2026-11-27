@@ -51,6 +51,28 @@ def calib(dom, name):
     print(json.dumps({k: v for k, v in out.items() if k not in ("grid", "reliability")}))
 
 
+def tau_e(dom, spec):
+    """Addendum B: tau_E = 95th percentile of -log p11 over OBSERVED successes on the original K <= 3 VAL roots (local, short evidence)."""
+    import numpy as np
+    import torch
+    import learn as LN
+    import xlearn as XLN
+    import xy as XY
+    D = XLN.prepare(dom)
+    fz, net = LN.load(dom, spec)
+    v = []
+    with torch.no_grad():
+        for i in range(0, len(D["k3val"]), 64):
+            ch = D["k3val"][i:i + 64]
+            b, lab = XY.collate([c["v"] for c in ch], [c["lab"] for c in ch], device="cuda", dtype=torch.float32)
+            Cf = net.coeffs(b)
+            p11 = torch.sigmoid(Cf["b"])[b["parent"]] * torch.sigmoid(Cf["a"] + Cf["w"])
+            m = lab["succ_q"] == 1
+            v += (-torch.log(p11[m].clamp(min=1e-8))).cpu().tolist()
+    out = {"spec": spec, "tau_E": float(np.percentile(v, 95)), "n_successes": len(v), "median": float(np.median(v))}
+    (R53 / f"tauE_{dom}.json").write_text(json.dumps(out, indent=1)); print(json.dumps(out))
+
+
 def reliability(P, n=10):
     out = []
     for k in range(n):
@@ -200,18 +222,37 @@ def admission(dom, spec):
     print(json.dumps({k: v for k, v in out.items() if k not in ("rows",)}, default=str)[:3000])
 
 
+def swap_sampler(fz):
+    """R5.3 Addendum A evaluation only: replace the frozen sampler model by an isolated recovery checkpoint (env CVAE_CKPT); the production
+    sampler object, scalers and inference rule are otherwise unchanged."""
+    import os
+    ck = os.environ.get("CVAE_CKPT")
+    if not ck:
+        return None
+    import torch
+    import placement as PLC
+    c = torch.load(ck, map_location=fz.samp.dev, weights_only=False)
+    m = PLC.TaskCVAE(*c["grid"], c["tdim"], c["cfg"]["hidden"], c["cfg"]["zdim"]).to(fz.samp.dev)
+    m.load_state_dict(c["state"]); m.task_on = c["v"]["task"]
+    fz.samp.m = m.eval()
+    return ck
+
+
 def proposals(dom, spec):
+    import os
     import learn as LN
     import planners as PL
     import recursive as RC
     import views as V
     fz, net = LN.load(dom, spec); fz.net = net
+    swapped = swap_sampler(fz)
+    modes = tuple(os.environ.get("PROP_MODES", "S1,TOP8,ANC64,UNIF").split(","))
     res = []
     for rid, row, A, W, meta in panel(dom):
         r0 = {"root_id": row["root_id"], "domain": row["domain"], "inputs": row["inputs"]}
         W = [tuple(map(int, a)) for a in W]
         rec = {"root_id": rid, "K": meta["K"], "N": meta["N"]}
-        for mode in ("S1", "TOP8", "ANC64", "UNIF"):
+        for mode in modes:
             fz.prop_mode = mode; fz.reset(); fz.caps = {}
             D = fz.proposals(r0, V.eligible(r0))
             ga = {(int(o), int(d)) for o, ds in D.items() for d in ds}
@@ -229,18 +270,21 @@ def proposals(dom, spec):
                          "ga_distinct_x": pj["distinct_x"], "latent_draws": fz.c["latent_draws"], "proposal_calls": fz.c["proposal_calls"]}
         fz.prop_mode = "S1"
         res.append(rec)
-        print(rid, {m: (round(rec[m]["ga_recall"], 2), round(rec[m]["rec_recall"], 2), rec[m]["rec_wall_s"]) for m in ("S1", "TOP8", "ANC64", "UNIF")}, flush=True)
+        print(rid, {m: (round(rec[m]["ga_recall"], 2), round(rec[m]["rec_recall"], 2), rec[m]["rec_wall_s"]) for m in modes}, flush=True)
     summ = {m: {"ga_recall": statistics.mean(r[m]["ga_recall"] for r in res), "ga_set": sum(r[m]["ga_set"] for r in res),
                 "rec_recall": statistics.mean(r[m]["rec_recall"] for r in res), "rec_set": sum(r[m]["rec_set"] for r in res),
                 "rec_wall_median": statistics.median(r[m]["rec_wall_s"] for r in res), "ga_exact_envelope_roots": sum(r[m]["ga_exact_envelope"] for r in res),
-                "ga_distinct_x_median": statistics.median(r[m]["ga_distinct_x"] for r in res)} for m in ("S1", "TOP8", "ANC64", "UNIF")}
-    s1, t8, an = summ["S1"], summ["TOP8"], summ["ANC64"]
-    choice = {"GA": "TOP8" if (t8["ga_recall"] - s1["ga_recall"] >= 0.10 and t8["ga_exact_envelope_roots"] >= 0.5 * len(res)) else "S1",
-              "REC": "ANC64" if (an["rec_recall"] - s1["rec_recall"] >= 0.05 and an["rec_wall_median"] <= 60) else "S1",
-              "cvae_recovery_triggered": max(s["rec_recall"] for s in summ.values() if s is not summ["UNIF"]) < 0.5 if dom == "2d" else False}
-    out = {"dom": dom, "spec": spec, "n": len(res), "summary": summ, "choice": choice, "per_root": res}
+                "ga_distinct_x_median": statistics.median(r[m]["ga_distinct_x"] for r in res)} for m in modes}
+    choice = None
+    if set(("S1", "TOP8", "ANC64")) <= set(modes) and not swapped:
+        s1, t8, an = summ["S1"], summ["TOP8"], summ["ANC64"]
+        choice = {"GA": "TOP8" if (t8["ga_recall"] - s1["ga_recall"] >= 0.10 and t8["ga_exact_envelope_roots"] >= 0.5 * len(res)) else "S1",
+                  "REC": "ANC64" if (an["rec_recall"] - s1["rec_recall"] >= 0.05 and an["rec_wall_median"] <= 60) else "S1",
+                  "cvae_recovery_triggered": max(v["rec_recall"] for k, v in summ.items() if k != "UNIF") < 0.5 if dom == "2d" else False}
+    out = {"dom": dom, "spec": spec, "sampler": swapped or "frozen production", "n": len(res), "summary": summ, "choice": choice, "per_root": res}
+    tag = os.environ.get("PROP_TAG", "")
     R53.mkdir(parents=True, exist_ok=True)
-    (R53 / f"proposals_{dom}.json").write_text(json.dumps(out, indent=1, default=str))
+    (R53 / f"proposals_{dom}{tag}.json").write_text(json.dumps(out, indent=1, default=str))
     print(json.dumps({"summary": summ, "choice": choice}, default=str))
 
 
@@ -275,5 +319,5 @@ def decide():
 
 if __name__ == "__main__":
     a = sys.argv[1]
-    {"decide": decide, "calib": lambda: calib(*sys.argv[2:4]), "length": lambda: length(*sys.argv[2:6]), "admission": lambda: admission(*sys.argv[2:4]),
+    {"tauE": lambda: tau_e(*sys.argv[2:4]), "decide": decide, "calib": lambda: calib(*sys.argv[2:4]), "length": lambda: length(*sys.argv[2:6]), "admission": lambda: admission(*sys.argv[2:4]),
      "proposals": lambda: proposals(*sys.argv[2:4])}[a]()

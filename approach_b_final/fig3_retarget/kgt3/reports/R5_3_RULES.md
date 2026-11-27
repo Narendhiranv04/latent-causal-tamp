@@ -92,3 +92,19 @@ The 2D cVAE recovery was triggered: the best frozen REC-union witness-action rec
 - Model selection uses the original recipe's VAL ELBO on the base snapshot.
 
 **Adoption for R6 2D:** adopt R-LOCAL only if, under the frozen R6 proposal mode, its 2D DEV REC-union witness-action recall exceeds the frozen production sampler's by ≥ 0.10. Otherwise the frozen sampler stays and the result is reported. R-ORIG is reported as the retraining control.
+
+## Addendum B (2026-11-27 ~11:20 UTC, before any R6 2D plan; disclosed specification correction)
+
+**The defect.** S2 as written in §2 used an X-only reliability statistic (Σ −log pX; −log pX for L ≤ 3). The model-only length audit (`r53/length_*_sel*.jsonl`, `figures/R5_3_scoring.png` b / f) shows it **degenerates to a single-relocation repair on 40/40 DEV roots** in both domains. A single easy move is always "reliable" while leaving the target blocked. This contradicts the plan's intent (the shortest *reliable* candidate), because the terminal target term was omitted.
+
+**The correction.**
+- The S2 statistic is the full energy E: −log p11 for L ≤ 3, and Σ −log pX(chunk) − log Y_global for L > 3.
+- τ_E is the 95th percentile of −log p11 over OBSERVED successes on the original K ≤ 3 VAL roots, using the selected (calibrated) model. This is local, short-sequence evidence; nothing is fitted on K4/5.
+- 2D: τ_E = 2.429 from 719 observed successes (`r53/tauE_2d.json`).
+
+**Sanity check** (5 DEV roots, model-only): S0 picks lengths 5, 5, 5, 5, 4; corrected S2 picks 4, 4, 3, 3, 2.
+
+**Unchanged:**
+- The decision logic (S2 iff length bias on ≥ 80% of roots → 2D S2, 3D S0).
+- Every other R6 setting.
+- 3D does not use S2.

@@ -59,7 +59,7 @@ def plan(pop, cfg_path):
     cfg = json.loads(Path(cfg_path).read_text())[dom]
     fz, net = LN.load(dom, cfg["spec"]); fz.net = net
     fz0, base = LN.load(dom, "F0"); fz0.net = base
-    pcfg = {"rule": {**PL.CFG["rule"], **({"S2_tau": cfg["S2_tau"]} if cfg.get("S2_tau") is not None else {})},
+    pcfg = {"rule": {**PL.CFG["rule"], **({"S2_tau": cfg["S2_tau"], "S2_stat": cfg.get("S2_stat")} if cfg.get("S2_tau") is not None else {})},
             "rec": {**PL.CFG["rec"], "admit_m": cfg.get("admit_m", 0.0), "admit_eta": cfg.get("admit_eta")}}
     R6.mkdir(parents=True, exist_ok=True)
     pf = R6 / f"plans_{pop}.jsonl"
