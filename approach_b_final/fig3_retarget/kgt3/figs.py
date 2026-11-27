@@ -182,5 +182,101 @@ def r4order():
     fig.tight_layout(); fig.savefig(FIG / "R4_2_order3d.png", dpi=150); print(FIG / "R4_2_order3d.png")
 
 
+def _heat(ax, mat, hs, gs, title):
+    """mat: {(h, g): (pos, neg, unresolved)} -> annotated heatmap of decided chunk labels."""
+    import numpy as np
+    A = np.zeros((len(hs), len(gs)))
+    for i, hh in enumerate(hs):
+        for j, g in enumerate(gs):
+            p_, n_, u_ = mat.get((hh, g), (0, 0, 0))
+            A[i, j] = p_ + n_
+            ax.text(j, i, f"+{p_} / -{n_}" + (f"\n?{u_}" if u_ else ""), ha="center", va="center", fontsize=8, color=INK)
+    ax.imshow(A, cmap="Blues", vmin=0, vmax=max(1, A.max()) * 1.6, aspect="auto"); ax.grid(False)
+    ax.set_xticks(range(len(gs))); ax.set_xticklabels([f"chunk {g}" for g in gs]); ax.set_yticks(range(len(hs))); ax.set_yticklabels([f"{hh} preceding" for hh in hs])
+    ax.set_title(title, fontsize=10)
+
+
+def _scene2d(ax, cells, goal, arrows, title):
+    from matplotlib.patches import Circle, FancyArrowPatch, Rectangle
+    xy = lambda c: (c % 8 + 0.5, c // 8 + 0.5)  # noqa: E731
+    for c in range(64):
+        ax.add_patch(Rectangle((c % 8, c // 8), 1, 1, fc="#f6f8fa" if (c % 8 + c // 8) % 2 else "white", ec="#eaeef2", lw=0.4))
+    for c in (50, 58):
+        ax.add_patch(Rectangle((c % 8, c // 8), 1, 1, fc="#ddf4ff", ec="none"))
+    ax.add_patch(Rectangle((goal % 8 + 0.1, goal // 8 + 0.1), 0.8, 0.8, fc="#dafbe1", ec=GREEN, lw=0.8))
+    mv = {o for o, _ in arrows}
+    for o, c in cells.items():
+        ax.add_patch(Circle(xy(c), 0.32, fc=GREEN if o == "t0" else (RED if o in mv else GREY), ec=INK, lw=0.5))
+        ax.text(*xy(c), o if o == "t0" else o[1:], ha="center", va="center", fontsize=6.5, color="white" if o in mv or o == "t0" else INK)
+    for k, (o, d) in enumerate(arrows):
+        ax.add_patch(FancyArrowPatch(xy(cells[o]), xy(d), arrowstyle="-|>", mutation_scale=9, color=ORANGE, lw=1.2))
+        ax.text(*xy(d), str(k + 1), ha="center", va="center", fontsize=7, color=ORANGE, fontweight="bold")
+    ax.set_xlim(0, 8); ax.set_ylim(0, 8); ax.set_aspect("equal"); ax.set_xticks([]); ax.set_yticks([]); ax.set_title(title, fontsize=8, loc="left")
+
+
+def r4b2d():
+    """R4.3: 2D witness-first construction yield, decided chunk coverage, actual constructed scene with verified vs failed order."""
+    D = json.loads((R4 / "b2d" / "R4_3_build2d.json").read_text())
+    F = jl(R4 / "b2d" / "families.jsonl")
+    fig, ax = plt.subplots(1, 4, figsize=(17, 4.2))
+    lv = collections.Counter(((f.get("family") or {}).get("level") or 0) for f in F)
+    ax[0].bar(["attempted", "level >= 2\nE enables B", "level 3\nF > E > B"], [len(F), lv[2] + lv[3], lv[3]], color=[GREY, BLUE, GREEN])
+    for i, v in enumerate([len(F), lv[2] + lv[3], lv[3]]):
+        ax[0].text(i, v + 0.5, str(v), ha="center", fontsize=8)
+    ax[0].set(ylabel="families", title="(a) witness-first construction yield")
+    mat = collections.defaultdict(lambda: [0, 0, 0])
+    for k, v in D["chunk_matrix"].items():
+        hh, g, kind = k.split("|"); hh, g = int(hh[1:]), int(g[1:])
+        mat[(hh, g)][0 if kind.startswith("pos") else 1 if kind == "neg_certified" else 2] += v
+    _heat(ax[1], {k: tuple(v) for k, v in mat.items()}, sorted({k[0] for k in mat}), [1, 2, 3], "(b) decided chunk labels (+ replayed / prefix, - certified)")
+    ex = next((f for f in F if (f.get("family") or {}).get("level") == 3), None) or next((f for f in F if ((f.get("family") or {}).get("level") or 0) >= 2), None)
+    if ex:
+        fm = ex["family"]
+        if fm.get("level") == 3:
+            S = fm["cells2"]; ok = [("oF", fm["pF"]), ("oE", fm["pE"]), ("oB", fm["pB"])]; bad = [("oB", fm["pB"]), ("oE", fm["pE"]), ("oF", fm["pF"])]
+            r3 = fm["L3"]
+            _scene2d(ax[2], S, fm["goal"], ok, f"(c) {ex['key']}: F, E, B as one chunk -> {r3.get('FEB[3]')}")
+            _scene2d(ax[3], S, fm["goal"], bad, f"(d) same assignment, B, E, F -> {r3.get('BEF[3]')}")
+        else:
+            S = fm["cells1"]
+            _scene2d(ax[2], S, fm["goal"], [("oE", fm["pE"]), ("oB", fm["pB"])], f"(c) {ex['key']}: E then B -> {fm['L2'].get('EB[2]')}")
+            _scene2d(ax[3], S, fm["goal"], [("oB", fm["pB"]), ("oE", fm["pE"])], f"(d) B then E -> {fm['L2'].get('BE[2]')}")
+    for a in ax[:1]:
+        a.spines[["top", "right"]].set_visible(False)
+    fig.suptitle("R4.3 2D witness-first dependency construction (unchanged BXY teacher, full articulated planar arm; light blue = arm footprint at q_ref; numbers = execution order)", fontsize=10, x=0.01, ha="left")
+    fig.tight_layout(); fig.savefig(FIG / "R4_3_build2d.png", dpi=150); print(FIG / "R4_3_build2d.png")
+
+
+def r4d3d():
+    """R4.4: 3D intermediate-state coverage matrix, temporary-target physical interventions, frozen-model temporary-target diagnostic."""
+    D = json.loads((R4 / "d3d" / "R4_4_deep3d.json").read_text())
+    T = json.loads((R4 / "d3d" / "temp_model.json").read_text())["summary"]
+    fig, ax = plt.subplots(1, 3, figsize=(15, 4.2))
+    mat = collections.defaultdict(lambda: [0, 0, 0])
+    for hh, row in D["coverage_matrix"].items():
+        for k, v in row.items():
+            g = int(k.split("_")[0][1:])
+            mat[(int(hh[1:]), g)][0 if "_pos" in k else 1] += v
+    _heat(ax[0], {k: tuple(v) for k, v in mat.items()}, sorted({k[0] for k in mat}), [1, 2, 3], "(a) decided chunk labels by preceding relocations")
+    iv = D["interventions"]
+    tags = [t for t in ("TEMP_baseline", "TEMP_beneficial", "TEMP_irrelevant", "TEMP_harmful") if t in iv]
+    ax[1].bar(range(len(tags)), [iv[t].get("SUCCESS", 0) for t in tags], color=GREEN, label="temporary target B -> pB VERIFIED")
+    ax[1].bar(range(len(tags)), [sum(v for k, v in iv[t].items() if k != "SUCCESS") for t in tags], bottom=[iv[t].get("SUCCESS", 0) for t in tags], color=GREY, label="not verified (certified / budget / other)")
+    ax[1].set_xticks(range(len(tags))); ax[1].set_xticklabels([t[5:] for t in tags]); ax[1].set(ylabel="families", title="(b) physical temporary-target interventions"); ax[1].legend(fontsize=7, frameon=False)
+    n = T["n"]
+    keys = [("dY_pos", "frozen Y_temp rises\nafter moving E"), ("E_proposed", "cVAE proposes E\n(temporary task)"), ("pE_in_top4", "cVAE top-4 has\nE's destination"),
+            ("enabler_admitted", "recursion admits\nE -> pE"), ("best_E_proposal_admitted", "recursion admits\nsome E proposal")]
+    ax[2].bar(range(len(keys)), [T[k] / n for k, _ in keys], color=BLUE)
+    ir = T["irrelevant_admitted"]
+    ax[2].bar([len(keys)], [ir[0] / max(1, ir[1])], color=RED)
+    ax[2].bar([len(keys) + 1], [T["other_proposals_admitted_rate"]], color=RED)
+    ax[2].set_xticks(range(len(keys) + 2)); ax[2].set_xticklabels([l for _, l in keys] + ["irrelevant Z\nadmitted", "other proposals\nadmitted"], fontsize=7)
+    ax[2].set(ylim=(0, 1.05), ylabel=f"fraction of {n} verified E-enables-B families", title="(c) frozen-model Fig. 3A assumptions (model-only)")
+    for a in ax[1:]:
+        a.spines[["top", "right"]].set_visible(False)
+    fig.suptitle("R4.4 3D deeper intermediate-state supervision + temporary-target pilot (unchanged SHELF66V3 teacher; collection only, no training)", fontsize=10, x=0.01, ha="left")
+    fig.tight_layout(); fig.savefig(FIG / "R4_4_deep3d.png", dpi=150); print(FIG / "R4_4_deep3d.png")
+
+
 if __name__ == "__main__":
-    {"p2": p2, "p4": p4, "r4cover": r4cover, "r4order": r4order}[sys.argv[1]]()
+    {"p2": p2, "p4": p4, "r4cover": r4cover, "r4order": r4order, "r4b2d": r4b2d, "r4d3d": r4d3d}[sys.argv[1]]()

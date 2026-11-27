@@ -1,0 +1,109 @@
+{
+ "completion": {
+  "status": "INCOMPLETE",
+  "why": [
+   "36 missing (NOT_RUN)"
+  ],
+  "n_sealed": 60,
+  "n_records": 24,
+  "kinds": {
+   "DONE": 24
+  },
+  "manifest_sha256": "568593b752b90af663ce3f33a03dd09b518e64f67a8b0dabf99745302a6c5e0d",
+  "results_sha256": "60b0bd7e89661aceea64392fbf80e6a52b4d2434859b32ab440fa42029e8f085"
+ },
+ "families_attempted": 24,
+ "families": {
+  "2|OK": 11,
+  "3|OK": 12,
+  "0|NO_CERTIFIED_LEVEL2": 1
+ },
+ "level2_or_more": 23,
+ "level3": 12,
+ "attempt_failures": {
+  "B_NOT_FREE_AFTER_E": 4,
+  "NO_VERIFIED_B_RELOCATION": 6,
+  "NO_STATIC_CAGE": 1,
+  "B_NOT_CERTIFIED_BLOCKED": 1
+ },
+ "level3_failure": {
+  "NO_VERIFIED_F_OR_E_AFTER_F": 10,
+  "E_NOT_CERTIFIED_BLOCKED_BY_F": 1
+ },
+ "queries": 452,
+ "query_outcomes": {
+  "PROBE|SUCCESS": 105,
+  "PROBE|CERTIFIED_INFEASIBLE": 49,
+  "X|SUCCESS": 85,
+  "X|CERTIFIED_INFEASIBLE": 147,
+  "PROBE|UNRESOLVED": 52,
+  "X|UNRESOLVED": 14
+ },
+ "by_stage": {
+  "L2|CERTIFIED_INFEASIBLE": 46,
+  "L2|SUCCESS": 46,
+  "L3_part|CERTIFIED_INFEASIBLE": 9,
+  "L3_part|SUCCESS": 24,
+  "L3_part|UNRESOLVED": 3,
+  "L3_perm|CERTIFIED_INFEASIBLE": 63,
+  "L3_perm|SUCCESS": 8,
+  "L3_perm|UNRESOLVED": 1,
+  "NUIS|CERTIFIED_INFEASIBLE": 29,
+  "NUIS|SUCCESS": 7,
+  "NUIS|UNRESOLVED": 10,
+  "PROBE:B_blocked_by_E|CERTIFIED_INFEASIBLE": 27,
+  "PROBE:B_blocked_by_E|UNRESOLVED": 1,
+  "PROBE:B_free_after_E|SUCCESS": 23,
+  "PROBE:B_free_after_E|UNRESOLVED": 4,
+  "PROBE:B_free_without_E|SUCCESS": 28,
+  "PROBE:B_free_without_E|UNRESOLVED": 21,
+  "PROBE:E_blocked_by_F|CERTIFIED_INFEASIBLE": 22,
+  "PROBE:E_blocked_by_F|UNRESOLVED": 1,
+  "PROBE:E_free_after_F|SUCCESS": 12,
+  "PROBE:E_free_after_F|UNRESOLVED": 3,
+  "PROBE:E_free|SUCCESS": 27,
+  "PROBE:F_free|SUCCESS": 15,
+  "PROBE:F_free|UNRESOLVED": 22
+ },
+ "matched_groups": 117,
+ "decided_discordant_groups": {
+  "L2": 46,
+  "NUIS": 7,
+  "L3_perm": 8,
+  "L3_part": 0
+ },
+ "groups_with_unresolved": {
+  "L2": 0,
+  "NUIS": 10,
+  "L3_perm": 1,
+  "L3_part": 3
+ },
+ "chunk_matrix": {
+  "h0|g1|neg_certified": 23,
+  "h0|g1|pos_prefix": 8,
+  "h0|g1|pos_replayed": 39,
+  "h0|g2|neg_certified": 36,
+  "h0|g2|pos_prefix": 4,
+  "h0|g2|pos_replayed": 35,
+  "h0|g2|unresolved": 5,
+  "h0|g3|neg_certified": 79,
+  "h0|g3|pos_replayed": 11,
+  "h0|g3|unresolved": 6,
+  "h1|g1|pos_prefix": 4,
+  "h1|g1|pos_replayed": 31,
+  "h1|g2|neg_certified": 3,
+  "h1|g2|pos_replayed": 8,
+  "h1|g2|unresolved": 1,
+  "h2|g1|neg_certified": 6,
+  "h2|g1|pos_replayed": 16,
+  "h2|g1|unresolved": 2
+ },
+ "nuisance": {
+  "verified_order:SUCCESS": 7,
+  "B_first:CERTIFIED_INFEASIBLE": 23,
+  "verified_order:CERTIFIED_INFEASIBLE": 6,
+  "verified_order:UNRESOLVED": 10
+ },
+ "cpu_h": 0.3177222222222222,
+ "unresolved_queries": 66
+}
