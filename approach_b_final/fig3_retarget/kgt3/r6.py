@@ -18,7 +18,8 @@ sys.path[:0] = [str(HERE), str(HERE.parent), str(HERE.parent / "r3"), str(HERE.p
 import common3 as K  # noqa: E402
 import guard as GD  # noqa: E402
 O = K.C.FIG3 / "kgt3"
-R6 = O / "r5" / "r6"
+import os  # noqa: E402
+R6 = Path(os.environ["R6_OUT"]) if os.environ.get("R6_OUT") else O / "r5" / "r6"   # post-hoc diagnostics write elsewhere (never pooled)
 ARMS = ("B0", "H3", "FLAT-INSERT", "REC-ORDERED", "GA")
 
 
