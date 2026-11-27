@@ -15,7 +15,21 @@
 - No production artefact was modified.
 - All trained models are development checkpoints. Final models will be trained cleanly in R7.
 
-@@GATE@@
+## Gate classification
+
+| Domain × method | Status | Evidence |
+|---|---|---|
+| **3D Fig. 3A (REC-ORDERED)** | **DEV_PHYSICALLY_DEMONSTRATED** | 11/20 strict success. 9 with more than 3 actions (6 with 4, 3 with 5). Committed non-oracle plans; replay-verified. |
+| **3D Fig. 3B (GA)** | **DEV_PHYSICALLY_DEMONSTRATED** | 12/20 strict success, all with more than 3 actions (7 with 4, 5 with 5). EXACT on 14/20 roots, BOUNDED elsewhere. |
+| **2D Fig. 3A (REC-ORDERED)** | **DEV_IMPLEMENTED; physically BLOCKED** under the preregistered configuration | 0/20 dense, 0/12 demonstration. Only one *post-hoc* (S0) 5-action success, which does not count. |
+| **2D Fig. 3B (GA)** | **DEV_IMPLEMENTED; physically BLOCKED** | 0/20 dense, 0/12 demonstration, 0/12 post-hoc. |
+
+**2D blockers, measured separately:**
+1. **Selection / terminal-Y extrapolation.** The preregistered S2 rule (τ_E from K ≤ 3 successes) commits 1–2-action plans that execute but never restore the target.
+2. **Teacher decidability.** 40–50% UNRESOLVED on dense roots and 8–9/12 on long plans in 9–13-object scenes. The mechanism is online-planner incompleteness, not budget; the teacher contract and budgets were not changed.
+3. **Placement proposals.** Frozen cVAE recursive-union recall is 0.31 vs 0.57 for uniform exploration. The bounded recovery failed (0.20–0.25).
+
+Local executability (X) is **not** the 2D blocker: G1 VAL AUROC 0.98 and matched-order concordance 0.96.
 
 ## 1. Implementation changes and regression tests
 
@@ -39,7 +53,7 @@
 | Recursive admission margin / eta (`recursive.admits`) | R5.3 | `test_admission_rules_default_unchanged_and_margins` |
 | Defects found and fixed during R5 | empty-X replay batch (no grad), DIRECT validation metric, `taskset` CPU list, snapshot link of the isolated cVAE root | – |
 
-**Tests:** 51 unit tests locally (`tests/test_r4.py`, `tests/test_kgt3.py`), plus 6 real-row tests and 2 learn tests on gvlab2.
+**Tests:** **58 pass on gvlab2**: 30 R4 / R5 unit tests, 20 KGT3, 6 real-row contract tests, 2 learn. 50 of them also run locally.
 
 **Leakage safeguards (R5.0 PASS, unchanged since):** the import guard poisons 23 physical modules, sentinel evaluator fields were never read, and plans are invariant to metadata stripping and root-ID renaming. Every planner reads only `{ids, xy0, cells0, attrs, tid, goal, goal_cell, base, ctx, legal_cells, q_ref, cell_xy}`.
 
@@ -237,20 +251,179 @@ At least one Fig. 3 planner succeeds on **16/20**.
 - Repairs are not claimed minimal. A long executed repair does not prove a long repair was required.
 - **Earlier anchors on the same roots:** R4.5 REC 10, GA 9 (R3 G1s, KGT3 objective); now REC 11, GA 12 with the clean-recipe development G1, the R5 budget fixes and the R5.3 rules.
 
-@@R6_2D@@
+### 2D: dense DEV panel (20 coh2d roots with L_ref 4–5, N 14–20; `R6_2d.json`)
+
+**Pilot (preregistered stop: more than 50% UNRESOLVED in 10 jobs):** 5 UNRESOLVED / 4 CERTIFIED / 1 VERIFIED, i.e. exactly 50%. This is **not above** the threshold, so the full panel was evaluated by rule.
+
+| Arm | Strict success | X / Y / replay = 1 | Unresolved / certified / no-repair | L_pred | Planning median / p90 (s) |
+|---|---|---|---|---|---|
+| B0 | 0/20 | 0 / 3 / 0 | 3 / 7 / 10 | {'0': 10, '3': 10} | 5.3 / 6.5 |
+| H3 | 0/20 | 0 / 0 / 0 | 7 / 2 / 11 | {'0': 11, '3': 9} | 6.8 / 8.2 |
+| flat H5 | 0/20 | 1 / 0 / 1 | 10 / 6 / 3 | {'0': 3, '1': 1, '2': 5, '3': 7, '4': 4} | 68.1 / 91.1 |
+| Fig. 3A REC | 0/20 | 1 / 0 / 1 | 9 / 7 / 3 | {'0': 3, '1': 1, '2': 5, '3': 7, '4': 1, '5': 3} | 71.4 / 104.0 |
+| Fig. 3B GA | 0/20 | 4 / 1 / 4 | 9 / 7 / 0 | {'2': 6, '3': 10, '4': 4} | 53.7 / 100.6 |
+
+### 2D: held-out moderate-density demonstration roots (12; N 9–13; L_ref 4 ×9, 5 ×3; `R6_2d_demo.json`)
+
+These roots are never used for training or selection, and are never pooled with the dense panel.
+
+| Arm | Strict success | X / Y / replay = 1 | Unresolved / certified / no-repair | L_pred | Planning median / p90 (s) |
+|---|---|---|---|---|---|
+| B0 | 0/12 | 5 / 0 / 5 | 3 / 4 / 0 | {'2': 5, '3': 7} | 2.0 / 2.2 |
+| H3 | 0/12 | 6 / 0 / 6 | 6 / 0 / 0 | {'1': 2, '2': 3, '3': 7} | 2.3 / 2.5 |
+| flat H5 | 0/12 | 4 / 0 / 4 | 8 / 0 / 0 | {'1': 6, '2': 6} | 32.9 / 42.5 |
+| Fig. 3A REC | 0/12 | 4 / 0 / 4 | 8 / 0 / 0 | {'1': 6, '2': 6} | 38.4 / 47.0 |
+| Fig. 3B GA | 0/12 | 6 / 0 / 6 | 5 / 1 / 0 | {'1': 6, '2': 6} | 85.9 / 94.4 |
+
+**Reading (primary, preregistered).**
+- 2D is **not physically demonstrated**: 0/20 and 0/12 for every arm.
+- **Demonstration roots.** Under the frozen 2D configuration (S2 shortest-reliable with τ_E from K ≤ 3 successes), **every committed plan has 1–2 relocations**, although every root's verified reference repair needs 4–5. The short plans often execute (X = 1 on 4–6 roots) but never restore the target (Y = 0 throughout). The frozen 2D Y and calibrated X give p11 ≥ 0.09 to short repairs that are physically insufficient, so the K ≤ 3-derived threshold is too permissive for 2D.
+- **Dense panel.** Teacher decidability dominates: 9–10 UNRESOLVED per long arm, plus certified-infeasible plans, on top of proposal coverage (REC-union recall 0.31).
+- **The three 2D bottlenecks, measured separately:**
+  1. Teacher decidability: UNRESOLVED 40–50% in dense scenes; the dominant mechanism is online-planner incompleteness, not budget (R4.3 audit).
+  2. Local executability: solved at the local level (G1 VAL AUROC 0.98, concordance 0.96).
+  3. Placement proposals: the frozen cVAE recalls only 0.31 of reference actions; uniform exploration reaches 0.57; the bounded recovery failed.
+- **The selection or Y-extrapolation issue** (short plans with optimistic p11) is a fourth, newly identified blocker.
+
+### 2D post-hoc diagnostic: original S0 selection on the 12 demonstration roots (`r5/r6_posthoc_s0/`; **chosen after observing the R6 2D primary outcomes; not a primary result, never pooled**)
+
+**Purpose.** Separate the selection-rule blocker from the X / Y / teacher / proposal blockers. Configuration is identical to the frozen R6 2D configuration except S0 instead of S2. Plans were sealed before jobs; 52 new runs, 0.17 CPU-h.
+
+| Arm | Strict success | > 3 actions | X / Y / replay = 1 | Unresolved / certified | L_pred |
+|---|---|---|---|---|---|
+| B0 | 0/12 | 0 | 5 / 0 / 5 | 3 / 4 | {'2': 5, '3': 7} |
+| H3 | 0/12 | 0 | 6 / 0 / 6 | 6 / 0 | {'1': 2, '2': 3, '3': 7} |
+| flat H5 | 1/12 | 1 | 4 / 1 / 4 | 8 / 0 | {'1': 2, '2': 2, '3': 2, '4': 6} |
+| Fig. 3A REC | 1/12 | 1 | 3 / 3 / 3 | 9 / 0 | {'1': 2, '2': 2, '3': 1, '4': 1, '5': 6} |
+| Fig. 3B GA | 0/12 | 0 | 4 / 1 / 4 | 8 / 0 | {'1': 2, '2': 1, '4': 5, '5': 4} |
+
+**Reading.**
+- With S0 the 2D planners commit long plans: REC 4–5 actions on 7/12 roots, GA on 9/12.
+- **Fig. 3A REC produces one replay-verified 5-action repair** on the sparsest root (G032, N = 9); flat succeeds there too with a 4-action plan.
+- REC reaches endpoint Y = 1 on 3 roots. The dominant outcome is now **UNRESOLVED (8–9/12): the unchanged 2D teacher cannot decide most long plans in 9–13-object scenes.**
+- **2D blocker order is therefore:** selection or Y extrapolation (S2 short plans: target never restored), then teacher decidability for long plans, then proposal coverage.
+- This single post-hoc success is not a physical demonstration of 2D.
+
 
 ## 6. Resources
 
-@@RES@@
+**Machine use.** All compute ran on gvlab2 (48 cores, RTX 5090 32 GB, 125 GB RAM). The local machine was used only for git, figures and reports, because /home there had 1.4 GB free (below the 20 GiB floor) and no GPU was visible. No unrelated process was touched.
+
+| Item | Used | Authorised |
+|---|---|---|
+| Physical teacher CPU | **15.1 CPU-h** — R5.1 2D 4.09; 3D 2.36 + 4.36; demonstration construction 1.26 + 0.91; smoke tests 0.36; R5.2 ordering 0.50; R6 3D 0.72; R6 2D 0.22 + 0.10; post-hoc 0.17 | 40 |
+| Summed GPU process wall | **≈ 6.4 h** (training ≈ 0.6, R5.3 diagnostics ≈ 2.7, recovery and evaluation ≈ 0.8, R6 planning ≈ 2.0, R5.0 audits ≈ 0.5); mostly CPU-bound DP with a GPU model resident | 10 |
+| GPU device occupancy (wall-clock union) | ≈ 3.5 h; peak VRAM ≈ 11 GB with 7 concurrent planners | – |
+| Peak host RAM | ≈ 23 GB used of 125 GB; no swap pressure; load ≤ 27 of 48 cores | – |
+| Wall clock | R5.1 → R6 gate about 3.3 h, plus R5.0 about 0.4 h | 12 h |
+| New storage | about 0.25 GB on gvlab2 (`kgt3/r5`, witnesses, cVAE runs) + about 25 MB in git (GIFs about 21 MB); /home free 33 GB | 4 GiB |
+
+**Planning latency** (synchronized, floor and selection included):
+- 3D medians: REC 5.5 s and GA 21 s (p90 10 s and 133 s).
+- 2D medians: REC 38–71 s and GA 54–86 s (p90 ≤ 105 s). No deadline overruns beyond one model batch were recorded.
+
+**Verification:** median 3D run 30–40 s CPU; 2D 2–30 s.
 
 ## 7. Deviations, limitations and unsuccessful experiments
 
-@@DEV@@
+**Deviations (all disclosed in the commit history and here):**
+1. **Addendum B: S2 specification correction.** The preregistered S2 used an X-only reliability statistic and degenerated to 1-relocation plans (model-only, before any R6 2D plan). It was corrected to the full energy with τ_E from original K ≤ 3 VAL successes. In R6 2D the corrected rule still commits too-short plans, which is itself a reported negative result.
+2. **R6 2D post-hoc S0 diagnostic.** Chosen after observing the 2D primary outcomes, explicitly labelled, and never pooled.
+3. **2D demonstration construction.** The first two designs failed in smoke tests (two-wall cages do not exist under the greedy cage; unverified destinations are unresolved). The third design is pick + place cages with verified steps. Yield: 12/100 attempted families.
+4. **2D VAL** includes the KGT3 P2 2D GATE families, which no model had read; they are dense generator scenes, a different distribution from the R5.1 constructions.
+5. **R5.2 driver bug.** Replay-only batches without X queries had no gradient, which crashed the run. Fixed and resumed; completed runs were reused by name.
+6. **The local machine was not used** (storage).
+7. **The 2D dense pilot sat exactly at 50% UNRESOLVED.** That is not above the threshold, so the full panel ran.
+
+**Limitations.**
+- All evaluation roots are exposed development roots. The 3D DEV panel has been used across R2–R6, including model and configuration selection (R5.3 coverage, length and admission diagnostics ran on it).
+- 3D VAL has 26 families. Each configuration had two seeds.
+- The X / Y coupling effect is not established.
+- The direct-success control cannot be compared on long horizons.
+- Admission false-admission rates in 2D are unmeasurable with current labels.
+- Terminal Y on 4–5 edits is an extrapolation.
+- No minimum-K claims: L_ref is a verified reference length, not K*.
+
+**Unsuccessful experiments, kept:**
+- 2D cVAE recovery (not adopted);
+- the first S2 definition;
+- 2D demonstration designs 1–2;
+- R6 2D primary (0/32).
 
 ## 8. Recommendation for R7 / R8 (not started; requires owner approval)
 
-@@R78@@
+**Is additional independent K4/5 evaluation data justified?** Yes, at least for 3D.
+- Every current K4/5 evaluation root is exposed. The 20 3D DEV roots were used for model, configuration and planner development from R2 to R6, so they cannot support confirmation.
+- 2D should not proceed to a costly independent cohort until its three blockers are addressed.
+
+**Proposed R7 (separate owner approval).**
+
+1. **Frozen design** from the R5 / R6 evidence:
+   - query-relative GNN X head (G);
+   - original observed-data likelihood with strict local data;
+   - Y frozen from a freshly trained base;
+   - lr 1e-3, ≤ 60 epochs, patience 10;
+   - selection by local VAL NLL;
+   - H = 5, `has_multi` primary;
+   - 3D S0 selection, A1 admission with m = 0.10, GA S1 top-4 pool, REC ANC64 local resampling;
+   - planner budgets unchanged (180 s with floor and selection reserve inside).
+
+2. **2D, before any 2D R7 training,** a bounded 2D development cycle (R6b), owner decision required:
+   - (a) the teacher-decidability question (contracts may not change silently: this needs an explicit owner decision on whether a larger online-planner budget or a certified alternative is permissible);
+   - (b) a larger local placement corpus for a fresh cVAE (at least about 1,500 verified local repairs from witness-first construction, about 6 CPU-h);
+   - (c) S2 / τ redefinition evidence from verified local *long-endpoint-free* data.
+
+   Otherwise R7 / R8 proceed for 3D only, with 2D reported as BLOCKED.
+
+3. **Clean training from random initialisation, per domain** (no development checkpoint inheritance):
+   - Q2 placement pretraining → `q2init_all` task fine-tuning (production recipe), seeds 0, 1, 2, or keep the released cVAE if the owner prefers to isolate the X change;
+   - fresh base XYNet (arm D, original recipe) seeds 0, 1, 2 → freeze its Y;
+   - fresh G X head on original + strict local TRAIN (R3.1 / KGT3 / R4.3 / R4.4 / R5.1 TRAIN), with VAL families for selection only, seeds 0, 1, 2;
+   - seed and checkpoint chosen by VAL NLL only; temperature on VAL;
+   - estimated ≤ 2 GPU-h.
+
+4. **Independent 3D cohort (R8)** with the existing SHELF66V3 K45 generator + witness pipeline on fresh family seeds:
+   - target 40 roots (about 20 with L_ref 4 and about 20 with L_ref 5); a certified K* stratum only where a sound lower bound exists;
+   - attempted-family budget fixed in advance; rejected families recorded;
+   - estimate about 12–18 CPU-h construction;
+   - sealed roster quarantined from developers.
+
+5. **R8 evaluation:**
+   - arms B0, H3, flat H5, Fig. 3A H5, Fig. 3B H5 on the sealed cohort;
+   - one committed plan per root and arm; teacher, replay and budgets unchanged;
+   - all-root strict success (UNKNOWN counted as not verified), > 3-action success, L_pred / L_exec, failure taxonomy, latency (median / p90 / mean), search counters, paired sign tests and family-aware intervals;
+   - estimated about 2 GPU-h planning + 3–4 CPU-h verification;
+   - **protected TEST / release_v2 access only with explicit separate authorisation.**
 
 ## 9. Reproducibility
 
-@@REPRO@@
+All commands run on gvlab2 with `source $FIG3/env.sh` and `cd $CODE/fig3_retarget/kgt3`.
+
+```
+# R5.1 data (sealed rosters)
+B2D_OUT=$FIG3/kgt3/r5/b2d B2D_PREFIX=1 $PY2D build2d.py roster 70 R5.1-2D-F && ... build2d.py work 8 2 6.0
+D3D_OUT=$FIG3/kgt3/r5/d3d D3D_NS=R5.1 D3D_ZTRY=8 $PY3D deep3d.py construct 8 10 6.0 60 && $PY3D deep3d.py jobs
+$PY3D ../physical3d.py work $FIG3/kgt3/r5/d3d/jobs.json $FIG3/kgt3/r5/d3d/phys.jsonl 12 14 900 8.0
+B2D_OUT=$FIG3/kgt3/r5/demo2d{,_b} B2D_DEMO=1 $PY2D build2d.py work 8 26 2.5
+# R5.2
+$FIG3/kgt3/r5/r52.sh 2d ; $FIG3/kgt3/r5/r52.sh 3d          # data -> recipe -> matrix -> select -> controls
+ORD_OUT=$FIG3/kgt3/r5/order3d ORD_SPECS=G1new=XL:3d_G1_hi_base_s0,... ORD_PARTITION=0 $PYG order_phys.py plan; $PY3D order_phys.py jobs 100
+# R5.3
+$PYG r53.py calib 2d 2d_G1_hi_base_s1 ; ... length / admission / proposals ; $PYG r53.py tauE 2d XL:2d_G1_hi_base_s1@T=0.7535 ; $PYG r53.py decide
+ABF_ROOT=$FIG3/kgt3/r5/cvae_root V3OUT=$FIG3/kgt3/r5/cvae_runs $PYG cvae_rec.py run
+# R6
+R6_SHARD=i/n $PYG r6.py plan {3d|2d|2d_demo} $FIG3/kgt3/r5/r6/config.json ; $PY2D r6.py merge POP n ; r6.py jobs POP CAP
+$PY{2D,3D} ../physical{2,3}d.py work jobs_POP.json phys_POP.jsonl W CPU_LO MAX MAXH ; $PY2D r6.py analyze POP
+python figs.py {r5xl|r53fig|r6fig 3d|r6fig 2d|r6fig 2d_demo}
+```
+
+**Artifacts:**
+- `kgt3/reports/r5/` (manifests, seals, raw per-root records, selections, configs, curves);
+- `kgt3/reports/figures/R5_2_xlearning.png`, `R5_3_scoring.png`, `R6_3d.png`, `R6_2d.png`, `R6_2d_demo.png`;
+- GIFs in `kgt3/reports/figures/gifs/` (`R5`/`R6` prefixed), all actual logged teacher records:
+  - 3D: MuJoCo re-execution of stored witnesses;
+  - 2D: certified joint records drawn with the teacher's robot geometry.
+
+**Checkpoint hashes (development only):**
+- 2D `2d_G1_hi_base_s1` sha256 `da3ad74f…`; 3D `3d_G1_hi_base_s0` `ed59aebc…`, in `$FIG3/kgt3/r5/xl/ckpt/` with `curve.json` per run;
+- recovery cVAEs in `$FIG3/kgt3/r5/cvae_runs/`.
