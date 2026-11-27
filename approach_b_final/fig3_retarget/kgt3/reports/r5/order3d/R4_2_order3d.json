@@ -1,0 +1,5438 @@
+{
+ "n_roots": 20,
+ "summary": {
+  "F0": {
+   "succ": 2,
+   "x": 2,
+   "y_given_x": 2,
+   "replay_given_xy": 2,
+   "first_failed": {
+    "0": 13,
+    "2": 3,
+    "1": 2
+   },
+   "connector_fail": 0,
+   "x_outcomes": {
+    "CERTIFIED_INFEASIBLE": 15,
+    "BUDGET_NO_PLAN": 3,
+    "SUCCESS": 2
+   },
+   "new": 0,
+   "reused": 20,
+   "first_action_ok": 3,
+   "witness_rank_median_quantile": 0.30434782608695654,
+   "plan_wall_s_median": 0.3782380186021328,
+   "x_unique_median": 480
+  },
+  "G1new": {
+   "succ": 15,
+   "x": 15,
+   "y_given_x": 15,
+   "replay_given_xy": 15,
+   "first_failed": {
+    "2": 2,
+    "4": 2,
+    "3": 1
+   },
+   "connector_fail": 0,
+   "x_outcomes": {
+    "SUCCESS": 15,
+    "CERTIFIED_INFEASIBLE": 2,
+    "BUDGET_NO_PLAN": 3
+   },
+   "new": 16,
+   "reused": 4,
+   "first_action_ok": 13,
+   "witness_rank_median_quantile": 0.08695652173913043,
+   "plan_wall_s_median": 0.3437594845890999,
+   "x_unique_median": 480
+  },
+  "M1new": {
+   "succ": 12,
+   "x": 12,
+   "y_given_x": 12,
+   "replay_given_xy": 12,
+   "first_failed": {
+    "3": 5,
+    "4": 1,
+    "null": 1,
+    "1": 1
+   },
+   "connector_fail": 1,
+   "x_outcomes": {
+    "SUCCESS": 12,
+    "CERTIFIED_INFEASIBLE": 5,
+    "BUDGET_NO_PLAN": 2,
+    "OPERATIONAL_FAILURE": 1
+   },
+   "new": 15,
+   "reused": 5,
+   "first_action_ok": 11,
+   "witness_rank_median_quantile": 0.2608695652173913,
+   "plan_wall_s_median": 0.3538299575448036,
+   "x_unique_median": 480
+  },
+  "A1new": {
+   "succ": 6,
+   "x": 6,
+   "y_given_x": 6,
+   "replay_given_xy": 6,
+   "first_failed": {
+    "0": 9,
+    "1": 3,
+    "3": 1,
+    "2": 1
+   },
+   "connector_fail": 0,
+   "x_outcomes": {
+    "SUCCESS": 6,
+    "BUDGET_NO_PLAN": 2,
+    "CERTIFIED_INFEASIBLE": 11,
+    "OPERATIONAL_FAILURE": 1
+   },
+   "new": 17,
+   "reused": 3,
+   "first_action_ok": 5,
+   "witness_rank_median_quantile": 0.2608695652173913,
+   "plan_wall_s_median": 0.3590543232858181,
+   "x_unique_median": 480
+  },
+  "RANDOM": {
+   "succ": 3,
+   "x": 3,
+   "y_given_x": 3,
+   "replay_given_xy": 3,
+   "first_failed": {
+    "0": 7,
+    "1": 9,
+    "3": 1
+   },
+   "connector_fail": 0,
+   "x_outcomes": {
+    "CERTIFIED_INFEASIBLE": 14,
+    "SUCCESS": 3,
+    "BUDGET_NO_PLAN": 3
+   },
+   "new": 0,
+   "reused": 20
+  },
+  "WITNESS": {
+   "succ": 18,
+   "x": 18,
+   "y_given_x": 18,
+   "replay_given_xy": 18,
+   "first_failed": {
+    "2": 1,
+    "3": 1
+   },
+   "connector_fail": 0,
+   "x_outcomes": {
+    "SUCCESS": 18,
+    "OPERATIONAL_FAILURE": 2
+   },
+   "new": 0,
+   "reused": 20
+  }
+ },
+ "paired": {
+  "G1new_vs_F0": {
+   "gain": 13,
+   "loss": 0,
+   "p_two_sided": 0.000244140625
+  },
+  "G1new_vs_RANDOM": {
+   "gain": 12,
+   "loss": 0,
+   "p_two_sided": 0.00048828125
+  },
+  "M1new_vs_F0": {
+   "gain": 11,
+   "loss": 1,
+   "p_two_sided": 0.00634765625
+  },
+  "M1new_vs_RANDOM": {
+   "gain": 9,
+   "loss": 0,
+   "p_two_sided": 0.00390625
+  },
+  "A1new_vs_F0": {
+   "gain": 4,
+   "loss": 0,
+   "p_two_sided": 0.125
+  },
+  "A1new_vs_RANDOM": {
+   "gain": 5,
+   "loss": 2,
+   "p_two_sided": 0.453125
+  },
+  "F0_vs_RANDOM": {
+   "gain": 2,
+   "loss": 3,
+   "p_two_sided": 1.0
+  }
+ },
+ "physical_concordance": {
+  "F0": {
+   "pairs": 95,
+   "concordance": 0.35789473684210527
+  },
+  "G1new": {
+   "pairs": 95,
+   "concordance": 0.968421052631579
+  },
+  "M1new": {
+   "pairs": 95,
+   "concordance": 0.7684210526315789
+  },
+  "A1new": {
+   "pairs": 95,
+   "concordance": 0.5894736842105263
+  }
+ },
+ "partition_study": {
+  "G1s:back:succ": 0,
+  "G1s:dp:succ": 0,
+  "G1s:front:succ": 0,
+  "G1s:pattern:????": 20,
+  "G1s:singletons:succ": 0,
+  "WITNESS:back:succ": 0,
+  "WITNESS:dp:succ": 0,
+  "WITNESS:front:succ": 0,
+  "WITNESS:pattern:????": 20,
+  "WITNESS:singletons:succ": 0
+ },
+ "per_root": {
+  "3ds66-k45d-srv3-w0068-s023-k4v2j0-k5v2j3": {
+   "F0": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "CERTIFIED_INFEASIBLE",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:2",
+    "status": "no feasible side grasp",
+    "first_failed": 2,
+    "connector_fail": false,
+    "connectors_ok": 2,
+    "cpu_s": 22.5,
+    "wall_s": 22.5,
+    "y_status": "VERIFIED",
+    "src": "R4.2:R4.2|3d|3ds66-k45d-srv3-w0068-s023-k4v2j0-k5v2j3|[[5, 9], [2, 10], [1, 28], [3, 11], [4, 15]]|[1, 2, 4, 5]",
+    "order": [
+     [
+      5,
+      9
+     ],
+     [
+      2,
+      10
+     ],
+     [
+      1,
+      28
+     ],
+     [
+      3,
+      11
+     ],
+     [
+      4,
+      15
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     2,
+     1
+    ],
+    "study": "main"
+   },
+   "G1new": {
+    "x": 1,
+    "y": 1,
+    "replay": 1,
+    "succ": true,
+    "x_outcome": "SUCCESS",
+    "y_outcome": "SUCCESS",
+    "phase": null,
+    "status": "VERIFIED",
+    "first_failed": null,
+    "connector_fail": false,
+    "connectors_ok": 4,
+    "cpu_s": 33.0,
+    "wall_s": 36.0,
+    "y_status": "VERIFIED",
+    "src": "NEW",
+    "order": [
+     [
+      4,
+      15
+     ],
+     [
+      1,
+      28
+     ],
+     [
+      3,
+      11
+     ],
+     [
+      2,
+      10
+     ],
+     [
+      5,
+      9
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     2,
+     1
+    ],
+    "study": "main"
+   },
+   "M1new": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "CERTIFIED_INFEASIBLE",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:3",
+    "status": "no feasible side grasp",
+    "first_failed": 3,
+    "connector_fail": false,
+    "connectors_ok": 2,
+    "cpu_s": 33.6,
+    "wall_s": 35.6,
+    "y_status": "VERIFIED",
+    "src": "NEW",
+    "order": [
+     [
+      4,
+      15
+     ],
+     [
+      3,
+      11
+     ],
+     [
+      5,
+      9
+     ],
+     [
+      2,
+      10
+     ],
+     [
+      1,
+      28
+     ]
+    ],
+    "partition": [
+     2,
+     1,
+     2
+    ],
+    "study": "main"
+   },
+   "A1new": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "CERTIFIED_INFEASIBLE",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:0",
+    "status": "no feasible side grasp",
+    "first_failed": 0,
+    "connector_fail": false,
+    "connectors_ok": 0,
+    "cpu_s": 11.1,
+    "wall_s": 12.2,
+    "y_status": "VERIFIED",
+    "src": "NEW",
+    "order": [
+     [
+      1,
+      28
+     ],
+     [
+      2,
+      10
+     ],
+     [
+      3,
+      11
+     ],
+     [
+      5,
+      9
+     ],
+     [
+      4,
+      15
+     ]
+    ],
+    "partition": [
+     3,
+     1,
+     1
+    ],
+    "study": "main"
+   },
+   "RANDOM": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "CERTIFIED_INFEASIBLE",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:0",
+    "status": "no feasible side grasp",
+    "first_failed": 0,
+    "connector_fail": false,
+    "connectors_ok": 0,
+    "cpu_s": 11.3,
+    "wall_s": 11.3,
+    "y_status": "VERIFIED",
+    "src": "R4.2:R4.2|3d|3ds66-k45d-srv3-w0068-s023-k4v2j0-k5v2j3|[[1, 28], [4, 15], [3, 11], [5, 9], [2, 10]]|[1, 2, 4, 5]",
+    "order": [
+     [
+      1,
+      28
+     ],
+     [
+      4,
+      15
+     ],
+     [
+      3,
+      11
+     ],
+     [
+      5,
+      9
+     ],
+     [
+      2,
+      10
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     2,
+     1
+    ],
+    "study": "main"
+   },
+   "WITNESS": {
+    "x": 1,
+    "y": 1,
+    "replay": 1,
+    "succ": true,
+    "x_outcome": "SUCCESS",
+    "y_outcome": "SUCCESS",
+    "phase": null,
+    "status": "VERIFIED",
+    "first_failed": null,
+    "connector_fail": false,
+    "connectors_ok": 4,
+    "cpu_s": 32.6,
+    "wall_s": 32.6,
+    "y_status": "VERIFIED",
+    "src": "R4.2:R4.2|3d|3ds66-k45d-srv3-w0068-s023-k4v2j0-k5v2j3|[[4, 15], [1, 28], [5, 9], [2, 10], [3, 11]]|[1, 2, 3, 5]",
+    "order": [
+     [
+      4,
+      15
+     ],
+     [
+      1,
+      28
+     ],
+     [
+      5,
+      9
+     ],
+     [
+      2,
+      10
+     ],
+     [
+      3,
+      11
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     1,
+     2
+    ],
+    "study": "main"
+   }
+  },
+  "3ds66-srv3-w0078-s012": {
+   "F0": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "BUDGET_NO_PLAN",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:1",
+    "status": "no feasible side grasp",
+    "first_failed": 1,
+    "connector_fail": false,
+    "connectors_ok": 1,
+    "cpu_s": 28.3,
+    "wall_s": 28.9,
+    "y_status": "VERIFIED",
+    "src": "R2.4:R24|3ds66-srv3-w0078-s012|[[4, 16], [5, 31], [2, 24], [1, 9]]|[1, 2, 4]",
+    "order": [
+     [
+      4,
+      16
+     ],
+     [
+      5,
+      31
+     ],
+     [
+      2,
+      24
+     ],
+     [
+      1,
+      9
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     2
+    ],
+    "study": "main"
+   },
+   "G1new": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "BUDGET_NO_PLAN",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:3",
+    "status": "no feasible side grasp",
+    "first_failed": 3,
+    "connector_fail": false,
+    "connectors_ok": 2,
+    "cpu_s": 35.6,
+    "wall_s": 36.0,
+    "y_status": "VERIFIED",
+    "src": "NEW",
+    "order": [
+     [
+      4,
+      16
+     ],
+     [
+      1,
+      9
+     ],
+     [
+      2,
+      24
+     ],
+     [
+      5,
+      31
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     2
+    ],
+    "study": "main"
+   },
+   "M1new": {
+    "x": 1,
+    "y": 1,
+    "replay": 1,
+    "succ": true,
+    "x_outcome": "SUCCESS",
+    "y_outcome": "SUCCESS",
+    "phase": null,
+    "status": "VERIFIED",
+    "first_failed": null,
+    "connector_fail": false,
+    "connectors_ok": 3,
+    "cpu_s": 35.0,
+    "wall_s": 35.0,
+    "y_status": "VERIFIED",
+    "src": "R4.2:R4.2|3d|3ds66-srv3-w0078-s012|[[2, 24], [4, 16], [5, 31], [1, 9]]|[1, 2, 4]",
+    "order": [
+     [
+      2,
+      24
+     ],
+     [
+      4,
+      16
+     ],
+     [
+      5,
+      31
+     ],
+     [
+      1,
+      9
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     2
+    ],
+    "study": "main"
+   },
+   "A1new": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "CERTIFIED_INFEASIBLE",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:0",
+    "status": "no feasible side grasp",
+    "first_failed": 0,
+    "connector_fail": false,
+    "connectors_ok": 0,
+    "cpu_s": 16.0,
+    "wall_s": 16.5,
+    "y_status": "VERIFIED",
+    "src": "NEW",
+    "order": [
+     [
+      5,
+      31
+     ],
+     [
+      4,
+      16
+     ],
+     [
+      1,
+      9
+     ],
+     [
+      2,
+      24
+     ]
+    ],
+    "partition": [
+     3,
+     1
+    ],
+    "study": "main"
+   },
+   "RANDOM": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "BUDGET_NO_PLAN",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:3",
+    "status": "no feasible side grasp",
+    "first_failed": 3,
+    "connector_fail": false,
+    "connectors_ok": 2,
+    "cpu_s": 34.9,
+    "wall_s": 35.0,
+    "y_status": "VERIFIED",
+    "src": "R4.2:R4.2|3d|3ds66-srv3-w0078-s012|[[2, 24], [4, 16], [1, 9], [5, 31]]|[1, 2, 4]",
+    "order": [
+     [
+      2,
+      24
+     ],
+     [
+      4,
+      16
+     ],
+     [
+      1,
+      9
+     ],
+     [
+      5,
+      31
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     2
+    ],
+    "study": "main"
+   },
+   "WITNESS": {
+    "x": 1,
+    "y": 1,
+    "replay": 1,
+    "succ": true,
+    "x_outcome": "SUCCESS",
+    "y_outcome": "SUCCESS",
+    "phase": null,
+    "status": "VERIFIED",
+    "first_failed": null,
+    "connector_fail": false,
+    "connectors_ok": 3,
+    "cpu_s": 32.4,
+    "wall_s": 32.4,
+    "y_status": "VERIFIED",
+    "src": "R4.2:R4.2|3d|3ds66-srv3-w0078-s012|[[2, 24], [4, 16], [5, 31], [1, 9]]|[2, 3, 4]",
+    "order": [
+     [
+      2,
+      24
+     ],
+     [
+      4,
+      16
+     ],
+     [
+      5,
+      31
+     ],
+     [
+      1,
+      9
+     ]
+    ],
+    "partition": [
+     2,
+     1,
+     1
+    ],
+    "study": "main"
+   }
+  },
+  "3ds66-k45d-srv-w0018-s015-k4v2j0": {
+   "F0": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "CERTIFIED_INFEASIBLE",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:0",
+    "status": "no feasible side grasp",
+    "first_failed": 0,
+    "connector_fail": false,
+    "connectors_ok": 0,
+    "cpu_s": 13.9,
+    "wall_s": 13.9,
+    "y_status": "VERIFIED",
+    "src": "R4.2:R4.2|3d|3ds66-k45d-srv-w0018-s015-k4v2j0|[[1, 29], [3, 10], [2, 30], [4, 16]]|[1, 2, 4]",
+    "order": [
+     [
+      1,
+      29
+     ],
+     [
+      3,
+      10
+     ],
+     [
+      2,
+      30
+     ],
+     [
+      4,
+      16
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     2
+    ],
+    "study": "main"
+   },
+   "G1new": {
+    "x": 1,
+    "y": 1,
+    "replay": 1,
+    "succ": true,
+    "x_outcome": "SUCCESS",
+    "y_outcome": "SUCCESS",
+    "phase": null,
+    "status": "VERIFIED",
+    "first_failed": null,
+    "connector_fail": false,
+    "connectors_ok": 3,
+    "cpu_s": 27.3,
+    "wall_s": 28.6,
+    "y_status": "VERIFIED",
+    "src": "NEW",
+    "order": [
+     [
+      4,
+      16
+     ],
+     [
+      1,
+      29
+     ],
+     [
+      3,
+      10
+     ],
+     [
+      2,
+      30
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     2
+    ],
+    "study": "main"
+   },
+   "M1new": {
+    "x": 1,
+    "y": 1,
+    "replay": 1,
+    "succ": true,
+    "x_outcome": "SUCCESS",
+    "y_outcome": "SUCCESS",
+    "phase": null,
+    "status": "VERIFIED",
+    "first_failed": null,
+    "connector_fail": false,
+    "connectors_ok": 3,
+    "cpu_s": 27.9,
+    "wall_s": 29.2,
+    "y_status": "VERIFIED",
+    "src": "NEW",
+    "order": [
+     [
+      4,
+      16
+     ],
+     [
+      3,
+      10
+     ],
+     [
+      1,
+      29
+     ],
+     [
+      2,
+      30
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     2
+    ],
+    "study": "main"
+   },
+   "A1new": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "CERTIFIED_INFEASIBLE",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:1",
+    "status": "no feasible side grasp",
+    "first_failed": 1,
+    "connector_fail": false,
+    "connectors_ok": 1,
+    "cpu_s": 21.8,
+    "wall_s": 21.8,
+    "y_status": "VERIFIED",
+    "src": "R3.4-QUARANTINED-DIAGNOSTIC:R34|-srv-w0018-s015-k4v2j0|[[2, 30], [1, 29], [4, 16], [3, 10]]|[1, 4]",
+    "order": [
+     [
+      2,
+      30
+     ],
+     [
+      1,
+      29
+     ],
+     [
+      4,
+      16
+     ],
+     [
+      3,
+      10
+     ]
+    ],
+    "partition": [
+     1,
+     3
+    ],
+    "study": "main"
+   },
+   "RANDOM": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "CERTIFIED_INFEASIBLE",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:1",
+    "status": "no feasible side grasp",
+    "first_failed": 1,
+    "connector_fail": false,
+    "connectors_ok": 1,
+    "cpu_s": 21.6,
+    "wall_s": 21.6,
+    "y_status": "VERIFIED",
+    "src": "R4.2:R4.2|3d|3ds66-k45d-srv-w0018-s015-k4v2j0|[[3, 10], [4, 16], [2, 30], [1, 29]]|[1, 3, 4]",
+    "order": [
+     [
+      3,
+      10
+     ],
+     [
+      4,
+      16
+     ],
+     [
+      2,
+      30
+     ],
+     [
+      1,
+      29
+     ]
+    ],
+    "partition": [
+     1,
+     2,
+     1
+    ],
+    "study": "main"
+   },
+   "WITNESS": {
+    "x": 1,
+    "y": 1,
+    "replay": 1,
+    "succ": true,
+    "x_outcome": "SUCCESS",
+    "y_outcome": "SUCCESS",
+    "phase": null,
+    "status": "VERIFIED",
+    "first_failed": null,
+    "connector_fail": false,
+    "connectors_ok": 3,
+    "cpu_s": 26.1,
+    "wall_s": 26.1,
+    "y_status": "VERIFIED",
+    "src": "R4.2:R4.2|3d|3ds66-k45d-srv-w0018-s015-k4v2j0|[[4, 16], [1, 29], [2, 30], [3, 10]]|[1, 2, 4]",
+    "order": [
+     [
+      4,
+      16
+     ],
+     [
+      1,
+      29
+     ],
+     [
+      2,
+      30
+     ],
+     [
+      3,
+      10
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     2
+    ],
+    "study": "main"
+   }
+  },
+  "3ds66-srv-w0003-s004": {
+   "F0": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "CERTIFIED_INFEASIBLE",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:0",
+    "status": "no feasible side grasp",
+    "first_failed": 0,
+    "connector_fail": false,
+    "connectors_ok": 0,
+    "cpu_s": 17.3,
+    "wall_s": 17.3,
+    "y_status": "VERIFIED",
+    "src": "R2.4:R24|3ds66-srv-w0003-s004|[[2, 14], [3, 8], [1, 12], [4, 9]]|[1, 2, 4]",
+    "order": [
+     [
+      2,
+      14
+     ],
+     [
+      3,
+      8
+     ],
+     [
+      1,
+      12
+     ],
+     [
+      4,
+      9
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     2
+    ],
+    "study": "main"
+   },
+   "G1new": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "CERTIFIED_INFEASIBLE",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:2",
+    "status": "no feasible side grasp",
+    "first_failed": 2,
+    "connector_fail": false,
+    "connectors_ok": 2,
+    "cpu_s": 35.0,
+    "wall_s": 35.8,
+    "y_status": "VERIFIED",
+    "src": "NEW",
+    "order": [
+     [
+      3,
+      8
+     ],
+     [
+      4,
+      9
+     ],
+     [
+      2,
+      14
+     ],
+     [
+      1,
+      12
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     2
+    ],
+    "study": "main"
+   },
+   "M1new": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "BUDGET_NO_PLAN",
+    "y_outcome": "SUCCESS",
+    "phase": "boundary:2",
+    "status": "CONNECTOR_NO_PLAN",
+    "first_failed": null,
+    "connector_fail": true,
+    "connectors_ok": 2,
+    "cpu_s": 24.1,
+    "wall_s": 24.1,
+    "y_status": "VERIFIED",
+    "src": "R4.2:R4.2|3d|3ds66-srv-w0003-s004|[[1, 12], [4, 9], [2, 14], [3, 8]]|[1, 2, 4]",
+    "order": [
+     [
+      1,
+      12
+     ],
+     [
+      4,
+      9
+     ],
+     [
+      2,
+      14
+     ],
+     [
+      3,
+      8
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     2
+    ],
+    "study": "main"
+   },
+   "A1new": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "CERTIFIED_INFEASIBLE",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:2",
+    "status": "no feasible side grasp",
+    "first_failed": 2,
+    "connector_fail": false,
+    "connectors_ok": 1,
+    "cpu_s": 26.5,
+    "wall_s": 27.4,
+    "y_status": "VERIFIED",
+    "src": "NEW",
+    "order": [
+     [
+      1,
+      12
+     ],
+     [
+      3,
+      8
+     ],
+     [
+      2,
+      14
+     ],
+     [
+      4,
+      9
+     ]
+    ],
+    "partition": [
+     2,
+     2
+    ],
+    "study": "main"
+   },
+   "RANDOM": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "BUDGET_NO_PLAN",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:1",
+    "status": "no feasible side grasp",
+    "first_failed": 1,
+    "connector_fail": false,
+    "connectors_ok": 0,
+    "cpu_s": 101.3,
+    "wall_s": 101.3,
+    "y_status": "VERIFIED",
+    "src": "R4.2:R4.2|3d|3ds66-srv-w0003-s004|[[4, 9], [1, 12], [2, 14], [3, 8]]|[2, 3, 4]",
+    "order": [
+     [
+      4,
+      9
+     ],
+     [
+      1,
+      12
+     ],
+     [
+      2,
+      14
+     ],
+     [
+      3,
+      8
+     ]
+    ],
+    "partition": [
+     2,
+     1,
+     1
+    ],
+    "study": "main"
+   },
+   "WITNESS": {
+    "x": 1,
+    "y": 1,
+    "replay": 1,
+    "succ": true,
+    "x_outcome": "SUCCESS",
+    "y_outcome": "SUCCESS",
+    "phase": null,
+    "status": "VERIFIED",
+    "first_failed": null,
+    "connector_fail": false,
+    "connectors_ok": 3,
+    "cpu_s": 29.6,
+    "wall_s": 29.6,
+    "y_status": "VERIFIED",
+    "src": "R4.2:R4.2|3d|3ds66-srv-w0003-s004|[[1, 12], [4, 9], [2, 14], [3, 8]]|[2, 3, 4]",
+    "order": [
+     [
+      1,
+      12
+     ],
+     [
+      4,
+      9
+     ],
+     [
+      2,
+      14
+     ],
+     [
+      3,
+      8
+     ]
+    ],
+    "partition": [
+     2,
+     1,
+     1
+    ],
+    "study": "main"
+   }
+  },
+  "3ds66-k45-b2c2-035": {
+   "F0": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "CERTIFIED_INFEASIBLE",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:0",
+    "status": "no feasible side grasp",
+    "first_failed": 0,
+    "connector_fail": false,
+    "connectors_ok": 0,
+    "cpu_s": 14.2,
+    "wall_s": 14.2,
+    "y_status": "VERIFIED",
+    "src": "R4.2:R4.2|3d|3ds66-k45-b2c2-035|[[5, 18], [6, 25], [1, 23], [2, 6]]|[1, 3, 4]",
+    "order": [
+     [
+      5,
+      18
+     ],
+     [
+      6,
+      25
+     ],
+     [
+      1,
+      23
+     ],
+     [
+      2,
+      6
+     ]
+    ],
+    "partition": [
+     1,
+     2,
+     1
+    ],
+    "study": "main"
+   },
+   "G1new": {
+    "x": 1,
+    "y": 1,
+    "replay": 1,
+    "succ": true,
+    "x_outcome": "SUCCESS",
+    "y_outcome": "SUCCESS",
+    "phase": null,
+    "status": "VERIFIED",
+    "first_failed": null,
+    "connector_fail": false,
+    "connectors_ok": 3,
+    "cpu_s": 32.4,
+    "wall_s": 32.4,
+    "y_status": "VERIFIED",
+    "src": "NEW",
+    "order": [
+     [
+      6,
+      25
+     ],
+     [
+      5,
+      18
+     ],
+     [
+      2,
+      6
+     ],
+     [
+      1,
+      23
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     2
+    ],
+    "study": "main"
+   },
+   "M1new": {
+    "x": 1,
+    "y": 1,
+    "replay": 1,
+    "succ": true,
+    "x_outcome": "SUCCESS",
+    "y_outcome": "SUCCESS",
+    "phase": null,
+    "status": "VERIFIED",
+    "first_failed": null,
+    "connector_fail": false,
+    "connectors_ok": 2,
+    "cpu_s": 33.1,
+    "wall_s": 35.3,
+    "y_status": "VERIFIED",
+    "src": "NEW",
+    "order": [
+     [
+      6,
+      25
+     ],
+     [
+      1,
+      23
+     ],
+     [
+      5,
+      18
+     ],
+     [
+      2,
+      6
+     ]
+    ],
+    "partition": [
+     2,
+     2
+    ],
+    "study": "main"
+   },
+   "A1new": {
+    "x": 1,
+    "y": 1,
+    "replay": 1,
+    "succ": true,
+    "x_outcome": "SUCCESS",
+    "y_outcome": "SUCCESS",
+    "phase": null,
+    "status": "VERIFIED",
+    "first_failed": null,
+    "connector_fail": false,
+    "connectors_ok": 2,
+    "cpu_s": 33.1,
+    "wall_s": 35.3,
+    "y_status": "VERIFIED",
+    "src": "NEW",
+    "order": [
+     [
+      6,
+      25
+     ],
+     [
+      1,
+      23
+     ],
+     [
+      5,
+      18
+     ],
+     [
+      2,
+      6
+     ]
+    ],
+    "partition": [
+     2,
+     2
+    ],
+    "study": "main"
+   },
+   "RANDOM": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "CERTIFIED_INFEASIBLE",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:0",
+    "status": "no feasible side grasp",
+    "first_failed": 0,
+    "connector_fail": false,
+    "connectors_ok": 0,
+    "cpu_s": 12.2,
+    "wall_s": 12.2,
+    "y_status": "VERIFIED",
+    "src": "R4.2:R4.2|3d|3ds66-k45-b2c2-035|[[2, 6], [6, 25], [5, 18], [1, 23]]|[1, 2, 4]",
+    "order": [
+     [
+      2,
+      6
+     ],
+     [
+      6,
+      25
+     ],
+     [
+      5,
+      18
+     ],
+     [
+      1,
+      23
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     2
+    ],
+    "study": "main"
+   },
+   "WITNESS": {
+    "x": 1,
+    "y": 1,
+    "replay": 1,
+    "succ": true,
+    "x_outcome": "SUCCESS",
+    "y_outcome": "SUCCESS",
+    "phase": null,
+    "status": "VERIFIED",
+    "first_failed": null,
+    "connector_fail": false,
+    "connectors_ok": 3,
+    "cpu_s": 27.5,
+    "wall_s": 27.5,
+    "y_status": "VERIFIED",
+    "src": "R4.2:R4.2|3d|3ds66-k45-b2c2-035|[[1, 23], [6, 25], [5, 18], [2, 6]]|[1, 2, 4]",
+    "order": [
+     [
+      1,
+      23
+     ],
+     [
+      6,
+      25
+     ],
+     [
+      5,
+      18
+     ],
+     [
+      2,
+      6
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     2
+    ],
+    "study": "main"
+   }
+  },
+  "3ds66-k45d-srv3-w0061-s017-k4v2j0-k5v2j0": {
+   "F0": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "CERTIFIED_INFEASIBLE",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:0",
+    "status": "no feasible side grasp",
+    "first_failed": 0,
+    "connector_fail": false,
+    "connectors_ok": 0,
+    "cpu_s": 12.8,
+    "wall_s": 12.8,
+    "y_status": "VERIFIED",
+    "src": "R4.2:R4.2|3d|3ds66-k45d-srv3-w0061-s017-k4v2j0-k5v2j0|[[1, 25], [5, 7], [3, 6], [2, 8], [4, 14]]|[1, 2, 4, 5]",
+    "order": [
+     [
+      1,
+      25
+     ],
+     [
+      5,
+      7
+     ],
+     [
+      3,
+      6
+     ],
+     [
+      2,
+      8
+     ],
+     [
+      4,
+      14
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     2,
+     1
+    ],
+    "study": "main"
+   },
+   "G1new": {
+    "x": 1,
+    "y": 1,
+    "replay": 1,
+    "succ": true,
+    "x_outcome": "SUCCESS",
+    "y_outcome": "SUCCESS",
+    "phase": null,
+    "status": "VERIFIED",
+    "first_failed": null,
+    "connector_fail": false,
+    "connectors_ok": 4,
+    "cpu_s": 24.9,
+    "wall_s": 26.0,
+    "y_status": "VERIFIED",
+    "src": "NEW",
+    "order": [
+     [
+      4,
+      14
+     ],
+     [
+      1,
+      25
+     ],
+     [
+      5,
+      7
+     ],
+     [
+      3,
+      6
+     ],
+     [
+      2,
+      8
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     1,
+     2
+    ],
+    "study": "main"
+   },
+   "M1new": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "CERTIFIED_INFEASIBLE",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:3",
+    "status": "no feasible side grasp",
+    "first_failed": 3,
+    "connector_fail": false,
+    "connectors_ok": 2,
+    "cpu_s": 26.0,
+    "wall_s": 27.2,
+    "y_status": "VERIFIED",
+    "src": "NEW",
+    "order": [
+     [
+      5,
+      7
+     ],
+     [
+      3,
+      6
+     ],
+     [
+      2,
+      8
+     ],
+     [
+      1,
+      25
+     ],
+     [
+      4,
+      14
+     ]
+    ],
+    "partition": [
+     2,
+     1,
+     2
+    ],
+    "study": "main"
+   },
+   "A1new": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "CERTIFIED_INFEASIBLE",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:0",
+    "status": "no feasible side grasp",
+    "first_failed": 0,
+    "connector_fail": false,
+    "connectors_ok": 0,
+    "cpu_s": 12.8,
+    "wall_s": 12.7,
+    "y_status": "VERIFIED",
+    "src": "R2.4:R24|061-s017-k4v2j0-k5v2j0|[[1, 25], [3, 6], [2, 8], [5, 7], [4, 14]]|[3, 4, 5]",
+    "order": [
+     [
+      1,
+      25
+     ],
+     [
+      3,
+      6
+     ],
+     [
+      2,
+      8
+     ],
+     [
+      5,
+      7
+     ],
+     [
+      4,
+      14
+     ]
+    ],
+    "partition": [
+     3,
+     1,
+     1
+    ],
+    "study": "main"
+   },
+   "RANDOM": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "CERTIFIED_INFEASIBLE",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:0",
+    "status": "no feasible side grasp",
+    "first_failed": 0,
+    "connector_fail": false,
+    "connectors_ok": 0,
+    "cpu_s": 12.9,
+    "wall_s": 12.9,
+    "y_status": "VERIFIED",
+    "src": "R4.2:R4.2|3d|3ds66-k45d-srv3-w0061-s017-k4v2j0-k5v2j0|[[1, 25], [3, 6], [4, 14], [5, 7], [2, 8]]|[1, 2, 3, 5]",
+    "order": [
+     [
+      1,
+      25
+     ],
+     [
+      3,
+      6
+     ],
+     [
+      4,
+      14
+     ],
+     [
+      5,
+      7
+     ],
+     [
+      2,
+      8
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     1,
+     2
+    ],
+    "study": "main"
+   },
+   "WITNESS": {
+    "x": 1,
+    "y": 1,
+    "replay": 1,
+    "succ": true,
+    "x_outcome": "SUCCESS",
+    "y_outcome": "SUCCESS",
+    "phase": null,
+    "status": "VERIFIED",
+    "first_failed": null,
+    "connector_fail": false,
+    "connectors_ok": 4,
+    "cpu_s": 31.8,
+    "wall_s": 31.8,
+    "y_status": "VERIFIED",
+    "src": "R4.2:R4.2|3d|3ds66-k45d-srv3-w0061-s017-k4v2j0-k5v2j0|[[4, 14], [1, 25], [5, 7], [2, 8], [3, 6]]|[1, 2, 3, 5]",
+    "order": [
+     [
+      4,
+      14
+     ],
+     [
+      1,
+      25
+     ],
+     [
+      5,
+      7
+     ],
+     [
+      2,
+      8
+     ],
+     [
+      3,
+      6
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     1,
+     2
+    ],
+    "study": "main"
+   }
+  },
+  "3ds66-k45d-srv3-w0080-s023-k4v2j0-k5v2j1": {
+   "F0": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "CERTIFIED_INFEASIBLE",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:0",
+    "status": "no feasible side grasp",
+    "first_failed": 0,
+    "connector_fail": false,
+    "connectors_ok": 0,
+    "cpu_s": 17.6,
+    "wall_s": 17.6,
+    "y_status": "VERIFIED",
+    "src": "R2.4:R24|080-s023-k4v2j0-k5v2j1|[[2, 29], [7, 24], [6, 35], [1, 17], [3, 12]]|[1, 2, 5]",
+    "order": [
+     [
+      2,
+      29
+     ],
+     [
+      7,
+      24
+     ],
+     [
+      6,
+      35
+     ],
+     [
+      1,
+      17
+     ],
+     [
+      3,
+      12
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     3
+    ],
+    "study": "main"
+   },
+   "G1new": {
+    "x": 1,
+    "y": 1,
+    "replay": 1,
+    "succ": true,
+    "x_outcome": "SUCCESS",
+    "y_outcome": "SUCCESS",
+    "phase": null,
+    "status": "VERIFIED",
+    "first_failed": null,
+    "connector_fail": false,
+    "connectors_ok": 4,
+    "cpu_s": 62.8,
+    "wall_s": 62.8,
+    "y_status": "VERIFIED",
+    "src": "NEW",
+    "order": [
+     [
+      6,
+      35
+     ],
+     [
+      7,
+      24
+     ],
+     [
+      2,
+      29
+     ],
+     [
+      3,
+      12
+     ],
+     [
+      1,
+      17
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     1,
+     2
+    ],
+    "study": "main"
+   },
+   "M1new": {
+    "x": 1,
+    "y": 1,
+    "replay": 1,
+    "succ": true,
+    "x_outcome": "SUCCESS",
+    "y_outcome": "SUCCESS",
+    "phase": null,
+    "status": "VERIFIED",
+    "first_failed": null,
+    "connector_fail": false,
+    "connectors_ok": 4,
+    "cpu_s": 68.2,
+    "wall_s": 68.2,
+    "y_status": "VERIFIED",
+    "src": "R4.2:R4.2|3d|3ds66-k45d-srv3-w0080-s023-k4v2j0-k5v2j1|[[7, 24], [6, 35], [2, 29], [3, 12], [1, 17]]|[1, 2, 3, 5]",
+    "order": [
+     [
+      7,
+      24
+     ],
+     [
+      6,
+      35
+     ],
+     [
+      2,
+      29
+     ],
+     [
+      3,
+      12
+     ],
+     [
+      1,
+      17
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     1,
+     2
+    ],
+    "study": "main"
+   },
+   "A1new": {
+    "x": 1,
+    "y": 1,
+    "replay": 1,
+    "succ": true,
+    "x_outcome": "SUCCESS",
+    "y_outcome": "SUCCESS",
+    "phase": null,
+    "status": "VERIFIED",
+    "first_failed": null,
+    "connector_fail": false,
+    "connectors_ok": 3,
+    "cpu_s": 61.3,
+    "wall_s": 63.4,
+    "y_status": "VERIFIED",
+    "src": "NEW",
+    "order": [
+     [
+      6,
+      35
+     ],
+     [
+      7,
+      24
+     ],
+     [
+      2,
+      29
+     ],
+     [
+      3,
+      12
+     ],
+     [
+      1,
+      17
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     3
+    ],
+    "study": "main"
+   },
+   "RANDOM": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "CERTIFIED_INFEASIBLE",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:1",
+    "status": "no feasible side grasp",
+    "first_failed": 1,
+    "connector_fail": false,
+    "connectors_ok": 1,
+    "cpu_s": 30.9,
+    "wall_s": 30.9,
+    "y_status": "VERIFIED",
+    "src": "R4.2:R4.2|3d|3ds66-k45d-srv3-w0080-s023-k4v2j0-k5v2j1|[[7, 24], [2, 29], [3, 12], [6, 35], [1, 17]]|[1, 2, 3, 5]",
+    "order": [
+     [
+      7,
+      24
+     ],
+     [
+      2,
+      29
+     ],
+     [
+      3,
+      12
+     ],
+     [
+      6,
+      35
+     ],
+     [
+      1,
+      17
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     1,
+     2
+    ],
+    "study": "main"
+   },
+   "WITNESS": {
+    "x": 1,
+    "y": 1,
+    "replay": 1,
+    "succ": true,
+    "x_outcome": "SUCCESS",
+    "y_outcome": "SUCCESS",
+    "phase": null,
+    "status": "VERIFIED",
+    "first_failed": null,
+    "connector_fail": false,
+    "connectors_ok": 4,
+    "cpu_s": 76.4,
+    "wall_s": 76.4,
+    "y_status": "VERIFIED",
+    "src": "R4.2:R4.2|3d|3ds66-k45d-srv3-w0080-s023-k4v2j0-k5v2j1|[[6, 35], [1, 17], [2, 29], [7, 24], [3, 12]]|[2, 3, 4, 5]",
+    "order": [
+     [
+      6,
+      35
+     ],
+     [
+      1,
+      17
+     ],
+     [
+      2,
+      29
+     ],
+     [
+      7,
+      24
+     ],
+     [
+      3,
+      12
+     ]
+    ],
+    "partition": [
+     2,
+     1,
+     1,
+     1
+    ],
+    "study": "main"
+   }
+  },
+  "3ds66-k45d-k45-b2c2-146-v2j1": {
+   "F0": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "CERTIFIED_INFEASIBLE",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:0",
+    "status": "no feasible side grasp",
+    "first_failed": 0,
+    "connector_fail": false,
+    "connectors_ok": 0,
+    "cpu_s": 15.6,
+    "wall_s": 15.6,
+    "y_status": "VERIFIED",
+    "src": "R2.4:R24|k45d-k45-b2c2-146-v2j1|[[6, 25], [5, 18], [7, 30], [2, 23], [1, 6]]|[1, 2, 4, 5]",
+    "order": [
+     [
+      6,
+      25
+     ],
+     [
+      5,
+      18
+     ],
+     [
+      7,
+      30
+     ],
+     [
+      2,
+      23
+     ],
+     [
+      1,
+      6
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     2,
+     1
+    ],
+    "study": "main"
+   },
+   "G1new": {
+    "x": 1,
+    "y": 1,
+    "replay": 1,
+    "succ": true,
+    "x_outcome": "SUCCESS",
+    "y_outcome": "SUCCESS",
+    "phase": null,
+    "status": "VERIFIED",
+    "first_failed": null,
+    "connector_fail": false,
+    "connectors_ok": 4,
+    "cpu_s": 43.2,
+    "wall_s": 43.2,
+    "y_status": "VERIFIED",
+    "src": "R4.2:R4.2|3d|3ds66-k45d-k45-b2c2-146-v2j1|[[7, 30], [2, 23], [6, 25], [5, 18], [1, 6]]|[1, 2, 3, 5]",
+    "order": [
+     [
+      7,
+      30
+     ],
+     [
+      2,
+      23
+     ],
+     [
+      6,
+      25
+     ],
+     [
+      5,
+      18
+     ],
+     [
+      1,
+      6
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     1,
+     2
+    ],
+    "study": "main"
+   },
+   "M1new": {
+    "x": 1,
+    "y": 1,
+    "replay": 1,
+    "succ": true,
+    "x_outcome": "SUCCESS",
+    "y_outcome": "SUCCESS",
+    "phase": null,
+    "status": "VERIFIED",
+    "first_failed": null,
+    "connector_fail": false,
+    "connectors_ok": 4,
+    "cpu_s": 36.4,
+    "wall_s": 36.8,
+    "y_status": "VERIFIED",
+    "src": "NEW",
+    "order": [
+     [
+      2,
+      23
+     ],
+     [
+      7,
+      30
+     ],
+     [
+      6,
+      25
+     ],
+     [
+      5,
+      18
+     ],
+     [
+      1,
+      6
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     1,
+     2
+    ],
+    "study": "main"
+   },
+   "A1new": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "CERTIFIED_INFEASIBLE",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:0",
+    "status": "no feasible side grasp",
+    "first_failed": 0,
+    "connector_fail": false,
+    "connectors_ok": 0,
+    "cpu_s": 15.7,
+    "wall_s": 16.7,
+    "y_status": "VERIFIED",
+    "src": "NEW",
+    "order": [
+     [
+      6,
+      25
+     ],
+     [
+      5,
+      18
+     ],
+     [
+      2,
+      23
+     ],
+     [
+      7,
+      30
+     ],
+     [
+      1,
+      6
+     ]
+    ],
+    "partition": [
+     3,
+     2
+    ],
+    "study": "main"
+   },
+   "RANDOM": {
+    "x": 1,
+    "y": 1,
+    "replay": 1,
+    "succ": true,
+    "x_outcome": "SUCCESS",
+    "y_outcome": "SUCCESS",
+    "phase": null,
+    "status": "VERIFIED",
+    "first_failed": null,
+    "connector_fail": false,
+    "connectors_ok": 4,
+    "cpu_s": 43.2,
+    "wall_s": 43.2,
+    "y_status": "VERIFIED",
+    "src": "R4.2:R4.2|3d|3ds66-k45d-k45-b2c2-146-v2j1|[[7, 30], [2, 23], [6, 25], [5, 18], [1, 6]]|[1, 2, 3, 5]",
+    "order": [
+     [
+      7,
+      30
+     ],
+     [
+      2,
+      23
+     ],
+     [
+      6,
+      25
+     ],
+     [
+      5,
+      18
+     ],
+     [
+      1,
+      6
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     1,
+     2
+    ],
+    "study": "main"
+   },
+   "WITNESS": {
+    "x": 1,
+    "y": 1,
+    "replay": 1,
+    "succ": true,
+    "x_outcome": "SUCCESS",
+    "y_outcome": "SUCCESS",
+    "phase": null,
+    "status": "VERIFIED",
+    "first_failed": null,
+    "connector_fail": false,
+    "connectors_ok": 4,
+    "cpu_s": 48.8,
+    "wall_s": 48.8,
+    "y_status": "VERIFIED",
+    "src": "R4.2:R4.2|3d|3ds66-k45d-k45-b2c2-146-v2j1|[[7, 30], [6, 25], [5, 18], [1, 6], [2, 23]]|[1, 2, 3, 5]",
+    "order": [
+     [
+      7,
+      30
+     ],
+     [
+      6,
+      25
+     ],
+     [
+      5,
+      18
+     ],
+     [
+      1,
+      6
+     ],
+     [
+      2,
+      23
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     1,
+     2
+    ],
+    "study": "main"
+   }
+  },
+  "3ds66-srvNt-w0009-s012": {
+   "F0": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "BUDGET_NO_PLAN",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:2",
+    "status": "no feasible side grasp",
+    "first_failed": 2,
+    "connector_fail": false,
+    "connectors_ok": 1,
+    "cpu_s": 54.7,
+    "wall_s": 54.7,
+    "y_status": "VERIFIED",
+    "src": "R4.2:R4.2|3d|3ds66-srvNt-w0009-s012|[[2, 21], [5, 23], [1, 18], [3, 19]]|[1, 3, 4]",
+    "order": [
+     [
+      2,
+      21
+     ],
+     [
+      5,
+      23
+     ],
+     [
+      1,
+      18
+     ],
+     [
+      3,
+      19
+     ]
+    ],
+    "partition": [
+     1,
+     2,
+     1
+    ],
+    "study": "main"
+   },
+   "G1new": {
+    "x": 1,
+    "y": 1,
+    "replay": 1,
+    "succ": true,
+    "x_outcome": "SUCCESS",
+    "y_outcome": "SUCCESS",
+    "phase": null,
+    "status": "VERIFIED",
+    "first_failed": null,
+    "connector_fail": false,
+    "connectors_ok": 2,
+    "cpu_s": 90.8,
+    "wall_s": 91.8,
+    "y_status": "VERIFIED",
+    "src": "NEW",
+    "order": [
+     [
+      2,
+      21
+     ],
+     [
+      5,
+      23
+     ],
+     [
+      3,
+      19
+     ],
+     [
+      1,
+      18
+     ]
+    ],
+    "partition": [
+     3,
+     1
+    ],
+    "study": "main"
+   },
+   "M1new": {
+    "x": 1,
+    "y": 1,
+    "replay": 1,
+    "succ": true,
+    "x_outcome": "SUCCESS",
+    "y_outcome": "SUCCESS",
+    "phase": null,
+    "status": "VERIFIED",
+    "first_failed": null,
+    "connector_fail": false,
+    "connectors_ok": 2,
+    "cpu_s": 60.8,
+    "wall_s": 60.9,
+    "y_status": "VERIFIED",
+    "src": "NEW",
+    "order": [
+     [
+      2,
+      21
+     ],
+     [
+      5,
+      23
+     ],
+     [
+      3,
+      19
+     ],
+     [
+      1,
+      18
+     ]
+    ],
+    "partition": [
+     2,
+     2
+    ],
+    "study": "main"
+   },
+   "A1new": {
+    "x": 1,
+    "y": 1,
+    "replay": 1,
+    "succ": true,
+    "x_outcome": "SUCCESS",
+    "y_outcome": "SUCCESS",
+    "phase": null,
+    "status": "VERIFIED",
+    "first_failed": null,
+    "connector_fail": false,
+    "connectors_ok": 2,
+    "cpu_s": 68.0,
+    "wall_s": 68.9,
+    "y_status": "VERIFIED",
+    "src": "NEW",
+    "order": [
+     [
+      3,
+      19
+     ],
+     [
+      1,
+      18
+     ],
+     [
+      2,
+      21
+     ],
+     [
+      5,
+      23
+     ]
+    ],
+    "partition": [
+     1,
+     3
+    ],
+    "study": "main"
+   },
+   "RANDOM": {
+    "x": 1,
+    "y": 1,
+    "replay": 1,
+    "succ": true,
+    "x_outcome": "SUCCESS",
+    "y_outcome": "SUCCESS",
+    "phase": null,
+    "status": "VERIFIED",
+    "first_failed": null,
+    "connector_fail": false,
+    "connectors_ok": 3,
+    "cpu_s": 74.3,
+    "wall_s": 74.4,
+    "y_status": "VERIFIED",
+    "src": "R4.2:R4.2|3d|3ds66-srvNt-w0009-s012|[[3, 19], [1, 18], [2, 21], [5, 23]]|[1, 3, 4]",
+    "order": [
+     [
+      3,
+      19
+     ],
+     [
+      1,
+      18
+     ],
+     [
+      2,
+      21
+     ],
+     [
+      5,
+      23
+     ]
+    ],
+    "partition": [
+     1,
+     2,
+     1
+    ],
+    "study": "main"
+   },
+   "WITNESS": {
+    "x": 1,
+    "y": 1,
+    "replay": 1,
+    "succ": true,
+    "x_outcome": "SUCCESS",
+    "y_outcome": "SUCCESS",
+    "phase": null,
+    "status": "VERIFIED",
+    "first_failed": null,
+    "connector_fail": false,
+    "connectors_ok": 3,
+    "cpu_s": 67.6,
+    "wall_s": 67.6,
+    "y_status": "VERIFIED",
+    "src": "R4.2:R4.2|3d|3ds66-srvNt-w0009-s012|[[2, 21], [3, 19], [1, 18], [5, 23]]|[1, 2, 4]",
+    "order": [
+     [
+      2,
+      21
+     ],
+     [
+      3,
+      19
+     ],
+     [
+      1,
+      18
+     ],
+     [
+      5,
+      23
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     2
+    ],
+    "study": "main"
+   }
+  },
+  "3ds66-k45d-srvNt-w0009-s012-v2j2": {
+   "F0": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "CERTIFIED_INFEASIBLE",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:0",
+    "status": "no feasible side grasp",
+    "first_failed": 0,
+    "connector_fail": false,
+    "connectors_ok": 0,
+    "cpu_s": 32.8,
+    "wall_s": 32.8,
+    "y_status": "VERIFIED",
+    "src": "R2.4:R24|-srvNt-w0009-s012-v2j2|[[1, 18], [3, 19], [8, 25], [2, 21], [5, 23]]|[1, 2, 5]",
+    "order": [
+     [
+      1,
+      18
+     ],
+     [
+      3,
+      19
+     ],
+     [
+      8,
+      25
+     ],
+     [
+      2,
+      21
+     ],
+     [
+      5,
+      23
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     3
+    ],
+    "study": "main"
+   },
+   "G1new": {
+    "x": 1,
+    "y": 1,
+    "replay": 1,
+    "succ": true,
+    "x_outcome": "SUCCESS",
+    "y_outcome": "SUCCESS",
+    "phase": null,
+    "status": "VERIFIED",
+    "first_failed": null,
+    "connector_fail": false,
+    "connectors_ok": 2,
+    "cpu_s": 87.8,
+    "wall_s": 87.9,
+    "y_status": "VERIFIED",
+    "src": "R3.4-QUARANTINED-DIAGNOSTIC:R34|-srvNt-w0009-s012-v2j2|[[2, 21], [5, 23], [8, 25], [3, 19], [1, 18]]|[2, 5]",
+    "order": [
+     [
+      2,
+      21
+     ],
+     [
+      5,
+      23
+     ],
+     [
+      8,
+      25
+     ],
+     [
+      3,
+      19
+     ],
+     [
+      1,
+      18
+     ]
+    ],
+    "partition": [
+     2,
+     3
+    ],
+    "study": "main"
+   },
+   "M1new": {
+    "x": 1,
+    "y": 1,
+    "replay": 1,
+    "succ": true,
+    "x_outcome": "SUCCESS",
+    "y_outcome": "SUCCESS",
+    "phase": null,
+    "status": "VERIFIED",
+    "first_failed": null,
+    "connector_fail": false,
+    "connectors_ok": 3,
+    "cpu_s": 85.6,
+    "wall_s": 86.1,
+    "y_status": "VERIFIED",
+    "src": "NEW",
+    "order": [
+     [
+      8,
+      25
+     ],
+     [
+      3,
+      19
+     ],
+     [
+      2,
+      21
+     ],
+     [
+      5,
+      23
+     ],
+     [
+      1,
+      18
+     ]
+    ],
+    "partition": [
+     2,
+     2,
+     1
+    ],
+    "study": "main"
+   },
+   "A1new": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "CERTIFIED_INFEASIBLE",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:0",
+    "status": "no feasible side grasp",
+    "first_failed": 0,
+    "connector_fail": false,
+    "connectors_ok": 0,
+    "cpu_s": 37.7,
+    "wall_s": 37.8,
+    "y_status": "VERIFIED",
+    "src": "NEW",
+    "order": [
+     [
+      3,
+      19
+     ],
+     [
+      8,
+      25
+     ],
+     [
+      2,
+      21
+     ],
+     [
+      5,
+      23
+     ],
+     [
+      1,
+      18
+     ]
+    ],
+    "partition": [
+     1,
+     3,
+     1
+    ],
+    "study": "main"
+   },
+   "RANDOM": {
+    "x": 1,
+    "y": 1,
+    "replay": 1,
+    "succ": true,
+    "x_outcome": "SUCCESS",
+    "y_outcome": "SUCCESS",
+    "phase": null,
+    "status": "VERIFIED",
+    "first_failed": null,
+    "connector_fail": false,
+    "connectors_ok": 4,
+    "cpu_s": 89.6,
+    "wall_s": 89.7,
+    "y_status": "VERIFIED",
+    "src": "R4.2:R4.2|3d|3ds66-k45d-srvNt-w0009-s012-v2j2|[[2, 21], [8, 25], [3, 19], [1, 18], [5, 23]]|[1, 2, 3, 5]",
+    "order": [
+     [
+      2,
+      21
+     ],
+     [
+      8,
+      25
+     ],
+     [
+      3,
+      19
+     ],
+     [
+      1,
+      18
+     ],
+     [
+      5,
+      23
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     1,
+     2
+    ],
+    "study": "main"
+   },
+   "WITNESS": {
+    "x": 1,
+    "y": 1,
+    "replay": 1,
+    "succ": true,
+    "x_outcome": "SUCCESS",
+    "y_outcome": "SUCCESS",
+    "phase": null,
+    "status": "VERIFIED",
+    "first_failed": null,
+    "connector_fail": false,
+    "connectors_ok": 4,
+    "cpu_s": 89.6,
+    "wall_s": 89.7,
+    "y_status": "VERIFIED",
+    "src": "R4.2:R4.2|3d|3ds66-k45d-srvNt-w0009-s012-v2j2|[[2, 21], [8, 25], [3, 19], [1, 18], [5, 23]]|[1, 2, 3, 5]",
+    "order": [
+     [
+      2,
+      21
+     ],
+     [
+      8,
+      25
+     ],
+     [
+      3,
+      19
+     ],
+     [
+      1,
+      18
+     ],
+     [
+      5,
+      23
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     1,
+     2
+    ],
+    "study": "main"
+   }
+  },
+  "3ds66-k45-b2c2-146": {
+   "F0": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "CERTIFIED_INFEASIBLE",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:0",
+    "status": "no feasible side grasp",
+    "first_failed": 0,
+    "connector_fail": false,
+    "connectors_ok": 0,
+    "cpu_s": 14.1,
+    "wall_s": 14.2,
+    "y_status": "VERIFIED",
+    "src": "R2.4:R24|3ds66-k45-b2c2-146|[[5, 18], [6, 25], [2, 23], [1, 6]]|[1, 3, 4]",
+    "order": [
+     [
+      5,
+      18
+     ],
+     [
+      6,
+      25
+     ],
+     [
+      2,
+      23
+     ],
+     [
+      1,
+      6
+     ]
+    ],
+    "partition": [
+     1,
+     2,
+     1
+    ],
+    "study": "main"
+   },
+   "G1new": {
+    "x": 1,
+    "y": 1,
+    "replay": 1,
+    "succ": true,
+    "x_outcome": "SUCCESS",
+    "y_outcome": "SUCCESS",
+    "phase": null,
+    "status": "VERIFIED",
+    "first_failed": null,
+    "connector_fail": false,
+    "connectors_ok": 3,
+    "cpu_s": 38.6,
+    "wall_s": 38.6,
+    "y_status": "VERIFIED",
+    "src": "R4.2:R4.2|3d|3ds66-k45-b2c2-146|[[6, 25], [5, 18], [1, 6], [2, 23]]|[1, 2, 4]",
+    "order": [
+     [
+      6,
+      25
+     ],
+     [
+      5,
+      18
+     ],
+     [
+      1,
+      6
+     ],
+     [
+      2,
+      23
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     2
+    ],
+    "study": "main"
+   },
+   "M1new": {
+    "x": 1,
+    "y": 1,
+    "replay": 1,
+    "succ": true,
+    "x_outcome": "SUCCESS",
+    "y_outcome": "SUCCESS",
+    "phase": null,
+    "status": "VERIFIED",
+    "first_failed": null,
+    "connector_fail": false,
+    "connectors_ok": 2,
+    "cpu_s": 34.4,
+    "wall_s": 34.4,
+    "y_status": "VERIFIED",
+    "src": "NEW",
+    "order": [
+     [
+      6,
+      25
+     ],
+     [
+      2,
+      23
+     ],
+     [
+      5,
+      18
+     ],
+     [
+      1,
+      6
+     ]
+    ],
+    "partition": [
+     2,
+     2
+    ],
+    "study": "main"
+   },
+   "A1new": {
+    "x": 1,
+    "y": 1,
+    "replay": 1,
+    "succ": true,
+    "x_outcome": "SUCCESS",
+    "y_outcome": "SUCCESS",
+    "phase": null,
+    "status": "VERIFIED",
+    "first_failed": null,
+    "connector_fail": false,
+    "connectors_ok": 2,
+    "cpu_s": 34.4,
+    "wall_s": 34.4,
+    "y_status": "VERIFIED",
+    "src": "NEW",
+    "order": [
+     [
+      6,
+      25
+     ],
+     [
+      2,
+      23
+     ],
+     [
+      5,
+      18
+     ],
+     [
+      1,
+      6
+     ]
+    ],
+    "partition": [
+     2,
+     2
+    ],
+    "study": "main"
+   },
+   "RANDOM": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "CERTIFIED_INFEASIBLE",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:0",
+    "status": "no feasible side grasp",
+    "first_failed": 0,
+    "connector_fail": false,
+    "connectors_ok": 0,
+    "cpu_s": 15.0,
+    "wall_s": 15.0,
+    "y_status": "VERIFIED",
+    "src": "R4.2:R4.2|3d|3ds66-k45-b2c2-146|[[5, 18], [2, 23], [6, 25], [1, 6]]|[1, 3, 4]",
+    "order": [
+     [
+      5,
+      18
+     ],
+     [
+      2,
+      23
+     ],
+     [
+      6,
+      25
+     ],
+     [
+      1,
+      6
+     ]
+    ],
+    "partition": [
+     1,
+     2,
+     1
+    ],
+    "study": "main"
+   },
+   "WITNESS": {
+    "x": 1,
+    "y": 1,
+    "replay": 1,
+    "succ": true,
+    "x_outcome": "SUCCESS",
+    "y_outcome": "SUCCESS",
+    "phase": null,
+    "status": "VERIFIED",
+    "first_failed": null,
+    "connector_fail": false,
+    "connectors_ok": 3,
+    "cpu_s": 38.6,
+    "wall_s": 38.6,
+    "y_status": "VERIFIED",
+    "src": "R4.2:R4.2|3d|3ds66-k45-b2c2-146|[[6, 25], [5, 18], [1, 6], [2, 23]]|[1, 2, 4]",
+    "order": [
+     [
+      6,
+      25
+     ],
+     [
+      5,
+      18
+     ],
+     [
+      1,
+      6
+     ],
+     [
+      2,
+      23
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     2
+    ],
+    "study": "main"
+   }
+  },
+  "3ds66-srvNt-w0013-s010": {
+   "F0": {
+    "x": 1,
+    "y": 1,
+    "replay": 1,
+    "succ": true,
+    "x_outcome": "SUCCESS",
+    "y_outcome": "SUCCESS",
+    "phase": null,
+    "status": "VERIFIED",
+    "first_failed": null,
+    "connector_fail": false,
+    "connectors_ok": 3,
+    "cpu_s": 50.5,
+    "wall_s": 50.5,
+    "y_status": "VERIFIED",
+    "src": "R2.4:R24|3ds66-srvNt-w0013-s010|[[4, 31], [1, 24], [5, 21], [2, 10]]|[1, 3, 4]",
+    "order": [
+     [
+      4,
+      31
+     ],
+     [
+      1,
+      24
+     ],
+     [
+      5,
+      21
+     ],
+     [
+      2,
+      10
+     ]
+    ],
+    "partition": [
+     1,
+     2,
+     1
+    ],
+    "study": "main"
+   },
+   "G1new": {
+    "x": 1,
+    "y": 1,
+    "replay": 1,
+    "succ": true,
+    "x_outcome": "SUCCESS",
+    "y_outcome": "SUCCESS",
+    "phase": null,
+    "status": "VERIFIED",
+    "first_failed": null,
+    "connector_fail": false,
+    "connectors_ok": 3,
+    "cpu_s": 55.2,
+    "wall_s": 55.2,
+    "y_status": "VERIFIED",
+    "src": "NEW",
+    "order": [
+     [
+      4,
+      31
+     ],
+     [
+      5,
+      21
+     ],
+     [
+      2,
+      10
+     ],
+     [
+      1,
+      24
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     2
+    ],
+    "study": "main"
+   },
+   "M1new": {
+    "x": 1,
+    "y": 1,
+    "replay": 1,
+    "succ": true,
+    "x_outcome": "SUCCESS",
+    "y_outcome": "SUCCESS",
+    "phase": null,
+    "status": "VERIFIED",
+    "first_failed": null,
+    "connector_fail": false,
+    "connectors_ok": 2,
+    "cpu_s": 50.3,
+    "wall_s": 50.4,
+    "y_status": "VERIFIED",
+    "src": "NEW",
+    "order": [
+     [
+      4,
+      31
+     ],
+     [
+      5,
+      21
+     ],
+     [
+      1,
+      24
+     ],
+     [
+      2,
+      10
+     ]
+    ],
+    "partition": [
+     2,
+     2
+    ],
+    "study": "main"
+   },
+   "A1new": {
+    "x": 1,
+    "y": 1,
+    "replay": 1,
+    "succ": true,
+    "x_outcome": "SUCCESS",
+    "y_outcome": "SUCCESS",
+    "phase": null,
+    "status": "VERIFIED",
+    "first_failed": null,
+    "connector_fail": false,
+    "connectors_ok": 3,
+    "cpu_s": 47.0,
+    "wall_s": 47.1,
+    "y_status": "VERIFIED",
+    "src": "NEW",
+    "order": [
+     [
+      5,
+      21
+     ],
+     [
+      4,
+      31
+     ],
+     [
+      1,
+      24
+     ],
+     [
+      2,
+      10
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     2
+    ],
+    "study": "main"
+   },
+   "RANDOM": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "CERTIFIED_INFEASIBLE",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:1",
+    "status": "no feasible side grasp",
+    "first_failed": 1,
+    "connector_fail": false,
+    "connectors_ok": 1,
+    "cpu_s": 40.7,
+    "wall_s": 40.7,
+    "y_status": "VERIFIED",
+    "src": "R4.2:R4.2|3d|3ds66-srvNt-w0013-s010|[[5, 21], [1, 24], [4, 31], [2, 10]]|[1, 2, 4]",
+    "order": [
+     [
+      5,
+      21
+     ],
+     [
+      1,
+      24
+     ],
+     [
+      4,
+      31
+     ],
+     [
+      2,
+      10
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     2
+    ],
+    "study": "main"
+   },
+   "WITNESS": {
+    "x": 1,
+    "y": 1,
+    "replay": 1,
+    "succ": true,
+    "x_outcome": "SUCCESS",
+    "y_outcome": "SUCCESS",
+    "phase": null,
+    "status": "VERIFIED",
+    "first_failed": null,
+    "connector_fail": false,
+    "connectors_ok": 3,
+    "cpu_s": 57.2,
+    "wall_s": 57.2,
+    "y_status": "VERIFIED",
+    "src": "R4.2:R4.2|3d|3ds66-srvNt-w0013-s010|[[2, 10], [4, 31], [1, 24], [5, 21]]|[1, 2, 4]",
+    "order": [
+     [
+      2,
+      10
+     ],
+     [
+      4,
+      31
+     ],
+     [
+      1,
+      24
+     ],
+     [
+      5,
+      21
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     2
+    ],
+    "study": "main"
+   }
+  },
+  "3ds66-k45d-srv3-w0077-s004-k4v2j0-k5v2j6": {
+   "F0": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "CERTIFIED_INFEASIBLE",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:1",
+    "status": "no feasible side grasp",
+    "first_failed": 1,
+    "connector_fail": false,
+    "connectors_ok": 1,
+    "cpu_s": 16.1,
+    "wall_s": 16.1,
+    "y_status": "VERIFIED",
+    "src": "R4.2:R4.2|3d|3ds66-k45d-srv3-w0077-s004-k4v2j0-k5v2j6|[[5, 30], [1, 18], [3, 6], [2, 29], [4, 7]]|[1, 2, 4, 5]",
+    "order": [
+     [
+      5,
+      30
+     ],
+     [
+      1,
+      18
+     ],
+     [
+      3,
+      6
+     ],
+     [
+      2,
+      29
+     ],
+     [
+      4,
+      7
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     2,
+     1
+    ],
+    "study": "main"
+   },
+   "G1new": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "BUDGET_NO_PLAN",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:4",
+    "status": "no feasible side grasp",
+    "first_failed": 4,
+    "connector_fail": false,
+    "connectors_ok": 3,
+    "cpu_s": 61.5,
+    "wall_s": 63.4,
+    "y_status": "VERIFIED",
+    "src": "NEW",
+    "order": [
+     [
+      4,
+      7
+     ],
+     [
+      3,
+      6
+     ],
+     [
+      2,
+      29
+     ],
+     [
+      1,
+      18
+     ],
+     [
+      5,
+      30
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     2,
+     1
+    ],
+    "study": "main"
+   },
+   "M1new": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "BUDGET_NO_PLAN",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:4",
+    "status": "no feasible side grasp",
+    "first_failed": 4,
+    "connector_fail": false,
+    "connectors_ok": 2,
+    "cpu_s": 52.9,
+    "wall_s": 52.9,
+    "y_status": "VERIFIED",
+    "src": "R4.2:R4.2|3d|3ds66-k45d-srv3-w0077-s004-k4v2j0-k5v2j6|[[4, 7], [1, 18], [3, 6], [2, 29], [5, 30]]|[1, 4, 5]",
+    "order": [
+     [
+      4,
+      7
+     ],
+     [
+      1,
+      18
+     ],
+     [
+      3,
+      6
+     ],
+     [
+      2,
+      29
+     ],
+     [
+      5,
+      30
+     ]
+    ],
+    "partition": [
+     1,
+     3,
+     1
+    ],
+    "study": "main"
+   },
+   "A1new": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "OPERATIONAL_FAILURE",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:3",
+    "status": "EXECUTION_NOT_VERIFIED",
+    "first_failed": 3,
+    "connector_fail": false,
+    "connectors_ok": 2,
+    "cpu_s": 30.0,
+    "wall_s": 30.0,
+    "y_status": "VERIFIED",
+    "src": "NEW",
+    "order": [
+     [
+      5,
+      30
+     ],
+     [
+      2,
+      29
+     ],
+     [
+      4,
+      7
+     ],
+     [
+      1,
+      18
+     ],
+     [
+      3,
+      6
+     ]
+    ],
+    "partition": [
+     2,
+     1,
+     2
+    ],
+    "study": "main"
+   },
+   "RANDOM": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "BUDGET_NO_PLAN",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:0",
+    "status": "no feasible side grasp",
+    "first_failed": 0,
+    "connector_fail": false,
+    "connectors_ok": 0,
+    "cpu_s": 20.4,
+    "wall_s": 20.4,
+    "y_status": "VERIFIED",
+    "src": "R4.2:R4.2|3d|3ds66-k45d-srv3-w0077-s004-k4v2j0-k5v2j6|[[2, 29], [4, 7], [5, 30], [1, 18], [3, 6]]|[1, 2, 3, 5]",
+    "order": [
+     [
+      2,
+      29
+     ],
+     [
+      4,
+      7
+     ],
+     [
+      5,
+      30
+     ],
+     [
+      1,
+      18
+     ],
+     [
+      3,
+      6
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     1,
+     2
+    ],
+    "study": "main"
+   },
+   "WITNESS": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "OPERATIONAL_FAILURE",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:2",
+    "status": "EXECUTION_NOT_VERIFIED",
+    "first_failed": 2,
+    "connector_fail": false,
+    "connectors_ok": 2,
+    "cpu_s": 15.0,
+    "wall_s": 15.0,
+    "y_status": "VERIFIED",
+    "src": "R4.2:R4.2|3d|3ds66-k45d-srv3-w0077-s004-k4v2j0-k5v2j6|[[5, 30], [4, 7], [1, 18], [2, 29], [3, 6]]|[1, 2, 5]",
+    "order": [
+     [
+      5,
+      30
+     ],
+     [
+      4,
+      7
+     ],
+     [
+      1,
+      18
+     ],
+     [
+      2,
+      29
+     ],
+     [
+      3,
+      6
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     3
+    ],
+    "study": "main"
+   }
+  },
+  "3ds66-k45d-srv3-w0059-s014-k4v2j0-k5v2j3": {
+   "F0": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "CERTIFIED_INFEASIBLE",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:0",
+    "status": "no feasible side grasp",
+    "first_failed": 0,
+    "connector_fail": false,
+    "connectors_ok": 0,
+    "cpu_s": 13.5,
+    "wall_s": 13.5,
+    "y_status": "VERIFIED",
+    "src": "R4.2:R4.2|3d|3ds66-k45d-srv3-w0059-s014-k4v2j0-k5v2j3|[[1, 28], [3, 11], [2, 10], [5, 9], [4, 15]]|[2, 3, 4, 5]",
+    "order": [
+     [
+      1,
+      28
+     ],
+     [
+      3,
+      11
+     ],
+     [
+      2,
+      10
+     ],
+     [
+      5,
+      9
+     ],
+     [
+      4,
+      15
+     ]
+    ],
+    "partition": [
+     2,
+     1,
+     1,
+     1
+    ],
+    "study": "main"
+   },
+   "G1new": {
+    "x": 1,
+    "y": 1,
+    "replay": 1,
+    "succ": true,
+    "x_outcome": "SUCCESS",
+    "y_outcome": "SUCCESS",
+    "phase": null,
+    "status": "VERIFIED",
+    "first_failed": null,
+    "connector_fail": false,
+    "connectors_ok": 4,
+    "cpu_s": 35.2,
+    "wall_s": 35.3,
+    "y_status": "VERIFIED",
+    "src": "NEW",
+    "order": [
+     [
+      4,
+      15
+     ],
+     [
+      1,
+      28
+     ],
+     [
+      3,
+      11
+     ],
+     [
+      2,
+      10
+     ],
+     [
+      5,
+      9
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     2,
+     1
+    ],
+    "study": "main"
+   },
+   "M1new": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "CERTIFIED_INFEASIBLE",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:3",
+    "status": "no feasible side grasp",
+    "first_failed": 3,
+    "connector_fail": false,
+    "connectors_ok": 2,
+    "cpu_s": 28.9,
+    "wall_s": 29.0,
+    "y_status": "VERIFIED",
+    "src": "NEW",
+    "order": [
+     [
+      4,
+      15
+     ],
+     [
+      3,
+      11
+     ],
+     [
+      5,
+      9
+     ],
+     [
+      1,
+      28
+     ],
+     [
+      2,
+      10
+     ]
+    ],
+    "partition": [
+     2,
+     1,
+     2
+    ],
+    "study": "main"
+   },
+   "A1new": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "CERTIFIED_INFEASIBLE",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:1",
+    "status": "no feasible side grasp",
+    "first_failed": 1,
+    "connector_fail": false,
+    "connectors_ok": 1,
+    "cpu_s": 15.6,
+    "wall_s": 16.1,
+    "y_status": "VERIFIED",
+    "src": "NEW",
+    "order": [
+     [
+      5,
+      9
+     ],
+     [
+      1,
+      28
+     ],
+     [
+      2,
+      10
+     ],
+     [
+      3,
+      11
+     ],
+     [
+      4,
+      15
+     ]
+    ],
+    "partition": [
+     1,
+     3,
+     1
+    ],
+    "study": "main"
+   },
+   "RANDOM": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "CERTIFIED_INFEASIBLE",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:1",
+    "status": "no feasible side grasp",
+    "first_failed": 1,
+    "connector_fail": false,
+    "connectors_ok": 1,
+    "cpu_s": 23.0,
+    "wall_s": 23.0,
+    "y_status": "VERIFIED",
+    "src": "R4.2:R4.2|3d|3ds66-k45d-srv3-w0059-s014-k4v2j0-k5v2j3|[[3, 11], [4, 15], [5, 9], [1, 28], [2, 10]]|[1, 2, 3, 5]",
+    "order": [
+     [
+      3,
+      11
+     ],
+     [
+      4,
+      15
+     ],
+     [
+      5,
+      9
+     ],
+     [
+      1,
+      28
+     ],
+     [
+      2,
+      10
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     1,
+     2
+    ],
+    "study": "main"
+   },
+   "WITNESS": {
+    "x": 1,
+    "y": 1,
+    "replay": 1,
+    "succ": true,
+    "x_outcome": "SUCCESS",
+    "y_outcome": "SUCCESS",
+    "phase": null,
+    "status": "VERIFIED",
+    "first_failed": null,
+    "connector_fail": false,
+    "connectors_ok": 4,
+    "cpu_s": 36.2,
+    "wall_s": 36.2,
+    "y_status": "VERIFIED",
+    "src": "R4.2:R4.2|3d|3ds66-k45d-srv3-w0059-s014-k4v2j0-k5v2j3|[[4, 15], [1, 28], [5, 9], [2, 10], [3, 11]]|[1, 2, 3, 5]",
+    "order": [
+     [
+      4,
+      15
+     ],
+     [
+      1,
+      28
+     ],
+     [
+      5,
+      9
+     ],
+     [
+      2,
+      10
+     ],
+     [
+      3,
+      11
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     1,
+     2
+    ],
+    "study": "main"
+   }
+  },
+  "3ds66-k45d-k45-b2c2-035-v2j1": {
+   "F0": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "CERTIFIED_INFEASIBLE",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:0",
+    "status": "no feasible side grasp",
+    "first_failed": 0,
+    "connector_fail": false,
+    "connectors_ok": 0,
+    "cpu_s": 15.2,
+    "wall_s": 15.3,
+    "y_status": "VERIFIED",
+    "src": "R4.2:R4.2|3d|3ds66-k45d-k45-b2c2-035-v2j1|[[5, 18], [6, 25], [7, 30], [1, 23], [2, 6]]|[1, 2, 4, 5]",
+    "order": [
+     [
+      5,
+      18
+     ],
+     [
+      6,
+      25
+     ],
+     [
+      7,
+      30
+     ],
+     [
+      1,
+      23
+     ],
+     [
+      2,
+      6
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     2,
+     1
+    ],
+    "study": "main"
+   },
+   "G1new": {
+    "x": 1,
+    "y": 1,
+    "replay": 1,
+    "succ": true,
+    "x_outcome": "SUCCESS",
+    "y_outcome": "SUCCESS",
+    "phase": null,
+    "status": "VERIFIED",
+    "first_failed": null,
+    "connector_fail": false,
+    "connectors_ok": 4,
+    "cpu_s": 41.6,
+    "wall_s": 41.7,
+    "y_status": "VERIFIED",
+    "src": "R4.2:R4.2|3d|3ds66-k45d-k45-b2c2-035-v2j1|[[1, 23], [7, 30], [6, 25], [5, 18], [2, 6]]|[2, 3, 4, 5]",
+    "order": [
+     [
+      1,
+      23
+     ],
+     [
+      7,
+      30
+     ],
+     [
+      6,
+      25
+     ],
+     [
+      5,
+      18
+     ],
+     [
+      2,
+      6
+     ]
+    ],
+    "partition": [
+     2,
+     1,
+     1,
+     1
+    ],
+    "study": "main"
+   },
+   "M1new": {
+    "x": 1,
+    "y": 1,
+    "replay": 1,
+    "succ": true,
+    "x_outcome": "SUCCESS",
+    "y_outcome": "SUCCESS",
+    "phase": null,
+    "status": "VERIFIED",
+    "first_failed": null,
+    "connector_fail": false,
+    "connectors_ok": 3,
+    "cpu_s": 45.5,
+    "wall_s": 49.6,
+    "y_status": "VERIFIED",
+    "src": "NEW",
+    "order": [
+     [
+      7,
+      30
+     ],
+     [
+      6,
+      25
+     ],
+     [
+      1,
+      23
+     ],
+     [
+      5,
+      18
+     ],
+     [
+      2,
+      6
+     ]
+    ],
+    "partition": [
+     1,
+     2,
+     2
+    ],
+    "study": "main"
+   },
+   "A1new": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "CERTIFIED_INFEASIBLE",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:0",
+    "status": "no feasible side grasp",
+    "first_failed": 0,
+    "connector_fail": false,
+    "connectors_ok": 0,
+    "cpu_s": 31.1,
+    "wall_s": 34.9,
+    "y_status": "VERIFIED",
+    "src": "NEW",
+    "order": [
+     [
+      6,
+      25
+     ],
+     [
+      5,
+      18
+     ],
+     [
+      7,
+      30
+     ],
+     [
+      2,
+      6
+     ],
+     [
+      1,
+      23
+     ]
+    ],
+    "partition": [
+     2,
+     3
+    ],
+    "study": "main"
+   },
+   "RANDOM": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "CERTIFIED_INFEASIBLE",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:1",
+    "status": "no feasible side grasp",
+    "first_failed": 1,
+    "connector_fail": false,
+    "connectors_ok": 1,
+    "cpu_s": 20.2,
+    "wall_s": 20.2,
+    "y_status": "VERIFIED",
+    "src": "R4.2:R4.2|3d|3ds66-k45d-k45-b2c2-035-v2j1|[[7, 30], [5, 18], [6, 25], [2, 6], [1, 23]]|[1, 2, 3, 5]",
+    "order": [
+     [
+      7,
+      30
+     ],
+     [
+      5,
+      18
+     ],
+     [
+      6,
+      25
+     ],
+     [
+      2,
+      6
+     ],
+     [
+      1,
+      23
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     1,
+     2
+    ],
+    "study": "main"
+   },
+   "WITNESS": {
+    "x": 1,
+    "y": 1,
+    "replay": 1,
+    "succ": true,
+    "x_outcome": "SUCCESS",
+    "y_outcome": "SUCCESS",
+    "phase": null,
+    "status": "VERIFIED",
+    "first_failed": null,
+    "connector_fail": false,
+    "connectors_ok": 4,
+    "cpu_s": 39.6,
+    "wall_s": 39.6,
+    "y_status": "VERIFIED",
+    "src": "R4.2:R4.2|3d|3ds66-k45d-k45-b2c2-035-v2j1|[[1, 23], [7, 30], [6, 25], [5, 18], [2, 6]]|[1, 2, 3, 5]",
+    "order": [
+     [
+      1,
+      23
+     ],
+     [
+      7,
+      30
+     ],
+     [
+      6,
+      25
+     ],
+     [
+      5,
+      18
+     ],
+     [
+      2,
+      6
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     1,
+     2
+    ],
+    "study": "main"
+   }
+  },
+  "3ds66-srv3-w0101-s007": {
+   "F0": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "CERTIFIED_INFEASIBLE",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:2",
+    "status": "no feasible side grasp",
+    "first_failed": 2,
+    "connector_fail": false,
+    "connectors_ok": 2,
+    "cpu_s": 65.2,
+    "wall_s": 65.4,
+    "y_status": "VERIFIED",
+    "src": "R2.4:R24|3ds66-srv3-w0101-s007|[[3, 31], [6, 12], [2, 18], [1, 6]]|[1, 2, 4]",
+    "order": [
+     [
+      3,
+      31
+     ],
+     [
+      6,
+      12
+     ],
+     [
+      2,
+      18
+     ],
+     [
+      1,
+      6
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     2
+    ],
+    "study": "main"
+   },
+   "G1new": {
+    "x": 1,
+    "y": 1,
+    "replay": 1,
+    "succ": true,
+    "x_outcome": "SUCCESS",
+    "y_outcome": "SUCCESS",
+    "phase": null,
+    "status": "VERIFIED",
+    "first_failed": null,
+    "connector_fail": false,
+    "connectors_ok": 3,
+    "cpu_s": 47.7,
+    "wall_s": 48.2,
+    "y_status": "VERIFIED",
+    "src": "NEW",
+    "order": [
+     [
+      3,
+      31
+     ],
+     [
+      2,
+      18
+     ],
+     [
+      6,
+      12
+     ],
+     [
+      1,
+      6
+     ]
+    ],
+    "partition": [
+     1,
+     2,
+     1
+    ],
+    "study": "main"
+   },
+   "M1new": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "CERTIFIED_INFEASIBLE",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:1",
+    "status": "no feasible side grasp",
+    "first_failed": 1,
+    "connector_fail": false,
+    "connectors_ok": 1,
+    "cpu_s": 29.7,
+    "wall_s": 34.0,
+    "y_status": "VERIFIED",
+    "src": "NEW",
+    "order": [
+     [
+      2,
+      18
+     ],
+     [
+      3,
+      31
+     ],
+     [
+      1,
+      6
+     ],
+     [
+      6,
+      12
+     ]
+    ],
+    "partition": [
+     1,
+     3
+    ],
+    "study": "main"
+   },
+   "A1new": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "BUDGET_NO_PLAN",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:1",
+    "status": "no feasible side grasp",
+    "first_failed": 1,
+    "connector_fail": false,
+    "connectors_ok": 0,
+    "cpu_s": 49.2,
+    "wall_s": 52.4,
+    "y_status": "VERIFIED",
+    "src": "NEW",
+    "order": [
+     [
+      3,
+      31
+     ],
+     [
+      6,
+      12
+     ],
+     [
+      1,
+      6
+     ],
+     [
+      2,
+      18
+     ]
+    ],
+    "partition": [
+     3,
+     1
+    ],
+    "study": "main"
+   },
+   "RANDOM": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "CERTIFIED_INFEASIBLE",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:1",
+    "status": "no feasible side grasp",
+    "first_failed": 1,
+    "connector_fail": false,
+    "connectors_ok": 1,
+    "cpu_s": 54.3,
+    "wall_s": 54.4,
+    "y_status": "VERIFIED",
+    "src": "R4.2:R4.2|3d|3ds66-srv3-w0101-s007|[[6, 12], [3, 31], [2, 18], [1, 6]]|[1, 2, 4]",
+    "order": [
+     [
+      6,
+      12
+     ],
+     [
+      3,
+      31
+     ],
+     [
+      2,
+      18
+     ],
+     [
+      1,
+      6
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     2
+    ],
+    "study": "main"
+   },
+   "WITNESS": {
+    "x": 1,
+    "y": 1,
+    "replay": 1,
+    "succ": true,
+    "x_outcome": "SUCCESS",
+    "y_outcome": "SUCCESS",
+    "phase": null,
+    "status": "VERIFIED",
+    "first_failed": null,
+    "connector_fail": false,
+    "connectors_ok": 3,
+    "cpu_s": 50.9,
+    "wall_s": 50.8,
+    "y_status": "VERIFIED",
+    "src": "R4.2:R4.2|3d|3ds66-srv3-w0101-s007|[[2, 18], [6, 12], [1, 6], [3, 31]]|[2, 3, 4]",
+    "order": [
+     [
+      2,
+      18
+     ],
+     [
+      6,
+      12
+     ],
+     [
+      1,
+      6
+     ],
+     [
+      3,
+      31
+     ]
+    ],
+    "partition": [
+     2,
+     1,
+     1
+    ],
+    "study": "main"
+   }
+  },
+  "3ds66-k45d-srv3-w0075-s019-k4v2j0-k5v2j3": {
+   "F0": {
+    "x": 1,
+    "y": 1,
+    "replay": 1,
+    "succ": true,
+    "x_outcome": "SUCCESS",
+    "y_outcome": "SUCCESS",
+    "phase": null,
+    "status": "VERIFIED",
+    "first_failed": null,
+    "connector_fail": false,
+    "connectors_ok": 4,
+    "cpu_s": 39.8,
+    "wall_s": 39.8,
+    "y_status": "VERIFIED",
+    "src": "R4.2:R4.2|3d|3ds66-k45d-srv3-w0075-s019-k4v2j0-k5v2j3|[[5, 15], [1, 28], [3, 11], [2, 10], [6, 9]]|[1, 3, 4, 5]",
+    "order": [
+     [
+      5,
+      15
+     ],
+     [
+      1,
+      28
+     ],
+     [
+      3,
+      11
+     ],
+     [
+      2,
+      10
+     ],
+     [
+      6,
+      9
+     ]
+    ],
+    "partition": [
+     1,
+     2,
+     1,
+     1
+    ],
+    "study": "main"
+   },
+   "G1new": {
+    "x": 1,
+    "y": 1,
+    "replay": 1,
+    "succ": true,
+    "x_outcome": "SUCCESS",
+    "y_outcome": "SUCCESS",
+    "phase": null,
+    "status": "VERIFIED",
+    "first_failed": null,
+    "connector_fail": false,
+    "connectors_ok": 4,
+    "cpu_s": 43.7,
+    "wall_s": 47.5,
+    "y_status": "VERIFIED",
+    "src": "NEW",
+    "order": [
+     [
+      5,
+      15
+     ],
+     [
+      1,
+      28
+     ],
+     [
+      6,
+      9
+     ],
+     [
+      3,
+      11
+     ],
+     [
+      2,
+      10
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     1,
+     2
+    ],
+    "study": "main"
+   },
+   "M1new": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "CERTIFIED_INFEASIBLE",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:3",
+    "status": "no feasible side grasp",
+    "first_failed": 3,
+    "connector_fail": false,
+    "connectors_ok": 2,
+    "cpu_s": 33.6,
+    "wall_s": 34.6,
+    "y_status": "VERIFIED",
+    "src": "NEW",
+    "order": [
+     [
+      5,
+      15
+     ],
+     [
+      3,
+      11
+     ],
+     [
+      6,
+      9
+     ],
+     [
+      1,
+      28
+     ],
+     [
+      2,
+      10
+     ]
+    ],
+    "partition": [
+     2,
+     1,
+     2
+    ],
+    "study": "main"
+   },
+   "A1new": {
+    "x": 1,
+    "y": 1,
+    "replay": 1,
+    "succ": true,
+    "x_outcome": "SUCCESS",
+    "y_outcome": "SUCCESS",
+    "phase": null,
+    "status": "VERIFIED",
+    "first_failed": null,
+    "connector_fail": false,
+    "connectors_ok": 3,
+    "cpu_s": 37.2,
+    "wall_s": 38.5,
+    "y_status": "VERIFIED",
+    "src": "NEW",
+    "order": [
+     [
+      5,
+      15
+     ],
+     [
+      6,
+      9
+     ],
+     [
+      1,
+      28
+     ],
+     [
+      2,
+      10
+     ],
+     [
+      3,
+      11
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     3
+    ],
+    "study": "main"
+   },
+   "RANDOM": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "CERTIFIED_INFEASIBLE",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:1",
+    "status": "no feasible side grasp",
+    "first_failed": 1,
+    "connector_fail": false,
+    "connectors_ok": 1,
+    "cpu_s": 27.6,
+    "wall_s": 27.6,
+    "y_status": "VERIFIED",
+    "src": "R4.2:R4.2|3d|3ds66-k45d-srv3-w0075-s019-k4v2j0-k5v2j3|[[3, 11], [5, 15], [1, 28], [6, 9], [2, 10]]|[1, 2, 3, 5]",
+    "order": [
+     [
+      3,
+      11
+     ],
+     [
+      5,
+      15
+     ],
+     [
+      1,
+      28
+     ],
+     [
+      6,
+      9
+     ],
+     [
+      2,
+      10
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     1,
+     2
+    ],
+    "study": "main"
+   },
+   "WITNESS": {
+    "x": 1,
+    "y": 1,
+    "replay": 1,
+    "succ": true,
+    "x_outcome": "SUCCESS",
+    "y_outcome": "SUCCESS",
+    "phase": null,
+    "status": "VERIFIED",
+    "first_failed": null,
+    "connector_fail": false,
+    "connectors_ok": 4,
+    "cpu_s": 42.2,
+    "wall_s": 42.2,
+    "y_status": "VERIFIED",
+    "src": "R4.2:R4.2|3d|3ds66-k45d-srv3-w0075-s019-k4v2j0-k5v2j3|[[5, 15], [1, 28], [6, 9], [2, 10], [3, 11]]|[1, 2, 3, 5]",
+    "order": [
+     [
+      5,
+      15
+     ],
+     [
+      1,
+      28
+     ],
+     [
+      6,
+      9
+     ],
+     [
+      2,
+      10
+     ],
+     [
+      3,
+      11
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     1,
+     2
+    ],
+    "study": "main"
+   }
+  },
+  "3ds66-k45-b2c2-148": {
+   "F0": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "BUDGET_NO_PLAN",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:0",
+    "status": "no feasible side grasp",
+    "first_failed": 0,
+    "connector_fail": false,
+    "connectors_ok": 0,
+    "cpu_s": 17.5,
+    "wall_s": 18.1,
+    "y_status": "VERIFIED",
+    "src": "R2.4:R24|3ds66-k45-b2c2-148|[[2, 27], [5, 28], [4, 22], [1, 17]]|[1, 2, 4]",
+    "order": [
+     [
+      2,
+      27
+     ],
+     [
+      5,
+      28
+     ],
+     [
+      4,
+      22
+     ],
+     [
+      1,
+      17
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     2
+    ],
+    "study": "main"
+   },
+   "G1new": {
+    "x": 1,
+    "y": 1,
+    "replay": 1,
+    "succ": true,
+    "x_outcome": "SUCCESS",
+    "y_outcome": "SUCCESS",
+    "phase": null,
+    "status": "VERIFIED",
+    "first_failed": null,
+    "connector_fail": false,
+    "connectors_ok": 3,
+    "cpu_s": 38.9,
+    "wall_s": 40.6,
+    "y_status": "VERIFIED",
+    "src": "NEW",
+    "order": [
+     [
+      5,
+      28
+     ],
+     [
+      4,
+      22
+     ],
+     [
+      1,
+      17
+     ],
+     [
+      2,
+      27
+     ]
+    ],
+    "partition": [
+     2,
+     1,
+     1
+    ],
+    "study": "main"
+   },
+   "M1new": {
+    "x": 1,
+    "y": 1,
+    "replay": 1,
+    "succ": true,
+    "x_outcome": "SUCCESS",
+    "y_outcome": "SUCCESS",
+    "phase": null,
+    "status": "VERIFIED",
+    "first_failed": null,
+    "connector_fail": false,
+    "connectors_ok": 3,
+    "cpu_s": 56.6,
+    "wall_s": 56.6,
+    "y_status": "VERIFIED",
+    "src": "R4.2:R4.2|3d|3ds66-k45-b2c2-148|[[5, 28], [4, 22], [1, 17], [2, 27]]|[1, 3, 4]",
+    "order": [
+     [
+      5,
+      28
+     ],
+     [
+      4,
+      22
+     ],
+     [
+      1,
+      17
+     ],
+     [
+      2,
+      27
+     ]
+    ],
+    "partition": [
+     1,
+     2,
+     1
+    ],
+    "study": "main"
+   },
+   "A1new": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "BUDGET_NO_PLAN",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:0",
+    "status": "no feasible side grasp",
+    "first_failed": 0,
+    "connector_fail": false,
+    "connectors_ok": 0,
+    "cpu_s": 18.6,
+    "wall_s": 19.7,
+    "y_status": "VERIFIED",
+    "src": "NEW",
+    "order": [
+     [
+      1,
+      17
+     ],
+     [
+      2,
+      27
+     ],
+     [
+      4,
+      22
+     ],
+     [
+      5,
+      28
+     ]
+    ],
+    "partition": [
+     2,
+     1,
+     1
+    ],
+    "study": "main"
+   },
+   "RANDOM": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "CERTIFIED_INFEASIBLE",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:0",
+    "status": "no feasible side grasp",
+    "first_failed": 0,
+    "connector_fail": false,
+    "connectors_ok": 0,
+    "cpu_s": 11.1,
+    "wall_s": 11.1,
+    "y_status": "VERIFIED",
+    "src": "R4.2:R4.2|3d|3ds66-k45-b2c2-148|[[4, 22], [5, 28], [1, 17], [2, 27]]|[1, 3, 4]",
+    "order": [
+     [
+      4,
+      22
+     ],
+     [
+      5,
+      28
+     ],
+     [
+      1,
+      17
+     ],
+     [
+      2,
+      27
+     ]
+    ],
+    "partition": [
+     1,
+     2,
+     1
+    ],
+    "study": "main"
+   },
+   "WITNESS": {
+    "x": 1,
+    "y": 1,
+    "replay": 1,
+    "succ": true,
+    "x_outcome": "SUCCESS",
+    "y_outcome": "SUCCESS",
+    "phase": null,
+    "status": "VERIFIED",
+    "first_failed": null,
+    "connector_fail": false,
+    "connectors_ok": 3,
+    "cpu_s": 56.6,
+    "wall_s": 56.6,
+    "y_status": "VERIFIED",
+    "src": "R4.2:R4.2|3d|3ds66-k45-b2c2-148|[[5, 28], [4, 22], [1, 17], [2, 27]]|[1, 3, 4]",
+    "order": [
+     [
+      5,
+      28
+     ],
+     [
+      4,
+      22
+     ],
+     [
+      1,
+      17
+     ],
+     [
+      2,
+      27
+     ]
+    ],
+    "partition": [
+     1,
+     2,
+     1
+    ],
+    "study": "main"
+   }
+  },
+  "3ds66-k45-b2c2-152": {
+   "F0": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "CERTIFIED_INFEASIBLE",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:0",
+    "status": "no feasible side grasp",
+    "first_failed": 0,
+    "connector_fail": false,
+    "connectors_ok": 0,
+    "cpu_s": 12.5,
+    "wall_s": 12.5,
+    "y_status": "VERIFIED",
+    "src": "R2.4:R24|3ds66-k45-b2c2-152|[[2, 27], [1, 15], [4, 16], [3, 10]]|[1, 2, 4]",
+    "order": [
+     [
+      2,
+      27
+     ],
+     [
+      1,
+      15
+     ],
+     [
+      4,
+      16
+     ],
+     [
+      3,
+      10
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     2
+    ],
+    "study": "main"
+   },
+   "G1new": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "CERTIFIED_INFEASIBLE",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:2",
+    "status": "no feasible side grasp",
+    "first_failed": 2,
+    "connector_fail": false,
+    "connectors_ok": 1,
+    "cpu_s": 27.7,
+    "wall_s": 27.9,
+    "y_status": "VERIFIED",
+    "src": "NEW",
+    "order": [
+     [
+      4,
+      16
+     ],
+     [
+      3,
+      10
+     ],
+     [
+      2,
+      27
+     ],
+     [
+      1,
+      15
+     ]
+    ],
+    "partition": [
+     2,
+     1,
+     1
+    ],
+    "study": "main"
+   },
+   "M1new": {
+    "x": 1,
+    "y": 1,
+    "replay": 1,
+    "succ": true,
+    "x_outcome": "SUCCESS",
+    "y_outcome": "SUCCESS",
+    "phase": null,
+    "status": "VERIFIED",
+    "first_failed": null,
+    "connector_fail": false,
+    "connectors_ok": 3,
+    "cpu_s": 34.1,
+    "wall_s": 34.1,
+    "y_status": "VERIFIED",
+    "src": "NEW",
+    "order": [
+     [
+      4,
+      16
+     ],
+     [
+      2,
+      27
+     ],
+     [
+      3,
+      10
+     ],
+     [
+      1,
+      15
+     ]
+    ],
+    "partition": [
+     2,
+     1,
+     1
+    ],
+    "study": "main"
+   },
+   "A1new": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "CERTIFIED_INFEASIBLE",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:0",
+    "status": "no feasible side grasp",
+    "first_failed": 0,
+    "connector_fail": false,
+    "connectors_ok": 0,
+    "cpu_s": 13.7,
+    "wall_s": 13.7,
+    "y_status": "VERIFIED",
+    "src": "R3.4-QUARANTINED-DIAGNOSTIC:R34|3ds66-k45-b2c2-152|[[2, 27], [4, 16], [3, 10], [1, 15]]|[2, 4]",
+    "order": [
+     [
+      2,
+      27
+     ],
+     [
+      4,
+      16
+     ],
+     [
+      3,
+      10
+     ],
+     [
+      1,
+      15
+     ]
+    ],
+    "partition": [
+     2,
+     2
+    ],
+    "study": "main"
+   },
+   "RANDOM": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "CERTIFIED_INFEASIBLE",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:1",
+    "status": "no feasible side grasp",
+    "first_failed": 1,
+    "connector_fail": false,
+    "connectors_ok": 1,
+    "cpu_s": 18.5,
+    "wall_s": 18.5,
+    "y_status": "VERIFIED",
+    "src": "R4.2:R4.2|3d|3ds66-k45-b2c2-152|[[4, 16], [1, 15], [2, 27], [3, 10]]|[1, 2, 4]",
+    "order": [
+     [
+      4,
+      16
+     ],
+     [
+      1,
+      15
+     ],
+     [
+      2,
+      27
+     ],
+     [
+      3,
+      10
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     2
+    ],
+    "study": "main"
+   },
+   "WITNESS": {
+    "x": 1,
+    "y": 1,
+    "replay": 1,
+    "succ": true,
+    "x_outcome": "SUCCESS",
+    "y_outcome": "SUCCESS",
+    "phase": null,
+    "status": "VERIFIED",
+    "first_failed": null,
+    "connector_fail": false,
+    "connectors_ok": 3,
+    "cpu_s": 33.0,
+    "wall_s": 33.0,
+    "y_status": "VERIFIED",
+    "src": "R4.2:R4.2|3d|3ds66-k45-b2c2-152|[[4, 16], [2, 27], [3, 10], [1, 15]]|[1, 2, 4]",
+    "order": [
+     [
+      4,
+      16
+     ],
+     [
+      2,
+      27
+     ],
+     [
+      3,
+      10
+     ],
+     [
+      1,
+      15
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     2
+    ],
+    "study": "main"
+   }
+  },
+  "3ds66-k45d-srv3-w0078-s012-j0": {
+   "F0": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "CERTIFIED_INFEASIBLE",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:0",
+    "status": "no feasible side grasp",
+    "first_failed": 0,
+    "connector_fail": false,
+    "connectors_ok": 0,
+    "cpu_s": 31.0,
+    "wall_s": 31.2,
+    "y_status": "VERIFIED",
+    "src": "R2.4:R24|45d-srv3-w0078-s012-j0|[[2, 24], [6, 30], [5, 31], [4, 16], [1, 9]]|[1, 3, 5]",
+    "order": [
+     [
+      2,
+      24
+     ],
+     [
+      6,
+      30
+     ],
+     [
+      5,
+      31
+     ],
+     [
+      4,
+      16
+     ],
+     [
+      1,
+      9
+     ]
+    ],
+    "partition": [
+     1,
+     2,
+     2
+    ],
+    "study": "main"
+   },
+   "G1new": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "BUDGET_NO_PLAN",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:4",
+    "status": "no feasible side grasp",
+    "first_failed": 4,
+    "connector_fail": false,
+    "connectors_ok": 3,
+    "cpu_s": 48.3,
+    "wall_s": 48.3,
+    "y_status": "VERIFIED",
+    "src": "NEW",
+    "order": [
+     [
+      4,
+      16
+     ],
+     [
+      1,
+      9
+     ],
+     [
+      6,
+      30
+     ],
+     [
+      2,
+      24
+     ],
+     [
+      5,
+      31
+     ]
+    ],
+    "partition": [
+     1,
+     1,
+     1,
+     2
+    ],
+    "study": "main"
+   },
+   "M1new": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "OPERATIONAL_FAILURE",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:3",
+    "status": "EXECUTION_NOT_VERIFIED",
+    "first_failed": 3,
+    "connector_fail": false,
+    "connectors_ok": 2,
+    "cpu_s": 55.9,
+    "wall_s": 57.4,
+    "y_status": "VERIFIED",
+    "src": "NEW",
+    "order": [
+     [
+      4,
+      16
+     ],
+     [
+      6,
+      30
+     ],
+     [
+      2,
+      24
+     ],
+     [
+      5,
+      31
+     ],
+     [
+      1,
+      9
+     ]
+    ],
+    "partition": [
+     2,
+     1,
+     2
+    ],
+    "study": "main"
+   },
+   "A1new": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "CERTIFIED_INFEASIBLE",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:0",
+    "status": "no feasible side grasp",
+    "first_failed": 0,
+    "connector_fail": false,
+    "connectors_ok": 0,
+    "cpu_s": 32.0,
+    "wall_s": 32.0,
+    "y_status": "VERIFIED",
+    "src": "NEW",
+    "order": [
+     [
+      2,
+      24
+     ],
+     [
+      5,
+      31
+     ],
+     [
+      4,
+      16
+     ],
+     [
+      1,
+      9
+     ],
+     [
+      6,
+      30
+     ]
+    ],
+    "partition": [
+     1,
+     3,
+     1
+    ],
+    "study": "main"
+   },
+   "RANDOM": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "CERTIFIED_INFEASIBLE",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:0",
+    "status": "no feasible side grasp",
+    "first_failed": 0,
+    "connector_fail": false,
+    "connectors_ok": 0,
+    "cpu_s": 33.3,
+    "wall_s": 33.3,
+    "y_status": "VERIFIED",
+    "src": "R4.2:R4.2|3d|3ds66-k45d-srv3-w0078-s012-j0|[[2, 24], [5, 31], [6, 30], [4, 16], [1, 9]]|[2, 3, 5]",
+    "order": [
+     [
+      2,
+      24
+     ],
+     [
+      5,
+      31
+     ],
+     [
+      6,
+      30
+     ],
+     [
+      4,
+      16
+     ],
+     [
+      1,
+      9
+     ]
+    ],
+    "partition": [
+     2,
+     1,
+     2
+    ],
+    "study": "main"
+   },
+   "WITNESS": {
+    "x": 0,
+    "y": 1,
+    "replay": null,
+    "succ": false,
+    "x_outcome": "OPERATIONAL_FAILURE",
+    "y_outcome": "SUCCESS",
+    "phase": "relocation:3",
+    "status": "EXECUTION_NOT_VERIFIED",
+    "first_failed": 3,
+    "connector_fail": false,
+    "connectors_ok": 2,
+    "cpu_s": 47.6,
+    "wall_s": 47.7,
+    "y_status": "VERIFIED",
+    "src": "R4.2:R4.2|3d|3ds66-k45d-srv3-w0078-s012-j0|[[6, 30], [2, 24], [4, 16], [5, 31], [1, 9]]|[1, 3, 4, 5]",
+    "order": [
+     [
+      6,
+      30
+     ],
+     [
+      2,
+      24
+     ],
+     [
+      4,
+      16
+     ],
+     [
+      5,
+      31
+     ],
+     [
+      1,
+      9
+     ]
+    ],
+    "partition": [
+     1,
+     2,
+     1,
+     1
+    ],
+    "study": "main"
+   }
+  }
+ },
+ "completion": {
+  "status": "COMPLETE",
+  "why": [],
+  "n_sealed": 46,
+  "n_records": 46,
+  "kinds": {
+   "DONE": 46
+  },
+  "manifest_sha256": "8f2f5525168213adf8c4c00f8756fa368161dc0b603636685bb12931980c6fec",
+  "results_sha256": "7157d5f3eb85297767229b6e0ba82391a196abeb90c9ecba72773a7e613c375e"
+ },
+ "cpu_h_new": 0.5035555555555555,
+ "label": "R4.2 DEVELOPMENT DIAGNOSTIC (exposed roots); not P2 reopening, not the P3 confirmation gate"
+}

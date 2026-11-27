@@ -62,9 +62,14 @@ def plan(pop, cfg_path):
     pcfg = {"rule": {**PL.CFG["rule"], **({"S2_tau": cfg["S2_tau"], "S2_stat": cfg.get("S2_stat")} if cfg.get("S2_tau") is not None else {})},
             "rec": {**PL.CFG["rec"], "admit_m": cfg.get("admit_m", 0.0), "admit_eta": cfg.get("admit_eta")}}
     R6.mkdir(parents=True, exist_ok=True)
-    pf = R6 / f"plans_{pop}.jsonl"
+    import os
+    sh = os.environ.get("R6_SHARD")                                     # "i/n": deterministic root shard (merged + sealed by `merge`)
+    i_, n_ = (int(x) for x in sh.split("/")) if sh else (0, 1)
+    pf = R6 / (f"plans_{pop}.part{i_}of{n_}.jsonl" if sh else f"plans_{pop}.jsonl")
     with open(pf, "w") as f:
-        for rid, row, meta in roots(pop):
+        for k_, (rid, row, meta) in enumerate(roots(pop)):
+            if k_ % n_ != i_:
+                continue
             rec = {"root_id": rid, "pop": pop, "config": cfg, "arms": {}}
             for arm in ARMS:
                 if arm in ("B0", "H3"):
@@ -88,7 +93,21 @@ def plan(pop, cfg_path):
             fz.prop_mode = "S1"
             f.write(json.dumps(rec, default=str) + "\n"); f.flush()
             print(rid, {a: (v["decision"], len(v["seq"] or []), v["wall_s"]) for a, v in rec["arms"].items()}, flush=True)
-    (R6 / f"plans_{pop}.jsonl.SEAL").write_text(GD.sha(pf))
+    if not sh:
+        (R6 / f"plans_{pop}.jsonl.SEAL").write_text(GD.sha(pf))
+
+
+def merge(pop, n):
+    """Merge every shard (each root exactly once, in roots() order) -> plans_POP.jsonl + SEAL."""
+    parts = [R6 / f"plans_{pop}.part{i}of{n}.jsonl" for i in range(int(n))]
+    recs = {r["root_id"]: r for p in parts for r in jl(p)}
+    order = [rid for rid, _, _ in roots(pop)]
+    assert set(recs) == set(order), f"missing {set(order) - set(recs)}"
+    pf = R6 / f"plans_{pop}.jsonl"
+    with open(pf, "w") as f:
+        for rid in order:
+            f.write(json.dumps(recs[rid], default=str) + "\n")
+    (R6 / f"plans_{pop}.jsonl.SEAL").write_text(GD.sha(pf)); print("merged", len(order))
 
 
 def archive3d():
@@ -233,4 +252,4 @@ def analyze(pop):
 
 if __name__ == "__main__":
     a = sys.argv[1]
-    {"plan": lambda: plan(*sys.argv[2:4]), "jobs": lambda: jobs(*sys.argv[2:4]), "analyze": lambda: analyze(sys.argv[2])}[a]()
+    {"merge": lambda: merge(*sys.argv[2:4]), "plan": lambda: plan(*sys.argv[2:4]), "jobs": lambda: jobs(*sys.argv[2:4]), "analyze": lambda: analyze(sys.argv[2])}[a]()
