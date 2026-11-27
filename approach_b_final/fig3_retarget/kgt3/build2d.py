@@ -403,6 +403,52 @@ def analyze():
     print(json.dumps(out, indent=1)[:5000])
 
 
+def rank():
+    """Model-only: frozen 2D F0 on the DECIDED matched groups (same family, scene, destination set and bounds; SUCCESS vs CERTIFIED).
+    Every group has m <= 3, so the production energy is the exact joint p11 of the ordered sequence; marginal pX also reported."""
+    import numpy as np
+    import contracts as CT
+    import learn as LN
+    fz, net = LN.load("2d", "F0"); fz.net = net
+    Q = [json.loads(l) for l in open(OB / "queries.jsonl")]
+    grp = collections.defaultdict(list)
+    for q in Q:
+        if q["kind"] == "X" and not q["stage"].startswith("PROBE") and q["outcome"] in ("SUCCESS", "CERTIFIED_INFEASIBLE"):
+            grp[(q["fid"], q["stage"][:4], json.dumps(sorted(q["cells"].items())), json.dumps(sorted(map(tuple, q["seq"]))), json.dumps(q["bounds"]))].append(q)
+    fam = collections.defaultdict(lambda: collections.defaultdict(list))
+    first = collections.Counter()
+    for k, v in grp.items():
+        pos = [q for q in v if q["outcome"] == "SUCCESS"]; neg = [q for q in v if q["outcome"] == "CERTIFIED_INFEASIBLE"]
+        if not pos or not neg:
+            continue
+        rec = json.loads(Path(v[0]["rec"]).read_text())
+        inp = CT.view2d(rec); row = {"root_id": rec["ids"]["root_id"], "domain": "2d", "inputs": inp}
+        ix = {n: i for i, n in enumerate(inp["ids"])}
+        seqs = [[[ix[o], int(d)] for o, d in q["seq"]] for q in pos + neg]
+        sc = fz.score(row, seqs)
+        for key in ("p11", "px"):
+            vals = [x[key] for x in sc]
+            pr = [1.0 if a > b else 0.5 if a == b else 0.0 for a in vals[:len(pos)] for b in vals[len(pos):]]
+            fam[key][k[0] + "|" + k[1]].append(sum(pr) / len(pr))
+        best = max(range(len(seqs)), key=lambda i: sc[i]["p11"])
+        first[k[1]] += best < len(pos)
+    out = {}
+    rng = np.random.default_rng(0)
+    for key, F in fam.items():
+        byf = collections.defaultdict(list)
+        for g, vals in F.items():
+            byf[g.split("|")[0]].extend(vals)
+        fv = {f: float(np.mean(v)) for f, v in byf.items()}
+        fs = sorted(fv)
+        bs = [float(np.mean([fv[f] for f in rng.choice(fs, len(fs))])) for _ in range(2000)]
+        out[key] = {"families": len(fs), "groups": sum(len(v) for v in F.values()), "concordance": float(np.mean(list(fv.values()))),
+                    "ci95": [float(np.percentile(bs, 2.5)), float(np.percentile(bs, 97.5))],
+                    "by_stage": {st: float(np.mean([x for g, v in F.items() if g.endswith(st) for x in v])) for st in sorted({g.split("|")[1] for g in F})}}
+    out["argmax_is_verified_order_by_stage"] = dict(first)
+    (OB / "R4_3_rank_F0.json").write_text(json.dumps(out, indent=1))
+    print(json.dumps(out, indent=1))
+
+
 if __name__ == "__main__":
     a = sys.argv[1]
-    {"analyze": analyze, "audit": audit, "roster": lambda: roster(sys.argv[2]), "work": lambda: work(*sys.argv[2:5]), "one": lambda: print(json.dumps(_one(sys.argv[2]), default=str)[:3000])}[a]()
+    {"rank": rank, "analyze": analyze, "audit": audit, "roster": lambda: roster(sys.argv[2]), "work": lambda: work(*sys.argv[2:5]), "one": lambda: print(json.dumps(_one(sys.argv[2]), default=str)[:3000])}[a]()
