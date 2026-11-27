@@ -86,10 +86,11 @@ def ga(fz, row0, mode, cfg=None, log=None):
     D = {o: v for o, v in D.items() if v}
     sizes = [len(v) for v in D.values()]
     ub = {k: elem(sizes, k) for k in range(1, H + 1)}
-    est_x = sum(ub[k] * sum(math.comb(k, g) * math.factorial(g) for g in range(1, min(3, k) + 1)) for k in ub)
+    est_x = CP.distinct_requests(ub)                 # R4.0: distinct (U, ordered chunk) readouts under set-keyed caching (the envelope quantity)
+    theo = sum(ub[k] * CP.nx(k) for k in range(4, H + 1))  # R4.0: unshared DP lookups N_X(k) per long assignment (k <= 3 = one p11 per order)
     exact = mode != "YONLY" and all(v <= cfg["assign_per_size"] for v in ub.values()) and est_x <= cfg["exact_x_est"]
     info = {"mode": "EXACT" if exact else ("YONLY" if mode == "YONLY" else "BOUNDED"), "D4": {str(o): v for o, v in D.items()},
-            "assign_upper_bound": ub, "est_x": est_x, "per_size": {}}
+            "assign_upper_bound": ub, "est_distinct_x": est_x, "est_theoretical_dp_lookups": theo, "per_size": {}, "by_size": {}, "exhausted": False}
     T = CP.Scores(fz, row0, V.rebase)
     pair_px = None
     cands, prev = [], []
@@ -137,25 +138,30 @@ def ga(fz, row0, mode, cfg=None, log=None):
         for i in range(0, len(keep), 256):                               # streamed blocks: requests -> batched scores -> exact DP per assignment
             B.tick()
             blk = keep[i:i + 256]
-            T.need({r for A in blk for r in CP.requests(A)})
+            if k > 3:
+                T.need({r for A in blk for r in CP.requests(A)})
             for A in blk:
+                if k <= 3:                                                # R4.0: K <= 3 keeps the exact joint p11 of one chunk (no marginal competitor)
+                    for c in short_options(fz, row0, [list(map(list, o)) for o in itertools.permutations(A)]):
+                        c.update(set=[list(a) for a in A], y_global=yg[A], n_chunks=1)
+                        if best_k is None or ckey(c) < ckey(best_k):
+                            best_k = c
+                    continue
+                T.dp_lookups += CP.nx(k)                                  # R4.0: theoretical DP reads (cost lookups) actually performed
                 r = CP.grouped_dp(T, A)
                 if r:
                     F, o, p = r
-                    c = cand_of(o, p, F - math.log(max(CP.EPS, yg[A])), kind="ga_dp", y_global=yg[A], set=[list(a) for a in A])
+                    c = cand_of(o, p, F - math.log(max(CP.EPS, yg[A])), kind="ga_dp", y_global=yg[A], set=[list(a) for a in A], F=F, n_chunks=len(p))
                     if best_k is None or ckey(c) < ckey(best_k):
                         best_k = c
-                if k <= 3:
-                    for c in short_options(fz, row0, [list(map(list, o)) for o in itertools.permutations(A)]):
-                        c.update(set=[list(a) for a in A], y_global=yg[A])
-                        if best_k is None or ckey(c) < ckey(best_k):
-                            best_k = c
         if best_k:
             cands.append(best_k)                                         # only the per-size argmin can win the global argmin
+            info["by_size"][k] = {"E": best_k["E"], "y_global": best_k.get("y_global"), "F": best_k.get("F"), "n_chunks": len(best_k["partition"])}
         info["per_size"][k]["dp_optimized"] = len(keep)
         if not exact:                                                    # evaluator-side coverage audit only (never read by the planner)
             info.setdefault("retained", {})[k] = [[list(a) for a in A] for A in keep]
-    info["scores"] = dict(T.n)
+    info["exhausted"] = bool(exact)                                     # reached only when every size was completed (timeouts raise before)
+    info["scores"] = {**T.n, "dp_lookups": T.dp_lookups}
     return cands, info
 
 
@@ -163,7 +169,7 @@ def ga(fz, row0, mode, cfg=None, log=None):
 def rec(fz, row0, arm, cfg=None):
     cfg = {**CFG, **(cfg or {})}
     H = cfg["H"][row0["domain"]]
-    rc = {**cfg["rec"], "m_max": H, "wall_s": cfg["wall_s"] * 0.6, "x_unique": cfg["x_unique"], "y_unique": cfg["y_unique"]}
+    rc = {**cfg["rec"], "m_max": H, "wall_s": cfg["wall_s"] * 0.6, "x_unique": cfg["x_unique"], "y_unique": cfg["y_unique"], "disp_tiebreak": False}
     ctx, pool, tree, stop = RC.discover(fz, row0, "F-FLAT" if arm == "FLAT-INSERT" else "R-FIG3", rc)
     fz.caps = {"x_unique": cfg["x_unique"], "y_unique": cfg["y_unique"]}
     B = Budget({"wall_s": cfg["wall_s"] * 0.4})
@@ -172,6 +178,10 @@ def rec(fz, row0, arm, cfg=None):
     for kk, (P, E, sd) in sorted(pool.items()):
         B.tick()
         acts = [tuple(map(int, a)) for a in P]
+        if len(P) <= 3:                                                  # R4.0: K <= 3 = exact joint p11 of one chunk only
+            orders = [list(map(list, P))] if arm != "REC-REORDER" else [list(map(list, q)) for q in itertools.permutations(acts)]
+            cands += [dict(c, seed=sd, n_inserted=len(P) - len(sd)) for c in short_options(fz, row0, orders)]
+            continue
         if arm == "REC-REORDER":
             idx = {V.key(row0, a): a for a in acts}
             before = [(idx[x], idx[y]) for x, y, k in E if k in ("PREREQ", "LOCAL") and x in idx and y in idx]
@@ -183,10 +193,7 @@ def rec(fz, row0, arm, cfg=None):
         if r:
             F, o, p = r
             Eh, yg = long_energy(T, fz, row0, o, p, F)
-            cands.append(cand_of(o, p, Eh, kind="rec_dp", y_global=yg, seed=sd, n_inserted=len(P) - len(sd), edges=sorted(map(list, E))))
-        if len(P) <= 3:
-            orders = [list(map(list, P))] if arm != "REC-REORDER" else [list(map(list, q)) for q in itertools.permutations(acts)]
-            cands += [dict(c, seed=sd, n_inserted=len(P) - len(sd)) for c in short_options(fz, row0, orders)]
+            cands.append(cand_of(o, p, Eh, kind="rec_dp", y_global=yg, seed=sd, n_inserted=len(P) - len(sd), edges=sorted(map(list, E)), F=F, n_chunks=len(p)))
     info = {"pool": len(pool), "stop": stop, "counters": dict(ctx.n), "scores": dict(T.n), "tree": tree}
     return cands, info
 
@@ -238,13 +245,22 @@ def assignment_given(fz, row0, A, witness=None, lam=0.0):
     SEL-DP (grouped DP, has_multi for |A| > 3), RANDOM (sha256('KGT3-P3|' + root) order + best admissible partition) and, when the
     evaluator passes the witness order, WITNESS (best admissible partition of that order)."""
     A = sorted(CP._t(A))
+    rng = random.Random(hashlib.sha256(f"KGT3-P3|{row0['root_id']}".encode()).hexdigest())
+    if len(A) <= 3:                                                      # R4.0: K <= 3 = one chunk scored by the exact joint p11
+        ro = list(A); rng.shuffle(ro)
+        ps = [list(map(list, o)) for o in itertools.permutations(A)]
+        sc = {json.dumps(o): x["p11"] for o, x in zip(ps, fz.score(row0, ps))}
+        mk = lambda o: {"order": [list(map(int, a)) for a in o], "partition": [len(o)], "F": None, "E": -math.log(max(CP.EPS, sc[json.dumps([list(map(int, a)) for a in o])])), "kind": "p11_single"}  # noqa: E731
+        out = {"SEL-DP": mk(min(ps, key=lambda o: (-sc[json.dumps(o)], json.dumps(o)))), "RANDOM": mk(ro)}
+        if witness is not None:
+            out["WITNESS"] = mk(witness)
+        return {**out, "y_global": fz.y_global(row0, [list(map(list, A))])[0], "scores": {"p11_orders": len(ps)}}
     T = CP.Scores(fz, row0, V.rebase)
     T.need(CP.requests(A))
     yg = fz.y_global(row0, [list(map(list, A))])[0]
     out = {}
     r = CP.grouped_dp(T, A, lam=lam)
     out["SEL-DP"] = {"order": r[1], "partition": r[2], "F": r[0]} if r else None
-    rng = random.Random(hashlib.sha256(f"KGT3-P3|{row0['root_id']}".encode()).hexdigest())
     ro = list(A); rng.shuffle(ro)
     r = CP.fixed_order_dp(T, ro, lam=lam)
     out["RANDOM"] = {"order": r[1], "partition": r[2], "F": r[0]} if r else None

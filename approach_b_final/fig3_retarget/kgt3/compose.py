@@ -32,23 +32,30 @@ class Scores:
 
     def __init__(self, fz, row0, rebase):
         self.fz, self.row0, self.rebase = fz, row0, rebase
-        self.px, self.n = {}, {"x_unique": 0, "scenes": 0, "batches": 0}
+        self.px, self.n = {}, {"x_unique": 0, "scenes": 0, "batches": 0, "requested": 0, "cache_hits": 0, "wall_s": 0.0}
+        self.dp_lookups = 0
 
     def need(self, reqs):
-        """reqs: iterable of (frozenset U, ordered chunk tuple); scores the missing ones grouped by U (one batch per scene)."""
-        by = {}
+        """reqs: iterable of (frozenset U, ordered chunk tuple); scores the missing ones grouped by U (one batch per scene).
+        R4.0 accounting: requested (theoretical reads), cache_hits (already scored), x_unique (actual model evaluations), batches, wall_s."""
+        import time
+        t0, by = time.perf_counter(), {}
         for U, C in reqs:
+            self.n["requested"] += 1
             if (U, C) not in self.px:
                 by.setdefault(U, set()).add(C)
+            else:
+                self.n["cache_hits"] += 1
         for U in sorted(by, key=lambda u: json.dumps(sorted(u))):
             Cs = sorted(by[U])
             S = self.rebase(self.row0, sorted([list(a) for a in U]))
             for C, x in zip(Cs, self.fz.score(S, [[list(a) for a in c] for c in Cs])):
                 self.px[(U, C)] = x["px"]
             self.n["x_unique"] += len(Cs); self.n["scenes"] += 1; self.n["batches"] += 1
+        self.n["wall_s"] += time.perf_counter() - t0
 
     def cost(self, U, C):
-        return -math.log(max(EPS, self.px[(frozenset(U), _t(C))]))
+        return -math.log(max(EPS, self.px[(frozenset(_t(U)), _t(C))]))
 
 
 def _pred(before):
@@ -167,9 +174,23 @@ def brute(T, A, need_multi=None, lam=0.0, before=(), fixed=None):
     return F, [list(a) for c in path for a in c], [len(c) for c in path]
 
 
+def nx(m):
+    """R4.0: theoretical ordered-chunk evaluations of the unrestricted grouped DP over ONE assignment of size m:
+    N_X(m) = sum_{g=1..3} g! C(m, g) 2^(m-g)  (N_X(8) = 15,360).  Every (U, ordered chunk) with U a subset of A minus the chunk."""
+    return sum(math.factorial(g) * math.comb(m, g) * 2 ** (m - g) for g in range(1, min(GMAX, m) + 1))
+
+
+def distinct_requests(e):
+    """R4.0: distinct (U, ordered chunk) readouts of an EXACT search over a pool whose partial assignments of size s number e[s] (s = 1..H):
+    a readout depends only on the placed SET U and the ordered chunk C, so it is shared by every assignment containing U + C.
+    = sum_s e[s] * sum_{g <= min(3, s)} C(s, g) g!   (upper bound on unique model evaluations under caching)."""
+    return sum(e[s] * sum(math.comb(s, g) * math.factorial(g) for g in range(1, min(GMAX, s) + 1)) for s in e)
+
+
 def counts(m):
-    """Complexity of the grouped DP for |A| = m (no restrictions): states, unordered transitions, ordered local evaluations (upper bounds)."""
+    """Complexity of the grouped DP for |A| = m (no restrictions): states, unordered transitions, ordered local evaluations (exact counts)."""
     c = math.comb
     return {"states": 2 ** m, "states_with_multi_flag": 2 ** (m + 1),
             "unordered_transitions": sum(c(m, g) * 2 ** (m - g) for g in range(1, GMAX + 1)),
-            "ordered_evaluations": sum(math.factorial(g) * c(m, g) * 2 ** (m - g) for g in range(1, GMAX + 1)), "full_orders": math.factorial(m)}
+            "ordered_evaluations": nx(m), "full_orders": math.factorial(m),
+            "full_orders_x_compositions": math.factorial(m) * sum(1 for _ in compositions(m))}

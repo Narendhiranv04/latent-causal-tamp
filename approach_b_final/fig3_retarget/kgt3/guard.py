@@ -46,7 +46,43 @@ def kind(r):
         return "ERROR"
     X = r.get("X") or r.get("Y") or {}
     st = str(X.get("teacher_status") or X.get("status") or X.get("resolution") or "")
-    return "UNKNOWN" if st.startswith("UNKNOWN") or st.startswith("UNRESOLVED") else "DONE"
+    if st.startswith("UNKNOWN") or st.startswith("UNRESOLVED"):
+        return "UNKNOWN"
+    if X.get("x") not in (0, 1) and X.get("y") not in (0, 1):
+        return "NO_OUTCOME"                                                  # R4.0: a record without a terminal X / Y value is never terminal
+    return "DONE"
+
+
+OUTCOMES = ("SUCCESS", "CERTIFIED_INFEASIBLE", "BUDGET_NO_PLAN", "OPERATIONAL_FAILURE", "UNRESOLVED", "CENSORED", "ERROR", "NO_OUTCOME")
+
+
+def outcome(r, part="X"):
+    """R4.0 evidence taxonomy of one teacher record (X or Y part):
+    SUCCESS               value 1 (callers additionally require independent replay where the contract asks for it)
+    CERTIFIED_INFEASIBLE  value 0 with a certificate (negative_kind CERTIFIED / CERTIFIED_INFEASIBLE status)
+    BUDGET_NO_PLAN        value 0 because the planner found no plan within the FIXED budget (negative_kind NO_PLAN_FOUND, not UNKNOWN status):
+                          budget-relative, NOT a certificate of infeasibility
+    OPERATIONAL_FAILURE   value 0 from execution (grasp failed, execution not verified, other failure)
+    UNRESOLVED            UNKNOWN_* / UNRESOLVED teacher status (never a negative)."""
+    if r.get("censored"):
+        return "CENSORED"
+    if r.get("error"):
+        return "ERROR"
+    X = r.get(part) or {}
+    v = X.get("x" if part == "X" else "y")
+    st = str(X.get("teacher_status") or X.get("status") or X.get("resolution") or "")
+    nk = str(X.get("negative_kind") or "")
+    if v == 1:
+        return "SUCCESS"
+    if v != 0:
+        return "NO_OUTCOME"
+    if st.startswith(("UNKNOWN", "UNRESOLVED")) or nk == "UNKNOWN":
+        return "UNRESOLVED"
+    if nk == "CERTIFIED" or st.startswith("CERTIFIED"):
+        return "CERTIFIED_INFEASIBLE"
+    if nk == "NO_PLAN_FOUND":
+        return "BUDGET_NO_PLAN"
+    return "OPERATIONAL_FAILURE"
 
 
 def complete(manifest, out):
@@ -77,11 +113,26 @@ def complete(manifest, out):
     for k in ks:
         if k in seen:
             kinds[kind(seen[k][0])] = kinds.get(kind(seen[k][0]), 0) + 1
+    if kinds.get("NO_OUTCOME"):
+        why.append(f"{kinds['NO_OUTCOME']} records without a terminal outcome")
     return {"status": "COMPLETE" if not why else "INCOMPLETE", "why": why, "n_sealed": len(ks), "n_records": len(R), "kinds": kinds,
             "manifest_sha256": sha(manifest), "results_sha256": sha(out) if Path(out).exists() else None}
 
 
-def decide(path, payload, inputs, manifests=()):
+def decide(path, payload, inputs, manifests=(), stage_dir=None, required=(), once=False):
+    """R4.0 hardening: required = payload metrics that must be present and not None; stage_dir = every sealed manifest (*.SEAL) in that
+    directory must be cited (no unbound expansion manifest); once = refuse a second opening (repeated gate opening) of the same decision."""
+    if once and (Path(path).exists() or Path(str(path) + ".OPENED").exists()):
+        raise NotAuthorized(f"{path}: decision already opened once")
+    miss = [k for k in required if payload.get(k) is None]
+    if miss:
+        raise NotAuthorized(f"missing required metrics {miss}")
+    if stage_dir is not None:
+        cited = {str(Path(m).resolve()) for m, _ in manifests}
+        unbound = [str(p)[:-5] for p in Path(stage_dir).glob("*.SEAL") if str(Path(str(p)[:-5]).resolve()) not in cited and Path(str(p)[:-5]).suffix == ".json"
+                   and Path(str(p)[:-5]).name.startswith("jobs")]
+        if unbound:
+            raise NotAuthorized(f"unbound sealed manifests {unbound}")
     for m, o in manifests:
         c = complete(m, o)
         if c["status"] != "COMPLETE":
@@ -89,6 +140,8 @@ def decide(path, payload, inputs, manifests=()):
     rec = {"decision": payload, "bound": {str(p): sha(p) for p in inputs}, "manifests": [[str(m), str(o)] for m, o in manifests],
            "utc": time.strftime("%FT%TZ", time.gmtime())}
     Path(path).write_text(json.dumps(rec, indent=1))
+    if once:
+        Path(str(path) + ".OPENED").write_text(rec["utc"])
     return rec
 
 

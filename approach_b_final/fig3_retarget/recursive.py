@@ -213,7 +213,8 @@ def seeds(ctx):
                 break
     out = out[:ctx.cfg["n_seeds"]]
     if gs:
-        b = min(zip(gs, sc), key=lambda t: (round(-math.log(max(t[1]["p11"], 1e-12)), 12), len(t[0]), round(V.displacement(row0, t[0]), 9), json.dumps(t[0])))
+        dsp = ctx.cfg.get("disp_tiebreak", True)                       # historical default True; KGT3/R4 scaling path passes False (no geometry tie-break)
+        b = min(zip(gs, sc), key=lambda t: (round(-math.log(max(t[1]["p11"], 1e-12)), 12), len(t[0]), round(V.displacement(row0, t[0]), 9) if dsp else 0.0, json.dumps(t[0])))
         if all(g != b[0] for g, _ in out):
             out.append((b[0], b[1]["p11"]))
     return out

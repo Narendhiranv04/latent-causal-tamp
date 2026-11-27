@@ -52,7 +52,9 @@ def main(dom, spec, outp):
                 rec["arms"][p["arm"] if arm != "GA" else "GA"] = {"mode": p["arm"], "decision": p["decision"], "seq": p["seq"], "partition": p["partition"], "E": p["E"],
                     "kind": p["kind"], "long": p["long"], "multi_chunk": p["multi_chunk"], "wall_s": p["wall_s"], "stop": p["stop"], "n_candidates": p["n_candidates"],
                     "scores": info.get("scores"), "per_size": info.get("per_size"), "pool": info.get("pool"), "rec_counters": info.get("counters"),
-                    "fz_counters": p["counters"], "coverage": cov}
+                    "fz_counters": p["counters"], "coverage": cov, "by_size": info.get("by_size"), "exhausted": info.get("exhausted"),
+                    "est_distinct_x": info.get("est_distinct_x"), "est_theoretical_dp_lookups": info.get("est_theoretical_dp_lookups"),
+                    "assign_upper_bound": info.get("assign_upper_bound"), "n_chunks": len(p["partition"] or [])}
                 print(rid, arm, p["arm"], p["decision"], p["partition"], p["wall_s"], cov, flush=True)
             f.write(json.dumps(rec, default=str) + "\n"); f.flush()
 

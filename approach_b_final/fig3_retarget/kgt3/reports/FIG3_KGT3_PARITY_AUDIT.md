@@ -39,7 +39,7 @@
 
 | Issue | Historical code | Scaling path |
 |---|---|---|
-| m! materialisation | `r24/arms.score_set` builds every order of the set even for m > 3 | `compose.requests` reads only (U, ordered chunk ≤ 3) pairs. For m = 8: 1,800 ordered evaluations vs 40,320 orders (tested). |
+| m! materialisation | `r24/arms.score_set` builds every order of the set even for m > 3 | `compose.requests` reads only (U, ordered chunk ≤ 3) pairs. For m = 8: 15,360 ordered chunk evaluations, N_X(8) = Σ_g g!·C(8,g)·2^(8−g) (tested), vs 40,320 orders × 81 chunkings. *(R4.0 correction: an earlier version of this row said 1,800; the code and test always used 15,360.)* |
 | Chunk size hard-coded | `order.dp` loops `range(1, 3)` and ignores `Table.maxg` | `compose.GMAX` |
 | Multi-action constraint | `order.dp` `min_chunks` is exact only for 1 and 2; there is no has_multi state | DP state (U, has_multi); fixed-order prefix DP with has_multi |
 | Displacement tie-break | `rank.select`, `rank.b0`, `recursive.seeds` | Removed from scaling ranking: (round(E, 12), length, chunks, canonical JSON). The production floor `rank.b0` is unchanged. |
