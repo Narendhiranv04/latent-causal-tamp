@@ -163,9 +163,35 @@ def derive(gen_dirs, outdir, workers, cpu_lo, cap_h, a4_code):
     f.close()
 
 
+def seal(der_dir, out_dir, max_per_pool=100):
+    """Roster (one root per fresh family; pool A -> K4, pool B -> K5; first max_per_pool per pool in completion order of the derivation ledger)
+    -> PUBLIC_r8b.jsonl (root_id, domain, inputs = contracts.view3d) + PRIVATE_r8b.jsonl (evaluator only) + SEAL.json (sha256)."""
+    sys.path.insert(0, str(HERE.parents[1]))
+    import contracts as CT
+    L = [json.loads(l) for l in open(Path(der_dir) / "ledger_r8b.jsonl") if l.strip()]
+    fam, n = {}, collections.Counter()
+    for d in L:
+        want = (d["pool"] == "A" and d["step"] == "K4") or (d["pool"] == "B" and d["step"] == "K5")
+        if d.get("accepted") and want and d["family"] not in fam and n[d["pool"]] < int(max_per_pool):
+            fam[d["family"]] = d; n[d["pool"]] += 1
+    out = Path(out_dir); out.mkdir(parents=True, exist_ok=True)
+    pub, priv = out / "PUBLIC_r8b.jsonl", out / "PRIVATE_r8b.jsonl"
+    with open(pub, "w") as fp, open(priv, "w") as fq:
+        for f_, d in sorted(fam.items(), key=lambda kv: kv[1]["root_id"]):
+            rec = json.loads(Path(d["child_path"]).read_text())
+            inp = CT.view3d(rec); ids = inp["ids"]
+            W = [[ids.index(o), int(c[0]) * 6 + int(c[1])] for o, c in rec["k45"]["witness"]["order"]]
+            fp.write(json.dumps({"root_id": d["root_id"], "domain": "3d", "inputs": inp}) + "\n")
+            fq.write(json.dumps({"root_id": d["root_id"], "path": d["child_path"], "L_ref": len(W), "witness": W, "goal": rec["goal"], "pool": d["pool"],
+                                 "family": f_, "label": rec["k45"]["label"], "N": len(ids), "K_cert": None}) + "\n")
+    sh = lambda p: hashlib.sha256(p.read_bytes()).hexdigest()  # noqa: E731
+    (out / "SEAL.json").write_text(json.dumps({"public": sh(pub), "private": sh(priv), "n": dict(n), "families": len(fam), "derive_attempts": len(L)}, indent=1))
+    print(json.dumps({"n": dict(n), "families": len(fam)}))
+
+
 pool_of = pool
 
 if __name__ == "__main__":
     a = sys.argv[1]
     {"slots": lambda: slots(*sys.argv[2:7]), "status": lambda: status(sys.argv[2]), "items": lambda: items(*sys.argv[2:5]),
-     "derive": lambda: derive(sys.argv[2].split(","), *sys.argv[3:8])}[a]()
+     "derive": lambda: derive(sys.argv[2].split(","), *sys.argv[3:8]), "seal": lambda: seal(*sys.argv[2:5])}[a]()

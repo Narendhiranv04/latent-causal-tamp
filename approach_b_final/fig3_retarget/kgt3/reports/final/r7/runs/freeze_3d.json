@@ -1,0 +1,69 @@
+{
+ "dom": "3d",
+ "x": {
+  "rep": "G",
+  "seed_mean_val": {
+   "A": 0.5897575997659779,
+   "M": 0.5117486073056957,
+   "G": 0.22394258714881596
+  },
+  "seeds": {
+   "A": [
+    0.5699401588267072,
+    0.5982035010128152,
+    0.6011291394584114
+   ],
+   "M": [
+    0.5782981975313136,
+    0.40434489663863865,
+    0.552602727747135
+   ],
+   "G": [
+    0.2492992385100747,
+    0.22085847508198256,
+    0.20167004785439055
+   ]
+  },
+  "tolerance": 0.04762919065568416,
+  "best": "G",
+  "name": "3d_G1_hi_base_s2",
+  "seed": 2,
+  "val_fam_nll": 0.20167004785439055,
+  "ckpt": "/home/user1/legolas_r7/runs/xl/ckpt/3d_G1_hi_base_s2/model.pt",
+  "sha256": "de45d683b72fcb7bcfccbf132addf355294ab99a4020897b91c1b32b92f0d1e1",
+  "rule": "R5.2 simplest-within-tolerance; lowest-VAL seed"
+ },
+ "calibration": {
+  "T": 0.8955,
+  "val_nll_raw": 0.20167004785439055,
+  "val_nll_cal": 0.2007741391676911,
+  "adopted": false,
+  "rule": "R5.3 adopt iff VAL NLL improves >= 0.005"
+ },
+ "y_base": {
+  "ckpt": "/home/user1/legolas_r7/runs/xy/p2_3d/D_s2/model.pt",
+  "sha256": "2b30ece5cb20cb4180976ed031fda1a487afd23ff951c35079aaf8f853ff367c",
+  "y_sha": "89e2993e1e0bb5b54f1f7849e103e9a0998cb94d8a5f508a2c77847bbb1e03f5"
+ },
+ "cvae": {
+  "pick": "q2init_all_s1",
+  "ckpt": "/home/user1/legolas_r7/runs/r7_task/3d/q2init_all_s1/model.pt",
+  "sha256": "7c750edb22a0acc31cfab9d0429082c77582da1ea62b4d4f9e7628c42f72ec66",
+  "all": {
+   "q2init_all_s0": {
+    "best_val": 2.027444362640381,
+    "sha256": "eeb231feacbb4cd0a64c0127f057382909115fdb28b1dff2541b0fd8d536d43d"
+   },
+   "q2init_all_s1": {
+    "best_val": 2.004595994949341,
+    "sha256": "7c750edb22a0acc31cfab9d0429082c77582da1ea62b4d4f9e7628c42f72ec66"
+   },
+   "q2init_all_s2": {
+    "best_val": 2.027973175048828,
+    "sha256": "5c04c837b944fe4b41a9ac4707c2d892aa555d5b6e5794018f8b9f634b3707e2"
+   }
+  },
+  "rule": "lowest base-snapshot VAL ELBO"
+ },
+ "spec": "R7:3d_G1_hi_base_s2"
+}

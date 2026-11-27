@@ -97,6 +97,27 @@ def load(dom, spec):
         net.load_state_dict(torch.load(XLN.XL / "ckpt" / name / "model.pt", map_location="cuda", weights_only=False)["state"])
         net = net.eval()
         return fz, (XLN.Cal(net, float(cal)) if cal else net)
+    if spec.startswith("R7:"):                                           # R7 clean model: R7:<name>[@T=<temperature>] (env R7_ROOT = runs dir)
+        import os
+        import xlearn as XLN
+        import xy as XY
+        name, _, cal = spec[3:].partition("@T=")
+        R7 = Path(os.environ["R7_ROOT"])
+        _, repdat, _, ctrl, s = name.split("_")
+        fz, _ = TR.f0(dom)                                               # bundle plumbing only (sampler object / scalers / rule)
+        base = XY.load_model(R7 / "xy" / f"p2_{dom}" / f"D_{s}" / "model.pt", "cuda").float().eval()
+        net = XLN.make(repdat[0], base, None if ctrl == "base" else ctrl).to("cuda")
+        net.load_state_dict(torch.load(R7 / "xl" / "ckpt" / name / "model.pt", map_location="cuda", weights_only=False)["state"])
+        net = net.eval()
+        cv = os.environ.get(f"R7_CVAE_{dom.upper()}")                    # clean stage-A sampler replaces the bundle cVAE model
+        if cv:
+            import placement as PLC
+            c = torch.load(cv, map_location=fz.samp.dev, weights_only=False)
+            m = PLC.TaskCVAE(*c["grid"], c["tdim"], c["cfg"]["hidden"], c["cfg"]["zdim"]).to(fz.samp.dev)
+            m.load_state_dict(c["state"]); m.task_on = c["v"]["task"]
+            fz.samp.m = m.eval()
+        fz.net = net = (XLN.Cal(net, float(cal)) if cal else net)
+        return fz, net
     arch = spec.split("_")[0]
     fz, base = TR.f0(dom)
     net = make(dom, arch, base)

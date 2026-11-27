@@ -20,7 +20,7 @@ import guard as GD  # noqa: E402
 O = K.C.FIG3 / "kgt3"
 import os  # noqa: E402
 R6 = Path(os.environ["R6_OUT"]) if os.environ.get("R6_OUT") else O / "r5" / "r6"   # post-hoc diagnostics write elsewhere (never pooled)
-ARMS = ("B0", "H3", "FLAT-INSERT", "REC-ORDERED", "GA")
+ARMS = tuple(os.environ["R6_ARMS"].split(",")) if os.environ.get("R6_ARMS") else ("B0", "H3", "FLAT-INSERT", "REC-ORDERED", "GA")
 
 
 def jl(p):
@@ -29,6 +29,12 @@ def jl(p):
 
 def roots(pop):
     """-> [(rid, row, meta)]; meta (evaluator only): L_ref, N, K if certified, witness, path, goal."""
+    if pop == "r8b":                                                     # R8C independent roster (sealed public rows + private index)
+        d = Path(os.environ["R8B_ROSTER"])
+        seal = json.loads((d / "SEAL.json").read_text())
+        assert GD.sha(d / "PUBLIC_r8b.jsonl") == seal["public"] and GD.sha(d / "PRIVATE_r8b.jsonl") == seal["private"], "roster not sealed"
+        Pv = {r["root_id"]: r for r in jl(d / "PRIVATE_r8b.jsonl")}
+        return [(r["root_id"], r, {k: Pv[r["root_id"]][k] for k in ("L_ref", "N", "K_cert", "witness", "path", "goal")}) for r in jl(d / "PUBLIC_r8b.jsonl")]
     if pop in ("3d", "2d"):
         import r53
         out = []
@@ -56,14 +62,16 @@ def plan(pop, cfg_path):
     import planners as PL
     import rank as RK
     import r53
-    dom = "3d" if pop == "3d" else "2d"
+    dom = "3d" if pop in ("3d", "r8b") else "2d"
     cfg = json.loads(Path(cfg_path).read_text())[dom]
     fz, net = LN.load(dom, cfg["spec"]); fz.net = net
     fz0, base = LN.load(dom, "F0"); fz0.net = base
+    fzF = fz0                                                            # K <= 3 floor model (R6: production F0)
+    if os.environ.get("R6_FLOOR") == "final":                            # R8C: the final clean model (separate instance: own caches / counters)
+        fzF, netF = LN.load(dom, cfg["spec"]); fzF.net = netF
     pcfg = {"rule": {**PL.CFG["rule"], **({"S2_tau": cfg["S2_tau"], "S2_stat": cfg.get("S2_stat")} if cfg.get("S2_tau") is not None else {})},
             "rec": {**PL.CFG["rec"], "admit_m": cfg.get("admit_m", 0.0), "admit_eta": cfg.get("admit_eta")}}
     R6.mkdir(parents=True, exist_ok=True)
-    import os
     sh = os.environ.get("R6_SHARD")                                     # "i/n": deterministic root shard (merged + sealed by `merge`)
     i_, n_ = (int(x) for x in sh.split("/")) if sh else (0, 1)
     pf = R6 / (f"plans_{pop}.part{i_}of{n_}.jsonl" if sh else f"plans_{pop}.jsonl")
@@ -84,7 +92,7 @@ def plan(pop, cfg_path):
                                         "counters": dict(m.c), "kind": "k3_exact4"}
                     continue
                 fz.prop_mode = cfg["prop_GA"] if arm == "GA" else cfg["prop_REC"]
-                p = PL.plan(fz, row, arm, r53.floor_fn(fz0, row), pcfg)
+                p = PL.plan(fz, row, arm, r53.floor_fn(fzF, row), pcfg)
                 rec["arms"][arm] = {k: p[k] for k in ("arm", "decision", "seq", "partition", "E", "kind", "long", "multi_chunk", "stop", "budget_stop", "wall_s", "floor_wall_s",
                                                       "search_wall_s", "select_wall_s", "deadline_overrun_s", "cap_overrun", "counters", "floor_counters", "selection_readouts",
                                                       "n_candidates", "incumbent_from_stop")}
@@ -152,7 +160,7 @@ def jobs(pop, cap):
             if p["decision"] != "REPAIR" or not p["seq"]:
                 sel.append({**base, "status": "NO_REPAIR"}); continue
             b = bounds(p["partition"])
-            k = (rid, J24.nk(J24.names("3d", ids, p["seq"])), J24.nk(b)) if pop == "3d" else (rid, json.dumps(p["seq"]), json.dumps(b))
+            k = (rid, J24.nk(J24.names("3d", ids, p["seq"])), J24.nk(b)) if pop in ("3d", "r8b") else (rid, json.dumps(p["seq"]), json.dumps(b))
             key = f"R6|{pop}|{rid}|{json.dumps(p['seq'])}|{json.dumps(b)}"
             if k in seen:
                 sel.append({**base, "status": "SAME_AS", "job": seen[k]}); continue
@@ -161,7 +169,7 @@ def jobs(pop, cap):
                 sel.append({**base, "status": "REUSED", "job": key, "src": A[k]["src"]}); continue
             if len(jb) + 1 > int(cap):
                 sel.append({**base, "status": "NOT_RUN_BUDGET", "job": key}); continue
-            if pop == "3d":
+            if pop in ("3d", "r8b"):
                 jb.append({"key": key, "root_id": rid, "arm": arm, "path": meta["path"], "kind": "X_CHUNKED", "order": J24.names("3d", ids, p["seq"]), "bounds": b,
                            "y": {"target": "t0", "goal": meta["goal"]}})
             else:
@@ -187,7 +195,7 @@ def _sign(g, l):
 
 
 def analyze(pop):
-    dom = "3d" if pop == "3d" else "2d"
+    dom = "3d" if pop in ("3d", "r8b") else "2d"
     jf, rf = R6 / f"jobs_{pop}.json", R6 / f"phys_{pop}.jsonl"
     comp = GD.complete(jf, rf)
     R = {r["key"]: r for r in jl(rf)}
@@ -226,7 +234,8 @@ def analyze(pop):
         pw = [x["plan_wall_s"] for x in rr if x.get("plan_wall_s") is not None]
         vw = [x["verify_wall_s"] for x in rr if x.get("verify_wall_s")]
         summ[arm] = {"n": n, "succ": sum(x["succ"] for x in rr), "succ_L4": sum(x["succ"] and x["L_pred"] == 4 for x in rr), "succ_L5": sum(x["succ"] and x["L_pred"] == 5 for x in rr),
-                     "succ_long": sum(x["succ"] and x["L_pred"] > 3 for x in rr), "x1": sum(x.get("x") == 1 for x in rr), "y1": sum(x.get("y") == 1 for x in rr),
+                     "succ_long": sum(x["succ"] and x["L_pred"] > 3 for x in rr),
+                     "succ_shorter_than_ref": sum(x["succ"] and x["L_pred"] < x["L_ref"] for x in rr), "x1": sum(x.get("x") == 1 for x in rr), "y1": sum(x.get("y") == 1 for x in rr),
                      "replay1": sum(bool(x.get("replay")) for x in rr), "outcomes": dict(collections.Counter(x["x_outcome"] for x in rr)),
                      "decisions": dict(collections.Counter(x["decision"] for x in rr)), "L_pred": dict(collections.Counter(x["L_pred"] for x in rr)),
                      "plan_wall": {"mean": statistics.mean(pw) if pw else None, "median": statistics.median(pw) if pw else None, "p90": q(pw, 0.9), "max": max(pw) if pw else None},
@@ -242,9 +251,11 @@ def analyze(pop):
                                  (ph + z * z / (2 * n) + z * math.sqrt(ph * (1 - ph) / n + z * z / (4 * n * n))) / (1 + z * z / n)] if n else None
     paired = {}
     for a, b in (("REC-ORDERED", "FLAT-INSERT"), ("GA", "FLAT-INSERT"), ("REC-ORDERED", "GA"), ("REC-ORDERED", "H3"), ("GA", "H3"), ("H3", "B0"), ("FLAT-INSERT", "H3")):
+        if a not in ARMS or b not in ARMS:
+            continue
         g = sum(per[r][a]["succ"] and not per[r][b]["succ"] for r in roots_); l = sum(per[r][b]["succ"] and not per[r][a]["succ"] for r in roots_)
         paired[f"{a}_vs_{b}"] = {"gain": g, "loss": l, "p_sign_two_sided": _sign(g, l)}
-    out = {"pop": pop, "n_roots": n, "summary": summ, "paired": paired, "either_fig3": sum(per[r]["REC-ORDERED"]["succ"] or per[r]["GA"]["succ"] for r in roots_),
+    out = {"pop": pop, "n_roots": n, "summary": summ, "paired": paired, "either_fig3": sum(per[r]["REC-ORDERED"]["succ"] or per[r]["GA"]["succ"] for r in roots_) if {"REC-ORDERED", "GA"} <= set(ARMS) else None,
            "per_root": per, "completion": comp, "cpu_h_new": sum(r.get("cpu_s", 0) for r in R.values()) / 3600,
            "label": "R6 DEVELOPMENT evaluation (exposed or development roots; planners never see assignment / order / K)"}
     (R6 / f"R6_{pop}.json").write_text(json.dumps(out, indent=1, default=str))
