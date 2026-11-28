@@ -92,10 +92,33 @@ class Frozen:
             R = S.Root(row, self.dom); legal = R.legal_dests(R.cells0)
             rng = random.Random(hashlib.sha256(("UNIF|" + V.skey(row)).encode()).hexdigest())
             out = {o: base[o][:4] + rng.sample([d for d in legal if d not in base[o][:4]], min(4, len([d for d in legal if d not in base[o][:4]]))) if base[o] else [] for o in objs}
+        elif mode in ("CR4", "CR8"):                                       # R10.7: complete-repair cVAE proposals (count-matched to S1 / ANC64)
+            out = self._cr(row, list(objs), 4 if mode == "CR4" else 8)
         else:
             raise ValueError(mode)
         self._p[k] = {int(o): [int(d) for d in v] for o, v in out.items()}
         return self._p[k]
+
+    def _cr(self, row, objs, M, budget=256):
+        """R10.7: per-object destinations ranked by frequency over the CR cVAE's complete-repair hypotheses (<= 3 actions) sampled at THIS public
+        (possibly hypothetical / retargeted) scene; ties by cell.  Model = env R10_CR_MODEL; the same 256-sample budget as the R8A CR arms."""
+        import collections, os
+        if getattr(self, "_crm", None) is None:
+            sys.path.insert(0, str(HERE.parent / "complete_repair_cvae"))
+            import infer as INF
+            self._crm = INF.load_cr(os.environ["R10_CR_MODEL"], self.dev)[0]
+        import infer as INF
+        import data as CRD
+        b1 = INF.enc_t(self.dom, row, self.dev, CRD.scalers(self.dom))
+        P = INF.make_pool(self._crm, self.dom, row, b1, budget, 0)
+        seqs, _ = INF.prefix(P, budget)
+        self.c["latent_draws"] += budget; self.c.setdefault("cr_pools", 0); self.c["cr_pools"] += 1
+        cnt = {o: collections.Counter() for o in objs}
+        for s_ in seqs:
+            for o, d in s_:
+                if int(o) in cnt:
+                    cnt[int(o)][int(d)] += 1
+        return {o: [d for d, _ in sorted(cnt[o].items(), key=lambda t: (-t[1], t[0]))[:M]] for o in objs}
 
     def score(self, row, seqs):
         import xy as XY

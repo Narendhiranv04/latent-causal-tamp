@@ -115,7 +115,7 @@ def plan(pop, cfg_path):
                     rec["arms"][arm] = {"decision": b["decision"], "seq": b["seq"], "partition": [len(b["seq"])] if b["seq"] else None, "wall_s": round(time.perf_counter() - t0, 3),
                                         "counters": dict(m.c), "kind": "k3_exact4"}
                     continue
-                fz.prop_mode = cfg["prop_GA"] if arm == "GA" else cfg["prop_REC"]
+                fz.prop_mode = cfg["prop_GA"] if arm.startswith("GA") else cfg["prop_REC"]   # R10: GA-* controls share the GA proposal mode
                 p = PL.plan(fz, row, arm, r53.floor_fn(fzF, row), pcfg)
                 rec["arms"][arm] = {k: p[k] for k in ("arm", "decision", "seq", "partition", "E", "kind", "long", "multi_chunk", "stop", "budget_stop", "wall_s", "floor_wall_s",
                                                       "search_wall_s", "select_wall_s", "deadline_overrun_s", "cap_overrun", "counters", "floor_counters", "selection_readouts",
@@ -160,6 +160,23 @@ def archive3d():
     return A
 
 
+def archive_r10():
+    """R10: exact physical reuse for r10comp (identical scene file, ordered names, chunk bounds and unchanged physical3d contract) from the
+    sealed R8C/R9 runs and other sealed R10 composition runs (env R10_ARCHIVE_DIRS, ':'-separated).  Used only AFTER this run's plans are sealed."""
+    A = {}
+    for d in [Path(x) for x in os.environ.get("R10_ARCHIVE_DIRS", "").split(":") if x]:
+        for jf in sorted(d.glob("jobs_*.json")):
+            rf = d / jf.name.replace("jobs_", "phys_").replace(".json", ".jsonl")
+            if not rf.exists():
+                continue
+            R = {r["key"]: r for r in jl(rf)}
+            for j in json.loads(jf.read_text()):
+                if j["key"] in R and j.get("kind") == "X_CHUNKED":
+                    import jobs24 as J24
+                    A.setdefault((j["root_id"], J24.nk(j["order"]), J24.nk(j["bounds"])), {"src": f"{d.name}:{j['key']}", "rec": R[j["key"]], "path": j["path"]})
+    return A
+
+
 def bounds(part):
     s, out = 0, []
     for g in part:
@@ -174,7 +191,7 @@ def jobs(pop, cap):
         raise SystemExit("plans not sealed")
     P = {r["root_id"]: r for r in jl(pf)}
     RT = {rid: (row, meta) for rid, row, meta in roots(pop)}
-    A = archive3d() if pop == "3d" else {}
+    A = archive3d() if pop == "3d" else archive_r10() if pop == "r10comp" else {}
     seen, jb, sel = {}, [], []
     for rid in sorted(P, key=lambda r: hashlib.sha256(f"R6|{r}".encode()).hexdigest()):
         row, meta = RT[rid]; ids = row["inputs"]["ids"]
@@ -189,7 +206,7 @@ def jobs(pop, cap):
             if k in seen:
                 sel.append({**base, "status": "SAME_AS", "job": seen[k]}); continue
             seen[k] = key
-            if k in A:
+            if k in A and (pop != "r10comp" or A[k]["path"] == meta["path"]):
                 sel.append({**base, "status": "REUSED", "job": key, "src": A[k]["src"]}); continue
             if len(jb) + 1 > int(cap):
                 sel.append({**base, "status": "NOT_RUN_BUDGET", "job": key}); continue
@@ -225,7 +242,7 @@ def analyze(pop):
     R = {r["key"]: r for r in jl(rf)}
     P = {r["root_id"]: r for r in jl(R6 / f"plans_{pop}.jsonl")}
     RT = {rid: meta for rid, _, meta in roots(pop)}
-    A = {v["src"]: v["rec"] for v in archive3d().values()} if pop == "3d" else {}
+    A = {v["src"]: v["rec"] for v in (archive3d() if pop == "3d" else archive_r10() if pop == "r10comp" else {}).values()}
     sel = json.loads((R6 / f"selection_{pop}.json").read_text())
     by_job = {}
     for s in sel:

@@ -5,7 +5,7 @@ W=/home/projects/long-horizon/naren_workspace/r10; REL=$W/release/LEGOLAS_FINAL_
 SNAP=$(ls -d $REL/snapshot/abf_r10_*)
 source /home/projects/long-horizon/naren_workspace/fig3/env.sh
 export ABF_ROOT=$W/abf V3OUT=$W/runs XY_RUNS=$W/runs/xy R7_OUT=$W/runs R7_PACK_DIR=$W/pack K3=$W/k3 CR_RUNS=$W/cr CUDA_VISIBLE_DEVICES=0
-export R10_SNAP=$SNAP R7_TRAIN_SNAP=$SNAP R7_VAL_SNAP=$SNAP CR_TRAIN_SNAP=$SNAP CR_VAL_SNAP=$SNAP CR_SCALERS_DIR=$REL/q2 R10_LOCAL_SPLIT=$REL/views/local_split.json
+export CR_BUNDLE=$K3_BUNDLE R10_SNAP=$SNAP R7_TRAIN_SNAP=$SNAP R7_VAL_SNAP=$SNAP CR_TRAIN_SNAP=$SNAP CR_VAL_SNAP=$SNAP CR_SCALERS_DIR=$REL/q2 R10_LOCAL_SPLIT=$REL/views/local_split.json
 export OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 PYTHONDONTWRITEBYTECODE=1
 mkdir -p $ABF_ROOT/snapshot $W/runs $W/pack $W/k3 $W/cr $W/logs/train; ln -sfn $REL/q2 $ABF_ROOT/data; ln -sfn $SNAP $ABF_ROOT/snapshot/$(basename $SNAP)
 L=$W/logs/train
@@ -22,6 +22,7 @@ lane3() { for d in 3d 2d; do for s in 0 1 2; do job 40-41 $C/ablations_k3 arms.p
             for c in ORDINV UNCOUPLED DIRECT; do job 40-41 $K r7.py xfit $d G 1 $s $c; done; done; done; }
 lane4() { for d in 3d 2d; do waitf $W/pack/pack_$d.pt; for s in 0 1 2; do waitf $XY_RUNS/p2_$d/D_s$s/curve.json
             for r in G M A; do for x in 1 0; do job 42-43 $K r7.py xfit $d $r $x $s; done; done; done; done; }
+if [ "$1" = cr ]; then for d in 3d 2d; do for s in 0 1 2; do job 34-35 $C/complete_repair_cvae train.py fit $d $s --tag r10; done; done; exit; fi
 lane1 & lane2 & lane3 & lane4 & wait
 for d in 3d 2d; do job 36-37 $K r7.py select $d; done
 echo "R10Q_DONE $(date -u +%FT%TZ)" >> $L/jobs.jsonl

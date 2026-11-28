@@ -75,6 +75,8 @@ def build(dom):
             r = R.get(j["key"])
             if not r:
                 continue
+            if j["root_id"] not in allr:                  # R10: root not a canonical TRAIN/VAL record (quarantined / TEST-linked): never used
+                audit["R10|root_not_canonical_trainval"] += 1; continue
             X = r.get("X") or {}
             oc = GD.outcome(r, "X")
             rep = (r.get("REPLAY") or {}).get("replay") == 1 if dom == "3d" else bool(X.get("independent_replay"))

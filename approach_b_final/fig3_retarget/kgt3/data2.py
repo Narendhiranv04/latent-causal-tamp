@@ -469,6 +469,10 @@ def build3d(expand=0):
 # =========================================================================================================== labels
 def all_rows(dom):
     R = dict(C.snapshot_rows(dom, snap=C.SNAP_TRAIN))
+    if os.environ.get("R10_SNAP"):                     # R10: merged exact-duplicate aliases of canonical TRAIN/VAL records keep their own row (object order)
+        al = {a for r in R.values() for a in (r.get("meta") or {}).get("r10_aliases", []) if a not in R}
+        hist = Path("/home/projects/long-horizon/naren_workspace/k3abl/abf/snapshot/abf_v32_fb0eef4f5ff433ee")
+        R.update({k: v for k, v in C.snapshot_rows(dom, snap=hist).items() if k in al})
     f = O / ("rows2d_gen.jsonl" if dom == "2d" else "rows3d_con.jsonl")
     if f.exists():
         R.update({json.loads(l)["root_id"]: json.loads(l) for l in open(f)})

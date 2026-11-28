@@ -257,6 +257,8 @@ def plan(fz, row0, arm, floor, cfg=None):
     caps = {"x_unique": cfg["x_unique"], "y_unique": cfg["y_unique"]}
     scfg = {**cfg, "t_end": t_end - rs["wall_s"], "x_unique": caps["x_unique"] - rs["x_unique"], "y_unique": caps["y_unique"] - rs["y_unique"]}
     fz.reset(); fz.caps = {"x_unique": scfg["x_unique"], "y_unique": scfg["y_unique"]}
+    if arm == "GA-YPURE":                                                 # R10.3: no X, no X-guided floor (dispatched before the floor runs)
+        return ypure(fz, row0, scfg, cfg, t0)
     floor_wall, floor_ctr, floor_external = None, None, not callable(floor) and floor is not None
     if callable(floor):
         tf = time.perf_counter()
@@ -314,6 +316,61 @@ def plan(fz, row0, arm, floor, cfg=None):
     if pick and pick["kind"] == "production_floor":
         out["note"] = "unchanged K<=3 production floor selected (short selection, not a long repair)"
     return out
+
+
+def ypure(fz, row0, scfg, cfg, t0):
+    """R10.3 long-horizon Y-ONLY control (no X anywhere, no X-guided floor): production NOOP gate on p_noop; otherwise the endpoint
+    (assignment over the same S1 candidate domain as GA, sizes 1..H, enumerated or Y-beam-extended exactly like GA's generation) with the
+    highest global Y (ties: smaller size, canonical assignment); ABSTAIN if that Y < eta; executed in a canonical X-independent order (object
+    index ascending) cut into greedy chunks of <= 3 (partition [3, k-3] for k > 3).  Same deadline as the native arms."""
+    H = cfg["H"][row0["domain"]]
+    stop, best, n_end = None, None, 0
+    noop = fz.p_noop(row0)
+    if noop >= cfg["rule"]["noop_gate"]:
+        best = "NOOP"
+    else:
+        try:
+            el = V.eligible(row0)
+            D = {o: sorted(set(v)) for o, v in fz.proposals(row0, el).items() if v}
+            D = {o: [d for d in v if V.legal_seq(row0, [[o, d]], H)] for o, v in D.items()}
+            D = {o: v for o, v in D.items() if v}
+            sizes = [len(v) for v in D.values()]
+            prev = []
+            for k in range(1, min(H, len(D)) + 1):
+                if time.perf_counter() >= scfg["t_end"]:
+                    raise TimeoutError("deadline")
+                if elem(sizes, k) <= cfg["assign_per_size"]:
+                    pool = [tuple(sorted(A)) for A in CO.assignments(D, k)]
+                else:
+                    acts = sorted((o, d) for o, v in D.items() for d in v)
+                    pool = sorted({tuple(sorted(A + (a,))) for A in prev for a in acts if a[0] not in {x[0] for x in A} and a[1] not in {x[1] for x in A}})
+                if not pool:
+                    break
+                yg = dict(zip(pool, fz.y_global(row0, [list(map(list, A)) for A in pool])))
+                n_end += len(pool)
+                prev = sorted(pool, key=lambda A: (-yg[A], A))[:256]
+                kb = prev[0]
+                if best is None or (-yg[kb], k, kb) < (-best[0], best[1], best[2]):
+                    best = (yg[kb], k, kb)
+        except (TimeoutError, CapReached) as e:
+            stop = f"{type(e).__name__}:{e}"
+    if best == "NOOP":
+        dec, seq, part = "NOOP", [], None
+    elif best is None or best[0] < cfg["rule"]["eta"]:
+        dec, seq, part = ("TIMEOUT_NO_INCUMBENT" if stop and best is None else "ABSTAIN"), None, None
+    else:
+        seq = [list(map(int, a)) for a in sorted(best[2])]
+        k = len(seq); part = [k] if k <= 3 else [3, k - 3]
+        dec = "REPAIR"
+    if str(fz.dev).startswith("cuda"):
+        fz.torch.cuda.synchronize()
+    total = round(time.perf_counter() - t0, 3)
+    return {"root_id": row0["root_id"], "arm": "GA-YPURE", "decision": dec, "seq": seq, "partition": part, "E": None if not isinstance(best, tuple) else -math.log(max(CP.EPS, best[0])),
+            "kind": "y_only_endpoint", "p_noop": noop, "n_candidates": n_end, "long": bool(seq and len(seq) > 3), "multi_chunk": bool(part and len(part) > 1),
+            "H": H, "stop": stop, "budget_stop": bool(stop), "info": {"mode": "YPURE", "y_best": None if not isinstance(best, tuple) else best[0]}, "tree": None,
+            "counters": dict(fz.c), "selection_readouts": {}, "floor_counters": None, "floor_external": False, "caps": None, "reserve": None, "wall_s": total,
+            "floor_wall_s": None, "search_wall_s": total, "select_wall_s": 0.0, "deadline_overrun_s": round(max(0.0, time.perf_counter() - (scfg["t_end"] + cfg["select_reserve"]["wall_s"])), 3),
+            "cap_overrun": None, "incumbent_from_stop": bool(stop and seq)}
 
 
 # ------------------------------------------------------------------------------------------------ P3 isolated assignment-given diagnostic
