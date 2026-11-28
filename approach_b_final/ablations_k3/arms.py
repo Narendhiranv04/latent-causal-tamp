@@ -19,7 +19,7 @@ import placement as PL  # noqa: E402
 
 K3 = Path(os.environ.get("K3", "."))
 ABF = Path(os.environ["ABF_ROOT"])
-EXP, ORIG = ABF / "snapshot/abf_v32_fb0eef4f5ff433ee", ABF / "snapshot/abf_9de85710c2a7103f"
+EXP, ORIG = (Path(os.environ["R10_SNAP"]),) * 2 if os.environ.get("R10_SNAP") else (ABF / "snapshot/abf_v32_fb0eef4f5ff433ee", ABF / "snapshot/abf_9de85710c2a7103f")   # R10 canonical
 STEPS = {"2d": (2400, 30), "3d": (1520, 19)}            # = frozen scratch_all cfg (curve.json of the bundle sampler)
 PL.VARIANTS.setdefault("scratch_all_notask", dict(init="scratch", assign="all", task=False, q2aux=False))   # R6: only the task input is zeroed
 
