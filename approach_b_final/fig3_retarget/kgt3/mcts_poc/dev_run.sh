@@ -18,7 +18,7 @@ acct() {  # acct LABEL GPU(0/1) CMD... : wall / user / sys appended to $M/out/re
 case $1 in
 prep)  acct prep 0 taskset -c 12 $PYG devtools.py prep $O ;;
 tests) acct tests 0 taskset -c 12-13 $PYG devtools.py tests $O/TESTS.json ;;
-ga)    acct ga_dev 1 taskset -c 12-13 $PYG anytime.py run $ROS $CFG $O/ga_dev.jsonl --arms GA --horizon 180 > $O/ga_dev.log 2>&1
+ga)    acct ga_dev 1 taskset -c 12-13 $PYG anytime.py run $ROS $CFG $O/ga_dev.jsonl --arms GA --horizon 180 --audit-open $O/OPEN_AUDIT_ga.json > $O/ga_dev.log 2>&1
        $PYG devtools.py parity $O/ga_dev.jsonl $F/r8c_dev/plans_3d.jsonl $O/GA_PARITY_DEV.json ;;
 prof)  acct prof_dev 1 taskset -c 14-15 $PYG profile_ga.py $ROS $CFG $O/profile_dev.jsonl --horizon 180 > $O/prof.log 2>&1
        $PYG profile_ga.py summarize $O/PROFILE_GA_DEV.json $O/profile_dev.jsonl ;;
@@ -28,7 +28,7 @@ grid)  # 6 predeclared configs (TUNING_GRID.json), 2 lanes x 3 configs, horizon 
        CPUS=12-13 lane '{"c": 0.2, "expand": "FULL"}' '{"c": 0.7, "expand": "FULL"}' '{"c": 2.0, "expand": "FULL"}' &
        CPUS=14-15 lane '{"c": 0.2, "expand": "PW"}' '{"c": 0.7, "expand": "PW"}' '{"c": 2.0, "expand": "PW"}' &
        wait; $PYG tune.py $O/ga_dev.jsonl $O/grid $O/TUNING_RESULT.json ;;
-frozen) acct mcts_dev_s0 1 taskset -c 12-13 $PYG anytime.py run $ROS $CFG $O/mcts_dev_s0.jsonl --arms GA-MCTS --seed 0 --mcfg "$2" --horizon 180 > $O/mcts_dev_s0.log 2>&1 ;;
+frozen) acct mcts_dev_s0 1 taskset -c 12-13 $PYG anytime.py run $ROS $CFG $O/mcts_dev_s0.jsonl --arms GA-MCTS --seed 0 --mcfg "$2" --horizon 180 --audit-open $O/OPEN_AUDIT_mcts.json > $O/mcts_dev_s0.log 2>&1 ;;
 exh)   # exhaustion equivalence on DEV roots whose GA EXACT search finished quickly: GA-MCTS run to exhaustion must select the GA plan
        R=$($PYG -c "import json; print(','.join(r['root_id'] for r in map(json.loads, open('$O/ga_dev.jsonl')) if r['final']['mode']=='EXACT' and r['final']['wall_s']<12))")
        acct exh_dev 1 taskset -c 14-15 $PYG anytime.py run $ROS $CFG $O/exh_dev.jsonl --arms GA-MCTS --seed 0 --mcfg "$2" --horizon 900 --budgets 900 --roots $R > $O/exh_dev.log 2>&1 ;;

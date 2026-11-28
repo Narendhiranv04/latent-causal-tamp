@@ -115,7 +115,7 @@ def trajectory(fz, row, arm, floor, pcfg, horizon, budgets, mcfg=None):
     fin = {k: out.get(k) for k in keep}
     info = out.get("info") or {}
     fin.update(mode=info.get("mode"), exhausted=info.get("exhausted"), scores=info.get("scores"), per_size=info.get("per_size"),
-               n_evals=info.get("n_evals"), iterations=info.get("iterations"), nodes=info.get("nodes"), mcts=info.get("mcts"))
+               n_evals=info.get("n_evals"), iterations=info.get("iterations"), nodes=info.get("nodes"), mcts=info.get("mcts"), timing=info.get("timing"), by_size=info.get("by_size"))
     return {"arm": arm, "horizon": horizon, "budgets": per, "final": fin, "trace": trace, "t_floor_s": round(t_floor - t0, 4),
             "t_search_end_s": round(t1 - t0, 4), "recon_final_ok": bool(recon_ok), "r_sel": R_SEL}
 
@@ -141,6 +141,9 @@ def roster(path):
 
 def run(a):
     import r53
+    opened = set()
+    if a.audit_open:                                                     # record every file the planning process opens (evaluator-isolation check)
+        sys.addaudithook(lambda ev, args: opened.add(str(args[0])) if ev == "open" and args and isinstance(args[0], (str, bytes, os.PathLike)) else None)
     cfg, fz, fzF, pcfg = load_models(a.config)
     rows = roster(a.roster)
     if a.roots:
@@ -169,6 +172,8 @@ def run(a):
                 r.update(root_id=rid, seed=a.seed if arm == "GA-MCTS" else None, mcfg=mcfg if arm == "GA-MCTS" else None, cfg_id=MG.canon_cfg(mcfg) if arm == "GA-MCTS" else None)
                 f.write(json.dumps(r, default=str) + "\n"); f.flush()
                 print(rid, arm, {b: (v["decision"], v["E"] and round(v["E"], 3)) for b, v in r["budgets"].items()}, r["final"]["wall_s"], flush=True)
+    if a.audit_open:
+        Path(a.audit_open).write_text(json.dumps(sorted(opened), indent=0))
 
 
 if __name__ == "__main__":
@@ -177,5 +182,6 @@ if __name__ == "__main__":
     ap.add_argument("--arms", default="GA,GA-MCTS"); ap.add_argument("--seed", type=int, default=0); ap.add_argument("--mcfg", default=None)
     ap.add_argument("--horizon", type=float, default=180.0); ap.add_argument("--budgets", default=",".join(map(str, BUDGETS)))
     ap.add_argument("--shard", default="0/1"); ap.add_argument("--roots", default=None)
+    ap.add_argument("--audit-open", default=None)
     a = ap.parse_args()
     {"run": run}[a.cmd](a)

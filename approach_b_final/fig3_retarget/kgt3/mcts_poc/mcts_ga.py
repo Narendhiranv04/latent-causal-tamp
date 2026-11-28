@@ -19,7 +19,7 @@ Selection / deadline: planners.plan itself (production NOOP gate, K <= 3 floor i
 No ground-truth K / L_ref / witness / labels / evaluator metadata, no physical or motion-planning module, no retraining (tested)."""
 from __future__ import annotations
 
-import contextlib, hashlib, itertools, json, math, random, sys
+import contextlib, hashlib, itertools, json, math, random, sys, time
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -62,6 +62,7 @@ class Search:
         self.T = CP.Scores(fz, row0, V.rebase, tick=self.B.tick)
         self.best = {}                                   # size -> best candidate (planners.ckey)
         self.rstar, self.evals, self.iters, self.nodes, self.dead = 0.0, {}, 0, 1, 0
+        self.tm = {"select": 0.0, "prior_y": 0.0, "eval_y": 0.0, "eval_short": 0.0, "eval_need": 0.0, "eval_dp": 0.0, "prefetch": 0.0}
         sizes = [len(v) for v in self.D.values()]
         self.info = {"mode": "MCTS", "D4": {str(o): v for o, v in self.D.items()}, "assign_upper_bound": {k: PL.elem(sizes, k) for k in range(1, self.H + 1)},
                      "per_size": {}, "by_size": {}, "exhausted": False, "mcts": dict(self.m), "scores_ref": self.T}
@@ -97,7 +98,9 @@ class Search:
         kids = [tuple(sorted(n.A + (a,))) for a in mv]
         cap = (self.fz.caps or {}).get("y_unique")
         use_y = self.m["w_y"] != 0 and (cap is None or self.fz.c.get("y_unique", 0) + len(kids) <= self.m["y_prior_frac"] * cap)
+        t = time.perf_counter()
         yv = self.fz.y_global(self.row0, [list(map(list, A)) for A in kids]) if use_y else [1.0] * len(kids)
+        self.tm["prior_y"] += time.perf_counter() - t
         sc = []
         for a, y in zip(mv, yv):
             g = -math.log(max(1e-300, -math.log(max(1e-300, self.rng.random())))) if self.m["tau"] else 0.0
@@ -144,13 +147,17 @@ class Search:
     def evaluate(self, sets):
         fz, row0 = self.fz, self.row0
         self.B.tick()
+        t = time.perf_counter()
         yg = dict(zip(sets, fz.y_global(row0, [list(map(list, A)) for A in sets])))
         short = [A for A in sets if len(A) <= 3]
         long_ = [A for A in sets if len(A) > 3]
+        t1 = time.perf_counter(); self.tm["eval_y"] += t1 - t
         if short:                                                            # one batched prefetch; short_options then reads the cache
             fz.score(row0, [list(map(list, o)) for A in short for o in itertools.permutations(A)])
+        t2 = time.perf_counter(); self.tm["eval_short"] += t2 - t1
         if long_:
             self.T.need({r for A in long_ for r in CP.requests(A)})
+        t3 = time.perf_counter(); self.tm["eval_need"] += t3 - t2
         out = {}
         for A in sets:
             self.B.tick()
@@ -169,6 +176,7 @@ class Search:
                     F, o, p = r
                     best = PL.cand_of(o, p, F - math.log(max(CP.EPS, yg[A])), kind="ga_dp", y_global=yg[A], set=[list(a) for a in A], F=F, n_chunks=len(p))
             out[A] = best
+            self.tm["eval_dp"] += time.perf_counter() - t3; t3 = time.perf_counter()
             k = len(A)
             ps = self.info["per_size"].setdefault(k, {"evaluated": 0})
             ps["evaluated"] += 1
@@ -195,13 +203,13 @@ class Search:
         if not self.acts:
             self.root.untried, self.root.done = [], True
         else:
-            self.prefetch()
+            t = time.perf_counter(); self.prefetch(); self.tm["prefetch"] += time.perf_counter() - t
         while not self.root.done:
             self.B.tick()
             self.iters += 1
             paths, fails = [], 0
             while len(paths) < self.m["batch"] and fails < 4 and not self.root.done:
-                p = self.select()
+                t = time.perf_counter(); p = self.select(); self.tm["select"] += time.perf_counter() - t
                 if p is None:
                     fails += 1; self.dead += 1
                     continue
@@ -231,6 +239,7 @@ class Search:
         self.info["n_evals"] = len(self.evals); self.info["dup_evals"] = 0
         self.info["iterations"], self.info["nodes"], self.info["dead_selections"] = self.iters, self.nodes, self.dead
         self.info["scores"] = {**self.T.n, "dp_lookups": self.T.dp_lookups}
+        self.info["timing"] = {k: round(v, 3) for k, v in self.tm.items()}
         self.info.pop("scores_ref", None)
         return list(self.sink["cands"]), self.info
 
@@ -244,6 +253,7 @@ def search(fz, row0, mode, cfg=None, log=None, sink=None):
         return S.run()
     except BaseException:
         S.info["n_evals"] = len(S.evals); S.info["iterations"], S.info["nodes"] = S.iters, S.nodes
+        S.info["timing"] = {k: round(v, 3) for k, v in S.tm.items()}
         raise
 
 

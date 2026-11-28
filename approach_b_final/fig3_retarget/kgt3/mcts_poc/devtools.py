@@ -58,6 +58,20 @@ def parity(any_path, ref_path, out):
     print(json.dumps({k: v for k, v in res.items() if k != "rows"}))
 
 
+FORBID = ("oracle_3d", "k45/cohort/roots", "roster_3d", "PRIVATE", "r8b/roster", "labels_", "phys_", "jobs_", "plans_3d", "r8c_dev", "witness")
+
+
+def isolation(out, *audits):
+    """Every file opened by the DEV planning processes (sys.addaudithook) vs evaluator-only paths."""
+    res = {}
+    for a in audits:
+        F = json.loads(Path(a).read_text())
+        res[Path(a).name] = {"n_opened": len(F), "forbidden_hits": [f for f in F if any(t in f for t in FORBID)],
+                             "data_files": sorted({f for f in F if not f.endswith((".py", ".pyc", ".so")) and "/lib/python" not in f and "site-packages" not in f})}
+    res["PASS"] = all(not v["forbidden_hits"] for k, v in res.items() if isinstance(v, dict))
+    Path(out).write_text(json.dumps(res, indent=1)); print(json.dumps({k: (v if not isinstance(v, dict) else v["forbidden_hits"]) for k, v in res.items()}))
+
+
 def tests(out):
     res = {}
     for name, args in (("kgt3_tests", [str(KG / "tests")]), ("r10_public_loader", [str(KG / "r10" / "test_public_loader.py")]),
@@ -68,4 +82,4 @@ def tests(out):
 
 
 if __name__ == "__main__":
-    {"prep": lambda: prep(sys.argv[2]), "parity": lambda: parity(*sys.argv[2:5]), "tests": lambda: tests(sys.argv[2])}[sys.argv[1]]()
+    {"prep": lambda: prep(sys.argv[2]), "parity": lambda: parity(*sys.argv[2:5]), "tests": lambda: tests(sys.argv[2]), "isolation": lambda: isolation(*sys.argv[2:])}[sys.argv[1]]()
