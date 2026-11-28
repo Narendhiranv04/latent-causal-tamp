@@ -66,7 +66,10 @@ Ours is not the best predictor of initial target feasibility. PIGINet leads on A
 | **FINAL** | **80.3** | — | 82.8 | 82.5 | GPU, < 1 s median |
 | DISCO-Grid s0 / s1 / s2 | 38.9 / 36.4 / 37.7 | −41 to −44 | 35–46 | 0 (never abstains) | 5–8 ms median |
 | NOR-Grid (OSNet + RPNet) | 24.3 | −56.1 | 82.8 | 100 | 20 ms median |
-| E-M4M / MO-SeGMan / MS-MCTS (300 CPU-s) | *pending verification* | | | | |
+| E-M4M (300 CPU-s) | 51.0 | −29.3 [−37.2, −20.9] | 100 | 100 | 300 CPU-s budget |
+| MS-MCTS (300 CPU-s) | 30.5 | −49.8 | 100 | 100 | 300 CPU-s budget |
+| MO-SeGMan (300 CPU-s) | 26.4 | −54.0 | 98.9 | 100 | 300 CPU-s budget |
+| E-M4M / MS-MCTS / MO-SeGMan at a 60 s cut | 0.0 / 3.3 / 0.0 | | | | 60 CPU-s (exact cut of the same runs) |
 | REAP | **not run**: no runnable implementation in our workspace (upstream clone, wheels and an online teacher are missing) | | | | |
 
 No baseline used oracle K. Every planner saw the same scenes and was verified by the same teachers.
