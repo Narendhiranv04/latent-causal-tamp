@@ -23,6 +23,7 @@ sys.path[:0] = [str(HERE.parent)]
 import r8a as R8  # noqa: E402  (paths, Pred, cvae, x_net, _run)
 
 RULE = R8.RULE
+DEV = R8.DEV
 
 
 def sha(p):
@@ -47,12 +48,13 @@ class Cached:
         self.base, self.mem, self.yonly, self.evals, self.dev, self.net, self.cost = base, {}, False, 0, base.dev, base.net, None
 
     def score(self, root, seqs):
-        miss = [s for s in seqs if (root.id, json.dumps(s)) not in self.mem]
+        ks = [(root.id, tuple(tuple(a) for a in s)) for s in seqs]
+        miss = [s for s, k in zip(seqs, ks) if k not in self.mem]
         if miss:
             for s, c in zip(miss, self.base.score(root, miss)):
-                self.mem[(root.id, json.dumps(s))] = c
+                self.mem[(root.id, tuple(tuple(a) for a in s))] = c
             self.evals += len(miss)
-        out = [self.mem[(root.id, json.dumps(s))] for s in seqs]
+        out = [self.mem[k] for k in ks]
         # Y-only: endpoint pY replaces p11 for nonempty sequences; the empty sequence keeps p11 = pY(initial scene) (the production NOOP input)
         return [{**c, "p11": c["py"]} if (self.yonly and s) else c for s, c in zip(seqs, out)]
 
@@ -64,12 +66,12 @@ def setup(arm, dom):
     R7 = Path(os.environ["R7_ROOT"])
     files = {}
     if arm == "B0":
-        samp, scor0, man = BM.load_bundle(Path(os.environ["K3_BUNDLE"]), dom, "cuda", 0)
+        samp, scor0, man = BM.load_bundle(Path(os.environ["K3_BUNDLE"]), dom, DEV, 0)
         scor = RUN.SafeScorer.__new__(RUN.SafeScorer)
-        scor.net, scor.dev, scor.cost, scor.evals = scor0.net, "cuda", None, 0
+        scor.net, scor.dev, scor.cost, scor.evals = scor0.net, DEV, None, 0
         files = {"bundle": os.environ["K3_BUNDLE"], "bundle_manifest_sha256": sha(Path(os.environ["K3_BUNDLE"]) / "MANIFEST.json")}
         return {"M": 4, "c1": None, "prop": "cvae"}, samp, scor, man, None, None, files
-    samp, _, man = BM.load_bundle(Path(os.environ["FIG3_BUNDLE"]), dom, "cuda", 0)      # plumbing only: rule / proposal seed / sampler object
+    samp, _, man = BM.load_bundle(Path(os.environ["FIG3_BUNDLE"]), dom, DEV, 0)      # plumbing only: rule / proposal seed / sampler object
     files["q2_scalers_sha256"] = scalers(samp, dom)
     cs = F["cvae"]["pick"].rsplit("_s", 1)[1]
     xs = F["x"]["seed"]; rep = F["x"]["rep"]
@@ -93,19 +95,19 @@ def setup(arm, dom):
     if cpath == Path(F["cvae"]["ckpt"]):
         assert sha(cpath) == F["cvae"]["sha256"], "FINAL cVAE differs from the freeze"
     scor = RUN.SafeScorer.__new__(RUN.SafeScorer)
-    scor.net, scor.dev, scor.cost, scor.evals = R8.Pred(net, direct), "cuda", None, 0
+    scor.net, scor.dev, scor.cost, scor.evals = R8.Pred(net, direct), DEV, None, 0
     sp = {"M": 1 if arm == "M1" else 4, "c1": 0 if arm == "C1" else None, "prop": "uniform4" if arm == "UNIFORM4" else "taskfm" if arm == "TASKFM" else "cvae"}
     fm = cr = None
     if arm == "TASKFM":
         import arms as A
         fp = Path(os.environ["K3"]) / "runs/training/taskfm" / dom / f"taskfm_s{cs}" / "model.pt"
-        fm = A.load_taskfm(fp, "cuda"); sp["fm_path"] = str(fp)
+        fm = A.load_taskfm(fp, DEV); sp["fm_path"] = str(fp)
     if arm in ("CR", "CRXY", "FC4"):
         sys.path.insert(0, R8.CRDIR)
         import infer as INF
         crr = Path(os.environ["CR_RUNS"]) / "models" / dom
         best = min(crr.glob("r10_s*"), key=lambda d: json.loads((d / "curve.json").read_text())["best_select"])
-        cr = INF.load_cr(str(best / "model.pt"), "cuda")[0]; sp["cr_path"] = str(best / "model.pt")
+        cr = INF.load_cr(str(best / "model.pt"), DEV)[0]; sp["cr_path"] = str(best / "model.pt")
     files.update({"x_name": xname, "x_ckpt": str(xpath), "x_sha256": sha(xpath), "cvae": str(cpath), "cvae_sha256": sha(cpath),
                   **{k: v for k, v in sp.items() if k.endswith("_path")}, **{k + "_sha256": sha(v) for k, v in sp.items() if k.endswith("_path")}})
     return sp, samp, scor, man, fm, cr, files
@@ -146,12 +148,106 @@ def fam(dom, samp, scor, man, r):
     return out, root
 
 
+NETS = ["UNCOUPLED", "ORDINV", "DIRECT", "FINAL_X0", "FINAL_X1", "FINAL_X2", "REP_G0", "REP_A1", "REP_M1"]
+
+
+class SharedViews:
+    """One learner-visible view + collated batch per (root, sequence chunk), shared by every net scored on the same FINAL pool (the chunks of
+    exhaustive.score_root are deterministic, so identical pools give identical chunks).  Pure caching: outputs equal search.Scorer.score."""
+
+    def __init__(self, dev):
+        self.dev, self.mem = dev, {}
+
+    def get(self, root, seqs):
+        import torch
+        import xy as XY
+        k = (root.id, tuple(tuple(tuple(a) for a in s) for s in seqs))
+        if k not in self.mem:
+            inp = root.row["inputs"]
+            P = lambda c: tuple(inp["cell_xy"][str(c)])  # noqa: E731
+            xs = [[(i, P(d)) for i, d in s] for s in seqs if s]
+            v, _, xm = XY.make_view(root.id, inp["xy0"], inp["attrs"], inp["tid"], inp["goal"], inp["base"], inp["ctx"], [], xs, XY._NoGeo)
+            b, _ = XY.collate([v], device=self.dev, dtype=torch.float32)
+            self.mem[k] = (v, xm, b, len(xs))
+        return self.mem[k]
+
+
+class NetScorer:
+    """search.Scorer.score (+ ablations SafeScorer NaN convention) for one net on SharedViews."""
+
+    def __init__(self, net, sv):
+        self.net, self.sv, self.evals, self.dev, self.cost = net, sv, 0, sv.dev, None
+
+    def score(self, root, seqs):
+        import torch
+        with torch.no_grad():
+            v, xm, b, nx = self.sv.get(root, seqs)
+            pr = self.net.predict(b)
+        self.evals += nx
+        out, k = [], 0
+        for s in seqs:
+            if not s:
+                out.append({"p11": float(pr["p_noop"][0]), "J": 0.0, "py": float("nan"), "px": float("nan")}); continue
+            q = xm[k]
+            out.append({"p11": float(pr["psucc"][q]), "py": float(pr["py"][v["parent"][q]]) if "py" in pr else float("nan"),
+                        "px": float(pr["px"][q]) if "px" in pr else float("nan"), "J": 0.0})
+            k += 1
+        return out
+
+
+def nets_pass(dom, arms, out_dir, public):
+    """NETS: every pool-sharing scoring arm (same FINAL cVAE + S1 proposals, different X/Y net) in one pass with shared views."""
+    import exhaustive as EX
+    import search as S
+    import torch
+    roster = Path(public).stem.split("_")[1]
+    built = {a: setup(a, dom) for a in arms}
+    samp, man = built[arms[0]][1], built[arms[0]][3]
+    for a in arms:
+        assert built[a][6]["cvae_sha256"] == built[arms[0]][6]["cvae_sha256"], "NETS arms must share the cVAE / pool"
+    fo = {a: Path(out_dir) / a / f"{roster}_{dom}.jsonl" for a in arms}
+    for a in arms:
+        fo[a].parent.mkdir(parents=True, exist_ok=True)
+        (fo[a].parent / f"files_{dom}.json").write_text(json.dumps({**built[a][6], "torch": torch.__version__, "device": DEV, "host": os.uname().nodename,
+                                                                     "pass": "NETS shared views"}, indent=1))
+    done = set.intersection(*[{json.loads(l)["root_id"] for l in open(f)} if f.exists() else set() for f in fo.values()])
+    hs = {a: open(fo[a], "a") for a in arms}
+    for r in map(json.loads, open(public)):
+        if r["domain"] != dom or r["root_id"] in done:
+            continue
+        root = S.Root(r, dom)
+        t0 = time.time()
+        D = EX.proposals(root, samp, man["config"]["proposal_seed"])
+        tp = time.time() - t0
+        D4 = {int(o): [int(x) for x in v[:4]] for o, v in D.items()}
+        sv = SharedViews(DEV)
+        for a in arms:
+            sc = NetScorer(built[a][2].net, sv)
+            t = time.time()
+            rec = EX.score_root(root, D4, sc, [RULE], 4, set(), 8192)
+            dd = rec["per_M"]["4"]["decisions"][0]
+            kind = "ABSTAIN" if dd is None else "NOOP" if dd["seq"] == [] else "REPAIR"
+            seq = dd["seq"] if kind == "REPAIR" else []
+            hs[a].write(json.dumps({"root_id": r["root_id"], "domain": dom, "decision": kind, "moves": moves(root, seq), "arm": a,
+                                    "wall_s": round(time.time() - t + tp, 4), "wall_s_note": "shared-view pass: views built once per root (first arm pays)",
+                                    "scorer_evals": sc.evals, "proposals": {str(o): v for o, v in D4.items()}, "n_scored": rec["per_M"]["4"]["n_scored"],
+                                    "p_noop": rec["p_noop"], "score": None if dd is None else dd.get("p11")}, default=float) + "\n"); hs[a].flush()
+        del sv
+        if DEV == "cuda":
+            torch.cuda.empty_cache()
+    for h in hs.values():
+        h.close()
+    print(json.dumps({"pass": "NETS", "dom": dom, "arms": arms}), flush=True)
+
+
 def moves(root, seq):
     return [{"object_id": root.ids[o], "object_index": int(o), "destination_cell": int(c)} for o, c in seq]
 
 
 def predict(arm, dom, public, out_dir):
     import torch
+    if arm.startswith("NETS:"):
+        return nets_pass(dom, arm[5:].split(","), out_dir, public)
     torch.set_num_threads(1)
     arms = ["FINAL", "FINAL_RANK", "YONLY", "YONLY_RANK", "M1"] if arm == "FAM" else [arm]
     roster = Path(public).stem.split("_")[1]
@@ -162,10 +258,12 @@ def predict(arm, dom, public, out_dir):
     rows = [r for r in map(json.loads, open(public)) if r["domain"] == dom and r["root_id"] not in done]
     sp, samp, scor, man, fm, cr, files = setup("FINAL" if arm == "FAM" else arm, dom)
     for a in arms:
-        (fo[a].parent / f"files_{dom}.json").write_text(json.dumps({**files, "torch": torch.__version__, "gpu": torch.cuda.get_device_name(0),
+        (fo[a].parent / f"files_{dom}.json").write_text(json.dumps({**files, "torch": torch.__version__, "gpu": torch.cuda.get_device_name(0) if DEV == "cuda" else "cpu", "device": DEV,
                                                                      "host": os.uname().nodename}, indent=1))
     hs = {a: open(fo[a], "a") for a in arms}
     for r in rows:
+        if DEV == "cuda":
+            torch.cuda.empty_cache()                                     # bounded GPU memory with concurrent lanes (no effect on results)
         if arm == "FAM":
             res, root = fam(dom, samp, scor, man, r)
             for a in arms:

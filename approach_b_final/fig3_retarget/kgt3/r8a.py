@@ -27,6 +27,7 @@ def _run():
     return sys.modules["k3run"]
 
 
+DEV = os.environ.get("R10_DEVICE", "cuda")                          # R10: CPU-only option for CPU-bound arms
 RULE = {"noop_gate": 0.5, "eta": 0.3, "alpha": 0.0, "beta": 0.0, "gamma": 0.0}
 
 
@@ -56,9 +57,9 @@ def x_net(dom, name):
     import xy as XY
     R7 = Path(os.environ["R7_ROOT"])
     _, repdat, _, ctrl, s = name.split("_")
-    base = XY.load_model(R7 / "xy" / f"p2_{dom}" / f"D_{s}" / "model.pt", "cuda").float().eval()
-    net = XLN.make(repdat[0], base, None if ctrl == "base" else ctrl).to("cuda")
-    net.load_state_dict(torch.load(R7 / "xl" / "ckpt" / name / "model.pt", map_location="cuda", weights_only=False)["state"])
+    base = XY.load_model(R7 / "xy" / f"p2_{dom}" / f"D_{s}" / "model.pt", DEV).float().eval()
+    net = XLN.make(repdat[0], base, None if ctrl == "base" else ctrl).to(DEV)
+    net.load_state_dict(torch.load(R7 / "xl" / "ckpt" / name / "model.pt", map_location=DEV, weights_only=False)["state"])
     return net.eval(), ctrl == "DIRECT", R7 / "xl" / "ckpt" / name / "model.pt"
 
 
@@ -80,7 +81,7 @@ def setup(arm, dom):
     RUN = _run()
     F = freeze(dom)
     R7 = Path(os.environ["R7_ROOT"])
-    samp, scor0, man = BM.load_bundle(Path(os.environ["FIG3_BUNDLE"]), dom, "cuda", 0)
+    samp, scor0, man = BM.load_bundle(Path(os.environ["FIG3_BUNDLE"]), dom, DEV, 0)
     cs = F["cvae"]["pick"].rsplit("_s", 1)[1]
     cpath = R7 / "r7_task" / dom / f"q2init_all_s{cs}" / "model.pt"
     xname = F["x"]["name"]; xs = F["x"]["seed"]
@@ -93,20 +94,20 @@ def setup(arm, dom):
     cvae(samp, cpath)
     net, direct, xpath = x_net(dom, xname)
     scor = RUN.SafeScorer.__new__(RUN.SafeScorer)
-    scor.net, scor.dev, scor.cost, scor.evals = Pred(net, direct), "cuda", None, 0
+    scor.net, scor.dev, scor.cost, scor.evals = Pred(net, direct), DEV, None, 0
     sp = {"M": 1 if arm == "M1" else 4, "c1": 0 if arm == "C1" else None, "prop": "uniform4" if arm == "UNIFORM4" else "taskfm" if arm == "TASKFM" else "cvae"}
     fm = None
     if arm == "TASKFM":
         import arms as A
         fp = Path(os.environ["K3"]) / "runs/training/taskfm" / dom / f"taskfm_s{cs}" / "model.pt"
-        fm = A.load_taskfm(fp, "cuda"); sp["fm_path"] = str(fp)
+        fm = A.load_taskfm(fp, DEV); sp["fm_path"] = str(fp)
     cr = None
     if arm in ("CR", "CRXY", "FC4"):
         sys.path.insert(0, CRDIR)
         import infer as INF
         crr = Path(os.environ["CR_RUNS"]) / "models" / dom
         best = min(crr.glob("r7_s*"), key=lambda d: json.loads((d / "curve.json").read_text())["best_select"])
-        cr = INF.load_cr(str(best / "model.pt"), "cuda")[0]; sp["cr_path"] = str(best / "model.pt")
+        cr = INF.load_cr(str(best / "model.pt"), DEV)[0]; sp["cr_path"] = str(best / "model.pt")
     files = {"x_ckpt": str(xpath), "x_sha256": sha(xpath), "cvae": str(cpath), "cvae_sha256": sha(cpath), **{k: v for k, v in sp.items() if k.endswith("_path")}}
     return sp, samp, scor, man, fm, cr, files
 
@@ -121,7 +122,7 @@ def decide(arm, dom, sp, samp, scor, man, fm, cr, r):
     if arm in ("CR", "CRXY", "FC4"):
         import infer as INF
         import data as CRD
-        b1 = INF.enc_t(dom, r, "cuda", CRD.scalers(dom))
+        b1 = INF.enc_t(dom, r, DEV, CRD.scalers(dom))
         P = INF.make_pool(cr, dom, r, b1, 256, 0)
         seqs, acct = INF.prefix(P, 256)
         if arm == "CR":
