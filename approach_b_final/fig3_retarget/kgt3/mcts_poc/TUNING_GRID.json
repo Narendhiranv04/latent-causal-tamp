@@ -1,0 +1,12 @@
+{
+ "label": "GA-MCTS development-only tuning grid (predeclared before any GA-MCTS model run; DEV = 20 exposed 3D roots, r53.panel('3d'))",
+ "population": "PUBLIC_dev_3d.jsonl (20 exposed DEV roots; public rows only)",
+ "fixed": {"batch": 32, "w_y": 1.0, "w_x": 1.0, "w_r": 0.25, "tau": 0.1, "y_prior_frac": 0.5, "pw_k": 2.0, "pw_alpha": 0.5, "seed": 0},
+ "grid": {"c": [0.2, 0.7, 2.0], "expand": ["FULL", "PW"]},
+ "horizon_s": 30, "budgets_s": [5, 10, 20, 30],
+ "outcome": "DEV learned energy of the SELECTED plan (planners.select, floor + NOOP gate) and incumbent time only; no physical verification on DEV",
+ "reference": "E*_r = min selected-plan energy for root r over every DEV trajectory (the GA 180 s DEV trajectory + all grid runs, all budgets)",
+ "regret": "regret_r(b) = E_sel_r(b) - E*_r; NOOP roots (p_noop >= 0.5, identical for every arm) excluded; no incumbent -> E = 60",
+ "selection_rule": "argmin over configs of mean_{roots, b in budgets} regret; configs within 0.01 of the best are tied -> smaller median time-to-final-incumbent (first trace time reaching the 30 s incumbent energy), then smaller c, then FULL before PW",
+ "not_allowed": ["physical success on DEV", "BENCH_COMP / R8B roots", "witness / L_ref / K", "post-hoc grid extension"]
+}
