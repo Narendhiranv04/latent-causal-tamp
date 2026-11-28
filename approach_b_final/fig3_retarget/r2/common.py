@@ -9,8 +9,8 @@ import numpy as np
 NW = Path(os.environ.get("R2_NW", "/home/projects/long-horizon/naren_workspace"))
 FIG3 = NW / "fig3"
 R2 = FIG3 / "r2"
-SNAP_TRAIN = NW / "k3abl/abf/snapshot/abf_v32_fb0eef4f5ff433ee"
-SNAP_V34 = NW / "k3abl/abf/snapshot/abf_9de85710c2a7103f"
+SNAP_TRAIN = Path(os.environ["R10_SNAP"]) if os.environ.get("R10_SNAP") else NW / "k3abl/abf/snapshot/abf_v32_fb0eef4f5ff433ee"   # R10: canonical release
+SNAP_V34 = Path(os.environ["R10_SNAP"]) if os.environ.get("R10_SNAP") else NW / "k3abl/abf/snapshot/abf_9de85710c2a7103f"     # snapshot (TRAIN+VAL only)
 PRIV = NW / "k3abl/runs/public"
 NBINS = {"2d": [(1, 5), (6, 10), (11, 15), (16, 20)], "3d": [(1, 3), (4, 5), (6, 7), (8, 13)]}     # TRAIN-quantile-based, predeclared
 

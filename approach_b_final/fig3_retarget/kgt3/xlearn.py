@@ -146,6 +146,12 @@ def groups(E):
 
 def data(dom):
     E, rows, audit = build(dom)
+    if os.environ.get("R10_LOCAL_SPLIT"):                     # R10 canonical release: split of every local root from its parent family (fail closed)
+        M = json.loads(Path(os.environ["R10_LOCAL_SPLIT"]).read_text())
+        miss = sorted({e["root_id"] for e in E if f"{dom}|{e['root_id']}" not in M})
+        assert not miss, ("local roots without a canonical partition", miss[:5])
+        audit["r10_excluded_entries"] = sum(1 for e in E if M[f"{dom}|{e['root_id']}"] == "EXCLUDE")
+        E = [{**e, "split": M[f"{dom}|{e['root_id']}"]} for e in E if M[f"{dom}|{e['root_id']}"] in ("TRAIN", "VAL")]
     fams = collections.defaultdict(set)
     for e in E:
         fams[e["split"]].add(e["fam"])

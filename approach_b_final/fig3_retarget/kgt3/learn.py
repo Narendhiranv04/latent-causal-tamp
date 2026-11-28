@@ -110,6 +110,21 @@ def load(dom, spec):
         net.load_state_dict(torch.load(R7 / "xl" / "ckpt" / name / "model.pt", map_location="cuda", weights_only=False)["state"])
         net = net.eval()
         cv = os.environ.get(f"R7_CVAE_{dom.upper()}")                    # clean stage-A sampler replaces the bundle cVAE model
+        if not cv and os.environ.get("R7_ALLOW_BUNDLE_CVAE") != "1":     # R10.1: fail closed (no silent fallback to the historical bundle cVAE)
+            raise RuntimeError(f"R7_CVAE_{dom.upper()} not set: refusing the bundle cVAE for a clean model")
+        sc_p = os.environ.get(f"R7_Q2_SCALERS_{dom.upper()}")            # R10: the scalers the clean cVAE was trained with (canonical TRAIN)
+        if sc_p:
+            sc = json.loads(Path(sc_p).read_text())
+            import numpy as _np
+            fz.samp.mu, fz.samp.sd = _np.array(sc["mean"], _np.float32), _np.array(sc["std"], _np.float32)
+        elif os.environ.get("R10_STRICT") == "1":
+            raise RuntimeError(f"R7_Q2_SCALERS_{dom.upper()} not set under R10_STRICT")
+        for k, p_ in (("R7_SHA_X", R7 / "xl" / "ckpt" / name / "model.pt"), ("R7_SHA_CVAE", cv), ("R7_SHA_BASE", R7 / "xy" / f"p2_{dom}" / f"D_{s}" / "model.pt")):
+            want = os.environ.get(f"{k}_{dom.upper()}")
+            if want or os.environ.get("R10_STRICT") == "1":           # R10: manifest hashes asserted at load time
+                import hashlib as _hl
+                got = _hl.sha256(Path(p_).read_bytes()).hexdigest() if p_ else None
+                assert want and got == want, (k, dom, got, want)
         if cv:
             import placement as PLC
             c = torch.load(cv, map_location=fz.samp.dev, weights_only=False)

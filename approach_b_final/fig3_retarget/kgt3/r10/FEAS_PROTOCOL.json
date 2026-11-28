@@ -1,0 +1,9 @@
+{"version": "R10_FEAS_PROTOCOL_V1", "frozen_utc": "2026-11-28T10:55:00Z", "track": "TEST_FEAS_3D",
+ "templates": "original TEST 3D RAW-route factor templates (feasgen.py templates)", "name_namespace": "r10f",
+ "schedule": "feasgen.schedule: block pattern K0,K1,K0,K2,K1,K3; templates ordered by sha256('R10F|family|cycle')",
+ "label_contract": {"POSITIVE": "teacher original-y query y=1 (BD3DS66_TEACHER_V2, first feasible grasp, RRT max_iters 5000)",
+                    "NEGATIVE_CERTIFIED": "y=0 with negative_kind CERTIFIED (every grasp fails a deterministic geometric check)",
+                    "UNKNOWN": "y=0 with NO_PLAN_FOUND/TIMEOUT/OTHER (budget-relative; reported separately, never a certified negative)"},
+ "target_pos": 100, "target_neg": 200, "max_jobs": 1200, "cpu_h_cap": 70, "construct_wall_s": 2700, "teach_wall_s": 900,
+ "acceptance": "all labelled scenes of all dispatched jobs; exact-geometry collisions with registered scenes excluded and ledgered; no model output is consulted",
+ "host": "gvlab2 only"}

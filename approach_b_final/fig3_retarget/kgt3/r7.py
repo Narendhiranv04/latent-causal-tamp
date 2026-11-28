@@ -15,7 +15,9 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 sys.path[:0] = [str(HERE), str(HERE.parent), str(HERE.parent / "r3"), str(HERE.parent / "r24"), str(HERE.parent.parent)]
-STEPS = {"2d": (2400, 30), "3d": (1520, 19)}            # frozen scratch_all fixed-step budget (ablations_k3/arms.py)
+STEPS = {"2d": (2400, 30), "3d": (1520, 19)}
+TSNAP = lambda PL: Path(os.environ.get("R7_TRAIN_SNAP") or PL.ROOT / "snapshot/abf_v32_fb0eef4f5ff433ee")  # noqa: E731  R10: canonical snapshot
+VSNAP = lambda PL: Path(os.environ.get("R7_VAL_SNAP") or PL.ROOT / "snapshot/abf_9de85710c2a7103f")  # noqa: E731            # frozen scratch_all fixed-step budget (ablations_k3/arms.py)
 
 
 def sha(p):
@@ -47,7 +49,7 @@ def stage_a(dom, seed):
     PL.fit(dom, PL.ROOT / "data" / f"q2_{dom}", "cvae", seed)
     s, e = STEPS[dom]
     os.environ["V3_TASK_STAGE"] = "r7_task"
-    PL.fit_task(dom, "q2init_all", seed, {"steps": s, "eval_every": e}, PL.ROOT / "snapshot/abf_v32_fb0eef4f5ff433ee", PL.ROOT / "snapshot/abf_9de85710c2a7103f", "cuda")
+    PL.fit_task(dom, "q2init_all", seed, {"steps": s, "eval_every": e}, TSNAP(PL), VSNAP(PL), "cuda")
 
 
 def abl_a(dom, seed, variant):
@@ -55,13 +57,13 @@ def abl_a(dom, seed, variant):
     import placement as PL
     s, e = STEPS[dom]
     os.environ["V3_TASK_STAGE"] = "r7_task"
-    PL.fit_task(dom, variant, int(seed), {"steps": s, "eval_every": e}, PL.ROOT / "snapshot/abf_v32_fb0eef4f5ff433ee", PL.ROOT / "snapshot/abf_9de85710c2a7103f", "cuda")
+    PL.fit_task(dom, variant, int(seed), {"steps": s, "eval_every": e}, TSNAP(PL), VSNAP(PL), "cuda")
 
 
 def stage_b(dom, seed):
     import placement as PL
     import xy as XY
-    XY.fit(PL.ROOT / "snapshot/abf_v32_fb0eef4f5ff433ee", dom.upper(), "D", int(seed))
+    XY.fit(TSNAP(PL), dom.upper(), "D", int(seed))
 
 
 def base_path(dom, seed):

@@ -29,6 +29,9 @@ def jl(p):
 
 def roots(pop):
     """-> [(rid, row, meta)]; meta (evaluator only): L_ref, N, K if certified, witness, path, goal."""
+    if pop == "r10comp":                                                 # R10 BENCH_COMP_3D (evaluator only: private index via R10_PRIVATE)
+        Pv = {r["root_id"]: r for r in jl(os.environ["R10_PRIVATE"])}
+        return [(r["root_id"], r, {k: Pv[r["root_id"]][k] for k in ("L_ref", "N", "K_cert", "witness", "path", "goal")}) for r in jl(os.environ["R10_PUBLIC"])]
     if pop == "r8b":                                                     # R8C independent roster (sealed public rows + private index)
         d = Path(os.environ["R8B_ROSTER"])
         seal = json.loads((d / "SEAL.json").read_text())
@@ -57,12 +60,33 @@ def roots(pop):
     return out
 
 
+PUBLIC_KEYS = {"root_id", "domain", "inputs"}
+INPUT_KEYS = {"ids", "xy0", "cells0", "attrs", "tid", "goal", "goal_cell", "base", "ctx", "grid", "legal_cells", "q_ref", "cell_xy"}
+
+
+def public_roots(pop):
+    """R10.1: the planner's ONLY loader.  Reads the public roster file alone (never the private index, references or caches); every row must
+    match the public schema exactly (extra / private fields -> rejected).  pop 'r10comp' = env R10_PUBLIC (a public-only jsonl)."""
+    if pop == "r10comp":
+        f = Path(os.environ["R10_PUBLIC"])
+    elif pop == "r8b":
+        d = Path(os.environ["R8B_ROSTER"]); f = d / "PUBLIC_r8b.jsonl"
+        assert GD.sha(f) == json.loads((d / "SEAL.json").read_text())["public"], "public roster not sealed"
+    else:
+        return [(rid, row) for rid, row, _ in roots(pop)]                # historical development populations (exposed; not used by R10 tracks)
+    out = []
+    for r in jl(f):
+        assert set(r) <= PUBLIC_KEYS and set(r["inputs"]) <= INPUT_KEYS, ("non-public field in planner input", r.get("root_id"), sorted(set(r) - PUBLIC_KEYS))
+        out.append((r["root_id"], {"root_id": r["root_id"], "domain": r.get("domain", "3d"), "inputs": r["inputs"]}))
+    return out
+
+
 def plan(pop, cfg_path):
     import learn as LN
     import planners as PL
     import rank as RK
     import r53
-    dom = "3d" if pop in ("3d", "r8b") else "2d"
+    dom = "3d" if pop in ("3d", "r8b", "r10comp") else "2d"
     cfg = json.loads(Path(cfg_path).read_text())[dom]
     fz, net = LN.load(dom, cfg["spec"]); fz.net = net
     fz0, base = LN.load(dom, "F0"); fz0.net = base
@@ -76,7 +100,7 @@ def plan(pop, cfg_path):
     i_, n_ = (int(x) for x in sh.split("/")) if sh else (0, 1)
     pf = R6 / (f"plans_{pop}.part{i_}of{n_}.jsonl" if sh else f"plans_{pop}.jsonl")
     with open(pf, "w") as f:
-        for k_, (rid, row, meta) in enumerate(roots(pop)):
+        for k_, (rid, row) in enumerate(public_roots(pop)):
             if k_ % n_ != i_:
                 continue
             rec = {"root_id": rid, "pop": pop, "config": cfg, "arms": {}}
@@ -110,7 +134,7 @@ def merge(pop, n):
     """Merge every shard (each root exactly once, in roots() order) -> plans_POP.jsonl + SEAL."""
     parts = [R6 / f"plans_{pop}.part{i}of{n}.jsonl" for i in range(int(n))]
     recs = {r["root_id"]: r for p in parts for r in jl(p)}
-    order = [rid for rid, _, _ in roots(pop)]
+    order = [rid for rid, _ in public_roots(pop)]
     assert set(recs) == set(order), f"missing {set(order) - set(recs)}"
     pf = R6 / f"plans_{pop}.jsonl"
     with open(pf, "w") as f:
@@ -160,7 +184,7 @@ def jobs(pop, cap):
             if p["decision"] != "REPAIR" or not p["seq"]:
                 sel.append({**base, "status": "NO_REPAIR"}); continue
             b = bounds(p["partition"])
-            k = (rid, J24.nk(J24.names("3d", ids, p["seq"])), J24.nk(b)) if pop in ("3d", "r8b") else (rid, json.dumps(p["seq"]), json.dumps(b))
+            k = (rid, J24.nk(J24.names("3d", ids, p["seq"])), J24.nk(b)) if pop in ("3d", "r8b", "r10comp") else (rid, json.dumps(p["seq"]), json.dumps(b))
             key = f"R6|{pop}|{rid}|{json.dumps(p['seq'])}|{json.dumps(b)}"
             if k in seen:
                 sel.append({**base, "status": "SAME_AS", "job": seen[k]}); continue
@@ -169,7 +193,7 @@ def jobs(pop, cap):
                 sel.append({**base, "status": "REUSED", "job": key, "src": A[k]["src"]}); continue
             if len(jb) + 1 > int(cap):
                 sel.append({**base, "status": "NOT_RUN_BUDGET", "job": key}); continue
-            if pop in ("3d", "r8b"):
+            if pop in ("3d", "r8b", "r10comp"):
                 jb.append({"key": key, "root_id": rid, "arm": arm, "path": meta["path"], "kind": "X_CHUNKED", "order": J24.names("3d", ids, p["seq"]), "bounds": b,
                            "y": {"target": "t0", "goal": meta["goal"]}})
             else:
@@ -195,7 +219,7 @@ def _sign(g, l):
 
 
 def analyze(pop):
-    dom = "3d" if pop in ("3d", "r8b") else "2d"
+    dom = "3d" if pop in ("3d", "r8b", "r10comp") else "2d"
     jf, rf = R6 / f"jobs_{pop}.json", R6 / f"phys_{pop}.jsonl"
     comp = GD.complete(jf, rf)
     R = {r["key"]: r for r in jl(rf)}
