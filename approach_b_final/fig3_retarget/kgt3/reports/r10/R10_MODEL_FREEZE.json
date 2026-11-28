@@ -1,0 +1,232 @@
+{
+ "version": "R10_MODEL_FREEZE_V1",
+ "frozen_utc": "2026-11-28T09:56:06Z",
+ "host": "gvlab2",
+ "release_seal_sha256": "a537366e78d42801a397c8b568fecbd8c96c8c752d09021345fb093548207270",
+ "snapshot": "/home/projects/long-horizon/naren_workspace/r10/release/LEGOLAS_FINAL_v1/snapshot/abf_r10_70e8ec7db1d4c56b",
+ "q2_scalers": {
+  "2d": "b9712e471456153a46289b78ce99262a4413fa4c6b14831b2dcc0b8bdec3ed68",
+  "3d": "b08ee372eb570c093abe7750928179d21665b9aaaf25e60c27cb1fed1b8982e5"
+ },
+ "local_split_sha256": "0333adf8f1b2275d29ca3412fae88c33486952f15c17e5eb35124966ac034c6b",
+ "packs": {
+  "2d": "4a49d2f706494700934b0e97e379b8ab62e50751718095a0326f0d1bfcc69a97",
+  "3d": "4b3f3620bf205427cb4ca210787d0119bf260709b7bfac51cd26f70113834047"
+ },
+ "selection_rules": {
+  "x": "R5.2 simplest representation within max(seed spread of best, 0.005) of the best seed-mean local-family VAL NLL; lowest-VAL seed",
+  "calibration": "R5.3: temperature adopted iff VAL family NLL improves >= 0.005",
+  "cvae": "lowest VAL ELBO (q2init_all)",
+  "pairing": "X paired with its own stage-B Y (same seed); cVAE seed chosen independently (R7 convention)"
+ },
+ "summary": {
+  "2d": {
+   "x": "2d_G1_hi_base_s2",
+   "x_sha256": "a25e1d57cb6896fc765b109be7e86e20d6f84842059b3d21b8db0c8987ef3886",
+   "x_rep": "G",
+   "x_seed": 2,
+   "x_val_fam_nll": 0.21612799039489328,
+   "seed_mean_val": {
+    "A": 0.42944620582722176,
+    "M": 0.38899137587733534,
+    "G": 0.2292246043984739
+   },
+   "temperature": {
+    "T": 1.0643,
+    "val_nll_raw": 0.21612799039489328,
+    "val_nll_cal": 0.21600725320188116,
+    "adopted": false,
+    "rule": "R5.3 adopt iff VAL NLL improves >= 0.005"
+   },
+   "y_base": {
+    "ckpt": "/home/projects/long-horizon/naren_workspace/r10/runs/xy/p2_2d/D_s2/model.pt",
+    "sha256": "d894a18b42836848f665ec5e648063c924f8a8eee7c792ae2df0754de31483a9",
+    "y_sha": "e07cbfde3f304fed7a39cb63f4ad3d4185f608538ef9b863b6106c2b7a4210e1"
+   },
+   "cvae": "q2init_all_s2",
+   "cvae_sha256": "bd76d3bc093455f0dd7554f0d65d70c5bf60947dce0c265dc7fd9115511a1614",
+   "cvae_val_elbo": {
+    "q2init_all_s0": {
+     "best_val": 2.7209393978118896,
+     "sha256": "26e12ca3d1add53f5307a458c07a676aeee4dfd61e10f094b666fa503d660550"
+    },
+    "q2init_all_s1": {
+     "best_val": 2.7384800910949707,
+     "sha256": "060c34853b62bc262320f8adf5b324dcbf6c903c82e60ec73b5099a5c6197c5b"
+    },
+    "q2init_all_s2": {
+     "best_val": 2.7153031826019287,
+     "sha256": "bd76d3bc093455f0dd7554f0d65d70c5bf60947dce0c265dc7fd9115511a1614"
+    }
+   },
+   "spec": "R7:2d_G1_hi_base_s2",
+   "cr": {
+    "all": {
+     "r10_s2": 8.417279982170726,
+     "r10_s0": 8.478774545879304,
+     "r10_s1": 8.576735942801344
+    },
+    "pick": "r10_s2",
+    "rule": "lowest VAL select criterion (neg ELBO + decoder CE), as R8A"
+   },
+   "taskfm_val": {
+    "taskfm_s0": 1.3344906568527222,
+    "taskfm_s2": 1.3310841917991638,
+    "taskfm_s1": 1.3442329466342926
+   },
+   "taskfm_pick_rule": "TASKFM uses the FINAL cVAE seed (r8a.py convention)"
+  },
+  "3d": {
+   "x": "3d_G1_hi_base_s2",
+   "x_sha256": "d601b07de6aba9f1ad8a27bf87d7b159f30e13840b4c2f9e549a626beb23c4a6",
+   "x_rep": "G",
+   "x_seed": 2,
+   "x_val_fam_nll": 0.249405352863376,
+   "seed_mean_val": {
+    "A": 0.4556585844802734,
+    "M": 0.3428847220621502,
+    "G": 0.2535265181292206
+   },
+   "temperature": {
+    "T": 1.1942,
+    "val_nll_raw": 0.249405352863376,
+    "val_nll_cal": 0.2462934904957568,
+    "adopted": false,
+    "rule": "R5.3 adopt iff VAL NLL improves >= 0.005"
+   },
+   "y_base": {
+    "ckpt": "/home/projects/long-horizon/naren_workspace/r10/runs/xy/p2_3d/D_s2/model.pt",
+    "sha256": "d9f482ef2921a8eef0851f261f76953312aa466bd5843ea52a376d9af93a5059",
+    "y_sha": "aebba692de0ce6028b1fb9c78f59f9ed05122bb8b4c749e16469b38be67c3067"
+   },
+   "cvae": "q2init_all_s1",
+   "cvae_sha256": "4ea33f79fde1b7c4170e2b00004975c2fe2bc4d7008c0ef8ee58fe192da72469",
+   "cvae_val_elbo": {
+    "q2init_all_s0": {
+     "best_val": 2.0405185222625732,
+     "sha256": "7f2667086bde2070cad8e45acfb6ba5be6cf94ed54d6e44f3ee264d5ac768b75"
+    },
+    "q2init_all_s1": {
+     "best_val": 2.0314555168151855,
+     "sha256": "4ea33f79fde1b7c4170e2b00004975c2fe2bc4d7008c0ef8ee58fe192da72469"
+    },
+    "q2init_all_s2": {
+     "best_val": 2.034350633621216,
+     "sha256": "e5d9ba77328e6b7d7d9bf2df27a5c9170384904c1e9c15b6920eb4d456c23d2f"
+    }
+   },
+   "spec": "R7:3d_G1_hi_base_s2",
+   "cr": {
+    "all": {
+     "r10_s2": 7.5639780989792795,
+     "r10_s0": 7.564159429100551,
+     "r10_s1": 7.540166182605098
+    },
+    "pick": "r10_s1",
+    "rule": "lowest VAL select criterion (neg ELBO + decoder CE), as R8A"
+   },
+   "taskfm_val": {
+    "taskfm_s0": 1.4426592588424683,
+    "taskfm_s2": 1.411046028137207,
+    "taskfm_s1": 1.4175331890583038
+   },
+   "taskfm_pick_rule": "TASKFM uses the FINAL cVAE seed (r8a.py convention)"
+  }
+ },
+ "checkpoints": {
+  "abf/runs/p1_2d/cvae_s0/model.pt": "95679f4a7371b85fc6b9efa05cb91584f5a7e017d217af02a3dfc341391428d8",
+  "abf/runs/p1_2d/cvae_s1/model.pt": "c246f678e5eb4cb2b23739305a19e64d57beca399e5ae52f61844eda56e520b9",
+  "abf/runs/p1_2d/cvae_s2/model.pt": "1e4fee4a9e88ade0e9408fc5e66101a4c328c048349a8d5d8e1b1f9cea1de8c8",
+  "abf/runs/p1_3d/cvae_s0/model.pt": "4f4f17d780596cd801d74fa67236a8bcf62c866ded2ed3d1965036e250f8ceb7",
+  "abf/runs/p1_3d/cvae_s1/model.pt": "9f9fc4ae4cdadd40152a131614c5b4341983bee09058ff5c913b4a17ab97afd6",
+  "abf/runs/p1_3d/cvae_s2/model.pt": "6a6253aa03bd6bb9eee650a3694c05702ee0fde73d78e2b6332035913923bd07",
+  "runs/r7_task/2d/q2init_all_notask_s0/model.pt": "90e6dd7e5fc0a6ca0404b700fddefce2a54fa1d6f0b762133154c065342489f5",
+  "runs/r7_task/2d/q2init_all_notask_s1/model.pt": "db30804c70a431791639e9646a652a4f74cd8b19de39455345409dc759d70e97",
+  "runs/r7_task/2d/q2init_all_notask_s2/model.pt": "324e239e4a71c514d3b6f680b0599d492c80971275511e07edf5eeb94aadb532",
+  "runs/r7_task/2d/q2init_all_s0/model.pt": "26e12ca3d1add53f5307a458c07a676aeee4dfd61e10f094b666fa503d660550",
+  "runs/r7_task/2d/q2init_all_s1/model.pt": "060c34853b62bc262320f8adf5b324dcbf6c903c82e60ec73b5099a5c6197c5b",
+  "runs/r7_task/2d/q2init_all_s2/model.pt": "bd76d3bc093455f0dd7554f0d65d70c5bf60947dce0c265dc7fd9115511a1614",
+  "runs/r7_task/3d/q2init_all_notask_s0/model.pt": "5f3283631132f9b3655b49273ddf7ebae0772f3f82836f0f1e0a5b9a88b7e476",
+  "runs/r7_task/3d/q2init_all_notask_s1/model.pt": "393766a1a787e41c9a246111668229e56b24ae6ed81f032bd83e24d1bb0c52c0",
+  "runs/r7_task/3d/q2init_all_notask_s2/model.pt": "e130ad7dbc051fc1338c466839eb627db459c312cb46c9a1c15fea01ff9d9f6b",
+  "runs/r7_task/3d/q2init_all_s0/model.pt": "7f2667086bde2070cad8e45acfb6ba5be6cf94ed54d6e44f3ee264d5ac768b75",
+  "runs/r7_task/3d/q2init_all_s1/model.pt": "4ea33f79fde1b7c4170e2b00004975c2fe2bc4d7008c0ef8ee58fe192da72469",
+  "runs/r7_task/3d/q2init_all_s2/model.pt": "e5d9ba77328e6b7d7d9bf2df27a5c9170384904c1e9c15b6920eb4d456c23d2f",
+  "runs/xy/p2_2d/D_s0/model.pt": "7e7024e5cea60d6cac98bfee2d70b548a7dc87fb97e78a1126a0cd74659f0932",
+  "runs/xy/p2_2d/D_s1/model.pt": "1bf6fedd71aedd725482e49ddb64e23443c7fd696347ec5595830e4cd4a4d33c",
+  "runs/xy/p2_2d/D_s2/model.pt": "d894a18b42836848f665ec5e648063c924f8a8eee7c792ae2df0754de31483a9",
+  "runs/xy/p2_3d/D_s0/model.pt": "b98e2a39224867951681f11977c23499f96472027f0bdfbd01e85b013e13192e",
+  "runs/xy/p2_3d/D_s1/model.pt": "29b0cffea304793fbc181e8fd8e135ae06ad74a6f7872e245642a2af2f034267",
+  "runs/xy/p2_3d/D_s2/model.pt": "d9f482ef2921a8eef0851f261f76953312aa466bd5843ea52a376d9af93a5059",
+  "runs/xl/ckpt/2d_A0_hi_base_s0/model.pt": "e93e3e1df9e32410eb264a895bbc73c67eb7a92002787ac05d8e89c124b1736f",
+  "runs/xl/ckpt/2d_A0_hi_base_s1/model.pt": "6059a2cdb905349662c2d86ae589d6a490237853f36d531f4c1e83b4d6f630e8",
+  "runs/xl/ckpt/2d_A0_hi_base_s2/model.pt": "f6da5ef61409d79b420f717365beee6baeba7ead8e47701b9a716f244ac75fcd",
+  "runs/xl/ckpt/2d_A1_hi_base_s0/model.pt": "9956ef39f1ac7555604b6bf60ca3ac5f6b356c523f337dfe7a7c5eb688bdae07",
+  "runs/xl/ckpt/2d_A1_hi_base_s1/model.pt": "cccf7752db317c5ebf8cd0ffdd53f2114412fdf0e11787921854782a8234da40",
+  "runs/xl/ckpt/2d_A1_hi_base_s2/model.pt": "5a674c154abfdb3a463df949249c734291c9ef802705634d22f679cc6ad5bba1",
+  "runs/xl/ckpt/2d_G0_hi_base_s0/model.pt": "d2bd06d1bd4fd1a05f98e218c7fac83c5e53a87f16c058cc4ddb7a4ca5738c40",
+  "runs/xl/ckpt/2d_G0_hi_base_s1/model.pt": "0cb65f47e367ce31068fff995ee047e9dea10cf3cdb7c21152e218e7d44a2037",
+  "runs/xl/ckpt/2d_G0_hi_base_s2/model.pt": "faeaf7b779858fcafaac90a99b5af917bfc7e5c164bb5a06814797944e1cc850",
+  "runs/xl/ckpt/2d_G1_hi_DIRECT_s0/model.pt": "305b1bc5565de2e58559766aef904d3de352a215581ea86a4b171ed5a6b9e988",
+  "runs/xl/ckpt/2d_G1_hi_DIRECT_s1/model.pt": "52f497a4d853b577d9fd21f58ec20745efb076a037631819d8b92a651ff09a47",
+  "runs/xl/ckpt/2d_G1_hi_DIRECT_s2/model.pt": "e61a855fc3a04be55c3617d1626151a9d86902bd638d5fc8167772317bdf6bde",
+  "runs/xl/ckpt/2d_G1_hi_ORDINV_s0/model.pt": "4c42462b60e9b0c6d001cbb49aff146c220c289ac7acc8e84bb4f1ed09dc8c4c",
+  "runs/xl/ckpt/2d_G1_hi_ORDINV_s1/model.pt": "b3792f13578bdcffa01fc63e1c543ade53ac175768cc7d615ca8b6fcd0792af2",
+  "runs/xl/ckpt/2d_G1_hi_ORDINV_s2/model.pt": "838937f9782ca67b881887d4fc4043da0a0af32c51f37c3310f545dd0598c48a",
+  "runs/xl/ckpt/2d_G1_hi_UNCOUPLED_s0/model.pt": "141aa69677455f2f7dcecf21b89fc958b3f9516cbb1ad9952fe43f75a7afef80",
+  "runs/xl/ckpt/2d_G1_hi_UNCOUPLED_s1/model.pt": "e644bd68a527ba5733ebaac556bb82f6479b90d39677c253096140179dc27601",
+  "runs/xl/ckpt/2d_G1_hi_UNCOUPLED_s2/model.pt": "3482334787f4e0e1a1a10e702622977e19aefcd7bf424f8a1e6f1df058662651",
+  "runs/xl/ckpt/2d_G1_hi_base_s0/model.pt": "b99cfb24807fa2bf947ffc86ce05abb73a76d69dd13713e1aad188f740ff1de5",
+  "runs/xl/ckpt/2d_G1_hi_base_s1/model.pt": "c767c85d9c7af1026925cfa2c62c44b592333e374c05765914418212cafc6014",
+  "runs/xl/ckpt/2d_G1_hi_base_s2/model.pt": "a25e1d57cb6896fc765b109be7e86e20d6f84842059b3d21b8db0c8987ef3886",
+  "runs/xl/ckpt/2d_M0_hi_base_s0/model.pt": "66d1875cccb3ab0ebf58720db2c8ac3a1e8b2e0511144b1c9c275eff3b5281a9",
+  "runs/xl/ckpt/2d_M0_hi_base_s1/model.pt": "1b5b8480586d009d1616de1fb0fcf5aba8011a3ebb766c70782fc88058a7145a",
+  "runs/xl/ckpt/2d_M0_hi_base_s2/model.pt": "d2cf977e199ea92a9a6f9727e78f749cc10a31029eda0d9a391f3609d67c252b",
+  "runs/xl/ckpt/2d_M1_hi_base_s0/model.pt": "63535edad16b8ee9407646f73f98f867735e766c872cac8caab66de74abd36f6",
+  "runs/xl/ckpt/2d_M1_hi_base_s1/model.pt": "6387254659709321eb8bdd26c60fbc237a8d008aa4ffd9c8e3f89d08fab38865",
+  "runs/xl/ckpt/2d_M1_hi_base_s2/model.pt": "4b8a4fec898bec93f39aba4757623620716ff220cb1d77141f23fb763d316c5d",
+  "runs/xl/ckpt/3d_A0_hi_base_s0/model.pt": "209aa5fe084b0b749b67cd8494226d548a004e0c2dcd58bebc6c891fb3b8c9ab",
+  "runs/xl/ckpt/3d_A0_hi_base_s1/model.pt": "b75574eebaf91f69b19d446abe55051419d9151339fac96f46af42ef1f11b998",
+  "runs/xl/ckpt/3d_A0_hi_base_s2/model.pt": "aa8801b1398524a673f8acfb5ff481820eb4572a1d6080cd6309e4b18b7bc01c",
+  "runs/xl/ckpt/3d_A1_hi_base_s0/model.pt": "65adcd079367ce3e96b017ee4c7f05ff90661b09d55f66bce4ea4df609eb3653",
+  "runs/xl/ckpt/3d_A1_hi_base_s1/model.pt": "1e197c615c832df7d0433abe633210071b9c43ba8d5e9f661a4b3a0113b3ca21",
+  "runs/xl/ckpt/3d_A1_hi_base_s2/model.pt": "02b535fb58bd3d3991bdc9cce12193abf52d92f4dd760731db3f47f44ec72671",
+  "runs/xl/ckpt/3d_G0_hi_base_s0/model.pt": "cef7aa932d26c02e2d8c4b3de1fe4def3be05065f22b7fad080feddebca2069e",
+  "runs/xl/ckpt/3d_G0_hi_base_s1/model.pt": "c518eaab941a93fe56d5cb3b1aa76649affe1ff3b15a271cabf34147f2461f47",
+  "runs/xl/ckpt/3d_G0_hi_base_s2/model.pt": "7ccc9a5b52de8791cfcc862169793b5e8cf4bf7a567d1510c7e8b529036b1222",
+  "runs/xl/ckpt/3d_G1_hi_DIRECT_s0/model.pt": "e44f0244996658195e355e7b39c4804f1369ebfc01aaa5a421f8c3ed0e3cd8d4",
+  "runs/xl/ckpt/3d_G1_hi_DIRECT_s1/model.pt": "746d6e731e6bc08cd46e1d95c2a58a76812c208ed8e5ccbd3657836cbfd1c361",
+  "runs/xl/ckpt/3d_G1_hi_DIRECT_s2/model.pt": "9962164232e8cd8be3ee7f1569ed410c3ce6a7012efc113942cc41246f1f39a2",
+  "runs/xl/ckpt/3d_G1_hi_ORDINV_s0/model.pt": "aa83221c774cb691d847ce4d6312656da27a7a19dd38b9e0ec4438483ff30349",
+  "runs/xl/ckpt/3d_G1_hi_ORDINV_s1/model.pt": "dc9462e010b2756c707e346511b575b05d2e33ceed350f300844afbb32352e4e",
+  "runs/xl/ckpt/3d_G1_hi_ORDINV_s2/model.pt": "86f9d3de48aac53ca00f813bcc6eb66f09f08674c1700d8ff9f0d193d6baf2f3",
+  "runs/xl/ckpt/3d_G1_hi_UNCOUPLED_s0/model.pt": "58b30bc0d1d88522f98005b43a89e55558acff29e04c5666119b839e7099c3fc",
+  "runs/xl/ckpt/3d_G1_hi_UNCOUPLED_s1/model.pt": "9b2fce6ae24d34df371c4a0be55efbd2f2e32d53ea8e55c8f46bdfea647f3abb",
+  "runs/xl/ckpt/3d_G1_hi_UNCOUPLED_s2/model.pt": "a61eedb622c3eea1196e22375b727c1985c527a610263db5a3a62afe60d9b443",
+  "runs/xl/ckpt/3d_G1_hi_base_s0/model.pt": "d0d87c0099eb29b40783a28b9134a2c7d583fc9991e682b507d93a53d8c670c4",
+  "runs/xl/ckpt/3d_G1_hi_base_s1/model.pt": "7d082f4b120b9bc01ae16522c5abb4a5bd78bac7798eeb58a67ccabf4ac31159",
+  "runs/xl/ckpt/3d_G1_hi_base_s2/model.pt": "d601b07de6aba9f1ad8a27bf87d7b159f30e13840b4c2f9e549a626beb23c4a6",
+  "runs/xl/ckpt/3d_M0_hi_base_s0/model.pt": "f7a0e438e3a5c870b5cfe335ee388dcde74a114bbd6d05e9e845270ea7faab44",
+  "runs/xl/ckpt/3d_M0_hi_base_s1/model.pt": "2f50780b7bc1b128887f40c9786c74183f0048a06fbadf91daaae0b7555d03c2",
+  "runs/xl/ckpt/3d_M0_hi_base_s2/model.pt": "a8d93b503031c6ab34b4d92570f5253a27048f89e6234ac4e6d20cf25bba4231",
+  "runs/xl/ckpt/3d_M1_hi_base_s0/model.pt": "c5249dff0dae6d9b9026867e10212b4e244e1d3f793dac877cbd6cdb29ba3ac1",
+  "runs/xl/ckpt/3d_M1_hi_base_s1/model.pt": "07cb1b6003b97f217113e8670b0ebc7215dc791d2b34226776cb5303a26f6515",
+  "runs/xl/ckpt/3d_M1_hi_base_s2/model.pt": "1a78d859d65114864d07d9398875dffc023ac79dce132c6fc03cdb88d1377dde",
+  "k3/runs/training/taskfm/2d/taskfm_s0/model.pt": "bfec16e404cf90194d12b526566b723a27ca946790884a8524f6b21ff124616c",
+  "k3/runs/training/taskfm/2d/taskfm_s1/model.pt": "eb4bb27a71a30b002dfd93b048f06078798843b157f118d8c5c7b57ea482a26d",
+  "k3/runs/training/taskfm/2d/taskfm_s2/model.pt": "2b6424e9979b30dd11158a9b68438fdb80e9cc9312964b5ef56dd6dfb2dfe8d2",
+  "k3/runs/training/taskfm/3d/taskfm_s0/model.pt": "1a990f897983de3a22004363836bff19b97b7cd877969d6d9cbb5da075ae23d6",
+  "k3/runs/training/taskfm/3d/taskfm_s1/model.pt": "9a1dd922308efd0173740b335775d16609f90648e4cb98f93cf1258b8f8ea364",
+  "k3/runs/training/taskfm/3d/taskfm_s2/model.pt": "665bcdafd99bfa27fad86565c73bdfde10b0019bc08f68efaa5b2f3551c61b8a",
+  "cr/models/2d/r10_s0/model.pt": "1fc3652fbd8e5006dcf85c3e0d026146be8f0b3a635c2ceb20d588bdf749c37a",
+  "cr/models/2d/r10_s1/model.pt": "79c0795272578f8914204cec89d5b5429adfcac6f6a934f64bb05c68aba4336a",
+  "cr/models/2d/r10_s2/model.pt": "2d713877faff76245c92c5c15f6913da0b805cd92562a2e4d5bf4204a3c98d7e",
+  "cr/models/3d/r10_s0/model.pt": "359ee57f20e54b93c074075e68f7cd73500a587c6eb9dff0191c82c9c31a9af0",
+  "cr/models/3d/r10_s1/model.pt": "6402d7c34cd42bfb5ced47301f289a5145cecd556f43380514ffbca90aa1dd04",
+  "cr/models/3d/r10_s2/model.pt": "44c68171176ad1b2203b4c159c09c1d27e230b4864d864c3efb6f88b3dff8fdc"
+ },
+ "results_files": {
+  "xl/results_2d.jsonl": "dd22780831c6c68cf16102081a6fdbdc313b362b72322041a475cce93644c480",
+  "xl/results_3d.jsonl": "3ee19627f587779cdb072c3093fbfa610556d87ee3e359dec546f3154023070f"
+ }
+}

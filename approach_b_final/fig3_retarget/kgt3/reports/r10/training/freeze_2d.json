@@ -1,0 +1,69 @@
+{
+ "dom": "2d",
+ "x": {
+  "rep": "G",
+  "seed_mean_val": {
+   "A": 0.42944620582722176,
+   "M": 0.38899137587733534,
+   "G": 0.2292246043984739
+  },
+  "seeds": {
+   "A": [
+    0.4405325308723095,
+    0.4354972935157202,
+    0.4123087930936356
+   ],
+   "M": [
+    0.4254367180458206,
+    0.33012041675647386,
+    0.41141699282971145
+   ],
+   "G": [
+    0.23461989177361461,
+    0.23692593102691378,
+    0.21612799039489328
+   ]
+  },
+  "tolerance": 0.020797940632020506,
+  "best": "G",
+  "name": "2d_G1_hi_base_s2",
+  "seed": 2,
+  "val_fam_nll": 0.21612799039489328,
+  "ckpt": "/home/projects/long-horizon/naren_workspace/r10/runs/xl/ckpt/2d_G1_hi_base_s2/model.pt",
+  "sha256": "a25e1d57cb6896fc765b109be7e86e20d6f84842059b3d21b8db0c8987ef3886",
+  "rule": "R5.2 simplest-within-tolerance; lowest-VAL seed"
+ },
+ "calibration": {
+  "T": 1.0643,
+  "val_nll_raw": 0.21612799039489328,
+  "val_nll_cal": 0.21600725320188116,
+  "adopted": false,
+  "rule": "R5.3 adopt iff VAL NLL improves >= 0.005"
+ },
+ "y_base": {
+  "ckpt": "/home/projects/long-horizon/naren_workspace/r10/runs/xy/p2_2d/D_s2/model.pt",
+  "sha256": "d894a18b42836848f665ec5e648063c924f8a8eee7c792ae2df0754de31483a9",
+  "y_sha": "e07cbfde3f304fed7a39cb63f4ad3d4185f608538ef9b863b6106c2b7a4210e1"
+ },
+ "cvae": {
+  "pick": "q2init_all_s2",
+  "ckpt": "/home/projects/long-horizon/naren_workspace/r10/runs/r7_task/2d/q2init_all_s2/model.pt",
+  "sha256": "bd76d3bc093455f0dd7554f0d65d70c5bf60947dce0c265dc7fd9115511a1614",
+  "all": {
+   "q2init_all_s0": {
+    "best_val": 2.7209393978118896,
+    "sha256": "26e12ca3d1add53f5307a458c07a676aeee4dfd61e10f094b666fa503d660550"
+   },
+   "q2init_all_s1": {
+    "best_val": 2.7384800910949707,
+    "sha256": "060c34853b62bc262320f8adf5b324dcbf6c903c82e60ec73b5099a5c6197c5b"
+   },
+   "q2init_all_s2": {
+    "best_val": 2.7153031826019287,
+    "sha256": "bd76d3bc093455f0dd7554f0d65d70c5bf60947dce0c265dc7fd9115511a1614"
+   }
+  },
+  "rule": "lowest base-snapshot VAL ELBO"
+ },
+ "spec": "R7:2d_G1_hi_base_s2"
+}

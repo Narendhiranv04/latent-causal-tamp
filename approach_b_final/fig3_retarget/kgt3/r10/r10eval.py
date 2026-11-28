@@ -53,7 +53,8 @@ class Cached:
                 self.mem[(root.id, json.dumps(s))] = c
             self.evals += len(miss)
         out = [self.mem[(root.id, json.dumps(s))] for s in seqs]
-        return [{**c, "p11": c["py"]} for c in out] if self.yonly else out
+        # Y-only: endpoint pY replaces p11 for nonempty sequences; the empty sequence keeps p11 = pY(initial scene) (the production NOOP input)
+        return [{**c, "p11": c["py"]} if (self.yonly and s) else c for s, c in zip(seqs, out)]
 
 
 def setup(arm, dom):
